@@ -1,6 +1,6 @@
 # Marcus–de Oliveira in Lean
 
-The library defines the conjecture for two ordered complex spectra and a relative unitary eigenbasis. The determinant and the convex hull use the complex matrix determinant and real convex combinations from Mathlib. The relative-eigenbasis identity connects this formulation to the expression with two unitary diagonalizations.
+The library defines the conjecture for two ordered complex spectra and a relative unitary eigenbasis. The determinant and the convex hull use the complex matrix determinant and real convex combinations from Mathlib. The relative-eigenbasis identity connects this formulation to the expression with two unitary diagonalizations. The all-orders claim is the open proposition `MOC.MOCIsTrue`. [Standalone claim](MOC/Claim.lean)
 
 With [Elan](https://github.com/leanprover/elan) installed, build the full library from the repository root.
 
@@ -9,7 +9,7 @@ cd Lean
 lake build
 ```
 
-The toolchain and transitive dependencies are pinned. Where the Mathlib cache is accessible, `lake exe cache get` can prefetch dependencies. For a source build when the Mathlib cache is unavailable, run `lake build proofwidgets:release` once to fetch the pinned widget assets, then `lake --no-cache build`. The umbrella module imports each proof module and prints the axioms used by the main results.
+The toolchain and transitive dependencies are pinned. Where the Mathlib cache is accessible, `lake exe cache get` can prefetch dependencies. For a source build when the Mathlib cache is unavailable, run `lake build proofwidgets:release` once to fetch the pinned widget assets, then `lake --no-cache build`. The umbrella module imports each proof module and checks every imported safe MOC declaration against the allowed foundational axioms `propext`, `Classical.choice`, and `Quot.sound`.
 
 ## Literature and repository coverage
 
