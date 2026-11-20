@@ -1,0 +1,194 @@
+Hodge and real-algebraic routes: an exact Gram reduction and precise gaps
+31 October 2026
+
+The unrestricted MOC4 support-to-certificate implication remains open.
+This lane produced an exact constructive reduction of the established
+14+4 certificate cone to ordinary real SOS on matching functions, then
+checked which standard Hodge/minimal-degree theorems could address the
+remaining implication. None of those theorems supplies it automatically.
+
+1. Constructive real-form Gram reduction
+
+Let V be the real14-dimensional matching-function space on S4. The
+real auxiliary tuple (0,1,-1,w) has a real24-by32 jet table Jr of rank14,
+whose column space is V. Let Jc use (0,1,i,w). The common Mobius map
+
+ t(z)=(1-i)z/(1-iz)
+
+sends the real fixed triple to the complex one. Put
+
+ L=[[1,-i],[0,1-i]], M=L tensor L tensor L tensor L,
+ A=[[1/2,0],[(-1+i)/4,(1+i)/4]], R=A tensor M.
+
+The exact jet identity is Jc=Jr R^T. In the exceptional feature basis
+e1,e2 used by the other lanes, M[e1,e2]=-2i[e1,e2]. Therefore
+
+ R E=E(Ae tensor I2),
+ Ae=[[-i,0],[(1+i)/2,(1-i)/2]].
+
+All maps are invertible. Thus this change of real form acts by a local
+invertible filter on the exceptional two-qubit corner. The identities
+are checked in all jet entries by
+ code/research/moc_hodge_real_jet_filter.py
+and the independent inverse-map calculation in
+ code/research/moc_real_jet_matching_sos.py.
+
+For a real symmetric4-by4 corner S, let
+ K=[[0,0,0,1],[0,0,-1,0],[0,-1,0,0],[1,0,0,0]].
+One has exactly
+
+ S-S^PT=(S03-S12)K, tr(KS)=2(S03-S12).
+
+The alternating jet pairing is Jr^T diag(sign(pi)) Jr=E K E^T.
+Consequently an SOS cost with zero alternating Fourier coefficient
+has a real Gram whose exceptional corner is PT-invariant. It is
+already PSD, so the corner-PPT constraint is redundant for that cost.
+
+Given any old complex Hermitian PSD Gram T, this is constructive:
+pull back to R*TR, replace it by its real part, then push forward by
+the inverse filter. Real averaging preserves PSD and all costs because
+Jr is real. The zero-alternating identity makes the real corner PPT;
+the local filter preserves PPT. Projection to the jet range preserves
+costs and the exceptional corner. Thus, on V, the established cone is
+exactly the cone of sums of squares of real functions in V. No quantum
+separability theorem or full32-dimensional PPT completion is needed for
+this reduction. Grace's main proof is
+ docs/research/moc_intrinsic_matching_sos_20261031.txt.
+
+Every actual MOC support cost has zero alternating coefficient:
+sum sign(pi) product_i(a_i+b_pi(i))=det[a_i+b_j]=0,
+since the displayed matrix has rank at most2. Constant support height
+also has zero alternating sum. The reduction therefore covers the
+actual costs relevant to unrestricted MOC4; it does not prove they
+belong to the SOS cone.
+
+The same identity gives a positive moment completion. For real O the
+real-normalized Clifford jet is H_O=P+Q^PT, where P>=0,Q=r r^T and
+r=E u is real. Since
+ (u u^T)^PT-u u^T=-det(mat2(u))K,
+adding det(mat2(u)) times the alternating weight functional changes
+H_O into P+Q>=0, rank at most8. This gauge is invisible to all matching
+costs. It is not a nonnegative classical permutation law.
+
+2. The genuine Lorentzian polynomial and its limitation
+
+For real orthogonal O let V0=[I O] and let t=(a,b). Cauchy-Binet gives
+
+ p_O(t)=det(V0 diag(t) V0^T)
+       =sum_{|S|=4}det(V0[:,S])^2 product_{s in S}t_s.
+
+Its pencil matrices are PSD rank-one matrices. It is a homogeneous
+stable polynomial with nonnegative coefficients and hence Lorentzian.
+Branden-Huh, Proposition2.2 and the example immediately following it,
+verify this class; Theorem2.16 gives the one-positive Hessian index only
+on the positive orthant. Source actually read: arXiv1902.03719v7,
+https://arxiv.org/pdf/1902.03719v7 , pages7--8 and16.
+
+The unrestricted spectral substitution is outside that positive cone.
+An exact ordinary example already prevents extending its signature
+claim to all real substitutions: p=x0x1x2x3 at(-1,1,1,1) has Hessian
+eigenvalues(-3,1,1,1). Thus a Lorentzian-positive-cone theorem cannot
+directly establish the needed global complex support inequality.
+
+Dinh-Nguyen's Theorem A instead takes fixed Kahler polarizations and
+proves positivity of a sesquilinear primitive pairing. It does allow
+complex test classes, but its polarizing forms remain Kahler. Turning
+the arbitrary normal spectra into those polarizations is not justified.
+Source actually read: arXivmath/0501449v2,
+https://arxiv.org/pdf/math/0501449v2 , pages2--3.
+
+3. The HMSV cubic is not Lorentzian on any full open cone
+
+There is a stronger obstruction for applying one-positive Hodge-index
+theory directly to the cubic F underlying the nonic. The four singleton
+rays corresponding to pi(0)=j, j=0,1,2,3, span a4-dimensional linear
+space L. Exactly, each ray has gradF=0, and H_ri rj=0 for all16 pairs.
+Since F is cubic, every vector in L is critical and polarization gives
+
+ ri^T H_g rj=g^T H_ri rj=0 for every g.
+
+Hence L is totally isotropic for every Hessian H_g. Any nonsingular real
+H_g has both positive and negative indices at least4. No invertible
+linear coordinate change can turn it into a one-positive-index Hessian.
+The verifier checks the14 coefficientwise isotropy identities:
+ code/research/moc_hodge_witt_hasse_probe.py.
+
+This does not exclude a useful smaller primitive quotient. A Witt
+reduction along the four hyperbolic planes leaves a6-dimensional form.
+At the neutral rank12 secant points, it would have rank4 and real
+signature(2,2,2zeros), matching the split determinant pairing's size.
+No general identification with the exceptional four-dimensional sector
+has been proved. The pairing K itself has signature(2,2), rather than
+the one-positive signature used by a standard Hodge index theorem.
+
+4. The finite matching embedding is not a minimal-degree shortcut
+
+The24 distinct permutation-evaluation points lie in P13. Exact ranks
+of linear and quadratic evaluation tables give
+
+ dim R0=1, dim R1=14, dim Rd=24 for all d>=2.
+
+The higher-degree claim follows because a linear coordinate evaluates
+to1 on every point, while degree2 already gives all24 point functions.
+Thus its Hilbert series is (1+13t+10t^2)/(1-t). Modding out by that
+nonvanishing linear coordinate has Hilbert vector(1,13,10). The top
+socle has dimension at least10; this natural Artinian reduction is not
+a Gorenstein/Poincare-duality algebra with one-dimensional top degree.
+An additional quotient and positive polarization would have to be
+constructed for a cohomological Hodge package.
+
+There are81 quadratic relations among the105 quadratic monomials.
+The usual quadratic-deficiency number is10. The point configuration
+has degree24; minimal degree in P13 would be14. It is also reducible.
+Therefore the irreducible minimal-degree SOS theorem of
+Blekherman-Smith-Velasco does not apply to this embedding.
+Source actually read: arXiv1308.0751v1, Theorem1.1,
+https://arxiv.org/pdf/1308.0751v1 , page1.
+
+These counts and the signature examples are verified exactly by
+ code/research/moc_hodge_finite_configuration.py
+with output build/moc_hodge_matching_sos/finite_configuration_exact.json.
+The formal f34 cost gives an independent concrete obstruction to an
+all-nonnegative-implies-SOS claim: its contact-null matching space is
+one-dimensional, generated by f34 itself, but f34 takes values1 and2.
+Any contact-vanishing SOS would be a multiple of f34^2, which cannot
+equal f34 at both values.
+
+5. What the global argument must still add
+
+After the real-form reduction, the remaining target is
+
+ every actual spectral support gap g is SOS in V.
+
+The broader conjectural implication g>=0, N9(g)=0, Q(g)!=0 => g SOS
+would suffice where applicable, but has not been proved. None of the
+positive-cone Lorentzian theorem, the primitive Hodge theorem, or the
+minimal-degree theorem proves this special nonic statement. The actual
+spectral/secant equations must supply information missing from generic
+nonnegative matching costs. This is the current global proof task.
+
+Arithmetic check on a possible6-dimensional Witt chart
+
+For three explicit generic rational height-normalized points, the
+Hessian is nonsingular with signature(7,7), negative determinant a
+rational square, and every local Hasse invariant matching seven
+hyperbolic planes. The verifier records diagonalizations and all primes,
+and checks Hilbert reciprocity. No quaternion/Brauer obstruction appeared
+at these points. This is exact sample evidence, not a generic rational
+splitting theorem. Output:
+ build/moc_hodge_matching_sos/hessian_witt_hasse_exact.json.
+
+A natural small-determinant shortcut was also falsified exactly. The
+16singleton rays span kerH_e, dimension10. Its universal compression
+radical contains e, so quotienting by e gives a9-by9 linear Hessian
+compression A9(g), of the tempting degree9. It is NOT the projected
+nonic up to a constant. At the three stored rational points,
+
+ detA9=(-4436,-29952,-71064),
+ N9^2=(1205604,929762064,86936976),
+ detA9^2/N9^2=(4919524/301401,692224/717409,79524/1369).
+
+The unequal exact ratios disprove that proposed identity. These checks
+are included in the same arithmetic verifier. A6-dimensional Witt
+residual remains a plausible route, but its putative rational3+3
+splitting has not been constructed uniformly.

@@ -1,0 +1,71 @@
+Balanced compact spinors give an extremal rank-two bracket matrix
+31 October 2026
+
+This exact consequence of compact minimax balance is not a proof of MOC.
+It retains the actual spinor factorization rather than replacing it with
+generic stable-polynomial data.
+
+Let S=[u_1,...,u_n] and T=[v_1,...,v_n] be 2-by-n matrices with unit
+columns, and let J=[[0,1],[-1,0]]. The actual bracket matrix is
+
+  C=S^T J T,       C_ij=[u_i,v_j].
+
+Write A=SS*, B=TT*. Both have trace n. At a hypothetical negative compact
+minimum the proved moment equation is A+B=nI2. The elementary 2-by-2
+identity J B J*=tr(B)I2-B^T then gives
+
+  C C*=S^T A^T bar(S).                                      (1)
+
+Put R=bar(S). Since RR*=A^T, the right side of (1) equals
+R*(RR*)R. Its nonzero eigenvalues equal those of (RR*)^2. Hence, including
+rank-one degeneracies, the nonzero singular values of C are precisely the
+two eigenvalues of A. In particular
+
+  rank C<=2,    ||C||_*=tr A=n.                            (2)
+
+Here ||.||_* is nuclear norm. This is equality in the general bound
+
+  ||S^T J T||_* <=||S^T||_F ||J T||_F=n.
+
+The balanced factorization is therefore an extremal rank-two Schur
+multiplier factorization. The inequality |C_ij|<=1 continues to hold.
+
+Conversely, equality in that nuclear bound forces balance for unit-column
+S,T. Indeed the nonzero singular values of C have the same sum as those
+of the 2-by-2 matrix A^(T/2) (J B J*)^(1/2), whose trace norm is the
+matrix fidelity between the positive matrices A^T and J B J*, both of
+trace n. Equality in the Hilbert--Schmidt Cauchy--Schwarz characterization
+of fidelity requires these two positive matrices to coincide, including
+singular cases. Thus A^T=J B J*=nI-B^T, i.e. A+B=nI. The forward
+implication (1)--(2) does not require importing this converse.
+
+Concrete examples showing what (2) does and does not force
+
+1. All row spinors are e1 and all column spinors e2. Then A=diag(n,0),
+   C is the all-ones matrix, its sole nonzero singular value is n, and
+   every matching product equals d=1. Thus nuclear norm n does not force
+   spectral degeneracy that is fatal to the determinant.
+
+2. For n=4, take row spinors e1,e1,e2,e2 and column spinors e2,e2,-e1,-e1.
+   Then A=2I and C is block diagonal with two all-ones 2-by-2 blocks.
+   Its singular values are 2,2,0,0. Matching products can be zero or one;
+   the determinant inclusion here follows from the already proved
+   two-projective-point boundary theorem.
+
+3. For n=4 take row spinors e1,e2,(3/5,4/5),(3/5,4i/5) and define
+   v_j=-J bar(u_j). Each pair u_j,v_j is orthonormal, so balance holds.
+   The actual C is Hermitian positive semidefinite with diagonal1.
+   A has eigenvalues 2+sqrt(337)/25 and 2-sqrt(337)/25, so those are
+   exactly the two nonzero singular values of C. Neither equals2.
+   Thus balance does not force the row or column frame individually
+   tight, nor does it force C to be a scaled partial isometry.
+
+Remaining full-target calculation
+
+At a negative compact minimum, (2) must be imposed together with all
+active matching contacts, the single common multiplier law, the tensor
+singular-vector equations, and unitary maximizer stationarity. No theorem
+has been established here comparing det(C Hadamard U)/det U with the
+matching-product hull for all rank-two nuclear-extremal C. That comparison
+cannot be assumed merely from (2). It is a possible new concrete input
+to the coupled mixed-Hessian calculation.

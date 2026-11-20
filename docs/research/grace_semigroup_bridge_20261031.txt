@@ -1,0 +1,163 @@
+Grace-like stability: finite composition identity and an exact boundary
+31 October 2026
+
+The unrestricted Marcus--de Oliveira conjecture is not resolved here.
+This calculation rules out a tempting stronger stability argument and records
+the exact operation represented by the Grace-like semigroup. The product
+input restriction in MOC must be retained by any subsequent proof.
+
+Primary sources actually read
+
+1. David Ruelle, Grace-like polynomials, arXiv:math-ph/0009030v1.
+   https://arxiv.org/pdf/math-ph/0009030v1
+   Proposition8 states that det(diag(z)-U diag(w) U*) is a reduced
+   Grace-like polynomial for every complex unitary U. Proposition5 gives
+   a representation as a linear combination of matching products.
+   The coefficients of this representation are not asserted positive.
+
+2. Petter Branden and David G. Wagner, A converse to the
+   Grace--Walsh--Szego theorem, arXiv:0809.3225v1.
+   https://arxiv.org/pdf/0809.3225v1
+   Propositions3--4 equate the stability of the plus-symbol polynomial
+   with stability preservation by the corresponding permutation operator.
+   The paragraph following Proposition4 gives semigroup closure.
+   Neither cited result supplies pointwise convex hull contraction.
+
+Exact operator conventions
+
+Let M_U,k[I,J]=|det U[I,J]|^2 for k-subsets I,J of {0,...,n-1}.
+For unitary U, complementary minors identify the action on degree-k
+monomials with
+
+  T_U(x_J)=sum_I M_U,k[I,J] x_I.
+
+Equivalently T_U is a real linear combination of variable permutations.
+The real Leibniz coefficients
+
+  c_pi=Re(sgn(pi) product_i U_i,pi(i)/det U)
+
+reproduce every M_U,k and sum to one. In a real orthogonal example no
+real-part operation is needed. Consequently T_U commutes with simultaneous
+translation of every variable by the same complex scalar. Its plus symbol
+on the matching product is the normal determinant, up to the consistent
+inverse convention on permutations; hence it preserves stability by the
+above primary theorem.
+
+All-dimensional finite phase identity
+
+For ANY two complex n-by-n matrices U,V, simultaneously for every k,
+
+  M_U,k M_V,k
+    = 2^(1-n) sum_(d in {+1,-1}^n, d_0=1) M_(U diag(d) V),k.       (1)
+
+No integration, genericity, or unitary hypothesis is needed for (1).
+Cauchy--Binet expands a minor of U diag(d) V as
+
+  sum_L det U[I,L] det V[L,J] product_(l in L) d_l.
+
+Its squared modulus has diagonal terms giving the left side of (1).
+For distinct equal-cardinality sets L,L', an off-diagonal term contains
+the Boolean character product_(l in L symmetric_difference L') d_l.
+The symmetric difference cannot consist solely of {0}, because its
+cardinality is even. Thus a free independent sign occurs, and its average
+is zero. Every diagonal character is one. This proves (1), including
+k=0,n and all zero or singular cases.
+
+Thus composition of two determinantal Grace operators is the average of
+2^(n-1) actual unitary profiles when U,V are unitary. It is NOT the profile
+of their coherent matrix product. For H2=2^(-1/2)[[1,1],[1,-1]],
+
+  M_H2,1^2 = [[1/2,1/2],[1/2,1/2]],
+  M_(H2 H2),1 = I.
+
+The exact verifier checks three instances at n=2,3,4. The entrywise L1
+differences between composed profiles and the coherent product profiles
+by order k are respectively
+
+  n2: (0,2,0), n3: (0,1,1,0), n4: (0,6,9,6,0).
+
+The n3 pair uses explicit rational complex Hermitian Cayley matrices.
+The n4 pair is the rational real Walsh matrix multiplied by itself.
+These are concrete checks of the algebra, not proofs inferred from sampling.
+
+Exact counterexample to contraction on ALL stable inputs
+
+The following proposed shortcut is false:
+
+  If T_U preserves stability and f is stable and multiaffine, then
+  (T_U f)(a) belongs to conv{f(a_pi): pi in S_n} for every complex a.   (C)
+
+Let
+
+ Q=(1/59)[[-25,46,16,22],[-46,-31,20,-2],
+           [-16,20,-11,-52],[22,2,52,-17]],
+ a=(-1+2i,3+3i,-2-2i,-3+2i).
+
+Exact multiplication gives QQ^T=I. In pair order 01,02,03,12,13,23 set
+
+ c=(498-1250i,875-850i,905-820i,
+    1250+1250i,530+530i,107+1004i),
+ f(x)=14195+sum_(i<j)c_ij x_i x_j.
+
+In lexicographic permutation order the 24 real values Re f(a_pi) are
+
+ (17250,0,22540,19090,3450,17250,
+  0,0,0,0,3450,3450,
+  5290,19090,0,0,13800,0,
+  0,13800,0,17250,10350,13800).
+
+Their minimum is zero. Direct exact squared-minor multiplication gives
+
+  (T_Q f)(a)=(-49910+8065732i)/3481.                         (2)
+
+This has negative real part and is outside the permutation hull.
+To obtain a STABLE input, put
+
+ p(x)=x_0 x_1 x_2 x_3+f(x),
+ q(x)=p(x_0+200i,...,x_3+200i),
+ a'=a-200i(1,1,1,1).
+
+For Im x_j>0 write z_j=x_j+200i, so |z_j|>200. The sum of the bounds
+|Re c_ij|+|Im c_ij| is exactly9869. Therefore
+
+ |p(z)/product_j z_j -1|
+   <=9869/200^2+14195/200^4
+   =78954839/320000000 <1.
+
+Hence p(z) is nonzero and q is stable. Both q and T_Qq are stable,
+using Branden--Wagner for the latter. Since the full monomial is fixed
+by T_Q, and T_Q commutes with uniform translations,
+
+  min_pi Re q(a'_pi)=Re product_j a_j,
+  Re (T_Q q)(a')=Re product_j a_j -49910/3481.
+
+This disproves (C) with a strict rational separating margin. There is
+no inference from numerical infeasibility: every displayed score, minor,
+and separation is checked by exact SymPy rational arithmetic. The
+stability bound is a direct triangle inequality valid on the entire
+open upper-half-plane product.
+
+Why this is not a counterexample to MOC
+
+The polynomial q is not a product of four affine factors in the individual
+variables. Before translation, p has leading coefficient1, no cubic
+terms, and nonzero quadratic terms. A product product_j(x_j+b_j) with
+leading coefficient1 and all cubic coefficients zero would have every
+b_j=0 and therefore all quadratic coefficients zero. Uniform translation
+preserves being such a product. Thus q is outside the product-input class
+used by MOC.
+
+In particular, a proof must retain the multiplicative relations among
+product-input coefficients. Replacing them merely by stability, or by
+semigroup closure of stability preservers, creates a false statement.
+An eventual positive state on the permutation-value algebra must use
+the rank-one product tensor or a comparably strong property. No such
+state is constructed here.
+
+Reproduction
+
+  python code/research/grace_semigroup_phase_identity.py
+
+The standalone exact verifier checks every minor coefficient of the
+Leibniz permutation law, all24 scores, (2), the dominance bound, and all
+orders in the three finite phase-design examples. It requires SymPy.

@@ -1,0 +1,110 @@
+Rank-eight moment tangents at two exact orthogonal mixers
+31 October2026
+
+Question tested. Can rank<=8 of the positive multiaffine moment kernel
+at two or more auxiliary crossratios locally recover the realSO4
+Leibniz-amplitude manifold? The answer at first order is no: there is
+one additional observable tangent direction at both exact examples.
+The strongest successful result here is that the actual amplitude
+vector is already an exposed extreme ray of each one-kernel PSD cone.
+Neither result is a global classification.
+
+Mixers and parameters
+
+Q59=(1/59)[[-25,46,16,22],[-46,-31,20,-2],
+           [-16,20,-11,-52],[22,2,52,-17]].
+R3701=(1/3701)[[999,2010,-2230,1920],[3090,849,660,-1730],
+               [1230,-2860,-2001,30],[1280,-870,2070,2649]].
+Both are exact real orthogonal matrices of determinant1. Let
+ c_pi=sgn(pi) product_i O_i,pi(i).
+The four tested auxiliary spectra are beta=(0,1,i,w) for
+ w=2+3i, -2+i, 3-2i, -1-3i.
+
+Definitions and exact method
+
+For fixed beta form the24x16 feature matrix F. The actual kernel
+ G0=F^*diag(c)F is PSD rank8. Let N span its kernel, and discard the
+four structural directions in kerF. Equivalently, select four
+independent columns of F N and call the resulting24x4 matrix V.
+The first-order rank-stratum tangent condition on a REAL24-vector v is
+ A_beta(v)=V^*diag(v)V=0.                                  (1)
+Real and imaginary upper-triangular entries give16 real linear rows.
+
+The stronger linear FACE condition, needed for two-sided affine
+perturbations in the PSD cone, is
+ F^*diag(v)V=0.                                            (2)
+It is not the same condition as (1).
+
+The actual scaled orbit tangent has seven independent columns:
+c itself, plus dc/dt for O(t)=exp(tK_ab)O over the six skew generators.
+They annihilate every A_beta exactly, using rational complex arithmetic.
+Only the scale direction must satisfy the stronger face condition.
+
+All upper/lower rank bounds are auditable. Tangent ranks are computed
+overQ using DomainMatrix rational RREF after rowwise denominator clearing.
+Modular elimination at prime1000000007 gives matching lower bounds.
+For full-face rank23, exact annihilation of nonzero c supplies the upper
+bound23, while the modular rank supplies the lower bound23.
+
+Results (identical at Q59 and R3701)
+
+Number of auxiliary parameters included:     1   2   3   4
+Combined rank of tangent constraints:       13  16  16  16
+Dimension of their real kernel:             11   8   8   8
+Combined rank of full-face constraints:     23  23  23  23
+Actual scaledSO4 tangent dimension:          7   7   7   7
+
+Each individual parameter has tangent rank13 and full-face rank23.
+The exact extra tangent is exported as a primitive integer24-vector in
+rank8_tangent_Q59.json and rank8_tangent_R3701.json. It is not the
+alternating-sign vector.
+
+More strongly, augmenting the tangent constraints by all70 ordinary
+common-minor incidence rows1_{pi(I)=J} gives rank24 modulo the stated
+prime, and hence rank24 overQ. Therefore the eight-dimensional tangent
+kernel injects into the fourteen-dimensional common-profile space.
+The additional direction cannot be discarded as an invisible MOC gauge.
+
+Exposed-ray consequence
+
+For the fixed-beta PSD cone K_beta={q real:G_beta(q)>=0}, consider the
+nonnegative exposing functional tr(N^*G_beta(q)N). If it vanishes,
+positivity implies G_beta(q)N=0. The exact rank23 of (2) leaves only
+q proportional to c. The proportionality coefficient must be
+nonnegative because G_beta(c) is nonzero PSD. Thus the actual c is an
+exposed extreme ray of K_beta. Since c also belongs to the intersection
+over all auxiliary beta, it remains an exposed ray of that smaller cone.
+This does not classify the other extreme rays of either cone.
+
+Second-order check and its limit
+
+For aC2 curve c(t)=c+t v+t^2 w+o(t^2) whose kernel ranks remain<=8,
+the Schur-complement equality requires
+ N^*G_beta(w)N=N^*G_beta(v)G0^+G_beta(v)N.                  (3)
+For PSD-only curves the equality is replaced by a PSD inequality, so
+failure of (3) would not by itself rule out a PSD curve.
+
+moc_qft_rank8_second_order.py evaluates the right side without a large
+pseudoinverse. Choose eight feature indices R for an invertible
+principal G0_RR. If Y=G_beta(v)N is in rangeG0, its quadratic form is
+Y_R^*G0_RR^{-1}Y_R. The tangent condition ensures that range inclusion.
+The actual SO4 generator direction is used as a sanity check.
+
+At both exact mixers, the exported transverse direction passes this
+second-order compatibility test across all four auxiliary spectra:
+augmenting the linear constraints by the right side increases no rank.
+Exact rational augmented ranks and matching modular ranks are recorded
+in rank8_second_order_Q59.json and rank8_second_order_R3701.json.
+This is a finite compatibility result; it proves neither existence of
+an actual rank-eight curve nor positivity at untested spectra.
+
+Files
+
+code/research/moc_qft_rank8_tangent.py
+code/research/moc_qft_rank8_second_order.py
+build/moc_qft_polynomial_tilt/rank8_tangent_Q59.json
+build/moc_qft_polynomial_tilt/rank8_tangent_R3701.json
+build/moc_qft_polynomial_tilt/rank8_second_order_Q59.json
+build/moc_qft_polynomial_tilt/rank8_second_order_R3701.json
+
+The full unrestricted MOC4/alln problem is not settled by these tests.

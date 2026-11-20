@@ -1,0 +1,176 @@
+ALGEBRAIC-GEOMETRY MOONSHOT: TWO EXACT OBSTRUCTIONS
+31 October 2026
+
+The first pass produced two precise results. The spectral cubic has no real
+hyperbolicity direction. Also, an actual unrestricted complex spectral point
+has an indefinite moment-kernel direction and admits no decomposition as a
+sum of two real critical points. These results rule out two global geometric
+shortcuts; they do not close an unresolved MOC4 contact family.
+
+Existing geometry and the rejected Pfaffian identification
+
+The repository already identifies the fourteen-coordinate cubic F with the
+HMSV skew cubic by an explicit invertible rational Fourier map. Its critical
+cone is the six-dimensional affine M8 cone; its projective singular locus
+has dimension five. The exact bridge, source checks and real-lift machinery
+are in HMSV_COMPATIBILITY.md, M8_PRODUCT_LINKAGE.md and
+CORANK_TWO_LIFT_EXACTNESS.md. None of this identification is new here.
+
+A linear equivalence to a hyperplane restriction of the six-by-six skew
+Pfaffian cubic is impossible. The latter's singular locus contains the
+rank-at-most-two skew matrices, whose projectivization is Gr(2,6), of
+dimension eight. Intersecting with any projective hyperplane leaves a
+seven-dimensional variety of singular points of the restricted cubic.
+That cannot equal M8's five-dimensional singular locus under an invertible
+fourteen-coordinate linear map. This dimension obstruction applies before
+any choice of real form or positivity cone.
+
+1. No real hyperbolicity direction for the actual cubic
+
+Theorem. Let F be the repository's real homogeneous cubic. There is no real
+direction e with F(e)!=0 for which every polynomial t->F(v+t e) has only
+real roots, for every real v.
+
+This statement is stronger than the archived obstruction to hyperbolicity
+of the projected nonic in one particular direction. It concerns the cubic
+itself and every possible direction. No literature-priority claim is made.
+
+The exact point p=ones14 satisfies grad F(p)=0. Let
+
+  E=H_F(p), Q(v)=v^T E v/2, Q(v,w)=v^T E w/2.
+
+Exact reconstruction gives rank E=4 and characteristic polynomial
+
+  t^10 (t^4+8t^3-42t^2-40t+201).
+
+The quartic has exactly two positive and two negative roots, certified by
+exact real-root counting. Thus Q has inertia (2,2,10). Cubic polarization
+at the singular point gives, identically,
+
+  F(z p+x)=F(x)+z Q(x).
+
+Fix any proposed direction e with A=F(e)!=0, and choose a real vector v.
+Write F(te+v)=A t^3+B t^2+C t+D. Then the restriction through z p+v is
+
+  A t^3+(B+z u)t^2+(C+2z w)t+D+z v0,
+  u=Q(e), w=Q(e,v), v0=Q(v).
+
+Its discriminant is a polynomial in z. Three cases exhaust all e.
+
+If u!=0, its z^4 coefficient is 4u^2(w^2-u v0). Since Q has two positive
+and two negative directions, the Q-orthogonal complement of a positive e
+retains a positive direction, and the complement of a negative e retains a
+negative direction. Choose v in that complement with u v0>0. Then w=0,
+so the leading coefficient is negative. Large |z| gives negative discriminant.
+
+If u=0 and e is not in the radical of Q, choose v with w!=0. The z^3
+coefficient is -32 A w^3, which is nonzero. One sign of sufficiently large
+z therefore gives negative discriminant.
+
+If e is in the radical, choose v with v0!=0. The z^2 coefficient is
+-27 A^2 v0^2<0. Again large |z| gives negative discriminant.
+
+In every case a real line parallel to e has a cubic with negative
+discriminant and therefore one real root and two nonreal conjugate roots.
+This contradicts hyperbolicity and proves the theorem.
+
+The proof uses only cubic polarization, inertia and the cubic discriminant.
+It does not invoke a hyperbolicity localization theorem or infer signs from
+samples. The exact verifier checks the three symbolic discriminant leading
+coefficients and produces one concrete line from each branch:
+
+  -5t^3+(93/4)t^2-(695/16)t+1255/64, discriminant -82240;
+  18t^3-6t^2-5t-1,                    discriminant -9432;
+  -12t^3-26t^2+29t-21,                discriminant -4871948.
+
+Each has exactly one real root by exact root counting. Their full direction
+vectors, offsets and singular-point shifts are recorded in the JSON.
+
+Consequently no invertible real coordinate change of F can supply a
+hyperbolicity cone. In particular a definite Hermitian linear determinant
+representation of this cubic is impossible. An indefinite determinantal
+representation or a restricted semialgebraic positivity argument is not
+excluded by this theorem.
+
+Reproduce:
+  python build/moc_extensive_20261031/ag_no_hyperbolicity.py
+Output: build/moc_extensive_20261031/ag_no_hyperbolicity.json
+
+2. An actual point in the indefinite moment chamber
+
+Take eta=1 and
+
+  a=(-i,-1+3i,3+i,0), b=(2,1+2i,-1-i,2-2i).
+
+Let w be its fourteen selected matching products, x=Re w and y=Im w.
+The exact vectors, in the established selected-permutation basis, are
+
+  x=(60,10,-16,-68,4,8,28,-48,-40,12,60,80,36,10),
+  y=(20,-80,88,24,-22,24,-16,32,8,-8,-80,10,2,-80).
+
+The verifier checks grad F(w)=0, H_F(x)y=0, grad F(y)=grad F(x)!=0, and
+rank H_F(x)=12. Both spectra are nonconcyclic and noncollinear: their
+generalized-circle determinants are -50 and -38.
+
+Choose the exact rational kernel basis K returned by the retained verifier,
+and define the moment map by
+
+  grad F(K(u,v))=B (u^2,u v,v^2)^T.
+
+It has rank two. Its one-dimensional symmetric kernel is spanned by
+
+  W=[ -621/50975  -1322/50975 ]
+    [ -1322/50975      1      ],
+  det W=-33403159/2598450625<0.
+
+The full affine line B(M)=grad F(x) is
+
+  M(t)=[ 167132/2039-621t/50975   12192/2039-1322t/50975 ]
+       [ 12192/2039-1322t/50975                 t        ],
+
+  det M(t)=-16129(t-6400)(2071t-900)/2598450625.
+
+Its two rank-one endpoints are both PSD:
+
+  M(900/2071)=(412,30)(412,30)^T/2071,
+  M(6400)=(2,-80)(2,-80)^T.
+
+The second is the supplied imaginary product vector's moment; explicitly
+y=K(2,-80). Thus the first endpoint supplies a second conjugate-critical
+decomposition, with imaginary part K(412,30)/sqrt(2071). There are precisely
+four signed real lifts on this rank-two chart.
+
+No point of the moment line is NSD. Such a point would require t<=0,
+where both determinant factors are negative and det M(t)<0. Therefore x
+cannot be the midpoint of two real critical points. Indeed if x=(z1+z2)/2
+with real grad F(z1)=grad F(z2)=0, then v=(z1-z2)/2 satisfies
+H_F(x)v=0 and grad F(v)=-grad F(x). The negative rank-one moment of v would
+be an NSD solution of the displayed moment equation, a contradiction.
+
+This is a counterexample to universal definiteness of the moment-kernel
+direction on actual data, and to a universal replacement of conjugate
+critical secants by split real critical secants. The earlier repository
+example with definite W has both kinds of decomposition; this actual
+indefinite example has only conjugate decompositions. A real invariant-cone
+point need not come from real spinors, so the no-real-critical-pair statement
+is stronger than merely excluding real spectra in such a replacement.
+
+The example does not show failure of MOC. It isolates a real geometric
+distinction that any global argument through the critical/secant variety
+must preserve. The PSD feasibility test remains exact; it simply has a
+bounded feasible interval here rather than the definite-direction behavior.
+
+Reproduce:
+  python build/moc_extensive_20261031/ag_indefinite_actual.py
+Output: build/moc_extensive_20261031/ag_indefinite_actual.json
+
+What this changes for the unrestricted attack
+
+The 35 critical-metric inequalities and the exact rank-two lift test cannot
+be replaced by one hyperbolicity cone for F, nor can all actual points be
+moved to the earlier definite/split-real chart. The useful remaining target
+is a certificate that respects both real moment chambers and couples PSD
+lift feasibility to the support objective. This pass supplies no such
+global positivity certificate and no additional six-, seven-, or eight-
+contact closure. Its two counterexamples prevent those omitted hypotheses
+from entering a purported unrestricted proof.

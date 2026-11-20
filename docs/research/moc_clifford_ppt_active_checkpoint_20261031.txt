@@ -1,0 +1,274 @@
+Active unrestricted MOC checkpoint: Clifford positivity and auxiliary PPT
+31 October 2026
+
+The goal remains ACTIVE. No unrestricted MOC4 or all-n proof, and no MOC
+counterexample, has been obtained. The target is the original complex
+permutation-product convex hull, with no enlargement. This checkpoint
+continues moc_active_global_checkpoint_20261031.txt.
+
+1. A complete auxiliary theorem, not a conjectural numerical kernel
+
+For every real orthogonal O4 and every complex b, let
+ c_pi=sgn(pi) product_i O_i,pi(i)/det O,
+ f_I(pi)=product_{i in I} b_pi(i),
+ G_IK=sum_pi c_pi conjugate(f_I(pi)) f_K(pi).
+Then G is PSD and rank at most8. For B=O diag(b) O^T, its Gram vectors
+are the even Clifford vectors
+ v_I=sum_{|J|=|I|}det B[I,J] reverse(e_I)e_J,
+with ONLY their grade-four coefficient conjugated. The twist matters.
+
+The proof covers all complex b, including zero and repeated entries,
+and either sign of det O. Nine base cases reduce to ordinary identities
+in two independent symmetric matrices B,C. Six residuals vanish; three
+are explicit multiples of BC-CB. Jacobi complementation and a 70-sign
+identity give all256 entries. Continuity handles singular B.
+
+Full proof: docs/research/moc_fixed_b_clifford_kernel_20261031.txt
+Exact symbolic verifier: code/research/moc_fixed_b_clifford_kernel.py
+Output: build/moc_fixed_b_clifford_kernel/exact.json
+Root replay: PASS all nine identities,70 signs,256 case types,3 examples.
+Independent review and coefficient audit:
+ docs/research/moc_kernel_positivity_independent_audit_20261031.txt
+ code/research/moc_twisted_gram_independent_audit.py
+Root replay: PASS256 coefficients each for generic/singular normal B;
+nonnormal negative control fails87 coefficients as expected.
+
+Lean now accepts all nine actual determinant/Clifford residual identities,
+their commuting-matrix consequence, and finite complex Gram positivity.
+ code/lean/MocCliffordKernel.lean
+ docs/research/moc_clifford_kernel_lean_status_20261031.txt
+ build/lean0710/moc_clifford_kernel_compile.log
+Only standard propext, Classical.choice, Quot.sound axioms are reported.
+The orbit transport, Jacobi complement, continuity and original orthogonal
+row bridge are proved in the mathematical note, not yet formalized in Lean.
+This is not a Lean proof of full MOC.
+
+The compact scalar consequence is
+ det N=|det(A+B)|^2
+       +sum_{i<j}|(a_i-a_j)adj(A+B)_ij|^2
+       +|Pf([A,conjugate(B)])|^2,
+for diagonal A and complex symmetric normal B in dimension4, with N as
+in the independent audit. The general joint coefficient kernel is stronger
+than separate cofactor-plane inequalities.
+
+2. A separate all-dimensional real-orthogonal variance theorem
+
+For real orthogonal O and any complex rank-at-most-two M,
+ det(O)det(O hadamard |M|^2) >= |det(O hadamard M)|^2.
+ docs/research/moc_signed_scalar_variance_20261031.txt
+ code/research/moc_signed_scalar_variance_20261031.py
+Root replay PASS. The proof uses the real symmetric part H of a real
+matrix N, det N>=det H, and det H>=|det C|^2. Complex unitary U only gives
+the modulus inequality, not real-part positivity. The exact Hermitian
+control has det N=-13248-36864i and |det C|^2=576. Do not transfer this
+nonlinear moment using the common-minor-profile reduction.
+
+3. The direct support-SOS bridge is exactly false
+
+At the actual spectra
+ a=(0,100,-214+146i,269-294i),
+ b=(-207-148i,-28-84i,-59+82i,83+104i), eta=-25+i,
+the nonnegative support gap has unique lexicographic contact index1.
+It is outside the full fixed-b multiaffine SOS cone. More strongly it
+is outside the sum of fixed-b SOS, inverse-permutation fixed-a SOS, and
+all34 ordinary singleton/complementary-two-minor rays.
+
+Exact optimizer-independent verifiers:
+ code/research/moc_multiaffine_sos_obstruction.py
+ code/research/moc_two_sided_sos_obstruction.py
+Both root replays PASS. The combined rational dual has pairing
+52996832583341777/12500000>0 and22 strict Gershgorin margins; ordinary
+ray inequalities are also checked exactly. This refutes a proof method,
+not MOC. Adding common Mobius charts of the same b does not enlarge
+its multiaffine function space.
+
+4. Auxiliary spectra give a larger universal cone
+
+Use unrelated auxiliary beta(w)=(0,1,i,w) and write its feature vector
+f_pi(w)=f_pi,0+w f_pi,1. Let j_pi stack the two16-vectors. The32-dimensional
+jet moment kernel need not be PSD. The Clifford theorem instead gives
+H=P+Q^(partial transpose), P,Q PSD, rank P<=7, rank Q<=1.
+The seven ordinary Clifford channels are affine-holomorphic in w; the
+pseudoscalar channel is affine-antiholomorphic. This gives a valid PPT
+cost certificate with24 linear cost equations and two matrix PSD tests.
+
+Proof: docs/research/moc_qft_auxiliary_ppt_jet_20261031.txt
+Jet audit: code/research/moc_qft_ppt_jet_exact.py
+The group-algebra feature span W has dimension14, not32.
+
+The QFT lane subsequently proved a stronger reduced sufficient cone:
+only T_W>=0 on W14 and partial-transpose positivity of its E4 corner
+are needed. Here E=C2 tensor Boolean[22], and the feature[22] basis has
+pair coefficients complementary-equal with v01+v02+v03=0. The coCP
+channel is supported in this E4; so are its partial transpose and the
+possible indefinite part of H. The full proof is in Section5 of the
+auxiliary PPT note; exact artifact ppt_reduced_cone.json and verifier
+code/research/moc_qft_ppt_reduced_cone.py passed root replay. No
+off-diagonal irrep blocks may be discarded. The joint H has rank<=11
+and negative index<=1, with its only possible negative channel on E4.
+
+The reduced cost cone is closed: the24 feature projectors form a positive
+frame on W, so bounded nonnegative costs bound trace(T), and positive
+ordinary rays also bound their weights. QFT has proved it equals the
+closure of all auxiliary-crossratio SOS costs, using the primary
+Horodecki 2x2 PPT/separability theorem and the rank12 fixed-parameter
+product-projection identity. The displayed witness minor of F(w) is
+(-2+2i)w^3(w-1)^3(w-i)^5, so generic rank12 is exact. Row and column
+relabelings preserve this closed cone. Inversion also preserves it:
+the E4 map is (A tensor B)SWAP. The inversion verifier/artifact are
+moc_qft_ppt_inversion_symmetry.py and ppt_inversion_symmetry.json.
+Thus two inverse orientations improve numerical conditioning but do
+not enlarge the CLOSED auxiliary cone; older sampled cones differ.
+
+An exact invisible PPT regularizer is also available:
+ build/moc_qft_polynomial_tilt/ppt_invisible_regularizer.json
+It supplies T0=LL*, T0PT=LptLpt*, jetL=0, with ranks18 and19 and an
+exact13-dimensional kernel of T0PT. Product nullvectors at w=0,1,i,infinity
+generate it. This explains why free fill can improve full-PPT searches.
+
+5. Numerical discovery and an independently verified exact certificate
+
+Root numerical search implementation:
+ code/research/moc_auxiliary_ppt_jet_probe.py
+No external SDP package is installed; it uses Dykstra or product-space
+Douglas-Rachford projections onto the affine contact face, PSD cone and
+parameter partial-transpose PSD cone, together with ordinary rays.
+It stores inputs, final matrices, ordinary weights, projection states,
+and iteration checks every100 steps. An iteration limit is not an
+infeasibility certificate.
+
+For the hard actual seed above:
+ one orientation converged at11800 iterations:
+  normalized cost residual1.3824e-11, PSD minimum~-2.2e-16,
+  PT minimum~2.9e-19, contact norm5.9e-16, weights>=1.59e-7.
+ two orientations converged at7900 iterations:
+  cost residual2.23e-16, PSD minimum~-3e-17, PT minimum~8e-18,
+  contact norm1.61e-16, weights>=2.49e-7.
+Reports/NPZs:
+ build/moc_auxiliary_ppt_jet/nonordinary_seed_one_sided_dr_30000.*
+ build/moc_auxiliary_ppt_jet/nonordinary_seed_two_sided_dr_10000.*
+The long plateaus were NOT evidence of infeasibility: both eventually
+converged abruptly. These numerical passes alone are not proofs.
+
+The one-sided certificate is NOW EXACTLY VERIFIED, including root replay:
+ data/certificates/moc_exact_ppt_jet_certificate.json
+ code/research/moc_exact_ppt_jet_certificate.py
+ docs/research/moc_exact_auxiliary_ppt_support_20261031.txt
+ build/moc_auxiliary_ppt_jet/exact_nonordinary_support.json
+Default verification needs SymPy only, never an optimizer or tolerance.
+It checks24 exact cost identities,27 strictly positive rational ordinary
+weights,13 positive exact contact-face Gaussian-rational LDL pivots and
+4 positive exact exceptional partial-transpose pivots. The stored proposal
+has denominator10^12; exact contact projection and affine correction are
+part of the verified recipe. An independent agent also audited the
+conventions and verifier (moc_exact_ppt_jet_independent_audit_20261031.txt).
+This proves the ONE stated eta support for all U4 via the established
+common-profile bridge, not every support direction or unrestricted MOC.
+
+Kernel_positivity_audit ran15 further full-PPT cases with a20k iteration
+limit:10 met all numerical criteria, including8/9 seed hull edges.
+Five were unresolved in that initial run, including seed edge[7,20].
+These were not failures of MOC or infeasibility proofs. Raw data are in
+build/moc_auxiliary_ppt_jet/campaign_all_summary.json and adjacent files.
+Repeating in the stronger14/4 cone and using continuation/warmstarts
+resolved ALL15 cases: all9 seed edges,4 fresh nonordinary perturbations,
+2 triangle-boundary cases. The slowest needed28400 DR cycles; another
+warmstart solved in200. The independently recomputed unclamped actual
+gaps meet1e-9 tolerance (largest violation9.816e-10). All inputs and
+2362 iteration-history rows are saved:
+ docs/research/moc_auxiliary_ppt_campaign_20261031.txt
+ build/moc_auxiliary_corner_ppt_jet/campaign_all_final_audit.json
+ build/moc_auxiliary_corner_ppt_jet/campaign_all_raw_history.csv
+ code/research/moc_auxiliary_corner_ppt_probe.py
+
+A new SciPy-only Phase-I logdet solver now finds strict candidates for
+the hard costs cold in39-53 Newton steps, around1.6-2.5 seconds:
+ code/research/moc_ppt_logdet_solver.py
+ code/research/moc_ppt_logdet_campaign.py
+Its analytic gradients/Hessians passed finite-difference checks; root
+and kernel_auditor reviewed the matrix derivatives independently. The
+auditor requested explicit full-PSD/contact checks and zero-ray handling;
+the owner reports these are now included.
+
+The fresh32-pair campaign found numerical certificates for249/249 ALL
+hull-edge costs:12 Gaussian-integer pairs,8 wide-scale,6 near-repeated,
+6 fresh nonordinary-seed perturbations.248 candidates are strict on the
+contact face and E4 corner; one is a boundary candidate. Exact integer
+product clouds, hulls, Gaussian-integer normals, gaps and contact sets
+are saved in build/moc_ppt_logdet/fresh32_inputs.json, with all249 NPZs,
+logs and reports and fresh32_summary.json. Walltime8.64 seconds on4workers.
+Independent audit has NOW PASSED all249, rebuilding Gaussian-integer
+costs with exact rational arithmetic, the jet, ordinary rays and literal
+partial-transpose indexing separately:
+ code/research/moc_ppt_logdet_independent_audit.py
+ build/moc_ppt_logdet_audit/independent_audit.json
+Largest five-criterion violation is1.4433e-15; zero false strict claims.
+The full analytic Hessian was independently matched to a whitened
+Hermitian Gram with error<=2.14e-14 for197/366 variable versions.
+The formal nonnegative f34 control is correctly rejected: its exact
+orthogonal witness is -3/98, normalized -3/196; it has no asserted
+actual spectral lift. This control's mixer is the documented Cayley
+witness, NOT Q59. Numerical feasibility remains distinct from exact
+universal containment. Root visually inspected fresh32_diagnostics.png.
+The margin/gap trend partly reflects barrier stopping and is not a
+proved mathematical bound.
+
+6. Data inspected and work continuing
+
+Root generated and visually inspected
+ build/moc_auxiliary_ppt_jet/kernel_and_support_search.png
+using code/research/moc_clifford_ppt_progress_plot.py.
+The left panel shows eight numerical zero eigenvalues and eight positive
+ones for a generic kernel. The right panel shows how the support-search
+residuals differ by algorithm and eventually drop to numerical precision.
+The plot explicitly separates exact kernel theory from numerical search.
+
+Other independent work: variational_closure verified the primary paper
+arXiv2607.12431v2, then proved its rank-two l4 pivot curvature does not
+transfer directly to MOC: all16 Walsh pivots have l4 curvature+4 but
+MOC curvature -2r(r^2-1)<0 for r>1. It derived denominator-free mixed
+Schur conditions instead. Its subsequent exact fake-functional construction
+shows that even both fixed-actual-a/b PSD kernels plus all34 ordinary
+marginals can coexist with a negative actual support gap; its kernels
+have rank12, unlike actual rank8. Full row KKT and balance are therefore
+insufficient without actual rank structure or mixed/column conditions.
+ docs/research/moc_joint_row_kernel_minimax_20261031.txt
+ code/research/moc_two_positive_kernel_relaxation.py
+
+Grace_operator_bridge is working analytically on the stronger possible
+bridge: every pointwise nonnegative complex-secant N9=0 cost might lie
+in the14/4 cone. Both old nonactual formal obstructions and one strict
+full13-budget formal point have numerical certificates in this cone.
+This is finite evidence only. Literature_breakthrough is checking whether
+Kovacec1999's false complex-bilinear extension supplies a counterexample
+to this stronger hypothesis; its abstract alone does not identify the
+necessary hypotheses. Positive_representation is seeking an analytic
+certificate for every actual spectral cost. QFT is finishing the cone
+structure note, then testing rank8 moment-variety tangent constraints
+across two auxiliary crossratios. Kernel_auditor is independently auditing
+the new solver and249 candidates, including a known formal negative
+control. Sdp_interior owns the logdet engine and data campaign.
+That universal containment, or another global argument, is still required
+for unrestricted MOC4. Numerical feasibility on these cases is not a
+substitute for it. The all-n problem is not closed either.
+
+Latest analytical updates and work ownership
+
+Kernel_auditor and sdp_interior completed their audit/campaign work
+described above; both are available for followups. QFT and
+positive_representation continue the global cone/actual-cost analysis;
+Grace continues the complex-secant bridge; literature continues the
+primary Kovacec source audit. No root-owned shell processes remain live.
+
+The bare f34 formal counterexample is NOT on N9=0: exact full-cap
+calculation gives F(f34)=-1,Q(f34)=-1,h=1 and N9(f34)^2=1. Thus it
+does not immediately refute the stronger secant bridge. Grace is
+searching negative-cost simplices for actual nonic roots.
+
+QFT's initial exact rank-variety tangent test at Q59 gives rank13 for
+one auxiliary crossratio,16 for two, leaving8 linearized c dimensions
+versus7 for scaled actual SO4 weights. Further crossratios/generic R
+are pending. Fixed PSD-face equations deltaG N=0 instead have exact
+rank23 at one crossratio, exposing Q59 c as an extreme ray of that
+fixed-b PSD moment cone. Do not confuse face and rank-variety tangents
+or infer a global characterization from these ranks.

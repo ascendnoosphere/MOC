@@ -1,0 +1,200 @@
+A finite PPT cone from the auxiliary-crossratio Clifford kernel
+31 October 2026
+
+This is a universal positivity mechanism in dimension four, conditional
+only on the independently proved twisted-Clifford identity. It does not
+establish that every actual MOC support cost belongs to the cone below.
+It strictly avoids assuming a positive cross-parameter kernel. A
+single-fixed-b SOS approach has already been refuted by the exact
+nonordinary spectral obstruction in moc_multiaffine_sos_obstruction.py.
+
+1. Auxiliary parameter and finite jets
+
+Choose auxiliary numbers beta(w)=(0,1,i,w), independent of the actual a,b.
+For every permutation pi define the sixteen-vector
+ f_pi(w)_I=product_{i in I} beta(w)_{pi(i)}, I subset{0,1,2,3}.
+Since every pi uses the fourth beta value at most once in any subset,
+ f_pi(w)=f_pi,0+w f_pi,1.
+Let the 32-vector j_pi stack f_pi,0 and f_pi,1. For a real orthogonal O,
+let c_pi be its signed Leibniz amplitudes. Define the joint jet matrix
+ H_O=sum_pi c_pi conjugate(j_pi) j_pi^T.
+This Hermitian matrix need not be PSD. No claim of that form is used.
+
+2. Exact decomposability
+
+Set B(w)=O diag(0,1,i,w) O^T. This is an affine rank-one update of B(0).
+Consequently every square minor of B(w) is affine in w, by determinant
+multilinearity: selecting the rank-one update in two columns gives zero.
+
+The twisted-Clifford Gram factor has eight columns. Its scalar and six
+bivector columns are minors of B(w), hence have the form
+ V_h(w)=V_h,0+w V_h,1.
+Its pseudoscalar column is the conjugate of a complementary two-minor,
+and thus has the form
+ V_a(w)=V_a,0+conjugate(w) V_a,1.
+
+Stack the holomorphic coefficient matrices into L=(V_h,0; V_h,1), and
+the antiholomorphic coefficient vectors into r=(V_a,0; V_a,1). Put
+ P=conjugate(L) L^T >=0, Q=conjugate(r) r^T >=0.
+The latter has rank at most one; P has rank at most seven. Comparing
+coefficients of 1,w,conjugate(w),|w|^2 in the universal kernel identity
+gives the exact finite-dimensional identity
+ H_O=P+Q^{T_parameter}.                                      (J)
+The partial transpose transposes the two-by-two block parameter index,
+leaving each 16-by-16 feature block unchanged. This operation exchanges
+the off-diagonal blocks. It is the antiholomorphic pseudoscalar channel,
+not a positive joint kernel, that accounts for the second term in (J).
+
+3. A new finite semidefinite sufficient cone
+
+Let T be a 32-by-32 Hermitian matrix satisfying
+ T>=0 and T^{T_parameter}>=0.                               (PPT)
+Define a real permutation cost
+ g_pi=j_pi^T T conjugate(j_pi).
+Then for every real O4,
+ sum_pi c_pi g_pi=tr(H_O T)
+                 =tr(P T)+tr(Q T^{T_parameter})>=0.          (K)
+Both traces are nonnegative because their two factors are PSD. This is
+an elementary finite-matrix proof; no separability theorem is invoked.
+The transpose/conjugate convention can equivalently be changed by
+replacing T with conjugate(T), preserving both PSD constraints.
+
+Any actual supported spectral gap g lying in this cone is nonnegative
+on every real orthogonal mixer. Its common-minor expansion and the
+proved SO4-to-U4 profile convexification then give the full all-unitary
+support inequality for those actual spectra.
+
+The cone contains every finite sum of auxiliary-w SOS costs. Indeed
+such a term has T=vv^* tensor S for a two-vector v representing w and
+a PSD feature matrix S, up to the displayed conjugation convention.
+These matrices and their partial transposes are PSD. Their sums remain
+PPT. The PPT cone can be larger than the separable cone; whether this
+enlargement covers an additional actual spectral family is a separate
+question requiring a certificate, not a consequence of the construction.
+
+There are only 24 cost equalities and two finite PSD constraints. At a
+permutation contact with g_pi=0, PSD implies T conjugate(j_pi)=0;
+this gives an exact linear face reduction before numerical discovery.
+Normalization of the auxiliary triple covers the other generic triples
+because common Mobius changes preserve the squarefree feature space.
+This does not justify throwing away singular feature-rank boundaries in
+a proof of universal actual-cost containment.
+
+4. Exact checks and present scope
+
+The symbolic verifier moc_qft_twisted_clifford_gram.py checks all256
+kernel entries, all2716 expanded coefficient terms, and the compact
+eight-amplitude generating formula for fixed exact mixers Q59 and R3701
+and arbitrary independent complex beta and conjugate-beta variables.
+The universal proof over symmetric commuting B,barB is supplied by the
+degree2_symbolic agent's separate normality-commutator verifier.
+
+moc_qft_ppt_jet_exact.py independently forms all1024 entries of H_O and
+verifies (J) for Q59 and R3701, using rational complex arithmetic and
+explicit seven-column and one-column PSD factorizations. These example
+checks audit the jet bookkeeping. Universal validity of (J) follows
+from the universal twisted-Clifford identity and the rank-one affine
+update argument in Section2, not from the number of checked examples.
+
+The remaining full-closure obligation is unchanged: prove that every
+actual spectral support cost in unrestricted MOC4 has a certificate in
+this or another established universal positivity cone, or find a different
+complete argument. No finite search or tested subset proves that claim.
+
+5. Exact reduction to a 14-dimensional PSD matrix and a 4-dimensional
+   partial-transpose corner
+
+There is a substantial simplification of (PPT). Define the real
+two-dimensional feature subspace E_22, supported only on size-two subsets,
+by the four equations
+ sum_{I: |I|=2, i in I} v_I=0, i=0,1,2,3.
+The four-by-six incidence matrix has rank four. For example, an orthogonal
+basis before normalization is
+ e1: v01=v23=1, v02=v13=-1, v03=v12=0;
+ e2: v01=v23=v02=v13=1, v03=v12=-2.
+Their squared norms are 4 and12. This is the [22] representation of S4.
+Let E=C^2_parameter tensor E_22, with dimension four.
+
+For ANY symmetric matrix C, without requiring normality, the pseudoscalar
+Clifford column is supported on E_22. Its entries are signed complementary
+two-minors. They satisfy v_I=v_complement(I) and
+ v01+v02+v03=0.
+The last identity follows immediately by expanding the three minors:
+ -(C02 C13-C03 C12)+(C01 C23-C03 C12)
+ -(C01 C23-C02 C13)=0.
+Consequently the antiholomorphic jet vector r in Section2 lies in E.
+Partial transpose preserves E, since its feature basis is real and does
+not depend on the parameter. Thus both Q and Q^{T_parameter} are supported
+on E.
+
+Let W=range(conjugate(J)^T), where J has rows j_pi^T. Exact elimination
+gives dimW=14 and E subset W. The joint matrix H_O is supported on W by
+its definition. Therefore P=H_O-Q^{T_parameter} is also supported on W.
+
+It follows that a cost has a universal positivity certificate whenever
+there is a Hermitian operator T supported on W satisfying
+ T>=0, PT_parameter(E^* T E)>=0.                            (R)
+Here E can be any real feature basis of the displayed four-dimensional
+space, ordered as parameter0:e1,e2; parameter1:e1,e2. The second condition
+is just a four-by-four PSD constraint. The proof is exactly the trace
+argument (K): the first constraint pairs positively with P, and the
+second with Q. No positivity of the remaining partial-transpose blocks
+is required. This cone contains the image of the original32PPT cone.
+
+Using a full-column-rank coordinate matrix N for W, write T=N S N^*.
+Then (R) is the finite pair of conditions
+ S>=0 (14-by-14),
+ PT_parameter((E^*N) S (N^*E))>=0 (4-by-4).
+This is not a block-diagonal ansatz: all cross terms among the14
+coordinates remain free. The second constraint transposes only the
+two-dimensional parameter factor of the four-dimensional corner.
+
+The exact verifier moc_qft_ppt_reduced_cone.py checks the grade-four
+support identity for all ten independent entries of a symmetric matrix,
+and exports N,E and J to ppt_reduced_cone.json. It also supplies conjugate
+N for the equivalent physical convention g_pi=j_pi^*Tj_pi,
+H=sum c_pi j_pi j_pi^*. Global conjugation preserves PSD, partial
+transpose, and the real subspace E, so the conventions are equivalent.
+
+The same decomposition proves two universal spectral bounds on H_O:
+ rank(H_O)<=11; number of strictly negative eigenvalues<=1.
+Indeed rankP<=7. A rank-one operator on two qubits has partial-transpose
+eigenvalues s1^2,s2^2,s1s2,-s1s2 in Schmidt coordinates, so Q^PT has
+rank at most4 and at most one negative eigenvalue. Adding PSD P cannot
+increase its negative index. This identifies a single two-qubit
+entanglement channel as the obstruction to positivity of the full jet.
+
+6. Invisible PPT regularizer and a finite-completion lemma
+
+There is also an exact separable, cost-invisible matrix T0 with
+ rankT0=18, rank(T0^PT)=19.
+For w=0,1,i choose a basis f of kerF(w), whose dimension is7 at each
+of these repeated-value parameters. The product vectors
+ p=(1,w) tensor f
+belong to kerJ. They span the whole18-dimensional kerJ. Adding the
+four vectors (0,1) tensor f for f in kerF1 raises the span of their
+partial-conjugated product vectors from18 to19. A generic parameter
+w=2+3i changes neither rank. The sum T0=sum p p^* is PSD, PPT, and has
+zero cost at every permutation. Its partial transpose is the explicit
+sum of the partial-conjugated product-vector projectors.
+
+moc_qft_ppt_invisible_regularizer.py verifies all these statements exactly
+and exports factors L,Lpt and a basis K of ker(T0^PT) to
+ppt_invisible_regularizer.json. The dimensions are32-by29,32-by29 and
+32-by13, respectively. T0=L L^*, T0^PT=Lpt Lpt^*, and J L=0.
+
+For any PSD T with exact desired costs, if D=K^*T^PT K is positive
+definite, adding a sufficiently large positive multiple of T0 produces
+a finite PPT certificate with exactly the same costs. To obtain an
+explicit bound, choose a basis Y of range(T0^PT), set
+ C=Y^* T0^PT Y>0,
+ M=Y^*T^PT Y-Y^*T^PT K D^{-1} K^*T^PT Y.
+Then tau=1+tr(C^{-1}M C^{-1}M) is a nonnegative rational sufficient
+choice when all data are rational. This follows from the Schur
+complement and ||C^{-1/2}M C^{-1/2}||op<=sqrt(tr(...))<=1+tr(...).
+
+If D is only PSD, finite completion additionally requires
+ kerD subset ker(Y^*T^PT K).
+Compressed PSD alone describes a closure and does not by itself prove
+that a finite tau exists. The reduced14+4 cone in Section5 avoids this
+extension issue entirely.

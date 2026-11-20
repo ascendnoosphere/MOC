@@ -1,0 +1,140 @@
+Exact root-pair geometry for a global flag-space maximum principle
+31 October 2026
+
+Scope. The identities below hold for arbitrary n, arbitrary complex spectra,
+and every physical unitary flag. They supply a global flat-orbit propagation
+mechanism. They do not exclude an above-hull stationary maximum and do not
+prove unrestricted MOC.
+
+1. The determinant is affine on every elementary SU(2) Bloch sphere
+
+Write C=U*DaU+Db and d(U)=det C. Fix i,j and delta=bj-bi. Let Pij swap these
+two eigenvalues of Db, keeping the eigenvectors U fixed, and set
+
+  dij=d(U Pij),       t=det C[complement{i,j},complement{i,j}].
+
+The exact polynomial identity is
+
+  dij-d(U)=delta(adj(C)ii-adj(C)jj)-delta^2 t.                 (1)
+
+No inverse or nonsingularity hypothesis is needed. If a two-dimensional
+complement is invertible, the Schur determinant formula reduces the claim
+to a 2-by-2 determinant. There the variable block is a fixed scalar matrix
+plus a fixed multiple of n.sigma, with n on the unit sphere; its determinant
+is affine in n because det(n.sigma)=-|n|^2=-1. Polynomial continuation removes
+the invertible-complement assumption. The same proof works for every n.
+
+For K=Eij-Eji, writing c=cos theta and s=sin theta gives
+
+  d(U exp(theta K))
+   =c^2 d(U)+s^2 dij+cs delta(adj(C)ji+adj(C)ij).              (2)
+
+For K=i(Eij+Eji), the corresponding formula is
+
+  d(U exp(theta K))
+   =c^2 d(U)+s^2 dij+i cs delta(adj(C)ji-adj(C)ij).            (3)
+
+Every phase between these two axes is covered by their linear combination.
+Thus the entire pair orbit has an affine Bloch-sphere determinant image.
+For generic spectra this image is a filled ellipse in the complex plane.
+
+2. An exact global averaging/Laplacian identity
+
+Normalized Haar averaging on the elementary pair SU(2) kills the Bloch
+coordinates and therefore gives the positive identity
+
+  integral_SU2 d(U R) dR = (d(U)+dij)/2.                     (4)
+
+The paired infinitesimal generators obey
+
+  (Kreal^2+Kimag^2)d(U)=4(dij-d(U)).                         (5)
+
+For invertible C, X=C^-1, and zeta=eta detC, the support version is
+
+  Hreal+Himag
+   =4 Re zeta[delta(Xii-Xjj)-delta^2 det X[{i,j},{i,j}]].     (6)
+
+Jacobi's complementary-minor identity makes (6) identical to (1) and (5).
+In particular this is valid at the original physical U. It neither changes
+the spectra nor replaces the unitary by a contraction.
+
+Equation (4) is a genuine positive local expectation. Iterating unconditioned
+pair averaging only produces the symmetrized determinant, not a pointwise
+positive law on permutation products. Conditioning its continuous process
+on an arbitrary final unitary is an additional step; it has not been proved
+to preserve a positive permutation representation. A spectrum-independent
+claim of that form would conflict with the existing common-profile law
+obstructions.
+
+3. Stationary supports are exactly sinusoidal on a whole pair orbit
+
+Let f(U)=Re eta d(U). At a stationary flag both transverse coefficients in
+(2)-(3) have zero real support. Consequently, for either axis and indeed
+every pair SU(2) rotation,
+
+  f(U exp(theta K))=f(U)+(f(U Pij)-f(U))sin(theta)^2.          (7)
+
+Thus a positive pair Hessian gives an actual finite ascending move. A zero
+pair Hessian gives a stronger conclusion than second-order flatness:
+the entire elementary SU(2) orbit has exactly the same support value.
+
+At a global maximum, every point of such a flat orbit is itself a global
+maximum. Hence its gradient vanishes and its full Hessian is negative
+semidefinite everywhere on that orbit. This propagates all maximum
+constraints, and permits subsequent tests at any point of the flat orbit.
+It is a concrete possible ingredient for a source-dependent degenerate
+diffusion or a finite sequence of flat moves followed by an ascent.
+
+If the flat root orbits, including the additional flats obtained after
+such moves, generate all of SU(n), f would be constant on the flag space.
+For nonconstant f a trapped maximum must therefore have a genuinely smaller
+flat-orbit saturation. Excluding an above-hull trapped maximum still needs
+an actual-source argument. No graph-connectivity conclusion is assumed.
+
+4. What positivity must still prove
+
+At any stationary flag with invertible C and distinct bi,bj, first order
+stationarity is equivalently
+
+  zeta delta Xji = -conjugate(zeta delta Xij).               (8)
+
+In particular |Xij|=|Xji| and
+
+  zeta^2 delta^2 Xij Xji=-|zeta delta Xij|^2 <=0.
+
+The normality of U*DaU=C-Db remains essential. In entries it gives
+
+  [C,C*]ij=(conjugate(bj)-conjugate(bi)) Cij
+                         -(bj-bi) conjugate(Cji).          (9)
+
+A sufficient global theorem would show that (8)-(9), full maximum
+conditions, and
+
+  f(U)>max_pi Re eta product_i(ai+b_pi(i))
+
+force an ascending direction or flat-orbit propagation that reaches one.
+Neither (8) nor (9) alone supplies this conclusion. Positive weights on
+the fixed paired traces in (6) cannot manufacture positivity when all
+their individual swap gaps are nonpositive; mixed Givens directions or
+propagated frames may be necessary. Harmless noncommuting stationary
+points must not be mistaken for counterexamples to this above-hull target.
+
+For comparison, no smooth nonconstant globally subharmonic function exists
+on a compact flag under a nonsingular elliptic operator. Any proposed
+absorbing diffusion must use a noncompact cell, a degenerate/singular
+operator, or a source-dependent correction whose sign is actually proved.
+Equations (4)-(9) do not yet construct it.
+
+5. Exact replay
+
+  python3 code/research/moc_global_root_pair_affine.py
+
+The checker retains all16 independent entries of C and independent delta,
+checks both complete rotation identities modulo c^2+s^2=1, and independently
+checks the paired determinant Frechet Hessian after clearing its denominator.
+It records build/moc_global_root_pair_affine_20261031.json.
+
+The companion moc_global_spin6_hessian.py computes the complete12-dimensional
+flag gradient and all78 symmetric Hessian entries, including mixed roots.
+The remaining problem is a global source-dependent sign/propagation theorem,
+not an unverified replacement of the determinant by a standard moment map.

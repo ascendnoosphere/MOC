@@ -1,0 +1,122 @@
+Logdet discovery for the reduced MOC positivity cone
+31 October 2026
+
+Scope
+
+This is numerical certificate discovery for the independently established
+14-dimensional PSD / 4-dimensional partial-transpose-corner cone. It does
+not prove unrestricted MOC, and a failed or limited run is not an
+infeasibility certificate. The returned matrices are retained so they can
+be audited independently and, where useful, rounded into exact proofs.
+
+Implementation
+
+ code/research/moc_ppt_logdet_solver.py
+
+The reduced physical cost convention is g_pi=j_pi^* T j_pi. At exact zero
+contacts, a basis N of the orthogonal complement of the contact vectors
+enforces T=N S N^*, with S Hermitian. Usually S is13-by-13 for a vertex
+support or12-by-12 for a two-contact edge support. All cross coordinates
+remain free. The exceptional corner is C(S)=PT((N S N^*)[0:4,0:4]).
+
+The unknowns are all real Hermitian coordinates of S, the nonnegative
+ordinary-ray weights w, and a real Phase-I shift t. Cost equations
+ A(S,w)=g
+are maintained through every Newton step. QR row selection removes only
+dependent cost equations; all24 original costs are checked afterward.
+The barrier minimizes
+
+ t - mu [logdet(S+t I)+logdet(C(S)+t I)+sum_k log(w_k+t)].
+
+For two orientations, both S and corner logdet terms are included.
+If t<0 and all shifted inequalities hold, then all unshifted constraints
+are strictly positive. The implementation also accepts an unshifted
+strictly feasible candidate directly. Acceptance independently checks the
+full14 matrix eigenvalue, the exceptional4 corner eigenvalue, all weights,
+all24 costs, and contact annihilation. No iteration-limit conclusion is
+promoted to infeasibility.
+
+Analytic gradient and Hessian use
+ d(-logdet F)[D] = -Re tr(F^{-1}D),
+ d2(-logdet F)[D,E] = Re tr(F^{-1}D F^{-1}E).
+Finite-difference directional checks of both passed on the seed problem.
+An equality-constrained Newton KKT system and backtracking line search
+keep the shifted matrices positive definite. The ordinary-weight barrier
+is handled analytically as well. NumPy and SciPy suffice; no external SDP
+solver or network installation is required.
+
+Contact bases, linear operators, cost matrices and their right inverses
+are cached by contact set and orientation count. This is useful when
+testing many spectrum pairs with the same permutation contact pattern.
+
+Cold benchmarks
+
+One orientation, without warm starts:
+
+ seed eta=-25+i:39 Newton steps,1.62 seconds;
+ mixed0037:53 steps,2.49 seconds;
+ mixed0066:48 steps,2.27 seconds;
+ seed edge[7,20]:47 steps,1.60 seconds.
+
+All produced cost residuals at approximately1e-16 and strictly positive
+contact-face/corner/weight margins. The corresponding projection searches
+had long numerical plateaus; mixed0066 required28,400 DR iterations. This
+is a performance comparison, not evidence of infeasibility of either cone.
+
+A nine-contact near-triangle test approaches a boundary and was reported
+unresolved at its requested barrier limit. Such degenerate faces may need
+additional reduction of the exceptional corner. Strict Phase-I is not an
+infeasibility oracle for boundary-feasible problems.
+
+Fresh32 campaign
+
+Runner: code/research/moc_ppt_logdet_campaign.py
+Raw exact inputs: build/moc_ppt_logdet/fresh32_inputs.json
+Summary: build/moc_ppt_logdet/fresh32_summary.json
+Candidates, logs and per-step reports: build/moc_ppt_logdet/fresh32_pair_*.
+
+Random seed710324 creates32 fresh spectrum pairs:
+ 12 Gaussian-integer pairs with components in[-9,9];
+ 8 pairs with unequal integer scales1,3,10,100;
+ 6 pairs with distinct but nearly repeated Gaussian-integer entries;
+ 6 fresh integer perturbations of the known nonordinary seed.
+
+All complex products, convex hulls, supporting normals, support heights,
+gaps and contact indices are computed using Python integer arithmetic.
+The integer convex hull uses exact cross products. Every hull edge is
+included. Large exact values are stored as decimal strings, preventing
+loss when JSON readers use floating-point numbers. Exact contact sets and
+normalized exact gaps are passed directly into the numerical optimizer.
+
+There are249 edge costs, each with two exact permutation contacts:
+ 87 Gaussian-integer edges;
+ 58 wide-scale edges;
+ 54 near-repeated edges;
+ 50 edges from fresh nonordinary-seed perturbations.
+
+All249 returned matrices meet independently recomputed absolute1e-9
+numerical criteria. Of these,248 met the solver's deliberately conservative
+strict-margin threshold1e-10. The remaining near-repeated case has a
+positive contact-face eigenvalue2.94e-11, a positive corner margin0.00887,
+and weights>=1.20e-10, but its face margin is below that acceptance cutoff;
+it is retained as numerical feasibility at tolerance, not strict success.
+
+Across the249 saved candidates:
+ maximum normalized cost residual1.45e-15;
+ smallest full14 eigenvalue about-4.50e-17 (contact roundoff);
+ smallest exceptional-corner eigenvalue1.13e-8;
+ smallest nonzero normalized gap6.45e-10;
+ maximum ratio cost-residual / smallest-positive-gap8.60e-7.
+Median Newton steps27, maximum73. Four workers completed the campaign
+in8.65 seconds in this environment. The numerical input/candidate arrays
+are retained for every case, not only successful subsets.
+
+Reproduction
+
+ python code/research/moc_ppt_logdet_solver.py --label seed_one --check-derivatives
+ python code/research/moc_ppt_logdet_campaign.py --workers 4 --max-outer 14 --max-inner 35
+
+The campaign supports using only one orientation; that is the setting
+used for the249 results. No universal containment theorem is inferred
+from these finite cases. An exact positive certificate for a single cost
+requires a separate rational or formal verification.

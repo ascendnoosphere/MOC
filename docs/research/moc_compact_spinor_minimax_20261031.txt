@@ -1,0 +1,210 @@
+Compact spinor normalization of unrestricted MOC
+31 October 2026
+
+This is an exact all-dimensional reduction and a necessary-condition theorem
+for a hypothetical counterexample. It does not establish the conjecture.
+Its purpose is to remove noncompact spectral/infinity issues before drawing
+conclusions from global spectral minimax. No contact-count inference is made.
+
+1. A compact parameter space capturing the entire unrestricted problem
+
+For i,j=1,...,n take unit vectors u_i=(x_i,y_i), v_j=(s_j,t_j) in C^2.
+Put [u,v]=x t-y s and let U be an n-by-n unitary. Define
+
+ p_pi=product_i [u_i,v_pi(i)],
+ M_ij=[u_i,v_j] U_ij,
+ d=det(M)/det(U).
+
+The denominator is nonzero and has modulus1. All these functions are smooth
+on the compact manifold (S^3)^(2n) times U(n). Put
+
+                  h=max_pi Re(p_pi-d).                 (1)
+
+The unrestricted complex MOC(n) holds if and only if h>=0 everywhere on this
+compact manifold. Consequently, if MOC(n) fails, h has a negative attained
+global minimum m.
+
+The global minimum is always<=0: take U=I and all row spinors equal, so
+all p_pi coincide with d and h=0. Therefore the full conjecture is exactly
+the assertion that this compact global minimum is0, in every dimension.
+
+Proof of exact scope.
+If all bottom coordinates y_i,t_j are nonzero, let
+ a_i=x_i/y_i, b_j=-s_j/t_j, L=product_i y_i product_j t_j.
+Then M=diag(y)(D_a U+U D_b)diag(t), so
+
+ d=L det(D_a+U D_b U*),
+ p_pi=L product_i(a_i+b_pi(i)).                         (2)
+
+Every finite spectral tuple is represented by normalizing spinors(a_i,1)
+and(-b_j,1). Any desired common phase of all p_pi,d can be obtained by
+multiplying one unit spinor by that phase. Thus every bad support direction
+for finite spectra produces h<0 at a unit-spinor tuple.
+
+Conversely, for any finite collection of nonzero spinors, a common S in SU(2)
+can make every bottom coordinate nonzero. Choose the bottom row outside the
+finite union of their orthogonal complex lines, then complete it to SU(2).
+Common S preserves all brackets because detS=1, and preserves all unit norms.
+It therefore preserves p_pi and d exactly. Formula(2) now applies with L!=0.
+If h<0, divide byL and transform the support multiplier byL; this is an
+ordinary unrestricted finite spectral counterexample. No appeal to an
+unproved rectangular statement or to a value at an infinite eigenvalue is used.
+
+2. Determinant contraction
+
+Let J=[[0,1],[-1,0]]. Define two isometries from C^n to C^n tensor C^2:
+ A has column_i equal to the vector bar(u_i) in block_i, zero elsewhere;
+ B has column_j equal to J v_j in block_j, zero elsewhere.
+Their columns have disjoint supports and norm1. Direct multiplication gives
+
+                    M=A* (U tensor I2) B.
+
+Thus M is a contraction. Its singular values are<=1, giving |d|<=1.
+Also |p_pi|<=1 since every bracket of unit spinors has modulus<=1. In
+particular(1) is a uniformly bounded continuous function. This norm bound
+alone is not a permutation-hull inclusion.
+
+3. Necessary simultaneous spectral criticality at a negative global minimum
+
+Let A be the nonempty set of active permutations at a global minimum m<0.
+There exist real lambda_pi>=0, supported on A and summing to1, such that
+the differential, restricted to the full tangent space, of
+
+             Re P,   P=sum_pi lambda_pi p_pi-d,
+
+vanishes. This follows from elementary finite-dimensional separation: if
+zero were outside the convex hull of the active restricted gradients, a
+tangent vector would strictly decrease all active functions, contradicting
+local minimality. Inactive functions remain below them in a neighborhood.
+The same lambda are used for every spinor and every U tangent direction.
+
+Hold these lambda fixed only to state first-order criticality. Since P is
+holomorphic and degree1 separately in each of its2n spinor labels w_k,
+sphere-tangent vanishing gives real numbers tau_k with
+
+           partial P/partial w_k=tau_k bar(w_k).
+
+Euler's identity for degree1 in the kth spinor gives P=tau_k, since||w_k||=1.
+All tau_k therefore coincide and P is real. Its real value is the weighted
+average of the active gaps, namely m. Thus
+
+ P=m,
+ partial P/partial x_k=m bar(x_k),
+ partial P/partial y_k=m bar(y_k),                       (3)
+
+for all2n labels. Spinor phase tangents are included; they are essential to
+the conclusion that P is real. No differentiability of the maximum itself
+is presumed.
+
+A scalar Caratheodory bound for a fixed complex output does not limit these
+lambda to three nonzero entries: the same law must cancel all spectral
+gradients. The earlier three-permutation theorem applies only to one fixed
+complex-eigenvalue affine fiber, not to this joint criticality system.
+
+4. Moment balance
+
+All bipartite perfect-matching products are invariant under commonSL(2,C)
+action on the2n spinors. The determinant expression d has the same invariance
+entrywise, so P does too. Differentiating in any traceless complex2-by-2
+matrix H and using(3) yields
+
+     0=sum_k (partial P/partial w_k) dot H w_k
+      =m tr(H sum_k w_k w_k*).
+
+Because m!=0 and this holds for all traceless H,
+
+                  sum_k w_k w_k*=n I2.                 (4)
+
+Entrywise, the diagonal-generator identity gives equal sums of the squared
+coordinate moduli; their total is2n, so each sum is n. Off-diagonal generators
+give sum x_k bar(y_k)=0. All multiplicities and zero brackets are allowed.
+This is a concrete real-algebraic restriction on the actual spectral labels.
+
+Along the normalized commonSL(2,C) orbit, every p_pi,d is multiplied by
+R(S)=1/product_k||S w_k||, for detS=1. A negative global minimum requires
+product_k||S w_k||>=1. Equation(4) is its infinitesimal form. Conversely,
+convexity of sum_k log||exp(tH)w_k|| for Hermitian tracelessH, together with
+(4), proves the global product inequality along every such orbit. This
+balance controls the common projective orbit; it does not prove MOC.
+
+5. Boundary multiplicities
+
+Equation(4) excludes any projective point with multiplicity>n, since its
+projector alone would have eigenvalue>n. If a point has multiplicity exactlyn,
+all othern labels must lie in its orthogonal projective point: evaluate(4)
+on the first unit vector and use nonnegativity of every remaining overlap.
+
+For such a two-point configuration, MOC holds directly. Up to unit phases
+and a commonSU2, every spinor is e1 or e2. Suppose r of the row labels aree1.
+Then exactlyr column labels aree2. Reorder rows with their e1 group first,
+and columns with their e2 group first. All nonzero permutation products equal
+one common complex number p of modulus1. The masked matrix M is block
+diagonal, with blocks U11 and -U22, times the unit row/column phases.
+Jacobi's complementary-minor identity for a unitary gives
+
+                    d=p |det U11|^2.
+
+The coefficient lies in[0,1]. For0<r<n, some permutation products are0, so
+d lies in their segment[0,p]. For r=0 or n every product equals p and d=p.
+Thus a negative global minimum cannot have projective multiplicity>=n.
+For n=4 the previously proved zero-pair and double-eigenvalue cases exclude
+all repeated labels, but that stronger exclusion is an imported result.
+
+6. Correct coupled second-variation obligation
+
+One may NOT infer that the Hessian of ReP is positive semidefinite on all
+product-sphere directions. P is a supporting weighted average below a
+nonsmooth maximum, and its first-order criticality does not make it a local
+minimum. A necessary second-order test must respect the active functions.
+
+Here is a polynomial pencil for such a test. Let K be traceless skew-Hermitian
+and vary U(t)=exp(tK)U. For spinor tangent vectors z_k with w_k* z_k=0, use
+w_k(t)=(w_k+t z_k)/sqrt(1+t^2||z_k||^2). Let C_ij=[u_i,v_j], let C_z denote
+its first spinor variation, and write
+
+ M=C Hadamard U,
+ N=C Hadamard(KU), R=C Hadamard(K^2U), M_z=C_z Hadamard U.
+
+With Ddet_M and D2det_M denoting first and second polarized determinant
+differentials, all valid also for singularM,
+
+ D_K d = Ddet_M[N]/detU,
+ D_K^2 d=(D2det_M[N,N]+Ddet_M[R])/detU,
+ D_z D_K d=(D2det_M[M_z,N]+Ddet_M[C_z Hadamard(KU)])/detU. (5)
+
+U-stationarity gives Re D_Kd=0 for everyK. If
+ Re D_z(p_pi-d)=0 for every active pi,
+then each active gap has second derivative
+
+ Re[D_z^2 p_pi-D_z^2 d-2D_zD_K d-D_K^2 d]
+                  -m sum_k||z_k||^2.                  (6)
+
+At least one active value in(6) must be nonnegative for every admissible(z,K).
+Finding(z,K) that makes all of them negative would exclude a hypothetical
+negative global minimum. For a one-label spinor tangent, multiaffineness
+makes D_z^2p_pi=D_z^2d=0, but generally the simultaneous active first-order
+conditions leave no such nonzero tangent. This restriction cannot be dropped.
+
+Remaining global theorem.
+The compact formulation and equations(3)--(6) are exact. Excluding m<0 using
+these equations remains unproved. Moment balance by itself is not an
+inertia certificate or a rank bound; generic distinct configurations can
+satisfy it. The equations provide a globally attained, normalized target
+for a coupled spectral/unitary calculation, without assuming away infinity.
+
+Exact convention audit.
+code/research/moc_compact_spinor_exact_audit.py replayed successfully. On a
+dense rational complex Householder unitary and rational unit spinors it checks
+the affine determinant identity, all24 matching identities, the isometric
+embedding and rational Gram identityI-M*M=Z*Z, commonSU2 invariance, and all
+five row-split cases of the multiplicity-four boundary formula. These finite
+regressions check conjugations and signs; the general proof is the argument
+above, not a claim inferred from those samples.
+
+Lean algebra.
+code/lean/MocBalancedSpinors.lean proves the finite-index entrywise/matrix
+balance consequence from explicitly supplied norm, Euler, derivative and
+SL2-generator equations. The tangent-separation argument producing the
+common active law, and its analytic origin at a compact global minimum,
+remain written mathematics. The accepted scalar algebra is not an accepted
+unrestricted MOC theorem.

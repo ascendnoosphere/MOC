@@ -1,0 +1,54 @@
+AN ACTUAL STAR COST REQUIRES PRIMARY GRAM CROSS COUPLINGS
+31 October2026
+
+The full source-dependent block construction must allow more than a
+diagonal six-primary block. This is an exact obstruction, independent
+of the earlier source-plane failures.
+
+Use the exact actual nonordinary star control and basis order
+ (A,B,C,D,E,F,U,R,S,T)
+from moc_star_actual_nonordinary_counterexample.py. All10 matching
+features are retained. We ask for any positive semidefinite10x10 Gram
+with arbitrary primary-to-auxiliary6x4 block and arbitrary4x4 auxiliary
+block, but with primary6x6 block diagonal. The pure-unit evaluations
+already fix its diagonal to(a,b,c,d,e,f).
+
+Let b_pi be the integer10-feature evaluation rows. A small integer
+coefficient vector is listed in the verifier/artifact. Its first24
+entries multiply the exact equations b_pi^T G b_pi=g_pi. Its last15
+entries multiply G_ij=0 for0<=i<j<6. The resulting symmetric matrix
+
+ H=sum_pi lambda_pi b_pi b_pi^T
+   +sum_(i<j<6) mu_ij (Eij+Eji)/2
+
+is positive definite. Exact rational LDL has all10 positive pivots;
+their decimal values are
+ 27,27.4074,30.2220,42.2188,37.4893,33.9360,
+ 3.19336,1.84808,3.24316,1.53460.
+
+On the normalized exact target g/max(g), the right side is
+
+ sum lambda_pi*g_pi
+ =-128741893999487726769498512361140649369
+   /14557173003385406016625644120422461067 <0.
+
+For a feasible G>=0 this would equal tr(HG)>=0, a contradiction.
+Thus NO arbitrary choice of the cross or auxiliary blocks can make
+this diagonal-primary ansatz work. In particular no source-S4 or
+Cauchy-Schur residual can repair it while the primary block stays
+diagonal.
+
+The mandatory three orthogonality pairs AE=BD=CF=0 still hold in every
+matching Gram. The other12 primary cross entries must be allowed;
+the obstruction does not assert that every one is individually needed.
+The known full positive Gram of the same cost remains valid.
+
+Exact replay:
+ python code/research/moc_star_primary_diagonal_obstruction.py
+Artifact:
+ build/moc_star_primary_diagonal_obstruction/exact.json
+
+Discovery used an affine Phase-I SDP with32 independent constraints
+and23 free Gram directions. Its limiting shift was+.01413554. The
+proof uses only the literal small integer dual vector, exact cost
+identities, rational LDL signs and the displayed negative pairing.

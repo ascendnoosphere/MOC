@@ -1,0 +1,114 @@
+INDEPENDENT AUDIT: QUANTITATIVE ORDER-FOUR CYCLE BUDGET
+2026-10-17
+
+Reviewed and independently executed plucker_moc4_positive_verify.py.
+Its imported full zero-budget verifier passed all67,298 exact nodes in
+17.71seconds. All new coefficient-norm, ray, and symmetry assertions passed.
+
+For a nonnegative actual spectral cost g on all24 permutations, let
+ m=max_pi g_pi, B=2 sum over8 complementary pairs sqrt(delta_s delta_bar_s),
+ K=sum_s (-1)^|s|delta_s.
+The resulting statement is
+ B*m^17 >= 2^(-144) |K|^18.
+This includes m=0 trivially. The divided form requires m>0.
+No linear inequality B>=|K| or unrestricted MOC follows here.
+
+1. Ray deletion.
+Use the established82-ray decomposition g=sum lambda_r r with lambda_r>=0.
+In each complementary pair choose an endpoint with the smaller cost.
+Delete every ray whose value is nonzero at any selected endpoint. Because
+positive ray entries are integers>=1,
+ sum_deleted lambda_r <= sum_selected delta <= B/2.
+The remaining g0 is nonnegative and has B(g0)=0. Since all ray entries
+and absolute K-values are<=2, h=g-g0 satisfies
+ 0<=h<=g, ||h||_infinity<=B, |K(h)|<=B.
+Every one of these discrete bounds is explicitly checked for all82 rays.
+
+2. Exact lower bound on the zero-budget face.
+The previously verified degree18 factorizations have nine positive linear
+factors counted with multiplicity, each bounded below by the remaining
+mixed-ray coefficient alpha. Thus
+ |N(g0)|>=4 alpha^18=|K(g0)|^18/2^16.
+The seven-ray face is split by the opposite-ray relation, leaving
+alpha=half the absolute alternating value. The128 face symmetries transport
+this inequality because they send K to plus or minus itself and preserve N.
+
+For completeness, the latter invariance follows directly from the newly
+checked generators. Let T be the integral unimodular coordinate action,
+Te=e, and F(Tx)=epsilon F(x), epsilon=+1 or-1. Then
+ Q(Tx)=epsilon Q(x),
+ H(Tx)=epsilon T^{-T}H(x)T^{-1},
+ T^{-T}H_eT^{-1}=epsilon H_e.
+Consequently
+ Q(Tx)H(Tx)-F(Tx)H_e=T^{-T}(QH-FH_e)T^{-1}.
+Its determinant and the even power Q^12 are unchanged. Thus N(Tx)=N(x)
+on Q!=0, and everywhere by the already proved polynomial continuation.
+The checker verifies integral unimodularity, Te=e, and the cubic sign
+coefficientwise for generators of all row/column permutations and inversion.
+
+3. Coefficient bound.
+The computed entry coefficient norms are M=15 for H(x), E=2 for H(e),
+and M_K=24 for the9x9 kernel block. The adapted basis and complementary
+quadratic form both have determinant1. Hence
+ ||h_i||_coeff <=14! binom(14,i) M^(14-i) E^i  (i=0,1,2),
+ ||R||_coeff <=2*9!*M_K^9.
+These follow by expansion of determinants and submultiplicativity of
+coefficient1-norm; no numerical conditioning assumption is used.
+The directly verified cubic/quadratic norms are ||F||=50 and ||Q||=56.
+Thus the homogeneous degree18 polynomial N has coefficient norm bounded by
+ C=31575966576774975049121280000000 <2^105.
+The checker constructs all required exact arrays and verifies these values.
+
+4. Lipschitz and case split.
+All14 selected coordinates of g and g0 lie in[0,m], and their difference
+has supremum norm at most B. A homogeneous degree18 polynomial of coefficient
+norm C has total gradient1-norm at most18 C m^17 on that box. Since N(g)=0,
+ |N(g0)|<=18 C m^17 B.
+If B<|K|/2, then |K(g0)|>=|K|-B>|K|/2, so
+ B>=|K|^18/(18 C 2^34 m^17).
+If B>=|K|/2, nonnegativity gives |K|<=8m; the weaker unified denominator
+2^144 is already larger than2^52 and hence suffices in this branch as well.
+The checker verifies2^144>=18 C 2^34 and144>=52 exactly.
+
+Conclusion: the quantitative inequality passes both algebraic and logical
+audit. Its imported structural input is the82-ray cone completeness;
+the degree18 polynomial property and actual spectral vanishing are proved
+from the directly verified cubic identities in the companion notes.
+The estimate proves strict positive budget when K!=0 but is substantially
+weaker than the linear comparison needed by the remaining MOC argument.
+
+5. Final dependency closure: cone completeness is now internally certified.
+
+cone82_completeness_verify.py was independently run and passed using its
+newly generated cone82_completeness_certificate.json. It checks all82 facet
+normals/ranks and a closed positive oriented boundary chain with9,050
+simplices,6,846 nondegenerate simplices,2,204 degenerate simplices, and
+58,825 ridges. cone82_completeness_notes.txt supplies the coverage argument
+showing that these exact checks prove there are no omitted facets.
+The standalone verifier uses only Python's standard library and that JSON;
+its correctness does not depend on the discovery hull program.
+
+The resulting82-ray cone is exactly the cone needed for the quantitative
+theorem. Indeed, every complex spectral matching vector belongs to the
+span of the graded-minor indicators by the elementary expansion
+ z_pi=product_i(a_i+b_pi(i))
+     =sum_{I,J:|I|=|J|} rho_{I,J}(pi)
+                    product_{i notin I}a_i product_{j in J}b_j.
+The constant function is the rank-zero indicator. Thus every actual real
+support gap g=h-Re(eta z) lies in this real14-dimensional cost space.
+Nonnegativity of g then gives the82-ray decomposition by the now-certified
+polyhedral duality statement, with no N046 computational assertion imported.
+
+All remaining substantive inputs to the quantitative theorem are present:
+ * exact full cone completeness via the positive boundary chain;
+ * direct coefficient verification of spectral cubic singularity;
+ * an explicit polynomial-degree/spectral-vanishing proof for N;
+ * complete zero-budget face coverage and two exact factor identities;
+ * exact ray deletion bounds, polynomial coefficient bounds, and symmetries;
+ * the elementary homogeneous-polynomial Lipschitz estimate and case split.
+The converse identification of the cubic singular locus with the full
+complex invariant cone is unnecessary here. Neither that external
+geometric theorem nor the prior nonic-square theorem is used by this
+quantitative conclusion. Standard finite-dimensional linear/polyhedral
+algebra and the stated closed-chain coverage argument remain explicit
+mathematical background, not hidden computational assumptions.

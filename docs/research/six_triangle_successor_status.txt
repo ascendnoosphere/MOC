@@ -1,0 +1,67 @@
+CANONICAL SIX-CONTACT TRIANGLE SUCCESSORS
+2026-10-30
+
+Scope: marked maximal six-contact types containing canonical compensators
+r18,r23,r28. The canonical cap ordinary generators are
+Z34={0,7,10,13,17,18,20,22,23,27,28,30,31}.
+Each child has exactly seven independent canonical ordinary coordinates;
+the larger original ordinary-ray lists include absorbed off-facet rays.
+
+Executed exact census: code/research/scan_six_triangle_children.py
+Fresh portable run: build/six_triangle_next/canonical_scan.log, PASS.
+There are17 types:12,13,14,15,16,22,25,30,31,32,43,79,80,81,82,89,97.
+Only already-closed type12 has coefficientwise-negative Q globally.
+The full F,Q table is in build/six_triangle_next/fq_census.json and is
+recomputed by the portable script, not trusted as a proof input.
+
+Current successor: type13,
+g=a r0+b r7+c r13+d r17+p r18+q r23+r r28+f34,
+with all seven coefficients independent and nonnegative.
+F=−[(1+a)(1+b)(1+c)+d(1+b)+pqr] is strictly negative.
+Q=d(r−1)−1−pq−pr−qr.
+Consequently Q<0 on the compensator cube, but Q can be positive when r>1.
+For an actual normalized gap Q=0 is impossible because F≠0; the negative
+height Q>0 region requires the previously imported Drury half-plane result.
+
+STATUS: exact interior obstruction verified; full successor13 remains open.
+The full seven-parameter nonic reconstruction finished11440 shared-origin
+directions in99.23seconds and produced a1381-term candidate. Its global
+identity is not yet independently certified. The cube/star coefficient
+method fails, and a direct exact point proves a genuine stronger obstruction:
+(a,b,c,d,p,q,r)=(2,1,2,331/17,1/4,1/4,1/4) has rank12 singular Hessian,
+neutral inertia(6,6,2), full C12 PSD, a2<0, and triangle capacity3/8<1.
+It has no real gradient lift. See
+ docs/research/six_triangle_nonic_obstruction.txt
+ code/research/verify_six_triangle_nonic_obstruction.py
+The portable exact point certificate freshly passed in5.292seconds.
+
+The previous type12 theorem remains verified and is not being retested.
+Reconstruction handles Q=0 on integer sampling lines by skipping that
+node; no division by Q=0 is performed. A future independent full identity
+check can use the degree18 simplex with p,q,r scaled by1/19, ensuring Q<0
+at every node. Unscaled Q=0 cross-multiplication tests would be tautological
+at those nodes and must not be counted as quotient evaluations.
+
+Step-back status,2026-10-30:
+Orbit13 remains OPEN as a full seven-parameter family. The only exact new
+elimination is the displayed interior false positive. It passes the
+e-metric test but is excluded by the expanded r33 metric and by full
+gradient lifting. No finite-metric coverage theorem has been proved.
+
+Numerical discoveries and refutations:
+-8685 positive-root cube samples were covered by {r33,r19}.
+-The attractive weighted-sum conjecture (1+a)(1+c)*a2_33+a2_19>0 passed
+ those samples, then FAILED360 times in9962 logarithmic-scale neutral
+ samples. It must not be promoted to a theorem.
+-The latter run had6 apparent all35 misses at a fixed1e-10 threshold.
+ A90-digit audit found positive r33 determinants at every one, as small
+ as2.47e-12. No all35 counterexample for this child was established.
+-The quadratic shortcut U*B-U²*A-C has mixed cube coefficients and yields
+ no new root-domain theorem. The parent reports discriminant factors
+ with mixed cube coefficients as well.
+
+Saved algebra: build/six_triangle_next/orbit13/schur8_ff.pkl contains the
+exact3+1+4 Schur chart in polynomial-fraction coefficient form. The chart
+was computed in4.53seconds. The expensive generic a2_33 extraction was
+stopped at the requested step-back; its source and all logs remain.
+No new full-family closure follows from these partial calculations.

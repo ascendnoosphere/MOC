@@ -1,0 +1,89 @@
+ALL-DIMENSIONAL THREE-VALUE SINGLETON THEOREM FOR MOC
+Research note, 17 October 2026
+
+Status: Complete proof of a restricted all-dimensional class, not of unrestricted MOC.
+No historical novelty is asserted. The proof uses the elementary finite monotone-coupling argument underlying the projection-DPP domination theorem of Russell Lyons (2003), Theorem 6.2. The attached volume N059 proves the weaker all-but-two-exceptional-input theorem; the argument here handles input multiplicities (r,s,1) for arbitrary r,s, including (2,2,1) and (3,3,1).
+
+THEOREM 1 (one exceptional factor over two projective lines).
+Let U be any n-by-n complex unitary. Let V=C^2, H=V^{tensor n}, and define the operator R(U) in the Boolean tensor basis by
+  <I|R(U)|J> = |det U[I,J]|^2 if |I|=|J|, and zero otherwise.
+For every product tensor u=u_1 tensor ... tensor u_n such that all but at most one of its factors lie on at most two projective lines,
+  R(U)u belongs to conv_R { T_pi u : pi in S_n }.
+Here T_pi permutes tensor factors and the convex weights may depend on U and the assignment of the three line classes to labels, but can be chosen independently of the numerical locations of those three projective lines.
+
+COROLLARY 1 (MOC with three values, one simple).
+Let b have at most three distinct complex values, one of them occurring once; the other two multiplicities are arbitrary. For every U there is a probability distribution (p_pi) on S_n such that, simultaneously for all complex a_1,...,a_n,
+  det(D_a+U D_b U*) = sum_pi p_pi product_i(a_i+b_{pi(i)}).
+In fact, with a fixed partition of input labels into classes of sizes r,s,1, one distribution can be chosen to work simultaneously for every choice of the three values b0,b1,b2. By symmetry the corresponding scalar MOC statement holds when a has that multiplicity pattern.
+
+PROOF.
+
+1. Tensor identities.
+Define J:V^{tensor n}-> exterior^n(C^n tensor V) by
+ J(v_1 tensor ... tensor v_n)=(e_1 tensor v_1) wedge ... wedge (e_n tensor v_n).
+Expanding the exterior action gives
+ R(U)=J* exterior^n(U tensor I_2) J / det U
+     =(det U)^(-1) sum_pi sgn(pi) product_i U_{i,pi(i)} T_pi.
+The unitary complementary-minor identity shows that its Boolean matrix coefficients are precisely the squared minors given above. In particular, R(U) commutes with g^{tensor n} for every g in GL(2,C), as do all T_pi. For u_j=(1,b_j)^T and row covectors w_i=(a_i,1),
+  w R(U)u = det(D_a+U D_b U*),
+  w T_pi u = product_i(a_i+b_{pi(i)}).
+(The choice of left/right permutation convention only reindexes all permutations and is immaterial to the convex assertion.)
+
+2. Elementary coupling lemma.
+Let B be an s-element set of input labels and c not in B. Put
+ x=the exterior product of the orthonormal columns Ue_j, j in B,
+ v=Ue_c,
+ y=x wedge v.
+The harmless overall sign from increasing ordering does not change squared coordinates. Then ||x||=||v||=||y||=1 and v is orthogonal to every factor of x. For any family F of coordinate s-subsets, let P_F be the orthogonal coordinate projection on their exterior basis vectors, and put z=P_F x. Let N(F) be all coordinate (s+1)-subsets containing at least one member of F. The vector z wedge v is supported on N(F).
+
+Let W_v be the exterior multiplication map z->z wedge v. Since v is unit, ||W_v||<=1. Orthogonality of v to the factors of x gives W_v* W_v x=x; therefore
+ <z wedge v,y>=<z,W_v*W_v x>=<P_F x,x>=||P_F x||^2.
+As z wedge v is supported on N(F), Cauchy-Schwarz gives
+ ||P_F x||^2
+   = |<z wedge v,P_N(F) y>|
+   <= ||z wedge v|| ||P_N(F)y||
+   <= ||P_F x|| ||P_N(F)y||.
+If the first norm vanishes the conclusion is automatic; otherwise divide and square. Thus
+ sum_{X in F} |det U[X,B]|^2
+ <= sum_{Y in N(F)} |det U[Y,B union {c}]|^2.          (H)
+
+Both sides define probability marginals p_X and q_Y by Cauchy-Binet. The finite weighted Hall theorem now supplies nonnegative numbers mu_XY supported on X subset Y with
+ sum_{Y superset X} mu_XY=p_X,
+ sum_{X subset Y} mu_XY=q_Y.
+For completeness this is a direct finite max-flow statement: source-to-X capacities p_X; edges X-to-Y of infinite capacity for inclusion; Y-to-sink capacities q_Y. A cut has capacity at least 1 exactly when p(F)<=q(N(F)); (H) checks every cut, so a flow of value 1 exists. The flow on X-to-Y is the claimed coupling. Because their sizes differ by one, Y\X is a singleton.
+
+3. Canonical three-line tensor.
+Take disjoint sets A,B,{c} partitioning {1,...,n}. Use e0 at A, e1 at B, and e0+e1 at c. In the Boolean basis this tensor is
+ u0=|B>+|B union {c}>.
+By the squared-minor formula and the coupling,
+ R(U)u0
+ =sum_X p_X|X>+sum_Y q_Y|Y>
+ =sum_{X subset Y, |Y|=|X|+1} mu_XY (|X>+|Y>).
+Each |X>+|Y> is a permutation of u0: place the e1 factors on X, the single e0+e1 factor at the unique element of Y\X, and the e0 factors outside Y. Choose any one permutation pi_XY implementing that placement. Thus
+ R(U)u0=sum_XY mu_XY T_pi_XY u0.
+The weights are nonnegative and sum to one, and depend only on U,B,c.
+
+4. General projective lines and degeneracies.
+Suppose the two repeated factor lines and the exceptional line are distinct. Choose a common g in GL(2,C) sending them respectively to the lines of e0,e1,e0+e1. Such a g exists because PGL(2,C) acts triply transitively on distinct points of the projective line. There are nonzero scalars lambda_i with
+ g u_i=lambda_i times the appropriate canonical factor,
+so g^{tensor n}u=(product_i lambda_i)u0. Since scalar multiplication commutes with permutations and R(U) commutes with g^{tensor n}, conjugating the canonical positive identity gives the theorem with the SAME weights. Zero factors make all tensors zero. When only one or two distinct lines occur, either use the elementary stochastic-column theorem (g sends the two lines to e0,e1), or obtain the conclusion by taking limits of the already fixed canonical weights. This also covers arbitrary coincidences of the three spectral values without any division by differences.
+
+5. Determinant conclusion.
+Pair the tensor identity against the arbitrary product covector w= tensor_i(a_i,1). Step 1 gives Corollary 1. Because the weights are fixed by U and the label partition before choosing g, they work for all three spectral values at once; because no restriction was imposed on the covector, they also work simultaneously for every a. This is stronger than scalar convex-hull membership.
+QED.
+
+
+ALTERNATIVE ELEMENTARY DETERMINANT PROOF (independent reviewer simplification).
+Let the b-values on the three label groups be b0,b1,b2, with b2 simple. Put δ=b1−b0 and τ=(b2−b0)/δ, initially assuming δ≠0. In the output basis let P=U diag(1_B)U* and v=Ue_c. Then P is an orthogonal projection, Pv=0, ||v||=1, and
+ U D_b U*=b0 I+δ(P+τ vv*).
+Set Q=P+vv*. The determinant is affine in the coefficient of the rank-one matrix vv*, so for C=D_a+b0 I,
+ det(C+δP+δτ vv*)=(1−τ)det(C+δP)+τ det(C+δQ).
+This is an exact complex affine identity; τ need not be real or lie in [0,1].
+
+The projection determinant formula (Cauchy-Binet) gives
+ det(C+δP)=sum_{|X|=s} p_X product_{i in X}(a_i+b1) product_{i not in X}(a_i+b0),
+where p_X=|det U[X,B]|², and the analogous formula for Q uses (s+1)-sets Y and q_Y=|det U[Y,B+c]|². The exterior-Hall lemma already proved supplies one coupling μ_XY with X⊂Y. For each coupled pair let j be the sole element of Y\X. Pairing the two determinant terms under this coupling produces
+ (1−τ) product_{i in X}(a_i+b1) product_{i not in X}(a_i+b0)
+ +τ product_{i in Y}(a_i+b1) product_{i not in Y}(a_i+b0)
+ = (a_j+b2) product_{i in X}(a_i+b1) product_{i not in Y}(a_i+b0).
+The right side is exactly one permutation vertex. Summing with the nonnegative μ proves the stated common law directly. Coincident b-values follow by polynomial continuity using the same μ. This proof is self-contained after the exterior-Hall lemma and has no projective-normalization denominators except the removable δ introduced for writing the affine identity.

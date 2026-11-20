@@ -1,0 +1,42 @@
+2. Independent audit of the new local six-contact certificate.
+
+profile_terminal_cone_verify.py was read and executed. Its exact tangent
+identity, positive coefficients, and ranks14,6,8 all passed.
+
+The crucial transfer from permutation values to every unitary is valid.
+For
+ c_pi(U)=sgn(pi) product_i U_(i,pi(i))/det U,
+grouping the Leibniz expansion by pi(I)=J gives
+
+ sum_(pi(I)=J)c_pi(U)
+ =(-1)^(sum I+sum J) det U[I,J] det U[Ic,Jc]/det U
+ =|det U[I,J]|^2,
+
+where the last equality is the unitary complementary-minor identity.
+Thus every linear identity among minor profiles checked on permutations
+is an identity among the corresponding functions on all U(4).
+
+Let L be the8-dimensional common-minor profile space vanishing on the
+six retained contacts. The base tetrahedral gap and nine specified minor
+profiles span L. The actual curve has
+
+ F_t=F_0+t F'_0+O(t^2) in L,
+ F'_0=-(401443/528)F_0+sum_(j=0)^8 lambda_j M_j,
+ min lambda_j=1/10.
+
+A fixed linear right inverse of the surjective ten-generator map sends
+the O(t^2) profile remainder to O(t^2) coefficient corrections. Therefore
+the base coefficient is1-(401443/528)t+O(t^2)>0, and the nine minor
+coefficients are t lambda_j+O(t^2)>0, for every sufficiently small t>0.
+The decomposition proves F_t(U)>=0 uniformly for every U.
+
+The relative-interior conclusion is also correct. A surjective linear
+map is open; a strictly positive ten-coefficient vector has a neighborhood
+inside the positive orthant. Its image therefore contains a neighborhood
+of F_t in L. Equivalently use the same bounded right inverse to preserve
+strict coefficient positivity under sufficiently small perturbations.
+
+The scope remains the retained supporting direction, not all directions
+of the perturbed spectra. The base full-unitary tetrahedral inequality
+N114/N128 is an explicit prior input. Neither the valid local certificate
+nor the false universal finite-cone claim is promoted to unrestricted MOC.

@@ -1,0 +1,76 @@
+The full orbit28 nonic has nonreal roots on a strictly positive budget ray
+31 October 2026
+
+This exactly rules out a definite symmetric/Hermitian Lax pencil for the
+nonic whose positive cone contains the ordinary positive-budget cone.
+It does not rule out an indefinite determinantal pencil, a rational Schur
+representation, or a full matching-SOS Gram construction.
+
+Take the full5778-term degree-nine polynomial in
+build/moc_face_03717_full_nonic/full_face_nonic.json. Its mixed f34
+coefficient is fixed at1 and its ordinary budget order is
+
+ (r7,r13,r17,r18,r20,r22,r27,r28,r31).
+
+Substitute the SAME variable s into all nine budgets. Exact summation
+of every term gives
+
+ P(s)=240s^9+1232s^8+2748s^7+3608s^6+3052s^5+1700s^4
+      +617s^3+140s^2+18s+1
+
+     =(2s+1)^2(3s+1)(2s^2+4s+1)
+                 *(10s^4+18s^3+17s^2+7s+1).
+
+The quartic is strictly positive for every real s, by the exact identity
+
+ 10s^4+18s^3+17s^2+7s+1
+   =10(s^2+9s/10+1/5)^2 +(49/10)(s+17/49)^2 +1/98.
+
+Thus the quartic contributes four nonreal roots. The remaining factors
+contribute five real roots with multiplicity: -1/2 twice, -1/3 once,
+and the two distinct roots of2s^2+4s+1. These do not coincide.
+No floating root approximation is needed for this conclusion.
+
+Consequences for a Lax/PSD representation
+
+Let N(t,v) denote the homogeneous degree-nine polynomial with mixed
+coefficient t. The ordinary direction
+
+                         e=(t=0,v=(1,...,1))
+
+has N(e)=240!=0. Since P(s)=N(f+s e) has nonreal roots, N is not
+hyperbolic in this strictly positive ordinary-budget direction.
+
+Suppose, contrary to this obstruction, that on the full face
+
+ N(t,v)=kappa det(t A_f+sum_j v_j A_j), kappa!=0,
+
+with Hermitian9-by9 matrices, and that the ordinary direction has a
+positive semidefinite pencil matrix B=sum_j A_j. Its determinant is
+nonzero because N(e)!=0, so B is positive definite. Every root of
+det(A_f+s B) must then be real: if (A_f+zB)u=0 for nonzero complex u,
+then u* A_f u+z u* B u=0, with the first term real and the second
+coefficient strictly positive real. Hence Im(z)=0. This contradicts
+the exact quartic factor above.
+
+In particular no such representation can assign a positive semidefinite
+matrix to every ordinary budget generator. The necessary-condition test
+has failed, so searching for that definite Lax cone should be abandoned.
+An indefinite symmetric pencil can still exist and is being constructed
+independently through the inverse-K quadratic form.
+
+Exact replay
+
+ python code/research/moc_face28_hyperbolicity_obstruction.py
+
+The checker reads every term of the FULL face polynomial, verifies the
+degree-nine factorization and quartic SOS identity, and independently
+checks the exact real-root count. Output:
+build/moc_face28_hyperbolicity_obstruction/exact.json.
+
+Lean source code/lean/MocFace28Nonhyperbolic.lean checks the displayed
+degree-nine factorization and proves the quartic strictly positive over
+R. It compiled successfully with Lean4.19.0; the printed axioms are only
+propext, Classical.choice, Quot.sound, with no sorryAx. Its scope excludes
+the5778-term substitution, which the exact Python
+checker performs directly, and the matrix-pencil argument, written above.

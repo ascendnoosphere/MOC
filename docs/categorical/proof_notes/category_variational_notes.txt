@@ -1,0 +1,324 @@
+1. NOTATION.
+For a unitary U in U(n), let its complete squared-minor kernel be
+
+ R(U)[I,J]=|det U[I,J]|^2,      |I|=|J|, I,J subsets of {1,...,n}.
+
+All Boolean weights are retained. A common permutation law means
+R(U)=sum_pi lambda_pi R(P_pi), lambda_pi>=0, sum lambda_pi=1.
+Such a law proves MOC simultaneously for every pair of complex spectra,
+by the exterior-minor expansion of det(diag(a)+U diag(b)U*).
+
+Let P and Q be partitions of the coordinate labels. U respects P when it
+is block diagonal on the P-blocks, and V respects Q similarly. Form the
+bipartite incidence multigraph G(P,Q): its left vertices are P-blocks,
+its right vertices are Q-blocks, and coordinate i is an edge joining the
+unique two blocks containing i. Two labels in the same P/Q intersection
+give parallel edges. A pair of parallel edges is a cycle of length two.
+
+THEOREM 1 (EXACT UNAVERAGED COMPOSITION).
+The following are equivalent for fixed partitions P,Q:
+
+ (i) G(P,Q) is a forest as a multigraph.
+ (ii) R(UV)=R(U)R(V) for every U respecting P and V respecting Q.
+
+In particular, under (i), if the individual blocks of U and V have common
+permutation laws, UV has a common law obtained by multiplying the two
+probability distributions on permutations.
+
+2. PROOF THAT A FOREST ELIMINATES ALL INTERMEDIATE INTERFERENCE.
+Fix row and column subsets I,J of equal cardinality. Cauchy--Binet gives
+
+ det(UV)[I,J]=sum_{|K|=|I|} det U[I,K] det V[K,J].
+
+A nonzero term must satisfy the occupancy equalities
+
+ |K intersect P_alpha|=|I intersect P_alpha| for every P-block,
+ |K intersect Q_beta|=|J intersect Q_beta| for every Q-block.
+
+Interpret K as a subset of graph edges. These equations prescribe its
+degree at every graph vertex. In a forest, a 0/1 edge subset with specified
+vertex degrees is unique if it exists: subtract two solutions and remove
+leaves successively; the incident edge difference at a leaf must be zero,
+and induction removes the entire forest.
+
+Thus the Cauchy--Binet sum contains at most one nonzero summand. Squaring
+its absolute value yields exactly
+
+ |det(UV)[I,J]|^2=sum_K |det U[I,K]|^2 |det V[K,J]|^2.
+
+This includes the case where no admissible K exists, when both sides are
+zero. It holds at every Boolean weight simultaneously, proving (ii).
+The argument uses no reality assumption and allows arbitrary complex
+phases, arbitrary singular minors, and arbitrary block sizes.
+
+
+4. POSITIVE COMPOSITION OF COMMON LAWS.
+If R(U)=sum_p lambda_p R(P_p) and R(V)=sum_q mu_q R(P_q), Theorem 1 gives
+
+ R(UV)=sum_{p,q} lambda_p mu_q R(P_p P_q).
+
+All weights are nonnegative and sum to one. In the row convention
+P_p[i,p(i)]=1, P_p P_q=P_(q composed with p). Hence this is an explicit
+distribution, independent of every spectral parameter.
+
+Every 3x3 unitary has a common law: a Birkhoff decomposition of its squared
+entry matrix gives the weight-one law, and complementary minors give the
+same law at weight two. Weights zero and three are both the scalar one.
+Thus arbitrary complex U(3) seeds are permissible in this theorem, in
+addition to U(2) seeds and any larger blocks with separately proved laws.
+
+5. OVERLAPPING THREE-SITE BLOCKS AND HYPERTREE CIRCUITS.
+In particular, if U acts on sites S and V on sites T with |S intersect T|
+<=1, their block-partition incidence graph is a forest. Hence exact
+composition holds, even when both U and V are nontrivial arbitrary
+three-site unitaries. The example S={1,2,3}, T={3,4,5} is connected and is
+not a direct sum of its two gates.
+
+More generally, construct a circuit from gates whose supports are
+hyperedges. Require each new support to meet each previously connected
+component in at most one coordinate. Equivalently, the bipartite incidence
+graph of sites and gate supports is a forest (after discarding trivial
+one-site gates). At every step the current unitary is block diagonal on
+the old connected components. The new gate and those components have
+a forest incidence graph, so Theorem 1 applies inductively.
+
+If every gate has a common law, the entire circuit has the product law.
+Consequently every circuit of arbitrary complex U(2) and U(3) gates on
+such an incidence forest satisfies MOC for all complex spectra in every
+dimension, with one spectrum-independent distribution on permutations.
+
+Pairwise intersections of gate supports having size at most one are NOT
+enough: three supports may form a cycle by intersecting in three different
+coordinates. The required condition concerns the full incidence graph,
+or equivalently intersection with already connected components.
+
+This extension allows internally arbitrary three-site mixing at a newly
+attached clique. Such a gate need not decompose into two-site gates each
+joining previously separate components: a general U(3) seed has intrinsic
+three-site interference. Its complete seed law, rather than a claim that
+its internal interference vanishes, is used in the composition proof.
+
+6. FULL EXACT RATIONAL FIVE-DIMENSIONAL EXAMPLE.
+Take
+
+ H1=(1/9)[[7,-4,-4],[-4,1,-8],[-4,-8,1]],
+ H2=(1/7)[[6,-2,-3],[-2,3,-6],[-3,-6,-2]].
+
+They are orthogonal Householder reflections, and every entry is nonzero.
+Embed H1 on sites {1,2,3} and H2 on {3,4,5}, calling the resulting matrices
+U and V. Their product is
+
+ W =
+ [[ 7/9, -4/9,  -8/21,   8/63,   4/21],
+  [-4/9,  1/9, -16/21,  16/63,   8/21],
+  [-4/9, -8/9,   2/21,  -2/63,  -1/21],
+  [   0,    0,   -2/7,    3/7,   -6/7],
+  [   0,    0,   -3/7,   -6/7,   -2/7]].
+
+Exact 3-site Birkhoff laws, with permutations written in one-based row
+image notation, are
+
+ H1: 123 weight1/81; 132 weight16/27;
+     231 weight16/81; 312 weight16/81.
+
+ H2: 123 weight4/49; 132 weight32/49; 231 weight4/49;
+     312 weight4/49; 321 weight5/49.
+
+Their embedded composition gives the following 20-point common law for W:
+
+ 12345:4/3969     12354:32/3969    12453:4/3969
+ 12534:4/3969     12543:5/3969     13245:64/1323
+ 13254:512/1323   14253:64/1323    15234:64/1323
+ 15243:80/1323    23145:64/3969    23154:512/3969
+ 24153:64/3969    25134:64/3969    25143:80/3969
+ 31245:64/3969    31254:512/3969   41253:64/3969
+ 51234:64/3969    51243:80/3969.
+
+The companion standard-library script category_variational_verify.py
+checks U,V,W orthogonality, all positive weights and their sum, and all
+252 equal-cardinality row/column minor pairs of W, verifying exactly
+
+ |det W[I,J]|^2=(R(U)R(V))[I,J]
+              =sum_{p:p(I)=J} lambda_p.
+
+Thus this is an explicit full coefficient identity, proving the MOC
+inclusion for W and every possible pair of complex five-dimensional
+spectra. It is not a numerical support sample.
+
+
+9. A SINGLE MATCHING CYCLE: EXACT RANK-ONE INTERFERENCE.
+Now let n=2r, and let P,Q be perfect matchings of the coordinate labels
+whose union is one alternating cycle. Parallel matching edges are allowed
+when r=1. Let U and V be arbitrary complex unitary two-site layers on P and
+Q, respectively. Thus there are 2r two-site gates in total.
+
+The cycle has two complementary alternating coordinate sets K0,K1, each
+meeting every P-pair and every Q-pair in exactly one coordinate. Choose an
+ordering (p0,p1) of every P-pair and (q0,q1) of every Q-pair. Define
+
+ f_P(I)=(-1)^(number of selected second P-coordinates),
+
+when I selects exactly one coordinate in every P-pair, and f_P(I)=0
+otherwise. Define f_Q similarly. Their supports lie entirely in weight r.
+Let I0 contain all first P-coordinates and J0 all first Q-coordinates, so
+f_P(I0)=f_Q(J0)=1. Define the actual complex amplitude
+
+ kappa=det U[I0,K0] conjugate(det U[I0,K1])
+       *det V[K0,J0] conjugate(det V[K1,J0]).
+
+For a diagonal phase D with entries exp(i theta_j), put
+theta=sum_{j in K0}theta_j-sum_{j in K1}theta_j and c=Re(exp(i theta)kappa).
+Then the entire complete kernel obeys the exact identity
+
+              R(UDV)=R(U)R(V)+2c f_P f_Q^T.                  (C1)
+
+All interference is at the middle exterior degree and has matrix rank one.
+
+Proof. A nonunique intermediate occupancy set on a cycle must differ by
+the alternating cycle flow. For its two 0/1 solutions to be distinct, every
+cycle vertex must have occupancy one; hence |I|=|J|=r, with I a P-transversal
+and J a Q-transversal, and the two possibilities are K0,K1. Otherwise the
+intermediate subset is unique and there is no cross term.
+
+For a P-transversal I, the product
+det U[I,K0] conjugate(det U[I,K1]) equals a fixed complex scalar times
+f_P(I). Indeed block determinant expansion factors it over P-pairs. The
+row regrouping signs cancel between the two determinants. In each local
+unitary, switching the selected row changes the factor u_i,k0 conjugate
+(u_i,k1) to its negative, by orthogonality of the two columns. The analogous
+product for V changes only by f_Q(J), by row orthogonality. Taking I0,J0
+fixes the common scalar to kappa. The two cross terms are conjugate, and
+the diagonal phase contributes exp(i theta), proving (C1).
+
+If gate g has mixing probability p_g=|offdiagonal entry|^2, then
+
+              |kappa|=product_g sqrt(p_g(1-p_g)).             (C2)
+
+This follows immediately from the same local factors. If a gate is
+deterministic, kappa=0 and exact composition holds for every phase.
+
+10. SIGNED OUTCOME IDENTITY AND A POSITIVE CYCLE COMPOSITION THEOREM.
+Index the 2^(2r) classical gate outcomes by bit strings s in {0,1}^{2r}.
+A zero means identity and a one means swap at that gate. Let pi_s be the
+resulting permutation in the same two-layer order, and let
+
+ w_s=product_g p_g^(s_g)(1-p_g)^(1-s_g),
+ chi_s=(-1)^(sum_g s_g),
+ sigma=f_P(K0) f_Q(K0) in {+1,-1}.
+
+Then
+
+             sum_s chi_s R(P_pi_s)=2 sigma f_P f_Q^T.         (C3)
+
+Proof. The signed product over the first matching is
+A_P=product_{e in P}(I-R(P_swap_e)). It annihilates every Boolean basis
+state containing both or neither coordinate of some pair. On the remaining
+middle-weight transversal states it is f_P f_P^T, since each two-coordinate
+factor is [[1,-1],[-1,1]]. Likewise A_Q=f_Q f_Q^T. Their product is
+f_P(f_P^T f_Q)f_Q^T. There are exactly two simultaneous transversals K0,K1;
+complementation multiplies each f by (-1)^r, so their two products agree
+and sum to 2 sigma. Expanding A_P A_Q gives the left side of (C3).
+
+Combining the phase-averaged classical law with (C1)-(C3) yields an exact
+permutation expansion for the individual phase:
+
+        R(UDV)=sum_s [w_s+sigma c chi_s] R(P_pi_s).           (C4)
+
+Its weights sum to one. Therefore it is a common positive law whenever
+
+                     w_s+sigma c chi_s>=0 for all s.        (C5)
+
+This is a proved all-spectra MOC-preserving composition criterion with
+explicit weights. It allows genuine nonzero interference on a closed cycle.
+A convenient symmetric sufficient condition is
+
+ |c|<=product_g min(p_g,1-p_g).                              (C6)
+
+When every gate is nondeterministic, write
+kappa=|kappa| exp(i phi0). Then (C6) is
+
+ |cos(theta+phi0)| <=
+       product_g sqrt(min(p_g,1-p_g)/max(p_g,1-p_g)).         (C7)
+
+Consequences:
+* For arbitrary gate probabilities there is a nonempty open phase interval
+  around quadrature where full common-law composition is valid.
+* At exact quadrature c=0, the individual kernel equals its phase average.
+* If every gate is balanced, p_g=1/2, condition (C7) holds at every phase.
+  Thus arbitrary complex balanced matching-cycle circuits have common laws
+  for every phase, in all even dimensions.
+* For several disjoint cycle components, impose the condition separately
+  on each cycle and take product laws; path components are covered by the
+  incidence-forest theorem. Thus arbitrary two matching layers admit
+  nontrivial, explicitly described phase regions with a common law.
+
+Failure of (C5) only means this particular signed correction is not a
+positive law. It does not disprove existence of a different law or MOC.
+
+11. A DETERMINANT-SPECIFIC CYCLE GLUING THEOREM.
+For arbitrary complex spectra a,b, formula (C1) gives the scalar defect
+
+ det(D_a+UDV D_b V*D*U*)
+   -sum_s w_s product_i(a_i+b_{pi_s(i)})
+
+ =2c [product_{(p0,p1) in P}(a_{p1}-a_{p0})]
+      [product_{(q0,q1) in Q}(b_{q0}-b_{q1})].              (C8)
+
+To check this, insert the middle-weight rank-one defect into the exterior
+determinant expansion. The sum over I of a_(I-complement) f_P(I) factors
+into product_P(a_p1-a_p0), and the sum over J of b_J f_Q(J) factors into
+product_Q(b_q0-b_q1).
+
+Consequently, if even one P-pair has equal a-eigenvalues, OR one Q-pair has
+equal b-eigenvalues, the actual determinant equals the phase-averaged
+positive permutation mixture for every phase and every gate probability.
+This removes the cycle defect for that spectral class without requiring
+the whole kernel to compose. Other eigenvalues are completely arbitrary.
+
+The unrestricted all-phase inequality for biased gates would require the
+classical support margin to dominate the right side of (C8). Neither (C4)
+nor the generic phase-average identity establishes that domination.
+
+12. EXACT NONZERO-INTERFERENCE CYCLE EXAMPLE.
+In dimension four take U as the layer on pairs (1,2),(3,4), and V as the
+layer on pairs (1,3),(2,4), every local gate being
+
+                     [[3/5,4/5],[-4/5,3/5]].
+
+Insert D=diag((7+24i)/25,1,1,1). Here every p_g=16/25 and
+the right side of (C7) is (3/4)^4=81/256>7/25, so the theorem applies.
+With K0={1,4}, K1={2,3}, I0={1,3}, J0={1,2}, one gets
+
+ kappa=-20736/390625,
+ c=-145152/9765625,
+ sigma=1.
+
+Thus c is nonzero: this example is not merely a zero-interference phase.
+The exact verifier category_cycle_verify.py uses Gaussian rational pairs
+and checks all 70 equal-size minor pairs, the rank-one defect (nonzero at
+16 minor pairs), and the 16 positive corrected permutation weights.
+Their minimum is 18873/9765625 and they sum to one.
+
+This is a full complex four-dimensional all-spectra certificate for a
+closed-loop circuit with nonzero coherent interference.
+
+13. COMBINING THE POSITIVE CYCLE AND OVERLAP THEOREMS.
+Treat each matching-cycle circuit satisfying (C5) as one common-law seed.
+Such seeds can have arbitrarily many sites and nonzero interference.
+Attach them, together with arbitrary U(3) seeds, along an incidence
+hyperforest as in Section 5. Theorem 1 composes their positive laws exactly.
+This gives connected all-dimensional circuits containing arbitrarily many
+closed coherent cycles, as long as the cycle gadgets meet only through
+acyclic single-coordinate attachments. No averaging over their internal
+phases is needed.
+
+For a balanced cycle the explicit law is especially simple:
+
+ lambda_s=2^(-2r)[1+sigma cos(theta+arg kappa) chi_s].
+
+Thus the entire coherent phase dependence is reproduced by a classical
+bias of the parity of the local swap choices. At the two extreme phases
+one uses only even or only odd outcomes; at quadrature both parities have
+equal weight. This explains how nonzero cycle interference can coexist
+with a full common permutation law, and why demanding zero interference
+would discard valid positive composition families.

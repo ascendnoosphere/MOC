@@ -1,0 +1,201 @@
+FULL FIVE-PARAMETER CLOSURE OF THE (0,7,10,18,22) CAP
+31 October 2026
+
+The previously open unequal branch is excluded. Combined with the existing
+equal-weight and d=0 proofs, this closes the entire nonnegative family
+
+  g = f34 + a r0 + b r7 + c r10 + d r18 + e r22,
+  a,b,c,d,e >= 0.
+
+The conclusion concerns actual spectral support gaps: their unitary support
+inequality holds. It does not assert that every arbitrary coefficient vector
+in this cap is nonnegative on U(4). Unrestricted complex MOC4 remains open.
+
+The main observation is the exact identity P=e^2 A(c+p(c+1)/e). The large
+five-variable polynomial is a shifted quadratic in one root coordinate.
+This identity proves uniqueness of the relevant root and supplies a global
+path to one rational anchor. No subdivision or sampled sign inference enters
+the proof.
+
+1. Inputs already proved in the repository
+
+Use the 14-coordinate spectral cubic and its Hessian H. Let E=H(ones14).
+An actual gap has x=g-h ones14, F(g)=h Q(g), det H(x)=0, and
+
+  [z^2] det(H(x)+z E) <= 0.                              (1)
+
+The last inequality is the audited necessary pencil-sign theorem in
+actual_pencil_sign.txt. Its proof uses the neutral inertia of actual rank-12
+Hessians and the (2,2,10) inertia of E, and includes rank drops by continuity.
+
+For this cap the exact pencil is det(H(g)-h E)=4 L(h) R(h), with L linear
+and R quadratic. Put
+
+  p=(a+1)(b+1), q=p+d(a+b+1),
+  F=-(c+1)(p+e)<0, Q=e(d-1)-1,
+  J=p(c+1)+e(c+1-ab),
+  P=Q L(F/Q)/(c+1).
+
+The expression P is polynomial. The full determinant identity gives
+
+  L(F/Q)=(c+1)P/Q, R(F/Q)=-(c+1)P/Q.
+
+Thus an actual positive-height point has Q<0 and P=0. Q=0 or h=0 is
+impossible since F=hQ and F<0. Negative-height support is covered by the
+previously audited external-half-plane theorem. The existing proofs
+eight0710_equal_closure.txt and eight0710_d0_closure.txt close a=b and d=0,
+respectively, including their nonnegative boundaries. It remains to exclude
+
+  P=0, Q<0, d>0, a!=b, a,b,c,e>=0.                       (2)
+
+2. The shifted quadratic
+
+Define
+
+  T=ab+d(a+b)-d^2-2d-2,
+  S=(ab-1)(d^2+1)-(a-1)(b-1)d,
+  A(w)=q w^2-p T w-p S.
+
+Exact expansion gives
+
+  P=A(c)e^2+p(c+1)A'(c)e+p^2(c+1)^2 q
+   =e^2 A(c+p(c+1)/e).                                 (3)
+
+Since P at e=0 equals p^2(c+1)^2 q>0, every point in (2) has e>0.
+Set w=c+p(c+1)/e>c>=0. Conversely, a positive root w of A and 0<=c<w
+determine the unique positive coefficient e=p(c+1)/(w-c).
+
+Two identities control the roots:
+
+  A(ab-1)=-ab d(a-b)^2 <= 0,
+  S=(ab-1)(d-1)^2+d(p-4).                               (4)
+
+Whenever A has a positive root, S>0 and this root is unique and simple.
+To see this, first suppose ab>=1. Then a+b>=2 sqrt(ab), so p>=4;
+equality occurs only at a=b=1. Away from that exception (4) gives S>0.
+At the exception A=q w^2-pT w has T=-(d^2+1)<0, hence no positive root.
+If ab<1, (4) places ab-1<0 between A's roots (possibly at an endpoint).
+The existence of a positive root therefore forces the other root to be
+negative, and again S>0. The roots have opposite signs since their product
+is -pS/q. In particular w depends continuously on a,b,d throughout S>0.
+
+3. Every point in (2) connects to c=0,d=1
+
+Hold a,b,d,w fixed and decrease c to zero, resetting e=p(c+1)/(w-c).
+The numerator of Q is affine:
+
+  (w-c)Q=[p(d-1)+1]c+p(d-1)-w.                         (5)
+
+At c=0 it is negative. For d<=1 this follows from w>0; for d>1 the
+coefficient of c is positive, so it follows from its assumed negativity
+at the starting point. Both endpoint values are negative, hence the entire
+segment retains Q<0. This step preserves P=0,d>0,a!=b and e>0.
+
+Now keep c=0 and a,b fixed, and move d to 1, following the positive root w.
+For d<=1, S/d=(ab-1)(d+1/d-2)+(p-4). If ab<1 this increases as d increases
+to 1, so remains positive. If ab>=1, positivity follows directly from (4).
+Q<0 is automatic for d<=1. In either case p>4 at the endpoint.
+
+For d>1, let
+
+  K(d)=(a+b+2)d^2+(ab-a-b+1)d-2ab-a-b.
+
+The exact factorization
+
+  A(p(d-1))=p[p(d-1)+1]K(d)                             (6)
+
+shows that Q<0 at c=0 is equivalent to K(d)<0: the comparison argument
+p(d-1)>0 lies below the unique positive root. Also
+
+  K(1)=4-p,
+  K'(1+t)=ab+a+b+5+2(a+b+2)t>0, t>=0.
+
+Decreasing d towards 1 keeps K negative. It also keeps a positive root
+available: A is negative at the positive comparison argument, and its
+upward leading coefficient gives a larger positive root. The root lemma
+then gives S>0. Consequently the path retains Q<0 throughout, and p>4
+at d=1. This proves the path for both ranges of d; no assertion that d can
+always decrease to zero is used.
+
+At c=0,d=1 the remaining domain is exactly
+
+  a,b>=0, (a+1)(b+1)>4, a!=b.
+
+There is an elementary piecewise-affine path to an anchor in each ordering.
+If a<b, increase b to B=max(b,4), holding a fixed; this increases p and
+preserves a<b. Next decrease a to zero, holding b=B; throughout this
+segment p>=(B+1)>=5 and a<b. Finally decrease b to 4 with a=0; again
+p>=5. This reaches (a,b)=(0,4). If a>b use the symmetric three segments
+to (4,0). The positive root can explicitly be written
+
+  w=(pT+sqrt(p^2 T^2+4qpS))/(2q),
+
+so it and e vary continuously on these paths. No logarithmic change of
+coordinates or implicit root-selection assumption is needed.
+
+4. The sign cannot change along these paths
+
+On P=0 both pencil factors vanish at h0=F/Q, so
+
+  a2=[z^2]det(H(g-h0 ones14)+zE)=4 L_h R_h(h0).         (7)
+
+The sign from h0-z does not alter the product of the two first derivatives.
+The unequal-branch nondegeneracy proof shows that both derivatives are
+nonzero on (2), including a=0 or b=0. Its argument is recalled here to
+specify precisely what the continuation requires.
+
+If L_h=0, then L(0)=d p(c+1)J=0, whence ab>c+1 and
+e=p(c+1)/(ab-c-1). Substitution instead gives
+
+  L_h=d p(a-b)^2(c+1)^2/(ab-c-1)>0,
+
+a contradiction. The discriminant of R is e^2 D. For 0<d<=1 substitute
+d=1/(1+t); (1+t)^4 D has 282 nonnegative coefficients and its a=b=c=e=0
+part is (t+2)^2>0. For d>1 and Q<0 write d=1+t,e=1/(t+u), t,u>0;
+(t+u)^2 D has 486 nonnegative coefficients and its a=b=c=0 part is
+(t+1)^2(t^2+tu+2t+2u+1)^2>0. These exact polynomial certificates cover
+all nonnegative a,b,c boundaries. Thus R_h(h0) cannot vanish, even if
+the quadratic coefficient of R vanishes and R becomes linear.
+
+At either rational anchor
+
+  (a,b,c,d,e)=(0,4,0,1,10) or (4,0,0,1,10),
+
+one has F=-15,Q=-1,h0=15,L_h=-5,R_h(h0)=-600 and a2=12000>0.
+Equation (7) is continuous and nonzero along every path above. Therefore
+a2>0 everywhere in (2), contradicting (1). This excludes the entire
+previously unresolved branch.
+
+The theorem follows with the two previously proved boundary families and
+the height cases in Section 1. A positive coefficient of f34 is normalized
+to one by scaling; coefficient zero is an ordinary-minor nonnegative sum.
+
+5. Reproduction and scope
+
+  python code/research/verify_eight_contact_full_0710.py --full-pencil
+
+The verifier reconstructs F,Q and optionally verifies the full 14-by-14
+determinant identity from the repository's exact spectral model. It checks (3)--(6), both
+nondegeneracy certificates, and both anchors; it also evaluates the new
+anchor directly as a Hessian determinant. The handwritten root and path
+arguments above supply the continuum step. A finite collection of samples
+is not used for that step.
+
+Dependencies: closing_moc4_model_verify.py and its certificate;
+actual_pencil_sign.txt and its audits; eight0710_equal_closure.txt;
+eight0710_d0_closure.txt; the audited negative-height theorem. The optional
+full-pencil mode rechecks the previously proved factorization on all 38,760
+nonnegative integer six-tuples of coordinate sum at most 14. Both sides are
+polynomials of total degree at most 14: the Hessian pencil is a 14-by-14
+affine matrix, and the degrees of L and R are checked directly. This grid is
+unisolvent. In the basis product_j binomial(x_j,alpha_j), evaluation is
+triangular by total degree, with identity diagonal blocks. Thus agreement
+at these exact integer nodes proves the polynomial identity, including
+all real and complex parameter values. Bareiss divisions are checked
+exactly. The grid is an algebraic identity certificate, not a numerical
+sample of the positivity statement.
+
+This is a full closure of one canonical five-parameter family and its
+relabelings. Six- and seven-contact families, and other eight-contact
+families, remain. No percentage of unrestricted MOC4 is inferred from the
+number of closed contact types, and no claim of literature priority is made.

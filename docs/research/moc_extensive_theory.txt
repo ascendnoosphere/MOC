@@ -1,0 +1,272 @@
+MOC: A RANDOM-ENSEMBLE THEOREM AND TESTED DETERMINISTIC CERTIFICATES
+31 October 2026
+
+The main result is a high-probability all-dimensional theorem for independent
+complex Gaussian spectra and Haar mixing. It follows from an explicit
+three-permutation triangle and the exact Haar second moment. This is a
+theorem about a specified random ensemble, not a proof of unrestricted MOC.
+The accompanying deterministic tests also refute a natural attempt to turn
+compound purity into a universal hull-contraction bound.
+
+1. Gaussian spectra: MOC holds with exponentially high probability
+
+Let a_1,...,a_n,b_1,...,b_n be independent standard complex Gaussian variables
+with density pi^-1 exp(-|z|^2), and let U be an independent Haar unitary.
+Write d=det(D_a+U D_b U*) and P=conv{product_i(a_i+b_pi(i))}. For n>=4,
+
+ P(d not in P) <= (1-p0)^floor(n/4) + exp(-n/400)
+                 + (8/3)(n+2)(n+3) exp(-n/50),                   (1)
+ p0 = exp(-5)/200^16 > 0.
+
+The right side can be replaced by its minimum with 1. In particular, there
+are positive absolute C,c such that the failure probability is at most
+C exp(-c n). The explicit p0 is deliberately conservative: approximately
+1.0281e-39. Formula (1) is therefore an asymptotic theorem, not a useful
+numerical guarantee at n=1000. No novelty claim is made without a broader
+literature search. The construction was proposed by the root researcher;
+the argument and constants below were checked independently in this task.
+
+Step A: a deterministic four-index triangle.
+
+Let z0=product_i(a_i+b_i), with no zero factors. On four indices, define
+
+ q1=((a1+b2)(a2+b1))/((a1+b1)(a2+b2)),
+ q2=((a3+b4)(a4+b3))/((a3+b3)(a4+b4)).
+
+Three permitted matching products are z0, z0*q1, and z0*q1*q2. They come
+from the identity, one transposition, and two disjoint transpositions.
+Let omega=(-1+i sqrt(3))/2. If |q1-omega|,|q2-omega|<1/10, these three
+products contain the closed disk centered at zero of radius |z0|/4.
+
+To prove this, normalize by z0. The vertices 1,q1,q1q2 differ from
+1,omega,omega^2 by at most 0,1/10,21/100, respectively. The equilateral
+triangle has support at least 1/2 in every unit direction. Perturbing its
+vertices by at most 21/100 changes every support value by at most 21/100.
+The new triangle therefore has support at least 29/100 in every direction,
+and contains the disk of that radius. We use the smaller radius 1/4.
+This support argument also proves that zero remains inside the triangle;
+it does not assume that conclusion from the angular appearance alone.
+
+Step B: independent blocks supply such a triangle.
+
+The four complex centers
+
+ (a1,a2,b1,b2)=(0,1,1,t), t=(-2+i sqrt(3))/7,
+
+satisfy q1=2t/(1+t)=omega, with |t|=1/sqrt(7) and |1+t|=2/sqrt(7).
+Use the same centers for the second pair. Suppose each of the eight
+variables lies in a complex disk of radius r=1/200 around its center.
+Each pair sum then changes by at most 2r. Writing q=N/D, the product
+error bounds and |N0|=|D0| give
+
+ |q-omega| <= (9r+8r^2)/(2/3-4r-4r^2)
+            =1356/19397 < 1/10.                                  (2)
+
+The coarse constants use 1/sqrt(7)<1/2 and 2/sqrt(7)>2/3. The denominator
+in (2) is strictly positive. Thus every point in these eight disks is a
+good block; no zero denominator occurs there.
+
+A standard complex Gaussian lands in a disk of radius r about c with
+probability at least r^2 exp(-(|c|+r)^2). The sum of the eight exponent
+bounds is at most
+
+ 2*(r^2+2*(1+r)^2+(1/2+r)^2)=22751/5000 < 5.
+
+Hence a given four-index block is good with probability at least p0.
+Disjoint four-index blocks involve disjoint spectral variables and are
+independent, so the probability that none is good is at most the first
+term of (1). The chosen good block may depend on the observed spectra.
+
+Step C: the common matching product is exponentially large.
+
+The independent variables X_i=log|a_i+b_i| have
+
+ E X_i=(log 2-gamma)/2 > 0,
+ E exp(-s X_i)=2^(-s/2) Gamma(1-s/2), 0<s<2.
+
+This follows because |a_i+b_i|^2/2 has exponential density exp(-x).
+Take s=1/10. Chernoff's inequality gives
+
+ P(|z0|<exp(n/100))
+ <= [exp(1/1000)*2^(-1/20)*Gamma(19/20)]^n
+ <= exp(-n/400).                                                  (3)
+
+The last numerical inequality has a rational verification. For x=1/20,
+the classical series log Gamma(1-x)=gamma*x+sum_{k>=2}zeta(k)x^k/k gives
+
+ 1/1000-x log 2+log Gamma(1-x)
+ < 1/1000-x*(693/1000)+x*(578/1000)
+       +(1645/1000)*x^2/(2*(1-x))
+ = -393/152000 < -1/400.
+
+The inequalities log 2>0.693, gamma<0.578, zeta(2)<1.645 are themselves
+checked with finite rational sums. Use four positive terms of
+2*atanh(1/3) for log 2; gamma<H_1024-10 log 2; and the integral-test upper
+bound sum_{j=1}^{100}j^-2+1/100 for zeta(2). For k>=2, zeta(k)<=zeta(2),
+and sum_{k>=2}x^k/k<=x^2/(2(1-x)). The gamma series follows also from
+NIST DLMF 5.7.3 by expanding -log(1-x): https://dlmf.nist.gov/5.7.E3 .
+
+Step D: Haar mixing keeps the determinant below that disk.
+
+The independently checked moment identity in moc_campaign_theory_20261031.txt
+gives E|d|^2=(n+2)(n+3)/6. Markov's inequality implies
+
+ P(|d|>(1/4) exp(n/100))
+ <= (8/3)(n+2)(n+3) exp(-n/50).                                   (4)
+
+If no event on the right of (1) occurs, a good block exists, its three
+matching products surround a disk of radius at least exp(n/100)/4, and
+d belongs to that disk. This proves (1). The good-block event, baseline
+product, and determinant are correlated. The proof uses a union bound
+and requires no independence among these three events. Independence is
+used only between disjoint spectral blocks, between the baseline factors,
+and between U and the spectra in the moment theorem.
+
+The finite rational/algebraic constants passed
+code/research/verify_moc_gaussian_triangle_constants.py. Its exploratory
+simulation found the broader event that the triangle (1,q1,q1q2) contains
+the disk of radius 1/4 in 4441 of 200000 independent blocks (0.022205).
+This frequency is not used as a rigorous probability bound. Improving
+the explicit p0 needs a larger analytically controlled region.
+
+Independent audit: docs/research/moc_gaussian_triangle_independent_audit_20261031.txt
+reports PASS after replaying the constant verifier, checking the geometric
+and probability arguments, and reading the DLMF gamma expansion. The
+theorem is a written mathematical proof with exact finite constant checks;
+it has not been formalized in Lean.
+
+General distribution criterion. Let all spectral entries be iid from a
+centered complex law with E|a|^2=1. Assume E log|a+b|=m>0 for independent
+draws a,b, E|a+b|^-s0<infinity for some s0>0, and positive probability
+that a four-index block has both swap ratios within 1/10 of omega.
+Then, for independent Haar U, MOC fails with probability at most C exp(-c n)
+for constants C,c>0 depending on this law. Indeed, choose 0<alpha<m.
+The negative moment and finite variance justify differentiation at zero
+of E exp(-s(log|a+b|-alpha)); its derivative is alpha-m<0. A small
+positive s therefore gives an exponentially decreasing Chernoff bound.
+The same exact second moment (n+2)(n+3)/6 and the independent-block
+argument finish the proof. Finite variance bounds the positive logarithmic
+tail, and the assumed negative moment bounds its negative tail.
+
+This includes the uniform distribution on the disk of radius sqrt(2).
+It is centered with variance one. Rotational averaging gives
+E log|a+b|=E log max(|a|,|b|)=log(sqrt(2))-1/4>0: the maximum radius
+has density r^3 on [0,sqrt(2)]. The sum density is bounded, so its negative
+moments of orders 0<s<2 are finite by a planar radial integral. The eight
+target disks above lie inside the radius-sqrt(2) disk, so their joint
+probability is exactly (r^2/2)^8>0. This proves a second all-dimensional
+random-ensemble corollary; no explicit Chernoff constants are claimed for
+it here.
+
+Root also tested the deterministic three-product certificate on 15412
+eligible existing records. For the reported n>=256 subsets it succeeds
+on 153/153 dense Gaussian rows, 745/745 structured Gaussian rows, and
+153/153 dense cluster rows, but only 30/153 dense near-real rows and
+0/745 structured paired-cancellation rows. The baseline identity product
+can be a poor center for this construction. See
+build/moc_extensive_20261031/local_block_summary.json for exact scope.
+These empirical counts are separate from the theorem's probability bound.
+
+For the worst-case conjecture none of the probability statements rules
+out a rare or structured violating input. The deterministic four-index
+disk certificate is the part that can be tested on an individual instance.
+
+2. An affine covariance certificate for actual matching products
+
+For any m selected complex matching products, identify C with R^2 and set
+ mu=(1/m)sum_j z_j, x_j=z_j-mu, Sigma=(1/m)sum_j x_j x_j^T.
+Assume Sigma is positive definite. For y=d-mu define
+
+ w_j=(1/m)*(1+x_j^T Sigma^-1 y).                                  (5)
+
+Then sum_j w_j=1 and sum_j w_j z_j=d exactly. Consequently all w_j>=0
+is a sufficient MOC certificate. This holds for any subset of matching
+products and any n, so enumeration of n! products is unnecessary.
+Proof: sum_j x_j=0, while (1/m)sum_j x_j x_j^T=Sigma.
+
+Put R^2=y^T Sigma^-1 y and L=max_j x_j^T Sigma^-1 x_j. Cauchy-Schwarz
+proves that R^2 L<=1 is a simpler sufficient certificate. Also L<=m-1:
+the whitened rows have sum zero and covariance identity, and the diagonal
+of their projection matrix is bounded by that of the mean-zero projection.
+Thus R^2<=1/(m-1) suffices without computing L. These conditions are
+affine invariant. They are sufficient only; negative canonical weights
+do not refute MOC or exclude another nonnegative representation.
+
+The complete-hull portion of the combined 20127-record campaign contains
+9364 records. Reconstructing every matching product in those records and
+requiring major RMS axis>1e-12 and axis ratio>=1e-6 leaves 6711 provisional
+numerical analyses. Among them, 3205 have nonnegative weights (5), 2010
+pass R^2 L<=1, and 574 pass R^2<=1/(m-1). These are float64 diagnostics,
+not interval certificates. Very small absolute minor axes remain a risk;
+the integration agent applies a stronger conditioning filter by record ID.
+Do not present these raw counts as certified inclusions or as independent
+new experimental draws. They reanalyze existing campaign records.
+
+Outputs: build/moc_extensive_20261031/affine_covariance_records.csv and
+affine_covariance_summary.json. Replay: code/research/moc_extensive_theory.py.
+
+3. Compound purity does not determine a universal hull contraction
+
+Let S(U)=sum_{k,I,J}|det U[I,J]|^4 and let mu be the full permutation
+centroid. A plausible strengthening was
+
+ d in mu+sqrt(kappa)*(P-mu),
+ kappa=(S(U)-(n+1))/(2^n-(n+1)).                                  (6)
+
+At n=2 this is exact: S(U)=3+(2|u11|^2-1)^2 and the determinant lies on
+the matching segment at the corresponding signed displacement. At a
+permutation mixer kappa=1. Nevertheless (6) is false at n=4.
+
+Take U to be the normalized Fourier4 matrix and
+ a=(2-i,-1-2i,2-2i,i), b=(-1-2i,2,2i,1+i).
+Exact arithmetic gives
+
+ S(U)=21/4, kappa=1/44,
+ d=9/4-99i/4, mu=73/6-129i/4.
+
+For q=-77-34i define support_q(z)=Re(conj(q)z). The largest matching
+support is 2040, and
+
+ support_q(d-mu)=6103/12,
+ max_pi support_q(z_pi-mu)=5641/3.
+
+Their ratio 6103/22564 is approximately 0.270475, larger than
+sqrt(1/44), approximately 0.150756. The exact squared violation is
+(6103/12)^2-(1/44)*(5641/3)^2=282429175/1584>0.
+
+This is not a counterexample to MOC. In fact d is the convex combination
+of the products indexed by (0,1,2,3), (0,1,3,2), and (0,3,2,1), with
+strictly positive respective weights 9/80,1/4,51/80. The exact verifier
+checks unitarity, all minors, all 24 matching products, the separating
+support calculation, and the positive triangle identity:
+code/research/verify_moc_purity_contraction_counterexample.py.
+
+The same exact example passes the affine covariance certificate: its
+minimum weight (5) is 4738357/522067008>0 and R^2 L equals
+98765249659741/118295989948816<1. The verifier checks all 24 weights and
+their exact determinant reconstruction as well as the three-point witness.
+
+The provisional numerical analysis also finds 1636 failures of (6) among
+4520 n=3/4 tests. The exact rational example already settles falsity; those
+floating counts only describe how often the stronger claim fails in this
+sample. The lesson is specific: the scalar sum S(U) forgets which minor
+coordinates carry the spectral cost. It controls a spectral ensemble
+second moment but cannot impose the proposed deterministic contraction.
+
+4. Consequences for the unrestricted proof search
+
+The random theorem upgrades the observed high-dimensional interior
+behavior to a proved statement for one ensemble. It identifies a small
+explicit certificate: three products differing on only four indices.
+The affine covariance construction gives another all-dimensional
+sufficient certificate that can be checked on selected products and
+upgraded to exact or interval arithmetic.
+
+Neither mechanism covers arbitrary fixed spectra and U. A full proof
+would need a reason that every input admits suitable nonnegative
+weights or another certificate, including thin hulls, highly structured
+spectra, and noncommuting boundary maximizers. The exact counterexample
+above rules out one tempting replacement of that obligation by a single
+purity number. It does not rule out spectral-direction-dependent
+compound inequalities. This note proves no new universal MOC case
+beyond its explicitly stated sufficient conditions and random ensemble.

@@ -1,0 +1,181 @@
+Twenty executed moonshot branches: live research ledger
+
+Original target: unrestricted complex 4x4 Marcus-de Oliveira (MOC4).
+Completion condition remains a complete proof or rigorous counterexample.
+MOC4 IS NOT SOLVED by this ledger. The related polygon conjecture below
+has an exact counterexample; the two targets must not be conflated.
+
+M01. Copositive/Birkhoff reconstruction of new unitary inequalities.
+PROVED: f34+(33/4)H>=0, H the other ten ordinary cap rays. A 24x24
+rational matrix is decomposed into rank-one PSD plus entrywise-positive
+parts, followed by exact Young inequalities. This lies outside the
+entire previous weighted-law cone. cap_other_ten_bound.txt.
+
+M02. Compact normalization and noncommutative Möbius transport.
+PROVED normalization: a farthest pair puts all eight signed spectral
+points in |z|<=1,|z-1|<=1, with exact common determinant scaling.
+The ordered fractional-linear matrix identity is verified on a genuinely
+noncommuting pair and proved symbolically. This does not supply a finite
+grid proof. moonshot_02_compact_normalization.txt.
+
+M03. Simultaneous circle geometry under Möbius transformations.
+EXECUTED explicit maps for separate spectral circles, poles included.
+Novelty check: Drury 2006 already proves this entire class in every n.
+Thus this is recovered background, not a new MOC4 solution.
+moonshot_03_mobius_circles.txt.
+
+M04. Closure of all 48 mixed rays' weighted compensation laws.
+PROVED obstruction: on a canonical cap this whole library certifies
+exactly the original three-budget capacity condition. Other ten ordinary
+coordinates cannot help inside this library. New inequalities are needed
+to enlarge it. Complete proof: moonshots_04_06.txt.
+
+M05. Algebraic zero sets and sparse positive atoms.
+PROVED new seven-contact atom:
+f34+12r0+5r7+r10+5r17+4r20+4r30>=0 for every complex U4.
+A four-parameter weighted extension is verified. It has zero triangle
+budgets and so escapes M04. verify_sparse_seven_contact_atom.py.
+
+M06. Higher mixed-ray cancellation circuits and propagation.
+PROVED: all17296 pure-mixed triples reduce to eight capacity types,
+each with binary extreme rays only. Old weighted propagation cannot
+evade M04. The new sparse atom has24 canonical-cap support images.
+They are available in four maximal six-contact orbit types (indices
+1,19,59,63), covering84 raw cones; availability is not a proof that
+actual coefficient budgets satisfy a certificate. Data are in
+data/certificates/research/sparse_atom_six_face_availability.json.
+
+M07. Reconstruct real spectral lifts rather than guessing realizability.
+PROVED finite complex spectra realize f34+(1/2)r18+2r23. Therefore the
+proposed stronger linear bound lambda<=p+r is false, even after small
+generic perturbation to distinct products. Triangle capacity is exactly
+one here and remains valid. verify_f34_weighted_asymmetry.py.
+
+M08. Hessian compounds as positivity detectors.
+EXECUTED an exact family with negative principal12 minor for every
+positive added singleton weight. Its determinant already excludes the
+family, so this particular test has no added strength. No fake progress
+claim. verify_f34_compound_slice.py.
+
+M09. Real-form topology versus neutral Hessian signature.
+REFUTED: neutral inertia is sufficient for a real lift. An exact smooth
+real secant has inertia(6,6,2) but its lift quartic is positive for every
+real parameter. verify_neutral_not_sufficient.py.
+
+M10. Exact interpolation of the full seven-parameter six-contact child.
+PROVED: the 2285-term degree9 identity passed a separate complete
+degree18 verification at all480700 exact unisolvent nodes in423.91s.
+The full seven-parameter child is closed, with independent coefficients.
+Proof and independent audit: six_symmetric_general_closure.txt and
+six_symmetric_general_independent_review.txt.
+
+M11. Singleton symmetrization/majorization.
+REFUTED pointwise averaging shortcut by an exact rational orthogonal
+matrix: f+r0=-14/975, whereas uniform averaging gives47/1950.
+Reverse ordering also fails. This is not an actual spectral MOC
+counterexample. verify_six_singleton_symmetrization.py.
+
+M12. Positive generating-function substitutions for nonic coefficients.
+EXECUTED cube and star rational substitutions. The cube cleared
+polynomial has6496 positive coefficients and constant1; each star
+has21195 positive coefficients and constant2. With M10 now verified,
+these force the weighted capacity and close the FULL seven-parameter
+child, including zero coefficient boundaries. No equality assumption
+on the first four ordinary coefficients remains.
+
+M13. Eight-contact family elimination without compensator pairs.
+PROVED three-parameter interior slice. Full five-parameter determinant
+also computed, but it has genuine positive roots. At an explicit root,
+kernel positivity excludes a real lift. Full family remains open.
+moonshots_13_14.txt and verify_eight_contact_slice_0710.py.
+
+M14. Two-parameter six-contact enlargement.
+PROVED an explicit family with six contacts using a strictly positive
+polynomial squared in its spectral determinant. A projection from
+arbitrary six to eight contacts was not proved or assumed.
+verify_six_contact_slice_0710.py.
+
+M15. Uniform profiles across all 58 canonical eight-contact types.
+EXECUTED exact nonic identities for every type: 38 have positive
+nonic coefficients; 20 contribute23 positive nonic roots.
+This covers one-parameter profiles, not arbitrary five coefficients.
+
+M16. Shared quotient recurrence and rank-two lift reconstruction.
+EXECUTED exact number-field filtering of all23 roots:16 weighted,
+one negative height, one negative principal12 minor, five excluded
+by the full real-lift equations after the tested principal minor did
+not exclude them. Together this proves the support inequality on
+all58 uniform eight-contact profiles. Portable verifier
+verify_eight_uniform_profiles.py passed, exit0; execution log is
+build/eight12/portable_verify.log and exact report is
+data/certificates/geometry/eight_uniform_profiles_report.json.
+
+M17. Rational Bézier curves for weighted certificates.
+PROVED exact arc representation; tested the sharp asymmetric edge.
+The arc has tangency at t=1/4 with slack(4t-1)^2/(8t), but a control
+point lies outside the hull. Thus control-point inclusion cannot replace
+the desired arc inclusion. moonshots_17_18.txt.
+
+M18. Finite direction reduction via concavity on normal cones.
+PROVED: for fixed spectra, the triangle-budget candidate needs checking
+only at hull-edge normals. Exact nine-edge checks establish the
+candidate for all directions on a nonordinary spectral example.
+verify_f34_triangle_hull_edges.py.
+
+M19. Contact-constrained adversarial search.
+EXECUTED two-contact spectral searches, including zero-budget edges.
+No violation found; this is numerical evidence, not a universal theorem.
+An exact example verifies a zero-capacity boundary with negative lambda.
+moonshots_19_20.txt.
+
+M20. Generative paired-conjugate spectral families.
+PROVED all-direction triangle capacity for an exact paired-conjugate
+example by nine rational edge checks. Affine spectral transport gives
+a four-real-parameter family. This is an auxiliary class, not a
+reduction from arbitrary spectra. verify_moonshots_19_20.py.
+
+Additional related-conjecture work requested by the user:
+
+R1. Kovacec 2026 Conjecture7 is REFUTED at n4 by an exact rational
+Cayley unitary and rational spectra. The 72 transposition segments have
+a verified star-shaped14-gon Jordan boundary, yet the determinant has
+a strict clear ray to infinity. The determinant lies strictly inside
+the ORIGINAL MOC hull. Root and an independent subagent audited the
+statement and exact verifier. related_conjecture_polygon.txt.
+
+R2. Rodtes arXiv2006.14846v1 dilation mechanism was inspected and tested.
+Exact independently coupled dilations can lose every common reducing
+subspace; arbitrary four-point spectra also fail a perpendicular-chord
+necessary condition. These are precise limits of that recovery route,
+not counterexamples to Rodtes' theorem or MOC.
+related_conjectures_arxiv_dilation.txt.
+
+R3. The general common-weight polynomial strengthening is false.
+An independently found exact isospectral rational-orthogonal example
+has a strict integer separator for all24 matching polynomials. The
+literature already reports failure for normal n>=4, so no novelty is
+claimed. The same five positive weights work at t=0,1 but none work
+at all three t=0,1,2. verify_polynomial_normal_counterexample.py PASS.
+
+Further primary progress after the twenty-branch batch:
+P1. Every actual spectral x satisfies [t^2]det(H_x+tH_e)<=0. Proved
+using the audited neutral-Hessian theorem, metric inertia(2,2,10),
+and the actual real lift; independently audited. This directly excludes
+positive-coefficient branches. actual_pencil_sign.txt.
+P2. On the entire13-coordinate cap, F<=-1 and Q<=-1 if the three
+compensators lie in[0,1], with no restriction on the other10 coefficients.
+Exact global coefficient identities verified; cap13_cube_signs.txt.
+P3. New full five-parameter eight-contact closures are being packaged:
+orbit0 by positive quadratic pencil coefficient, orbit2 by a positive
+polynomial on de<1 and weighted reconstruction on de>=1. Do not conflate
+these cases with all58 arbitrary-coefficient families.
+P4. Orbit13 has an exact all-positive six-contact Hessian-singular point
+inside the strict compensator cube. It passes the full neutral compound
+test but fails the exact real-lift Veronese equation. Thus determinant
+or inertia alone cannot replace full real-lift checks on this child.
+
+Do not rerun failed routes without a new ingredient. Next active work:
+generalize real-lift elimination on genuine
+five/seven-parameter cones; propagate the new sparse seven-contact
+atoms; continue from the stronger-polygon failure toward a concrete
+full-MOC diagnostic. The tracked full-MOC goal remains ACTIVE.

@@ -1,0 +1,99 @@
+AN INTERIOR SIX-CONTACT OBSTRUCTION TO NONIC/NEUTRALITY-ONLY EXCLUSION
+2026-10-30
+
+STATUS: EXACTLY VERIFIED. This is a counterexample to a proposed necessary-
+condition implication, not an actual spectral gap or a MOC counterexample.
+It does not close the successor orbit13.
+
+Portable verifier:
+ code/research/verify_six_triangle_nonic_obstruction.py
+Fresh execution:
+ build/six_triangle_next/portable_obstruction.log
+No reconstructed nonic, generated model, floating point, or build data is
+an input. The verifier reconstructs the exact cubic model in a temporary
+directory from its source and checked certificate.
+
+1. The full-family context and the exact interior point
+------------------------------------------------------
+The canonical marked six-contact child13 is
+ g=a r0+b r7+c r13+d r17+p r18+q r23+r r28+f34.
+All seven coefficients are independent and nonnegative. Direct cubic
+calculation gives
+ F(g)=−[(1+a)(1+b)(1+c)+d(1+b)+pqr],
+ Q(g)=d(r−1)−1−pq−pr−qr.
+In particular F<0 always, and Q<0 on the entire compensator cube.
+
+Choose the strictly positive coefficients
+ (a,b,c,d,p,q,r)=(2,1,2,331/17,1/4,1/4,1/4).
+The permutation gap has exactly six contacts. Exact values are
+ F=−61969/1088, Q=−4295/272, h=F/Q=61969/17180>0.
+Set x=g−h e, H=H_F(x), E=H_F(e).
+
+The exact Hessian is singular with rank12. Its inertia is (6,6,2), obtained
+by rational symmetric congruence with one- and two-dimensional pivots.
+The principal12 minor on coordinates0,...,11 is
+ 3920179072343350283975790081/100704869744978560000 >0.
+Because rankH=12, its symmetric twelfth compound has rank1. One positive
+diagonal entry proves the WHOLE twelfth compound is positive semidefinite;
+this conclusion is stronger than testing merely a selected minor.
+The additional pencil necessary condition [t²]det(H+tE)=−24125362895/1257728<0 also passes,
+checked directly by four exact determinant evaluations and rankE=4.
+Thus neither Hessian singularity, neutral inertia, full C12 positivity,
+nor the original e-direction a2<=0 condition can exclude this point.
+The expanded35-critical-direction theorem DOES detect the point:
+ [t²]det(H+t H_F(r33))
+ =4559787785795356211499/1245621933690800 >0.
+Here Q_r33(x)=−861221/58412<0 and H_F(r33)|kerH is positive definite.
+The portable checker independently recomputes this coefficient. Thus this
+point is not a false positive for the enlarged35-metric library; it is a
+false positive for the older nonic/neutrality/e-metric conditions. See
+ docs/research/actual_pencil_sign.txt
+for the extended necessary theorem.
+
+Meanwhile p=q=r=1/4 gives exact triangle capacity (p+q+r)/2=3/8<1.
+Every star product p(q+r),q(p+r),r(p+q) equals1/8; every pair product
+is1/16. The capacity is3/8, not1/8. The point therefore disproves the
+implication that these necessary Hessian conditions force sufficient
+weighted triangle capacity, even strictly inside the seven-coefficient
+orthant of one genuine six-contact child.
+
+2. Why the point is nevertheless not actual
+-------------------------------------------
+An actual lift requires a real y with Hy=0 and gradF(y)=gradF(x).
+Compute an exact two-column rational kernel basis K, write y=K(u,v), and
+put U=u²,V=uv,Z=v². The fourteen gradient equations are linear in U,V,Z.
+Their augmented RREF has pivots(0,1), rank2, and twelve zero rows. Thus
+U=alpha+beta Z, V=gamma+delta Z for exact rational coefficients.
+The remaining necessary Veronese identity is UZ−V²=0, with Z>=0.
+
+After multiplying by a negative rational factor, the left side has the
+primitive integer polynomial
+ 2573771220003498823790635840000 Z²
+ +297891681814321068231832326417200 Z
+ +8593199221018410086710908315163369.
+All three coefficients are strictly positive. Hence the actual left side
+UZ−V² is strictly negative for every Z>=0. No real y can exist.
+The exact checker recomputes all fourteen equations and every coefficient.
+It also finds det(E|kerH)<0, so the simpler kernel-Q sign test does not
+exclude this point either.
+
+3. Scope and the next needed argument
+-------------------------------------
+The previous orbit12 proof excluded all insufficient-capacity points using
+its exact nonic alone. That strategy cannot be carried unchanged to13:
+the obstruction above already satisfies the full neutral Hessian tests.
+The expanded critical-metric sign theorem excludes this point directly.
+A full orbit13 proof must use stronger lifting information or a support
+certificate involving the other ordinary coefficients. The gradient-
+Veronese calculation supplies a sharp exact diagnostic, not a full-family
+sign theorem. All conclusions here concern the displayed interior point;
+no unequal-coefficient family is silently replaced by a restricted slice.
+
+Exploratory reconstruction for the entire seven-parameter family13 gave
+a1381-term degree9 candidate with multidegrees(3,3,3,2,2,2,2), recovered
+from11440 shared-origin directions in99.23seconds. The candidate's cube
+transform has3973 nonzero coefficients, including883 negative ones; the
+three star transforms also have negative coefficients. These exploratory
+tables are not proof inputs. Its full seven-variable identity has not yet
+been independently certified. The direct point certificate above requires
+none of that interpolation.

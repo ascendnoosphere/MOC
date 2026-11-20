@@ -1,0 +1,77 @@
+FULL FIVE-PARAMETER CLOSURE OF EIGHT-CONTACT ORBIT5
+2026-10-30
+
+THEOREM. No actual spectral support gap with positive mixed coefficient lies
+in the coefficient face
+
+ g=f34+a r0+b r7+c r17+d r18+e r27,     a,b,c,d,e>=0.
+
+The assertion includes all support heights and all boundary coefficients.
+With zero mixed coefficient the cost is an ordinary nonnegative minor sum.
+Hence the support inequality holds on this whole face and all its symmetry
+images. This is orbit5 of the canonical eight-contact census, with24 images
+in the f34 cap and permutation contact set {6,7,8,9,14,20,22,23}.
+
+Exact background and the necessary singularity
+---------------------------------------------
+The verified spectral cubic F on14 selected matching coordinates satisfies
+grad F(z)=0 for every actual complex spectral matching vector. Write H_v for
+its Hessian, 1 for the all-ones vector, and Q=D_1F. The model also proves
+H_1 1=0 and F(1)=0.
+
+For an actual support gap g_pi=h-Re(eta z_pi), put x=g-h1 and let y be the
+imaginary-part lift. Expanding the quadratic gradient gives
+
+                    H_x y=0, grad F(y)=grad F(x).
+
+Euler's identity gives F(x)=0; therefore F(g)=hQ(g). On the present face,
+
+ F(g)=-(b+1)(e+1)(a+c+1)<0,
+ Q(g)=e(d-c-1)-c-1.
+
+An actual gap consequently has Q(g)!=0 and h=F(g)/Q(g).
+The Hessian H_x must be singular: y supplies a kernel vector when y!=0.
+If y=0, then grad F(x)=0 and H_x x=0; here x!=0 because x=0 would imply
+F(g)=F(h1)=0, contrary to the strictly negative formula above.
+
+Exact determinant and a globally positive factor
+------------------------------------------------
+Set A=a+c+1, B=b+1, C=c+1, E=e+1. Then F=-ABE and Q=d(E-1)-CE. The
+standalone verifier establishes the polynomial determinant identity
+
+ det H_(g-F/Q 1)=-4 A^4 B^4 E^2 P^2/Q^2,                  (1)
+
+where
+
+ P=ABE+AEd-BCE+BEd+BE-CEd+Ed^2-d^2
+  =E[a(B+d)+B(d+1)]+(E-1)d^2.                            (2)
+
+The second line uses A-C=a. All its terms are nonnegative on the full
+coefficient orthant, and E B(d+1)>0. Thus P>0 everywhere. Since A,B,E>0
+and Q!=0 for actual gaps, formula (1) makes the actual-lift Hessian
+nonsingular. This contradiction proves the theorem. The argument needs
+neither a branch connectedness theorem nor an inertia continuation.
+
+Exact compiler and verification
+-------------------------------
+
+ python3 code/research/verify_eight_contact_orbit5.py
+
+Fresh source-free verification passed in5.48seconds. The imported model
+checks all spectral gradient identities. The reusable helper
+code/research/eight_contact_pencil_compiler.py then computes the full
+Hessian pencil by exact rational elimination from14 variables to a small Schur matrix.
+After row denominators are cleared, a Laplace expansion into2x2 and3x3 minors
+computes its determinant. Substitution of h=F/Q and clearing Q^3 verifies
+(1) coefficientwise. The rational calculation proves a polynomial identity,
+so intermediate elimination pivots impose no restriction on the final
+domain. This checker reads no generated build files or sampled parameters.
+
+The helper exposes SpectralModel.face, compile_pencil, and
+clear_actual_height for further complete coefficient families. It returns
+the chosen pivots so a final verifier can fix them independently of the
+discovery heuristic. Its CLI is a determinant compiler; positivity still
+requires a sign proof such as (2).
+
+This closes one whole five-parameter eight-contact orbit. The unrestricted
+MOC4 problem and the other coefficient faces remain separate targets.

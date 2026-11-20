@@ -1,0 +1,31 @@
+TWO-MIXED FACE RIGIDITY DOES NOT EXTEND TO ALL ORDINARY RAYS
+
+The equality of the coefficients of f52 and f74 proved on the face
+(3,19,22,29,52,74) is not a universal necessary condition for an actual
+spectral gap when arbitrary ordinary rays are admitted. The following exact
+example is verified in code/research/verify_two_mixed_global_counterexample.py.
+
+Take eta=1 and
+ alpha=(1+3i,2-3i,2-i,3), beta=(-2+i,-1+3i,2-i,1-i).
+For z_pi=product_i(alpha_i+beta_pi(i)), the height is
+ h=max_pi Re(z_pi)=168. Its 24 actual gaps agree exactly with
+
+ 109 r0 + 75 r2 + 5 r7 + 85 r8 + 12 r9 + 12 r14 + 15 r17
+ + 55 r20 + 3 r21 + 3 r22 + 25 r30 + 72 f52 + 8 f74.
+
+All coefficients are nonnegative, and 72 != 8. This refutes the statement
+that every such representation of every actual gap must have equal mixed
+coefficients; it does not preclude another representation with equality or
+show failure of the support inequality. The verifier forms the products in
+integer-pair Gaussian arithmetic, computes the actual maximum, rebuilds the
+rays and checks all 24 coordinates exactly.
+
+An exploratory single-ray calculation suggests where the old obstruction
+breaks. For g=v r0+t f52+f74, a=b=c=d=0 and t,v>=0, the exact cubic has
+ F(g)=(t+1)Q, Q=t^2+t+1. The exploratory script
+build/two_mixed/extra_ray.py computes
+ det(Q H_g-F H_e) = -4(t-1)^4(t+1)^4(t-v+1)^2 Q^16.
+Thus the necessary Hessian singularity also allows the branch v=t+1 with
+unequal mixed coefficients. This last identity does not establish spectral
+realizability of that branch; it only explains why the old determinant proof
+alone cannot rule it out.

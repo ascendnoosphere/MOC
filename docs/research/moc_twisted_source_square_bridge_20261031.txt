@@ -1,0 +1,88 @@
+FOURIER22 SOURCE-SQUARE BRIDGE AND AN EXACT LIMIT ON ITS USE
+31 October2026. Exact global algebra; no global MOC proof is asserted.
+
+Files:
+ code/research/moc_twisted_source_square_bridge.py
+ build/moc_hodge_matching_sos/twisted_source_square_bridge.json
+
+1. The global quadratic identity
+
+Let V be the14-dimensional real matching-function space on S4, with
+orthogonal Fourier decomposition V=V0 directsum V31 directsum V22 of
+dimensions1,9,4. Define the real involution
+  T=P0+P31-P22.
+This changes the sign of the entire22 block. It is NOT multiplication
+of that block by sign(pi), and it is not a complex rotation.
+
+Let E reconstruct the24 matching values from the repository's selected
+14 coordinates, and let the columns of W span Vperp. Let F be the
+verified HMSV skew cubic in those selected coordinates. There is an
+explicit integer10-by14 matrix C, rank10, such that for EVERY u in C14,
+  W^T[(TEu) entrywise_squared]=C gradF(u).             (1)
+The verifier computes both sides as ten quadratic forms, compares all
+105 coefficients of each form, and exports C. Its entries are0,+/-2,4.
+It additionally checks C H_e=0, with e=(1,...,1). No sampled identity or
+cached polynomial is used as the proof input.
+
+Consequently, for every critical source p in M8 (gradF(p)=0),
+  (Tp)^2 belongs to V.                               (2)
+This includes all complex spectra, all collisions, and all homogeneous
+infinite-point charts covered by the established critical-source link.
+For real p, (Tp)^2 is a known nonnegative matching-SOS cost, a single
+square of a real matching function. Adding any real constant to Tp
+preserves the matching-square property.
+
+Polarization of(1) gives, for all matching p,v,
+  W^T[(Tp)(Tv)]=(1/2) C H_p v.                       (3)
+Thus H_p v=0 implies (Tp)(Tv) belongs to V. In particular an actual
+conjugate lift x+i y with H_x y=0 and gradF(x)=gradF(y) satisfies
+  (Tx)(Ty) in V,   (Tx)^2-(Ty)^2 in V.               (4)
+The difference in(4) is an indefinite two-square expression; it is not
+a PSD certificate. The individual squares can have equal nonzero
+components outside V, so their sum need not be matching.
+
+2. It is not automatically a tangent SOS direction
+
+For real spectra a=(0,1,3,8), b=(2,5,7,11), let p_pi=product(a_i+b_pi(i)).
+The verifier checks gradF(p)=0 and (Tp)^2 in V, but
+  H_p (Tp)^2 !=0.
+Thus the bridge does not by itself produce an element of T_p M8, and
+it cannot be advertised as a solution of the source-tangent SOS problem.
+The complete exact nonzero14-vector is retained in the artifact.
+
+3. Even ALL individually matching squares are globally insufficient
+
+This obstruction was identified by the positive-representation parent
+and independently checked here. Put f=f34, r=r23, s=r28. The sharp actual
+cost
+  g=f+r+s=f^2+(r-s)^2
+has eleven contacts
+  (1,6,7,8,12,15,17,18,20,22,23).
+The space of matching functions vanishing on these contacts has dimension3
+and basis(f,r,s).
+
+Suppose a real matching function h vanishes on those contacts. Write
+  h=a f+b r+c s.
+The three outside vectors W^T(rs), W^T(fr), W^T(fs) are linearly
+independent, and W^T(f^2)=2 W^T(rs). Since r^2=r and s^2=s are matching,
+  h^2 in V iff ab=ac=0 and a^2+bc=0.
+Over the reals this forces a=0 and bc=0. Thus the only individually
+matching squares that vanish on all eleven contacts are nonnegative
+multiples of r and s.
+
+In any positive sum g=sum h_l^2, each h_l must vanish on every zero of g.
+If every h_l^2 were itself matching, the preceding paragraph would give
+g=alpha r+beta s, impossible because f,r,s are independent. Therefore
+  cone{h^2:h in V real, h^2 in V} is STRICTLY smaller than
+  {g in V:g=sum h_l^2, h_l in V real}.
+The displayed sharp actual g is an exact witness. Its valid two-square
+certificate requires cancellation of NONMATCHING components between
+f^2 and(r-s)^2. Neither summand is matching separately.
+
+In particular, the source-square family in(2), even supplemented by
+every possible individually matching square and all ordinary rays, cannot
+prove the global full-SOS target. The unrestricted68-direction Gram
+completion must permit cross-square cancellation of the ten unwanted
+Fourier components. The identities(1)-(4) may help organize those
+cancellations, but no construction proving their existence globally has
+been obtained.

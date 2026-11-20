@@ -1,0 +1,75 @@
+Independent global Ward identity audit for the complete unitary flag
+31 October2026
+
+The sign and factor in the proposed identity are correct. The result
+holds for every actual complex spectral source, not just at stationary
+points or on a particular contact face. It is a symmetry identity; it
+does not establish a positive weighted-Hessian contradiction under a
+strict permutation support gap.
+
+Let
+  f(U)=Re[eta det(D_a+U D_b U*)],
+with arbitrary complex spectra and eta. Use the right exponential chart
+  X -> f(U exp X)
+on skew-Hermitian matrices. Let g be its differential and H its symmetric
+second derivative at0. The12 flag generators are the off-diagonal real
+and imaginary generators Eij-Eji and i(Eij+Eji), i<j. Their norm is1 for
+the invariant inner product <X,Y>=-tr(XY)/2.
+
+For a diagonal traceless skew-Hermitian D, put
+  v=U*DU=v_off+v_diag.
+Left multiplication by exp(tD) preserves f, since it commutes with D_a.
+Right multiplication by a diagonal unitary preserves f, since it
+commutes with D_b. Thus, for every off-diagonal K, BCH gives
+  0=d_t d_s f(U exp(tv)exp(sK))
+    =H(v,K)+g([v,K])/2,
+  0=d_s d_t f(U exp(sK)exp(td))
+    =H(K,d)+g([K,d])/2
+for diagonal d. Subtracting the second identity with d=v_diag yields
+  H(K,v_off)=g([K,v_off]/2+[K,v_diag]).                       (1)
+
+Project the commutators onto the off-diagonal flag, because g vanishes
+on diagonal directions. Let B_D have row K equal to the coordinates of
+  [K,v_off]/2+[K,v_diag].
+Then the complete matrix identity is
+  H v_off=B_D g.                                            (2)
+Invariance of the inner product makes each projected commutator map
+skew, so B_D^T=-B_D. Consequently g^T H v_off=0 even away from
+stationarity. In general H v_off is NOT zero away from stationarity;
+dropping the connection-gradient term would be incorrect.
+
+At a stationary U, g=0, all left-phase orbit vectors v_off lie in ker H.
+Their rank can be determined exactly from U's nonzero-entry graph.
+Construct the bipartite graph with row vertices i, column vertices j,
+and edge ij when Uij!=0. If it has c connected components, then
+  rank[D -> off(U*DU)]=n-c.                                 (3)
+Indeed its kernel consists of diagonal D for which U*DU=D' is diagonal.
+The equation D U=U D' says d_i=d'_j on every nonzero edge. Both phase
+labels must be constant on each graph component. Unitarity makes every
+component square, and the one trace-zero constraint leaves dimension
+c-1 in the(n-1)-dimensional traceless diagonal algebra. This proves(3).
+
+Therefore, in any dimension, the complete right-flag Hessian obeys
+  rank H<=n(n-1)-(n-c)=n(n-2)+c
+at a stationary point. For n=4 this is rank H<=8+c. Connected support
+gives rank H<=9, even if some entries of U vanish. A monomial matrix has
+c=4 and receives no such flag nullity bound. Thus rank<=9 is not an
+unconditional assertion about every stationary U.
+
+Exact independent replay:
+  python code/research/moc_global_flag_ward_independent_audit.py
+Data:
+  build/moc_global_flag_ward_independent_audit.json
+
+The verifier uses the existing global source as an implementation audit,
+recomputes its determinant Frechet gradient and full Hessian independently,
+checks all36 entries of(2), all three skew B_D matrices, and exact phase
+orbit rank3. The chosen source is nonstationary, so the nonzero connection
+term is genuinely exercised rather than hidden by g=0. The universal
+argument is the invariance/BCH proof above; this exact replay is not an
+additional MOC example campaign or a positivity theorem.
+
+The remaining step is still a source-dependent weighted-Hessian identity
+that becomes positive under a strict gap above ALL permutation supports.
+Neither the Ward null directions nor the ordinary Hessian trace alone
+establishes that implication.

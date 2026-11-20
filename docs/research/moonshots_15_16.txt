@@ -1,0 +1,198 @@
+Executed moonshots M15 and M16: canonical eight-contact cap profiles
+=================================================================
+
+Status: NEW EXACT ONE-PARAMETER FAMILY CLOSURE, not a proof of the entire
+eight-contact threshold or of MOC4. The ordinary coefficients are equal.
+The general unequal-coefficient eight-contact threshold remains open.
+A subsequent full five-coefficient closure of orbit0 is documented in
+eight_cap_orbit0_closure.txt and its independent portable verifier. The
+primary14-by-14 pencil determinant completed in826.10seconds; its Schur
+rank certificate then closed that complete cone. The equal-coefficient
+all58-orbit claim below does not depend on this additional result.
+
+M15. Unique-cap census and exact nonic signatures
+------------------------------------------------
+The unique f34 cap has ordinary coordinates
+  rays  0,7,10,13,17,18,20,22,23,27,28,30,31
+  slots 1,17,6,22,12,18,20,8,14,15,9,23,7.
+Each coefficient is exactly its gap at the corresponding zero of f34.
+Thus eight contacts leave exactly five ordinary cap coordinates, rather
+than the larger unmarked faces in the earlier census.
+
+Executed build/eight12/census.py. Among the 13 f34 zero slots there are
+927 rectangle-free eight-subsets. The order24 f34 stabilizer reduces them
+to58 canonical marked orbits. The ordinary sets contain zero, one, or all
+three compensator pairs (18,23),(18,28),(23,28) in respectively31,22,5 orbits.
+Full contact lists, ordinary sets, orbit sizes and pairs are in
+build/eight12/census.json and census.log.
+
+Executed build/eight12/fq_census.py for all58 independent five-coefficient
+cones. Coefficient-sign classes are:
+  F coefficientwise strictly negative, Q has mixed signs:34;
+  F and Q coefficientwise strictly negative:14;
+  F and Q both have mixed signs:10.
+Full exact F,Q formulae are in build/eight12/fq_census.json.
+The selected first cone has ordinary IDs [0,7,10,17,28] and
+ F=-(b+1)(c+1)(a+d+1), Q=de-d-1.
+The second cone [0,7,10,18,22] was independently assigned to face16.
+
+For a family test covering every orbit, set
+ g(t)=f34+t sum_(j in J) r_j, t>=0,
+where J is the orbit's five ordinary cap coordinates. Every t>0 has exactly
+the eight indicated contacts. Executed build/eight12/nonic_profiles.py.
+For each of the58 families it reconstructs the checked cubic F and Hessian
+H and verifies coefficientwise
+ det[Q(g)H(g)-F(g)H(e)]=-4 Q(g)^12 N_J(t)^2.
+These are exact polynomials, not samples. The58 signatures have56 distinct
+monic forms; degrees are9:16,8:19,7:14,6:8,5:1. Exactly38 have positive
+coefficients after normalizing N_J(0)>0, and hence no positive root. The
+remaining20 have23 positive roots, counted exactly by Sturm theory.
+The full factors and root counts are in build/eight12/nonic_profiles.json
+and nonic_profiles.log. Example first orbit:
+ N=(t+1)^5(2t+1)^2(3t^2+3t+1)>0.
+The second orbit also has positive-coefficient N. Orbit3, however, has a
+positive root of 5t^6-13t^5-62t^4-73t^3-39t^2-10t-1 while F,Q<0;
+therefore nonic positivity alone does not close all families.
+
+M16. Shared positive recurrence, compound filter, and full real lifts
+-------------------------------------------------------------------
+A common exact quotient recurrence handles the remaining nonic factors.
+For p(t)=l t^n-sum_(i<n) b_i t^i, l>0,b_i>=0, b_0>0, define
+ r_0=1, r_(k+1)=t r_k modulo p.
+Equivalently the nonnegative companion matrix gives
+ r_(k+n)=sum_(i<n)(b_i/l)r_(k+i).
+Its preservation of the coefficientwise nonnegative cone is immediate by
+induction. All six nonic factors reaching the compound test have this form.
+Executed build/eight12/recurrence.py; it verified the companion identities
+and positive coefficients in every case. Recurrence coefficients from
+constant through degree n-1 are:
+  orbit3:  [1/5,2,39/5,73/5,62/5,13/5];
+  orbit7:  [1,6,15,18,8];
+  orbit9:  [1/2,4,11,13,17/2,5/2];
+  orbit10: [1,5,6];
+  orbit40: [1,5,8,4];
+  orbit57: [1/2,3/2,1].
+Thus reduction of a principal12 minor modulo p supplies a coefficient-sign
+certificate at its unique positive root; no floating-point sign is used.
+
+Executed build/eight12/compound_profiles.py on all23 positive nonic roots.
+Exactly16 are already covered by the existing weighted-pair law (t>=1),
+one has negative height, and one (orbit57) has a strictly negative
+principal12 minor. The latter violates the actual necessary condition
+C12(H(x)) positive semidefinite, independently established in
+session_actual_neutral_hessian.txt and neutral_hessian_independent_review.txt.
+The minor of M=QH(x) has the same sign because C12(M)=Q^12 C12(H(x)).
+Its negative remainder has all three coefficients negative. Details,
+isolating intervals, omitted indices and remainders are in
+build/eight12/compound_profiles.json and compound_profiles.log.
+
+The five passes of this selected-principal-minor filter are orbits
+3,7,9,10,40. A positive chosen minor alone is not a full neutrality or
+C12-PSD verification. None has any
+compensator pair, so triangle capacity is zero for these coefficient sets.
+A filter pass was not treated as sufficient. Executed the full real-gradient
+lift test in build/eight12/lift_profiles.py, over the exact number field
+Q[t]/(p) for each case. It computes the complete two-dimensional Hessian
+kernel k,l, then solves all14 equations
+ grad F(u k+v l)=grad F(x)
+as a linear system in z0=u^2,z1=uv,z2=v^2. Completeness of the two-vector
+kernel is checked by exact nullspace dimension, not assumed.
+
+For orbits3,7,10,40 the RREF has pivots(0,1):
+ z0=alpha+beta z2, z1=gamma+delta z2.
+The rank-one Veronese equation z0 z2-z1^2=0 becomes
+ q2 z2^2+q1 z2+q0=0.
+All three q coefficients are strictly negative at the isolated positive
+root, certified by exact Sturm sign counts. This is impossible for z2>=0.
+For orbit9 the pivots are(0,2), and z2 is a constant gamma<0; its free-z1
+coefficient is exactly zero. This also makes a real lift impossible.
+All five fresh exact checks finished successfully in9.59 seconds.
+Their full kernel, affine-line and quadratic certificates are stored in
+build/eight12/lift_profiles.json and lift_profiles.log.
+
+Conclusion and limits
+---------------------
+The desired support inequality holds in each of the58 equal-ordinary-
+coefficient canonical eight-contact families: weighted cases are certified
+by their existing inequality; the other potential positive-height
+violations have no actual real-gradient lift. Via the exact
+stabilizer census this covers all927 rectangle-free contact patterns with
+that coefficient restriction. The final coverage uses38 strictly positive nonics,16 weighted roots,
+1 negative-height root, and6 full-gradient real-lift exclusions. One of
+those six also has a negative12-compound minor. The root counts16+1+6
+sum to all23 positive roots in the remaining20 families. That all58-orbit statement makes no assertion for unequal ordinary
+coefficients or for the unrestricted eight-contact threshold; orbit0 is
+closed separately below.
+
+Dependencies: the already checked exact cubic/model; canonical cap inverse;
+ordinary nonnegativity; the existing weighted-pair law; the previously
+proved actual C12-PSD necessary condition; and the prior negative-height
+argument. The new computations are rational/symbolic, Sturm or exact
+algebraic-number arithmetic. Numeric eigenspaces were used only to choose
+convenient omitted minor indices in the exploratory compound script; every
+chosen minor and its sign was subsequently checked exactly.
+
+Portable all58-profile reproduction:
+ python3 code/research/verify_eight_uniform_profiles.py --report OUTPUT.json
+Fresh execution passed; build/eight12/portable_verify.log and the report
+data/certificates/geometry/eight_uniform_profiles_report.json record all
+exact stages. No cached matrix or floating-point selection is used in
+this consolidated verifier. General_face independently audited the ANP
+kernel/Veronese argument and the distinction between weighted support
+certification and nonexistence of real lifts.
+
+Additional executed shared quadratic-coefficient test (M16)
+---------------------------------------------------------
+After actual_pencil_sign.txt was established, executed
+build/eight12/quadratic_profiles.py on the same six selected-minor cases.
+A universal finite-difference identity extracts the coefficient: because
+rank H(e0)=4, H(e0)e0=0 and H(g)e0=H(e0)g, the Hessian pencil has degree
+at most3. Hence, for M=QH(x),
+ [z^2]det(M+zH(e0))
+ =[det(M+H(e0))+det(M-H(e0))-2detM]/2.
+This is verified over the polynomial profile and reduced modulo the same
+positive-companion factors. The exact remainder is coefficientwise positive
+for orbit40 and coefficientwise negative for3,7,9,10,57. All six determinant
+and remainder calculations completed in22.19seconds in the final run, including the
+rank4/radical identities needed for the cubic-pencil finite difference. Thus the new necessary
+quadratic-pencil sign excludes orbit40 directly, but does not replace the
+full real-gradient lifts for3,7,9,10. This is a concrete limitation of the
+shared sign filter, not a failed support inequality. Full results are in
+build/eight12/quadratic_profiles.json and quadratic_profiles.log.
+
+The full unequal-coefficient orbit0 portable verifier completed successfully
+in232.25seconds; see build/eight12/full_portable_verify.log. Its exact
+compact-pencil and global Schur identities provide both the shortest
+actual-pencil-sign exclusion and an independent real-kernel-inertia proof.
+
+Full-gradient independence from the compound filter
+--------------------------------------------------
+The expanded consolidated verifier also reconstructs the real lift for
+orbit57 directly, rather than relying on its negative12-minor. Its RREF
+again leaves one free square coordinate, and the Veronese quadratic has
+strictly negative leading coefficient and strictly negative discriminant
+at the unique positive cubic root. Hence it has no real zero. This exact
+single-case execution passed in0.91seconds; the complete fresh portable
+run passed all6 full-gradient checks in17.10seconds. Consequently the
+final equal-coefficient support proof need not invoke the C12-PSD theorem;
+that theorem remains an independently tested earlier filter. The primary
+report now contains all6 complete algebraic-kernel/gradient certificates.
+
+Executed extension to all35 special critical directions (M16)
+------------------------------------------------------------
+The ordinary-ray extension of actual_pencil_sign.txt was tested on the four
+uniform families whose constant-direction coefficient was nonpositive.
+Profiles3,9,10 are excluded by directions r33,r3,r30, respectively: their
+exact restricted Gram determinants are strictly positive at the isolated
+nonic root. Profile7 passed a numeric selection scan, so the full35 library
+was then checked exactly rather than inferred from sampling.
+
+The independent primary-model verifier
+code/research/verify_eight_uniform7_direction_obstruction.py passed in
+12.97seconds. At its positive algebraic nonic root, profile7 has exact
+neutral inertia(6,6), positive height and all35 critical-ray quadratic
+pencil coefficients nonpositive (31 strict,4 zero), but still has no real
+full-gradient lift. Thus the finite35-direction library is provably
+insufficient. This is a necessary-test false positive, not an actual gap
+or a MOC counterexample. See eight_uniform7_direction_obstruction.txt and
+its complete JSON report for the exact polynomial and certificates.

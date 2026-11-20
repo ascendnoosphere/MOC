@@ -1,0 +1,201 @@
+SPARSE SPECTRAL CERTIFICATES: COMPLETE SMALL-DIMENSION DATA AUDIT
+31 October 2026
+
+The main result is an exact counterexample to a highly successful sparse
+selection rule. In a generic rational 4x4 example, every convex representation
+of the determinant by matching products must use a permutation at
+transposition distance three from the unique maximum-product assignment of
+|U_ij|^2. All eighteen closer products fail to contain the determinant.
+The determinant nevertheless has a strictly positive three-product
+representation in the full MOC hull. This refutes the selection rule, not MOC.
+
+This lane reconstructed all 9,364 complete-hull small-case records, including
+7,765 noncontrol draws. It does not independently analyze the other campaign
+records; the parent integration and other research lanes cover those.
+
+Selection rules and computation
+
+Let pi0 maximize product_i |U_i,pi0(i)|^2, computed by Hungarian assignment
+on -log |U_ij|^2. Retain either:
+
+  R1: pi0 and all one-transposition neighbors;
+  R2: all permutations at transposition distance at most two from pi0;
+  B:  the support of a deterministic greedy Birkhoff decomposition of |U|^2;
+  R1+B and R2+B: unions of those sets.
+
+R2 has O(n^4) products and B has O(n^2); these rules avoid enumerating n!
+products for selection. The audit enumerates the full hull independently
+to measure coverage and extract full-hull witnesses. The two union rules
+were added after examining the first results and are exploratory.
+
+For each record, regenerate U from its recorded seed, reconstruct every
+matching product at the original common logarithmic scale, and use the full
+product covariance to condition planar hull tests. The tolerance in these
+coordinates is 2e-7. Point/segment hulls are handled separately. This is
+floating-point evidence, not a universal or interval-certified inclusion.
+The maximum residual in the greedy Birkhoff decomposition was 1.00e-11.
+
+Raw numerical passes on noncontrol records
+
+ n     draws      R1       R2        B       R1+B     R2+B
+ 2       417      417      417      417       417      417
+ 3       834      786      834      834       834      834
+ 4      4167     3869     4165     3947      4142     4166
+ 5      1250     1135     1249     1205      1243     1249
+ 6       667      604      666      658       666      667
+ 7       300      270      299      294       299      299
+ 8       100       90      100      100       100      100
+ 9        30       26       30       30        30       30
+
+One n4 row, small_n04_04076, is a numerical artifact: its product-cloud axis
+ratio is 4.36e-10. Reconstructing the seeded pre-QR matrix and performing QR
+and all supporting-edge tests at 100 digits puts the determinant INSIDE R2,
+with signed Euclidean gap
+
+  -1.3409617410548042318282015112790906191262961768406e-16.
+
+Therefore the corrected numerical R2 count in n4 is 4166/4167. R2+B covers
+all 4167 n4 examples after that correction. This does not prove the union
+rule: it still has well-conditioned numerical failures in n5 and n7, and
+the other research lane found that the generic n4 data largely misses the
+actual mixed-cap frontier. High empirical coverage is particularly weak
+evidence of a global theorem here.
+
+The sole robust n4 R2 failure is small_n04_00760, a Haar mixer with nearly
+cancelling spectra. Its covariance-conditioned excess is 0.20729. It was
+the seed for the exact counterexample below. The n5 and n6 R2 failures are
+also near-cancellation cases; the n7 failure is clustered.
+
+The deterministic seed-mod-5 split gives the following raw n4 R2 counts:
+3333/3334 on the training-labelled rows, 832/833 on the held-out-labelled
+rows. The training failure is the numerical artifact just resolved; the
+held-out failure is the robust example. This split is an audit convention,
+not a preregistered statistical experiment. R1 failures by family are:
+Gaussian 6/834, disk 24/834, anisotropic 25/833, clustered 40/833, and
+near cancellation 203/833. The latter is the clear obstruction-rich family
+for these local selection rules.
+
+Exact rational radius-two obstruction
+
+Use the following complex spectra, with indices 0,...,3:
+
+  a=((1+2i)/2, (2+i)/2, (-1-i)/2, 0),
+  b=((-2-i)/2, (1+i)/2, (-1-2i)/2, 0)
+       + ((1+i)/1000, (2+4i)/1000,
+          (3+9i)/1000, (4+16i)/1000).
+
+Let H=(R+iJ)/5, where
+
+  R=[[-5,9,0,1], [9,-11,-3,-3],
+     [0,-3,-3,-1], [1,-3,-1,-3]],
+  J=[[0,1,-3,4], [-1,0,6,-3],
+     [3,-6,0,-1], [-4,3,1,0]],
+
+and U=(I+iH)(I-iH)^(-1). Exact rational arithmetic verifies H=H*, U*U=I,
+and every entry of U is nonzero. The two spectra are nonconcyclic: the
+determinants with rows (|z|^2,Re z,Im z,1) are respectively -1 and
+-24675996703/25000000000. All 24 matching products are nonzero and distinct.
+
+The unique maximizer of product_i |U_i,pi(i)|^2 is
+
+  pi0=(2,0,1,3).
+
+Its exact score gap over every competitor is positive (approximately
+0.00639169); the exact rational minimum is in the certificate. Let C be
+the eighteen permutations with distance(pi,pi0)<=2. For the linear functional
+
+  ell(z)=161291766 Re(z)+702475427 Im(z),
+
+the exact inequalities are
+
+  ell(z_pi) <= 493616552242196103/12500000000  for every pi in C,
+
+  ell(det(D_a+UD_bU*)) - max_{pi in C} ell(z_pi)
+      =178036711804373127596957/9982244500000000 > 0.
+
+The supporting edge uses permutations (0,2,3,1) and (1,3,2,0). Thus no
+nonnegative weights supported on C can represent the determinant.
+
+For comparison, the following full-hull triangle represents the SAME
+determinant exactly:
+
+  permutations: (0,2,3,1), (1,2,3,0), (1,3,0,2);
+  distances from pi0: 2,3,3;
+  weights:
+    3293919714886997182337359/4210724210044312849409540,
+    532129419370971507233379/4210724210044312849409540,
+    192337537893172079919401/2105362105022156424704770.
+
+All three weights are strictly positive and sum to one; their approximate
+values are 0.78226917, 0.12637480, and 0.09135604. Their weighted matching
+product sum equals the determinant exactly. The determinant itself is
+
+  -41192044863319167/249556112500000000
+       + i*14911309975062341/124778056250000000.
+
+Consequently every convex representation must include at least one relative
+four-cycle (distance three). The simple idea that a dominant assignment and
+its one/two exchanges provide enough products is false even on an open set:
+assignment uniqueness, strict separation, strict triangle inclusion and
+product distinctness all persist under sufficiently small perturbations.
+This is not an isolated repeated-product or zero-product exception.
+
+What the barycentric data says
+
+In each complete polygon, a fan from its first hull vertex produces a
+three-product witness whenever the numerical point falls in a fan triangle.
+Of the 4167 noncontrol n4 cases, 4165 returned such a witness; the two failures
+are the already independently audited near-boundary roundoff cases
+small_n04_03237 and small_n04_04076. The median minimum barycentric weight is
+0.11720; the 10th and 90th percentiles are 0.003462 and 0.24534. These are
+the best weights among the chosen fan triangles, not among all triples.
+
+Their maximum cycle distances from pi0 are 1 for 118 witnesses, 2 for 1762,
+and 3 for 2285. Those counts depend on the fan and do NOT establish that
+four-cycles are necessary in 2285 examples. Only the strict separating-line
+certificate above proves necessity for its example.
+
+Once three products z0,z1,z2 are selected, the weights have the exact formula
+
+  w0=orient(z1,z2,d)/orient(z0,z1,z2),
+  w1=orient(z2,z0,d)/orient(z0,z1,z2),
+  w2=orient(z0,z1,d)/orient(z0,z1,z2),
+
+where orient(x,y,z)=Im(conj(y-x)(z-x)). The hard step is choosing products
+so every weight is nonnegative for all spectra and mixers. Caratheodory's
+three-point bound does not solve selection. A strictly interior polygon
+point need not have a strictly positive three-vertex representation (the
+center of a square is the simplest example); a four-product enclosure can
+be preferable for a robust interior certificate. The present exact example
+already has a strictly positive triangle, so no fourth product is needed.
+
+Before perturbation, the failed example has b equal to a permutation of -a.
+Then products with a cancelling match vanish, leaving derangement cycle
+products. This explains why near-cancellation inputs stress assignment-
+local selection: a few long cycles can carry essential hull directions.
+The generic perturbation above shows this mechanism survives away from the
+exact cancellation locus. It supplies an obstruction to a proof strategy,
+not a proof or counterexample for MOC.
+
+Reproduction
+
+  python code/research/moc_extensive_certificates.py
+  python code/research/moc_extensive_certificates.py --exact
+  python code/research/moc_extensive_certificates.py --precision
+  python code/research/moc_extensive_certificates.py --summarize
+
+The --exact mode is portable and reads no generated seed or empirical data:
+it constructs the rational example directly and checks all stated equalities
+and inequalities. Other modes read the saved small-case campaign records.
+
+Outputs in build/moc_extensive_20261031:
+  certificate_rows.jsonl          all 9364 per-record audits and witnesses;
+  certificates_summary.json      raw groups and representative failures;
+  certificate_analysis.json      aggregate tables and precision correction;
+  exact_radius2_obstruction.json  exact rational proof data;
+  precision_radius2.json         100-digit replay and input interpretation.
+
+No universal sparse selector, full n4 proof, or unrestricted-n proof has
+been obtained from these computations. A next selector must accommodate
+essential long cycles; simply increasing a local rule's sample success
+rate does not close the missing quantified statement.

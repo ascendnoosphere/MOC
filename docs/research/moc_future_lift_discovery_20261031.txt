@@ -1,0 +1,118 @@
+Fast future-lift discovery, quadratic fibers, and direct finite replay
+31 October2026
+
+Scope
+
+These are discovery tools for the full canonical13-ordinary-coefficient
+cap. The moment-line criterion itself is proved by the separate exact
+Hodge verifier. Floating classifications and optimizer outputs are not
+proofs of either a counterexample or global exclusion.
+
+Exact source for the lift criterion:
+ code/research/moc_kernel_lift_sign_20261031.py
+ docs/research/moc_kernel_lift_sign_20261031.txt
+
+Fast implementation:
+ code/research/moc_future_lift_numeric.py
+
+Given the14 selected matching costs g, set h=F(g)/Q(g), x=g-h1. On the
+generic secant, Hx has a two-dimensional real kernel K. In orthonormal
+kernel coordinates, the quadratic-gradient lift equation is
+
+ L(M)=gradF(x),
+ L=[gradF(k0), H_F(k0)k1/sqrt2, gradF(k1)],
+ M coordinates=(M00,sqrt2 M01,M11).
+
+Its image has rank2, so all solutions are M0+sW. The code uses an SVD
+minimum-norm particular, hence M0:W=0, and normalizes ||W||F=1. Its
+definiteness test agrees with four independently exact anchors:
+the original actual nonordinary seed, another actual mixed-sign seed,
+the neutral orbit13 past point, and the uniform orbit7 past point.
+
+When detW>0, some rank-one endpoint is PSD. When detW<0, the determinant
+parabola has a finite maximum; real PSD feasibility requires nonnegative
+discriminant and positive midpoint trace. Under our orthogonality convention,
+
+ tr(midpoint)=-tr(M0)/(2detW).
+
+Thus the particular trace has the same sign as the midpoint trace in
+this chamber. This shortcut is NOT valid for an arbitrary particular.
+The canonical positive dual metric is C=I-tr(W)W, with C:W=0 and
+C:M0=tr(M0). The code reports both traces and their identity residual.
+
+Q, small Hessian spectral gaps, moment-rank collapse, target residuals,
+and near-zero discriminants are guarded. Such cases are marked ambiguous,
+not treated as proved nonactual. For a future point the code factors a
+PSD rank-one endpoint and reconstructs y in kerH, then checks
+
+ gradF(x+i y)=0.
+
+An EXACT nonzero critical point has an eight-point realization by the
+audited HMSV gradient-ideal/GIT identification. Numerical output still
+needs exact certification. Direct finite replay can bypass this theorem
+in a final concrete artifact.
+
+Quadratic fiber API
+
+ code/research/moc_nonic_quadratic_fiber.py
+ NonicFiber(model).roots(weights,variable,classify=True,reconstruct=False)
+
+The13 ordinary coefficient order is
+ [0,7,10,13,17,18,20,22,23,27,28,30,31].
+The corresponding permutation contacts are
+ [1,17,6,22,12,18,20,8,14,15,9,23,7].
+
+Nine nonsingleton coordinates17,18,20,22,23,27,28,30,31 have nonic degree
+at most2. The routine interpolates its known quartic square from five
+floating Hessian determinants, tries leading- and constant-coefficient
+square extraction with several scales, and independently checks every
+root's Hessian/moment behavior. It agrees with an exact future quadratic
+anchor and an exact full-cap past anchor. Positive roots are discovery
+values until an exact rational/algebraic fiber is reconstructed.
+
+The separate FastSeptic class in moc_nonic_sos_dual_budget_search.py gives
+an analytic full13 nonic Jacobian using the global Reynolds formula. Its
+scaled coordinates are u=weight*v. At a simple fiber root,
+ dt/dv_j=-(dN9/dv_j)/(dN9/dv_variable); the common nonic scaling cancels.
+
+Direct finite reconstruction
+
+ code/research/moc_critical_spectral_reconstruct.py
+ reconstruct(model,critical_selected)
+
+All105 matching products are evaluated from the14 selected coordinates.
+Normalize three labeled projective points to infinity,0,1. For each
+remaining k, choose a matching R of the other four labels and recover
+
+ z_k=M_[(02)(1k)R]/M_[(0k)(12)R].
+
+The three choices of R are used for conditioning. A common Mobius map
+avoids infinity for every point. Its first four points are finite row
+spectra a; the negatives of the last four are b. One common complex
+scalar eta restores all matching values. The code verifies all105
+matching products and all selected spectral products. Two independent
+anchors reproduce their gaps with relative errors below4e-14.
+
+One can then round the finite spectra and support direction to Gaussian
+rationals and recompute all24 products EXACTLY. A sufficiently strict
+inequality persists; the direct replay no longer assumes anything about
+the original numerical nonic root or lift classifier.
+
+Concrete payoff and present limits
+
+The first full-cap future hit had tiny critical budgets but large other
+ordinary budgets. It led to a DIRECT INTEGER actual counterexample to
+the proposed global three-budget triangle necessity. The final portable
+verifier uses only Python integer arithmetic:
+
+ code/research/moc_actual_triangle_failure_integer_verify.py
+ docs/research/moc_actual_triangle_failure_integer_20261031.txt
+
+It does not refute MOC. The same cost has an independently exact positive
+matching-SOS Gram, so the broader cone route remains viable.
+
+The full-cap future search and weighted-section stress code is
+ code/research/moc_future_nonic_fiber_search.py.
+It preserves the original discovery artifact by writing later campaigns
+to distinct output paths. Rejected-root counts and successful numerical
+sections are never interpreted as global theorems.

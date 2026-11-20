@@ -1,0 +1,297 @@
+MOC CAMPAIGN: WHAT LARGE-DIMENSION DATA CAN EXPLAIN
+31 October 2026
+
+For a,b in C^n and U unitary, write
+ d(U)=det(D_a+U D_b U*), z_pi=product_i(a_i+b_pi(i)).
+The unrestricted conjecture asks whether d(U) belongs to conv{z_pi}.
+Neither the calculations below nor a finite numerical campaign prove it.
+
+An exact explanation for small random determinants
+
+Suppose the 2n complex random variables a_i,b_j are mutually independent,
+have mean zero, and E|a_i|^2=E|b_j|^2=1. They need not be Gaussian or
+circularly symmetric. Fix an arbitrary unitary U, independent of them.
+Then
+
+ E_{a,b}|d(U)|^2 = S(U)
+                 = sum_{k=0}^n sum_{|I|=|J|=k}|det U[I,J]|^4,       (1)
+ n+1 <= S(U) <= 2^n.                                              (2)
+
+Proof. The principal-minor expansion and Cauchy-Binet give
+
+ d(U)=sum_{k,I,J} a_{I^c} b_J |det U[I,J]|^2.
+
+Distinct monomials a_{I^c}b_J are orthogonal in complex L2: some
+independent centered variable occurs on only one side of the product.
+Every monomial has squared L2 norm one. This proves (1).
+The compound matrix wedge^k U is unitary of size N=binom(n,k).
+Its squared entry moduli form a doubly stochastic matrix. Each row's
+sum of squares lies between 1/N and 1. Summing N rows gives a degree-k
+contribution between 1 and N, proving (2). At a permutation U, S(U)=2^n.
+
+If U is Haar and independent of the spectra, there is a closed formula:
+
+ E_{U,a,b}|d(U)|^2 = (n+2)(n+3)/6.                                 (3)
+ E_{a,b}|z_pi|^2 = 2^n for every fixed permutation pi.               (4)
+
+Here is a derivation of the Haar constant which does not require MOC.
+Take an n by k standard complex Gaussian matrix G=QR, with positive
+diagonal in R. Q is a uniform Stiefel frame and independent of R. The
+leading k by k block satisfies det(G_top)=det(Q_top)det(R).
+Gaussian Gram-Schmidt gives independent |R_jj|^2 with Gamma(n-j+1,1)
+laws: each residual column is isotropic Gaussian in the remaining
+complex subspace. A Gamma(m,1) variable has second moment m(m+1).
+Applying this both to G and to its square Gaussian top block yields
+
+ E|det(Q_top)|^4
+   = k!(k+1)!(n-k)!(n-k+1)! / (n!(n+1)!).
+
+Multiplication by binom(n,k)^2 reduces this to
+(k+1)(n-k+1)/(n+1). Summing k proves (3). Independence of the n factors
+in z_pi and E|a_i+b_pi(i)|^2=2 prove (4).
+
+The ratio of these root mean squares is
+
+ R_n = sqrt((n+2)(n+3)/(6*2^n)).
+
+ n       E|d|^2       R_n
+ 4       7            0.6614378278
+ 10      26           0.1593443598
+ 50      459.3333     6.3872526e-7
+ 100     1751        3.7165783e-14
+ 1000    167501      1.2502903e-148
+
+These are ensemble identities, not empirical estimates. They provide a
+specific mechanism by which high-dimensional Haar examples can become
+easy to place inside a matching hull. They do not give the expectation
+of a ratio, control the largest matching product, imply that zero lies
+in the hull, or establish a typical-case statement. The numerator and
+denominator can have very different tails. For example Markov only gives
+P(|d| >= t*sqrt((n+2)(n+3)/6)) <= t^-2, not a comparison with a random
+matching product from the same spectra.
+
+Subtracting the empirical mean of each spectrum or normalizing its
+sample variance destroys the independence used in (1). Such datasets
+can test the mechanism qualitatively but must not be advertised as
+literal samples for (3). Opposite scalar shifts a->a+c,b->b-c preserve
+the MOC instance; independent centering of both spectra generally does
+not preserve the sum.
+
+Independent exact calculation: for the normalized four-dimensional
+Fourier matrix, the degree contributions in (1) are 1,1,5/4,1,1.
+Thus S(F4)=21/4, below the Haar mean 7 and permutation value 16.
+code/research/verify_moc_campaign_moments.py exhausts all 256 independent
+Rademacher spectra for this matrix and checks the same 21/4 directly.
+It also verifies the factorial simplification and finite sum exactly
+for n=1,...,100. The proof above covers all n.
+
+The fixed-spectrum Haar mean already belongs to the matching hull
+
+For arbitrary fixed complex a,b,
+
+ E_U d(U) = sum_{k=0}^n e_{n-k}(a)e_k(b)/binom(n,k)
+          = (1/n!) sum_pi z_pi.                                   (5)
+
+For each k, Haar symmetry and the unit norm of a compound row give
+E|det U[I,J]|^2=1/binom(n,k). For the matching average, the probability
+that a uniform permutation sends I onto J is also 1/binom(n,k).
+This proves both equalities. The first is also the constant-term case
+of the finite free convolution identity of Marcus, Spielman and
+Srivastava [1, Theorem 1.2]. A mean in the hull does not force every
+sample into the hull. In data, distance to this known centroid is a
+more meaningful concentration diagnostic than distance to zero when
+the spectra have substantial means.
+
+Fixed-rank phase mixing is a different regime
+
+If rank(U-I)<=r, put D=diag(a_i+b_i) and E=U D_b U*-D_b. Then
+ rank(E)<=2r, because E=(U-I)D_b U*+D_b(U*-I).
+If delta=min_i|a_i+b_i|>0 and B=max_i|b_i|, then
+
+ |d(U)/z_id| <= (1+2B/delta)^(2r).                                 (6)
+
+Indeed ||E||<=2B and det(D+E)/det(D)=det(I+D^-1 E). At most 2r
+eigenvalues of D^-1 E are nonzero; each has modulus at most 2B/delta.
+If eta=||D^-1 E||<1, the corresponding lower bound is (1-eta)^(2r).
+For bounded B/delta and fixed r, the difference in log magnitudes is
+bounded independently of n. A rank-r phase update can be globally
+dense while retaining this restriction. In near-cancellation spectra,
+delta can be tiny and (6) becomes weak; those rows deserve separate
+analysis. A large-n fixed-rank campaign must not be pooled with Haar
+data under a single label such as random mixing.
+
+For a single random Householder reflection the comparison is exact.
+Let U=I-2vv*, where v is uniform on the complex unit sphere and
+independent of the centered variance-one spectra in (1). Then
+
+ E|d(U)|^2 = 2^n*(28n-4)/((n+1)(n+2)(n+3)).                        (7)
+
+This formula was derived by the campaign's root researcher and checked
+independently here. Put p_i=|v_i|^2; p has Dirichlet(1,...,1) law.
+A principal I-minor is 1-2*sum_{i in I}p_i. A nonprincipal minor
+vanishes unless its row and column sets differ by one exchange; for
+that exchange i,j its squared modulus is 4p_i p_j. Averaging the
+principal fourth powers over all subsets I amounts to averaging
+(sum_i epsilon_i p_i)^4 over independent signs. This sign average is
+sum_i p_i^4 + 6 sum_{i<j}p_i^2p_j^2. With
+D=n(n+1)(n+2)(n+3), the Dirichlet expectations are 24/D and 4/D,
+respectively. The diagonal contribution to E S(U) is consequently
+2^n*12/((n+2)(n+3)). The total number of ordered one-exchange minors is
+sum_k binom(n,k)k(n-k)=n(n-1)2^(n-2), and each has fourth moment 64/D.
+Adding both contributions proves (7); n=1 follows directly.
+
+The RMS ratio to a matching product is therefore asymptotic to
+sqrt(28)/n, compared with Haar's exponential suppression. At n=2,
+E S(U)=52/15; at n=4 it is 288/35. Formula (7) covers one reflection,
+not a product of several reflections. Drury [5] proved MOC for the
+Householder class in all dimensions, so this ensemble is a calibration
+and sampling-bias control, not fresh evidence for an unresolved class.
+The exact verifier also checks every minor of the rational reflection
+with v=(1,2,2,4)/5, integrates the complete n=2 expression directly to
+52/15, and checks the combinatorial summation for n=2,...,100. All pass.
+
+Separate angular coverage from radial contraction
+
+There is a precise circle-spectrum control for a measured radial
+exponent near -log(2). For arbitrary unitary matrices A,B,
+
+ (1/2pi) integral_0^{2pi} log|det(A+exp(it)B)| dt = 0.              (8)
+
+Indeed A*B is unitary, with eigenvalues lambda_j on the circle, so the
+integrand is sum_j log|1+exp(it)lambda_j|. Each term has zero integral;
+the isolated logarithmic singularities are integrable. This is a
+one-variable calculation and makes no independence assumption on U.
+
+Now take both spectra to be all n-th roots of unity, and rotate the
+second spectrum by exp(it). For n>=2, some cyclic matching aligns every
+pair with the same phase discrepancy delta satisfying |delta|<=pi/n.
+Consequently, for every t,
+
+ max_pi |z_pi(t)| >= [2*cos(pi/(2n))]^n.
+
+Combining with (8) proves
+
+ average_t [(log|d(t)|-log max_pi|z_pi(t)|)/n]
+   <= -log(2)-log(cos(pi/(2n))) = -log(2)+O(n^-2).                 (9)
+
+This explains an exponent near -0.693 in the circular control without
+assuming random determinants or independent matching products. The
+exact-circle products are collinear: each factor a_i+b_j has a common
+half-sum phase times a real cosine, and the total half-sum phase is
+permutation independent. Thus this is a radial calculation, not a
+two-dimensional hull argument. Its application to perturbed circles
+is an empirical interpretation, since small singular values prevent a
+uniform perturbation bound for log determinants.
+
+For any finite nonzero subset of matching products, zero is strictly
+inside its convex hull exactly when its maximum cyclic angular gap is
+strictly smaller than pi. Thus phase spread and determinant shrinkage
+are separate measurable conditions. Once zero is inside a polygon,
+its origin-centered inradius is
+
+ rho=min_edges Im(conj(z_i)*z_{i+1})/|z_{i+1}-z_i|,
+
+with counterclockwise hull vertices. The sufficient condition |d|<rho
+combines both effects. Record maximum angular gap, origin-in-hull,
+log|d|-log rho, and the exact nearest-edge distance. Small |d| alone is
+uninformative when the sampled products lie in a narrow angular sector.
+
+Isotropic spectra make the joint matching set rotation invariant; they
+do not make its n! products independent. All products reuse the same
+2n spectral entries. Probability formulae for hulls of independent
+uniform directions therefore cannot be applied to this matching set.
+Near-real spectra, tight clusters, and near-cancellation examples are
+useful controls against the broad angular spread of generic spectra.
+
+An inexpensive route from a numerical inclusion to a rigorous one
+
+Three matching products suffice to certify an individual planar
+inclusion, even when n! is enormous. Use a computed hull triangulation
+to locate a triangle containing d. Save its three permutations and
+verify the following quantities with outward-rounded interval arithmetic:
+
+ T=orient(z1,z2,z3)>0,
+ orient(z1,z2,d)>0, orient(z2,z3,d)>0, orient(z3,z1,d)>0,
+ orient(x,y,z)=Im(conj(y-x)*(z-x)).
+
+Strict positive interval lower bounds prove membership in the full
+matching hull. Failure to certify remains inconclusive. If every
+available witness has d on an edge, an exact segment representation
+can handle the equality. Strict containment in a three-vertex triangle
+need not exist even for an interior polygon point: the center of a
+square is a counterexample. A four-vertex enclosure can avoid that
+degeneracy when a robust interior certificate is wanted.
+This avoids verifying every hull vertex or enumerating all permutations.
+
+For explicit complex-disc errors |z_i-zhat_i|<=eps_i and
+|d-dhat|<=eps_d, an edge orientation error is at most
+
+ |zhat_j-zhat_i|*(eps_d+eps_i)
+ + |dhat-zhat_i|*(eps_i+eps_j)
+ + (eps_i+eps_j)*(eps_d+eps_i).
+
+This follows from expanding the bilinear orientation. A floating-point
+orientation larger than this certified error is positive for the exact
+inputs. Product logs and a shared positive scale help with overflow,
+but normalization and exponentiation errors still require bounds.
+
+The intended U must be exactly unitary. An arbitrary computed QR array
+is only approximately unitary. Convenient exact inputs are products of
+rational complex Givens matrices or U=(I+K)(I-K)^-1 for rational
+skew-Hermitian K. For an existing Haar sample one can instead define
+the intended U as the polar factor and bound the correction, then
+propagate determinant error. For nonsingular M, if eta=||M^-1 Delta||<1,
+
+ |det(M+Delta)-det(M)| <= |det M|*((1+eta)^n-1).
+
+Use a verified inverse norm/residual and interval LU to make this an
+actual certificate. Increasing arbitrary precision until digits agree
+is useful debugging but does not itself supply an error enclosure.
+
+Literature and its limits
+
+[1] Adam W. Marcus, Daniel A. Spielman, Nikhil Srivastava,
+    Finite free convolutions of polynomials, arXiv:1504.00350v2.
+    https://arxiv.org/pdf/1504.00350v2
+    Read Theorem 1.2: expected characteristic polynomials for arbitrary
+    complex normal matrices. Its real-rootedness conclusions require
+    real-rooted inputs and do not establish unrestricted complex MOC.
+
+[2] Anirban Basak and Amir Dembo, Limiting Spectral Distribution of
+    Sums of Unitary and Orthogonal Matrices, arXiv:1208.5100v4.
+    https://arxiv.org/pdf/1208.5100v4
+    Read Theorem 1.2 and the introduction's logarithmic-potential setup.
+    Their ensemble is a sum of independent Haar unitary/orthogonal
+    matrices. It is not the general Gaussian-eigenvalue normal ensemble
+    of this campaign. Weak empirical spectral convergence alone does
+    not control log determinants because log is singular at zero.
+    Small singular values require separate analysis. Free-probability
+    heuristics must not be silently promoted to a determinant theorem.
+
+[3] Elizabeth Meckes, The Random Matrix Theory of the Classical Compact
+    Groups, Section 1.2, Gaussian Gram-Schmidt construction, pp.22-23.
+    https://case.edu/artsci/math/esmeckes/Haar_book.pdf
+    Checked the complex QR construction and its phase-normalization
+    warning. The fourth-minor calculation above is supplied explicitly.
+
+[4] Alexander Kovacec, A conjecture more precise and stronger than the
+    one by Marcus and de Oliveira, DMUC 26-11, 7 April 2026.
+    https://www.mat.uc.pt/preprints/ps/p2611.pdf
+    Primary-source status evidence that MOC is still treated as a
+    conjecture in this 2026 work. Its stronger polygon assertion is
+    distinct from MOC; the repository has a local counterexample to
+    that stronger assertion. This literature check found no source
+    proving unrestricted n=4. It is not an exhaustive novelty search.
+
+[5] S. W. Drury, OMC for Householder reflections, Linear Algebra and
+    its Applications 298 (1999), 159-169.
+    https://doi.org/10.1016/S0024-3795(99)00173-1
+    The publisher's primary abstract returned in search explicitly
+    states MOC for the Householder class, and failure of the stronger
+    Merikoski-Virtanen assertion in dimension five. Direct opening
+    returned HTTP 403; the full proof was not inspected in this pass.
+
+Sources [1]-[4] were opened on 31 October 2026. The 2025 survey
+Revisiting the Marcus-de Oliveira Conjecture, DOI 10.3390/math13050711,
+was located through the authors' institution; the publisher page
+returned HTTP 429. No claim here relies on its unavailable full text.

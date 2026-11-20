@@ -1,0 +1,89 @@
+1. THE THREE DIFFERENT QUANTIFIER ORDERS
+
+Let H_n=(C^2)^{tensor n}. Let T_pi permute tensor factors, with a fixed consistent action convention. The actual compound kernel R(U) has entries
+ R(U)[I,J]=|det U[I,J]|^2 if |I|=|J|,
+and zero otherwise. Let u=otimes_j u_j be a product input and w=otimes_i w_i a complex-linear product output covector.
+
+Universal common permutation law:
+ For every U there exists a probability mu_U such that
+ R(U)=sum_pi mu_U(pi)T_pi.
+The same law must work for every input and every output.
+
+Input-dependent product-orbit law:
+ For every U and every product u there exists a probability mu_{U,u} such that
+ R(U)u=sum_pi mu_{U,u}(pi)T_pi u.
+The same law must work for every output covector, including entangled ones.
+
+Scalar product-test law:
+ For every U, every product u and every product w, there exists a probability
+ mu_{U,u,w} such that
+ wR(U)u=sum_pi mu_{U,u,w}(pi)wT_pi u.
+This last statement is precisely unrestricted complex MOC after the rank-two matrix factorization C_ij=w_i(u_j), generic row/column scaling to C_ij=a_i+b_j, and continuity.
+
+4. A POSITIVE INTERMEDIATE CATEGORY WITH A PROVED GLUING LAW
+
+Define B_n to be normalized nonnegative GL2-equivariant Boolean Markov kernels. Define H_n subset B_n by the additional requirement:
+ for every source inclusion B subset C, |C|=|B|+1, the two output column laws R_k[-,B] and R_{k+1}[-,C] admit a coupling supported on X subset Y.
+This is a finite system of weighted Hall inequalities. Equivalently there are stochastic kernels L_k on incidence edges (B,C) such that the two endpoint marginals of L_k are exactly the respective R columns.
+
+THEOREM. H_n is convex and closed under composition. The family(H_n) is closed under tensor products. Every actual compound kernel belongs to H_n. Every R in H_n satisfies the product-input orbit theorem whenever its local input factors lie on at most three projective lines and one of the classes has cardinalityone.
+
+Proof of closures. Convex combinations of couplings give a coupling of the corresponding mixtures. For a composite S R, first sample a nested pair from the coupling for R at the source edge, then conditionally sample a nested pair from the coupling for S at that intermediate edge. The resulting marginals are the columns of SR and nesting is preserved. At the level of incidence kernels this is just L_k(S)L_k(R), so associativity is ordinary Markov-kernel associativity. Identity kernels use deterministic identity edge maps.
+
+For a tensor product, an adjacent source pair changes in exactly one factor. Use an adjacent coupling in that factor and an identical shared sample from the unchanged-factor column. Union of the two sampled subsets preserves inclusion and gives the required tensor marginals. The GL2-equivariance and Boolean normalization conditions are themselves preserved under these operations.
+
+Actual membership follows from the exterior Hall argument for every adjacent pair of column subsets, not merely one fixed pair: x is the wedge of the smaller orthonormal column family, y=x wedge v, and projected-vector Cauchy-Schwarz gives all Hall cuts.
+
+Positive input theorem. A global GL2 change sends two distinct input lines to e0,e1. The exceptional factor is alpha e0+beta e1. Up to a global scalar the input is alpha|B>+beta|C> for an adjacent pair. A common nested coupling yields
+ R(alpha|B>+beta|C>)
+ =sum_{X subset Y} mu_XY(alpha|X>+beta|Y>),
+and each summand is a permutation image of that same input. Undo the global change using equivariance. Coincident lines and zero coefficients follow directly or by continuity. The convex coefficients are independent of alpha,beta and of the numerical representatives of the three lines.
+
+Conversely, requiring the product-orbit conclusion just for every input |B>+|C> forces a nested coupling: every permutation image is|X>+|Y> with X subset Y, and comparison of the two different weight blocks gives its marginals. Thus H_n is exactly the category capturing this three-line singleton input law, not the unrestricted product-input law.
+
+Logical position:
+ conv{tensor permutations} subset conv{actual kernels} subset H_n subset B_n.
+The first inclusion is strict already in dimension4 by the volume's actual common-law counterexample. The last inclusion is strict in dimension5 by the explicit R above. Equality or strictness of other inclusions is not asserted. This construction does not declare all of H_n to satisfy unrestricted MOC; only the proved three-line singleton stratum follows.
+
+The category with chosen incidence lifts as part of a morphism has genuine functorial composition; selecting arbitrary couplings independently is not claimed to give a canonical functor. The forgetting map to Boolean Markov kernels is a well-defined functor. This is the precise local-to-global compatibility supplied here. It glues adjacent-rank laws, not the unsupported full branching Boolean family needed for multiple exceptional labels.
+
+5. INDEPENDENT AUDIT OF THE FIXED-DATA U(6) PHASE ELLIPSE
+
+Ran category_phase_ellipse.py and checked its mathematical bridge. For its exact fixed A,B,a,b, all phases in U(theta)=A diag(exp(i theta),1,...,1) B satisfy MOC. The phase family is a nondegenerate ellipse and all12 polygon facet inequalities have strict rational slack.
+
+Why the finite calculation proves all phases: U(z)=AB+(z-1)A e1e1*B is a rank-one affine pencil. Every minor is affine in z. On |z|=1 its squared modulus has Fourier degree at mostone. The compound determinant expansion therefore proves d(theta)=center+cos(theta)cosine+sin(theta)sine identically. Four evaluations determine these coefficients; the fifth rational-circle point is an additional consistency check. For each exact hull facet, h>0 and h^2>c^2+s^2 prove containment for every phase. The asserted scope is fixed A,B,a,b and all theta, not all spectra or all unitary matrices.
+
+The exact center is
+ -32338565434976/36975700125 +(378821018453552/332781301125)i;
+cosine is
+ -10600933376/2465046675 -(140968603648/7395140025)i;
+sine is
+ -56102912/13042575 -(977174528/117383175)i.
+
+
+7. INDEPENDENT PRIORITY AUDIT: FULL ALL-REAL U(4) SPECTRAL FAMILY
+
+Read category_moc4_all_real_verify.py, category_moc4_algebra.py and the completed category_moc4_notes.txt, and independently executed the verification-only program successfully. It checked 89 contiguous algebraic cells, 17 polygon types, 726 facet identities, 8,703 nonnegative coefficient polynomials, and 17,424 permutation identities, including strict turns and all vertex distances.
+
+The mathematical audit found no gap. The normalized polynomials Z=(1-x)^2 z(x/(1-x)) and D=(1-x)^2 d(x/(1-x)) correctly transport all finite epsilon>=0 to0<=x<1. Positive scaling preserves hull inclusion. Exact algebraic endpoint equality and rational sample betweenness certify the ordered interval cover. The Sturm convention counts roots in(L,R] and subtracts a root at R to count the open interval. Removing even-multiplicity factors and fixing sign at one exact interior sample validly proves polynomial nonnegativity; excluding every root proves strict turns and vertex separation. The common-minor identities then give every supporting polygon facet for every unitary. Continuity handles finite breakpoints and x=0. x=1 is only the compactification point and is not needed for any finite epsilon. Negative epsilon follows by swapping the first two a-labels.
+
+The spectra are a=(epsilon+i,-epsilon+i,1,2+i) and b=(-1+i,-2-2i,2-i,1+2i). The a-spectrum is simple except at epsilon=0,+2,-2; b is always simple. Both spectra are noncollinear throughout. The common Mobius extension in the notes also checks: a'=f(a), b'=-f(-b) multiply every pair sum by Delta divided by its row and column denominators, and hence multiply the determinant and every matching vertex by the same nonzero complex scalar. No unrestricted MOC conclusion follows.
+
+
+8. FINAL CONSOLIDATED REPORT SCOPE AND FORMULA AUDIT
+
+Audited output/category/MOC_Categorical_Followup.tex together with tensor_family.tex and local_coupling.tex after consolidation. This was a final presentation-level mathematical audit; it did not reopen research or replace the independent theorem/certificate reviews. No material mathematical error or quantifier overclaim was found. The unrestricted complex conjecture is explicitly stated unresolved in both the front outcome and the final paragraph.
+
+Identity (1) has the correct permutation convention: pi maps row labels to column labels, and complementary-minor/Laplace expansion gives each squared minor as the indicated sum of real signed determinant terms. These coefficients sum to one but need not be nonnegative. Thus checking a linear common-minor identity on all permutations really does imply it for all unitaries, without invoking a false positive common-law assertion.
+
+The phase gauge is valid for general block partitions: adding alpha_P+beta_Q to edge phases multiplies the coherent matrix only by outer diagonals, since the two block-constant diagonal factors commute with their respective unitary layers. A spanning forest leaves exactly E-V+c phases. One retained coordinate gives an affine rank-one matrix pencil, so every squared minor and the determinant symbol has only frequencies -1,0,1. The explicit six-dimensional result concerns its fixed A,B,a,b and every phase; it does not assert all U(6) or arbitrary spectra.
+
+For a single matching cycle, the coherent defect is 2c f_P f_Q^T, while the signed gate-choice sum is 2 sigma f_P f_Q^T. Therefore the correction w_s+sigma c chi_s has the correct sign and factor. The stated sufficient positivity bound, its bias-product phase ratio, the balanced-gate formula, and the determinant cancellation product all agree. The final scalar support inequality loses sigma inside an absolute value, as required for the all-phase maximum.
+
+The Kronecker theorem quantifies arbitrary A,B in U(2) and arbitrary complex four-dimensional spectra; it makes no inference to arbitrary Kronecker powers. Its six Bernstein control laws have unit mass, and the outer coefficients sum to one. The physical Kronecker operation is explicitly distinguished from Boolean tensor/direct-sum closure.
+
+The local (2,2,2) theorem correctly fixes source column groups 12,34,56 and the center U0. Other placements require column permutation of that center. The midpoint target r has mass two and is the sum of the two rank-three laws, consistent with the interval representation. The seven independent relations leave dimension 43; the selected inverse norm 82 and target Lipschitz bound 12 give radius m/(12*82)=1/23083105288 with m=3/70375321. The repaired weights also retain total mass one through their rank-two marginal. The theorem covers complex unitary matrices in this operator-norm ball and every complex a,b0,b1,b2. No global (2,2,2) theorem is asserted.
+
+The all-real spectral theorem retains its exact finite-cell verification, positive normalization, continuity at finite endpoints, and negative-parameter row swap. The common projective transport has the correct signs and common nonzero complex scale. Abstract Boolean scalar violations are explicitly distinguished from actual-unitary MOC counterexamples.
+
+Two optional wording improvements were sent to the parent: replace front-table “a full U(6) phase family” with “a fixed U(6) phase family”; replace the pre-local-insert “the indecomposable case remains unresolved here” with “the general indecomposable case remains unresolved,” avoiding apparent conflict with the subsequent local neighborhood theorem. Neither affects the correctly stated theorem scopes.

@@ -1,0 +1,25 @@
+Zero-transposition support and paired spectral matching
+
+Status: exact restricted boundary exclusion, not a proof of MOC4. This is a deduction from the existing complex Gram and cycle formulas in docs/theorems/profile_geometry/analysis_clifford_idempotent_reformulation.md. No claim of historical novelty or independent audit is made.
+
+Let z_pi=product_i(a_i+b_pi(i)), and suppose identity is a support maximizer for Re(eta z_pi). Assume z_id != 0, eta z_id is a nonzero real number, and each transposition (ij) ties identity in this support direction. Then for every three distinct indices i,j,k, at least one pair p,q among them satisfies a_p=a_q or b_p=b_q.
+
+Equivalently, form the bipartite graph whose left vertices are distinct a values, whose right vertices are distinct b values, and whose edges are the pairs (a_i,b_i). This graph has no matching of size three. Thus, by the bipartite matching-cover theorem, its edges are covered by at most two vertices. Consequently either there are at most two distinct a values, or at most two distinct b values, or there are values a*, b* such that each index has a_i=a* or b_i=b*. In particular, this situation cannot occur when both spectra are simple and n>=3. The argument holds in every dimension, with the identical condition on all transpositions, and also locally for any triple whose three transpositions tie.
+
+Proof. Put m_i=a_i+b_i and z_id=product m_i. All m_i are nonzero. Set P_i=(1/m_i)[[b_i,a_i b_i],[1,a_i]], Q_i=2P_i-I, and G_ij=tr(Q_i Q_j)/2. Then P_i is a rank-one idempotent, and G_ii=1. The permutation product for (ij), divided by z_id, is tr(P_i P_j)=(1+G_ij)/2. A direct calculation gives
+
+  G_ij=1+2(a_i-a_j)(b_i-b_j)/(m_i m_j).
+
+Let zeta=eta z_id. Since zeta is real and nonzero, vanishing transposition gaps implies Re G_ij=1. Write G_ij=1+i y_ij with y_ij real.
+
+For a triple, define V_ijk as the complex scalar triple product of the Pauli vectors of the traceless Q_i; it obeys V_ijk^2=det G[{i,j,k}]. The sum of the two oriented 3-cycle support gaps equals the sum of the three transposition gaps. The latter sum is zero. Since identity supports all permutation products, each of the two oriented 3-cycle gaps is nonnegative; hence both vanish. Their difference equals a nonzero real multiple of Im V_ijk, so Im V_ijk=0. Consequently V_ijk^2 is real.
+
+Direct expansion gives
+
+  Im det G[{i,j,k}]=-2 y_ij y_jk y_ki.
+
+Hence y_ij y_jk y_ki=0. Some y_pq=0 and therefore G_pq=1. The displayed formula for G now yields (a_p-a_q)(b_p-b_q)=0, proving the claim.
+
+The bipartite graph reformulation follows because three paired edges form a matching exactly when their a values and their b values are both pairwise distinct. The vertex-cover alternatives are the possible types of a cover with at most two vertices. Repeated edges do not change matching or cover number.
+
+Limits: The radial support hypothesis eta z_id real is essential to the argument; no rotation or Möbius normalization makes it automatic because eta z_id is invariant under the compensating support-direction change. This does not exclude all g=0 boundary data; the existing formal-profile boundary results already establish positivity of their particular rank-four residual. The result adds a spectral collision condition on a smaller stratum, and it does not use or imply a universal probability law for unitary minors.

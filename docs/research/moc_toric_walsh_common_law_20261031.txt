@@ -1,0 +1,106 @@
+Exact positive and signed common-minor laws on the toric Walsh path
+31 October 2026
+
+This is an exact classification for the specified one-parameter mixers, not
+an unrestricted MOC proof. It supplies a quantitative obstruction encountered
+by the positive diagonal flag-torus escape developed in the parent lane.
+No priority claim is made relative to general fourteen-term identities.
+
+Put d=p^2+1 and, for p>0, define
+
+                [p^2, p,    p,    1   ]
+  Q(p) = 1/d *  [1,  -p,   p,   -p^2 ] .
+                [p,   1,  -p^2, -p   ]
+                [p,  -p^2,-1,    p   ]
+
+Its numerator N satisfies NN^T=d^2 I, so Q(p) is orthogonal. At p=1 it is
+the normalized Walsh matrix. It arises by Gram-Schmidt from
+diag(p,p^-1,1,1)W, with the indicated eigenvector ordering.
+
+Permutations use zero-based lexicographic indices in S4; their one-based
+word forms are stored in the JSON artifact. Define numerator weights
+
+    indices 0,3,11,16:          p^2(p^2-1)^2 each;
+    indices 1,6,9,14,17,22:    2p^4 each;
+    index 5:                   p^2(p^6+3p^2-2);
+    index 18:                  1+2p^2-p^4;
+    every other index:         zero.
+
+These twelve weights sum identically to d^4. For every equal-size pair of
+subsets I,J of {0,1,2,3}, including empty and full subsets, they satisfy
+
+  |det Q(p)[I,J]|^2
+      = sum_pi [weight_pi(p)/d^4] 1_{pi(I)=J}.             (1)
+
+All 70 identities hold in Q(p), verified by exact symbolic arithmetic.
+Consequently, whenever these weights are positive, the complete determinant
+polynomial for arbitrary complex spectra is a convex combination of the
+matching products. This is a genuine arbitrary-spectra mixer theorem.
+
+For p>=1, every displayed numerator except index18 is nonnegative, and
+index18 is nonnegative exactly when p<=sqrt(1+sqrt(2)). Thus the formulas
+give a positive law on that entire interval.
+
+An exact dual proves that this interval cannot be enlarged by choosing a
+different spectrum-independent common-minor law. Let m_ij=|Q_ij|^2 and
+m_(I,J)=|det Q[I,J]|^2, with zero-based indices. Define
+
+ L = 1-m_00-(1/2)m_01-m_02-(1/2)m_12-(1/2)m_20-(1/2)m_22
+       +(1/2)m_(01,02)+(1/2)m_(02,01)+(1/2)m_(02,02).
+
+For a permutation matrix the 24 values of L all lie in {0,1/2,1}. Therefore
+L>=0 for every nonnegative common-minor law. Direct substitution gives
+
+      L(Q(p))=(1+2p^2-p^4)/(p^2+1)^4.                    (2)
+
+For p>sqrt(1+sqrt(2)), (2) is negative, so no such positive common law
+exists. This is an exact method obstruction; it is not a spectral MOC
+counterexample.
+
+More quantitatively, let nu=sum max(-w_pi,0) be the negative mass of any
+real signed common-minor law. Since every permutation score lies in [0,1],
+equation (2) gives nu>=max(0,-L(Q(p))). Our explicit law has just the one
+potential negative index18, so it attains this bound for every p>=1:
+
+  min nu = max(0,p^4-2p^2-1)/(p^2+1)^4,       p>=1.       (3)
+
+The reciprocal identity
+
+ Q(1/p)=diag(1,-1,-1,1) Q(p) J_reverse
+
+is exact. Row phases and column permutations preserve existence and least
+negative mass of common-minor laws. Thus a positive law exists for p>0
+exactly on
+
+  sqrt(sqrt(2)-1) <= p <= sqrt(1+sqrt(2)).                (4)
+
+For 0<p<=1 the minimum negative mass is
+
+  p^4 max(0,1-2p^2-p^4)/(p^2+1)^4.                       (5)
+
+At p=2 (and p=1/2), the minimum is exactly 7/625. The maximum over p>0 of
+the minimum negative mass equals (5sqrt(5)-11)/16, attained at
+p=sqrt(2+sqrt(5)) and its reciprocal. Differentiating (3) with q=p^2 gives
+-2(q^2-4q-1)/(q+1)^5, proving this maximum. The endpoint limits p=0 and
+p=infinity are monomial mixers, so their negative masses return to zero.
+
+Implication for the topological route
+
+The special Walsh spectral support has an explicit quartic ascent all the
+way along this toric degeneration toward an exposed permutation. Equations
+(3)-(5) show that part of that same path leaves the cone of common positive
+minor laws. Thus a proof based on toric ascent must use the actual spectral
+cost or otherwise handle signed minor identities; common spectrum-independent
+positivity cannot cover the whole escape. This is a computable distinction
+between two proposed mechanisms, not merely an absent proof.
+
+Reproduction:
+  python3 code/research/moc_toric_walsh_common_law.py
+
+Artifact:
+  build/moc_toric_walsh_common_law_20261031.json
+
+The exact verifier checks orthogonality, normalization, all70 minor identities,
+the dual scores, its evaluated polynomial, the reciprocal gauge, exact
+parameter instances, and the optimal-negative-mass derivative. It uses no
+floating-point LP or numerical optimizer.

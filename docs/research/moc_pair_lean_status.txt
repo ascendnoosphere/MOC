@@ -1,0 +1,62 @@
+Dimension-four Walsh construction: Lean status, 2026-10-31
+
+COMPLETE FOR THE UNITARY CURVE AND ACTUAL DETERMINANT/SUPPORT IDENTITY.
+This status supersedes the earlier structural-only checkpoint.
+
+Accepted sources:
+ code/lean/MocPairObstruction.lean
+ code/lean/MocPairDeterminant.lean
+Both compiled .olean modules are present beside the sources.
+Final determinant-extension compiler exit code: 0.
+Logs:
+ build/lean0710/moc_pair_checked_compile.log
+ build/lean0710/moc_pair_determinant_compile.log
+
+For a=(1,-1,-3i,3i), b=(-3,3,-i,i), W=Walsh/2, and the explicit
+K=[[0,1,1,1],[-1,0,1,-1],[-1,-1,0,1],[-1,1,-1,0]], Lean verifies:
+ K*K=-3I; K*= -K; W is unitary.
+ R(c,s)=cI+sK satisfies R R*=R*R=(c^2+3s^2)I.
+ V(c,s)=R(c,s)W is unitary whenever c^2+3s^2=1.
+ spectral_sum_eq identifies diag(a)+V diag(b)V* with an explicit quadratic matrix.
+
+The new determinant extension proves a generic 4-by-4 determinant expansion,
+then substitutes the explicit quadratic matrix and checks its complete complex
+polynomial determinant by ring normalization. Its support function is exactly
+ F(c,s)=Re(i*det(diag(a)+V(c,s)*diag(b)*V(c,s)*)).
+
+The checked polynomial identity is
+ F(c,s)=24+384*c*s^3
+       +12*(c^2+3*s^2-1)*(c^2+3*s^2+1)*(3*c*s+3*s^2+2).
+Therefore, on the unitary ellipse,
+ F(c,s)=24+384*c*s^3.
+The theorem positive_curve_strict_ascent proves F(c,s)>F(1,0) whenever
+c>0, s>0, and c^2+3s^2=1. Checked endpoint values are F(1,0)=24 and
+F(1/2,1/2)=48.
+
+New checked theorems (namespace MOC.PairObstruction):
+ det_four_expansion
+ determinant_polynomial
+ support_polynomial
+ support_on_unitary_curve
+ support_at_W
+ positive_curve_strict_ascent
+ support_at_half
+
+The printed axiom audits for determinant_polynomial and
+positive_curve_strict_ascent contain only:
+[propext, Classical.choice, Quot.sound]
+No sorryAx or custom axiom occurs.
+
+Scope limits:
+The full Hessian negative-semidefiniteness calculation and pair-fiber maximality
+have separate exact symbolic certificates; this Lean extension does not claim to
+formalize those derivative statements. The checked result is an actual unitary
+curve with an exact determinant formula and strict support increase.
+It does not prove or disprove unrestricted MOC4.
+
+Earlier unsuccessful approaches remain archived at
+build/lean0710/MocPairObstruction_full_attempt.lean.txt. They are superseded and
+excluded from the accepted module imports.
+
+Compiler command (working directory /data/MOC/build/lean0710/mathlib):
+PATH=/data/MOC/build/lean0710/lean-4.19.0-linux/bin:$PATH lake env bash -c 'LEAN_PATH=/data/MOC/code/lean:$LEAN_PATH timeout 150 lean --root=/data/MOC/code/lean -o /data/MOC/code/lean/MocPairDeterminant.olean /data/MOC/code/lean/MocPairDeterminant.lean'

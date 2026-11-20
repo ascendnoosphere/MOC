@@ -1,0 +1,106 @@
+Independent Choi and Kraus audit of the alternating CP completion
+31 October2026
+
+Input theorem. Grace/Hodge proved the real-jet identity for an arbitrary
+real orthogonal4x4 mixer. Choose beta(w)=(0,1,-1,w), write its real jet
+J=[F0 F1], and let c be the signed determinant amplitudes. The universal
+Clifford decomposition gives
+ H(c)=J^Tdiag(c)J=P+Q^PT, P=h h^T, Q=r r^T,
+where h has7 columns and r one. The real PT-odd corner is one-dimensional,
+and for the explicitly determined scalar lambda,
+ Q^PT-Q=-lambda H(sign),
+ H(c+lambda sign)=h h^T+r r^T>=0.                         (1)
+This note independently audits the transition from (1) to a quantum
+channel and its constants at two exact mixers. It does not substitute
+example checks for the universal real-jet theorem.
+
+Choi congruence
+
+Let P_pi act on four qubits by permuting tensor factors. The24 vectors
+vec(P_pi) span14 dimensions. Their permutation-function space is the
+same14-dimensional space as the columns of the jet J. Therefore there
+is an injective linear map L on range(J^T) satisfying
+ L j_pi=vec(P_pi).
+Consequently
+ Choi(Phi_q)=sum_pi q_pi vec(P_pi)vec(P_pi)^T=L H(q)L^T,
+ Phi_q(X)=sum_pi q_pi P_pi X P_pi^T.
+This is a congruence, not an assertion that the original signed twirl
+was completely positive. For q=c+lambda sign, (1) gives eight real
+Kraus vectors Lh_1,...,Lh_7,Lr.
+
+The alternating coherent sum vanishes exactly:
+ sum_pi sign(pi)P_pi=0.
+Indeed there is no fully alternating tensor in (C^2)^tensor4. Also
+sum_pi sign(pi)=0. Thus the corrected channel is unital and trace
+preserving, and the coherent operator is unchanged:
+ T_c=sum c_pi P_pi=sum q_pi P_pi.
+
+The first Kraus operator is T_c itself. To see this without relying on
+an example, every P_pi fixes the fully symmetric subspace Sym^4(C^2).
+The scalar Clifford column has coefficient1 there; the other six
+holomorphic channels and the pseudoscalar channel have coefficient0.
+Choose any invariant unit vector v. Comparing the channel on |x><v|
+gives K0 x<Tv|=T_c x<v|, hence K0=T_c. Therefore
+ Phi_q(X)=T_c X T_c^T+sum_{alpha=1}^7 K_alpha X K_alpha^T,
+ T_c^T T_c+sum_{alpha=1}^7 K_alpha^T K_alpha=I,
+ T_c T_c^T+sum_{alpha=1}^7 K_alpha K_alpha^T=I.             (2)
+The seven error channels annihilate the five-dimensional fully
+symmetric sector. Formula (2) is an exact operator sum-of-squares
+completion of the fermionic compression contraction.
+
+Independent exact computations
+
+moc_qft_cp_alternating_gauge_audit.py constructs all16x16 permutation
+operators, proves their frame has rank14, and checks all6144 entries
+of the jet-to-operator frame relation. It then checks all196 entries
+of the reduced14x14 Choi factorization, both channel normalization
+identities, the unchanged coherent operator, and K0=T_c.
+
+For Q59:
+ lambda=-170944/12117361;
+ Choi rank8;
+ corrected q has six negative coefficients, at zero-based indices
+ 0,3,4,11,16,19;
+ min q=-2880/205379.
+
+For R3701:
+ lambda=4440777210000/187618794154801;
+ Choi rank8;
+ corrected q has eight negative coefficients, at indices
+ 0,1,5,9,13,21,22,23;
+ min q=-1248480000/50694081101.
+
+The24 indices use lexicographic permutation order. Both exact matrices
+were specified in moc_qft_rank8_moment_tangent_20261031.txt.
+The JSON artifacts export all eight rational16x16 Kraus matrices and
+all24 corrected coefficients. Since Choi rank is8, eight is the
+minimum number of Kraus operators for each constructed channel.
+No claim is made about minimizing over other invisible gauge families.
+
+At both mixers the displayed lambda is the UNIQUE scalar on the
+alternating line for which the Choi matrix is PSD. The verifier
+restricts H(sign) to the six-dimensional kernel of the rank-eight
+completed matrix and exports exact rational vectors giving positive
+and negative quadratic values. Any nonzero change of lambda makes
+that restricted form indefinite. This example uniqueness statement
+is distinct from a universal uniqueness theorem.
+
+Negative q coefficients are compatible with complete positivity. This
+is not a classical common-minor probability law. The original common
+profiles and all actual MOC product averages remain unchanged because
+the alternating vector is invisible to them.
+
+The correction cannot be linear in c on the whole amplitude family.
+For a signed permutation mixer, c is a coordinate unit vector and
+r=0, so lambda=0. Those24 vectors spanR24. A linear functional with
+these values would vanish identically, contradicting the exact Q59
+value above. Orthogonality-related denominator cancellations therefore
+do not establish linearity in the signed amplitude coordinates.
+
+Files
+code/research/moc_qft_cp_alternating_gauge_audit.py
+build/moc_qft_polynomial_tilt/cp_alternating_gauge_Q59.json
+build/moc_qft_polynomial_tilt/cp_alternating_gauge_R3701.json
+
+The unrestricted spectral support-cost containment needed for MOC4
+is still separate and is not proved by this channel construction.

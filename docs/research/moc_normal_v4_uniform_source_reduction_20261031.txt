@@ -1,0 +1,266 @@
+Uniform actual normal-V4 reductions: one simplicial cap, source Schur
+factorization, and the complete conditional dual completion
+31 October 2026
+
+Subsequent resolution on the same date: the uniform V4 construction is
+proved in moc_normal_v4_uniform_triangle_sos_theorem_20261031.txt.
+The exact replay is moc_normal_v4_neutral_triangle_sos.py. Its scalar
+capacity/inertia argument supplies the conversion left open below.
+The remaining-status statements in this earlier note describe the
+intermediate stage at which its source and dual reductions were found.
+
+Status. The reductions in Sections 1--5 are uniform and proved. They
+retain the original actual complex source and every cross module.
+They do not yet construct a positive Gram for every actual V4 cost.
+The unresolved implication is stated explicitly in Section 6. No
+all-real-secant or all-real-balanced-normal positivity claim is made.
+
+Use the notation and verified ten-coordinate chart from
+moc_normal_v4_contact_source_and_sos_20261031.txt. Write
+ beta=(b2,b0,b1), p=(a01,a12,a20), q=(a10,a21,a02),
+ c++c-=sum beta.
+
+1. Every nonordinary point is in one of eight simplicial one-mixed caps
+
+The rectangle inequalities give
+
+           sum beta>=||p||1+||q||1.                    (1)
+
+Consequently at most one of c+<||p||1 and c-<||q||1 can hold. If neither
+holds the exact ordinary-cone criterion already gives a matching SOS.
+Suppose the first holds. Put t=||p||1-c+>0. Positivity of the four plus
+cycle values forces all p_i nonzero, product(sign p_i)=1, and
+
+                         t<=2 min_i |p_i|.            (2)
+
+Indeed otherwise the negative sign pattern attaining -||p||1 would be
+one of the four allowed tetrahedral patterns, or the pattern obtained
+by changing the smallest absolute coefficient would violate positivity.
+The left V4 action removes the three signs of p. Transposing permutations
+exchanges the two cycle orientations if necessary. Thus it suffices
+uniformly to treat p_i>0 and c+<sum p_i.
+
+In that canonical case define
+
+ t=sum p-c+,
+ u_i=2p_i-t,
+ v_i^+=beta_i-p_i+q_i, v_i^-=beta_i-p_i-q_i.            (3)
+
+All nine budgets in (3) are nonnegative by (2) and the rectangle bounds.
+There is the EXACT, UNIQUE decomposition
+
+ g=t r58
+   +u0 r17+u1 r28+u2 r24
+   +v0+ r22+v1+ r18+v2+ r29
+   +v0- r27+v1- r19+v2- r32.                           (4)
+
+The ten rays in (4) are independent. This is a simplicial cap, not an
+ansatz discarding some nonnegative coefficients. The eight possible
+frustrated sign/orientation choices are symmetry-equivalent copies.
+Thus all eight mixed rays of the full V4 face reduce to ONE canonical
+ten-generator cone for an actual uniform proof.
+
+Its twenty noncontact gap values are particularly simple:
+
+ three small plus-cycle values: u_i;
+ one large plus-cycle value: 2t+sum u;
+ six small transposition-coset values: v_i^+ or v_i^-;
+ six corresponding large values: t+u_i+v_i^+ or t+u_i+v_i^-;
+ four minus-cycle values: t+sum_i v_i^(s_i), product s_i=1.
+
+Conversely these formulas prove nonnegativity for every t,u,v>=0.
+For t>0 the ordinary separating facet is exactly -t, so the interior
+of this cap is genuinely nonordinary.
+
+There is also an equivalent complete primal vector criterion in this
+basis. Let Z,A_i,B_i^+,B_i^- be ten arbitrary Euclidean vectors. Their
+Gram represents g if and only if
+
+ ||A_i||^2=u_i, ||B_i^+||^2=v_i^+, ||B_i^-||^2=v_i^-;
+ ||Z+A_i+B_i^+||^2=t+u_i+v_i^+,
+ ||Z+A_i+B_i^-||^2=t+u_i+v_i^-;
+ ||Z+sum B_i^(s_i)||^2=t+sum v_i^(s_i), product s_i=1;
+ ||2Z+sum A_i||^2=2t+sum u.
+
+These are all twenty equations. The norm of Z and all cross terms are
+free; no ordinary diagonal or block-diagonal Gram is prescribed.
+
+2. Degenerate boundaries that are already covered
+
+If any beta_i=0, the rectangle bounds force p_i=q_i=0. A tetrahedral
+norm with one zero coefficient equals the full l1 norm. Hence both
+cycle l1 bounds hold, and g is ordinary. This proves the beta=0 boundary
+for EVERY nonnegative real matching cost, without source or density.
+
+If two a eigenvalues, or two b eigenvalues, coincide, the actual cost
+is invariant under the associated row or column transposition tau.
+Its V4 contacts therefore include V4 and its tau coset. Let tau' be
+the disjoint transposition with tau tau' in V4. The contacts contain
+{id,tau,tau',tau tau'}, a symmetry copy of the nonnormal Klein subgroup
+treated by moc_klein_actual_ordinary_theorem_20261031.txt. Its proved
+uniform actual theorem gives an ordinary certificate, including every
+such collision. Eta=0 gives the zero cost.
+
+These observations permit beta_i>0 and simple spectra in the remaining
+construction problem. They do not assume that every other singular
+source stratum is a limit within the V4 supporting chamber. The original
+source factorization below does not require the rational chart M(b) to
+have rank three.
+
+3. The universal V4 inverse pencil is a triangular-prism block matrix
+
+For row-major H, reorder its entries as
+ w=(H22,H11,H00), u=(H01,H20,H12), v=(H10,H02,H21).
+Let Off(p) have entries Off(p)_jk=p_i when {i,j,k}={0,1,2}, with zero
+diagonal. The universal inverse quadratic pencil has the exact form
+
+                         [ -diag beta  -diag q   -diag p ]
+  8 M(g), reordered  =    [ -diag q       C+0         0   ],
+                         [ -diag p        0          C-0  ]
+
+ C+0=diag(c+-beta)+Off(p), C-0=diag(c--beta)+Off(q).     (5)
+
+The signs and all 81 coefficients are checked against the universal
+pencil, rather than inferred from a sparsity picture. Eliminating the
+negative three-block gives the six-dimensional real Schur complement
+
+ S6=[[C+, diag(p_i q_i/beta_i)],
+     [diag(p_i q_i/beta_i), C-]],
+
+ C+=diag(c+-beta_i+q_i^2/beta_i)+Off(p),
+ C-=diag(c--beta_i+p_i^2/beta_i)+Off(q).                (6)
+
+For a generic actual cost rank M(g)=8, actual source rank four gives
+inertia M(g)=(4+,4-,1zero), hence inertia S6=(4+,1-,1zero).
+The exact rational nonordinary actual control has this inertia, checked
+by rational congruence pivots. Thus demanding S6>=0 would be incorrect.
+
+4. An ACTUAL complex-source Schur factorization
+
+Let z_pi=prod_i(a_i+b_pi(i)) and retain the original eta and finite
+spectra. Set Z=-8 eta M(z), in the same ordering as (5). Then
+
+       Re Z=8M(g), rank_C Z<=4,                        (7)
+
+by the source theorem moc_actual_inverse_pencil_rank_four_20261031.txt.
+Partition Z=[[A,B],[B^T,C]] according to its first three entries.
+The real part of A is -P, P=diag beta>0. Put T=Im A.
+
+A is invertible: its Hermitian part is the negative-definite real matrix
+-P. Write A^-1 B=X+iY. The complex Schur residual
+
+                       D=C-B^T A^-1 B                 (8)
+
+has complex rank at most one, since rank A=3 and rank Z<=4. A direct
+completion-of-squares calculation gives the UNIFORM identity
+
+                S6=Re D+Y^T(P+T P^-1 T)Y.             (9)
+
+To check it, Re B=-PX-TY and
+ Re(B^T A^-1 B)=-X^TPX+Y^TPY-X^TTY-Y^TTX.
+Subtracting (Re B)^T(Re A)^-1(Re B) leaves precisely
+Y^T(P+T P^-1 T)Y. The middle matrix in (9) is positive definite because
+P>0 and T is real symmetric. Its contribution has rank at most three.
+The other term is the real part of one complex square: if D!=0, write
+D=ell ell^T, so Re D=Re(ell)Re(ell)^T-Im(ell)Im(ell)^T.
+
+Thus the original actual source supplies an explicit positive-three-
+factor plus one complex-square factor for S6. It preserves the actual
+complex rank-four completion, rather than substituting a generic real
+balanced normal or merely an inertia condition. Equations (7)--(9)
+remain valid at source chart rank drops and spectral collisions whenever
+beta>0; no generic source reconstruction is used in their proof.
+
+The exact control replay verifies rank_C D<=1 and every entry of (9)
+using rational complex arithmetic. The theorem itself is the block
+identity and rank argument, not an extrapolation from that example.
+
+5. Complete conditional dual coordinates, including all free moments
+
+The basis (d,f_i,x_i,y_i) and complete primal vector criterion are in
+Section 7 of moc_normal_v4_contact_source_and_sos_20261031.txt.
+Let n be any real functional on that ten-dimensional space. Write
+ d0=n(d), A_i=n(f_i), B_i=A_i-d0, P_i=n(x_i), Q_i=n(y_i).
+
+Its conditional moment extension to all twenty noncontact functions
+has EXACTLY ten free real parameters
+
+ T0=n(Pplus), r_i=n(d x_i), s_i=n(d y_i), z_i=n(x_i y_i).
+
+The full symmetric ten-by-ten moment matrix in order d,f3,x3,y3 has
+the following entries (the complementary index to i,j is k):
+
+ Kdd=2T0-d0, Kd,fi=T0, Kd,xi=r_i, Kd,yi=s_i;
+ Kfi,fi=Kxi,xi=A_i, Kyi,yi=B_i;
+ Kfi,fj=T0 for i!=j;
+ Kfi,xi=P_i, Kfi,xj=r_j for i!=j;
+ Kfi,yi=Q_i+s_i, Kfi,yj=0 for i!=j;
+ Kxi,xj=r_k for i!=j, Kyi,yj=-s_k for i!=j;
+ Kxi,yj=0 for i!=j, Kxi,yi=z_i.                       (10)
+
+All 100 entry identities are checked against the exact twenty-point
+evaluation table. The linear transformation from the twenty point
+weights to (n,T0,r,s,z) has rank twenty. Hence (10) describes ALL moment
+extensions, with no discarded cross module or hidden linear condition.
+
+A PSD completion (10) is precisely a positive conditional extension of
+n. The corresponding dual description of C0 is exact: the sum of the
+twelve ordinary-square Grams is positive definite on the ten-feature
+space, so the finite semidefinite extension problem satisfies Slater's
+condition. Thus there is no extra closure/attainment assumption in
+using this full conditional dual completion.
+
+For a generic projective Gauss normal, put n=sigma psi(H), sigma=+/-1.
+Using the prism coordinates from (5), the entries fixed by n are,
+up to that common orientation,
+
+ d0=||u||^2-||v||^2,
+ A_i=||u||^2-u_i^2-v_i^2-w_i^2,
+ B_i=||v||^2-u_i^2-v_i^2-w_i^2,
+ P_i=2(u_j u_k-w_i v_i), Q_i=2(v_j v_k-w_i u_i).       (11)
+
+The ten free completion parameters in (10) must still be retained.
+For example, sigma=-1,w=(5,5,5),u=(1,1,1),v=(-3,-3,-3) gives
+ d0=24,A_i=32,B_i=8,P_i=-32,Q_i=-8.
+All twelve ordinary ray values are nonnegative, yet n(r58)=-24.
+Thus an ordinary-only Gauss-normal contradiction would be false.
+
+Nevertheless this exact example has NO PSD completion in (10). Its
+three ordinary features (f_i+x_i)/2 have zero moment norm. PSD would
+force their vectors to vanish, so X_i=-F_i. Then r_i=-T0 from Kd,fi.
+For i!=j, Kxi,xj=T0 from X_i=-F_i but also r_k=-T0 from (10). Hence
+T0=0, and Kdd=-24<0, a contradiction. This is a uniform boundary
+argument for any conditional functional with those three zero ray
+norms; it is not just an unsuccessful numerical completion search.
+
+6. Precisely what remains
+
+The desired uniform actual theorem would now follow from a construction
+of the ten primal vectors from the original source (7)--(9), satisfying
+the twenty cap equations in Section 1, for every nonnegative actual cap.
+Alternatively a conditional-dual contradiction must combine the FULL
+PSD completion (10), the Gauss kernel relation M(g)vec(H)=0, nonnegative
+cap budgets, and the ACTUAL complex-source condition (7). Ordinary
+positivity, real secant membership, and real normal-chart density alone
+are insufficient and are not substituted for that source condition.
+
+The rank-one residual in (9) isolates one negative real direction and
+three explicit positive source directions. The missing step is turning
+that indefinite factorization into a Euclidean ten-vector Gram while
+preserving the cap norm equations. No such conversion has been proved
+in this note. No rank-two SOS assumption is used; a short diagnostic
+did not find a planar factor for the actual control, which is not an
+impossibility proof.
+
+Exact replays:
+ python code/research/moc_normal_v4_prism_duality.py
+ python code/research/moc_normal_v4_single_cap_and_source_schur.py
+
+Both PASS. Outputs:
+ build/moc_normal_v4_prism_duality_20261031.json
+ build/moc_normal_v4_single_cap_source_schur_20261031.json.
+
+The previous actual nonordinary control and its exact full PD Gram
+remain separately certified by moc_normal_v4_actual_nonordinary.py
+and moc_normal_v4_full_sos_verify.py. None of these finite controls
+is presented as a uniform positivity theorem.

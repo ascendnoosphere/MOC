@@ -1,0 +1,222 @@
+Exact five-dimensional matching SOS from Cauchy-normal tangent planes
+31 October 2026
+
+RESULT AND SCOPE
+
+The exact actual nonordinary STAR control has a matching-SOS Gram of rank5
+whose six primary vectors occupy only THREE real dimensions. Each primary
+orthogonal pair lies in the tangent plane of its intrinsic Cauchy normal.
+The remaining auxiliary Schur residual has rank2. This is structurally
+different from the previously successful rank6 Cauchy tensor O(2) block:
+cross blocks here are anisotropic, with normalized singular values1,Kij.
+
+The certificate uses the EXACT source Cauchy Gram, the rational common
+vector e=(1,2,0), and no fitted tangent phases. Eight auxiliary cross
+coordinates are explicit rationals; three are specified by a unique
+algebraic root in a rational box, proved to exist using exact rational
+interval arithmetic. All24 matching identities are proved symbolically.
+
+This is an instance theorem. It does not prove that every actual STAR
+source admits these tangent frames or a rank5 completion. The common-vector
+rule is a TWO-parameter subset of the full three tangent-phase family.
+
+1. THE ACTUAL CONTROL AND ITS NORMALS
+
+The actual source and all24 exact gaps are the existing control
+ build/moc_star_actual_nonordinary_counterexample/exact.json.
+
+The exact normalized STAR cost w=(a,b,c,d,e,f,u,r,s,t) is read from
+ build/moc_star_directed_descriptor/exact.json
+and divided by the maximum of its24 exact rational gap values. Scaling
+back afterwards multiplies the Gram by a positive rational and preserves
+its rank.
+
+Let R be the positive-definite reciprocal Fricke matrix of this source,
+and put Kij=Rij/sqrt(Rii Rjj). Thus K is an exact positive-definite3-by3
+unit-diagonal matrix. No rounding of K is used in the theorem. Numerically
+
+  K01=.9852958004195014,
+  K02=.9688301986175681,
+  K12=.9967734914591582.
+
+Use the upper Cholesky normals
+
+  n0=(1,0,0),
+  n1=(k,y,0),        k=K01, y=sqrt(1-k^2),
+  n2=(l,z,t0),       l=K02, z=(K12-k*l)/y,
+                         t0=sqrt(1-l^2-z^2).
+
+Then ni.nj=Kij exactly. Positivity of R and its principal minors ensures
+all these square roots are positive and the normals are independent.
+
+2. THREE PRIMARY TANGENT PLANES
+
+Project the COMMON vector e=(1,2,0) into each plane ni-perp, normalize to
+pi, and put qi=ni cross pi. For the first two normals this simplifies to
+
+  p0=(0,1,0), q0=(0,0,1),
+  p1=(-y,k,0), q1=(0,0,1).
+
+For the third normal, with d=l+2z and L=sqrt(5-d^2),
+
+  p2=((1-d*l),(2-d*z),-d*t0)/L,
+  q2=(-2t0,t0,2l-z)/L.
+
+The six primary vectors, in coordinate order(A,B,C,D,E,F), are
+
+  sqrt(a)p0, sqrt(b)p1, sqrt(c)p2,
+  sqrt(d)q1, sqrt(e)q0, -sqrt(f)q2.                (1)
+
+Write V for this3-by6 matrix. It has rank3, and D6=V^T V has the required
+diagonal(a,b,c,d,e,f) and A perpendicular E, B perpendicular D, C
+perpendicular F. This is the exact primary block used by the certificate.
+
+For any two tangent frames, the normalized two-by-two cross block has
+singular values1 and |ni.nj|=Kij. By contrast, a Cauchy tensor O(2) block
+has two equal singular values Kij. Therefore(1) is outside the class of
+all the previously tested conformal primary kernels.
+
+3. ENFORCING THE SINGULAR PRIMARY RANGE CONDITION
+
+The full ten-dimensional matching basis has four auxiliary coordinates
+(U,R,S,T). A positive completion of D6 MUST have cross block
+
+                         B=V^T X,
+
+where X is3-by4. We build this in from the beginning; no inverse of the
+singular D6 is taken. The seven-dimensional reduced Gram is
+
+                      [ I3    X ]
+                H =   [ X^T   C ].                       (2)
+
+The original ten-dimensional Gram is obtained by congruence with the
+injective embedding diag(V^T,I4), so it has the same rank as H.
+
+For arbitrary D6 and B, all24 interpolation equations reduce to ten
+linear formulas determining the symmetric C and ONE additional equation
+
+  sum_i(B_iU-B_iR+B_iT)
+    +D_AB+D_AC+D_BC-D_DE-D_DF-D_EF+r-t-u=0.          (3)
+
+Let c=V*(1,1,1,1,1,1)^T. Its first component is nonzero on this source.
+We eliminate X00 using(3). The remaining eleven entries of X are free.
+The checker proves symbolically that every24 interpolation residual is
+an exact scalar multiple of(3), before any source values are substituted.
+Thus satisfying(3) proves all24 equalities; interval residuals containing
+zero are NOT used as a substitute for an exact identity.
+
+4. A RANK-TWO AUXILIARY RESIDUAL
+
+Put S=C-X^T X. To make H positive of rank5, it suffices to make S positive
+of rank2. Use the principal pivot P=[1,2] of S and remaining indices
+J=[0,3]. Define the symmetric two-by-two matrix
+
+  F(X)=S[J,J]-S[J,P]*S[P,P]^{-1}*S[P,J].           (4)
+
+If S[P,P] is positive definite and the three entries of F vanish, then
+S is PSD of rank2 by its Schur complement. Consequently H is PSD of
+rank3+2=5.
+
+Index the eleven free cross entries row-major, omitting X00. Fix indices
+[0,1,2,3,4,7,9,10] to the following rationals, in that order:
+
+  (-11884406,1269159,-10550731,-1595531,
+                  40848738,1833430,-44140871,1029319)/10^8.
+
+The remaining indices[5,6,8] lie in a box of radius10^-8 about
+
+  (-4724674125346062,-407666377721730,-4418747623282930)/10^16.
+
+These are the ONLY three unknown coordinates. Their defining equations
+are the three entries F00,F01,F11 in(4). All other quantities in these
+equations are explicitly specified real algebraic numbers or rationals.
+
+5. EXACT ROOT EXISTENCE AND POSITIVITY
+
+The checker uses70-decimal absolute interval rounding. Every operation
+is implemented using Python integer/Fraction arithmetic and outward
+rounding. Square-root endpoints use integer square roots. This is not
+a floating-point tolerance check.
+
+Let f be the three-vector from(4), x0 the rational center, and R0 the
+rational inverse-Jacobian proposal supplied in the checker. On the ENTIRE
+box B, the exact interval calculation proves
+
+  ||I-R0 Df(B)||_infinity <= .005807140,
+  ||R0 f(x0)||_infinity <= 6.545*10^-16.
+
+In particular, with radius r0=10^-8,
+
+  ||R0 f(x0)|| + ||I-R0 Df(B)|| r0 < r0.           (5)
+
+The map x -> x-R0 f(x) is a contraction from the closed box into itself.
+It therefore has a unique fixed point. The same bound implies R0 Df is
+invertible; a fixed point is exactly a root of f. This proves existence
+of an exact isolated algebraic solution, not merely a numerical proposal.
+
+Throughout the box, S[P,P] has positive first diagonal and determinant
+at least2.8748880319*10^-6. Hence the Schur pivot is PD at the root.
+Together with f=0 this proves the rank-two residual and rank-five Gram.
+
+6. THE FIVE MATCHING FUNCTIONS
+
+The certificate can be read directly as five real matching functions.
+Let L2 be the positive Cholesky factor with L2^T L2=S[P,P]. In column
+order(P,J), set
+
+  Y=L2*[I2, S[P,P]^{-1}S[P,J]],
+
+then restore the original four auxiliary column indices. Thus Y^T Y=S.
+For each permutation, split its exact ten-feature row into v_pi inR6
+and q_pi inR4. The five-vector
+
+                  ( V v_pi+X q_pi, Y q_pi )              (6)
+
+has squared norm exactly g_pi. Formula(6) is an exact matching-SOS
+representation on the actual benchmark. It uses three primary and two
+auxiliary dimensions.
+
+FILES AND REPLAY
+
+Exact checker (reads no numerical optimizer or proposal):
+ code/research/moc_star_tangent_rank_five_exact.py
+Exact interval bounds and all proof inputs:
+ build/moc_star_tangent_rank_five_exact/certificate.json
+
+Numerical discovery, retaining full B,C interpolation and the singular
+primary range condition:
+ code/research/moc_star_tangent_primary_probe.py
+ build/moc_star_tangent_primary_probe/common_1_1_-1.npz
+
+Rank reduction and three-variable proposal:
+ code/research/moc_star_tangent_rank_five.py
+ build/moc_star_tangent_rank_five/proposal.json
+
+WHAT REMAINS
+
+The new tangent-plane matrix-capacity route survives the exact control
+where the canonical descriptor/Pi kernels failed. The uniform problem is
+now concrete: choose tangent frames and eleven cross entries from an
+arbitrary actual nonordinary source so that the rank-two Schur equations
+have a positive root. The eight rational cross coordinates above were
+discovered on this instance; they are not a uniform source formula.
+No unrestricted MOC theorem follows from this instance certificate.
+
+The strict contraction and pivot bounds also give a qualitative local
+statement. The Cauchy normal construction, all radicals, and the matching
+completion are analytic near this source. The dependent3-by3 Jacobian is
+invertible. Hence the same common vector and eight fixed cross entries
+extend to a rank-five completion on an open neighborhood of this STAR
+cost, with the three dependent entries chosen analytically. This is a
+local persistence statement, not a global source-selection theorem.
+
+Reusable numerical API for additional source-dependent work:
+
+  model=TangentPrimary(cost_coordinates=w10)
+  V=model.common_primary([1,2,0],signs=(1,1,-1))
+  result=model.fit(V)
+
+The API derives the Fricke/Cauchy matrix directly from the supplied ten
+cost coordinates, retains the complete reduced cross/auxiliary space,
+and reports numerical feasibility only. The three-phase method is also
+available independently of the common-vector subset.

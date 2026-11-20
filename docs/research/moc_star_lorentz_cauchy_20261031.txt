@@ -1,0 +1,174 @@
+STAR NONIC: SPARSE FRICKE MATRIX AND A POSITIVE NONLINEAR CAUCHY KERNEL
+31 October 2026
+
+Scope. This proves an intrinsic positive3-by-3 kernel for generic actual,
+supported, nonordinary star costs. A matching-SOS interpolation using this
+kernel is still missing. This is not an unrestricted MOC proof.
+
+Use the full10-coordinate star chart from moc_star_schur_structure_20261031.txt:
+w=(a,b,c,d,e,f,u,r,s,t), F=abc+def, Q=ut-rs. Let P=abcdef and
+
+ beta=t-s, gamma=u-s,
+ A=F+bc*t+df*(r-u),
+ B=F+ac*u+ef*(r-t),
+ C=F+ab*(t+u-r-s)-de*s.
+
+The exact220-term restricted nonic has the compact form
+
+ N=ABC-cf*r*C^2-bd*beta*B^2-ae*gamma*A^2+4P*r*beta*gamma.
+
+Equivalently N is a weighted3-by-3 Fricke determinant:
+
+ M=[[2abde*r, ae*A, bd*B],
+    [ae*A,2acef*beta,cf*C],
+    [bd*B,cf*C,2bcdf*gamma]],
+
+ detM=2P*N.
+
+1. Relation to the actual-source Hessian
+
+In the4-by-4 positive Schur matrix S4, pivot along the constant complement
+direction(1,1,1,1). The pivot is2Q^2/F>0. Keep the remaining complement
+columns8,9,11, giving S3. The exact polynomial identity is
+
+ 2P*F*S3 = -adjM.
+
+The minus sign matters: the actual-source inertia proof gives S4>=0,
+hence adjM<=0. At a generic actual star point, M has rank2 and inertia(1,1,0),
+not positive semidefinite. The exact actual control has a strictly negative
+nonzero eigenvalue. It cannot be treated as a unit-circle/SU2 Gram matrix.
+
+2. Polyhedral reduction forces the timelike chamber
+
+The full nonnegative star face has15 ordinary and2 mixed extreme rays.
+For the three coordinates(r,beta,gamma), both mixed rays40,81 contribute
+(1,1,1). Among ordinary rays, the only negative contributions are
+
+ r21=(-1,-1,0), r26=(0,-1,-1), r31=(-1,0,-1).
+
+The six exact identities
+
+ f40+r21=r3+r13+r25,
+ f40+r26=r3+r4+r28,
+ f40+r31=r4+r13+r20,
+ f81+r21=r7+r12+r32,
+ f81+r26=r1+r12+r18,
+ f81+r31=r1+r7+r27
+
+allow trading a unit of mixed-ray coefficient against a unit of any of these
+three negative-axis ordinary coefficients, with a wholly ordinary result.
+
+If any one of r,beta,gamma is nonpositive, the relevant two negative-axis
+capacities already cover the total mixed-ray weight. Trade it all away;
+the cost is ordinary. Therefore nonordinary costs have r,beta,gamma>0.
+
+More generally, keep trading until either all mixed weight is gone, or the
+coefficients of all three negative-axis ordinary rays are zero. Cancel a
+common coefficient on f40,f81 using
+
+ f40+f81=r18+r20+r25+r27+r28+r32.
+
+Every nonordinary cost therefore has a representation with exactly one
+mixed ray of coefficient lambda>0 and the12 surviving ordinary rays
+
+ 1,3,4,7,12,13,18,20,25,27,28,32.
+
+In each of the two resulting cap charts, A,B,C have52 strictly positive
+monomial coefficients in these13 nonnegative weights. Each contains
+lambda^3 with coefficient1. Consequently A,B,C>0. This coefficient check
+is exact, and is much smaller than a positivity assertion on the original
+unrestricted13-budget cap.
+
+For a,b,c,d,e,f>0, all nine entries of M are now strictly positive.
+The actual rank2 indefinite M is thus the Lorentz Gram of three future
+timelike vectors. Its normalized correlations have the form
+
+ Mij/sqrt(Mii*Mjj)=cosh(theta_i-theta_j).
+
+3. Entrywise reciprocal is a positive rank3 kernel
+
+Let R_ij=1/Mij. Since adjM<=0,
+
+ Delta_ij=Mij^2-Mii*Mjj >=0.
+
+These imply all three2-by-2 principal minors of R are nonnegative. The
+Fricke equation detM=0 gives the exact factorization
+
+ detR=Delta01*Delta02*Delta12 /
+      (M00*M11*M22*M01^2*M02^2*M12^2) >=0.
+
+Along with the positive diagonal, this proves R>=0. Generic distinct
+rapidities make all three Delta positive and R strictly positive definite.
+The exact control admits a rational positive LDL decomposition, saved in
+lorentz_cauchy.json. The nonlinear kernel has rank3; it is not confined to
+the failed Schur image/kernel feature planes.
+
+After normalizing the diagonal, Kij=sqrt(Mii*Mjj)/Mij equals
+
+ sech(theta_i-theta_j)=2sqrt(x_i*x_j)/(x_i+x_j), x_i=exp(2theta_i)>0.
+
+This is a Cauchy kernel: an integral Gram is
+
+ Kij=integral_0^infty 2sqrt(x_i*x_j) exp(-(x_i+x_j)v) dv.
+
+The elementary determinant proof above avoids needing an integral or a
+physics analogy. It also exposes the exact algebra needed by a Lean client.
+
+4. All-N9 versus actual scope
+
+The exact determinant relation holds for the full face, not just actual
+costs. A positive-entry rank2 symmetric M is either PSD itself or indefinite
+with nonpositive adjugate; in the latter case its reciprocal is PSD. Thus
+there is a two-kernel dichotomy on generic nonordinary N9 points. Only the
+indefinite/reciprocal branch is forced by the actual-source Schur proof.
+This does not identify either kernel with a full matching-SOS Gram.
+
+The supporting direct-source audit sampled100000 normalized actual star
+sources and found310 supported costs. All eight signs of(r,beta,gamma)
+occurred, so discarding ordinary costs was essential. Of these310,309 were
+ordinary; the sole nonordinary example was in the+++ chamber. These counts
+are illustrative only. The chamber claim is proved by the six exact trades,
+not inferred from sampling.
+
+Reproducible files:
+ code/research/moc_star_schur_determinantal.py
+ code/research/moc_star_lorentz_cauchy.py
+ code/research/moc_star_lorentz_probe.py
+ build/moc_star_contact/{schur_determinantal,lorentz_cauchy,lorentz_probe}.json
+
+Next needed step: interpolate all24 gaps by a positive10-feature Gram,
+using the nonlinear Cauchy kernel as a residual/clique block and retaining
+all ordinary-ordinary and cross-module terms. Neither the two-square
+ansatz nor a whole-Gram pullback through the old four-dimensional source
+planes is justified.
+
+5. Formal feedback and a concrete structured extension
+
+MocStarSchurAlgebra.lean compiles under Lean4.19/mathlib. It checks the
+product-Hessian inverse and explicit inertia congruences, the four-quadric
+sum, generic complex-symmetric-kernel isotropy, the weighted Fricke
+determinant, and the nonnegative reciprocal quadratic form. The last
+theorem uses a strictly positive reverse minor as an LDL pivot and the
+remaining two nonnegative reverse minors. It is therefore a complete
+positivity proof in the generic chamber, not just a determinant check.
+Only standard axioms propext, Classical.choice, Quot.sound occur.
+
+The positive_representation branch subsequently found an exact algebraic
+full10-feature extension at the actual control. The primary block is the
+realification of the source Cauchy kernel with pair orientations(1,1,-1)
+and two rational Cayley phase parameters. All24 cost identities hold
+exactly, and a rational root-interval/LDL certificate gives a positive
+eigenvalue lower bound10^-7. The verifier is
+
+ code/research/moc_star_cauchy_primary_exact.py.
+
+I independently replayed it successfully. This establishes one structured
+control certificate, not a uniform phase or completion formula.
+
+Zero-phase Cauchy realification and a fully diagonal six-primary block
+fail at this same control. The latter failure now has an exact dual.
+Simple explicit source phases from the real ri and kappa alone also fail
+numerically with positive separating duals. The experiments are recorded
+by moc_star_explicit_pick_probe.py; they are formula-specific obstructions,
+not failures of the unrestricted matching-SOS cone. Dependence on the
+complex ci, or a more general positive primary covariance, remains needed.

@@ -1,0 +1,57 @@
+RODTES' NORMAL-DILATION CLASS AND INDEPENDENT RELATIVE COUPLINGS
+
+Source: K. Rodtes, A Class of Normal Dilation Matrices Affirming the Marcus-
+de Oliveira Conjecture, arXiv:2006.14846v1 (2020),
+https://arxiv.org/pdf/2006.14846. The source proves the aligned pair
+(N(X,s),N(Y,t)) is in MOC, using a common Hadamard block basis. It does not
+assert that independent relative unitary conjugations are covered.
+
+For n=2 write
+ N(X,s)=[[X,(X-sI)*],[(X-sI)*,X]],
+ H=(1/sqrt(2))[[I,I],[-I,I]].
+Direct block multiplication gives
+ H* N(X,s) H = [X-X*+conj(s) I] direct-sum
+                [X+X*-conj(s) I].
+The first block has spectrum on a vertical line and the second on a
+horizontal line. Rodtes' proof applies a known MOC result to corresponding
+blocks, then multiplies the two convex combinations. A common unitary change
+of basis does not alter the conclusion.
+
+A modest independent-coupling extension follows directly. In the H basis,
+if the relative unitary W is block diagonal diag(U,V), the conjugated second
+dilation preserves the same two sectors, and the original blockwise proof
+continues to apply. If n=2, a block-antidiagonal W also gives two independent
+2x2 normal pairs after sector exchange; the known dimension-2 MOC theorem and
+Rodtes' direct-sum lemma settle that case. Neither claim covers a general W.
+
+The general W cannot be handled merely by finding another common reducing
+block decomposition, even in dimension four. Set
+ X=diag(1,(3+i)/2), Y=diag(2,(5+2i)/2), s=t=0.
+In the H basis their two spectra are respectively
+ A=diag(0,i,2,3), B=diag(0,2i,4,5).
+Let W be the normalized four-point Fourier matrix W_jk=i^(jk)/2, with
+j,k=0,1,2,3, and set C=W B W*. The exact checker verifies every off-diagonal
+entry of C is nonzero. Since A has simple spectrum, any A-invariant complex
+subspace is spanned by a subset of its eigenvectors. No nonempty proper
+coordinate subset is invariant for C. Thus A,C have no common nontrivial
+invariant, and in particular reducing, subspace. They correspond to two
+independently coupled normal dilations in the original basis. This proves an
+obstruction to the paper's common-block strategy; it is not a counterexample
+to MOC or to any extension by a different proof method.
+
+There is also a spectral obstruction to encoding arbitrary MOC4 instances
+as this class, even if an arbitrary common scalar shift, a nonzero complex
+scaling, and unitary similarity are allowed. The four eigenvalues must split
+into two pairs whose differences are perpendicular as real plane vectors:
+one pair comes from the first block, the other from the second. A common
+complex scale rotates and scales both differences, preserving perpendicularity.
+For the spectrum (0,1,2i,1+3i), the three pair partitions have chord dot
+products 1,6,5. None is zero. Consequently no shifted/scaled dilation of
+the stated type has this spectrum. This excludes the direct spectral
+embedding; it does not rule out an indirect reduction using additional
+variables, limiting arguments or a different construction.
+
+code/research/verify_dilation_relative_obstruction.py checks the two block
+identities, the Fourier unitary, all 12 off-diagonal nonzero conditions and
+all three chord products exactly. Its fresh execution passed. The independent
+coupling MOC question itself remains open here.

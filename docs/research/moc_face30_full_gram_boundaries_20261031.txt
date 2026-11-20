@@ -1,0 +1,208 @@
+Two exact boundaries and numerical full-space audits of four-contact face30
+31 October 2026
+
+STATUS UPDATE. The full all-N9 face containment is now EXACTLY FALSE.
+See moc_face30_full_sos_nonic_escape_20261031.txt: an irreducible-degree8
+algebraic N9 cost on this face has an exact strictly positive full14-
+feature moment separator. Its numerical spectral lift is past; no MOC
+counterexample is claimed. The two sparse boundary claims below remain
+valid, as do their exact Gram calculations.
+
+Original scope. The two
+sparse boundary claims in sections2–3 are exact all-N9 statements. The
+remaining computations are numerical stress tests, with no claim that a
+finite search excludes a counterexample.
+
+1. The full face and why a triangle-only proof fails
+
+The complete four-contact orbit census has one-mixed representative
+ C=(0,3,8,17), with ordinary rays(3,4,14,18,20,26,27,31,33) and mixed ray41.
+Its row/column image in canonical mixed-ray34 coordinates has
+
+ C'=(7,12,15,22),
+ nu13=nu17=nu27=nu31=0,
+ allowed ordinary labels A=(0,7,10,18,20,22,23,28,30).
+
+Thus the full face is the simplicial10-dimensional cone
+
+             g=t f34+sum_(j in A) nu_j r_j, t,nu>=0.
+
+The independent target from the global29-face reduction is
+ g>=0,N9(g)=0 => g is SOS in the FULL10-dimensional contact-function space.
+It includes past, Q=0, and singular costs; a future-only proof is weaker.
+
+The candidate critical-three-budget capacity law fails on this face.
+The fiber probe found307 future roots before stopping after ten failures;
+the smallest sampled capacity was.454195<2. Each of those ten failures
+has a numerically positive FULL10-feature Gram, with normalized minimum
+eigenvalue at least9.7645e-5 and maximum cost residual1.12e-15. SO4
+multistart minima were zero to numerical precision. A small feature or
+three-critical-budget obstruction is therefore not a full-SOS/MOC
+counterexample.
+
+Data: build/moc_one_mixed_four_contact_probe_20261031.json, report1;
+      build/moc_one_mixed_four_contact_sos_audit_20261031.json.
+
+2. Exact all-N9 closure of g=f34+a r7+b r10+c r20
+
+Let a,b,c>=0, with positive mixed coefficient normalized to1. Direct exact
+cubic and projected-Hessian calculations give
+
+ F=-ab-a-b-c-1, Q=-c-1,
+ N9^2=(a+1)^2(b+1)^2(ab+a+b+c+1)^2 W^2,
+ W=abc-ab-a-b-c-1.
+
+This factor is the already known controlled residual-face boundary, up
+to symmetry. The following full-SOS certificate is the useful upgrade.
+
+The common zero set of the four ray functions(r7,r10,r20,f34) has ten
+permutations. The full matching-function space vanishing there has
+dimension4 and is exactly their span. Put B=(r7,r10,r20,f34). Then
+
+ g(pi)=B(pi) G B(pi)^T,
+ G=[[a,-1,1,0],[-1,b,1,0],[1,1,c,-1],[0,0,-1,1]].       (1)
+
+The evaluation map Sym4 -> R24 has rank10. Hence(1) is the UNIQUE Gram
+in the FULL contact-function space, rather than a restricted ansatz.
+
+Every nonnegative N9 point in this cone satisfies W=0, since every other
+factor is strictly positive. Therefore
+
+                  ab>1, c=(a+1)(b+1)/(ab-1).
+
+The Schur complement of G's last diagonal1 is
+
+                 [[a,-1,1],[-1,b,1],[1,1,c-1]].
+
+Its leading2-block is positive definite. The remaining scalar Schur
+complement is W/(ab-1)=0. Consequently G>=0 of rank3. This proves the
+strong all-N9/full-SOS containment on this whole sparse cone.
+
+More explicitly put d=b-1/a>0. On this branch
+
+ c=1+1/a+(1+1/a)^2/d,
+ g=(f34-r20)^2
+   +a(r7-r10/a+r20/a)^2
+   +d(r10+(1+1/a)r20/d)^2.                            (2)
+
+Every squared function lies in V. The identity is checked on all24
+permutations exactly. Zero mixed coefficient is an ordinary ray sum;
+with positive mixed coefficient, a=0 or b=0 cannot satisfy N9=0. Thus no
+coefficient boundary is omitted. The parent is formalizing(2) in Lean.
+
+The same calculation characterizes SOS on this four-ray cone: for
+a,b,c>=0 and mixed coefficient1, G>=0 iff ab>1 and W>=0.
+
+3. Exact exclusion of the three-noncritical boundary
+
+For g=f34+a r20+b r22+c r30 with a,b,c>=0, set
+
+                     R=ab+ac+a+bc+b+c+1.
+
+The exact model gives F=Q=-R and N9^2=R^4. Since R>0, there is NO N9
+point with positive mixed coefficient in this entire boundary cone.
+No actual-future condition is needed. With zero mixed coefficient the
+ordinary sum is already SOS.
+
+Both exact boundary computations are replayed by
+ code/research/moc_face30_sparse_boundaries_exact.py,
+with output
+ build/moc_face30_sparse_boundaries_exact_20261031.json.
+
+4. Full9-budget adversarial search, including past roots
+
+The full-face code alternates a FULL10-feature contact-SOS dual with a
+nine-budget N9 optimization, then independently reprojects through the
+quadratic-fiber/kernel oracle. It includes past costs, deliberately
+testing the strong face claim rather than only original actual MOC.
+
+Twenty accepted optimization steps gave no negative feasible pairing.
+The smallest pairing was about1.56e-4, past, and approached the sparse
+branch in section2. Numerical dual margin failures are recorded and
+retried; an older feasible dual is retained if necessary. Such a positive
+finite search does not prove membership or global nonnegativity.
+
+Executable: code/research/moc_four_contact_face30_adversarial.py.
+Data: build/moc_four_contact_face30_adversarial_20261031.json.
+
+5. Small Gram atoms do not replace the full face
+
+For each of the84 triples of ordinary labels in A, the atom enumerator
+tests the four functions(triple,f34). Eighteen triples have a unique
+admissible affine4-by4 Gram family; five triples do not represent f34 in
+that quadratic image, and61 have nonunique Gram data. The enumerator
+does not assert that its unique-Gram families exhaust all possible
+three-budget certificates.
+
+The three cyclic versions of(1), using triples
+(0,7,22),(0,10,30),(7,10,20), cover all ten sampled future triangle failures.
+However a1329-root full-face stress test found five PAST roots outside
+every one of the18 unique atom LMIs and the critical-triangle bound.
+Full10-feature dual audits still gave positive pairings, about.99–4.28.
+Thus the atom union is not a full proof, and it has not produced a
+counterexample to the full10-feature claim.
+
+Executable: code/research/moc_face30_three_budget_atoms.py.
+Data: build/moc_face30_three_budget_atoms_20261031.json and
+      build/moc_face30_atom_uncovered_full_sos_20261031.json.
+
+A simultaneous-clique SDP DOES handle all five escaped samples. It allows
+all84 four-feature cliques consisting of f34 plus three of the nine
+ordinary functions. The Gram blocks are positive simultaneously and sum
+to the full cost; individual block costs may cancel components outside V.
+This is a factor-width4 sufficient Gram cone, not the union of the18
+individual atom regions and not a proved equivalent description of C0.
+
+All five sampled costs have EXACT repaired rational certificates: each
+of the84 four-by-four blocks has strictly positive exact Sylvester minors,
+and all24 matching costs replay exactly. The targets here are the exact
+binary-rational budget coefficients of the numerical samples. They are
+not claimed to be exact N9 roots. The certificates therefore establish
+the sampled cost decompositions, not a uniform algebraic N9 implication.
+
+Executable: code/research/moc_face30_clique_sos.py.
+Exact certificates: build/moc_face30_clique_sos_20261031.json.
+The observed run solved and repaired all five cases in1.56 seconds.
+
+6. Remaining decisive statement
+
+The ENTIRE nine-variable N9 has now been reconstructed exactly, with4920
+integer terms and total degree9. The computation uses a46656-point
+modular grid, five primes, CRT, an analytic Cauchy coefficient bound, and
+the dyadic square-root denominator bound2^35. No numerical polynomial
+fitting is used for the final coefficients.
+
+Variables(a,b,c,p,d,e,q,r,f) correspond to
+(nu0,nu7,nu10,nu18,nu20,nu22,nu23,nu28,nu30). The source cubics are
+
+ F=-abc-ab-ac-ad-a-bc-bf-b-ce-c-de-df-d-ef-e-f-pqr-1,
+ Q=-de-df+dr-d-ef+ep-e+fq-f-pq-pr-qr-1.
+
+The full10-feature quadratic map has rank20 and a35-dimensional Gram
+kernel. All ten Gram diagonals are fixed by the cost: the matching table
+has unit rows for the basis(f34,r0,r7,r10,r18,r20,r22,r23,r28,r30).
+
+Builder: code/research/moc_face_03817_full_nonic.py and its C++ evaluator.
+Exact artifact: build/moc_face_03817_full_nonic/full_face_nonic.json.
+Three independent exact14-by14 determinant replays passed.
+
+A proposed simple definite determinantal proof has an exact obstruction:
+there is a line with a NONNEGATIVE ordinary-budget base and STRICTLY
+POSITIVE ordinary direction on which the full N9 has seven real roots
+and two nonreal roots. Sturm isolation gives the exact count. Therefore
+this direction cannot be a hyperbolicity direction for N9; in particular
+there is no9-by9 symmetric definite determinant representation with PSD
+ordinary directions reproducing N9 itself. This does not refute the
+semidefinite-SHADOW full-SOS containment target.
+
+Replay and exact integer line polynomial:
+ code/research/moc_face30_nonic_replay_hyperbolicity.py,
+ build/moc_face30_nonic_replay_hyperbolicity_20261031.json.
+
+The unresolved target is precisely the full nine-budget implication in
+section1, including all past and exceptional N9 points. Sections2–3
+control two of its higher-contact boundaries. They do not justify an
+induction over the remaining faces or eliminate an interior bad point.
+Any completion must use all10 contact features or prove that its chosen
+smaller certificate family covers the entire N9 locus. No such coverage
+proof is currently available.

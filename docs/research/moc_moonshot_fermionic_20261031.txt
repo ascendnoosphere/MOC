@@ -1,0 +1,279 @@
+Fermionic permutation weights: exact obstructions and a constructive local theorem
+2026-10-31
+
+Unrestricted MOC remains open. This pass gives an explicit spectral certificate,
+a local theorem with constructive weights, and an exact obstruction to freezing
+the two-dimensional Schur block. The most promising unproved statement left by
+the computations is that positive real determinant amplitudes suffice as a
+support set. Numerical success does not establish that statement.
+
+Conventions
+
+Let U be unitary, a,b be complex spectra, and
+  z_pi = product_i (a_i+b_pi(i)),
+  d = det(diag(a)+U diag(b) U*).
+Permutation indices below are zero-based lexicographic indices in S4. All
+convex combinations use real, nonnegative weights.
+
+1. Real signed amplitudes work for every unitary
+
+Define
+  gamma_pi = sgn(pi) product_i U_i,pi(i) / det(U),
+  c_pi = Re(gamma_pi).
+Then, in every dimension,
+  sum_pi c_pi = 1,
+  sum_{pi:pi(I)=J} c_pi = |det U[I,J]|^2,
+  d = sum_pi c_pi z_pi.                                      (1)
+
+Proof. The corresponding sum of the complex gamma coefficients is
+  (-1)^(sum I+sum J) det U[I,J] det U[Ic,Jc] / det U.
+Jacobi's complementary-minor identity for a unitary makes this exactly the
+squared minor. Thus the imaginary amplitudes annihilate every subset-matching
+indicator. Expanding the products z_pi in those indicators proves (1).
+Equivalently, det(diag(a)U+U diag(b))/det(U) gives the complex expansion, and
+its imaginary coefficient vector belongs to the common polynomial kernel.
+
+The amplitudes can be negative. Nevertheless, (1) supplies a canonical real
+signed measure whose correction may depend on a,b. This is more precise than
+an appeal to fermionic positivity: the initial measure is generally signed.
+
+The exact verifier checks all 70 subset-minor identities for Q below, Walsh4,
+and Fourier4, including annihilation by the imaginary amplitudes. Fourier4 has
+16 positive real amplitudes equal to 1/16 and eight zero real amplitudes.
+Eight complex amplitudes have nonzero imaginary parts.
+
+2. A closed spectral formula and its actual scope
+
+Set c_pi^+=max(c_pi,0), S=sum c_pi^+, and q_pi=c_pi^+/S. Regard each z_pi as
+a vector x_pi in R^2. Set
+  mu = sum q_pi x_pi,
+  Sigma = sum q_pi (x_pi-mu)(x_pi-mu)^T,
+  delta = (Re d,Im d)-mu.
+When Sigma is invertible, define
+  w_pi = q_pi [1+(x_pi-mu)^T Sigma^(-1) delta].                (2)
+Direct multiplication gives sum w_pi=1 and sum w_pi z_pi=d. Consequently,
+checking the displayed factors are nonnegative is a complete MOC certificate.
+This uses a 2 by 2 inverse after evaluating the permutation products; it does
+not solve a convex-hull or linear-programming problem.
+
+Let N=sum max(-c_pi,0). If N>0, put
+  mu_minus = sum max(-c_pi,0) x_pi / N.
+Then S=1+N and delta=N(mu-mu_minus). A sufficient scalar bound is
+  N R sqrt((mu-mu_minus)^T Sigma^(-1)(mu-mu_minus)) <= 1,      (3)
+where R=max_{q_pi>0} sqrt((x_pi-mu)^T Sigma^(-1)(x_pi-mu)).
+This follows from Cauchy-Schwarz in the Sigma metric. N=0 gives the positive
+law c itself without this bound. Formula (2) is an affine moment correction;
+the generic linear-algebra device also appears in moc_extensive_theory.txt.
+The specific choice of q from real determinant amplitudes makes its error
+controlled by the negative amplitude mass and yields the following theorem.
+
+Constructive local theorem. Fix arbitrary complex spectra in dimension n and
+a skew-Hermitian K. Let U(t)=exp(tK), and put
+  v_ij = (Re(z_(ij)-z_id), Im(z_(ij)-z_id)),
+  C = sum_{i<j} |K_ij|^2 v_ij v_ij^T.
+If C is positive definite, there exists epsilon>0 such that (2) gives
+nonnegative weights for 0<|t|<epsilon. At t=0 the identity permutation gives
+the determinant. Hence MOC holds on this segment of the specified path.
+
+Proof. Expansion at the identity gives
+  c_id(t) = 1-t^2 sum_{i<j}|K_ij|^2 + O(|t|^3),
+  c_(ij)(t) = t^2 |K_ij|^2 + O(|t|^3).
+Every other permutation moves at least three indices and has amplitude
+O(|t|^3). Transpositions with K_ij=0 can be negative at higher order, which
+does not affect the estimate N(t)=O(|t|^3). The finite set of product points
+is fixed, so delta=O(|t|^3). Taking positive parts in the preceding expansions
+gives Sigma=t^2 C+O(|t|^3). Positive definiteness yields
+Sigma^(-1)=O(t^(-2)). Every correction factor in (2) is therefore
+1+O(|t|), uniformly over the finite permutation set. They are positive for
+sufficiently small nonzero t. This proves the theorem.
+
+This is a result along directions satisfying C>0. It does not give a uniform
+neighborhood over directions approaching singular C. The theorem is stated
+in all n because the same expansion proves it; no unrestricted all-n claim
+is inferred. No novelty claim is made for generic local validity near a
+commuting pair. The explicit positive-part weights are the useful output.
+
+3. An exact nonordinary spectral example passes formula (2)
+
+Use the repository's actual nonordinary spectra
+  a=(0,100,-214+146i,269-294i),
+  b=(-207-148i,-28-84i,-59+82i,83+104i),
+and the rational special orthogonal matrix
+  Q=(1/59) [ -25   46   16   22
+             -46  -31   20   -2
+             -16   20  -11  -52
+              22    2   52  -17 ].
+Formula (2) has 20 strictly positive weights here. Its minimum is approximately
+0.0000698849090. Exact rational weights and exact reproduction of d are checked
+in code/research/moc_moonshot_fermionic.py --exact and recorded in exact.json.
+The four negative real amplitudes of Q have indices 2,10,13,21 and numerators
+  -170000, -76544, -76544, -165044
+over 12117361. Q and Walsh4 have the same negative-index set.
+
+Independent three-product certificates for these spectra at Q, Walsh4 and
+Fourier4 also appear in exact.json. For Q,
+  d=(-2893995794596-1740732897720i)/3481,
+with support indices 9,14,20. These examples use the actual nonordinary
+spectra that were absent from the original random spectral campaign.
+
+4. Universal compound coupling and nested flags fail
+
+Write rho(I,J)=|det U[I,J]|^2, now with one-based subset labels. The expression
+  f34 = rho(3,3)+rho(2,4)+rho(12,13)-rho(13,23)
+is nonnegative at every permutation, while
+  f34(Q)=-55/3481.
+Thus no permutation law reproduces all compound marginals of this Q.
+This is an exact instance of the already-known stronger obstruction, not a
+counterexample to MOC.
+
+Nested projection-DPP laws cannot evade the singleton obstruction. If
+I_k={i_1,...,i_k} and a permutation law satisfies
+  P[pi(I_k)=J]=rho(I_k,J)
+for every prefix and J, then
+  P[pi(i_k)=j]
+    =P[j in pi(I_k)]-P[j in pi(I_(k-1))]
+    =sum_{i in I_k}|U_ij|^2-sum_{i in I_(k-1)}|U_ij|^2
+    =|U_i_k,j|^2.
+This holds for every order, so mixing different flags also preserves all
+singleton marginals. The exact existing singleton obstruction with
+  a=(0,1,-2+2i,2-2i), b=(2+i,-2-2i,1+i,2)
+excludes determinant reproduction by every such flag law: its separating
+gap is 6392/3481. The present verifier rechecks that certificate and every
+inclusion-marginal identity for Q.
+
+Lyons' stochastic-domination theorem gives nested couplings of projection
+DPPs for nested subspaces. Its hypotheses are satisfied by these row flags.
+The failure is the additional requirement to reproduce this complex
+determinant. Primary source: Russell Lyons, Determinantal probability measures,
+arXiv:math/0204325v4, Theorem 6.2 and Section 10,
+https://arxiv.org/abs/math/0204325v4
+Full text inspected: https://arxiv.org/html/math/0204325v4
+
+Walsh4 and Fourier4 do admit common laws: uniform weights 1/8 on indices
+  Walsh: 1,5,6,9,14,17,18,22;
+  Fourier: 2,4,6,11,13,15,20,22.
+The verifier checks all 70 coordinates. These are benchmark certificates;
+no new Hadamard-family theorem is claimed.
+
+5. New exact obstruction to preserving only the small Schur block
+
+Let I_0=12,I_1=13,I_2=14, representing the three partitions of four indices
+into two unordered pairs. Set
+  S_rs(U)=rho(I_r,I_s)+rho(I_r,I_s^c).
+This is a 3 by 3 doubly stochastic matrix. A permutation induces the usual
+permutation matrix of its action on the three partitions. Preserving S fixes
+the two-dimensional Schur block and leaves the standard block free.
+
+For the Q above,
+  S(Q)=(1/3481) [2465  116  900
+                  116 2385  980
+                  900  980 1601].
+Take
+  a=(0,1,i,-7/10+i/4),
+  b=(1/20-i,-1/20+9i/5,-1/20,7/10-3i/10),
+  eta=1+11i.
+Define the rational matrix
+  Lambda=[ -34523/40000       1433/8000       -868223/40000
+            3473367/160000    219847/10000     0
+            0                0                0 ].
+For every one of the 24 permutations,
+  Re(eta z_pi) <= sum_rs Lambda_rs S_rs(P_pi).                (4)
+Every slack in (4) is rational and nonnegative. But
+  Re(eta d)-sum_rs Lambda_rs S_rs(Q)
+    =107258179/556960000 > 0.                                (5)
+Thus no positive permutation weights can preserve S(Q) and reproduce d,
+even if the weights depend arbitrarily on these spectra.
+
+For comparison, MOC itself holds by the exact positive law supported on
+indices 7,8,18, with weights
+  15936663345562/34637710428725,
+  536875203309/1385508417149,
+  5279167000438/34637710428725.
+The determinant is
+  -86255171/139240000 - 105125017 i/111392000.
+Formula (2) also supplies a positive certificate. The complete certificate
+is quotient_exact.json; --quotient-exact reconstructs it without a stored
+numerical search. The LP proposes a support and dual basis, after which all
+inequalities, weights and identities are verified in rational arithmetic.
+
+This obstruction complements the existing singleton-preserving obstruction.
+A universal spectral transport proof cannot freeze either nontrivial Schur
+block separately. Both blocks must be permitted to move, while retaining
+the one complex observable d.
+
+6. Numerical tests and surviving questions
+
+The source was build/moc_extensive_20261031/all_moc_extensive_data.jsonl.
+The n4 complete-product noncontrol subset has 4167 records. We excluded 72
+whose planar covariance axis ratio was below 1e-8, leaving 4095. These are
+numerical tests of the same records, not independent draws or a proof.
+
+Positive-amplitude support: all 4095 targets were in the numerical hull of
+{z_pi:c_pi>0}, after covariance whitening at tolerance 2e-7. Support sizes
+ranged from 14 to 22. The nonnegative-factor test for formula (2) passed
+4081/4095 at weight tolerance 1e-9. There are five failures below -1e-6,
+including generic Haar examples; thus (2) is not globally positive.
+The initial unwhitened covariance computation gave 4079 passes; only the
+whitened final count is used here. No exact counterexample to the support
+restriction was found. The formula's failure does not refute that restriction.
+
+An exact small failure of formula (2) occurs at Walsh4 with
+  a=(-2,-1+3i,-1+3i,-2), b=(-1,2-i,3+i,-2i).
+Its smallest weight is -2529/589540. The verifier checks the rational value;
+the universal eight-permutation Walsh law still proves MOC for these spectra.
+
+A separate fresh test of 10000 real orthogonal/Gaussian-spectrum draws also
+found no positive-support failure. Differential evolution at Q, Walsh and
+eight fresh real orthogonals, using 1000 generations each, found none.
+The two largest optimized normalized gaps were still negative, roughly
+-2.05e-8 and -1.65e-7. The sample and optimization cannot certify a universal
+inequality. Exact raw seeds/settings for the optimization are in
+moc_moonshot_fermionic_signed.py and positive_amplitude_search.json.
+
+The unproved candidate is
+  sum_pi c_pi Re(eta z_pi) <= max_{c_pi>0} Re(eta z_pi)        (6)
+for every unitary, actual spectra and phase eta. Equation (6) would prove
+MOC. It is an additional assertion, not a consequence of the signed identity.
+Testing actual spectral constraints is essential: arbitrary costs on the
+permutations can plainly violate this restriction.
+
+We also tested whether a law preserving just one chosen two-row DPP marginal
+could reproduce d. The three choices are I=12,13,14; complements give the
+same constraint. The feasible determinant set for I is exactly
+  sum_{|J|=2} rho(I,J) conv{z_pi:pi(I)=J}.                    (7)
+Its support function is sum_J rho(I,J) max_{pi(I)=J} Re(eta z_pi), so (7)
+has a finite polygon test independent of generic LP success flags.
+
+At least one pair passed LP in 4089/4095 records, and all three passed in
+4024. The six all-pair LP failures were near-permutation cases with direct
+support gaps between roughly -3e-14 and +3e-15, so they are numerical
+ambiguities, not evidence of a mathematical failure. A fixed choice can
+fail robustly (record small_n04_04018 and the Schur-block obstruction above).
+For the latter rational example, preserving I=14 and using eta=1+18i gives
+an exact support-bound excess of 78528447/278480000. The verifier checks
+this inequality by maximizing separately over each of its six four-point
+fibers, so this fixed-pair obstruction does not rely on a floating LP.
+All 203 added mixers for the known nonordinary spectral tuple passed some
+pair. Three 1500-generation optimizations at Q did not find a violation of
+all three choices simultaneously. Adaptive pair selection remains unproved.
+
+Primary literature checked also includes Grigori Olshanski, Determinantal
+point processes and fermion quasifree states, arXiv:2002.10723v2,
+https://arxiv.org/abs/2002.10723v2 . Its CAR interpretation supplies context;
+it does not assert the needed permutation law. The publisher abstract of
+Drury and Cload's 1992 paper was accessible, but full text returned 403, so
+no new assertion about its proof or precise counterexample is based on it:
+https://doi.org/10.1016/0024-3795(92)90319-6 .
+
+Reproduction
+
+  python code/research/moc_moonshot_fermionic.py --exact --quotient-exact
+  python code/research/moc_moonshot_fermionic.py --positive-data
+  python code/research/moc_moonshot_fermionic.py --data
+  python code/research/moc_moonshot_fermionic_signed.py --restarts 8 --iters 1000
+
+All artifacts live in build/moc_moonshots_20261031/fermionic/. Exact checks
+use SymPy rational arithmetic. SciPy searches choose candidate supports and
+dual bases but are not trusted for the final exact equalities or signs.
+The local theorem has a complete proof above; it has not been formalized in
+Lean. No Lean file was changed in this moonshot.

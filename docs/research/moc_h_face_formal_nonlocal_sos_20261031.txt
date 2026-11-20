@@ -1,0 +1,57 @@
+An exact nonlocal point on the formal H-nonic branch, with full SOS
+31 October 2026
+
+The H-contact actual-source theorem proves ordinary-cone membership on
+the entire cubic branch F_H=0. It does not cover all formal projected
+nonic points. The following exact point shows that an ALL-N9 H-face
+proof must use the larger matching-SOS cone rather than only ordinary
+indicators or the old three-critical-budget triangle construction.
+
+Use H contacts [0,1,6,7]. In the listed ray order
+  2,3,6,7,8,9,12,13,17,18,19,20,21,22,27,28,33,
+  46,48,52,54,70,72,76,78,
+take integer weights
+  0,10457,423,0,2886,115,3578,0,41,0,465,73,0,0,0,0,1756,
+  6485,23,78,1532,758,0,0,0.
+Let b be their weighted ray sum and put
+  g=b+t r21,
+  t=-23506943788700009050/3143531869348363.
+All24 entries are nonnegative, with precisely the four H contacts.
+
+The cubic and height derivative are
+  F(g)=-1420398772185,
+  Q(g)=-80425730.
+Thus this is off the cubic actual-H branch. The shifted Hessian
+H_F(g-(F/Q)e) has rank12 exactly. Its determinant vanishes, and the
+projected nonic identity gives N9(g)=0. The exact squared fiber is
+
+  N9(b+u r21)^2
+    =2217112047773014516308423522562500
+       *(3143531869348363*u+23506943788700009050)^2.
+
+The corrected CHSH projection has an exact violated inequality
+  2N-sum(sign_xy C_xy)=-1148,
+or normalized margin -574/18773. Hence g is outside the ordinary-ray
+cone. It cannot be an actual spectral H-support cost, by the independently
+proved actual-H theorem. No spectral realization is asserted.
+
+After row/column relabeling into canonical cap34, all13 ordinary budgets
+are nonnegative but two of the three critical budgets are exactly zero.
+The old triangle capacity is therefore exactly0 while the mixed
+coefficient is strictly positive. This excludes that small construction.
+
+Nevertheless g is in the full intrinsic matching-SOS cone. The certificate
+contains a rational10-by10 positive definite contact Gram, all24 exact
+interpolation identities, and10 strictly positive rational LDL pivots.
+The least pivot is greater than .0056 after normalization by max(g).
+The initial numerical ellipsoid fit only discovers a Gram; rounding,
+linear correction, interpolation and LDL signs are checked exactly.
+
+Reproduce:
+  python code/research/moc_h_face_formal_nonlocal_sos.py
+
+Exact artifact:
+  build/moc_h_face_formal_nonlocal_sos/exact.json
+
+This is an exact regression for the remaining formal sextic branch.
+It refutes neither the ALL-N9H matching-SOS target nor MOC.

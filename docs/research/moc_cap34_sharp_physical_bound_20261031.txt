@@ -1,0 +1,255 @@
+Sharp physical minimum of the mixed facet and a strict SOS-dual relaxation
+31 October 2026
+
+Main result
+
+For every real O in O4, put
+ F(O)=O22^2+O13^2+det O[01,02]^2-det O[02,12]^2,
+with zero-based indices. This is the canonical mixed cost f34. Its exact
+minimum is the unique real root m of
+
+                   4m^3-12m^2+14m+1=0,
+
+namely m=-0.06744224886812297.... The independently stored strict rational
+global matching-SOS dual has f34 expectation -0.068563242. Thus the SOS
+dual profile body strictly contains the physical convex profile body.
+This refutes equality of those bodies. It is not an actual spectral
+support gap or a counterexample to MOC4 or universal actual-gap SOS.
+
+Exact verifier:
+ code/research/moc_cap34_sharp_physical_bound.py
+Record:
+ build/moc_adversarial_sos_dual/cap34_sharp_physical_bound_exact.json
+The verifier checks polynomial identities, the stationary resultant,
+the rational positive-square bound below, and all14 exact positive
+Gaussian-rational pivots of the supplied moment dual. The global
+optimization proof is the elementary argument in Sections2--4 below.
+
+1. Exact reduction from SO4 to two probability vectors
+
+Row sign changes preserve this squared-minor cost, so detO=-1 reduces
+to detO=1. Every SO4 matrix has the quaternion form O=L(p)R(q), with
+unit p,q in R4. The left and right imaginary quaternion generators span
+so4 (rank6 checked exactly). Hence this compact subgroup image is both
+open and closed in connected SO4, proving surjectivity.
+
+Let A=Rot(p), B=Rot(q) be the usual SO3 quaternion rotations. Direct
+polynomial expansion gives, when p and q have unit norm,
+
+ O22^2+O13^2
+  =1/2+[-A01 B10+A02 B20+A11 B11-A12 B21+A20 B02]/2,
+ det O[01,02]=(A01+B10)/2,
+ det O[02,12]=(A12-B21)/2.
+
+The two unwanted cross terms cancel, giving
+
+ F=1/2+(A01^2-A12^2+B10^2-B21^2)/4
+       +(A02 B20+A11 B11+A20 B02)/2.                 (1)
+
+These are checked as homogeneous polynomial identities before imposing
+unit norms; the script records the required norm factors explicitly.
+
+Put C=B^T and let J reverse the three coordinate axes. Both
+R=-AJ and S=-CJ belong to SO3, independently. Write R=Rot(u), S=Rot(v)
+with unit quaternions u,v. Elementary quaternion identities give
+
+ A01^2-A12^2=-16 u0u1u2u3,
+ C01^2-C12^2=-16 v0v1v2v3,
+ (A02,A11,A20)=-diag R,
+ diagR dot diagS=4 sum_i u_i^2 v_i^2-1.
+
+Consequently
+
+ F=2 sum_i u_i^2 v_i^2-4(product_i u_i+product_i v_i). (2)
+
+The two products can independently be chosen positive for any specified
+squared coordinates. Therefore minimizing F is exactly minimizing
+
+ f(w,t)=2 w dot t-4(G(w)+G(t)),
+ G(w)=sqrt(w0w1w2w3), w,t in the probability simplex Delta3. (3)
+
+There is no relaxation in this reduction: the two SO3 rotations and
+their quaternion squared coordinates are independent and cover the
+indicated domains.
+
+2. A negative minimum cannot occur in the simplex interior
+
+The function is continuous on the compact product of simplices, so it
+has a global minimum. Suppose both w and t are strictly positive and
+it is a stationary point. With Lagrange multipliers lambda,mu,
+
+ 2t_i-2G(w)/w_i=lambda,
+ 2w_i-2G(t)/t_i=mu.                                  (4)
+
+Multiplying by the respective coordinates and summing gives
+lambda+mu=2f. Subtracting the multiplied equations pointwise gives
+
+ lambda w_i-mu t_i=2(G(t)-G(w)).                       (5)
+
+If lambda=0, then w_i t_i=G(w) for all i. Unless mu=0, the second
+equation forces t uniform and then w uniform, which also forces mu=0.
+Thus lambda=0 implies mu=0 and f=0. The same holds with lambda,mu
+interchanged. Such a point cannot be a negative minimum.
+
+Assume now lambda mu!=0. Substitute the affine expression for t_i
+from(5) into the first equation(4). Every w_i solves the same quadratic
+with nonzero leading coefficient. Hence w has at most two distinct
+coordinate values; the t_i have the same multiplicity partition.
+
+If w is uniform, (3) gives f=1/4-4G(t)>=0 by AM-GM. If there are two
+values, their multiplicities are either2+2 or1+3, after relabeling.
+
+For2+2, write
+ w=(a,a,b,b), t=(c,c,d,d), a+b=c+d=1/2.
+Then exactly
+ f=4(ac+bd-ab-cd)=4(a+c-1/2)^2>=0.                    (6)
+
+For1+3 write
+ w=(r^2,1,1,1)/(r^2+3),
+ t=(s^2,1,1,1)/(s^2+3), r,s>0.
+The restricted objective is
+
+ f(r,s)=2(r^2s^2+3)/[(r^2+3)(s^2+3)]
+           -4r/(r^2+3)^2-4s/(s^2+3)^2.              (7)
+
+Its two derivative numerators, after positive denominators and factor12
+are removed, are
+
+ P=r^3s^2-r^3+r^2s^2+3r^2+3rs^2-3r-s^2-3,
+ Q=r^2s^3+r^2s^2+3r^2s-r^2-s^3+3s^2-3s-3.
+
+The exact resultant identity is
+
+ Res_s(P,Q)=-16(r-1)^6(r+1)^3(r^2+3)^2.               (8)
+
+Since r>0, a stationary point must have r=1. Then P(1,s)=4(s^2-1)
+forces s=1, giving f=0. Thus no strictly interior stationary point has
+negative value. This exhausts the multiplier degeneracies as well as
+all multiplicity cases.
+
+3. Boundary reduction to a vertex
+
+If a boundary w has exactly three positive coordinates, introduce epsilon
+in the missing coordinate and multiply the other three by1-epsilon.
+The dot-product change is O(epsilon), whereas the negative term
+-4G(w) gains a strictly negative multiple of sqrt(epsilon). This
+strictly lowers f for sufficiently small epsilon, independently of t.
+Thus such w cannot occur at a minimum. The same argument applies to t.
+
+If a boundary vector w has at most two positive coordinates, G(w)=0.
+For fixed t the remaining dependence on w is linear. Replacing w by
+one of its supported vertices cannot increase f. Therefore a negative
+global minimum has a representative with w a vertex. The objective
+does have negative values, for instance the explicit matrix below at
+r=1/3. Hence this reduction applies to the global minimum.
+
+Take w=e0. For fixed a=t0, AM-GM maximizes t1t2t3 at
+t1=t2=t3=(1-a)/3. Therefore the minimum reduces exactly to
+
+ min_(0<=a<=1) [2a-4sqrt(a((1-a)/3)^3)].              (9)
+
+Set a=r^2/(r^2+3), r>=0, including a=1 by the limit r=infinity. Then
+
+ f_vertex(r)=2r(r^3+3r-2)/(r^2+3)^2,
+ f_vertex'(r)=12(r^3+r^2+3r-1)/(r^2+3)^3.             (10)
+
+The cubic is strictly increasing on r>=0 and has a unique positive
+root r*=0.295597742522085.... This is the unique minimum of(10).
+Elimination of r* gives the polynomial stated at the beginning. Its
+derivative in m is12(m-1)^2+2>0, so there is one real root.
+
+The sharp value is attained by the explicit orthogonal matrix
+
+ O(r)=1/sqrt(r^2+3)
+       [ -r,-1,-1, 1;
+          1,-1, 1, r;
+          1, 1,-r, 1;
+          1,-r,-1,-1 ].
+
+The verifier checks O(r)O(r)^T=I, detO(r)=1, and its mixed cost equals
+(10), without approximating r*.
+
+4. Rational exact separation from the supplied SOS dual
+
+For a convenient purely rational weaker physical bound, the verifier
+checks
+
+ f_vertex(r)+17/250
+   =(517r^4+1602r^2-1000r+153)/[250(r^2+3)^2],
+
+and the numerator has the explicit strictly positive decomposition
+
+ 517(r^2-1/10)^2
+ +(8527/5)(r-2500/8527)^2
+ +1054641/852700.
+
+Thus every physical orthogonal profile has f34>-17/250=-0.068.
+
+The exact data in
+ build/moc_hodge_matching_sos/optimized_f34_dual_exact.json
+give sum y=1 and a strictly positive14-dimensional real matching moment
+matrix. All14 pivots are rechecked. Its exact mixed pairing is
+
+ y dot f34=-34281621/500000000=-0.068563242
+          <-17/250,
+
+with a strict rational separation margin281621/500000000. Therefore
+the projected moment-positive profile of this y is outside conv{profiles(O)}.
+The previously proved real-jet alternating-gauge theorem supplies the
+other inclusion, so the matching-SOS dual profile relaxation is strict.
+
+5. Consequence for the ongoing global proof
+
+One cannot prove universal actual-gap membership by identifying every
+normalized matching-moment PSD point with a physical convex mixture.
+The explicit dual above defeats that identification. It remains possible
+that all actual spectral support gaps are nonnegative on this strictly
+larger dual body; the extra spectral linkage can matter. Nothing in this
+note constructs an actual negative gap. The sharp mixed-facet separation
+instead supplies a concrete nonphysical dual target for that search.
+
+6. General variational interface and the limit of this proof shape
+
+There is a useful exact common form for every real matching-cost profile.
+With the independent SO3 factors A and C=B^T from Section1, it is
+
+ F_g(A,C)=c+sum_ij M_ij A_ij C_ij
+             +sum_ij N_ij(A_ij^2+C_ij^2).             (11)
+
+One may uniquely require all row and column sums of N to vanish. This
+leaves1+9+4=14 real coefficients, matching V14. Here is a direct proof of
+the representation. Singleton squares have a constant plus bilinear
+entrywise A,C expansion, as in Section1. Every two-minor is one half
+of a signed A entry plus or minus the corresponding C entry, by the
+self-dual/anti-self-dual exterior-square formula. Squaring yields one
+entry of A^2+C^2 plus one entrywise A,C product. These ordinary rays
+span all matching costs. Adding row/column potentials to N contributes
+only a constant, so centering N loses nothing. The cross terms are
+independent; averaging over C removes them. On centered N, the remaining
+quadratic functional is independent because squared SO3 permutations
+span the dimension4 three-by-three Birkhoff affine space. Thus(11)
+indeed has the stated unique parameter count.
+
+The exact stationary equations are
+
+ A^T(2N entrywise A+M entrywise C) is symmetric,
+ C^T(2N entrywise C+M entrywise A) is symmetric.        (12)
+
+For actual normalized cofactor directions, M,N and the score constant
+depend linearly on the four real coefficients of the complex two-cofactor
+functional; the gap constant also adds the maximum of the24 scores.
+The fixed beta data supply the spectral linkage. Equations(11)--(12)
+give a smaller global comparison problem than an unconstrained quartic
+in sixteen real quaternion coordinates.
+
+The special mixed facet admits an additional axis reversal making the
+self-quartic exactly -4product(u) and the cross term exactly
+2sum u_i^2v_i^2. That extra symmetry is what makes the same scalar
+quadratic govern all KKT coordinates in Section2. General coefficients
+in(11) retain mixed signed quaternion monomials; the two-value KKT
+classification has not been established for actual spectral directions.
+In particular this argument does not assert that all nonpermutation
+stationary points are saddles. Known actual Walsh families with strict
+nonpermutation local extrema prevent that shortcut. A global comparison
+of their critical values, or a constructive spectral Gram identity,
+is still required.

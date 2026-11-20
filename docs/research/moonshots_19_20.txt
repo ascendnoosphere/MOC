@@ -1,0 +1,62 @@
+MOONSHOTS 19–20: CAPACITY BOUNDARIES AND A PAIRED-CONJUGATE FAMILY
+
+Both tests concern the candidate lambda<=C(p,q,r) in the canonical f34
+cap; they do not establish it globally and do not settle MOC4.
+
+19. Exposed two-contact boundary.
+
+When two of p=g18, q=g14, r=g9 vanish, the triangle capacity is exactly
+zero. Thus any actual gap on that boundary with lambda>0 would immediately
+disprove the candidate. Given products z_i,z_j, an exact tie is generated
+by eta=±i conjugate(z_i-z_j); retain the directions for which i and j are
+both global maxima. This searches actual support directions on the boundary,
+not arbitrary nonnegative vectors. If z_i=z_j, the direction formula is
+zero and this search omits that degenerate pair.
+
+Numerical trials found no violation: at least 1,380,000 random spectra were
+screened for pairs of budget contacts, and six differential-evolution runs
+searched the resulting constrained directions. A complementary run screened
+20,000 random spectra for a budget contact tied to every other label
+(3*23*2 candidate orientations per spectrum); none of the retained exposed
+directions had lambda>0. Six 600-generation differential-evolution runs
+on ties of label 1 and each budget label likewise found no capacity failure.
+These are finite floating-point searches, not a theorem; the latter test
+excluded a zero product difference and its exposure check used tolerance.
+
+An exact nondegenerate two-budget contact does exist. With
+ alpha=(5-i,3+6i,2+6i,-1+i), beta=(2+3i,4-3i,3-5i,-1),
+ eta=952+2764i, the products are all distinct, h=580200, and exactly labels
+ 14 and 18 are contacts. Here (p,q,r)=(0,0,4264068), C=0 and
+ lambda=-5815724. code/research/verify_moonshots_19_20.py verifies the
+actual products, all 24 gaps and these integer equalities. This example is
+not a positive-lambda boundary case and does not settle the boundary.
+
+20. Paired-conjugate spectra and an exact family for all eta.
+
+Take
+ alpha=(3,-2+6i,-2-6i,0), beta=(2,-10,-1-2i,-1+2i).
+The 24 products are distinct. The exact verifier checks all nine exposed
+support-edge directions against the capacity inequality. The hull-edge
+reduction proved in docs/research/moonshots_17_18.txt then proves the
+inequality for every complex eta for this fixed pair of spectra. This is
+nontrivial: eta=726+420i gives lambda=381312>0, budgets
+(p,q,r)=(506304,808704,650244), and balanced capacity C=982626.
+
+For every nonzero complex u and every complex v, replace these spectra by
+ alpha'_j=u alpha_j+v, beta'_j=u beta_j-v.
+All matching products are multiplied by u^4; arbitrary eta absorbs that
+factor. Thus this is a four-real-parameter family for which the inequality
+holds for all eta and all 24 products remain distinct. The paired-conjugate
+arrangement is a construction of the representative, not a claim that all
+paired-conjugate spectra satisfy the candidate.
+
+Additional exact collision observation: if alpha_2=alpha_3 or beta_2=beta_3
+(zero-based indices), g0=g1 and lambda=-(g6+g14+g23)<=0. Analogously,
+alpha_0=alpha_1 or beta_0=beta_1 gives g0=g6; alpha_0=alpha_2 or
+beta_0=beta_2 gives g0=g14. These entire complex collision families satisfy
+the candidate trivially. In fact
+ |g0-g1| <= |eta| |alpha_2-alpha_3| |beta_2-beta_3|
+                         |alpha_0+beta_0| |alpha_1+beta_1|,
+from the exact two-factor swap identity, and lambda<=g0-g1. This describes
+how the potentially positive mixed coefficient is suppressed near those
+collisions; it does not by itself bound capacity.

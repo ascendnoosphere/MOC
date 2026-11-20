@@ -1,0 +1,42 @@
+Moc0710 d-path formalization status — 2026-10-31
+
+Accepted module: code/lean/Moc0710DPath.lean
+Dependency: code/lean/Moc0710Core.lean (unchanged).
+Compiler: Lean 4.19.0, the mathlib environment in build/lean0710/mathlib.
+Final compiler exit status: 0. Log: build/lean0710/moc0710_dpath_compile.log.
+The adjacent Moc0710DPath.olean contains the accepted declarations.
+
+The principal theorem d_path_from_admissible_start proves the missing strict
+feasibility assertion for the canonical c=0 slice. Its hypotheses are
+  a >= 0, b >= 0, a != b, d0 > 0, e0 >= 0,
+  P(a,b,0,d0,e0) = 0, Q(d0,e0) < 0.
+For every d between d0 and 1, the selected cap root reconstructs
+  e(d) = cLift(a,b,capRoot(a,b,d),0),
+and Lean proves S(a,b,d)>0, e(d)>0, P(a,b,0,d,e(d))=0, and Q(d,e(d))<0.
+The theorem covers both directions d0<=1 and d0>=1, including d=1.
+
+continuous_admissible_d_path proves continuity of the explicit path
+  t |-> (d(t),e(d(t))), d(t)=(1-t)d0+t, t in [0,1].
+admissible_d_path_start and admissible_d_path_end prove its exact endpoints.
+d_path_coordinate_between places every parameter value in the interval used
+by the feasibility theorem. admissible_start_forces_p_gt_four proves p(a,b)>4
+from the initial admissibility assumptions, rather than assuming it.
+
+The key new algebraic step is S_pos_of_A_neg. For ab<1, put r=ab-1<0 and
+use A(r)=-ab*d*(a-b)^2<=0 together with
+  A(r)*x-r*A(x) = (r-x)*(q*r*x+p*S).
+If x>0 and A(x)<0, the assumption S<=0 makes the two sides have incompatible
+signs. For d>1, comparison at x=p*(d-1) then proves
+  Q(d,e(d))<0 iff K(a,b,d)<0.
+Monotonicity of K transports this condition down to d=1. For d<=1,
+the earlier S monotonicity lemma and positivity give the other branch.
+
+All six audited public results depend only on the standard Lean axioms
+propext, Classical.choice, and Quot.sound. There is no sorry or custom axiom.
+The sole compiler warning is a redundant ring tactic after field_simp.
+
+Scope: this closes a concrete path-feasibility gap in the canonical
+five-parameter argument. It does not prove unrestricted MOC. Any reduction
+from arbitrary complex normal matrices to this canonical family and any
+remaining global topology or determinant-to-hull implications require their
+own checked arguments.

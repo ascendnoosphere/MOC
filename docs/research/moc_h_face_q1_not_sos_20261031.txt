@@ -1,0 +1,41 @@
+Q1 feasibility and positive H gaps are insufficient for matching SOS
+31 October 2026
+
+There is an exact rational H-face cost g with all20 noncontact gaps
+strictly positive and a positive definite5-by5 Q1 Gram for
+(n,a0,a1,b0,b1), but g is outside the full matching-SOS cone. This only
+refutes replacing the nonic condition by Q1 feasibility. The cost does
+NOT satisfy N9=0 and is not a spectral or MOC counterexample.
+
+The complete standalone certificate is
+  python code/research/moc_h_face_q1_not_sos.py
+using only SymPy and the Python standard library. It contains all rational
+data, without input files or floating-point sign tests, and passed.
+
+The Q1 Gram has unit diagonal and supplies marginals and correlations.
+Its positive rational LDL pivots are checked exactly. The hidden fourth
+correlator is chosen as
+  D=1-max(|C00-C11|,|C10-C01|)-1/1000000,
+so all four double gaps are positive. The16 single gaps are positive too.
+The four H contacts are exactly[0,1,6,7].
+
+Let B be the14 independent ordinary matching-indicator columns and let
+F=B*ker(B_H) be the rational24-by10 contact feature matrix. The supplied
+signed weights y have a STRICTLY positive definite contact moment
+  F^T diag(y) F,
+proved by ten positive rational LDL pivots, but
+  y.g < -3/1000
+(approximately -.00337663141). This rigorously excludes every matching
+SOS representation of g. Indeed any PSD Gram representing a cost zero
+on H must annihilate the four contact evaluation vectors, and therefore
+factor through this contact feature space.
+
+The script also evaluates the exact restricted nonic factor and checks
+that both det(M) and det(M)*K*D+P6 are NONZERO. Thus this is not an
+obstruction to the stronger ALL-N9H inclusion sought by the main proof.
+That equality must control the cross-context vectors beyond the5-by5
+elliptope condition. The3-by3 hidden-D completion lemma retains those
+additional constraints; Q1 alone discards them.
+
+Exact matrices, weights, pivots and pairing:
+  build/moc_h_face_q1_not_sos/exact.json

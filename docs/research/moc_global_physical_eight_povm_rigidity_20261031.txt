@@ -1,0 +1,106 @@
+GLOBAL PHYSICAL-EIGHT AMPLITUDE COUPLING: EXACT RIGIDITY
+31 October 2026.  This is a complete test of one global interpolation
+mechanism, not a counterexample to MOC and not an infeasibility inference
+from a numerical SDP.
+
+1. The proposed unrestricted mechanism.
+
+Let F be the exported 24 by 14 matching-feature matrix, p its constant
+feature vector (Fp=1), and x a complex M8 source.  Thus the 24 permutation
+products are z_pi=f_pi x.  At the rational real-orthogonal mixer Q59 the
+physical rank-eight moment has an exact factorization H=VV^T.  Put
+U=V^T, y=Hp and d=y^T x.  Seek source-independent Hermitian effects M_pi
+and a nonzero positive semidefinite normalizer S such that
+
+    M_pi >= 0,  sum_pi M_pi=S,
+    sum_pi (f_pi x-d) M_pi Ux=0          for EVERY complex source x.
+
+Multiplication by x^*V would give the positive law
+    d=sum_pi z_pi (x^*V M_pi V^T x)/(x^*V S V^T x)
+on its nonzero-success set.  That set would be dense, so continuity would
+handle zero success.  S was allowed to be arbitrary PSD; the test does
+not impose S=I or positive definiteness.
+
+2. Exact complete reduction, with no covariant ansatz.
+
+Define symmetric moments B_i=sum_pi F_pi,i M_pi and corrections
+C_i=B_i-y_i S.  Normalization is C_p=0.  The source identity is
+
+    C_x Ux=0 on M8,       C_x=sum_i x_i C_i.
+
+The degree-two ideal of M8 is the 14-dimensional span of the gradient
+quadrics of the verified skew cubic.  Choose a rational source change
+x=Z(u,v), where u=Ux has dimension eight and v has dimension six.
+Exactly seven independent source quadrics vanish identically on u=0.
+Write them as q_k=u^T A_k u+2u^T D_k v.  Every component of C_x u is a
+unique combination sum_k L_ak q_k, so all possible corrections have
+only 8*7=56 essential parameters L_ak.
+
+For completeness, the symmetric pencil is reconstructed from those
+parameters by
+
+ (C_{v_alpha})_ab = 2 sum_k L_ak (D_k)_{b,alpha},
+ (C_{u_c})_ab = sum_k [L_ak(A_k)_bc+L_bk(A_k)_ac-L_ck(A_k)_ab].
+
+Symmetry of the six v-pencils gives 168 linear equations.  C_p=0 gives
+36 more.  These formulas exhaust the coupling: the u-linear symmetric
+pencil is uniquely recovered by polarization, and the mixed coefficients
+determine the v-linear pencil.
+
+3. Exact result and a short positive-cone contradiction.
+
+The resulting 204 by 56 rational matrix has rank 56.  Its independently
+checked reduction modulo 1009 also has rank 56.  Therefore C_i=0 for all
+i, and every proposed coupling must satisfy the operator identities
+
+    sum_pi F_pi,i M_pi=y_i S.
+
+The nonnegative matching ray r34 is
+
+ [1,0,1,1,1,2,0,0,0,0,1,1,0,1,0,0,1,0,0,1,0,1,0,0].
+
+It is F rho with
+ rho=[1,0,0,0,0,0,-1,-1,0,1,0,-1,0,0]^T,
+and at Q59 its physical value is exactly rho^T y=-55/3481.  Consequently
+
+    sum_pi r34_pi M_pi = -(55/3481) S.
+
+The left side is PSD, while the right side is negative semidefinite.
+This forces S=0, contradicting nonzero success.  Complex Hermitian
+effects do not escape the result: averaging a solution with its complex
+conjugate preserves positivity and the real coefficient identities,
+and gives a nonzero real symmetric normalizer.
+
+4. The actual seven quadrics and the proposed Clifford incidence test.
+
+All seven rational quadratic matrices in (u,v), the source change Z,
+the full constraint matrix, and its modular pivot rows are exported in
+build/moc_global_gaussian_povm/Q59.json.  They contain no floating-point
+entries.  Their mixed parts span dimension six.  The unique pure-u
+combination is the canonical Cartan quadric u^T J u=0, where J is the
+signed antidiagonal (+,-,+,-,-,+,-,+).
+
+For the exact Cartan-null vector u=(1,2,3,4,5,6,7,16), the 7 by 6
+mixed-coefficient pencil has full rank six.  Hence it has no rank drop
+that holds on the whole Cartan quadric.  This does not preclude another
+Clifford factorization involving additional source equations.
+
+5. Consequence for the next global construction.
+
+This rules out all source-independent quadratic Born weights whose
+success matrix is supported in the physical eight-dimensional range,
+including arbitrary PSD normalizers.  It does not rule out a full
+14-dimensional success matrix, nonlinear/source-dependent effects,
+quartic weights on the 35-dimensional Cartan two-copy space, or a
+contact-dependent positive law.  The source35 two-copy mechanism is
+therefore a substantive enlargement, not a change of basis in the
+refuted physical-eight problem.
+
+Reproduction:
+ python3 code/research/moc_global_gaussian_povm.py --mixer Q59 --linear-only
+
+Historical correction: the first exploratory normalization used Python
+integer division and created SymPy Float entries.  That output was
+withdrawn.  The final checker uses Rational(denominator,gcd), checks for
+absence of Float, and has the independent finite-field rank certificate.
+The final result above is entirely rational.

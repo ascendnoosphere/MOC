@@ -1,0 +1,93 @@
+Complete free-edge Gram-gauge test by evaluation cocircuits
+31 October 2026. All indices are zero based.
+
+Exact replay:
+  python code/research/moc_high_contact_gram_gauge_structure.py
+Data:
+  build/moc_high_contact_gram_gauge_structure.json
+Runtime about35s. All accepted and rejected rank tests are exact.
+
+For the15 five-budget families left at an earlier closure stage, take
+the complete six-dimensional contact-null matching-feature space,
+with evaluation matrix F=[f34,r_j1,...,r_j5]. The verifier checks that
+these six features are independent and span the contact-null space.
+Let K be the full kernel of quadratic evaluation on these features:
+  K={Q=Q^T : F_i Q F_i^T=0 for every permutation i}.
+Its exact dimension is5,6,or8. The artifact lists a complete rational
+basis, each corresponding quadratic's exact factorization and rank,
+and every evaluated feature vector.
+
+QUESTION. Does some invertible real or complex change of these six
+feature coordinates make the ENTIRE space K precisely the span of k
+free off-diagonal products y_i*y_j? This is the ordinary free-edge
+positive-semidefinite matrix-completion representation. The following
+lemma reduces this question to a finite exact combinatorial test.
+
+COCIRCUIT REPLACEMENT LEMMA.
+For any full-column-rank finite evaluation matrix F over Q, if an
+invertible linear feature basis has its entire quadratic kernel spanned
+by a set E of off-diagonal products, there is such a basis whose every
+coordinate form is a rational evaluation cocircuit normal: the normal
+to a hyperplane spanned by n-1 independent evaluation rows.
+
+Proof. Work over R or C. Fix one coordinate form ell_j. Let W_j be the
+span of evaluation rows at which any neighboring coordinate form
+ell_l, jl in E, is nonzero. Each required product ell_j*ell_l vanishes
+on every row, so ell_j lies in W_j^perp. Choose an evaluation-row basis
+of W_j and extend it to a full evaluation-row basis. The dual normals
+to the added basis rows span W_j^perp; each vanishes on n-1 independent
+evaluation rows and hence is an evaluation cocircuit normal.
+
+The original ell_j is outside the span of the other n-1 coordinate
+forms. Therefore some one of these dual cocircuit normals is outside
+that span too. Replace ell_j by it. This preserves basis independence
+and every required incident product relation; other edge relations are
+unchanged. Distinct products of independent coordinate forms are
+independent quadratics. Since |E|=dim K, the preserved products still
+span the entire kernel, and no new edge relation is possible. Repeat
+for all coordinate forms, preserving all previously selected cocircuit
+coordinates. The resulting rational cocircuit basis has exactly E.
+This argument works over C as well as R. End proof.
+
+FINITE VERIFICATION.
+The verifier enumerates every five-element subset of the distinct
+projective evaluation rows. Whenever their rank is5 it records the
+primitive rational normal. This includes every cocircuit normal.
+Additional split-factor forms and coordinate units may be included;
+their inclusion cannot invalidate a negative test. Two candidate forms
+have a kernel edge exactly when their evaluation supports are disjoint.
+
+For each possible number q<=6 of nonisolated graph vertices, it
+enumerates every q-element subset of incident candidate forms with
+exactly k induced edges. Such forms must be independent. Every such
+candidate receives an exact rational rank test. Independent candidates
+are extended to a six-form basis and the entire transformed kernel is
+checked to be exactly all free off-diagonal entries. Isolated vertices
+cause no omission: an independent q-form edge basis may be extended
+arbitrarily; kernel dimension excludes extra edges. The artifact stores
+all candidate forms and edges, counts of all exhausted subset sizes,
+and every edge-count-qualified subset's exact rank.
+
+RESULT.
+Exactly one of the15 families has a free-edge representation:
+  remaining budgets [13,17,18,20,28], dim K=6.
+In the original feature order z=(f34,r13,r17,r18,r20,r28), one basis is
+  y=(z5,z4,z3,z2,z1-z2-z3,z0-2z1+z2-z4).
+Its six free edges are
+  (0,4),(0,5),(1,2),(1,3),(1,4),(2,3).
+The specified graph is nonchordal; the artifact lists four chordless
+four-cycles and its full symbolic specified Gram matrix.
+
+For the other14 families the finite test rejects every possible basis.
+By the replacement lemma this rules out an arbitrary real or complex
+invertible linear basis representing the ENTIRE quadratic kernel as
+free edges. These are exact structural obstructions, not failed random
+searches. Most have no edge-count-qualified subset at all; the two
+other rejected cases have an explicitly listed dependent candidate.
+
+SCOPE. This does not rule out PSD Grams, gauge sections with only part
+of the kernel free, split products in redundant coordinates, additional
+features, nonlinear Gram formulas, or other SOS constructions. Several
+of these14 families already have independent uniform SOS proofs. In
+particular a block-cap affine Gram section may have a useful completion
+graph even when the entire six-feature gauge kernel has no graph basis.

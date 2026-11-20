@@ -1,0 +1,129 @@
+Uniform moving planes for all three pair-budget dual families
+31 October2026
+
+RESULT. For each j=18,23,28 and every epsilon>0, the explicit full14-PD
+dual family in moc_arbitrarily_small_budget_dual_20261031.txt admits a
+rational epsilon-dependent five-plane certificate. Thus each of these
+ENTIRE continuous dual families is positive on every nonzero actual
+nonnegative matching support cost. Together with the four singleton
+families proved by the scout, this closes all seven explicit small-budget
+boundary families. It does not prove the all-dual plane conjecture.
+
+1. A particularly simple pair18 nilpotent block
+
+Write C=M(f34), R=M(r18), and let e0,...,e8 be the standard coordinate
+vectors for row-major vec(H). Use
+
+ P=[e0,e5,-e4+e6,e7],
+ a=e2,
+ b=-e2/4+(e4+e6)/2.
+
+Direct exact multiplication gives
+
+ P^T C P=diag(1,1,2,1)/16,
+ P^T R P=diag(0,0,0,1)/16,
+ P^T C[a,b]=P^T R[a,b]=0,
+
+ [a,b]^T C[a,b]=[[0,-1],[-1,0]]/16,
+ [a,b]^T R[a,b]=diag(0,-1)/16.
+
+Set delta=epsilon/(1+epsilon), so0<delta<1 and delta<epsilon, and put
+
+                         U_delta=[P,a-delta b].
+
+Then the two crucial compressions are exactly
+
+ U_delta^T C U_delta=diag(1,1,2,1,2delta)/16 >=delta I/16,
+
+ U_delta^T(R+epsilon C)U_delta
+   =diag(epsilon,epsilon,2epsilon,1+epsilon,
+                                  delta(2epsilon-delta))/16 >0.       (1)
+
+This is a rational moving plane. Its last cap-positive direction becomes
+isotropic as epsilon approaches zero; no fixed nondegenerate limit is
+being asserted.
+
+2. All other ordinary directions, uniformly in epsilon
+
+The exact Frobenius square is
+
+ ||U_delta||F^2=6+delta/2+9delta^2/16 <=113/16.
+
+For all34 ordinary matrices M(r_k), the exact maximum absolute row sum
+is at most1/8, hence the spectral norm is at most1/8. For every real x,
+
+ x^T U_delta^T M(r_k)U_delta x
+   >=-(1/8)||U_delta x||^2
+   >=-113||x||^2/128
+   >=-[113/(8delta)] x^T U_delta^T C U_delta x
+   >-[15/delta] x^T U_delta^T C U_delta x.                  (2)
+
+For the chosen explicit dual y_epsilon, the target budget is epsilon.
+Every other ordinary indicator has at least one selected completion
+contact. Its initial negative weights total at most3, so
+
+ beta_k=y_epsilon(r_k)>=mass-3,
+ mass=K+20/epsilon, K=109 or217.
+
+Consequently
+
+ beta_k-15/delta >=K-18+5/epsilon>0.                         (3)
+
+Equations(2)-(3) prove all the other ordinary corrections
+
+ U_delta^T[M(r_k)+beta_k C]U_delta>0
+
+simultaneously for EVERY epsilon>0. Equation(1) proves the target
+correction. These are parameter inequalities, not a finite sample test.
+
+3. Transfer to pair23 and pair28
+
+The following permutation matrices are orthogonal cap stabilizers:
+
+ S23=I9[[7,8,6,1,2,0,4,5,3],:],
+ S28=I9[[5,3,4,8,6,7,2,0,1],:].
+
+Exact multiplication verifies
+
+ S_j^T C S_j=C,
+ S_j^T M(r_j) S_j=R.
+
+Thus use S23 U_delta and S28 U_delta for their own explicit full-PD
+dual families. Their Frobenius bounds are identical. Every ordinary
+matrix still has norm at most1/8, and the contact counts still give(3).
+All34 corrections are therefore PD in all three families.
+
+4. Why the certificate is global on actual costs
+
+The13 canonical ordinary rays evaluate as a permutation identity on the
+13 zero coordinates of f34. Hence every g in V14 has a decomposition
+
+                  g=t f34+sum_j nu_j r_j,
+
+with nu_j=g(pi_j)>=0 whenever g>=0. For any of the planes above, with
+A=U^T C U>0 and X_j=U^T[M(r_j)+beta_j C]U>0, one has the exact identity
+
+                U^T M(g)U+y_epsilon(g) A=sum_j g(pi_j)X_j.
+
+If y_epsilon(g)<0, the left compression U^T M(g)U is positive definite
+on five dimensions. The global actual source rank4 theorem forbids that.
+Equality also excludes nonzero actual gaps because all13 X_j are PD.
+Thus y_epsilon(g)>0 for every nonzero actual g>=0, globally in V14.
+
+5. Exact replay and scope
+
+ python code/research/moc_pair_budget_tilt_20261031.py
+
+Artifact: build/moc_pair_budget_tilt_20261031.json.
+
+The checker proves all block identities, the polynomial Frobenius bound,
+all34 exact row-norm bounds, all34 contact counts and all-parameter
+budget inequalities in all three families, and both cap-stabilizer
+identities. Additional exact LDL checks at epsilon=1/10 and100 are
+redundant independent replays; they are not the uniform proof.
+
+The companion scout theorem
+moc_singleton_budget_tilt_20261031.txt handles j=0,7,10,13 in the same
+spirit. Together these are seven continuous family theorems. They do
+not yet construct a five-plane from an arbitrary full-PD moment, nor
+prove that neutral N9 costs are always full matching SOS, nor settle MOC.

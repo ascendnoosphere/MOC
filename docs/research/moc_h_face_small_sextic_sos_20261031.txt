@@ -1,0 +1,59 @@
+A small formal H-nonic point with three squares and a postquantum projection
+31 October 2026
+
+In lexicographic S4 order take
+  g=(0,0,0,1,0,1,0,0,3,1,2,0,3,0,6,0,3,0,6,3,8,2,6,3).
+It is nonnegative and vanishes at H={0,1,6,7}, with six additional
+contacts. Its restricted CHSH coordinates are
+  N=9, A=(7,3), B=(3,7), C=[[5,9],[-3,5]], D=-3.
+For M=[[N,B0,B1],[A0,C00,C01],[A1,C10,C11]], the invariants are
+  Delta=det(M)=192, F=-Delta/16=-12, Q=-4,
+  K=(C00-C11)^2-(C01-C10)^2=-144, P6=-82944.
+Thus Delta*K*D+P6=0. The exact restricted nonic factorization
+  N9_H=+/-Delta*(Delta*K*D+P6)/16384
+puts g on its off-cubic component. Independently, direct computation in
+the audited14-variable cubic gives rank H_(g-3e)=12 and determinant0.
+
+Here is an especially short full matching-SOS certificate:
+  3g=u^2+v^2+w^2,
+where the three integer functions in permutation order are
+  u=(0,0,0,1,0,1,0,0,-1,1,-2,0,-2,0,-3,0,-1,0,0,2,-2,1,1,2),
+  v=(0,0,0,1,0,1,0,0,2,1,1,0,1,0,3,0,2,0,3,2,4,1,4,2),
+  w=(0,0,0,-1,0,-1,0,0,-2,-1,-1,0,2,0,0,0,-2,0,3,1,2,2,-1,1).
+All three belong to V14, as checked by exact ordinary-indicator rank.
+There are no numerical positivity steps in this certificate.
+
+The ten contact zeros leave four matching feature directions. In the
+standard rational contact basis, interpolation gives the UNIQUE Gram
+  [[3,-3,-1,1],[-3,6,0,-3],[-1,0,1,0],[1,-3,0,2]].
+Its LDL pivots are(3,3,1/3,0), so its rank is3.
+
+The projected box has CHSH value22/9 after normalization by N. It is
+not an ordinary local box. More strongly, it admits no commuting-projector
+quantum model in any Hilbert-space dimension. Its probabilities satisfy
+  Pr(A0!=B1)=0,
+  Pr(A0=1,B0=0)=Pr(A1=1,B0=1)=Pr(A1=0,B1=1)=0,
+but Pr(A0=1)=1/9.
+
+To see the quantum obstruction, let A0,A1 and B0,B1 be outcome1 projections
+and psi the state vector; the parties' projections commute. Perfect
+correlation gives u=A0 psi=B1 psi. The first and last zero events imply
+B0 u=u and A1 u=u. The middle zero event gives A1 B0 psi=0. Therefore
+  <psi,u>=<A1 B0 psi,u>=0,
+whereas <psi,u>=||A0 psi||^2=1/9. Mixed states can be purified, so the
+same argument applies to them.
+
+Consequently neither the ordinary local cone nor the ordinary quantum
+correlation cone can equal the H-restricted matching-SOS cone or cover
+all its formal nonic points. A Tsirelson or PSD-rank2 factorization theorem
+would impose too strong a condition on the remaining off-F branch.
+
+This does not refute MOC or the ALL-N9H matching-SOS target. The example
+has the displayed exact matching-SOS certificate. It cannot be an actual
+spectral H-support cost, by the separately proved actual-H ordinary theorem.
+
+Standalone reproduction, SymPy plus Python standard library only:
+  python code/research/moc_h_face_small_sextic_sos.py
+
+The verifier checks all24 integer SOS identities, all three feature
+memberships, the exact restricted nonic factor, and the stated probabilities.

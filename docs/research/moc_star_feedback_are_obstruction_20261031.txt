@@ -1,0 +1,67 @@
+An exact obstruction to the natural four-state feedback ARE embedding
+31 October 2026
+
+Use the full35-parameter star block-Gram equations from
+moc_star_block_gram_affine_20261031.txt.  With the primary block D and
+the cost fixed, the auxiliary lift has the affine form
+
+                      C=C0+L(B),  ell(B)=beta,
+
+where B is6-by4, C is symmetric4-by4, and
+
+                   ell(B)=1_6^T B (1,-1,0,1)^T.
+
+The linear operator L is independent of D and the source cost.  Its
+extension away from the ell-hyperplane depends on the choice of ten
+interpolation rows, but its restriction to ker ell is intrinsic.
+
+The proposed feedback reduction asks for U in Mat_(6,4) and A in
+Mat_(4,4) satisfying, for EVERY symmetric4-by4 X,
+
+                L(U X)=A^T X+X A,  ell(U X)=0.             (1)
+
+If nonzero full-rank U existed, B=B0+UX would make the Gram Schur
+residual a standard algebraic Riccati expression with quadratic term
+-X U^T D^-1 U X.  This specific construction is impossible:
+
+        THEOREM.  The only solution of(1) is U=0,A=0.
+
+Proof by exact coefficient certificate.  The symmetric X has ten
+independent entries.  For each entry, equate the ten symmetric entries
+of the first equation and the one scalar second equation.  This gives
+a homogeneous110-by40 rational linear system in the24 entries of U
+and16 entries of A.  The exact system has an INTEGER40-by40 minor with
+determinant64.  Hence its rank is40 and its kernel is zero.  The full
+coefficient matrix, the40 selected row indices, their equation labels,
+and the determinant are exported by the checker below.
+
+The checker rebuilds L directly from the eleven star interpolation
+equations and the invertible ten-row C coefficient block.  It does
+not rely on a floating-point fit or on a saved optimized Gram.
+
+Two structural necessary conditions are useful for interpreting the
+test.  First, ell(UX)=0 for every symmetric X is equivalent to
+1_6^T U=0, since X(1,-1,0,1)^T ranges over R4.  Second, L(UX) is
+PT-invariant on this kernel.  If J_Q is the symmetric Hessian of
+UT-RS, then the first equation requires
+
+                         A J_Q+J_Q A^T=0.
+
+Thus A would belong to so(2,2).  The rank40 certificate proves that
+even after allowing all such possibilities and all24 entries of U,
+no nonzero embedding satisfies the complete interpolation operator.
+
+Scope.  This result is independent of the chosen primary Gram D,
+including a Cauchy primary with arbitrary pair phases.  It also permits
+U and A to be selected separately for each source cost: the same
+zero-kernel linear test applies at each selection.  It does not rule
+out B depending on X by a more general linear operator, a change of
+state/auxiliary identification, higher-dimensional feedback, a
+nonlinear source-dependent construction, or a Bezoutian identity.
+It is not an obstruction to a positive full matching Gram or to MOC4.
+
+Exact replay:
+ code/research/moc_star_feedback_are_obstruction.py
+ build/moc_star_feedback_are_obstruction/exact.json
+
+Default replay: PASS, rank40, minor determinant64.

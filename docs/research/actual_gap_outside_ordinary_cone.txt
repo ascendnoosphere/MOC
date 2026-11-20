@@ -1,0 +1,51 @@
+AN ACTUAL SPECTRAL GAP OUTSIDE THE ORDINARY-MINOR CONE
+
+The assertion that every actual four-by-four spectral support gap is a
+nonnegative linear combination of ordinary squared-minor ray functions is
+false. This does not disprove MOC4: a function can be nonnegative on all
+unitaries even if it lies outside that particular cone, and no unitary
+counterexample is asserted here.
+
+Use lexicographic permutation order and the canonical 82-ray order. Set
+  alpha=(0,100,-214+146i,269-294i),
+  beta=(-207-148i,-28-84i,-59+82i,83+104i), eta=-25+i,
+  z_pi=eta product_i(alpha_i+beta_pi(i)),
+  h=max_pi Re(z_pi)=32952360312, g_pi=h-Re(z_pi).
+All 24 products are pairwise distinct; the unique contact is permutation
+index 1. The nonzero height and distinctness hold without genericity limits.
+
+The 24-coordinate linear functional
+  w=(-1,2,1,-1,-1,0,1,-1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0)
+has w.r_j>=0 for every ordinary ray j=0,...,33, but
+  w.g=-42246975256<0.
+Consequently this actual gap cannot belong to the ordinary-ray cone. The
+separation is strict, so the same conclusion persists under sufficiently
+small perturbations of the spectral parameters; the maximum is a continuous
+function even without using the unique-contact property.
+
+Its exact nonnegative single-mixed decomposition is
+  g = 42246975256 f34 + 0 r0 + 358559712 r7 + 85457544 r10
+      +196211247 r13 +421793576 r17 +65769370688 r18
+      +394340352 r20 +24317724232 r22 +216282432 r23
+      +21086271672 r27 +58010468072 r28 +266873312 r30
+      +163259800 r31.
+These 14 ray vectors are linearly independent, so their coefficients are
+unique within this specified 14-generator cap. In particular the example
+shows that the single-mixed residual problem is nonempty. It has only one
+contact and does not address the six-contact rectangle-free residual cones.
+
+This particular support direction is nevertheless safe for every U(4).
+The established weighted-minor theorem relabels to
+ f34+tau*r18+tau^(-1)*r28>=0.
+With lambda=42246975256, p=65769370688 and r=58010468072, the exact budget is
+ p*r-lambda^2=2030505060130680408000>0.
+Multiply the inequality with tau=p/lambda by lambda, then add the remaining
+nonnegative ordinary terms and (r-lambda^2/p)r28. This proves g(U)>=0.
+The verifier checks the row/column relabeling (0,2,3,1) on both sides and the
+integer budget. Thus ordinary-cone failure is demonstrably compatible with
+the required support inequality, rather than merely not known to violate it.
+
+code/research/verify_actual_gap_outside_ordinary_cone.py rebuilds the rays,
+computes the products in Gaussian-integer arithmetic, checks h, all 24 gap
+coordinates and the 34 dual inequalities, and checks the exact column rank
+with rational elimination. Its fresh execution passed.

@@ -1,0 +1,69 @@
+GLOBAL SIX-SECTOR POSITIVE-BLOCK DIFFERENCE AND THE REMAINING GRAM GLUING
+2026-10-31; variational_closure
+
+Status: exact global coordinate identity. This does not prove MOC4 or the
+stronger nonnegative-neutral-pencil-to-C0 implication.
+
+1. Coordinates, without contact or budget restrictions
+
+Use the normal form in moc_global_cofactor_diagonal_form_20261031.txt:
+ Q_g(H)=<A,cof H>+sum B_ij H_ij^2,
+ D=(8/9)K^T B K,
+ g(O)=c+4<A,O>+sum D_ij O_ij^2.
+The 24 tetrahedral signed-permutation matrices O have product of their
+three nonzero entries +1. They split into six sectors sigma in S3, each
+containing four sign vectors epsilon with epsilon_1 epsilon_2 epsilon_3=1.
+Put c_sigma=c+sum_i D_i,sigma(i), a_sigma,i=4A_i,sigma(i).
+Then g_sigma(epsilon)=c_sigma+a_sigma^T epsilon.
+
+The six sectors form the vertices of K3,3, according to permutation parity.
+Each of the nine coordinate pairs (i,j) is the edge joining its unique even
+sector and unique odd sector. There is no choice of a support contact here.
+
+2. Six positive local blocks
+
+Let C_sigma have diagonal c_sigma and offdiagonal entry (i,j) equal to
+a_sigma,k for {i,j,k}={1,2,3}. Set
+ T_sigma = [[c_sigma,a_sigma^T],[a_sigma,C_sigma]].
+If W has rows (1,epsilon^T), then W^T W=4I and
+ W T_sigma W^T=4 diag(g_sigma(epsilon)).
+Thus g>=0 on all24 permutations is exactly equivalent to all six T_sigma
+being positive semidefinite. Their principal blocks C_sigma are PSD too.
+
+Let E_sigma select the three coordinate edges of sigma from vec(H). Then
+the exact identity, valid for every g in V14, is
+ 8M(g)=sum_even E_sigma^T C_sigma E_sigma
+       -sum_odd E_sigma^T C_sigma E_sigma.
+Each sum is block diagonal after arranging its three disjoint matchings.
+The diagonal identity is B_ij=(c_even(i,j)-c_odd(i,j))/8. The cofactor signs
+give the offdiagonal identity. The checker verifies every coefficient on
+all14 basis functions, and the local Walsh congruence symbolically there.
+
+3. Exact global C0 Gram gluing formulation
+
+A matching function f in V14 can be written, in sector sigma, as
+ f_sigma(epsilon)=b_sigma+sum_{e incident sigma} t_e epsilon_e.
+There are six scalar sector coefficients b_sigma, one relation
+ sum_even b_sigma=sum_odd b_sigma, and nine edge coefficients t_e: 14
+independent features in total. For an SOS use vector coefficients b,t.
+The required Gram identities are
+ c_sigma=||b_sigma||^2+sum_{e incident sigma}||t_e||^2,
+ a_e=2<b_sigma,t_e>+2<t_other1,t_other2>
+at both endpoints of every coordinate edge, together with the vector
+relation sum_even b_sigma=sum_odd b_sigma.
+These formulas follow by expanding the squared norm and using
+epsilon_i epsilon_j=epsilon_k. They are equivalent to all24 interpolation
+conditions, so any proposed global construction can be checked directly.
+
+The six independent local choices T_sigma/4 are PSD but generally assign
+different variances c_sigma/4 to the same shared edge at its two endpoints.
+They therefore do not already give a global14 Gram. A neutral difference
+of the two nine-dimensional PSD sums suggests using a cost-dependent
+generalized spectral decomposition or parallel sum; no synchronization
+identity has been established. A common five-plane depending only on the
+dual functional was refuted earlier, so that ansatz is not assumed here.
+
+Exact replay:
+ python code/research/moc_global_six_sector_psd_difference.py
+Artifact:
+ build/moc_global_six_sector_psd_difference_20261031.json

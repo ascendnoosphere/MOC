@@ -1,0 +1,42 @@
+Eight-contact orbit1: nondegeneracy on the remaining unequal branch
+
+Use the exact five-parameter pencil and notation of
+verify_eight_contact_cap_0710_pencil.py. The pencil factors as 4 L(h) R(h),
+with L linear and R quadratic. Put h0=F/Q and let P=Q L(h0)/(c+1).
+On P=0,Q<0, both L(h0) and R(h0) vanish. Its z^2 pencil coefficient at
+x=g-h0 E is therefore 4 L_h R_h(h0).
+
+As a quadratic in e, P has exact discriminant
+ (a+1)^3(b+1)^3(c+1)^2 [a(b+d)^2+(b-d)^2][b(a+d)^2+(a-d)^2],
+which is strictly positive when a,b,d>0. This identity is also checked by
+the portable verifier.
+
+The zero-e coefficient of P is
+ (a+1)^2(b+1)^2(c+1)^2[ab+ad+a+bd+b+d+1]>0,
+so P=0 with nonnegative coefficients forces e>0. If d>0 and a!=b,
+L_h is nonzero: L_h=0 and P=0 would force L(0)=0, i.e.
+ (a+1)(b+1)(c+1)+e(c+1-ab)=0. It follows that ab>c+1 and
+ e=(a+1)(b+1)(c+1)/(ab-c-1), but then the exact identity
+ L_h=d(a+1)(b+1)(a-b)^2(c+1)^2/(ab-c-1)>0 gives a contradiction.
+
+The discriminant of R(h) is e^2 D(a,b,c,d,e). For Q<0, the polynomial D
+is strictly positive. Indeed, in the chart 0<d<=1, set d=1/(1+t), t>=0.
+After multiplying by (1+t)^4, D is a polynomial with 282 nonnegative
+coefficients; its restriction at a=b=c=e=0 is (t+2)^2>0. In the chart
+d>1, Q<0 is equivalent to e=1/(d-1+u) with u>0. Set d=1+t,t>0.
+After multiplying by (t+u)^2, D is a polynomial with 486 nonnegative
+coefficients; its restriction at a=b=c=0 is
+ (t+1)^2(t^2+tu+2t+2u+1)^2>0.
+The denominator-cleared identities and coefficient checks are verified by
+code/research/verify_eight_contact_unequal_nondegeneracy_0710.py. Therefore
+R has two distinct real roots and R_h(h0)!=0 on this branch. Hence the
+z^2 coefficient is nonzero everywhere for P=0,Q<0,d>0,a!=b.
+
+This proves nondegeneracy, not its sign. At the exact unequal seed
+(a,b,c,d,e)=(1,2,1,5/6,672/5), F=-1404/5,Q=-117/5,h0=12 and
+[z^2]det(H_F(x)+zH_F(E))=38203648/5>0, excluding that point under the
+independently proved necessary a2<=0 condition for actual gaps. A uniform
+sign or a connectedness argument covering every branch component is still
+needed to exclude the whole unequal branch. The a=b and d=0 branches are
+separately closed by eight0710_equal_closure.txt and
+eight0710_d0_closure.txt.

@@ -1,0 +1,90 @@
+Connectedness lemma for the positive-height residual-face branch
+
+Put A=a+1 and
+
+  D=d A^2-A[c(d^2+1)+(d+1)^2]+c^2 d,
+  b=A(c+1)(d+1)(A-cd)/D,
+  Q=b(d-1)-cd-1.
+
+Assume c>=0, d>=0, cd<1, A>=1, D>0, and Q<0. These
+are the dangerous branch after solving P=0 for b; in particular the
+numerator of b is positive and b>0. Since D=-A(c+1)<0 at d=0,
+necessarily d>0. Also
+
+  D(1)=-d^2-d-1-c(d^2+1)+c^2 d < 0,
+
+because c^2 d<c (with the conclusion also clear for c=0).
+The quadratic D in A consequently has two real roots, with 1 strictly
+between them. Write A_+(c,d) for the larger root. For A>=1, D>0 is
+equivalent to A>A_+(c,d); this root is continuous on the domain.
+
+For fixed c,d and A>A_+, direct differentiation gives
+
+  db/dA = -(c+1)(d+1)[c(A-cd)^2+A^2(d+1)^2]/D^2 < 0,
+
+and b tends to (c+1)(d+1)/d as A tends to infinity. When d<=1,
+Q<0 holds for every A>A_+. When d>1, Q is strictly decreasing
+in A, tends to +infinity as A descends to A_+, and tends to
+
+  -(c-d^2+d+1)/d
+
+as A tends to infinity. Thus the fiber with Q<0 is nonempty precisely
+when c>d^2-d-1, and then it is an open ray A>A_Q(c,d), with a
+unique finite root Q(A_Q)=0. One may equivalently define the fiber
+threshold as A_+ for d<=1 and A_Q for d>1. This threshold is
+continuous: continuity for d>1 follows from the strict derivative;
+as d tends to 1 from above, for every fixed A>A_+(c,1), Q is
+negative at nearby parameters, while A_Q is always above A_+.
+
+Consequently the base of the dangerous domain is
+
+  0<d<delta,  max(0,d^2-d-1)<c<1/d,
+
+plus the boundary points c=0 where they satisfy the original strict
+inequalities. Here delta is the unique positive zero of
+d^3-d^2-d-1. Indeed the lower c bound is strictly below 1/d
+exactly for d<delta, and the displayed lower-bound condition is
+automatic when d<=1. The base with c>0 is path connected: interpolate
+d through (0,delta), and take c halfway between its continuous upper
+and lower bounds. The full domain with c>0 is the epigraph of the
+continuous threshold and is therefore path connected. Alternatively,
+over any compact base path one can raise A to a common sufficiently
+large value, travel along the path, then lower A. Every admissible
+point with c=0 is a limit of admissible points with c>0, because the
+conditions D>0, Q<0, cd<1, and A>=1 remain valid under sufficiently
+small positive perturbation of c (in fact A>A_+>1).
+
+Conditional inertia propagation
+
+Let H_x be the real symmetric Hessian at x and let H_e be the Hessian
+at e. The spectral argument needs the following separate exact facts:
+
+  (i) every 13 by 13 minor of H_x vanishes throughout this domain,
+      so corank(H_x)>=2;
+  (ii) the coefficient of z^2 in det(H_x+z H_e) is nonzero.
+
+These facts must be established by polynomial identities; this note
+does not establish either one. Condition (ii) alone gives only
+corank(H_x)<=2 and does not rule out corank one. Together, (i) and
+(ii) give corank exactly two. In an orthonormal decomposition into
+ker H_x and its orthogonal complement, the z^2 coefficient equals
+the determinant of the invertible 12 by 12 Hessian block times the
+determinant of H_e restricted to ker H_x. Hence (ii) also proves that
+the restricted form is nonsingular. Since the kernel bundle and the
+restricted quadratic form vary continuously on the connected domain,
+their inertia is constant. Positive definiteness at one exact point
+then implies it throughout the interior. The same argument extends to
+c=0 using nonvanishing of the same identities there and continuity.
+
+One exact checkable reference is a=20, c=1/2, d=1, b=5166/1345.
+For the basis produced by SymPy's nullspace method from the original
+14-coordinate Hessian, the restriction of Q=det B has
+
+  upper-left entry = 2053835401869962825470275 /
+                     11142654539008626568621442,
+  determinant      = 326426415890044646250 /
+                     795903895643473326330103,
+
+both strictly positive. The reference calculation must be included in
+an exact independent verifier along with (i), (ii), and the claimed
+Hessian-pencil identity before this becomes a proof of exclusion.

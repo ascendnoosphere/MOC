@@ -1,0 +1,158 @@
+Topology visual atlas, 31 October 2026
+
+Four PNG figures were generated and each was opened with view_image. The final
+raw-diagnostics image was inspected again after fixing its heatmap scale and
+softening an overbroad distance-classification label. The figures are under
+build/moc_visual_atlas_20261031/topology/. Reproduction is
+
+  python code/research/moc_visual_topology.py
+
+The underlying proof and exact algebra are in
+docs/research/moc_moonshot_topology_20261031.txt. These are scientific plots,
+not generated illustrations. The raw source records were not modified.
+
+01_attainable_regions.png
+
+Four panels show actual images of closed walks in the ABSTRACT permutation
+Cayley graph, their exact certified disks, the matching-product convex hull
+as a reference, and a magnified Walsh neighborhood. The three exact squared
+disk radii are 3721/585, 5, and 961/4225. The Walsh radius is sqrt(5), centered
+at -43-24i. Arrowheads show the orientation of the walks; their winding is -1.
+Backtracking and collapsed edges are retained, rather than cosmetically
+replacing the actual walk with a simple hull boundary.
+
+The large gray hull is not claimed to be an outer bound on all determinant
+values. The proved statement is that every point in each blue OPEN disk is
+attained by some unitary. Boundary circles are dashed. The small Walsh disk
+looks almost invisible on the full-range panel; the magnified panel shows
+its tangency to the nearest walk segment and makes its actual scale visible.
+The first and third examples have unequal real/imaginary plotting extents;
+equal aspect ratio preserves geometric distances.
+
+Visual inspection: labels and arrows are readable; disks are round; the
+legend distinguishes hull, walk, and attained region. The full Walsh cycle
+includes a real-axis backtrack, which is mathematically part of the certificate.
+
+02_crossing_lifts.png
+
+This is a newly constructed rational example of why a planarized drawing is
+not automatically a graph of matrix paths. The spectra are
+
+  a=(1+2i, 2+i, -1-i, 1/3),
+  b=(-2-i, 1+i, -1-2i, 1/5+2i/7).
+
+The Givens segments 1234--4231 and 2134--2431 intersect at
+
+  q=-485604002/15450645 + (3467568/1030043)i.
+
+Their exact interpolation parameters are 149203/294298 and 72241/147149,
+both strictly between zero and one. Thus both actual matrix paths have this
+determinant value. Their corresponding normal matrices have unequal diagonal
+entries; the exact rational differences are saved in metrics.json. The plotted
+Frobenius distance is approximately 4.173995478.
+
+The middle panel retains two separate points in the abstract graph. The right
+panel displays the absolute entries of the difference of their normal-matrix
+lifts. This demonstrates a missing gluing step, not disconnectedness of the
+determinant fiber: a path between the two preimages inside that fiber might
+exist, but the mere crossing does not establish one. The figure explicitly
+says so. Intersection and diagonal inequality are exact; matrix heatmap
+entries are floating-point visualizations of the exact Givens expressions.
+
+Visual inspection: the two colors consistently identify the two edges and
+their preimages; the matrix difference is visibly nonzero. Endpoint labels
+do not overlap. The diagram makes the abstract-versus-planar distinction
+concrete without claiming a nonexistent fiber obstruction.
+
+03_positive_weight_family.png
+
+The first panel plots the four classes of individual permutation weights in
+the exact fourteen-permutation law for V(t)=(tI+K)/sqrt(t^2+3). Multiplicities
+are displayed: one identity, three double transpositions, four oriented
+three-cycles, and six transpositions. Curves within a class coincide by an
+algebraic identity; this is not an empirical pattern or an additional fit.
+
+The identity weight becomes nonnegative at
+
+  tau=0.6925048425718423...,  tau^4+4tau-3=0.
+
+The shaded region shows where THIS law has a negative coefficient. It is not
+marked as an MOC violation or as impossibility of every other positive law.
+The middle panel shows group masses on t>=tau. They sum to one exactly by
+the polynomial mass identity; the maximum floating-point plotting residual
+is 4.44e-16. The final panels display squared entries of the dense mixers at
+t=1,2,4. The light off-diagonal entries remain positive in all three.
+
+The law reproduces all 70 squared minors exactly and therefore works for
+every complex spectrum on the stated family. This is a restriction on mixers,
+not an unrestricted U(4) proof. The relation to the gauged Walsh escape arc
+is proved in the mathematical report.
+
+Visual inspection: the sign-changing weight, positive domain, and unit mass
+are clear. The stack plot does not conceal the multiplicities. No stochastic
+noise should be inferred from these deterministic curves.
+
+04_raw_winding_diagnostics.png
+
+Every one of the 8,324 computed small-matrix records is represented in the
+accounting panel and in the distance scatter. This is the n=3,4,5,6 portion
+selected from the immutable 20,127-record corpus. The exclusions are visible:
+
+  1,406 controls;
+  1,714 noncontrols excluded by shape or graph-distance guards;
+  5,041 eligible noncontrols with a nonzero-winding cycle;
+    163 eligible noncontrols where this inner criterion is silent.
+
+Eligibility requires minor RMS axis >1e-7, minor/major axis >1e-4, and distance
+from every graph segment >1e-9 in the producer's common scaling. The vertical
+change near log10(graph distance)=-9 is partly imposed by this guard. It is not
+a newly discovered phase transition. The 319 graph distances and one vertex
+distance at or below 1e-18 are clipped for display and counted in metrics.json.
+
+The family panel gives both numerator and denominator. All n4,n5,n6 eligible
+silent cases are clustered spectra:
+
+  n4: 78/518 clustered cases are silent, 15.06%;
+  n5: 46/170, 27.06%;
+  n6: 37/106, 34.91%.
+
+The corresponding other-family silence counts are all zero in these finite
+guarded samples. At n3, the only two silent cases are Gaussian; 0/97 eligible
+clustered cases are silent. The heatmap's scale extends to 0.40, so the larger
+clustered fractions are not clipped or shown as identical by saturation.
+
+The distance scatter deliberately retains overlap and apparent clutter. Its
+triangular envelope is largely the elementary inequality
+
+  distance to the graph <= distance to its vertex set,
+
+not evidence of a new MOC mechanism. A graph distance by itself does carry a
+retrospective association with silence: its pooled eligible AUC is 0.78090,
+and vertex distance gives 0.75022. These are in-sample, family-confounded
+descriptions, not prospectively validated predictors. Neither distance has a
+threshold separating every eligible outcome: their distributions overlap.
+Median graph distances are 0.00071535 for inner-certificate cases and
+0.0125742 for silent cases. The image therefore avoids claiming either a
+perfect separator or complete absence of a relationship.
+
+The final panel is the weak-extrapolation view. Guarded success fractions
+are 526/528, 3100/3178, 919/965, and 496/533 in dimensions 3 through 6. They
+decrease here. Thus this criterion does not become uniformly more successful
+merely as n grows; the family panel shows why a pooled dimension story is
+incomplete. Family composition, sampling laws, and eligibility also differ
+between n. These fractions are not probabilities that MOC fails.
+
+Most importantly, a silent record is already an attained determinant value
+by its construction. It shows a limitation of this sufficient inner-region
+criterion, not a violation of the original convex-hull conjecture.
+
+Visual inspection: all four panels are legible; counts match the stored rows;
+the final heatmap uses the full observed fraction range; the plotted controls
+and rejected observations remain visible instead of disappearing behind the
+eligible summary. No unrestricted theorem is inferred from the scatter.
+
+Machine-readable metrics and exact crossing data are in
+build/moc_visual_atlas_20261031/topology/metrics.json. The atlas contains four
+distinct views with different evidentiary roles: exact attained regions,
+an exact gluing caution, an exact positive family, and numerical population
+diagnostics including overlap and unsuccessful extrapolation.

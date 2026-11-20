@@ -1,0 +1,106 @@
+Global flag Ward identities and the remaining weighted-Hessian problem
+=====================================================================
+
+For f(U)=Re(eta det(Da+U Db U*)), use the12 right-flag generators
+Kij=Eij-Eji and Fij=i(Eij+Eji). The Hessian is the symmetric exponential-
+coordinate Hessian, including all mixed entries. The result below is
+global, uses the actual determinant source, and assumes no contact family.
+
+For any traceless diagonal anti-Hermitian D, write
+
+    v=U*DU=v_off+v_diag.
+
+At every U, including nonstationary U,
+
+    H_flag(K,v_off)
+       = df([K,v_off]/2+[K,v_diag]).
+
+Thus in12 real coordinates
+
+    H V=B_D gradient,
+
+where V is the off-diagonal coordinate vector of U*DU and B_D is the
+skew-symmetric matrix whose row K contains the coordinates of
+[K,v_off]/2+[K,v_diag]. There are three such identities, one per D.
+
+Proof of the connection terms
+----------------------------
+Left diagonal phases commute with Da, so left multiplication by exp(tD)
+leaves f invariant. In right coordinates the symmetry vector is U*DU.
+BCH, or the bi-invariant connection, gives
+
+    H(K,v)=df([K,v])/2.
+
+Right diagonal phases commute with Db and likewise leave f invariant,
+but their vector field has the opposite connection term:
+
+    H(K,v_diag)=-df([K,v_diag])/2.
+
+Subtracting proves the displayed flag identity. The verifier also
+checks the underlying trace/Jacobi formulas in the free associative
+word algebra, without using an example as their proof.
+
+At stationarity the gradient vanishes, so all three phase vectors are
+in the flag Hessian kernel. More precisely, let c be the number of
+connected components of the bipartite nonzero-entry support graph of U.
+Then the phase-vector map has rank4-c, and
+
+    rank H_flag <= 8+c.
+
+Indeed off(U*DU)=0 means DU=UD' for some diagonal D'. Every nonzero
+Uij forces d_i=d'_j. The phase is constant on each graph component;
+the trace condition removes one of those c parameters. Therefore the
+map from the3D traceless left torus has kernel dimensionc-1 and rank4-c.
+For connected support this gives rank H_flag<=9, without a generic-
+nonzero-entry assumption. At a permutation c=4 and no false rank9
+assertion is made.
+
+Two further global checks
+--------------------------
+In the Spin6 block coordinates, write the supported function as
+
+    f=f_constant+f_symmetric+f_skew,
+    f_symmetric=Re eta sum Aij Qij,
+    f_skew=Re eta sum Bij Pij,
+    mean_symmetric=Re eta sum Aij/3.
+
+The full flag Hessian trace obeys the universal Casimir identity
+
+    tr H=-24(f_symmetric-mean_symmetric)-16 f_skew.
+
+The six block-diagonal right-source basis matrices are checked exactly
+under sum_K ad_K^2. Their symmetric trace-free parts have eigenvalue-24,
+their skew parts eigenvalue-16, and the scalar part eigenvalue0. This
+proves the trace formula for all actual source coefficients, rather
+than merely checking it on a numerical source.
+
+Every individual root-plane2x2 Hessian block also has the form lambda*Id:
+H(Kij,Kij)=H(Fij,Fij) and H(Kij,Fij)=0 at every flag. A generic Schur
+complement reduces that pair orbit to det(S+V diag(bi,bj)V*), a2x2
+determinant affine in the SU2 Bloch vector. Polynomial continuation
+covers singular Schur charts. This identity holds in every dimension;
+it does not by itself exploit the special4x4 source relations.
+
+What remains unproved
+---------------------
+At a local maximum, the Casimir identity only implies
+
+    24(f_symmetric-mean_symmetric)+16 f_skew >= 0.
+
+That inequality is not a permutation support bound. The Ward nullity
+and the scalar pair blocks likewise do not alone contradict a strict
+above-permutation value. A cost-dependent positive Hessian weighting,
+using the actual source cross-block relations, is still missing. No
+MOC conclusion or no-spurious-local-maxima theorem is claimed here.
+
+Replay
+------
+  python code/research/moc_global_flag_ward_identity.py
+
+The replay checks universal word identities, the universal6-block
+Casimir action, all36 entries of H*V-B*gradient at an exact nonstationary
+generic flag, skewness of each B, and rank V=3. It uses the complete
+Hessian API from moc_global_spin6_hessian.py, which is independently
+checked against determinant Frechet derivatives.
+
+  build/moc_global_flag_ward_identity.json

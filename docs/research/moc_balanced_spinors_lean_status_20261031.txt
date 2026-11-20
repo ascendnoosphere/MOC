@@ -1,0 +1,67 @@
+Lean: common SL(2) criticality forces a balanced spinor moment matrix
+31 October 2026
+
+Accepted source: code/lean/MocBalancedSpinors.lean
+Compiler: Lean 4.19.0 and pinned mathlib in build/lean0710/mathlib.
+Log: build/lean0710/moc_balanced_spinors_compile.log. Final exit status 0.
+Object: code/lean/MocBalancedSpinors.olean.
+
+Exact algebraic theorem.
+Let i run through any finite type, and let x_i,y_i,p_i,q_i,mu_i be complex
+numbers. Assume
+
+ normSq(x_i)+normSq(y_i)=1,
+ p_i=mu_i conjugate(x_i), q_i=mu_i conjugate(y_i),
+ x_i p_i+y_i q_i=m,
+ sum_i(x_i p_i-y_i q_i)=0,
+ sum_i x_i q_i=0,
+ m!=0.
+
+Then every mu_i equals m, and
+
+ sum_i [x_i;y_i][conjugate(x_i),conjugate(y_i)]
+   =(cardinality/2) I_2.
+
+For index type Fin(2*n), the right-hand side is exactly n I_2. The module
+proves both the separate lemmas and their direct composition
+balanced_from_euler. There is no hidden restriction on repeated labels,
+zero individual coordinates, finite cardinality, or complex phase of m.
+The algebra works for any nonzero complex m, stronger than the real negative
+m supplied by the contemplated minimax extraction.
+
+Only the diagonal sl2-generator identity and one nilpotent-generator
+identity are needed. The second off-diagonal moment vanishes by complex
+conjugation, rather than a separate assumption.
+
+The matrix moment is defined entrywise as the finite sum of outer-product
+entries. Thus the final statement is an actual 2-by-2 complex matrix
+identity, not a verbal use of 'balance'.
+
+Proof feedback.
+Lean checked the common-multiplier argument by separate degree-one Euler
+identities and norm-one constraints. Its subsequent checks require the
+nonzero m hypothesis before cancellation; no division by an unknown spectral
+difference appears. Initial failures concerned imported module availability
+and pointwise matrix-sum evaluation. The accepted source uses the already
+built Data.Matrix.Basic import and an entrywise moment definition, preserving
+the same mathematics.
+
+Every reported axiom list is exactly propext, Classical.choice, Quot.sound.
+No sorry/admit declarations or custom axioms occur.
+
+Reproduction:
+  cd /data/MOC/build/lean0710/mathlib
+  /data/MOC/build/lean0710/lean-4.19.0-linux/bin/lake env lean \
+    --root=/data/MOC/code/lean \
+    -o /data/MOC/code/lean/MocBalancedSpinors.olean \
+    /data/MOC/code/lean/MocBalancedSpinors.lean
+
+Scope and remaining bridge.
+The arrays p,q are arbitrary algebraic arrays in the Lean statement. Their
+identification with holomorphic derivatives, the existence of a compact
+negative minimax witness, active-contact subgradients, the Euler identities
+for actual matching determinants, and the derivation of the two sl2
+identities are NOT formalized in this file. No such extraction theorem is
+assumed as an axiom. The algebraic lemma is a verified client for any future
+proof of that analytic extraction. Balance alone also gives no sign theorem
+for the support gap and does not prove unrestricted MOC.

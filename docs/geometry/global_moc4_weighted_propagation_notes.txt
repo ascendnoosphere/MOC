@@ -1,0 +1,132 @@
+FINITE PROPAGATION OF THE UNIVERSAL WEIGHTED-MINOR INEQUALITY
+2026-10-17
+
+These results close additional coefficient faces of the order4 MOC problem.
+They do not prove unrestricted MOC4. All positivity conclusions below hold
+for every complex unitary matrix, without a distinct-product assumption.
+
+Input theorem
+-------------
+The independently audited theorem in global_weighted_minor_notes.txt gives,
+for every tau>0 and every U in U(4),
+ f(U)+tau*rho(23,34)(U)+tau^{-1}*rho(13,13)(U)>=0,
+where f=rho(3,3)+rho(2,4)+rho(12,13)-rho(13,23).
+Row/column relabelings and transposition give the same theorem for48 mixed
+rays. Each mixed ray has three compensating pairs, the edges of a triangle
+on three ordinary-minor rays. The exact witnesses used here are checked
+against all24 permutation costs; the common-minor model identifies these
+costs with the corresponding unitary functionals.
+
+The ray ordering is the canonical82-ray ordering from
+cone82_completeness_verify.py, and is regenerated in both new verifiers.
+Write r_j(U) for the squared-minor functional of an ordinary ray j<34 and
+f_j(U) for a mixed ray. Every r_j(U)>=0.
+
+1. New full face (3,12,21,26,78)
+--------------------------------
+Let g=a*r3+b*r12+c*r21+d*r26+f78, a,b,c,d>=0. Put A=a+1,B=b+1.
+The exact degree18 identity is N(g)=-4P(g)^2, where
+ P=AB(AB-cd)[AB(c+d+1)+cd(a+b+1)].
+The second bracket is strictly positive and AB>=1. Thus an actual spectral
+support cost, which satisfies N(g)=0, has cd=AB>=1. In particular c,d>0.
+
+The weighted theorem relabels to
+ f78+tau*r21+tau^{-1}*r26>=0.
+One explicit relabeling is transposition followed by
+ pi -> pi^{-1} o (3,0,1,2), with zero-based labels. The checker verifies it
+on every permutation. Taking tau=c and using d>=1/c gives
+ g(U)>=f78(U)+c*r21(U)+(1/c)*r26(U)>=0.
+Thus this full coefficient face is safe for all complex unitary matrices.
+Its symmetry orbit contains288 nine-contact faces.
+
+Verification: global_moc4_weighted_propagation_verify.py checks the exact
+relabeling and all7315 lower-grid nodes for N=-4P^2, using the previously
+proved total degree18 bound. Q=1+cd>0 on the grid. It uses standard-library
+integer arithmetic, with no approximate fitting or numerical tolerances.
+
+2. The prior lift face also has a shorter positivity proof
+----------------------------------------------------------
+For g=a*r3+b*r19+c*r21+d*r26+f52, the independently certified nonic forces
+ cd=[(a+1)(b+1)(d+1)+bd^2]/(b+d+1).
+Therefore
+ cd-1=(d+1)[a(b+1)+bd]/(b+d+1)>=0.
+The compensation pair for f52 is(r21,r26), so the same weighted argument
+proves g(U)>=0 for every U. This strengthens the earlier imaginary-lift
+exclusion by removing its distinct-product assumption. It is the SAME
+face orbit as the lift theorem and must not be counted twice.
+
+The two previously constrained faces (3,19,21,24,46) and
+(3,20,21,27,53) similarly force cd=a+1 and bd=a+1, respectively, and are
+already covered by the preceding baseline. The other f78 face
+(3,12,21,30,78) is proved separately in global_weighted_minor_notes.txt.
+
+3. New triangle-compensator face (3,21,26,30,52)
+------------------------------------------------
+Let g=a*r3+b*r21+c*r26+d*r30+f52 with nonnegative coefficients. Let P be
+the explicit nonic stored in global_moc4_triangle_certificate.json.
+The verifier establishes the following exact facts:
+  F(g)=1+a+bcd, Q(g)=1+bc+bd+cd>0,
+  N(g)=-4P(a,b,c,d)^2,
+  P is symmetric in b,c,d.
+The N identity is checked at all7315 unisolvent degree18 nodes.
+
+Two coefficient-sign certificates locate every nonnegative zero of P.
+First, substitute
+ b=x/(1+x), c=y/(1+y), d=z/(1+z),  x,y,z>=0,
+and multiply by(1+x)^2(1+y)^2(1+z)^2. The resulting polynomial in a,x,y,z
+has100 nonzero coefficients, all strictly positive, including its constant.
+Consequently P>0 whenever b,c,d<1.
+
+Second, substitute
+ b=1+x,
+ c=y/[b(1+y+z)], d=z/[b(1+y+z)], x,y,z>=0,
+and multiply by b^4(1+y+z)^4. The resulting polynomial has345 nonzero
+coefficients, all strictly positive, including its constant. These
+parameters cover exactly b>=1 and b(c+d)<1: the inverse is
+ x=b-1, y=bc/[1-b(c+d)], z=bd/[1-b(c+d)].
+Consequently P>0 throughout that region.
+
+Thus at any nonnegative zero of P, choose a largest member of b,c,d and
+call it b by symmetry. Necessarily
+ b>=1 and b(c+d)>=1.                                      (*)
+In particular c+d>0.
+
+All three weighted pairs of f52 are certified:
+ (r21,r26), (r21,r30), (r26,r30).
+Choose the two pairs incident to the largest coefficient. Convex-combine
+ f52+b*r21+(1/b)*r26>=0,
+ f52+b*r21+(1/b)*r30>=0
+with weights c/(c+d) and d/(c+d). This gives
+ f52+b*r21+[c/(b(c+d))]*r26+[d/(b(c+d))]*r30>=0.
+By(*), both displayed ordinary coefficients are no larger than c,d.
+Adding the nonnegative remainders and a*r3 proves g(U)>=0 for every U.
+The same argument applies if either of the other coefficients is largest,
+using the corresponding two certified pairs. No unproved symmetry of the
+unitary functional is being assumed.
+
+The face's symmetry orbit contains192 nine-contact faces. The new files
+are global_moc4_triangle_certificate.json and global_moc4_triangle_verify.py.
+The checker is standard-library only and verifies all three relabeling
+witnesses, the two polynomial-sign expansions, and the nonic identity.
+
+4. Counts and a precise limitation of this propagation method
+------------------------------------------------------------
+Relative to the previously audited19 of29 nine-contact orbit types, the
+new lift/weighted face52 adds1, the two f78 faces add2, and the triangle
+face adds1. The total is therefore23 of29, with no overlap counted twice.
+The six remaining types contain3552 faces; the23 treated types contain
+14640 of the18192 faces in the exact nine-contact census. This is a
+conditional terminal classification under that census's assumptions; it
+is not an unrestricted proof of MOC4.
+
+
+Direct shared dependencies
+--------------------------
+ closing_moc4_model_verify.py
+ closing_moc4_model_certificate.json
+ cone82_completeness_verify.py
+ global_terminal_face_census.json
+
+Mathematical inputs: the proved degree18/spectral-vanishing lemma in
+closing_moc4_notes.txt; the independently audited weighted-minor theorem;
+and, for the coverage counts only, the existing exact nine-contact census.

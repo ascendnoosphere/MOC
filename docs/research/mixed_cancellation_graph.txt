@@ -1,0 +1,271 @@
+THE MIXED-RAY CANCELLATION GRAPH IS K48
+2026-10-30
+
+Let r0,...,r33 be the canonical ordinary squared-minor rays, and let
+f34,...,f81 be the 48 canonical mixed rays. Put an edge between distinct
+mixed labels i,j precisely when f_i+f_j belongs to cone(r0,...,r33).
+Every pair is an edge. The graph has 48 vertices, 1128 edges, degree47,
+one connected component, and adjacency spectrum 47 once and -1 with
+multiplicity47. Its full graph automorphism group is S48.
+
+The graph itself therefore carries no special 48-point geometry. The natural
+S4 x S4 action and the maximal cancellation ratios retain information that
+the uncolored graph discards.
+
+Exact certificates and functional identities
+-------------------------------------------
+The files are
+
+ data/certificates/geometry/mixed_cancellation_graph.json
+ code/research/verify_mixed_cancellation_graph.py
+
+The verifier uses no LP solver and reads no generated discovery files.
+LP supplied candidate decompositions; exact integer identities certify all
+1128 edges. The following eleven identities, plus row/column relabeling,
+cover the stabilizer orbits of partners of f34. An entry such as 2r18 denotes
+an ordinary squared-minor ray with coefficient two.
+
+ partner  orbit size   ordinary decomposition of f34+f_partner
+    35       6         r0+r7+r17+r18+r20
+    37       4         r0+r14+r23+r27+r28
+    38       4         r0+r13+r22+r25+r30
+    41       3         r17+2r18+r20+r30+r31
+    43       6         r16+r18+r22+r27+r28+r31
+    58       6         r0+r13+r22+r27+r28
+    59       4         r17+r18+r22+r23+r28+r30
+    60       1         r0+r7+r10+r13
+    63       4         2r0+r20+r27+r31
+    65       6         r17+r18+r22+r23+r25+r27
+    68       3         r0+r3+r4+r7
+
+These are identities on all of U(4). To check that permutation identities
+suffice here, the verifier reconstructs every mixed function as a relabeling
+of the standard four-term minor expression. The 34 ordinary permutation
+vectors have rank14. The Cauchy--Binet incidence relations, after Jacobi
+complementation of 2x2 minors, have rank20. They lie in the kernel of the
+ordinary permutation matrix, whose nullity is 34-14=20, so they span that
+kernel. Every ordinary linear relation used in the certificates consequently
+holds for complex unitary squared minors as well.
+
+Natural S4 x S4 labels
+---------------------
+For the raw relabeling T_(a,b)f(p)=f(a p b), the stabilizer of f34 is
+
+ H={(a,tau a^(-1) tau^(-1)): a in A4},     tau=(0,3,2,1).
+
+Both stabilizer projections have order12 and are isomorphic to A4. The
+natural mixed-ray action is faithful, of order576, and is transitive.
+It has the explicit 48-point model
+
+               (sigma,epsilon) in S4 x {+1,-1},
+ sigma=b tau a, epsilon=sgn(a) for the label T_(a,b)f34.
+
+A further relabeling T_(c,d) acts by
+
+        (sigma,epsilon) -> (d sigma c, epsilon sgn(c)).
+
+The verifier checks this formula for all576 relabelings and all48 labels.
+The involution (sigma,epsilon)->(sigma,-epsilon) gives 24 equivariant pairs;
+f34 is paired with f60. The quotient is the usual S4 left/right bitorsor.
+In abstract direct-product notation the 48-point set is
+(S4 x S4)/diagonal(A4), up to the displayed conjugation and the inverse in
+the second raw relabeling parameter.
+
+This is more specific than a count of 48. It differs from the standard
+4 x 4 x 3 Cartesian product action: its vertex stabilizer projects onto A4
+in both S4 factors, whereas a fixed coordinate in a natural four-point
+factor restricts that projection to a subgroup of S3. The complete graph
+alone cannot distinguish an F4 or binary-octahedral labeling from an
+arbitrary numbering of 48 points.
+
+Equal-pair flows remove all but at most one mixed coefficient
+------------------------------------------------------------
+Suppose a cost has a nonnegative ray expansion
+
+              g=sum_k b_k r_k+sum_i alpha_i f_i,
+                         b_k,alpha_i>=0.
+
+For every edge choose its certified ordinary expansion
+f_i+f_j=sum_k C_(ij,k)r_k, with C_(ij,k)>=0. Any nonnegative edge flows w_ij
+satisfying sum_(j!=i)w_ij<=alpha_i give the exact operation
+
+ g=sum_k [b_k+sum_(i<j)w_ij C_(ij,k)]r_k
+                       +sum_i [alpha_i-sum_(j!=i)w_ij]f_i.       (1)
+
+Thus cancellation preserves the cost as a function on U(4) and adds only
+nonnegative ordinary coefficients.
+
+Write L=sum_i alpha_i. Complete cancellation by equal-pair flows is possible
+if and only if 2max_i alpha_i<=L. Necessity follows because the mass consumed
+at any vertex cannot exceed the total mass consumed at the other vertices.
+For sufficiency, put consecutive intervals I_i of lengths alpha_i around a
+circle of circumference L. Match each point with the point half a circle
+away, and let
+
+        w_ij=length(I_i intersect (I_j-L/2 modulo L)),  i<j.
+
+No interval meets its own half-turn translate when its length is at most
+L/2. The half-turn is an involution, so w_ij=w_ji and the incident flows sum
+to alpha_i. This gives an exact deterministic formula in canonical label
+order. Rational input coefficients produce rational flows. Averaging this
+construction over the576 natural relabelings gives a natural-group
+equivariant allocation if that property is needed.
+
+If alpha_d>L/2, the unique dominant vertex d can instead pair with each
+other vertex j using w_dj=alpha_j. The only residual is
+
+                 [2alpha_d-L] f_d.                            (2)
+
+Any equal-pair allocation leaves at least this much coefficient at d, so
+(2) is optimal for these operations. The included pair_allocation function
+implements both cases and checks its exact degree equations. It also
+reconstructs the resulting ordinary coefficients in example calculations.
+
+Consequently, positivity for actual spectral costs in the82-ray cone
+reduces to positivity for actual costs represented by one mixed ray plus
+nonnegative ordinary coefficients. By natural symmetry one may use a single
+canonical mixed ray.
+This reduction does not prove positivity of the remaining costs: the
+ordinary coefficients produced by (1) must still satisfy the needed
+spectral support conditions. An exact dual certificate in the JSON file
+proves that f34 itself lies outside the ordinary cone, so an isolated mixed
+ray cannot disappear by a pure ordinary identity.
+
+Maximal ratios expose the limitation of the uncolored graph
+----------------------------------------------------------
+The dominant-mass condition concerns equal-pair flows. It is not a criterion
+for ordinary-cone membership, because unequal pairs can cancel too.
+Define
+
+ T(i,j)=max{t>=0: t f_i+f_j belongs to the ordinary cone}.
+
+Exact primal decompositions and dual separating functionals establish
+T(i,j)=T(j,i), with values1,2,3. Each vertex has respectively24,20,3 partners
+of these three capacities. For a partner orbit of f34, the capacities are
+
+ partner       35 37 38 41 43 58 59 60 63 65 68
+ capacity       1  2  2  1  2  1  1  1  1  2  3
+
+Each dual w satisfies w.r_k>=0 for every ordinary ray, w.f34=-1,
+and w.f_partner=T. It rules out t>T. The primal certificate attains T;
+reversing the pair attains1/T after scaling. Convexity then proves that
+x f_i+y f_j is ordinary precisely when 1/T<=x/y<=T for x,y>0.
+
+There is a closed label rule. For vertices (sigma,epsilon) and
+(sigma',epsilon'), put delta=sigma^(-1)sigma' and r=epsilon'/epsilon.
+
+ cycle type of delta        r=+1       r=-1
+ identity                   same       1
+ transposition                1        1
+ double transposition         1        3
+ three-cycle                  2        1
+ four-cycle                   2        2
+
+The verifier proves this rule on all ordered distinct pairs. The capacity3
+relation is six disjoint cubes Q3. Their components correspond to the six
+cosets of the Klein four subgroup V4 in S4; each has eight labels. Inside
+a component, the three generators are the nonidentity elements of V4,
+each accompanied by a sign flip. These are independent generators of an
+F2^3 cube. The verifier constructs the eight binary coordinates and checks
+every cube edge exactly. The spectrum of the capacity3 graph is therefore
+3^6,1^18,(-1)^18,(-3)^6.
+
+Exact weighted allocation and the 14-ray cap normal form
+------------------------------------------------------
+Unequal certified pairs give additional directed operations: a capacity T
+pair can consume T units at one endpoint and one at the other. For example,
+3f34+f68 is ordinary. These operations also have a closed allocation rule.
+If the mixed coefficients are balanced for equal pairs, use the interval
+construction above. Otherwise let d be their unique dominant vertex.
+Initially pair alpha_j units at d with every other coefficient alpha_j.
+Then increase the consumption at d on edge d,j from alpha_j toward
+T(d,j)alpha_j, in canonical label order, until d is consumed or every edge
+reaches capacity. Every intermediate ratio is ordinary by convexity.
+
+The remaining mixed coefficient is exactly
+
+       Delta=max(0,alpha_d-sum_(j!=d)T(d,j)alpha_j).             (3)
+
+If it is positive, no pair allocation can do better: each unit consumed at
+j can consume at most T(d,j) units at d. Thus full cancellation is possible
+precisely when
+
+              alpha_i<=sum_(j!=i)T(i,j)alpha_j for every i.     (4)
+
+The weighted_pair_allocation function implements this rule using exact
+rational arithmetic. No matching LP is needed.
+
+There is one dual w_i for each mixed ray that attains all its capacities
+simultaneously:
+
+ w_i(f_i)=-1,     w_i(f_j)=T(i,j) for j!=i,
+ w_i(r_k) in {0,1} for every ordinary ray.
+
+The JSON file stores a stabilizer-invariant rational representative for
+w34; symmetry supplies the other47. The verifier checks every value. Hence
+(4) is also necessary for ordinary-cone membership of a nonnegative pure
+mixed combination, rather than only for the chosen flow operations.
+
+For w34, the ordinary rays on its zero facet are
+
+        Z34={0,7,10,13,17,18,20,22,23,27,28,30,31}.
+
+These13 rays have rank13. The other21 ordinary rays all have w34(r_k)=1,
+and each satisfies an exact integer identity
+
+                f34+r_k=sum_(j in Z34) C_(k,j)r_j,
+                                  C_(k,j)>=0.                 (5)
+
+All21 certificates are included; symmetry gives the corresponding
+absorptions for every mixed label. For example, f34+r16=r0+r10+r31.
+Since w34(f34)=-1, the14 rays consisting of f34 and Z34 are independent.
+
+Write C82=cone(r0,...,r33,f34,...,f81) and COrd=cone(r0,...,r33).
+The following exact decomposition now holds:
+
+ C82 = COrd union union_(i=34,...,81) cone(f_i,{r_k:w_i(r_k)=0}). (6)
+
+Each of the48 added cones is a symmetry image of one14-ray simplicial cone.
+For a cost g in C82, at most one w_i(g) is negative. If all are nonnegative,
+g belongs to COrd. If w_d(g)<0, the unique cap coordinates have the form
+
+         g=-w_d(g)f_d+sum_(k:w_d(r_k)=0) beta_k r_k,
+                                     beta_k>=0.               (7)
+
+To prove this, first use weighted pair allocation. A positive residual at
+d uses every other mixed coefficient at maximal capacity. Its ordinary
+remainder lies on w_d=0. Add the original ordinary coefficients, then apply
+(5) until d disappears or every ordinary coefficient with w_d=1 is consumed.
+The latter case is exactly (7). The former case is ordinary. Conversely,
+w_d is nonnegative on COrd, so a negative value rules out ordinary membership.
+Finally w_i+w_j is nonnegative on every generator of C82 for i!=j; two
+negative dual values are impossible.
+
+The verifier reconstructs these operations on exact examples and checks
+all24 coordinates after both weighted allocation and ordinary absorption.
+The certificates prove the formulas for arbitrary nonnegative real input;
+the examples serve only to replay their implementation.
+
+Thus a counterexample within C82 must lie in a single canonical14-ray cap,
+after symmetry. This replaces a search over mixed supports with one explicit
+simplicial normal form. It does not prove positivity of actual spectral
+costs inside that cap. The residual spectral problem still permits the13
+ordinary coefficients in (7), and a support inequality can hold even when
+the cost is outside the ordinary cone.
+
+For comparison, the standard normalized 48 F4/binary-octahedral unit vectors
+have inner-product class sizes1,6,6,8,8,18 at a vertex: eight coordinate axes,
+sixteen half-cube vectors, and twenty-four normalized two-coordinate vectors
+give these counts directly. No union of these intrinsic angle classes has
+degree3. Thus the capacity3 cube relation cannot be an intrinsic union of
+Euclidean angle classes of that configuration. A bare48-element bijection
+supplies no such identification.
+
+Fresh verification
+------------------
+
+ python3 code/research/verify_mixed_cancellation_graph.py
+
+The fresh exact run passed in1.69 seconds. The graph construction proves
+cancellation and allocation statements; it does not complete MOC4 or assert
+that every residual one-mixed-ray spectral cost is positive.

@@ -1,0 +1,94 @@
+EXHAUSTIVE NUMERIC-FIELD VISUAL APPENDIX
+31 October 2026
+
+Source: build/moc_moonshots_20261031/all_moc_analysis_data.jsonl
+SHA-256: cfc4b793715b382fed58728c16f68199a5b22b9616b67b2f5313219235ede3c3
+20,127 rows; no source arrays or records changed.
+
+Coverage: 290 numeric/boolean scalar fields plus 3 null-only scalar candidates.
+There are 271 canonical panels on 46 PNG pages and 22 exact aliases.
+Every included scalar path is assigned a page and field ID in metrics_inventory.csv and JSON.
+Array-valued payloads are not scalar fields: all 35 array paths, counts, length ranges and element types are inventoried explicitly. No array coordinate was silently selected.
+Non-numeric string scalar fields are listed separately with their exclusion reason. Numeric seeds, case IDs, source-line numbers, schema versions and boolean flags are retained.
+Aliases require the same complete value/missingness vectors. Absent, explicit null, container and boolean type states are distinguished; numeric signed zeros are normalized.
+
+Reading the figures
+Each panel pair shows record-count distribution and source-separated median/10–90% n trend. Continuous values use sign(x)log10(1+|x|/s), where s is the median nonzero absolute value for that field. Min/median/max are also printed in original units.
+Nearly constant large seed controls subtract their transformed median to avoid a floating-offset label collision; this has no effect on ranks or histogram counts. Discrete/constant distributions use original labels. Trend y axes use the signed-log transform even for discrete fields. Count axes are logarithmic. Trend x axes are logarithmic in n; large grids use 18 logarithmic n bins.
+Missing entries are not imputed. Coverage percentages refer to all 20,127 rows, not to an eligibility-conditioned subset. A large missing fraction often records analysis scope rather than a failed calculation.
+These rows are neither independent nor identically distributed. Optimizer restarts share spectra; families, mixers, n and sources are selected by design. Correlations and envelopes are descriptive diagnostics, not mathematical evidence.
+
+Constant canonical panels: 13. Null-only panels: 3. Fields over 90% missing: 26.
+Nonfinite numeric observations among canonical panels: 0.
+
+Constant fields (including uninformative controls):
+ F002 campaign_seed = 2.03e+09; finite 3189; aliases 0.
+ F014 full_permutation_count = 24; finite 1; aliases 0.
+ F046 numeric_reliable = 1; finite 5994; aliases 0.
+ F054 random_permutation_count = 128; finite 5994; aliases 0.
+ F055 random_permutations_requested = 256; finite 1578; aliases 0.
+ F059 robust_violation = 0; finite 9366; aliases 0.
+ F065 schema_version = 1; finite 20127; aliases 0.
+ F068 spectra_regenerations = 0; finite 5994; aliases 0.
+ F078 _campaign.metrics.exact_raw_unit_support_margin_lower_bound = 0.344; finite 1; aliases 0.
+ F106 _extensive.analyses.all_edge_ordinary_cone.outside_ordinary_edges = 0; finite 4095; aliases 0.
+ F121 _extensive.analyses.boundary.n = 4; finite 4167; aliases 0.
+ F132 _extensive.analyses.closest_edge_contacts.negative_capacity_dual_count = 0; finite 3442; aliases 0.
+ F193 _extensive.analyses.small_shape.is_control = 0; finite 7348; aliases 0.
+
+Null-only scalar candidates:
+ F130 _extensive.analyses.closest_edge_contacts.mixed_cap_index: null 3442, absent 16685, container 0.
+ F233 _extensive.analyses.sparse_permutation_selection.triangle: null 2, absent 12767, container 7358.
+ F264 _moonshots.analyses.topological_winding.first_bad_edge: null 984, absent 11803, container 7340.
+
+Weak within-source n associations (|Spearman rho|<=.05; at least 200 observations and 3 distinct n; no hypothesis test or independence assumption):
+ F057 large_reflector: rho=0.00000, count=5994; requested_reflector_rank.
+ F025 adversarial: rho=-0.00067, count=3189; hull_dimension.
+ F074 adversarial: rho=0.00067, count=3189; _campaign.is_control.
+ F142 large_reflector: rho=0.00177, count=5982; _extensive.analyses.local_block_certificate.reflector_rank.
+ F267 small_complete: rho=0.00177, count=8324; _moonshots.analyses.topological_winding.is_control.
+ F053 small_complete: rho=0.00180, count=9364; phase_det.
+ F053 large_reflector: rho=0.00231, count=5994; phase_det.
+ F019 small_complete: rho=0.00236, count=9364; generator_config.input_global_log_scale.
+ F095 small_complete: rho=-0.00283, count=6711; _extensive.analyses.affine_weights.ellipsoid_certificate.
+ F048 dense_haar: rho=-0.00416, count=1578; permutation_count.
+ F073 adversarial: rho=0.00462, count=3189; wall_seconds.
+ F020 small_complete: rho=-0.00489, count=2317; generator_config.mixer_epsilon.
+ F056 large_reflector: rho=0.00529, count=5994; reflector_rank.
+ F013 adversarial: rho=0.00560, count=1893; epsilon.
+ F031 small_complete: rho=0.00671, count=9364; is_control.
+ F074 small_complete: rho=0.00671, count=9364; _campaign.is_control.
+ F216 small_complete: rho=0.00671, count=9364; _extensive.analyses.sparse_permutation_selection.control.
+ F226 small_complete: rho=-0.00682, count=9364; _extensive.analyses.sparse_permutation_selection.rules.radius1_birkhoff.passed.
+ F220 small_complete: rho=-0.00709, count=9364; _extensive.analyses.sparse_permutation_selection.rules.birkhoff.passed.
+ F141 small_complete: rho=0.00739, count=7852; _extensive.analyses.local_block_certificate.positive_disk_blocks.
+
+Important diagnostic limits
+Constant no-violation or all-ordinary flags describe a finite, selected numerical campaign. They do not prove the conjecture or establish coverage of the difficult mixed-cap region.
+Normalized floating errors near zero can have both signs. A sign count alone cannot turn roundoff, an optimizer excess, or a reconstruction residual into a mathematical counterexample.
+The n coordinate and many permutation/count/seed variables encode the generator. Strong trends in these controls are sampling artifacts, retained here so they remain visible.
+The source-separated n correlations still mix families and mixers within each source. Weak association with n is not absence of structure, and no pooled association is treated as a theorem.
+Some null-only paths are container sentinels: topological first_bad_edge is otherwise array-valued, and sparse triangle is otherwise an object. Their nulls are recorded explicitly rather than misrepresented as missing numeric measurements.
+
+Image inspection status: COMPLETE. All 46 final PNG pages were explicitly viewed using view_image. Seven corrected pages were viewed again. The frozen hashes are in image_inspection_manifest.json. There are no unreviewed pages.
+
+
+Findings from viewing every page
+
+The 13 constant panels and three null-only panels are retained, including all-false robust_violation and outside_ordinary_edges flags, constant sample counts 128 and 256, the schema version and fixed campaign seed. Twenty-six canonical fields are more than 90% missing against the full joined source. Dense verification fields have only 72 observations; one exact bound has one. No scalar numeric nonfinite observation was found.
+
+Several near-zero plots are dominated by numerical scale. F015/F080 (pages 3 and 14) have 2,383 negative sampled-hull margins, but their minimum is only -2.66e-15. Their signed-log scale is 2.31e-66, which creates a dramatic transformed range without a large negative error. F040 (page 7) has 142 negative nonmonomial scores, minimum -3.55e-15. These sign counts are not counterexamples. Optimizer support excess reaches only 1.17e-15; 324 of 3,189 optimizer success flags are false.
+
+Large-n normalization loses information: F063 (page 11) records 800 exactly zero scaled determinant moduli, while F064 has 813 underflow flags. The two recorded diagnostics are not interchangeable. The appendix preserves their difference and does not infer failure from either alone.
+
+Flat medians can conceal the intended stress tests. The input global log scale is zero in 8,871 of 9,364 observations despite a range near -250 to 250. Median and 10–90% curves are therefore flat while the histogram retains the rare tails. Boolean median curves are majority summaries, not success percentages. A single n=4 point is not a trend.
+
+Failures of proposed sufficient certificates remain visible: F091 has 3,506 false affine-weight flags among 6,711 eligible rows; F101 has 1,636 purity-contraction failures among 4,520 rows; F135 has 7,305 negative local disk radii among 15,404 finite observations. F243 has only 51 Frobenius-triangle passes among 4,167 rows, and F245 has 542 Gram-triangle passes. These are failures or successes of particular certificates, not of MOC.
+
+The signed-amplitude affine minimum (F239, page 40) is negative in 31 of 4,095 rows at the raw sign level, reaching about -0.0018. This raw sign count intentionally differs from tolerance-filtered failure counts in the focused analysis. Pinching outside the full hull (F248, page 42) occurs in 910 of 4,167 recorded flags; this diagnoses the proposed pinching construction.
+
+Weak within-source n correlations are retained in the CSV. Examples include determinant phase, rho=0.00180 in small/full and 0.00231 in reflectors; the ellipsoid certificate, rho=-0.00283 in small/full; and optimizer elapsed time, rho=0.00462. Phase is circular, and elapsed time and certificate eligibility depend on the sampling design. These small rank correlations neither establish independence nor erase family-specific effects.
+
+Seed and source-line trends reveal generator ordering. Large seeds were centered after the signed-log transform so floating-offset labels remain readable; their original extrema stay in the inventory. Permutation counts encode the complete-enumeration cutoff and sampled regimes. Their correlations with n are controls, not discoveries.
+
+Visual review corrected header spacing, long permutation-count labels, seed-axis offsets and misleading microscopic vertical ranges for two single-point summaries. Page 46 intentionally contains the final remaining field; its unused panel area is blank. The first 45 pages contain six fields each. All 271 canonical field panels and all 22 exact aliases are indexed in the inventory.

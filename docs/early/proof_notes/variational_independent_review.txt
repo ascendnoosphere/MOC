@@ -1,0 +1,185 @@
+INDEPENDENT REVIEW OF THE SMALL-SPECTRUM THEOREM
+Reviewer track: literature / independent audit. 17 October 2026.
+Reviewed file: variational_notes.txt, sections 1--11.
+
+VERDICT
+The stated sufficiently-small-complex-t theorem is proved by the supplied
+argument. I found no mathematical gap in its assignment-face classification,
+normal Hessian argument, or uniformity over all support phases. This is an
+independent informal mathematical review, not formal proof-assistant checking.
+It does not establish unrestricted MOC or a quantitative admissible radius.
+
+EXACT SCOPE
+For fixed n>=2, nonzero a_i, and beta_j, assume all n! sums
+    s_pi = sum_i a_i^{-1} beta_{pi(i)}
+are distinct and no three are collinear in C=R^2. Then some epsilon>0
+works simultaneously for every unitary U and every complex |t|<epsilon:
+    det(D_a+t U D_beta U*) is in conv{prod_i(a_i+t beta_{pi(i)})}.
+Both quantifier uniformities are justified below. The genericity hypothesis
+is genuinely satisfiable and open dense, but the proof supplies no control
+of epsilon near nongeneric spectral shapes.
+
+1. NORMALIZATION AND ASSIGNMENT REDUCTION
+The polynomial expansion of G_t in section 1 is correct: factoring D_a
+reduces the kth coefficient to principal minors of U D_beta U*, followed by
+Cauchy--Binet. Thus its t=0 value is the assignment functional on |U_ij|^2.
+For t!=0 the normalization is an invertible complex affine map and preserves
+real convex combinations. The original t=0 conclusion is immediate.
+
+2. MAXIMIZER CLASSIFICATION
+The no-three-collinear hypothesis permits at most two optimal assignments
+in each support direction. If two optimal permutations differed by several
+disjoint cycles, every partial-cycle replacement would also be optimal:
+its nonnegative deficit contributes to a sum of deficits equal to zero.
+This contradicts exactly two optimizers. Thus the relative permutation is
+a single cycle.
+
+When that cycle has length>=3, a strict mixture of the two permutation
+matrices cannot be unistochastic: consecutive cycle rows have precisely
+one common allowed nonzero column and cannot be orthogonal. Consequently
+the unitary equality set consists of two phase tori, not a hidden larger
+critical family. For a transposition the equality set is precisely one
+U(2) block times scalar phase blocks. The singleton-optimizer case is one
+phase torus.
+
+3. AN ELEMENTARY VERSION OF THE COERCIVE LEAKAGE BOUND
+The assignment dual construction in section 3 is valid. It can also be
+avoided: let delta be the smallest deficit of a nonoptimal permutation,
+let E be the union of optimal permutation supports, and write the doubly
+stochastic matrix |U|^2 as a convex combination sum lambda_pi P_pi.
+Every optimal permutation uses no edge outside E, and any other uses at
+most n such edges. Therefore
+    h-F_0(U) >= delta sum_nonoptimal lambda_pi
+              >= (delta/n) sum_{(i,j) outside E}|U_ij|^2.
+If there are no nonoptimal permutations, this is the n=2 all-U(2) solved
+case. No bound on a chosen Birkhoff decomposition is otherwise required.
+
+4. NORMAL HESSIAN IS STRICT IN EVERY NECESSARY CASE
+At U0 in the equality manifold S, leakage along exp(sK)U0 begins with
+    s^2 sum_outside_E |(K U0)_ij|^2.
+For a phase torus its kernel is diagonal skew-Hermitian K. For a U(2)
+block family it is exactly block-diagonal K. For a cycle of length>=3,
+after monomial normalization each additional allowed off-diagonal edge
+has a forbidden transpose; skew-Hermiticity forces both entries to zero.
+Thus again only diagonal K lies in the kernel. These are precisely the
+tangent spaces to S in the respective cases.
+Compactness of S and its unit normal bundle makes the lower Hessian bound
+uniform in U0. The two tori in the long-cycle case are disjoint compact
+components, so disjoint normal neighborhoods may be chosen.
+
+5. THE CRUCIAL PERTURBATION ERROR IS QUADRATIC
+The proof correctly uses more than uniform C0 approximation. On each
+component of S, A+t U0 B U0* is block diagonal for the same fixed partition.
+An off-block skew-Hermitian generator gives an off-block first variation.
+The determinant derivative is therefore zero. The adjugate argument works
+also at singular block matrices by polynomial continuity. It follows that
+every G_t, and every support functional of G_t, has zero first derivative
+in every normal direction at S, for all t and all support phases.
+
+Consequently E_t=G_t-G_0 has a normal Taylor remainder bounded uniformly by
+C|t| ||K||^2. A phase change similarly contributes at most
+C'|eta'-eta| ||K||^2 to the comparison between exp(K)U0 and U0. Polynomial
+dependence on t gives these C2 estimates uniformly for complex t in a
+closed small disk. The strict negative base normal Hessian dominates both
+errors after shrinking that disk and the phase neighborhood.
+
+6. LOCAL-TO-GLOBAL AND PHASE UNIFORMITY
+Normal exponential coordinates cover a sufficiently small tube around the
+compact S. Inside the tube every perturbed objective is at most its value
+at its base point in S. At a phase torus that value is a permutation value.
+On the U(2) block the determinant is exactly a convex combination of its
+two permutation endpoints, with nonnegative weights summing to one; the
+exterior singleton factors cause no problem even when complex.
+
+The compact complement of a smaller open tube has a positive base support
+gap. One can compare its perturbed values to a fixed point of S; uniform
+continuity preserves a positive gap. Thus every unitary is covered.
+Finally each base support phase has an open phase neighborhood and a
+positive t-radius. A finite subcover of the support circle and the minimum
+of those radii give the simultaneous all-phase, all-U, complex-disk claim.
+There is no interchange of an uncontrolled pointwise limit with a supremum.
+
+7. GENERICITY AND EXACT EXAMPLE
+For each permutation pair the difference of assignment sums is a nonzero
+complex polynomial in x_i=a_i^{-1}, beta_j. If any triple orientation were
+identically zero, the corresponding holomorphic rational ratio would take
+only real values on a complex open set, hence would be a real constant.
+Comparing bilinear coefficients would then put three distinct permutation
+vertices on one real affine line, impossible for vertices of a convex
+polytope. Each forbidden condition is therefore a proper real algebraic
+set; their finite union has empty interior. This establishes genericity.
+
+Executed python variational_example_check.py. It reported 24 distinct
+assignment sums, 2024 nonzero triple orientations, and minimum absolute
+orientation 315, agreeing with the manuscript. This checks the listed
+n=4 example, not the analytic epsilon.
+
+MINOR EDITORIAL QUALIFICATIONS
+The phrase 'noncollinear instances in every dimension' should say n>=3:
+any two-point spectrum is collinear, although the theorem itself is valid
+for n=2. The open-set claim can be justified by letting a,beta vary in a
+sufficiently small neighborhood during the same finite-patch argument;
+all the Hessian, gap, and polynomial estimates then remain uniform.
+
+LIMITATION
+Nothing here permits replacing 'sufficiently small |t|' by arbitrary t,
+and simultaneous scaling of A and B does not change their relative scale.
+The result proves a substantial restricted class in every dimension. No
+novelty claim or comparison with all existing small-perturbation literature
+was performed in this audit.
+
+APPENDIX-C FOLLOW-UP AUDIT: EXPLICIT RADIUS 10^(-12)
+The nine-edge refinement in Appendix C is valid, conditional on the
+quantitative distance/Hessian lemma in Appendix A (under separate review).
+I checked the algebraic bounds and the precise polygon-topology issue
+below, and executed variational_improved_radius_check.py successfully.
+
+Subtracting the k=4 term from G_t is legitimate: its coefficient is
+product(x_i) product(beta_j) for every U, so it is a common translation.
+The remaining vertex displacement is bounded by
+    R=1366923 r+679895624 r^2.
+The coefficient bounds are complex L1 bounds, hence safely dominate the
+Euclidean absolute values for every complex |t|<=r. The global Hessian
+constants B1,B2,B3 remain applicable to the nonconstant terms; no B4 is
+needed because that term has identically zero derivatives in U.
+
+For each directed original edge u->v, and every other labeled point j,
+the oriented area changes by at most 4DR+4R^2. This follows by expanding
+the determinant of the two difference vectors, whose perturbations have
+norm at most 2R. The L1 diameter D=2502 is a valid Euclidean upper bound.
+Thus the strict first inequality in Appendix C implies that every other
+perturbed point lies strictly to the left of each of the nine directed
+perturbed edge segments.
+
+WHY CHECKING ONLY THE NINE ORIGINAL EDGES IS SUFFICIENT
+Each such segment is consequently an actual exposed edge of the convex
+hull of all 24 perturbed points: its supporting line contains exactly its
+two endpoint labels. Those endpoints are distinct, and the endpoints are
+vertices of the hull. Consecutive designated edges are not collinear,
+because the next endpoint lies strictly to the left of the previous
+designated edge. The nine designated edges therefore form a closed cycle
+in the boundary graph of a nondegenerate convex polygon, with two distinct
+designated edges incident at every designated vertex. A polygon boundary
+graph is connected and every vertex has degree two. Hence this closed
+cycle is the whole boundary graph: no extra edge or vertex can occur.
+Equivalently, the intersection of the nine left half-planes is exactly
+the perturbed hull. Full preservation of all triple orientations is not
+necessary for this conclusion.
+
+For each original edge the minimum nonendpoint support gap is at least
+    area_e / L_e,
+since its true Euclidean length is at most the L1 length L_e. Dividing by
+n=4 gives the stated gamma_e. Its true length is at least l_e, so the
+change of the outward unit normal is at most 4R/l_e. Therefore the stated
+second inequality is precisely a conservative version of Appendix A's
+all-unitary certificate, using C4<245. This confirms that all nine edge
+half-planes contain every actual G_t(U), and consequently confirms the
+claimed full convex-hull membership on |t|<=10^(-12).
+
+EXECUTED CHECK
+python variational_improved_radius_check.py passed all exact integer and
+Fraction checks, including the nine-label hull cycle, maximum displacement
+coefficients, D=2502, minimum edge area 3320, and the strict perturbation
+and Hessian inequalities at every edge. The tightest displayed edge is
+17->10, with gamma=415/958. No floating-point optimization or finite
+sampling of unitaries is used by this certificate.

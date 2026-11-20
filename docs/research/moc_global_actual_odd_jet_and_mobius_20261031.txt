@@ -1,0 +1,139 @@
+Global actual4x4 support attack: odd jets and Mobius covariance
+31 October2026. This file concerns the original determinant and ALL24
+permutation vertices. No formal nonic cost, partial face, or SOS-core
+substitute appears. No actual MOC violation has been established.
+
+GLOBAL RESULT1: AN EXACT TWO-TERM SUPPORT FORMULA
+
+Let alpha,beta,x,y be arbitrary real4-vectors and U any unitary4x4.
+Put
+  C0=D_alpha+U D_beta U*, C1=D_x+U D_y U*.
+Both are Hermitian. The polynomial det(C0+t C1) has real coefficients:
+for real t its matrix is Hermitian and its determinant is real. The
+cofactor derivative formula and reversal of this quartic give
+  D1=tr(adj(C0) C1), D3=tr(adj(C1) C0).
+Therefore, for EVERY real epsilon,
+  Im det(C0+i epsilon C1)=epsilon D1-epsilon^3 D3.             (1)
+This remains valid at every singular-rank boundary; adjugates are
+polynomial and no matrix inverse occurs.
+
+For a permutation pi put k_i=alpha_i+beta_pi(i),
+                           h_i=x_i+y_pi(i),
+  P1_pi=sum_i h_i prod_(j!=i) k_j,
+  P3_pi=sum_i k_i prod_(j!=i) h_j.
+The corresponding vertex has exactly the same formula
+  Im prod_i(k_i+i epsilon h_i)=epsilon P1_pi-epsilon^3 P3_pi.
+For epsilon>0 its actual support excess is consequently
+  epsilon min_pi[Delta1_pi-rho Delta3_pi],
+  Delta1_pi=D1-P1_pi, Delta3_pi=D3-P3_pi, rho=epsilon^2.
+
+For fixed alpha,beta,x,y,U, optimization over the entire perturbation
+scale is a TWO-VARIABLE linear program:
+  maximize t over rho>=0,
+  subject to t<=Delta1_pi-rho Delta3_pi for ALL24 pi.           (2)
+For rational real spectra, directions and rational orthogonal/unitary
+U, all data in this LP are rational. Its finite optimum is attained at
+rho=0 or an intersection of two of the24 affine lines; enumerate at
+most276 intersections. An unbounded positive optimum also gives a
+finite positive witness. Thus no numerical root isolation is necessary.
+
+If the optimum is strictly positive, choose a positive rational epsilon
+whose square lies in the same strict region. The resulting complex
+spectra and matrix are actual MOC data and all24 support inequalities
+are strict. Recompute the actual determinant and all24 products exactly.
+In particular a strictly positive first-jet separation Delta1_pi>=d>0
+immediately gives a counterexample: choose rational epsilon>0 with
+  epsilon^2 max_pi |Delta3_pi|<d.
+The quartic identity bounds the entire error EXACTLY; there is no
+uncontrolled asymptotic remainder.
+
+This is a WHOLE-MOC4 reduction, not a restriction to near-real spectra.
+Any arbitrary complex spectra split as alpha+ix,beta+iy. Any support
+direction Re(eta det) becomes pure imaginary support after multiplying
+all spectra by a common unit scalar lambda with lambda^4=i eta.
+Consequently proving the upper support inequality in(1) for all real
+alpha,beta,x,y and all U is equivalent to the full4x4 conjecture.
+The lower support inequality follows by changing signs of x,y.
+No universal inequality for these traces is proved here.
+
+GLOBAL RESULT2: COMMON MOBIUS COVARIANCE AND A SEARCH OBSTRUCTION
+
+Let m(z)=(rz+s)/(tz+u), with ru-st nonzero. Transform
+  a'_i=m(a_i), b'_j=-m(-b_j),
+and leave U fixed. Whenever the poles are avoided, BOTH the actual
+determinant and EVERY permutation vertex are multiplied by
+  kappa=(ru-st)^n/[prod_i(ta_i+u) prod_j(-tb_j+u)].             (3)
+This holds for every n, arbitrary complex spectra and every U.
+
+Proof. Write A=D_a, B=U D_b U*. Functional calculus gives
+  A'+B'=m(A)-m(-B).
+Without assuming A and B commute, direct multiplication gives
+  (tA+uI)[m(A)-m(-B)](-tB+uI)=(ru-st)(A+B).
+The noncommuting AB terms cancel in their displayed order. Taking
+determinants proves(3). Scalar multiplication proves the same identity
+for each permutation vertex. Pole-boundary statements follow only
+where the corresponding limits exist; none are needed for the search.
+
+Thus common Mobius deformations preserve the hull-inclusion question
+and all normalized relative vertex geometry. A holomorphic disk of
+these common transformations produces only a common scalar averaging
+identity; it cannot change the mixing matrix toward permutation strata
+or manufacture a new probability law on permutations.
+
+The practical trap is larger than spectra lying on a complex line:
+the EIGHT labels (a_0,...,a_3,-b_0,...,-b_3) can all lie on a generalized
+circle. A common Mobius map then makes them real. All permutation
+vertices and the actual determinant lie on one common complex line,
+even though the original real/imaginary spectral coordinate vectors
+can have positive area and all eigenvalues can be simple. Coupled
+optimization repeatedly reached this zero-gap stratum before it was
+removed; that is not progress toward a strict counterexample.
+
+Normalize three distinct labels z0,z1,z2 and use the other five ratios
+  chi_j=(z_j-z0)(z1-z2)/[(z_j-z2)(z1-z0)].
+They are common-Mobius invariants. All are real (allowing infinity)
+exactly on the common-circle stratum. The new attack constrains
+  sum_j [Im chi_j/(1+|chi_j|^2)]^2
+away from zero. The implementation uses a continuous numerator and
+denominator formula at infinite ratios and checks analytic gradients.
+Imaginary perturbation directions are first projected off the common
+Mobius tangent span(1,z,z^2). This removes another source of spurious
+zero first-jet LP directions.
+
+EXACT REPRODUCTION
+
+  python code/research/moc_actual_odd_jet_and_mobius_exact.py
+  build/moc_actual_odd_jet_and_mobius_exact.json
+
+The verifier checks the universal formal quartic identity and universal
+noncommuting coefficient cancellation. An independent rational-input
+audit constructs an exact SO4 matrix from two rational unit quaternions,
+checks its orthogonality and determinant, expands the actual symbolic
+determinant, checks all24 vertex identities, computes the exact support
+ray maximum, and checks common Mobius covariance directly for the
+actual determinant and all24 vertices. That single negative support-ray
+optimum is an implementation audit, NOT a universal MOC proof.
+
+COUPLED ACTUAL ADVERSARY
+
+  python code/research/moc_actual_coupled_rank_boundary_attack.py
+    --seconds110 --max-starts24 --iterations180
+
+All complex spectral coordinates and all SO4/U4 rotation coordinates
+are optimized together against the complete24-vertex epigraph. The
+spectral norm and harmless scalar-shift gauge are fixed. Starts come
+from Hermitian sums of prescribed rank1,2,3,or4, then genuinely complex
+spectral perturbations. Adjugate gradients remain polynomial at singular
+matrices. Additional search constraints prevent line/circle collapse,
+repeated labels and reducible matrix limits; these constraints define
+a search strategy and are NOT assumptions in either global identity.
+
+The raw output records the actual spectra, actual matrix, determinant,
+ALL24 vertices, singular values, complete iteration histories and
+constraint residuals. A floating positive candidate triggers90-digit
+replay after independently enforcing unitary orthonormality. Any claim
+would still require exact rational/quaternion or rational-unitary data.
+No positive actual candidate is claimed. Failure of this numerical
+attack is not evidence of a global theorem. Its rigorous payoffs are
+the global identities(1)-(3) and the resulting sharper adversarial
+parameterization and exact counterexample extraction procedure.

@@ -1,0 +1,99 @@
+AG VISUAL ATLAS, 31 OCTOBER 2026
+
+Four figures were generated as PNG and PDF under
+build/moc_visual_atlas_20261031/ag/. I opened and inspected every final PNG.
+The first inspection caught a legend marker that could look like a second
+counterexample and a caption overlapping the orbit51 panel. Both were fixed
+and the images viewed again. Source: code/research/moc_visual_ag.py.
+metrics.json records the numerical summaries and SHA256 hashes of all inputs.
+
+01_moment_chamber_census.png
+
+This accounts for all 4,167 noncontrol n=4 small-complete records in the raw
+20,127-row file. The raw count is not the chamber-classified count: 183 fail
+the hull-shape guard, and another 1,365 fail the Hessian-rank guard. The 2,619
+retained cases contain 2,164 definite, 371 indefinite, and 84 near-zero moment
+kernels. The figure also includes all 161 targeted perturbations through their
+88 mixed and 73 ordinary chamber distributions.
+
+The eligibility bars reveal a substantial selection effect. All 834 Gaussian
+and 834 disk cases pass; only 330/833 clustered, 185/833 cancellation, and
+436/833 anisotropic cases pass. The omitted rows are explicitly displayed and
+are not classified as harmless. All 84 near-zero chamber values are anisotropic.
+Their smallest retained nonzero Hessian eigenvalue has median 3.04e-7 and
+maximum 4.85e-6, close to the 1e-7 rank cutoff. The apparent near-zero band
+therefore needs conditioning checks before any geometric interpretation.
+
+An additional weak pattern is now measured rather than omitted. The Spearman
+correlation of the nonmonomial score, 4-sum_ij |U_ij|^4, with the normalized
+moment-kernel determinant is 0.0037225 across retained records. Within-family
+correlations are -0.0128 anisotropic, 0.0208 clustered, 0.0432 disk, -0.0288
+Gaussian, and 0.0808 cancellation. This is almost no monotone relationship in
+this selected dataset. It does not establish independence or rule out nonlinear
+relationships. The chart's support direction is the hull edge nearest the
+recorded determinant, so it also depends on that recorded unitary.
+
+02_exact_indefinite_mixed.png
+
+The old 88 mixed examples form a narrow positive cluster. The small exact
+Gaussian-integer example lies well within the omitted negative chamber: its
+numerically displayed orthonormal-basis descriptor is -0.4132147, while its
+negative sign is established by exact rational arithmetic. Its weighted
+capacity/mixed coefficient ratio is 8.268821. Thus it refutes the proposed
+restriction to definite moment kernels while remaining covered by a valid
+MOC support certificate. The picture makes the original sampling bias clear;
+it does not show a MOC violation.
+
+The second panel plots the two eigenvalues of its exact affine moment matrix.
+The PSD interval has scaled endpoints 0.1067957563 and 1. Both rank-one
+endpoints are PSD; at nonpositive parameter the determinant is negative.
+Consequently there is no negative-semidefinite moment and no split-real
+critical decomposition. The curves are numerical evaluations of exact rational
+formulas, with the endpoint/sign claims taken from the exact certificate.
+
+03_orbit51_geometry.png
+
+The first panel plots the actual capacity formula at r=2. The second plots
+the exact positive branch 5ab-7(a+b)-3=0 at p=q=0,r=2. Its anchor is
+(a,b)=(2,17/3). The third compares computed eigenvalue locations for the
+forbidden anchor, a neutral secant candidate, and an actual mixed example.
+All three have exact rank/signature certificates, but the middle point is
+labelled only as a neutral secant candidate: its finite spectral realization
+is not asserted.
+
+The branch's inertia is (5,7,2), whereas actual rank-12 spectral real parts
+require (6,6,2). The established connectedness/constant-rank proof excludes
+the entire branch, not just the plotted points. The figure illustrates the
+already audited five-parameter closure; it supplies no new numerical proof
+and no unrestricted MOC conclusion. No schematic surface was invented.
+
+04_flat_local_obstruction.png
+
+This deliberately preserves an uninformative result. The exact equality seed
+has 11 active contacts; nine KKT multipliers are positive and the multipliers
+at labels 12 and 20 vanish. Its restricted Lagrangian Hessian is the exact zero
+8-by-8 matrix. Every zero is written into the image; no color scale or rounding
+makes small numbers look like zero. There is no strict quadratic curvature
+certificate at this seed. Higher-order behavior remains undetermined by this
+calculation. A flat Hessian does not prove that the objective is constant.
+
+Scope and reproducibility
+
+The figures combine empirical descriptors with separately labelled exact
+certificates. Normalized det(W) uses an orthonormal kernel basis; the exact
+rational kernel basis in the proof certificate has a different determinant
+magnitude, so the certificate's raw magnitude is not plotted on that axis.
+Only its coordinate-invariant sign is imported as exact. The current atlas
+adds one near-null empirical correlation and makes selection effects visible;
+it does not establish a new general spectral theorem.
+
+Reproduce with:
+  OPENBLAS_NUM_THREADS=1 python code/research/moc_visual_ag.py
+
+The files are:
+  01_moment_chamber_census.png / .pdf
+  02_exact_indefinite_mixed.png / .pdf
+  03_orbit51_geometry.png / .pdf
+  04_flat_local_obstruction.png / .pdf
+  metrics.json
+  inspection.json

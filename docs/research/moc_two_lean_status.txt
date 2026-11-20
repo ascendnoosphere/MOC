@@ -1,0 +1,40 @@
+Unrestricted dimension-two MOC: Lean status, 2026-10-31
+
+ACCEPTED by Lean 4.19.0 against the installed Mathlib.
+Source: code/lean/MocTwo.lean
+Compiled module: code/lean/MocTwo.olean
+Shared target: code/lean/MocUnrestricted.lean, namespace MOC.
+
+Theorem MOC.conjecture_two : MOC.Conjecture 2 proves the full dimension-two
+statement for arbitrary complex spectra a,b and arbitrary complex unitary U.
+The target uses the real convex hull of every matching product
+product_i (a_i + b_(sigma i)). No spectral reality, circle, distinctness,
+invertibility, or genericity assumptions occur.
+
+The proof supplies an explicit convex combination. With t=Complex.normSq(U00),
+0<=t<=1 and
+ det(diag(a)+U*diag(b)*U*) =
+ t*(a0+b0)*(a1+b1) + (1-t)*(a0+b1)*(a1+b0).
+
+Supporting checked theorems:
+ MOC.Two.row_normSq_sum
+ MOC.Two.col_normSq_sum
+ MOC.Two.mixing_parameter_bounds
+ MOC.Two.determinant_convex_combination
+ MOC.Two.determinant_mem_matching_hull
+ MOC.conjecture_two
+
+The determinant identity is proved using the two row/column norm identities,
+explicit diagonal entries of U*diag(b)*U*, determinant multiplicativity,
+and the two-by-two determinant formula. Convex-hull membership then follows
+from nonnegative coefficients summing to one.
+
+Compiler command (from /data/MOC/build/lean0710/mathlib):
+PATH=/data/MOC/build/lean0710/lean-4.19.0-linux/bin:$PATH lake env bash -c 'LEAN_PATH=/data/MOC/code/lean:$LEAN_PATH lean --root=/data/MOC/code/lean -o /data/MOC/code/lean/MocTwo.olean /data/MOC/code/lean/MocTwo.lean'
+
+Compiler exit code: 0.
+Printed axioms for both the determinant identity and MOC.conjecture_two:
+[propext, Classical.choice, Quot.sound]
+These are standard Lean/Mathlib foundations. No sorryAx or custom axiom occurs.
+
+This file does not establish unrestricted dimension four or arbitrary n.

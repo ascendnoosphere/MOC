@@ -1,0 +1,209 @@
+CLOSING ROUND: EXACT FOUR-BY-FOUR MODEL AND A COMPLETE ZERO-BUDGET CLASS
+17 October 2026. This document does not claim unrestricted complex MOC.
+
+1. Scope and inputs
+
+Two exact results were obtained in this round:
+ (a) a compact symmetric 4-by-4 matrix model of the complex spectral
+     invariant cone on the chart relevant to nonzero cycle interference;
+ (b) for every actual order-four spectral supporting gap, vanishing of the
+     complementary-pair square-root budget forces vanishing of its alternating
+     cycle gap. This excludes the entire zero-budget obstruction class.
+
+The zero-budget theorem imports exactly the complete 82-ray description of
+nonnegative order-four common-minor costs: supplied volume N046, beginning
+at extracted text line2500, with its certified completeness argument around
+lines2520-2550. Section3's converse realization additionally imports N067's
+identification of the skew cubic's singular locus with the spectral invariant
+cone and its finite-chart lemma (extracted lines9815-10000, especially
+Section1 and Section2). That converse is not needed for the zero-budget
+theorem. Spectral singularity in the needed forward direction is verified
+directly coefficientwise by our checker. Section4A below proves the degree18
+polynomial and its spectral vanishing from the cubic identities, so neither
+the nonic-square theorem nor its degree is imported for the finite certificate.
+Historical novelty is not asserted for the coordinate presentation or boundary
+consequence. N067's notation N=-4 P9^2 remains convenient but is dispensable.
+
+2. Cycle coordinates
+
+Use matching gates P=(12),(34) and Q=(13),(24), and pi_s=q_s composed with
+p_s for s in {0,1}^4. The sixteen bitstrings are in lexicographic order.
+For a common-minor cost z, its discrete Walsh expansion on these permutations
+has exactly the form
+ z_s=C+sum_i l_i y_i+sum_{i<j} J_ij y_i y_j+t y1 y2 y3 y4,
+where y_i are the signs for binary masks1,2,4,8, respectively. Every cubic
+Walsh coefficient vanishes identically. The alternating sum is 16t.
+
+Write x=z_1324 and y=z_2413 (one-line permutations), and introduce
+ X=x-2(J13+J24+t), Y=y+2(J23+J14-t).
+These shifted Walsh variables, in the order
+ (C,l1,l2,J12,l3,J13,J23,l4,J14,J24,J34,t,X,Y),
+are invertible linear coordinates on the 14-dimensional common-minor space.
+
+Define the symmetric matrix
+ A=[[-t,-J34,J24,J23],[-J34,-t,J14,J13],
+    [J24,J14,-t,-J12],[J23,J13,-J12,-t]],
+and put p=J13 J24, q=J23 J14, P=J12 J34-p-q. Then, with G=F/8,
+
+ t G=t l^T A l-det A+(t C+P)^2-(t X-2p)(t Y-2q).                 (1)
+
+This is a polynomial identity, valid also at t=0. In particular
+
+ det A=t^4-t^2 sum_{i<j}J_ij^2+2t T+P^2-4pq,
+ T=J12 J13 J14+J12 J23 J24+J13 J23 J34+J14 J24 J34.
+
+An equivalent 28-term cubic is
+ G=l^T A l+t C^2+2 C P+t sum J_ij^2-t^3-2T+2qX+2pY-tXY.
+
+The pure standard-library checker closing_moc4_model_verify.py reconstructs
+all105 matching forms from their 70 monomials, checks the invertible coordinate
+map, reconstructs F as the signed sum of matching cubes divided by6, and
+checks every coefficient of (1). It uses closing_moc4_model_certificate.json.
+The certificate is exact rational data; no numerical discovery is trusted.
+
+3. Exact spectral chart
+
+For complex t!=0, the singular locus of F is exactly described by
+ C=-P/t, X=2p/t, Y=2q/t, A l=0, adj(A)=t l l^T.                 (2)
+
+Proof. The C,X,Y derivatives of (1) give the first three equations. After
+substitution, G=l^T A l-det A/t. Its l derivatives give A l=0. Euler's
+identity at a singular point gives G=0, hence det A=0. The six J derivatives
+show that every off-diagonal entry of
+ D=l l^T-adj(A)/t
+vanishes: each J varies exactly one symmetric off-diagonal pair of A. Thus
+D is diagonal. Moreover A D=0, because A l=0 and A adj(A)=det(A)I=0.
+Since every diagonal entry of A is -t!=0, (A D)_ii=-t D_ii gives D=0.
+Conversely (2) implies det A=0 by tracing A adj(A)=t A l l^T. Differentiating
+the rational expression for G shows all derivatives vanish, including t;
+the completed-square terms have zero value and zero gradient. This proves
+the equivalence, including rank<=2 cases where adj(A)=0 and l=0.
+
+By N067's finite-chart lemma, points of this singular locus are actual finite
+complex spectral product vectors up to an allowed common scalar. A real
+support gap has the form g=h*1+Re(z) for such a vector z, after absorbing a
+minus sign into z. If its alternating gap is nonzero, then Re(t)!=0 and in
+particular the complex t is nonzero. Thus chart (2) covers every nontrivial
+candidate violation of the cycle budget. Neither Re(A)>=0 nor a Hermitian
+Gram interpretation is asserted; A is complex symmetric.
+
+4A. Why the checked rational expression is a degree18 polynomial
+
+This lemma makes the interpolation certificate independent of the imported
+nonic theorem. Work in the original14 selected permutation coordinates,
+and let e=(1,...,1), H(x)=H_F(x), H_e=H_F(e), and Q=D_e F.
+The model checker verifies coefficientwise that Q is the displayed two-by-two
+singlet determinant, that H_e has rank4, that H_e e=0, and that all14
+quadratic gradient components vanish after substitution of spectral matching
+products. Since F is cubic, H(x)e=H_e x and Q(x)=(1/2)x^T H_e x.
+
+Choose any rational invertible basis matrix S whose first column is e, whose
+next nine columns complete a basis of ker H_e, and whose last four columns
+complement that kernel. Put x=S(t0,a,b), where a has nine entries and b four.
+In these coordinates
+ F(S(t0,a,b))=t0 Q(b)+C(a,b), Q(b)=(1/2)b^T J b,
+where J is a nonsingular4-by-4 symmetric constant matrix. The Hessian pencil
+with an additional shift u e is
+ [[0,0,l^T],[0,K,L],[l,L^T,M+uJ]], where l=Jb,
+K is9-by-9 and K,L,M depend linearly on x.
+
+Its determinant has degree at most3 in u, and its cubic coefficient is
+ -det(K)det(J) l^T J^{-1}l=-2 Q(x)det(J)det(K).
+For invertible K this follows from a Schur complement and the leading term
+of adj(uJ+M-L^T K^{-1}L); polynomial continuation proves it without the
+invertibility assumption. Alternatively the same coefficient follows from
+the determinant expansion. The original-coordinate determinant differs by
+the constant factor det(S)^(-2). Thus, writing
+ det H(x+u e)=h0(x)+h1(x)u+h2(x)u^2+h3(x)u^3,
+one has h3(x)=Q(x) R(x), where R is a polynomial of degree9. Specifically
+ R=-2 det(S)^(-2)det(J)det(K) in the chosen coordinates. No normalization
+of det(S) or det(J) is needed for the divisibility or degree argument.
+
+Consequently
+ N(x)=Q(x)^2 h0-F(x)Q(x)h1+F(x)^2 h2-F(x)^3 R              (5)
+is a homogeneous polynomial of degree18. On Q!=0 it equals
+ Q^2 det H(x-F(x)e/Q)
+ =det(Q H(x)-F(x)H_e)/Q^12.                               (6)
+This proves precisely the degree bound used by the checker. It is not an
+inference from numerical interpolation or from the degree42 numerator alone.
+
+Why N vanishes on actual real spectral costs. Write a complex spectral
+matching vector as z=c+i d, with c,d real. The directly verified identity
+grad F(z)=0 gives
+ grad F(c)=grad F(d), H(c)d=0.
+Polarization yields c^T grad F(d)=(1/2)d^T H(c)d=0. Euler's identity now
+gives F(c)=0. Also H(c) is singular: d is a nonzero kernel vector if d!=0;
+if d=0 then H(c)c=2 grad F(c)=0, and the remaining case c=0 has H(0)=0.
+Thus h0(c)=det H(c)=0. For every real h,
+ g=c+h e has Q(g)=Q(c), F(g)=h Q(c), and
+ H(g)-h H_e=H(c).
+If Q(c)!=0, (6) immediately gives N(g)=0. If Q(c)=0, then F(g)=0 and
+every term in polynomial formula(5) vanishes, so again N(g)=0. This covers
+all actual gaps, all degeneracies, and arbitrary constant shifts.
+
+4B. Complete exclusion when the complementary budget is zero
+
+For a real nonnegative supporting gap g on all24 permutations, let
+ delta_s=g(pi_s), K=sum_s(-1)^|s|delta_s,
+ B=2 sum_{s=0}^7 sqrt(delta_s delta_{15-s}).
+THEOREM: if g is an actual order-four spectral gap and B=0, then K=0.
+This is a boundary result. It does not prove B>=|K| when B>0. It also implies
+that vanishing exact cycle capacity forces K=0: for
+ Cap(delta)=inf_x sum_s delta_s exp(sum_j(2s_j-1)x_j),
+pairwise AM-GM gives Cap(delta)>=B>=0, so Cap(delta)=0 implies B=0 and K=0.
+No quantitative lower bound Cap(delta)>=|K| is established here.
+
+Proof by two explicitly certified cone types. The full nonnegative cost cone
+has34 ordinary minor rays and48 mixed rays. Because every ray is pointwise
+nonnegative, imposing a zero on a permutation retains precisely those rays
+which vanish there. B=0 chooses at least one zero from each of the eight
+complementary pairs. There are256 choices. Exactly96 resulting faces contain
+any ray with K!=0. All other faces have K=0 identically. Row/column label
+permutations and inversion preserving the cycle set form a128-element action.
+The96 faces comprise exactly64 images of one six-ray cone and32 images of
+one seven-ray cone. The checker exhaustively verifies these finite claims.
+
+Use rho_{I,J}(pi)=1_{pi(I)=J}. Define f by its lexicographic24-vector
+ (0,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,1,1,0,1,1,1,2).
+It is one of the known48 mixed rays and has K=-2.
+
+Type I is
+ g=alpha f+a rho_{1,4}+b rho_{2,3}+c rho_{12,13}
+                    +d rho_{12,24}+e rho_{13,24},
+with all six coefficients nonnegative. Its projected secant square is
+
+ -N(g)/4=[alpha^2(alpha+a)(alpha+b)(alpha+e)
+                    (alpha+a+d)^2(alpha+b+c)^2]^2.             (3)
+
+For alpha>0 the right side is strictly positive, so g cannot be spectral.
+For alpha=0, K=0. This proves the result on every Type I face.
+
+Type II contains five ordinary rays
+ rho_{2,3},rho_{4,1},rho_{12,13},rho_{12,24},rho_{13,24}
+and two mixed rays f and f', with K=-2,+2 respectively, satisfying exactly
+ f+f'=rho_{2,3}+rho_{4,1}+rho_{12,13}+rho_{12,24}+rho_{13,24}.
+Subtracting the smaller mixed-ray coefficient using this identity splits
+the cone into two symmetry-equivalent six-ray subcones. On the subcone
+ g=alpha f+a rho_{2,3}+b rho_{4,1}+c rho_{12,13}
+                    +d rho_{12,24}+e rho_{13,24},
+the exact identity is
+
+ -N(g)/4=[alpha^3(alpha+a+c)^2(alpha+b+d)^2
+             ((alpha+a)(alpha+b)+e(alpha+a+b))]^2.             (4)
+
+Again this is strictly positive for alpha>0. Thus a spectral cost has equal
+coefficients on the opposite mixed rays and K=0. This completes all96 faces.
+
+Verification of (3),(4). N is a homogeneous degree18 polynomial by Section4A.
+Normalize alpha=1. The checker evaluates its determinant specification
+ N=det(Q H_F(g)-F(g)H_F(1))/Q^12
+at all33,649 nonnegative integer five-tuples with total degree<=18, separately
+for the two cone types, and compares the proposed square. Here
+ Q=1+c+d>0, so every denominator is nonzero. The lower integer simplex is an
+unisolvent grid for polynomials of total degree<=18 (multivariate Newton
+interpolation), proving the identities coefficientwise. Homogeneity extends
+them to alpha!=0, and polynomial continuation extends to alpha=0.
+The pure standard-library checker closing_moc4_zero_capacity_verify.py
+verifies the82 ray values, all256 zero choices, both symmetry orbits, the
+opposite-ray identity, and all67,298 exact determinant comparisons.
+

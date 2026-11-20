@@ -1,0 +1,135 @@
+GLOBAL VIRTUAL-SURFACE FORM OF THE THREE-BUDGET TRIANGLE CANDIDATE
+2026-10-31. Exact duality audit. Universal hull containment is REFUTED by
+direct actual finite products in Section5.
+
+1. Primal and dual, including degenerate budgets
+
+For beta=(beta1,beta2,beta3)>=0, define
+ C3(beta)=max{-sum_{i<j} Gamma_ij : Gamma>=0, diag Gamma=beta}.
+
+The feasible primal set is nonempty and compact. Its exact value is
+ C3(beta)=[sum beta-max(0,sqrt(beta_max)-sum sqrt(beta_other))^2]/2.
+
+The SDP dual is
+ C3(beta)=INF_y {sum_i y_i beta_i : D(y)>=0},
+ D(y)=[[y1,1/2,1/2],[1/2,y2,1/2],[1/2,1/2,y3]].
+
+The factor1/2 is essential: off-diagonal entries occur twice in the trace
+pairing. Strong duality follows from strict dual feasibility, e.g y=(2,2,2),
+and finite feasible primal. If all beta_i>0 the dual infimum is attained.
+It need not be attained on degenerate budgets: beta=(1,0,0) has C3=0,
+but every finite feasible y has y1>0. One may approach y1=0 only with
+other components tending to infinity. Thus MIN must be replaced by INF
+in a statement covering all spectra/contacts. This does not affect any
+universal inequality quantified over every finite feasible y.
+
+2. Exact global virtual point equivalence
+
+Let P_pi be the actual complex matching products. Put
+ L=P1+P9+P12+P22-P3,
+ t=Re(eta L)-3h,
+ beta=(h-Re(eta P18),h-Re(eta P14),h-Re(eta P9)).
+
+Here h is the support height max_pi Re(eta P_pi). The global triangle
+candidate is C3(beta)>=t. Since D(y)>=0 implies each y_i>0, the denominator
+3+sum y is positive. Elementary rearrangement gives
+
+ C3(beta)>=t for every eta
+ IFF for every finite y with D(y)>=0,
+ W(y)=[L+y1 P18+y2 P14+y3 P9]/[3+y1+y2+y3]
+ lies in conv_C{P_pi}.
+
+This eliminates the support direction eta exactly. There is no anchor
+contact1 restriction. Cases t<=0 are automatic because C3>=0. For t>0,
+the canonical cap normal form identifies the relevant mixed cap.
+The negative coefficient on P3 means the asserted hull containment is
+substantive and is not a convex-combination identity.
+
+3. Rational two-dimensional Pareto boundary
+
+All y_i>=1/2 are dominated componentwise by (1/2,1/2,1/2), which itself
+has rank1. At most one y_i can be below1/2, because every principal2x2
+minor requires y_i y_j>=1/4. A minimal nontrivial feasible point must have
+rank2 and exactly one y_i<1/2, the other two>1/2.
+
+With y1 the exceptional component, the complete rational parametrization is
+ y1=(a+b)/[2(1+a+b)],
+ y2=(a+1)/(2a),
+ y3=(b+1)/(2b),              a,b>0.
+
+The kernel is (1+a+b,-a,-b). Direct principal-minor calculations give
+ y1 y2-1/4=b/[4a(1+a+b)],
+ y1 y3-1/4=a/[4b(1+a+b)],
+ y2 y3-1/4=(1+a+b)/(4ab),
+ det D=0.
+Thus these matrices are PSD of rank2. Conversely, writing
+D=diag(y_i-1/2)+J/2, its kernel equations show the kernel sum is nonzero;
+normalize that sum to1. Its signs force exactly the displayed form with
+a,b>0. Permuting the exceptional component gives the three surfaces.
+Their unbounded limits and the rank1 point must not be discarded.
+
+4. The simplest potentially fatal virtual point
+
+At y=(1/2,1/2,1/2), the virtual point W0 has normalized linear functional
+ qA=(2delta1-2delta3+3delta9+2delta12+delta14+delta18+2delta22)/9.
+For every support cost,
+ qA dot g=[beta1+beta2+beta3-2t]/9.
+
+Consequently ANY exact actual nonnegative canonical-cap cost with
+sum beta<2t already disproves the universal virtual-surface hull claim,
+without inspecting any nontrivial surface parameter. It would refute the
+three-budget sufficient candidate, not necessarily the larger matching
+SOS cone and not MOC itself.
+
+A numerical future-lift candidate reported by the Grace lane has t=1,
+beta approximately(.08468870,.08787621,.01810513), so its critical lengths
+are balanced and sum beta=.19067004. It would give qA dot g about-.201037.
+At the time of this audit its actualness requires exact certification;
+the numerical candidate is NOT asserted here as a theorem or counterexample.
+Its artifact is build/moc_future_nonic_fibers/search.json, provisionalcase4.
+
+The reported definite moment-direction chamber is especially useful:
+once exact rank/compatibility and det(W)>0 are proved, the affine moment
+line necessarily has a rank-one PSD endpoint, giving an actual conjugate
+critical lift. The separately audited M8 critical-cone identification then
+supplies spectral existence. Explicit spectra would make the result more
+directly reviewable but are not a further logical existence hypothesis.
+
+The initial numerical discovery is superseded by the direct finite
+Gaussian-integer counterexample below. No numerical lift assumption is
+needed for the conclusion.
+
+5. Direct exact counterexample to the global virtual-point claim
+
+Take
+ a=(100000+100000i,0,-300000-100000i,7256-11910i),
+ b=(-340+953i,-1240+2373i,5750-9071i,-1484+2182i),
+ eta=-802442+596731i.
+
+The exact support height is h=218844922230108103452220, attained uniquely
+at permutation9. For its24 support gaps,
+ t=8412997598488012479616,
+ beta=(716336099653867664712,155106963601811855672,0).
+All canonical ordinary budgets are nonnegative. The single rank1 dual
+point y=(1/2,1/2,1/2) has
+
+ Re[eta W0]-h=(2t-sum beta)/9
+             =15954552133720345438848/9>0.
+
+Thus W0 is outside conv{P_pi}. Explicitly its Gaussian-integer numerator
+over denominator9 is
+ -7247288637477593900 + 6418252004052248212i.
+
+Pure-integer independent verifier:
+ python code/research/moc_triangle_counterexample_independent_audit.py
+Artifact:
+ build/moc_cap_triangle_sos/independent_actual_counterexample.json.
+The verifier multiplies integer pairs directly, checks the stated height,
+all24 costs, all13 ordinary coefficients, all24 cap identities and the
+strict virtual support excess. It imports no numerical optimization or
+HMSV/future-lift assertion.
+
+This decisively refutes universal virtual-surface hull containment and
+the equivalent global triangle candidate. It does not refute MOC or the
+larger matching-SOS cone; the same actual gap has an exact positive full14
+Gram in build/moc_future_hit_exact_gram/exact_positive_gram.json.

@@ -1,0 +1,82 @@
+COHERENT OPERATOR CONTRACTION IS ALREADY IMPLIED BY ORDINARY PROFILES
+31 October2026. Exact global obstruction to a proposed proof mechanism.
+
+This note does not refute full matching-SOS containment or MOC. The actual
+cost used below has an independently verified full matching-SOS Gram.
+
+1. The implication holds for any number of tensor factors
+
+Let P_pi permute the factors of (C^2)^{tensor n}, let y_pi be arbitrary
+real weights with sum1, and put T_y=sum y_pi P_pi. Its Hamming-weight-k
+block has entries
+  (B_k)_{J,I}=sum_{pi:pi(I)=J} y_pi, |I|=|J|=k.
+If these ordinary compound profiles are nonnegative, B_k is doubly
+stochastic: every row and column sum equals sum y_pi=1. Consequently
+  ||B_k||_2 <=sqrt(||B_k||_1 ||B_k||_infinity)=1.
+The Hamming decomposition is orthogonal, hence ||T_y||_2<=1. Every
+Schur-Weyl block is also a contraction. This argument does not use CP.
+
+For n=4, the34 distinct ordinary singleton/pair rays cover all these
+conditions: weight3 is the complement of weight1, and weights0/4 are
+the scalar1. Thus every coherent block contraction follows already from
+nonnegative ordinary profiles. A CP proof based only on that contraction
+cannot add strength to the ordinary-profile bound.
+
+2. A direct actual-spectrum failure of this relaxation
+
+Use zero-based lexicographic permutations and define
+  y=(2 delta1-2 delta3+3 delta9+2 delta12+delta14+delta18+2 delta22)/9.
+All34 ordinary-ray expectations are nonnegative. The exact weight1
+coherent block is
+  [0,1,1,1; 1,1,1,0; 1,1,0,1; 1,0,1,1]/3.
+The exact weight2 block is
+  [2,0,1,4,0,2;
+   0,1,2,2,4,0;
+   1,2,0,0,2,4;
+   4,2,0,0,2,1;
+   0,4,2,2,1,0;
+   2,0,4,1,0,2]/9.
+Both are nonnegative doubly stochastic matrices. The slack I-B_k^T B_k
+has characteristic polynomial
+  weight1: lambda(lambda-8/9)^3,
+  weight2: lambda(lambda-8/9)^3(lambda-20/27)^2.
+Thus even the nontrivial Schur blocks are strict contractions: their
+singular values are1/3 on[31] and sqrt(21)/9 on[22].
+
+Nevertheless consider the finite Gaussian-integer spectra
+  a=(100000+100000i,0,-300000-100000i,7256-11910i),
+  b=(-340+953i,-1240+2373i,5750-9071i,-1484+2182i),
+  eta=-802442+596731i.
+Let z_pi=product_i(a_i+b_pi(i)), h=max Re(eta z_pi), g=h-Re(eta z).
+Exact arithmetic gives the unique contact9, all g_pi>=0, and
+  y.g=-15954552133720345438848/9 <0.
+Hence ordinary profiles PLUS all coherent Schur-block contractions do
+not imply the needed actual spectral support inequality.
+
+The script recomputes every product and score using Gaussian integers,
+checks all34 profile inequalities, and checks the complete characteristic
+polynomials above. No eigenvalue approximation is used.
+
+3. Relation to CP and the full cone
+
+The raw y moment is not PSD: y(f34^2)=-2/9. This particular negative-square
+witness by itself does not exclude all invisible[211]+sign completions,
+since f34^2 is not a matching function. The stronger exclusion follows
+from the actual cost's existing positive full Gram and the negative y.g:
+every invisible completion has the same negative pairing with that
+matching-SOS cost. The independent exact full-Gram certificate is
+  docs/research/moc_future_hit_exact_gram_20261031.txt
+  build/moc_future_hit_exact_gram/exact_positive_gram.json.
+Its rational spectra differ from the displayed ones by a common shift
+and multiplication by10^6; eta is also multiplied by10^6. Thus the
+displayed gaps are exactly10^30 times that verified cost.
+
+This identifies where genuine extra information is required: full Choi
+second moments and their coupling between the constant,[31],[22]
+sectors. Coherent-operator contraction, even with all ordinary budgets,
+has discarded essential constraints.
+
+Reproduce:
+  python code/research/moc_coherent_contraction_obstruction.py
+Output:
+  build/moc_cap_triangle_sos/coherent_contraction_obstruction.json

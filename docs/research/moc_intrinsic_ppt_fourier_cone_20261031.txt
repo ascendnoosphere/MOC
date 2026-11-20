@@ -1,0 +1,223 @@
+Intrinsic Fourier form of the auxiliary PPT cone; ordinary-ray absorption
+31 October 2026
+
+Status and scope
+
+The reduced fourteen-dimensional PSD/four-dimensional PPT cone has an
+intrinsic description without auxiliary spectra. Its generators are
+squares of functions whose [22] Fourier matrix has rank at most one.
+All34 distinct ordinary nonconstant Boolean indicator rays already have
+rank-one witnesses in this cone. This removes the ordinary-ray extension
+of the closed cone. It does not prove universal actual-support membership
+or unrestricted MOC4.
+
+Exact verifier and artifact
+
+  code/research/moc_ppt_ordinary_rankone_witnesses.py
+  data/certificates/moc_ppt_ordinary_rankone_witnesses.json
+
+Running the script is read-only; --write regenerates the artifact.
+The verification uses Gaussian-rational matrix arithmetic, with no
+optimizer or floating point. All34 indicators plus the constant are
+checked, including evaluation, exceptional rank one, and a rank-one
+factor of each partial-transposed exceptional corner. All70 labeled
+Boolean events of all subset sizes are explicitly identified with one
+of these35 functions.
+
+1. Physical coordinates
+
+Use beta(w)=(0,1,i,w), F(w)=F0+wF1, and J=[F0 F1]. Its24 rows are
+indexed by lexicographic permutations and its32 columns by parameter
+degree followed by the sixteen subset masks. Let j_pi=J[pi,:]^T.
+
+The independently established geometry is rankJ=14 and
+ W=range(J^T), E=C^2 tensor U subset W,
+where U is the two-dimensional size-two Boolean coefficient space with
+zero four-vertex incidence sums. The physical cost convention is
+ g_pi=j_pi^* T j_pi.
+
+The script uses exactly the same rational basis as
+moc_exact_ppt_jet_certificate.py:
+ Wmatrix=J^T[:,pivots],
+ pivots=(0,1,2,3,4,6,7,8,9,10,12,13,16,18),
+ psi=J conjugate(Wmatrix), Q=Wmatrix^* E.
+Here Wmatrix denotes a matrix, whereas W above denotes its range.
+For a coefficient column c in C^14 put v=Wmatrix c and
+ h_pi=v^*j_pi=(psi conjugate(c))_pi.
+Then T=vv^* gives cost |h_pi|^2. In these coordinates T=Wmatrix C Wmatrix^*
+with C=cc^*. The exceptional vector is u=E^*v=Q^*c.
+
+The real U basis used here is
+ e1(01)=e1(23)=1, e1(02)=e1(13)=-1, others0;
+ e2(01)=e2(23)=e2(02)=e2(13)=1, e2(03)=e2(12)=-2.
+It is not normalized, which is harmless: its Gram correction is local
+on the second tensor factor and preserves product rank and PPT.
+
+2. Exact Fourier determinant bridge
+
+Let q0=01|23,q1=02|13,q2=03|12. Use the [22] representation rho22 on
+q0-q2,q1-q2, and define
+ B(h)=sum_pi h_pi rho22(pi^{-1}).
+The complete function space range(J) is
+ V14=C directsum Mat3([31]) directsum Mat2([22]).
+
+For row-major vectorization of B and of the two-by-two reshaping U of u,
+the verifier proves the linear identity
+ conjugate(u)=A vec(B(h)),
+where A is the following exact four-by-four matrix:
+
+ [(-1+i)/12, (1+i)/12, (1-i)/12, (-1-i)/12]
+ [(-1+i)/4,  (1+i)/4,  (-1+i)/4, (1+i)/4  ]
+ [(-1-i)/12, (1+i)/12, (1+i)/12, (-1-i)/12]
+ [(-1-i)/4,  (1+i)/4,  (-1-i)/4, (1+i)/4  ].
+
+This is verified as an equality of four-by-fourteen matrices, not just
+on the ordinary examples. A symbolic four-variable expansion then gives
+
+ det reshape(conjugate(u)) = ((-1+i)/12) det B(h).             (1)
+
+In particular u is a product vector in C^2 tensor C^2 exactly when
+rank B(h)<=1. This also verifies that the kernel of the exceptional
+projection is precisely the ten-dimensional [4]+[31] coefficient space.
+
+3. Intrinsic finite-square theorem
+
+Let Caux be the closed cost image of
+ {T supported on W:T>=0, (E^*TE)^PT>=0}.
+Then, exactly,
+
+ Caux={ sum_k |h_k|^2 : h_k in V14, rank B(h_k)<=1 }.         (2)
+
+There is a finite sum in (2), not an unspecified limiting expression.
+One direction is immediate from (1): each rank-one witness vv^* has a
+product exceptional component, hence a PSD partial-transposed corner.
+
+For the other direction, use an orthogonal split W=Eperp directsum E
+and write a feasible T as [[A,C],[C^*,R]]. The two-qubit PPT theorem makes
+R a finite sum of product projectors r_k r_k^*. Positivity of T gives
+ C=C R^+ R, A-C R^+ C^*>=0.
+Thus T is the sum of projectors on
+ (C R^+ r_k,r_k)
+and projectors supported on Eperp. Every such vector has a product
+exceptional component, including zero. Equation(1) proves (2).
+Caratheodory gives at most16 product terms for R, and the residual
+has rank at most10, so at most26 squares suffice in this argument.
+
+The established closed-all-auxiliary-square theorem identifies this same
+cone with the closure of fixed-auxiliary multiaffine polynomial squares.
+Equation(2) removes the exceptional-parameter limiting issue by allowing
+the intrinsic rank-one-[22] functions directly.
+
+The only non-elementary positivity input here is the genuine two-qubit
+PPT=separable theorem. Primary source: Horodecki--Horodecki--Horodecki,
+arXiv:quant-ph/9605038v2, Theorem3, pages7--8:
+https://arxiv.org/pdf/quant-ph/9605038
+It is used only for a two-by-two tensor product, not for fourteen- or
+sixteen-dimensional bipartite systems. The rest of this section is the
+explicit Schur lift also proved in moc_qft_auxiliary_cone_closure_20261031.txt.
+
+4. Every ordinary ray is already in Caux
+
+For |I|=|K| define r_{I,K}(pi)=1_{pi(I)=K}. At degenerate auxiliary values
+beta_j=1_{j in K}, the multiaffine polynomial
+ H_I(x)=product_{i in I} x_i product_{i notin I}(1-x_i)
+has H_I(beta_pi)=r_{I,K}(pi), and its square equals the same indicator.
+Closure and auxiliary Mobius normalization therefore already imply
+ordinary-ray inclusion. The following gives exact finite reduced witnesses.
+
+The indicator is a matrix coefficient of the permutation representation
+on k-subsets. The k=1,3 representation is [4]+[31], so B(r)=0. For k=2
+it is [4]+[31]+[22], with each summand occurring once, so B(r) has rank
+at most one. The constant k=0,4 cases also have B=0. Thus (1)--(2) give
+a rank-one reduced witness for every indicator.
+
+The script solves psi conjugate(c)=r canonically, computes u=Q^*c and
+checks its two-by-two determinant. It then factors u=alpha tensor v and
+checks the full exact four-by-four identity
+ (u u^*)^PT=(conjugate(alpha) tensor v)
+            (conjugate(alpha) tensor v)^*.
+Thus the PT assertion is proved by an explicit square, including cases
+with zero corner; no approximate eigenvalue is used.
+
+There are34 distinct nonconstant rays:16 singleton indicators and18
+distinct two-subset indicators, after identifying simultaneous subset
+complements. With the constant this covers all70 labeled (I,K) pairs.
+Consequently
+ Caux + cone(ordinary rays) = Caux.                         (3)
+Ordinary variables can improve conditioning, but do not enlarge the
+closed certificate cone.
+
+For the exact existing single-support certificate, retain records with
+r[1]=0; this gives the same27 rays in the same order as setup(). Given
+its exact C and weights w_j, the ordinary-free coefficient is
+ Ctotal=C+sum_j w_j c_j c_j^*.
+Every added term is PSD, kills the contact vector k=psi[1,:]^T, and has
+PSD exceptional PT. Therefore the existing strict13-dimensional contact
+face and strict four-dimensional PT positivity are preserved.
+
+5. Precise conic dual and the remaining full-target statement
+
+For real q=(q_pi), (2) gives
+
+ q in Caux^* iff sum_pi q_pi |h_pi|^2>=0
+                 for every h in V14 with rank B(h)<=1.     (4)
+
+This removes all auxiliary sampling and all separate Boolean marginal
+conditions. In Fourier coordinates split h=(x,y), with x in C^10 and
+y the four entries of the two-by-two [22] matrix. Write its Hermitian
+q-moment form as [[A,C],[C^*,D]]. Condition(4) is equivalent to
+ A>=0, rangeC subset rangeA,
+ and D-C^* A^+ C is nonnegative on all product vectors in C^2 tensor C^2.
+The singular range condition follows by varying the unconstrained x;
+the remaining assertion is the exact Schur minimum, not an ansatz.
+
+The missing universal theorem is that every actual supported spectral
+gap g_pi=max_sigma Re(eta z_sigma)-Re(eta z_pi) has nonnegative pairing
+with every q satisfying (4). Closedness of Caux makes this statement
+equivalent to universal membership, including boundary and coincident
+spectra. The Fourier determinant identity and ordinary-ray absorption
+do not establish this spectral inequality.
+
+6. A global positive-map consequence
+
+Let P_pi permute the four tensor factors of H=(C^2)^{tensor4} and define
+ Phi_q(X)=sum_pi q_pi P_pi X P_pi^*.
+Then an equivalent version of (4) is
+
+             q in Caux^* iff Phi_q is a positive map.       (5)
+
+Proof. The weight-k subspaces of H are precisely the k-subset
+permutation representations. Summing k=0,...,4 gives
+ H = C^5 tensor[4] directsum C^3 tensor[31] directsum C tensor[22].
+Consequently the functions h_pi=<x,P_pi y> have arbitrary scalar and
+three-by-three standard Fourier blocks, while their two-by-two [22]
+block has rank at most one. Conversely any such Fourier profile factors
+in these multiplicity spaces, so every h in (4) is such a matrix
+coefficient. Positivity of Phi_q is equivalent to
+ <x,Phi_q(|y><y|)x>=sum_pi q_pi |<x,P_pi y>|^2>=0
+for all x,y. This proves (5).
+
+Combining (5) with the established all-auxiliary-square closure theorem
+also proves that, for these signed permutation-conjugation maps,
+positivity on all pure four-qubit PRODUCT inputs already implies
+positivity on ALL sixteen-dimensional inputs. This is a special property
+of the displayed multiplicities; it is not a general positive-map theorem.
+
+In particular the independently proved real-O4 fixed-b kernel theorem
+implies a new universal operator consequence: for any real orthogonal O4,
+q_pi=sgn(pi) product_i O[i,pi(i)]/det(O), the map Phi_q is positive,
+unital, and trace preserving. This includes detO=-1 and singular entries.
+It does not assert complete positivity, and makes no corresponding claim
+for arbitrary complex-unitary determinant amplitudes.
+
+Finally a strict separator for an actual g can always be normalized by
+sumq=1. Equation(4) implies sumq>=0 using h=1. If sumq=0, positivity of
+Phi_q and trace Phi_q(|y><y|)=0 force Phi_q=0. For a permutation-fixed
+nonzero symmetric vector s,
+ Phi_q(|y><s|)=(sum_pi q_pi P_pi)|y><s|,
+so the mean permutation operator is also zero. Its matrix coefficients
+span V14, and therefore q annihilates every actual gap. Such q cannot
+strictly separate. The nontrivial obstruction candidate is thus exactly
+a normalized positive signed-permutation map violating one actual
+spectral support inequality. No such example or exclusion theorem is
+proved in this note.

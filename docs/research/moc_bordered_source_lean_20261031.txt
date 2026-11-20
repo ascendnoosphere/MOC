@@ -1,0 +1,88 @@
+Bordered spectral source: formal determinant reduction
+2026-10-31
+
+Status
+
+MocBorderedDeterminantFactor.lean, MocBorderedSourceCongruence.lean,
+and MocDeterminantPolarization.lean compile with Lean 4.19.0 and only
+propext, Classical.choice, and Quot.sound. No extra axioms or sorry occur.
+The canonical universal-pencil source checks are a separate, ongoing
+formalization in MocUniversalSourcePencil.lean; this note does not claim
+those checks have passed yet.
+
+1. All border charts, with the cofactor transpose fixed
+
+For complex u,v in C^3 and any complex 3-by-3 matrix T, let
+
+ B(u,v,T) = [[0,u^T],[v,T]].
+
+Lean proves det B = -u^T adj(T) v. In particular u is the left argument
+and v the right argument of the adjugate, even when T is nonsymmetric.
+
+Choose i,j with u_i v_j nonzero. Delete row j and column i, retaining
+the natural increasing orders of the two surviving row/column indices.
+For those row/column indices r,s put
+
+ Q_rs = u_i v_j T_rs - u_i v_r T_js
+        -v_j u_s T_ri + v_r u_s T_ji.
+
+All nine chart identities are proved by finite case analysis and ring:
+
+ det Q = (-1)^(i+j) u_i v_j (u^T adj(T) v).
+
+Scaling the first row of Q by -1/[(-1)^(i+j)u_i v_j] represents det B
+as a two-by-two determinant. When the nine entries of T are arbitrary
+real-linear complex-valued forms, the resulting four entries are still
+real-linear forms. If u or v is zero, the zero four-form representation
+works. Thus no singular T or border chart is removed by a genericity
+argument.
+
+Theorems include bordered_complex_linear_factor,
+bordered_real_linear_factor, no_negative_five_bordered, and its positive
+analogue. The five-dimensional obstructions use the independently formal
+four-positive/four-negative-square theorem in
+MocComplexDeterminantInertia.lean.
+
+2. The inverse-pencil normalization
+
+For K,W,A,B complex 3-by-3 matrices with KW=WK=I, and a one-by-three row
+u and three-by-one column v, Lean proves
+
+ [[0,uK],[Kv,AK+KB]]
+   =diag(1,K) [[0,u],[v,WA+BW]] diag(1,K),
+
+and consequently
+
+ det [[0,uK],[Kv,AK+KB]]
+   =(det K)^2 det [[0,u],[v,WA+BW]].
+
+It also proves that multiplying an arbitrary block spectral matrix on
+the left/right by diag(0,K) produces exactly this bordered source. The
+scalar top-left blocks and the unused row/column blocks cancel. A
+separate finite reindexing proof identifies the sum-type block matrix
+with the explicit Fin 4 matrix used by the border-factor theorem.
+
+3. Reconstruction from symmetric coefficients
+
+For q(x)=L0(x)L3(x)-L1(x)L2(x), with four complex-valued real-linear
+forms on R^n, define
+
+ P_ij=[q(e_i+e_j)-q(e_i)-q(e_j)]/2.
+
+MocDeterminantPolarization.lean proves
+
+ q(x)=sum_ij x_i x_j P_ij
+
+using finite sums and linearity. The diagonal formula also gives q(e_i).
+This reduces the explicit universal M9 source identity to 45 symmetric
+coefficient identities rather than an unstructured expanded degree-six
+polynomial identity. The latter checks are verified in Lean, not accepted
+from a symbolic package.
+
+Scope
+
+These formal algebraic results do not prove unrestricted MOC4. They make
+the necessary actual-source inertia bound available after the explicit
+universal-pencil identification is proved. The V4 analytic SOS client is
+already formal conditional on that source representation; the separate
+V4 prism identification is finite algebra still to be joined to it.

@@ -1,0 +1,203 @@
+An exact nonnegative N9 cost outside the FULL matching-SOS cone
+31 October 2026
+
+RESULT. The stronger all-N9 face-containment target is FALSE, already
+on four-contact orbit30, representative(0,3,8,17). The counterexample is
+separated by an exact strictly positive14-feature moment. Consequently
+it also lies outside the simultaneous84-clique factor-width4 cone.
+
+This is NOT a MOC counterexample. The algebraic cost is EXACTLY NOT an
+actual spectral support gap: its universal pencil has at least five
+positive directions, while every actual cost has at most four. The
+elementary global rank/inertia proof is in
+moc_actual_inverse_pencil_rank_four_20261031.txt. Its independently
+computed generic critical lift is also numerically PAST. The actual
+spectral restriction cannot be discarded for all nonnegative N9 costs.
+
+1. Exact algebraic cost
+
+Use the canonical cap34 coordinates for the face:
+
+ C'=(7,12,15,22),  A=(0,7,10,18,20,22,23,28,30).
+
+Let
+
+ v=(0,27/125,0,107/500,784,1547,0,43/200,833),
+ d=sum_(j in A) v_j r_j,
+ g(t)=f34+t d.
+
+All ray values and coefficients are nonnegative. Thus g(t)>=0 for every
+t>=0. The zero set for t>0 is exactly
+
+                     (1,6,7,12,14,15,22).
+
+The exact full4920-term face nonic, independently replayed with the
+universal9-by9 pencil at ten exact interpolation nodes, gives
+
+                  N9(g(t))=R(t)/156250000000000,
+
+where R is the irreducible integer polynomial
+
+ 972586430238224941211394 t^8
+ -69059379964918107494435578789 t^7
+ +19090009873007026443734471 t^6
+ +1003231544210173080580187425 t^5
+ +1557083124789197557634269375 t^4
+ +3121117945097877474687500 t^3
+ +2550913544056250000000 t^2
+ +988918281250000000 t
+ +156250000000000.
+
+Exact signs give R(3/10)>0 and R(31/100)<0. Sturm isolation gives exactly
+one root alpha in that interval, and the tighter exact interval
+
+     3003170577/10000000000 < alpha < 3003170579/10000000000.
+
+Numerically alpha=.30031705778918777. Therefore g(alpha) is an exactly
+specified nonnegative N9 cost on the full face30.
+
+2. Exact separation from ALL matching SOS
+
+Let B be the full24-by14 matching-function evaluation table. The JSON
+certificate records24 rational weights y, the full rational moment
+
+                         H=B^T diag(y) B,
+
+and an exact LDL decomposition with ALL14 pivots strictly positive.
+The smallest recorded LDL pivot is approximately.0001540348444767242;
+the proof uses its positive rational value, not its decimal sign.
+
+The gauge and endpoint pairings are verified exactly:
+
+ y(f34)=-1,
+ y(g(3/10))  = -.4354515239305081... <0,
+ y(g(31/100))= -.4166332413948584... <0.
+
+Their exact rational values are in the JSON. Since y(g(t)) is affine in
+t, it is strictly negative throughout[3/10,31/100], in particular at
+alpha. On the other hand, for ANY real matching function f=B a,
+
+                         y(f^2)=a^T H a>=0.
+
+It follows immediately that g(alpha) is not a sum of squares of real
+matching functions in V14. This excludes the FULL C0 cone, without a
+feature restriction or a choice of Gram gauge. The cost is not even in
+the full10-dimensional four-contact SOS cone, since that cone is a
+subset of C0.
+
+The certificate was obtained first on the full7-dimensional function
+space vanishing on all seven contacts. Adding exact contact mass1524
+at those contacts gives the displayed full14-feature positive moment.
+The addition changes neither y(f34) nor y(d), because both functions
+vanish at every added contact.
+
+As a separate exact replay, all84 moments on each cap-plus-three-
+ordinary4-feature clique have positive leading principal minors. Thus
+the previously explored factor-width4 uniform target also fails.
+
+3. What is and is not refuted
+
+REFUTED: P_C intersect{N9=0} subset C0 for every one of the29 faces.
+It already fails on orbit30. The conditional Gauss-leaf/polytope
+implication remains mathematically valid, but its sufficient hypotheses
+are false. Proving all29 such containments cannot complete MOC.
+
+NOT REFUTED: actual spectral support costs belong to C0, or physical
+SO4/unitary functionals are nonnegative on actual support costs, or MOC.
+
+At alpha, the independent FutureLift numerical diagnostic has:
+
+ status=generic, actual_numeric=False,
+ direction determinant=-.4926164174925105,
+ moment-line discriminant=-44.423802426338916,
+ kernel residual1.37e-17, target residual3.96e-13,
+ spectral gap6.16e-6.
+
+The universal9-pencil at the root has numerical inertia(5+,3-,1zero),
+with smallest positive eigenvalue about.06253. More strongly, the exact
+verifier records an INTEGER9-by5 compression positive definite at both
+rational endpoints of the tight isolating interval. By affinity and
+convexity it stays positive definite at alpha. The companion elementary
+rank4/inertia theorem proves that every actual cost has positive index
+at most4. This EXACTLY excludes actuality here, independently of the
+numerical lift diagnostic.
+
+4. It also lies in the regular refined real-normal chart
+
+The escape is not explained by a singular H or a nonunique four-contact
+conormal system. This is proved without large algebraic-field arithmetic.
+Reduce the irreducible degree8 polynomial R modulo101. It has a root91.
+At t=91 modulo101, the exact pencil has rank8. Column0 of its adjugate is
+
+                    h=(53,47,54,27,97,80,52,56,65).
+
+The row-major3-by3 reshape has determinant44 modulo101. The14-by14 system
+whose first nine rows are
+
+                       [M(B_j)h]_(j=1)^14,
+
+followed by the four contact evaluation rows(7,12,15,22) and the coordinate
+sum row has determinant14 modulo101. All rational denominators used in
+this calculation are units modulo101.
+
+Choose the adjugate column as a polynomial representative h(t). If any
+of these minors vanished at alpha, its denominator-cleared polynomial
+would be divisible by the irreducible primitive R over Q and hence over
+Z. Its reduction would vanish at91 modulo101, a contradiction. Thus at
+alpha the actual real kernel H is invertible, M has rank8, and the full
+four-contact normalized conormal system is nonsingular.
+
+Therefore the counterexample also refutes the refined statement that
+ALL regular real balanced-matrix normal charts R_C(S) give C0 whenever
+their costs are nonnegative. Here S=L H^(-T)L^T is real balanced rank3,
+and the unique four-contact conormal cost is the separated g(alpha), up
+to a positive mean normalization. Merely restricting to a generic real
+SL4/Gauss chart does not restore the target. The actual spectral lift
+condition or another condition strong enough to imply it is necessary.
+
+There are three additional contacts at the displayed cost. They do not
+affect the nonsingularity claim. The finite-field calculation certifies
+the original FOUR-contact system, not only the seven-contact restriction.
+
+5. Consequence for a proposed common quadratic metric
+
+Put A_j=M(f34)^(-1)M(r_j) and beta_j=y(r_j), using the exact FULL14-PD
+separator above. If P>0 satisfied
+
+            sym(P A_j)+beta_j P>=0 for all nine j,
+
+then at a kernel of I+sum nu_j A_j one would have
+
+ 0=h^T(P+sum nu_j sym(P A_j))h
+   >=(1-sum nu_j beta_j) h^T P h.
+
+The escape has sum nu_j beta_j<1, so this is impossible. Hence this
+uniform common-quadratic-metric implication fails even for a genuine
+full-C0 dual, not merely for the weaker clique-dual class. It could still
+be useful with an additional actual spectral constraint on the kernel;
+it cannot prove a no-root assertion for all nonnegative N9 costs.
+
+6. Reproduction and data
+
+ python code/research/moc_face30_full_sos_nonic_escape_exact.py
+
+Output:
+ build/moc_face30_full_sos_nonic_escape_exact_20261031.json
+
+The verifier checks irreducibility, exact Sturm root counts, pointwise
+nonnegativity and seven contacts, independent9-pencil interpolation,
+full14-dimensional rational LDL positivity, exact negative endpoint
+pairings, all84 clique moments, and a5-dimensional positive compression
+throughout the root interval. It also checks the modular regularity
+certificate. Complete run is under one second.
+
+Discovery and numerical lift data:
+ build/moc_face30_fw4_escape_numeric_20261031.json
+ build/moc_face30_lyapunov_convex_spectral_probe_20261031.json
+
+Related analysis, not needed for the stronger counterexample: the
+one-dual common quadratic Lyapunov ansatz also has an exact infeasibility
+certificate in
+ build/moc_face30_lyapunov_negative_budget_20261031.json.
+That certificate originally concerned a FW4 dual; its scope must not be
+silently upgraded to every full-C0 dual.

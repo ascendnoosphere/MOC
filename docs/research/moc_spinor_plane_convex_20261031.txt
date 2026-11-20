@@ -1,0 +1,73 @@
+SPINOR PLANE CONVEX COMBINATION AND AFFINE WEYL EXPANSION
+31 October 2026. This is not a proof of unrestricted MOC.
+
+Checker: code/research/moc_spinor_plane_convex.py
+The quartic is q(C)=[2 tr((C C^T)^2)-(tr C C^T)^2]/16, transpose not conjugate.
+For traceless spinor coordinates the identity
+  q(diag x + D)=q(diag x)+q(D)-||x||^2 ||D||_F^2/8 + landscape(D)
+is the free 9-entry expansion already used in
+  code/research/moc_global_bell_pair_quadratic.py.
+On D=R diag(y) S^T with R,S real orthogonal it becomes
+  landscape = sum_ij alpha_ij (R_ij^2+S_ij^2) + beta_ij R_ij S_ij,
+  alpha_ij=x_i^2 y_j^2/4,
+  beta_ij=[x_i y_j (x_i^2+y_j^2-(||x||^2+||y||^2)/2) - xhat_i yhat_j]/2.
+The 24 Weyl values q(diag(x+eps y_sigma)), product of signs +1, are the
+24 permutation products of the spinor 4-spectra.
+
+1. COORDINATE-PLANE CONVEX COMBINATION
+
+Let R and S be rotations by angles a and b in the coordinate 01-plane.
+Then, for every complex x,y,
+  q(diag x + R diag(y) S^T)
+    = w++ q(id, signs +++)
+    + w-- q(id, signs --+)
+    + v++ q(swap 01, signs +++)
+    + v-- q(swap 01, signs --+),
+with
+  w++=(cos a+cos b)^2/4,   w--=(cos a-cos b)^2/4,
+  v++=(sin a+sin b)^2/4,   v--=(sin a-sin b)^2/4.
+The four weights are nonnegative and sum to 1. The same identities with the
+rotated coordinate plane give the other two axis-parallel cases. Conjugation
+by a signed permutation matrix moves the identity among the 24 Weyl values,
+so the same holds after a common monomial change of frame.
+
+This is the complex-spectral MOC inequality for that mixer family, because a
+convex combination lies in the convex hull. It is not the general mixer.
+
+2. AFFINE EXPANSION FOR EVERY REAL ORTHOGONAL PAIR
+
+The 24 Weyl quadratics span a 14-dimensional space of degree-4 polynomials.
+Every linear relation among them is orthogonal to the landscape as soon as
+R and S have orthonormal rows and columns. The checker reduces each
+left-kernel obstruction to those row and column square-sum identities.
+The right kernel changes weights without changing the value, and every
+kernel vector sums to 0. At R=S=I the landscape equals the identity Weyl
+quadratic, so every weight solution sums to 1.
+
+Thus for every real orthogonal R,S and every complex x,y there exist real
+weights, depending only on R,S, summing to 1, such that q equals the
+corresponding affine combination of the 24 Weyl values. Some of those
+weights are negative for a generic pair: nonnegativity can fail for every
+choice in the coset. An explicit rational witness is the Cayley pair
+K=(1,1,1) and K=(2,-1,3), whose weight polytope is empty in the nonnegative
+orthant. Negative universal weights are therefore essential there. They do
+not by themselves produce a point outside the convex hull, and they do not
+prove the hull membership either.
+
+3. RELATIVE DIAGONAL SIGNS
+
+If S=R E with E diagonal, det E=1, then
+  landscape = sum_ij (2 alpha_ij + E_jj beta_ij) R_ij^2.
+R∘R is doubly stochastic, so this is at most its maximum on permutation
+matrices. Each of the six permutations occurs as R∘R for some R in SO(3)
+whose relative signs reproduce E along that permutation, and that value is
+a Weyl value. This is the classical Birkhoff bound for this subfamily.
+
+4. WHAT REMAINS
+
+The unrestricted inequality is the case of arbitrary R,S in SO(3), or by
+the realification in algebra_unitary_realification.md, arbitrary U in U(4).
+Section 2 writes every such value as an affine combination. The missing step
+is a nonnegative choice of weights, or another certificate that the negative
+part cannot exit the hull. The plane family in Section 1 is the case where
+the nonnegative choice is explicit.

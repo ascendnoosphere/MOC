@@ -1,0 +1,190 @@
+ACTUAL SPECTRAL COSTS VERSUS THE REAL MATCHING-SOS DUAL BODY
+2026-10-31
+
+Status: the global actual-cost containment is OPEN. No actual cost outside
+the real matching-SOS cone was found. The searches below are falsification
+attempts, not evidence promoted to a theorem. An SOS counterexample alone
+would not refute MOC: an actual orthogonal/unitary determinant profile is
+an additional requirement.
+
+1. Full-scope n4 formulation
+
+Let V be any real24x14 full-column-rank matching frame. A normalized dual
+functional y is admissible for the real matching-SOS cone precisely when
+
+ sum_pi y_pi=1,   H_y=V^T diag(y) V >=0.
+
+For an actual complex spectral configuration, set
+z_pi=product_i(a_i+b_pi(i)) and g_pi=h-Re(eta z_pi), h=max_pi Re(eta z_pi).
+The decisive sufficient-cone question is whether y dot g>=0 for every
+such y and every actual configuration. Negative y entries are allowed.
+The ordinary inequalities are automatic because every ordinary indicator
+is its own square in the matching space.
+
+The normalized dual body is compact and genuinely larger than the
+convex hull of physical real-SO4 profiles. This is not merely numerical.
+The exact physical f34 bound is proved in
+moc_cap34_sharp_physical_bound_20261031.txt: its minimum is the unique
+real root of 4m^3-12m^2+14m+1=0, about -0.067442248868123.
+In particular it is strictly greater than -17/250. The exact strict
+PSD-moment functional in optimized_f34_dual_exact.json has
+y dot f34=-34281621/500000000<-17/250. Thus searching nonphysical
+dual functionals is a substantive stronger-cone test. It cannot be
+replaced by an assertion that all PSD-moment functionals are physical.
+
+2. Four-dimensional reduction removes x and the support direction
+
+Common Mobius normalization fixes the first three projective a-points to
+0,1,infinity. With the fourth point x, the products have form
+
+ z_pi(x)=u_pi x+v_pi.
+
+For a fixed y and four beta-points, all x and all eta are handled by one
+convex-hull membership problem in C^2:
+
+ (sum y u_pi,sum y v_pi) in conv_R{(u_pi,v_pi)}.
+
+Indeed the support directions (eta*x,eta) cover the dense set with second
+component nonzero in C^2; the remaining directions follow by continuity.
+Thus this is a full-scope reduction at n4, not a restriction to a special
+spectral family. The parent project has a separate proof/Lean audit.
+
+The implementation parametrizes the four remaining beta spinors by
+(sin(theta)e^{i phi},cos(theta)). Products acquire only a common factor
+under each projective normalization, so arbitrary finite spectra are
+covered densely and limiting charts are continuous. ConvexHull in the
+intrinsic affine span supplies every support facet at each visited beta.
+
+Source: code/research/moc_adversarial_cofactor_dual.py.
+
+3. Avoiding ordinary and collision plateaus
+
+An unconstrained optimizer repeatedly approaches a classical permutation
+functional or a repeated-root/collinear-cloud configuration with zero
+normalized gap. These outcomes are not obstructions.
+
+The exact cancellation graph says every distinct pair of mixed rays has
+ordinary sum. Consequently a PSD-moment functional can be negative on at
+most one mixed ray. For a fixed f34-negative dual, only the canonical
+cap34 cell can yield a negative actual gap. The canonical expansion
+
+ g=t f34+sum_{j in Z} beta_j r_j,  t>0,beta_j>=0,
+ Z=(0,7,10,13,17,18,20,22,23,27,28,30,31)
+
+is unique. Its coefficient t=g3-g1-g9-g12-g22 is exact and linear.
+The authoritative adversary minimizes y dot g/t, so escaping into
+the ordinary t=0 boundary does not create a false successful plateau.
+This cap restriction is a necessary detecting domain for the chosen
+dual, not a restriction of the global mathematical target.
+
+Some guarded runs require pairwise chordal separation of all eight
+projective points and a lower singular-value ratio of the 4D cloud.
+These are numerical search guards only. They are not theorem assumptions.
+An early diagnostic selected an unguarded facet after guarded optimization;
+the code was corrected before the authoritative cap-normalized runs.
+Older exploratory outputs are explicitly marked as such.
+
+The planted orientation control y=2 delta_vertex-delta_opposite produces
+positive violation1 in both the 4D reduction and a large finite-chart
+replay. That y is not PSD; the purpose is to test sign/orientation and
+chart conversion, not to produce a mathematical counterexample.
+
+4. Numerical dual and contact-face oracles
+
+code/research/moc_adversarial_sos_dual.py implements a SciPy Newton
+log-determinant oracle in23 coordinates, sum y=1, H_y>0. The Newton
+gradient and Hessian are explicit. Admissible exposed points are
+numerically feasible candidates, not exact optimum certificates.
+The compact-body and residual support bounds are independently proved
+in moc_sos_dual_body_structure_20261031.txt.
+
+The fixed exact f34 dual and nearby exposed cap-negative duals did not
+yield a negative actual gap. The authoritative cap-normalized campaigns
+are under
+ build/moc_adversarial_cofactor_dual/cap_ratio_fixed/
+ build/moc_adversarial_cofactor_dual/hard_cap_ratio_adaptive/.
+Their hardest configurations stay genuinely separated and full-rank;
+they converge to the exact distinct-point triangle boundary described
+below, rather than an ordinary or collision limit.
+
+A separate contact-face oracle removes the unavoidable contact atom.
+It uses H_face>0 and the homogeneous normalization y dot f34=-1,
+without an arbitrary cap-strength cutoff. A negative result would be
+completed by contact-atom Schur mass and then exactified. The completion
+preserves the actual gap only when the chosen contacts are actual zeros;
+the implementation checks them before use.
+
+The bounded completed campaign remained positive in the two adjacent
+contact chambers tested. Exact rational controls verify the matching
+projector, face dimensions, moment-map rank and positive control16/9.
+See moc_contact_face_dual_adversary_20261031.txt and its exact verifier.
+This does not establish global cone containment.
+
+5. Concrete mathematical outputs from the adversary
+
+The new sparse triangle-Gram theorem is recorded in
+moc_cap_triangle_sos_20261031.txt. For canonical critical budgets
+(beta18,beta23,beta28), it gives an explicit sufficient inequality for
+matching SOS and a13-square exact certificate for the previously hard
+actual seed support. The Boolean identities and all24 costs are checked
+without an optimizer.
+
+The same adversary identified an exact SHARP, distinct finite-spectrum
+configuration with
+ g=f34+r23+r28=f34^2+(r23-r28)^2.
+It has eleven contacts and a full-rank4 cofactor cloud. Its explicit
+finite spectra, products, integer gaps and rank checks are in
+ build/moc_cap_triangle_sos/exact_sharp_actual_boundary.json.
+This configuration is a concrete local/global stress target, not a proof
+that every actual cost obeys the triangle inequality.
+
+An exact all-orders local theorem has since been proved around this
+configuration, including transverse actual costs outside its known
+orbit51 critical face. Its contact chart has determinant -13/8 and gives
+positive Hadamard coefficients for a stronger smooth local inequality.
+See moc_cap_triangle_local_boundary_theorem_20261031.txt. This qualitative
+open-neighborhood result does not certify a global covering or an explicit
+neighborhood radius.
+
+The independent explicit ellipsoid-section adversary DID find a rigorous
+failure of the power -1/2 Gram formula on an actual finite spectral cost.
+Its exact rational fitted Gram has a negative integer-vector quadratic
+form. The SAME actual cost has an exact sparse positive Gram. Thus this
+is a decisive formula obstruction, not an SOS or MOC obstruction.
+See moc_ellipsoid_section_obstruction_20261031.txt and its verifier.
+No robust failure of powers -3/4 or -1 was obtained in the bounded
+targeted follow-up; no universal positivity claim is made for them.
+
+6. The unresolved global step
+
+The exact physical-profile relaxation gap prevents a shortcut through
+identification of the whole SOS dual body with physical profiles.
+The complex-secant equation N9=0 alone also does not force the simpler
+triangle inequality: a known nonactual nonnegative nonic point violates
+that inequality while retaining a larger matching-SOS certificate.
+
+One must retain actual conjugate-spinor geometry, prove a global
+rank-two-product containment theorem, or exhibit an exact actual cost
+outside the sufficient cone. Neither outcome has been achieved here.
+
+7. Subsequent decisive falsification of the smaller triangle candidate
+
+The Grace lane's new clustered finite Gaussian-integer configuration
+REFUTES the global three-budget triangle ansatz. It has unique contact9,
+positive canonical cap coefficient t, critical budget beta28=0, and
+beta18*beta23<t^2. Direct independent integer multiplication verifies
+all24 spectral products, all24 cap identities and all13 ordinary
+nonnegative coefficients. See
+ code/research/moc_triangle_counterexample_independent_audit.py
+ build/moc_cap_triangle_sos/independent_actual_counterexample.json.
+
+The single virtual point corresponding to dual y=(1/2,1/2,1/2) lies
+strictly outside the matching-product hull, with exact supporting excess
+15954552133720345438848/9. Thus the global virtual-surface reformulation
+is itself false, although the reformulation/duality is correct.
+
+The full actual-SOS question remains OPEN: the same countercost has an
+exact positive full14 Gram in
+ build/moc_future_hit_exact_gram/exact_positive_gram.json.
+This distinguishes a genuine candidate falsification from a claim of a
+MOC counterexample.

@@ -1,0 +1,801 @@
+HISTORICAL MOC CHECKPOINT: REAL SOS, JOINT COFACTORS, AND DIMENSION FIVE
+31 October 2026
+
+This checkpoint preserves a campaign-stage record, including superseded
+assignments and later corrections. For the latest synthesis, start with
+README.md, next_unrestricted_research.md, and next_harmonic_algebra.md.
+Read the exact route obstructions below together with their stated scopes;
+older open-target descriptions can precede their resolution in this record.
+
+Campaign redirection recorded at the time:
+"Stop any partial results and only go for moonshots from now on."
+Root has interrupted every running partial-case/Lean-infrastructure
+task and reassigned the team ONLY to mechanisms that could settle the
+unrestricted4x4 conjecture (or all n) in one argument. Do not resume
+the69-family census, C5 case exclusions, individual boundary families,
+control-specific kernel fitting, or subsidiary formalizations as goals.
+Existing proofs/data remain inputs, not the next deliverables.
+
+CURRENT GLOBAL MOONSHOTS:
+The user has REPEATED "make all subagents do moonshots". Root sent
+explicit whole-conjecture-only assignments to ALL EIGHT agents.
+Auxiliary audits, derivative identities, individual examples, source
+inverses, and channel catalogs are inputs, not standalone deliverables.
+1. n5 + Grace: a direct global maximum principle. Spin6 gives an exact
+   SO6 quadratic; after realification the Bell SO3xSO3 quadratic has
+   six real directions plus six imaginary U4 Hessian directions. Seek
+   a contradiction to a global maximum ABOVE ALL24 permutation values.
+   Fixed/full Born-marginal laws and invariant-KKS moment maps failed.
+2. Literature + QFT + positive_representation: uniform nonlinear
+   quantum measurement / Wick-Fierz positivity on the whole M8 source.
+   Two physical copies retain172 classical-invisible channels
+   (81 symmetric +91 antisymmetric). Curvature splits91=35+56. Bare
+   Hessian commutator and the initial18-map B/J family fail interpolation;
+   neither failure rejects all172 channels or a general source POVM.
+   Canonical8 Clifford amplitudes satisfy the pure-even4fermion Cartan
+   quadric UNIFORMLY by a Pfaffian-congruence proof. Current focused
+   Gaussian POVM metric is physicalH(rank8), NOT a required PD14 metric.
+3. Variational + max_contact_families: the uniform positivity step,
+   full14Gram from actual Lorentz/triality or an analytic physical-R
+   dependent positive5-plane. The ALL-DUAL common-plane ansatz is
+   REFUTED for synthetic nonphysical duals; the physical-only version
+   has NOT been refuted. Do not conflate these or fit separate R cases.
+4. high_contact_nonic_factors: a spectra-dependent positive coupling
+   from the [I,U] determinantal point process to perfect matchings,
+   preserving the actual complex expectation after the external field.
+   Seek an all-n/whole4x4 principle, not more routine constrained searches.
+ROOT: global source-state quantum POVM and the uniform both-traces-zero
+Mobius/spinor normal form. Details: moc_global_tracezero_spinor_normal_form.py.
+Every disjoint simple n+n source, n>=2, admits BOTH traces zero via a
+critical point of P/Q; continuity handles coincident labels after a
+uniform proof. In n4 the remaining inequality is a quartic correlation
+inequality for all X,Y in C3 and R,S in SO3, with24 WeylD3 vertices.
+The general14-state source-POVM cone probe is UNRESOLVED, not feasible
+evidence or a countercertificate: relative normalization error~.085.
+IMPORTANT: G only needs to be nonzeroPSD, since success on denseM8
+and continuity suffice. Root's earlier G>=.001I was a stronger test.
+Lean, algebra, data and literature were assigned to test these global mechanisms.
+
+EXTERNAL WHOLE-PROOF CLAIM FOUND DURING THE GLOBAL SEARCH (UNVERIFIED):
+Dongzhe Zheng, "The Marcus-de Oliveira conjecture for n=4", author
+upload24Oct2026, DOI10.13140/RG.2.2.36790.25923. Primary66-pagePDF:
+https://www.researchgate.net/profile/Dongzhe-Zheng/publication/416773999_The_Marcus-de_Oliveira_conjecture_for_n_4/links/6add31918aa8df110de33813/The-Marcus-de-Oliveira-conjecture-for-n-4.pdf
+Literature owns this lead. Its Theorem3.6 curve maximum principle
+(counterexample=>at least6 contacts) looks sound on direct audit and
+retains the complex M8 source through singular/ramified points. The
+claimed final90 contact-class certificates require supplementaryS0-S2;
+only one case T85 is proved in the mainPDF, and no archive link has yet
+been found. Do NOT declare MOC solved on the title/abstract. Its actual
+source assumptions exclude our nonactualN9 escapes, so those do not
+by themselves refute it. Other agents continue independent moonshots;
+do not restart a finite case campaign merely because this paper exists.
+
+The user's ZFC question has been checked: each fixed dimension,
+including4, is a first-order real-closed-field sentence and therefore
+decidable by Tarski QE; it cannot be independent of ZFC. No independence
+result for the uniform all-n statement was found. Primary QE reference:
+https://homepages.math.uic.edu/~marker/orsay.pdf , Corollary7.15.
+The fixed-n encoding uses polynomial unitary/normal constraints and
+finite convex-combination weights; complex entries split into real and
+imaginary coordinates. Decidability does not give a practical small
+computation. The all-n universal assertion is a separate arithmetic
+statement; no claim that QE decides it uniformly as one finite sentence.
+
+Unrestricted complex MOC for n=4 or all n remained open at this checkpoint,
+with no verified counterexample. The stronger ALL-N9=>FULL-C0 target is
+exactly false. Read moc_face30_full_sos_nonic_escape_20261031.txt and
+code/research/moc_face30_full_sos_nonic_escape_exact.py FIRST. Nonnegative
+g(alpha)=f34+alpha*sum nu_j r_j, nu=(0,27/125,0,107/500,784,1547,0,43/200,833)
+on IDS=(0,7,10,18,20,22,23,28,30), has unique isolated degree8 root
+alpha~.3003170578 withN9=0, but an EXACT FULL14-PD moment dual separates
+it fromC0 across the entire rational interval. Thus notmerelyFW4fails.
+It is now PROVABLY NONACTUAL: a fixed5D positive compression ofM9 onthe
+isolatinginterval contradicts the proved necessaryactualinertia p,q<=4.
+Proof moc_actual_inverse_pencil_rank_four_20261031.txt: for raw spectralz,
+q_z(K)=det(Da S+S Db), S=LKL^T; divideK blocks to obtain the bordered
+determinant -u^Tadj(H^TA0+B0H^T)v, a2x2 determinantoflinearforms. Therefore
+complexrankM(z)<=4 and actualM(g)=XX^T-YY^T withrankX,rankY<=4.
+Genericactualrank8 forcesinertia(4,4,1zero); converseUNPROVED.
+The stronger29ALL-N9facecontainments arefalse; unrestricted-real-S
+rational-image targets are ALSO EXACTLY FALSE. The same escape has rank8
+M9, an invertible real reshaped kernel H, and an invertible four-contact
+system for C=(7,12,15,22). Modulo101, the irreducible root polynomial
+vanishes at91, det(H)=44, and det(contact system)=14. Irreducibility
+proves these quantities remain nonzero over Q(alpha). A small positive
+height perturbation, generic real regular perturbation, and leaf-vertex
+minimization also disprove the version restricted to the common open.
+Conditionalreductiontheoremsremaincorrect, but
+DO NOT tryto prove their false unrestrictedpositivityhypotheses.
+Future/actualrealform must be retained in the nextglobalproof. The
+firstR_C0123closure and actualH theorem below remain TRUE, but there is
+NO longer a valid "28 remaining universal targets" program as stated.
+
+SECOND CRITICAL CORRECTION: the proposed universal dual-dependent
+COMMON five-plane certificate is ALSO EXACTLY FALSE. There is an
+explicit rational FULL14-PD dual with beta7=beta10=1/100 for which NO
+common5-plane exists, even allowing dependence on the entire dual.
+The18x18 amplification in moc_joined_budget_amplification_obstruction.py
+has9 exact negative directions, while any such plane would produce10
+positive directions. Proof moc_joined_positive_plane_ansatz_refuted_20261031.txt.
+This does NOT refute neutral-inertia=>C0 or MOC. Cost-dependent planes,
+direct Gram constructions, and more general future certificates remain.
+The fixed-dual and seven single-budget-family theorems remain true.
+Do not try to prove the refuted all-dual common-plane implication.
+
+Earlier exact formula obstructions also remain: the
+formerly proposed global THREE-BUDGET TRIANGLE LAW IS NOW REFUTED by
+finite integer complex spectra. The SAME cost has an exact positive
+full matching-SOS Gram. Continue the broader SOS/common-cofactor-law
+or direct physical-MOC route; do NOT resume proving global triangle.
+The fixed p=-1 projector formula and the triangle-or-p=-1/2 cover are
+NOW ALSO EXACTLY REFUTED on actual spectra; both have independent full
+positive-Gram rescues. Do not propose another finite projector cover.
+The remaining target is an actual-source support proof. The earlier broad
+checkpoint is
+moc_clifford_ppt_active_checkpoint_20261031.txt; this note supersedes its
+description of the reduced positivity cone and records newer work.
+
+0. NEWEST GLOBAL ROUTE: PROJECTIVE DUALS, MARKOV NORMALS, MULTIPLE CONTACTS
+
+CURRENT SOURCE-AWARE RESULTS AND NEXT CANDIDATE
+
+The actual-source rank4 theorem has now passed three independent exact
+audits. The default universal-pencil checker verifies all16 generic
+spectral block entries, the bordered determinant/adjugate identity, and
+the rank4 Hessian of the resulting2x2 determinant. Root replayed the
+updated algebraic escape verifier successfully, including the complete
+14-feature moment separator, all84 clique moments, and the5-positive
+compression across the entire rational isolating interval.
+
+NEW LEAN: code/lean/MocComplexDeterminantInertia.lean compiled, with only
+propext, Classical.choice, and Quot.sound. It proves that the real part
+of ANY2x2 complex determinant of REAL linear forms is four positive
+squares minus four negative squares; each positive or negative definite
+subspace therefore has dimension at most4. It also proves
+positive_compression_budget_bound: a common5D positive base compression
+and PSD weighted-ray corrections force the weighted budget to be at
+least1 for every determinant-real-part cost. The actual-source block
+reduction is independently checked symbolic algebra, not yet a Lean
+formalization of the complete universal-pencil bridge. Do not claim
+unrestricted MOC or the entire source theorem is formalized.
+Root build log: build/moc_complex_determinant_inertia_lean.log.
+
+UNIFORM NORMAL-V4 CASE NOW CLOSED (root independently audited):
+moc_normal_v4_uniform_triangle_sos_theorem_20261031.txt proves every
+nonnegative matching cost vanishing on C=(0,7,16,23) with n_-(M9(g))<=4
+belongs to C0. Therefore ALL actual normal-V4 support costs are covered,
+including every degeneracy. After exact sign/orientation normalization,
+g=t*r58+sum(u_i A_i)+sum(v_i^+/- B_i^+/-), all budgets nonnegative.
+Put a=sqrt(max u), b,c=the other square roots and T0=a(b+c)-bc.
+A fixed2-plane gives two negative directions for
+K=diag(u-t)+(t/2)J whenever t>T0; the universal9-pencil Schur block
+already contributes three negative directions. Hence source-index
+costs satisfy t<=T0. Since t>0, T0>0. The explicit PSD core is
+G=(1-t/T0)diag(u)+(t/T0)(a,-b,-c)(a,-b,-c)^T.
+The identities AiAj=one common indicator and Z^2-2AiAj=r58 give the
+full matching Gram diagblock(t,G,diag(v6)). The final argument needs no
+optimizer, N9 equation, source genericity, or limiting argument.
+The earlier capacity proof is valid but this stronger T0 proof is
+simpler. Root replayed the full symbolic verifier successfully.
+MocV4TriangleGram.lean formalizes the strong2-plane and explicit SOS.
+MocV4SchurCompression.lean now formalizes the negative5-compression and
+direct source-to-SOS implication, conditional on the concrete prism
+having the actual2x2-determinant representation. The universal-pencil
+prism/source identification remains prose plus exact symbolic algebra.
+Do NOT call the whole V4 theorem or unrestricted MOC fully formalized.
+This closes the actual V4 case, not the complete conjecture.
+
+NEW EXACT FUTURE CERTIFICATE, NOT JUST A SAMPLE COUNT:
+code/research/moc_neutral_fixed_dual_five_plane.py verifies a simple
+5-plane U in row-major H coordinates:
+ h1=h3=h8=0, h2+h4+h6=0.
+Writing C=16 U^T M(f34) U gives a positive definite5x5 matrix. For all13
+canonical ordinary budgets, the matrices D_j+c_j C are PSD, where
+ D_j=16 U^T M(r_j) U,
+ c0=c7=c10=c13=1, c18=c23=c28=2/3,
+ c17=c20=c22=c27=c30=c31=0.
+Thus EVERY actual cost g=t f34+sum(nu_j r_j), t,nu>=0, necessarily has
+ t <= nu0+nu7+nu10+nu13+(2/3)(nu18+nu23+nu28).
+This source constraint is not a C0-dual inequality: the threshold
+functional yf=-1, yr=c has NO PSD full-moment extension. Six zero
+Boolean scores force a unique extension with a3x3 principal minor -1/4.
+Also every one of the seven positive-score budgets can be made
+arbitrarily small in OTHER full positive definite duals; do not treat
+the thresholds as universal dual conditions.
+
+STRONGER GLOBAL FIXED-DUAL THEOREM:
+code/research/moc_fixed_escape_dual_actual_global.py verifies, for the
+specific full14-PD escape dual y, that
+ Z(r)=16 U^T M(r) U+y(r) C
+is zero on f34 and is strictly greater than C/10000 on ALL81 other rays
+of the nonnegative matching cone. Exact rational principal-minor checks
+prove this. A simpler13-row identity now removes any need for the
+82-ray completeness theorem: the13 ordinary rays are delta functions
+on the13 zero coordinates of f34. Thus every g has the unique expansion
+g=t*f34+sum_j g(pi_j)*r_j and
+Z(g)=sum_j g(pi_j)[16U^T M(r_j)U+y(r_j)C].
+All13 coefficient matrices are PD, so Z(g)>=0 for every nonnegative
+matching cost. If y(g)<=0 for any nonzero actual g,
+its compression would have5 positive directions, contradicting the
+source theorem. Hence this fixed y is strictly positive on every
+nonzero actual gap cost globally, including other caps. This excludes
+an entire dual-negative region, while allowing its nonactual N9 roots.
+It does NOT establish the same statement for every full moment dual.
+
+Seven other exact full14-PD separators with individual budget scores
+about0.05 also have rational9x5 planes and13 PD row coefficients.
+Beyond those point certificates, ALL epsilon>0 in seven constructed
+rational single-budget dual families are now proved by closed rational
+moving planes delta=epsilon/(1+epsilon). The tilt is the parallel-sum
+of their top moment block diag(1,epsilon); contact Schur mass controls
+the other12 scores. This is uniform for seven SPECIFIED families,
+not all duals with a small budget. See
+moc_actual_positive_plane_dual_bridge_20261031.txt,
+moc_singleton_budget_tilt_20261031.txt,
+moc_pair_budget_tilt_20261031.txt. Generic correlated small budgets
+remain open. A fixed plane cannot cover even the whole singleton
+family: at epsilon=0 its positive cap compression must degenerate.
+
+MocNeutralBudgetFivePlane.lean now proves the13 actual compressed
+quadratic SOS identities and universal excess-budget positive5D
+compression implication. Root independently compiled it. The exact
+Python generator identifies these quadratics with the universal pencil.
+MocComplexDeterminantInertia.lean additionally has the arbitrary-t
+linear compression bound and no_positive/negative_five_compression.
+
+SCIENTIFIC FIGURE AND RAW DATA, root inspected:
+build/moc_nonic_inertia_escape/nonactual_root.png and .pdf,
+build/moc_nonic_inertia_escape/spectrum.csv (903 rows), metadata.json.
+At alpha~.3003170578 the zero eigenvalue is fourth, not middle fifth;
+the fifth scaled eigenvalue is about1.00048. The fixed5D compression
+minimum is about0.999993 and dual pairing about-0.43485. Exact rational
+certificates prove the assertions; numerical curves illustrate them.
+
+CURRENT UNPROVED GLOBAL CANDIDATE:
+ nonnegative g with inertia(M9(g)) positive and negative indices <=4
+ belongs to C0.
+It would imply unrestricted MOC4. Neutral inertia is NOT equivalent to
+actualness: the exact nonactual H sextic/Hardy point has inertia(4,4,1)
+and an independent three-square certificate. n5 is testing other full
+moment separators with very small single budgets for a neutral root
+outside C0. The stronger claim that every full moment dual admits ONE
+common positive5-plane has now been EXACTLY REFUTED as flagged above.
+The explicit full-PD dual has beta7=beta10=epsilon=1/100. Put C=16M(f34)
+and Rj=16M(rj). The18D matrix
+L=I2 tensor C+diag(1,0) tensor R7+32J2 tensor R10
+has9 exact negative directions. If a common W5 had C>0 and both
+Rj+epsilon*C>=0, then L would be positive on R2 tensor W (dimension10),
+because I2-epsilon*(diag(1,0)+32J2)>0 for epsilon<=1/65. Contradiction.
+The underlying correlated3-parameter full-PD dual family is explicit
+for epsilon1,epsilon2>0, rho^2<epsilon1*epsilon2. Hence the obstruction
+is caused by coupled small budgets, not failure of moment positivity.
+The STAR team retains actual source data; the V4
+case has now been closed as above.
+
+NEW SECOND-ORDER ACTUAL MINIMUM OBSTRUCTION:
+moc_actual_nonic_second_order_contact_rank_20261031.txt proves, under
+rank8 neutral pencil, actual-image interior, and stated face regularity,
+that a negative minimum with nonzero nonic multiplier must satisfy
+rank{d -> M(d)h : d vanishes on active contacts}<=5.
+For derivative rank9 this is k-r>=4. Since e is in the Gauss kernel
+and is1 on each contact, r>=1; regular four-contact negative minima
+are impossible, and a five-contact minimum forces r=1. Full MFCQ is
+given by d=e-g after mean1 normalization. For k<=5 the multiplier and
+face-CQ follow automatically; generic convex-physical objective
+perturbations give a nonzero multiplier for all k. This does NOT remove
+rank<=7, singular derivative, source-boundary, or remaining face-CQ
+cases. Do not infer an unrestricted reduction yet.
+
+moc_cap34_contact_subset_census.py enumerates8192 subsets of the13 cap
+zeros under24 cap stabilizers. Among H/V4-uncovered subsets there are
+47 k8,19 k9,3 k10 orbits and none with k>=11. The69 >=8-contact families
+have at most5 ordinary budgets. This is an ACTUAL-case classification:
+H is closed for actual costs, not proved for every neutral formal cost.
+The3 maximal10-contact/3-budget cases are now closed uniformly by
+nonic factorization and unique4-feature Grams; see
+moc_max10_contact_three_budget_closure_20261031.txt. Four maximal9 cases
+and13 other sparse cases have coefficientwise positive nonics. Further
+exact single/multiple-core polynomial dominance certificates now give
+51 proved/excluded families in total, with18 residuals. The identities
+R+sum(M_i D_i)=H with coefficientwise nonnegative H,M_i force at least
+one small core capacity D_i>=0 on every restricted nonic root; its
+explicit Gram plus remaining ordinary squares gives the uniform SOS.
+The residual positivity targets are not assumed true, and this finite
+census does not settle the Morse degeneracies.
+
+ACTUAL ODD-RANK BOUNDARY IS NONEMPTY, including unique contacts:
+Root exact data build/moc_actual_odd_rank_support_examples.json has
+a=(1,2,i,2+3i), b=conj(a)+1, eta=1, h=250, contact{23}, rankM=7;
+b=i*a, eta=i gives h=60, contact{7}, rank7. Also a=(0,1,i,2+i), b=-a,
+eta1 gives h8, contact{23}, rank5. Thus do not conjecture actual ranks
+are always even, or that rank<=7 forces H/V4 contact sets. These are
+genuine missing strata of the rank8 Morse argument. Grace owns their
+source/Gram classification. Additional structured exact probes are in
+build/moc_actual_structured_rank_probe.json; these are data, not a
+universal classification theorem.
+
+STAR update: source reciprocal Lorentz/Cauchy3 kernel positivity is
+fully proved and Lean checked (root independently recompiled
+MocStarSchurAlgebra.lean). A Cauchy tensor O(2) six-primary block has an
+EXACT full10-Gram extension on the actual control, with eigenvalue
+lower bound10^-7: moc_star_cauchy_primary_exact_20261031.txt. Its phases
+and cross block are control inputs, not a uniform source formula.
+Ordinary4-state linear feedback Riccati embeddings, even restricted to
+the9D PT auxiliary subspace, are exactly obstructed. Nonlinear source
+phases/cross-block construction remains open.
+
+HISTORICAL CONDITIONAL REFINED REDUCTION (POSITIVITY HYPOTHESIS REFUTED):
+moc_refined_29_rational_image_reduction_20261031.txt. It is enough to
+proveC0 for29 nonnegative RATIONAL normal-image costs u_C(S), Srealbalanced
+rank3, defined by the invertible14x14 system [Dc(S)^TB;B[C];sum(B)].
+All29 determinantpolynomials are simultaneously nonzero at ONEintegerK
+mod1000003; rootreplayed moc_gauss_leaf_29_minor_certificate.py PASS.
+Symmetry andfiniteproductavoidance cover ALL10626foursets. ActualNORMALS
+areZariskidenseY(rawReproductdenseSec +Gaussdominance); actualSUPPORTCOSTS
+areNOTdenseX becauseeachhasazero. This distinction was caught/corrected.
+Vertices inherit thesamegenericnormal as originalactualcost, so noother
+N9restrictioncomponentsneedpositivityunderthisrefinedcover. Degenerate
+originalactualinputsarecoveredbyperturbation+closedness.
+
+FIRST OF29 RATIONAL FAMILIES CLOSED: C=(0,1,2,3). Universal9pencil obeys
+M_g*ones9=b*v, b=g4=g5, v=(0,0,0,1,-1,0,-1,1,0)/8. Conormalcompatibility
+M_g vec(K^-T)=0 plus symmetry forces b*(v.vec(K^-T))=0. The secondfactor
+isnonzero rationally (atK=I itis-1/8), hence bIDENTICALLY0 onrationalimage.
+Every nonnegative suchcost hasall6row0col0contacts andisORDINARY/C0.
+Independentexhaustive6435facet-subset proof ofthesixcontactcone needsNO
+82-raycompleteness assumption. Note/verifier:
+moc_contact_0123_rational_closure_20261031.txt / .py.
+RootLean MocOrbitZeroKernel.lean compiles the abstractfield elimination
+andtwoadditionalcontactzeros(no sorry/customaxioms). 28familiesremain.
+
+GLOBAL LINEAR SYMMETRIC9PENCIL NOW EXISTS (indefinite):
+moc_universal_inverse_quadratic_pencil_20261031.txt / .py;
+API UniversalPencil().matrix(g24),.nonic(g24). Quadratic maponH=K^-T is
+restriction[c(LKL^T)/detK^2], soYisprojectionofVeroneseP8. ItsdualX has
+detM_g=constant*N9 globally byirreducibledegree9; exactall34rayformulas,
+20relations, rank13map, e-kernel,8commonisotropic3planes verified.
+N5usescommon-isotropicWitt/Schur reductions; doNOTseekadefiniteLaxmatrix:
+orbit28/30positivebudgetlineshaveEXACTnonrealroots. Onactualcontrols
+rootfoundexactrank8 andnumericalinertia(4+,4-,1zero), soevenresidual3Schur
+afterhyperbolic6neednotbePSD. Global9pencilisstillaconcretealgebraictool.
+
+Currentfull targets: n5owns C=(0,1,6,17), variational temporarilyowns
+C=(0,1,8,11); BOTH alreadyprovedconstant-rank1shortcutcannotextendthere.
+Thenvariationalreturnsfullface30(4920-termN9,84cliqueGramcone). QFT and
+positiveparentown STAR C=(0,1,2,14): F=abc+def,Q=ut-rs, irreduciblenonic
+220terms, intrinsic4x4sourceSchurPSD rank2 foractualcosts; naiveplanes
+cannotinterpolateg evenwitharbitrarymetrics, fullmixingneeded. Litowns
+V4 C=(0,7,16,23): rationalactual8parameterchart, actualordinaryshortcut
+EXACTLYFALSE butsameactualcosthasfull10DpositiveGram(rootreplayPASS).
+GraceownsHoff-Fsextic: N9_H=F*(F*kappa*D/4+R6), fullbranchlinearhiddenD;
+actualH/cubicF0ordinaryalreadyproved. Degree2childownsuniversal9pencil
+API/globalproofandfullone-mixedC=(0,3,7,17)5778-termnonic; itsnormalimage
+rank8verified. Bothone-mixedfullpolysnowknown; fullcontainmentsstillopen.
+
+Read moc_projective_dual_and_markov_stationarity_20261031.txt first.
+The clean sufficient global theorem is now separately recorded in
+moc_twenty_nine_face_global_reduction_20261031.txt: ALL nonnegativeN9
+costs on each of29 full four-contact faces inC0 would suffice, including
+Q0/singular/past face vertices. The elementary convex implication is
+proved; face containments remain open. The generic actual witness is now
+EXACT: moc_actual_gauss_rational_chart.py PASS withnonzero304-digit
+cofactor, all34ordinaryprofileidentities, andall9conormalderivatives0.
+NormalizedPhi(S)=projectedcS/tau hassingletonmatrixS identically, so
+the nine-dimensional balanced chart has a rational singleton inverse.
+Genericity/duality/density inputs are NOW PROVED and independently reviewed:
+moc_twenty_nine_face_genericity_audit_20261031.txt; rootreplayed universal
+moc_balanced_height_transversality.py PASS. The two height divisors have
+the same image, Galequotient normality plus det(S+t11T)=16t*tau gives
+ambient smoothness/transversality, and the actualSchurwitness gives
+conormal dominance. Realpolynomial nonvanishing and supportmax continuity
+give densegoodactualcosts. The29 FULLfacecontainments remain unproved.
+
+UNIFORM ACTUAL H CONTACT TYPE CLOSED: H=[0,1,6,7]
+={id,(01),(23),(01)(23)}. Every nonnegativeH cost withF=0 isordinary,
+including Q0/singular cases; EVERYactualH support isordinary including
+allcollisions. ExactliftedCHSH coordinates, exhaustive24310subset facet
+audit, F_H=-det3(M)/16, and nonnegative-rank2 NS factorization prove it.
+Root-read proof and rootreplayed BOTHverifiers PASS:
+moc_klein_actual_ordinary_theorem_20261031.txt,
+moc_klein_actual_ordinary_theorem.py,moc_klein_contact_face_geometry.py.
+Thisdoes NOT close strongALL-N9H: an off-Fsextic exists. An exactnonlocal
+pastHcost nevertheless has10DpositiveGram; see
+moc_h_face_formal_nonlocal_sos_20261031.txt. Hnonic islinear inhiddenD.
+
+PAST SPARSE FACE CLOSED: g=f34+a*r7+b*r10+c*r20, budgets>=0,N9=0.
+Thenab>1,c=(a+1)(b+1)/(ab-1) (oldfactor, notnew). Unique full4featureGram
+[[a,-1,1,0],[-1,b,1,0],[1,1,c,-1],[0,0,-1,1]] isPSD rank3. Withd=b-1/a>0,
+rootLean MocCapThreeBudget.lean accepts g=(f-r20)^2+
+a(r7-r10/a+r20/a)^2+d(r10+(1+1/a)*r20/d)^2 and3literal sqrt-weighted squares.
+Thiscloses a high-contactsubface, notthefull9budgetface.
+
+Two-contact NORMAL-ONLY positivity isFALSE: n5exactified3 SL4normals
+withFULL10gauge completions,12positiveLDLpivots,negativecontactcaps.
+ALL3 fail FULLGausscompatibility by exactFarkascertificates combining
+Dncolumns+10matchingannihilators into strictlypositive noncontactvectors.
+ThusDnTg0+g>=0+contacts0 forcesg0 for thesecandidates. Verifier:
+moc_two_contact_completed_normal_exact.py. Eulerng0 isNOTfullDnTg0.
+SignedchartsmustretainBOTHsignsofc(S),dependingtau. RawLeibnizPDtest
+isonlysufficient; full10gauge conditional momentcompletion isessential.
+The audited HMSV facts imply Sec(M8)^*=N8': generic Hessian-kernelK is
+tangent to Sec, F vanishes onK, H_k x=0 puts allK back inSec, and q(K)
+fills its normal projective line. Dominance ofq(Sec) gives the reverse
+inclusion. Thus smooth N9 Gauss normals lie in N8' intersect e-perp.
+The primary SL4 quotient-to-N8' cone map is surjective (HMSV section3.2).
+
+ONE-CONTACT positivity is now proved conditionally on the correct
+stationary/Gauss-normal hypotheses. Strict contact-null moment positivity
+forces all off-diagonal singleton and3 disjoint ordinary scores positive.
+SL4 chart[I|T] gives detT0, rank3; gauging by its nullvectors produces a
+real balanced positive-offdiagonal Markov generatorS with n=-positive*c(S).
+Both-dependent group charts give rank-one zero-row-sum singleton matrices,
+which cannot have all offdiagonalspositive; all lower ranks also excluded.
+Twelve six-term matching trades imply a nonnegative cycle decomposition
+of n.g for EVERY nonnegative matchingg vanishingidentity. With strict
+rates/disjoint scores it is strictlypositive for nonzerog, contradicting
+Gauss compatibilityn.g0. NO82-census completeness is needed for this theorem.
+Root-replayed short verifier moc_markov_cycle_capacity.py PASS; independent
+20-cycle coefficient proof moc_markov_gauss_cone_certificate.py PASS26/26.
+Lean MocMarkovCycle.lean and MocMarkovMatching.lean accept the algebra,
+rank-one exclusion,12trades, and min-capacities with no sorry/customaxioms.
+The global KKT application STILL NEEDS MULTIPLE CONTACTS and singular strata.
+Unique-contact density does not remove these stationary-boundary issues.
+
+A stronger generic-normal PSD exclusion was REFUTED exactly: the balanced
+integerS in moc_markov_normal_positive_moment.py has a strictlyPD13D
+contact moment (13 exact positive LDL pivots). It also pairsstrictpositive
+withall53 contact-null rays, so cannotbeGauss-compatible withnonzerog>=0.
+Retaining that compatibility is essential. Plot generated AND inspected:
+build/moc_markov_normal_positive_moment/normal_and_contact_cone.png.
+
+Exact gradient ratios now take ~1second without342k-termN9 expansion:
+moc_nonic_gauss_adjugate2_exact.py compresses projectedHessian derivatives
+to2x2 and independently verifies the original-spectral formula
+n=Q H_y k-(y^T H_e k)q(x), n.e=n.g0. RootPASS.
+
+Full FOUR-contact finite census: moc_four_contact_orbits.py PASS. All10626
+subsets form34 row/column/inversion orbits,29 admitmixed rays. Eachof29 has
+face-dim10 andexact4forcedcontacts. Data moc_four_contact_orbits_20261031.json.
+Gaussleafconormalspace kerDn_S^T hasdim5 andcontainse; a mean-one positive
+section is4Dpolytope withvertices>=4contacts. This is now a PROVED
+sufficientglobalreduction using ALL-N9faceclaims; nofuturecontinuation
+assumptionisneededbecauseverticesmaypast. Actual-onlycontinuationwould
+stillneedthefuture-liftdegenerationboundary.
+
+Current coordinated branches: positive_representation owns signed-balancedS
+5Dconormal LP/fullC0 adversary(22/29orbitsvisited,NOmembershipproofs) and
+itsdegree2child ownsFULLone-mixedface(0,3,7,17); variational ownsotherFULL
+one-mixedface(0,3,8,17). n5_kernel_proof owns2contactfullGausscompatibility;
+Grace ownsALL-N9Hoff-Fsextic(actualHdone). LiteratureagentownsnormalV4
+[0,7,16,23]; QFT ownsSTAR[0,1,2,14]=idplus(23),(12),(02). Exactelliptic
+sourcepencil/rulingfuturetestpassed2anchors; sharp11contactanchorhas
+rank1singleton/tau0 andexceptionalrank3criticalHessian.
+Extra exact nongeneric-normal block exclusions: ifconstant+31 vanish,
+singleton squares exclude28/29nonordinary4contactorbits (V4 exception);
+ifconstant+22 vanish, pair-partition squares excludeH andV4 among6orbits.
+See moc_contact_pair_partition_square_20261031.txt.
+
+Physical negative-budget search:60000trials across30negative-f34 profiles,
+742positiveN9 roots, noverifiednegativephysicalvalue; full-C0-dual budgets
+separately60000trials gave7348validatedpositiveN9roots andno negativepairing.
+These are finite evidence, not proofs. Original MOC remains unproved.
+
+Exact NEW formula obstructions: rootreplayed moc_two_chart_exact_replay.py
+PASS7.4sec (actualfinitecost, criticalsum/t=.84534, p=-1/2 negativeQF,
+separate10DpositiveGram). p=-1 exactcounter in
+moc_projector_section_exact_replay.py (rootPASS28.6sec). See corresponding
+moc_actual_two_chart_obstruction and moc_actual_projector_minus_one notes.
+Restricted all-f-arrow+critical-block pencils also require S>=6t/5 and
+therefore fail knownactualanchors; ordinary-ordinary cross terms essential.
+SeparatedTL3Markov lifts+separate spin0 repair also fail an exactactualcost;
+fullJones cross moments remain viable. Note moc_tl4_jones_markov_obstruction.
+
+1. Universal intrinsic real matching-SOS reduction
+
+The reduced14+4 PPT certificate cone, on matching costs, equals exactly
+the real SOS cone of the14-dimensional real matching-function space V.
+The auxiliary spectrum can be chosen (0,1,-1,w). The32 real jets span V
+and satisfy sum_pi sgn(pi) j_pi j_pi^T=E(J2 tensor J2)E^T. An alternating
+component vanishes for g in V, which makes the real4x4 exceptional
+corner partial-transpose invariant automatically.
+
+Universal real-O4 Clifford moment decomposition also supplies one
+alternating gauge c'=c+delta_O sgn with PSD14x14 matching moment matrix,
+rank<=8. The gauge preserves all matching costs. SOS in V is therefore
+sufficient for all realO4 and, by the already proved real common-profile
+convex bridge, arbitrary complexU4. A general actual-gap SOS theorem is
+STILL MISSING. Some strict SOS-dual profiles are nonphysical, and their
+values can be outside the physical SO4 support range; equating the two
+profile bodies is rigorously false.
+
+Proof: moc_intrinsic_matching_sos_20261031.txt.
+Root-replayed exact verifier: code/research/moc_real_jet_matching_sos.py.
+Accepted Lean: code/lean/MocRealMatchingSos.lean, exactPT/sign-gauge and
+conditional support client; no custom axioms or sorry.
+CP gauge: moc_qft_cp_completion_audit_20261031.txt.
+
+2. Global four-dimensional cofactor hull equivalence
+
+For any fixed finite complex u_pi,v_pi, all-x inclusion
+ d1*x+d0 in conv{u_pi*x+v_pi}, for every x in C,
+is EQUIVALENT to (d1,d0) in conv_R{(u_pi,v_pi)} in C^2=R4.
+Equivalently there is ONE positive permutation law matching both slope
+and intercept simultaneously, independent of x. This is a full finite
+convex-hull/support theorem, not just one implication. A generalization
+to two additional free complex variables does not follow.
+
+Homogeneous commonGL2 action normalizes row spinors to0,1,infinity,x.
+With column parameters beta and plus convention, u_pi=beta_pi0*(1+beta_pi1),
+v_pi=u_pi*beta_pi3. For B=Odiag(beta)O^T,
+ d1=B00+detB[01], d0=detB[03]+detB[013].
+Thus unrestricted MOC4 is equivalent to universal inclusion of this
+cofactor pair in the24-point R4 hull, for all realO4,beta, with limits
+covering degeneracies and the real-profile bridge covering complexU4.
+
+Proof: moc_four_dimensional_cofactor_hull_20261031.txt.
+Root-replayed exact audit: code/research/moc_cofactor_hull_exact_audit.py.
+Accepted Lean: code/lean/MocJointAffineHull.lean. The strongest theorem
+common_weights_iff_all_affine_supports includes duplicate finite points
+correctly and proves the slope-only limit algebraically.
+Plot: build/moc_cofactor_hull/joint_common_law_projections.png.
+
+3. Explicit projector Gram formulas: both candidates refuted
+
+New formulas adapt classical ellipsoid fitting to matching-SOS without
+an SDP. See moc_ellipsoid_sos_sections_20261031.txt for complete algebra,
+primary-source attribution, numerical counts, and exact obstruction.
+p=-1/2 passed248/249 saved planar costs and2644/2644 sampled cofactor
+facets. Targeted actual-cap search then REFUTED it exactly on a finite
+rational spectral support. The countercost nevertheless has an exact
+small positive SOS Gram. It refutes this formula ONLY.
+
+Root-replayed obstruction:
+ code/research/moc_ellipsoid_section_obstruction.py
+ build/moc_ellipsoid_section_obstruction/exact_obstruction.json.
+p=-1 also has an EXACT actual counterexample and separate elementary
+positiveGram. Rootreplayed moc_projector_section_exact_replay.py PASS.
+Its rational domain on all generic two-contact types remains valid;
+that interpolation-domain statement does not give PSD. The proposed
+triangle-or-p=-1/2 two-chart cover is ALSO exactlyfalse, with a separate
+positive fullGram; rootreplayed moc_two_chart_exact_replay.py PASS.
+Do not promote another empirically surviving power to a global cover.
+
+4. Conditional triangle Gram: global necessity REFUTED
+
+The exact82-ray completeness and mixed cancellation theorems reduce
+every nonnegative matching cost to an ordinary cone or one canonical
+mixed cap, up to relabelling. References:
+ code/geometry/cone82_completeness_verify.py (oriented-chain proof),
+ docs/research/mixed_cancellation_graph.txt.
+The canonical14 rays [f34]+Z are independent, with
+ Z=[0,7,10,13,17,18,20,22,23,27,28,30,31].
+Thus g=t*f34+sum v_j*r_j, t>0,v_j>=0 has unique cap coordinates.
+
+Let beta=(v18,v23,v28)/t. Exact Boolean identities:
+ f34^2=f34+2delta_pi5;
+ r18*r23=r18*r28=r23*r28=delta_pi5;
+ ordinary rays are idempotent.
+A PSD3x3 block with diagonal beta and sum of its three off-diagonal
+entries=-1 gives a matching-SOS certificate. Such a block exists iff
+
+ T(beta)=sum beta-max(0,sqrt(beta_max)-sum_others sqrt(beta))^2 >=2.
+
+Constructive sufficiency: balanced lengths give a PSD Heron matrix
+B0 with off_ij=(beta_k-beta_i-beta_j)/2 and B0*1=0; mix it with diagbeta
+using weight2/sumbeta. For unbalanced sorted lengths x<=y<=z use the
+rank1 vector(x,y,-z), mixing its outer product with diagbeta with
+weight2/T. These are explicit conditional formulas, not an actual-only
+proof of T>=2.
+
+BEFORE falsification, all19 nonordinary saved249 actual planar costs
+passed, as did the32
+nonordinary costs in the2644 sampled cofactor facets. A direct eight-real-
+parameter actual-cap adversary performed192160 evaluations, approaching
+T=2+8.95e-10 and beta approximately(.99981033,1.000189705,0). No uniform
+lower bound has been proved. At beta=(0,1,1),
+ g=f34^2+(r23-r28)^2 exactly.
+
+DO NOT replace actual spectra by N9=0 or neutral Hessian or35 metric
+tests in this stronger triangle claim. Exact supported NONACTUAL
+neutral13 gives T=.75, and uniformorbit7 gives T=0 despite all35 metric
+tests. Both admit other matching-SOS certificates. Hence this new
+stronger criterion requires actual conjugate-spinor/real-gradient lift.
+
+Exact seed now has just13 positive matching squares, greatly simpler
+than its older auxiliary-PPT certificate:
+ code/research/moc_cap_triangle_seed_certificate.py
+ build/moc_cap_triangle_sos/exact_seed_sparse_sos.json.
+Root replay PASS. Cap t=42246975256, A=v18=65769370688,
+C=v28=58010468072, AC-t^2=2030505060130680408000>0.
+The actual ellipsoid-obstruction cost also has a two-ray positive repair.
+Lean cap-Gram and FULL scalar-budget support clients have now COMPILED:
+ code/lean/MocCapTriangle.lean,
+ code/lean/MocTriangleGramConstruction.lean.
+The latter constructs an explicit five-row Gram factor from the stated
+scalar inequality, including zero lengths and every largest-coordinate
+case, then invokes the existing real-Clifford support client. All printed
+axioms are only propext,Classical.choice,Quot.sound. Root inspected both
+compiler logs. The ACTUAL-cost-implies-budget inequality remains missing.
+
+There is a NEW EXACT SHARP FINITE ACTUAL example:
+ a=(-1/2,-1,0,(-9+i*sqrt7)/22),
+ b=((3-i*sqrt7)/8,(7+i*sqrt7)/14,(13-i*sqrt7)/22,1/3),
+ eta=(363+33i*sqrt7)/4, h=1/2,
+ g=f34+r23+r28=f34^2+(r23-r28)^2.
+All eight projective points are distinct, all factors nonzero, and there
+are11contacts. Root replay PASS:
+ code/research/moc_triangle_sharp_actual_boundary.py,
+ build/moc_cap_triangle_sos/exact_sharp_actual_boundary.json.
+
+The positive agent also proved an ALL-ORDERS LOCAL triangle theorem on
+an actual open neighborhood of this equality support, covering transverse
+directions outside the known orbit51 face. Exact9contact Jacobian rank9,
+13x13 IFT determinant-13/8, and a smooth J vanishing on the zero-contact
+slice with dJ=sum dg_D imply J=sum g_D,j*positive_coefficient_j locally
+by Hadamard's lemma. Local ordering of the three budgets gives T>=J+2t.
+See moc_cap_triangle_local_boundary_theorem_20261031.txt. Root read the
+proof and is replaying its verifier. No explicit neighborhood radius or
+GLOBAL triangle theorem follows. The5D zero-contact face itself is an
+old orbit51 subfamily; root caught this overlap and author corrected the
+novelty description. Its full polynomial factorization is useful to the
+new local argument but is not a new global face closure. Root replay of
+the all-orders local verifier PASSED. This local result remains valid
+despite the following global counterexample away from its neighborhood.
+
+4b. EXACT FINITE COUNTEREXAMPLE TO GLOBAL TRIANGLE, WITH FULL-SOS RESCUE
+
+Finite Gaussian-integer spectra:
+ a=(100000+100000i,0,-300000-100000i,7256-11910i),
+ b=(-340+953i,-1240+2373i,5750-9071i,-1484+2182i),
+ eta=-802442+596731i.
+All24 products were computed with integer-pair Gaussian arithmetic,
+independently of numerical lifting/HMSV. Their exact supporting cost
+has unique contact9 and full nonnegative canonical cap expansion with
+ t=8412997598488012479616,
+ (v18,v23,v28)=(716336099653867664712,155106963601811855672,0).
+The critical SUM satisfies
+ S/t=6808148931684996253/65726543738187597497 <.104<2.
+This is S/t, NOT the full T/t; T<=S proves failure. Here the true T is
+2sqrt(v18*v23). All spectra are simple and all16 pair factors nonzero.
+
+Root-replayed direct audit:
+ code/research/moc_triangle_counterexample_independent_audit.py,
+ build/moc_cap_triangle_sos/independent_actual_counterexample.json.
+The proposed virtual surfaces are also refuted already at y=(.5,.5,.5):
+W0 exceeds this exact product support by15954552133720345438848/9.
+The correct SDP dual uses INFIMUM for zero budgets, not always minimum.
+Derivation: moc_triangle_virtual_surface_duality_20261031.txt.
+
+CRUCIALLY, the SAME actual cost has a fully EXACT rational matching-SOS
+Gram. Root replay PASS in under1second:
+ code/research/moc_future_hit_exact_gram.py,
+ build/moc_future_hit_exact_gram/exact_positive_gram.json,
+ docs/research/moc_future_hit_exact_gram_20261031.txt.
+All24 finite spectral identities, all24 Gram values and the13x13 exact
+LDL factorization are checked. All13 rational pivots are>1/10000.
+Thus this counterexample eliminates the three-budget route, not full
+matching-SOS or MOC. The Clifford/sign-gauge theorem certifies its
+support bound for allU4 via the broader Gram.
+
+The proposed8-feature enlargement (f34,4singletonU,3criticalrays, plus
+other6ordinary squares) is also too small on this cost: exact evaluation
+identities force k=Gramff>=0, 2k<=S, and2k+vU13>=t; henceS+vU13>=t.
+The cost violates that linear inequality by4594283034535663630512.
+QFT is finishing its independent verifier/Lean certificate. DO NOT claim
+8-feature cone equals triangle: this was briefly proposed then corrected,
+because k is free, not fixed to t. Broader Gram cross terms involving
+the remaining six ordinary features are necessary for this example.
+
+5. Universal dimension-five kernel theorem, now fully audited
+
+For EVERY realO5 and complex spectrum (including repeats/zeros), the
+full32x32 signed fixed-spectrum kernel has a division-free factor
+G=W^*W with16 columns. Thus G>=0 and rank<=16. Grade4 Clifford entries
+are conjugated on subset size2, and on size3 have polynomial correction
+r_C,I*B*H^T; polar inverses disappear. Fourteen universal polynomial
+identities plus common-unitary complement transport cover all1024
+entries. The original coverage enumeration loop had a mutation bug;
+author and independent auditor fixed it and checked actual permutation
+witnesses for all pairs. This did not change the mathematical identities.
+
+Complete proof: moc_n5_universal_clifford_kernel_20261031.txt.
+Root-replayed code: code/research/moc_n5_universal_clifford_kernel.py.
+Independent structural audit:
+ moc_n5_universal_kernel_independent_audit_20261031.txt,
+ code/research/moc_n5_kernel_structural_audit.py.
+It checks30240 Clifford signs,120 Hodge maps,252 Jacobi signs,50 formal
+Hodge entries, and all1024 explicit orbit witnesses.
+Lean: code/lean/MocN5CliffordKernel.lean, all14 actual raw-minor/determinant
+identities compile with only propext,choice,Quot.sound. Full equivariance,
+complement and limiting proof is written/audited, not fully inLean.
+This is NOT MOC, does not extend to complexU5, and historical novelty is
+unknown (Drury1994/1996 full texts still not fully read).
+
+6. Current active mathematical work and next obligations
+
+The direct actual-cap triangle adversary's192160 evaluations approached
+T=2 from above but MISSED the exact counterexample in4b. The future-N9
+parameterization found the obstruction after only five basepoints; its
+finite spectra are clustered. Do not treat the direct search as evidence
+for a now-refuted global bound. positive_representation finished the
+independent integer counter-audit and the correct virtual-surface duality.
+
+QFT_global has actual (not merely N9) Plucker identities and a new
+SO3(C) parameterization in progress. Normalize starpi5 toidentity;
+critical products become Klein4 double-transposition dimers. The row and
+column three-singlet channels x,y satisfy sumx=sumy=0. Lean accepted
+code/lean/MocTrianglePlucker.lean, including an actual spectral identity
+for t+p+q+r as a pure[22] bilinear source phase. A global T bound is
+FALSE, so use this structure for the broader matching-SOS problem.
+For row-spinor triplet matrix C_a and column C_b, exact identities give
+C_a Q C_a^T=2diag(x1x2,x1x3,x2x3). Their crossmatrix normalizes to
+R in O3(C), so Re(R)^TRe(R)-Im(R)^TIm(R)=I. Identify the cap budgets
+in this frame and seek a broad global Gram certificate; no claimed
+implication from this orthogonality alone. Further accepted Lean module
+code/lean/MocSpinorTriplet.lean proves the homogeneous16-spinor frame
+and actual Fourier31 identities, including all projective charts.
+
+Hodge_global FINISHED a useful generic real-lift theorem. The proposed
+rank3 shortcut is FALSE: the generic map L:Sym2->R14 has rank TWO.
+This is proved geometrically from the HMSV dominant polar map
+Sec(M8)(projectivedim11)->N8'(dim9): generic Hessian corank2, and the
+normal derivative K^T H_v K vanishes on the12-dimensional secant tangent.
+The primary Theorem3.4/Cor3.9 were checked by root directly in
+https://arxiv.org/pdf/1103.5255v1.
+
+For x=g-F(g)e/Q, K=kerH_x, actual conjugate critical lift is exactly
+L(M)=gradF(x), M>=0, rankM<=1. On the rank2 chart the solutions form
+an affine matrix line M(s)=A+sW. Meeting the PSD cone alone is enough:
+a finite boundary point has rank<=1. For detW<0 and positive determinant
+discriminant, the determinant-midpoint is definite and its trace sign
+distinguishes the actual futurePSD sheet from the nonactual pastNSD
+sheet. For detW>0 the line always has both aPSD and anNSD endpoint.
+A dynamic PD metric C=tr(W^2)I-tr(W)W, orthogonal to W, supplies a
+rational two-output-coordinate sign separator; it excludes uniform7
+even though all35 old fixed metric tests passed.
+
+Root-read and root-replayed exact four-anchor theorem/audit:
+ moc_kernel_lift_sign_20261031.txt,
+ code/research/moc_kernel_lift_sign_20261031.py,
+ build/moc_hodge_matching_sos/kernel_lift_sign_exact.json.
+Lean code/lean/MocMomentLine.lean accepts the metric and obstruction
+identities. Actual nonordinary costs occur in BOTH W-sign chambers:
+original seed has detW>0, and the exact nonordinary mixed seed
+a=(-3-i,4i,-11-i,13-2i),b=(2-11i,5-3i,-4+i,1+6i),eta1 has detW<0
+and twoPSD endpoints (t1250,T=16.5936). Hence do not assert that actual
+nonordinary caps force detW>0. The sharp triangle boundary also has
+detW>0, so triangle equality is not a moment discriminant degeneration.
+
+Grace's code/research/moc_future_lift_numeric.py and full-cap quadratic
+N9 fibers led to the exact counter in4b. Previously ambiguous formal00/03
+roots are both pastNSD, but an actual definite-W branch then yielded
+the trace failure. A further20,000 basepoints produced1,014 strict
+future roots on four-contact faces without a p=-1 section failure.
+Those historical passes were not a proof. A later targeted search found
+the exact p=-1 failure above. Grace has stopped the projector campaign
+and is working on the full-Gram/global four-contact source theorem.
+
+Exact nonzero complex critical p implies actual spectral realizability
+ABSTRACTLY by the audited M8 gradient ideal and GIT surjectivity. A
+common PGL2 chart avoids infinity for all8 labels and overall invariant
+scaling is absorbed in eta. Thus explicit eight-spinor reconstruction
+is useful for concrete spectra but is not an extra abstract sufficiency
+hypothesis. Numerical future checks alone still need exact certificates.
+
+variational_closure is now targeting ORIGINAL MOC directly on these
+actual future-cost fibers: minimize physical SO4 expectation
+F34(O)+sum v_j r_j(O), using the sharp f34 physical minimizer as a start
+and alternating cost/O if useful. An exact negative physical value with
+an actual cost would refute MOC4; none is established. Seek a global
+nonic/Clifford nonvanishing proof on physical negative-budget simplexes
+if numerical searches support it. This work is disjoint from p=-1 tests.
+
+The global nonic/septic explicitReynolds formula and full68-dimensional
+contact Gram completion are in the earlier checkpoint plus updated
+moc_contact_ordinary_gram_kernel_20261031.txt. All68 gauge directions
+are generated by disjoint-support products alone; Boolean relations
+are redundant. These broad routes remain active now that triangle failed.
+Literature agent is checking actual primary sources and overlap.
+
+The continuation target was a uniform actual-gap certificate or common
+cofactor law, with exact spectral examples used to test candidate mechanisms.

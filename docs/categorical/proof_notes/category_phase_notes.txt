@@ -1,0 +1,131 @@
+PHASE QUOTIENTS, GRAPH CYCLES, AND EXACT ELLIPSE CERTIFICATES
+17 October 2026. Derived in the categorical follow-up; no priority claim.
+
+1. GAUGE QUOTIENT OF A BLOCK COMPOSITION.
+Let A and B be unitary and block diagonal on coordinate partitions P and Q.
+Let G be their bipartite incidence multigraph: one edge per coordinate,
+joining its P-block and Q-block. Put D(theta)=diag(exp(i theta_e)).
+
+Adding alpha_p+beta_q to each edge phase theta_e leaves the complete
+squared-minor kernel R(A D(theta) B) unchanged. Indeed the added P-constant
+diagonal matrix commutes with A, and the Q-constant diagonal commutes
+with B; the new product differs only by exterior row/column phases.
+These phases disappear from every squared minor.
+
+Fix a spanning forest of G. By successively choosing vertex phases, all
+edge phases on that forest can be set to zero. Exactly
+
+ beta_1(G)=|E|-|V|+#connected_components
+
+chord phases remain. Equivalently these gauge-invariant phase combinations
+are alternating cycle sums. Reversing the sign of Q-vertex phases turns
+the gauge map into the usual graph coboundary. This gives a concrete
+first-cohomology interpretation, with circle-valued phases; it does not
+assert a categorical positivity axiom.
+
+For a forest beta_1=0, no phase parameter remains. More strongly, the
+occupancy-uniqueness theorem proves R(AB)=R(A)R(B), hence positive
+composition whenever A and B have common permutation laws.
+
+2. A SINGLE CYCLE HAS AN EXACT ELLIPSE ORBIT.
+Suppose G is connected and has beta_1=1; trees attached to the unique
+cycle and parallel-edge two-cycles are allowed. The gauge above leaves
+one diagonal coordinate phase z=exp(i theta), on a selected chord e0.
+For fixed equal-size I,J, Cauchy--Binet gives
+
+ det(A D(z) B)[I,J] = alpha_IJ + z beta_IJ.
+
+This expression is affine in z because each intermediate coordinate
+subset either contains e0 or does not. In fact its nonzero intermediate
+subsets are at most two: the difference of two equal-degree edge subsets
+vanishes on every tree and alternates around the sole cycle.
+
+Consequently every squared minor has Fourier frequencies only -1,0,1.
+The full determinant, which is linear in these squared minors, has form
+
+ d(theta)=d0+p cos(theta)+q sin(theta),    d0,p,q complex.
+
+Its image is an ellipse, allowing a line segment or a point as a
+Degenerate ellipse. This statement is uniform in all complex spectra,
+all block sizes, and all actual block unitaries satisfying this graph
+hypothesis. The center is the phase average, equal to evaluation on
+R(A)R(B). This follows directly by integrating the cross term.
+
+More generally an arbitrary block-incidence graph yields a finite
+Laurent polynomial on beta_1 phase variables, with each frequency vector
+in {-1,0,1}^{beta_1}. Each residual chord appears at most once in a minor.
+Several frequencies may coincide after cycle constraints; beta_1 bounds
+the number of independent phase variables, not the Fourier rank of every
+particular choice of matrices.
+
+3. A COMPLETE FINITE CERTIFICATE FOR THE ENTIRE PHASE CIRCLE.
+For fixed spectra a,b, let z_pi=product_i(a_i+b_pi(i)). Assume their convex
+hull is two-dimensional, and list its vertices v_1,...,v_m counterclockwise.
+Let e_j=v_(j+1)-v_j and [e,w]=Im(conj(e)w). Then the entire phase orbit
+lies in the permutation hull if and only if, for every polygon edge,
+
+ h_j=[e_j,d0-v_j] >= sqrt(c_j^2+s_j^2),
+ c_j=[e_j,p],   s_j=[e_j,q].
+
+Proof: the oriented edge gap is h_j+c_j cos(theta)+s_j sin(theta).
+Its minimum over all theta is h_j-sqrt(c_j^2+s_j^2). All edge gaps are
+nonnegative exactly when every point lies in the closed convex polygon.
+For rational complex data the certificate uses only rational comparisons:
+
+ h_j >= 0,    h_j^2 >= c_j^2+s_j^2.
+
+No phase sampling or numerical minimizer is needed. A degenerate hull
+must be checked in its affine span instead of using polygon-edge normals.
+
+An averaged positive law proves h_j>=0, but does NOT give the second
+inequality. That precise missing quadratic comparison is where coherent
+interference enters; it has not been proved universally for all spectra.
+The ellipse criterion closes a fixed phase family when the finite exact
+inequalities pass. It does not by itself prove the unrestricted conjecture.
+
+4. EXACT SIX-DIMENSIONAL PHASE FAMILY.
+The standard-library script category_phase_ellipse.py constructs rational
+complex A and B with partitions
+
+ P={{1,2,5},{3,4},{6}},  Q={{1,4,6},{2,3},{5}}.
+
+The graph has six edges, six vertices, is connected, and has one cycle.
+Use Householder H(v)=I-2vv^T/(v^Tv), H=H(1,2,2), K=H(1,2,3), and
+
+ C=H diag(1,i,1) K,
+ E=K diag((3+4i)/5,1,1) H,
+ R(c,s)=[[c,s],[-s,c]].
+
+A acts by C on {1,2,5}, R(3/5,4/5) on {3,4}, and 1 on {6}.
+B acts by E on {1,4,6}, R(5/13,12/13) on {2,3}, and 1 on {5}.
+Put W(theta)=A diag(exp(i theta),1,1,1,1,1) B and
+
+ a=(1+i,2-i,-1+2i,3+i,-2-i,2+3i),
+ b=(-2+i,1-2i,3+3i,-1+i,-2-2i,2-i).
+
+The exact checker verifies A*A=B*B=I and constructs all 720 permutation
+products. Their hull has 12 vertices. The ellipse is nondegenerate:
+
+ d0= -32338565434976/36975700125
+       +i 378821018453552/332781301125,
+ p=  -10600933376/2465046675 - i 140968603648/7395140025,
+ q=  -56102912/13042575 - i 977174528/117383175.
+
+All twelve inequalities h_j>0 and h_j^2>c_j^2+s_j^2 hold as exact rational
+comparisons. Therefore MOC holds for these fixed spectra and for EVERY
+real theta, not just tested values. The smallest ratio h_j/sqrt(c_j^2+s_j^2)
+is approximately204.73, reported only as a descriptive numerical value;
+the proof uses the exact squared inequalities stored in the certificate.
+
+The program obtains d0,p,q from four roots of unity, justified by the
+proved Fourier-degree bound, and also checks an independent rational
+unit-circle point z=(3+4i)/5. It writes all matrices, spectra, hull vertices,
+and twelve rational edge checks to category_phase_ellipse_certificate.json.
+
+5. WHAT IS ACTUALLY ADVANCED.
+The graph first-cohomology quotient exactly counts phase variables left
+by block gauge symmetry. Acyclicity supplies a proved positive composition
+class in every dimension; one cycle supplies an exact finite certificate
+for a whole continuous phase family. Neither is an assumption that all
+positive equivariant kernels are unitary kernels, nor an inference from
+phase averages to pointwise bounds.

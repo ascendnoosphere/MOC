@@ -1,0 +1,114 @@
+A global cofactor/diagonal normal form for the neutral-pencil problem
+31 October2026
+
+Status. These are GLOBAL algebraic identities on the entire14-dimensional
+matching space. They provide a concrete13-parameter quadratic form and
+a rational kernel reconstruction. They are not a positive14-Gram
+formula and do not prove neutral nonnegative costs belong to C0.
+
+1. The13-parameter quadratic form
+
+Every universal pencil has a unique expression
+
+ Q_g(H)=<A,cof H>+sum_(i,j) B_ij H_ij^2,                    (1)
+
+where A is arbitrary real3-by3 and B has all row and column sums zero.
+Here <X,Y>=tr(X^T Y), cofactor means the matrix of signed2-by2 minors,
+and vec(H) is row-major. Constants in g disappear. Thus A has9 parameters
+and B has4, accounting for all13 dimensions of M(V14).
+
+This directly explains the eight common isotropic three-planes. On
+H=l_i v^T, cof H=0 and each coordinate of l_i has square1/4, so the
+diagonal term vanishes by the column sums of B. On H=u l_j^T the row
+sums give the other four planes.
+
+The converse is part of the exact linear-algebra replay: every one of
+the14 universal matching basis matrices has form(1), and the map has
+the already proved rank13. Formula(1) is a coordinate form of the
+whole pencil, rather than a special family or contact restriction.
+
+2. The24 signed-permutation evaluation formula
+
+For each permutation pi of four labels let P_pi have entries
+(P_pi)_(i,pi(i))=1 and put O_pi=L^T P_pi L. These are exactly the
+24 signed3-by3 permutation matrices whose three nonzero entries have
+product+1. Let
+
+ K=[[0,-1,1],[1,0,-1],[-1,1,0]],
+ D=(8/9) K^T B K,
+ c=mean_pi g_pi.
+
+Then the full matching function is recovered from(1) by
+
+ g_pi=c+4<A,O_pi>+sum_(i,j) D_ij (O_pi)_ij^2.              (2)
+
+The constant is independent because A contributes zero mean and D is
+balanced. Equation(2) is verified at all24 permutations for every one
+of the14 basis columns, and hence for ALL real or complex g in V14.
+
+For a fixed ordinary coordinate permutation sigma of three labels,
+the four permitted signs epsilon_i have product+1. Nonnegativity of g
+is exactly the following24 scalar inequalities:
+
+ c+sum_i D_(i,sigma(i))+4 sum_i A_(i,sigma(i)) epsilon_i>=0.
+
+Thus a global Gram reconstruction can be tested against an explicit
+three-by-three signed-assignment problem, with no contact census.
+
+3. Universal rational reconstruction from an invertible kernel
+
+Suppose H is invertible and M(g)vec(H)=0. Put
+
+              T=B entrywise-times H,
+              s=sum B_ij H_ij^2.
+
+Then ALL nine cofactor coefficients are determined by B and H:
+
+             A=[2H T^T H-sH]/det H.                       (3)
+
+Proof. The gradient of(1) is
+
+ E=2T+det(H)[alpha H^(-T)-H^(-T) A^T H^(-T)],
+ alpha=<A,H^(-T)>.
+
+Multiplying E=0 on the left and right by H^T gives
+
+ det(H) A^T=2H^T T H^T+<A,cof H> H^T.
+
+Euler's identity gives <A,cof H>=-s at a zero gradient, proving(3).
+Conversely substituting(3) makes E=0 identically. The exact checker
+clears det(H) and verifies all nine resulting polynomial identities
+with NINE independent H entries and FOUR independent balanced-B
+parameters. No numerical normal or special kernel is used.
+
+The formula applies on the invertible-kernel chart. It does not by
+itself dispose of singular-kernel or lower-rank real-neutral strata.
+The global normal form(1)-(2) remains valid on those strata.
+
+4. What a genuine global certificate still has to do
+
+The desired global neutral target is
+
+ g_pi>=0 for all24pi and n_+(M(g)),n_-(M(g))<=4
+                 => g has a PSD14-feature matching Gram.
+
+Equations(1)-(3) reduce its generic kernel chart to a concrete problem:
+use the neutral8-dimensional quotient, B's four real coefficients,
+and the24 inequalities in(2) to reconstruct that PSD Gram. No such
+reconstruction is asserted here. The false common-plane-per-dual
+statement cannot substitute for this step.
+
+For actual future data, the companion triality agent is retaining the
+source-selected complex structure and Lorentz real form of the spinor
+frames. These contain information not supplied by neutrality alone.
+An eventual positive trace identity may use them; no positivity follows
+merely from identifying the abstract spinor representations.
+
+5. Exact API and replay
+
+ code/research/moc_global_cofactor_diagonal_form.py
+ build/moc_global_cofactor_diagonal_form_20261031.json
+
+Public helpers: normal_form(M), matrix_from_form(A,B),
+A_from_kernel(H,B). The complete all14/all24/generic-polynomial replay
+takes about.54 seconds.

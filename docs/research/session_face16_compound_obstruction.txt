@@ -1,0 +1,32 @@
+Exact compound-matrix obstruction on a face-16 determinant branch
+
+On the rays (3,16,21,30,53), take weights (1,b,2,d,1), and put
+
+  R=3d^2-4d-8,  b=4(d^2+d+2)/R,  d>(2+2sqrt(7))/3.
+
+All weights are nonnegative and R>0. The recovered height is
+h=4d/(5d+4)>0. The exact Hessian determinant at x=g-h e is zero,
+but its principal 12-minor omitting original selected coordinates
+1 and 2 is
+
+  -28 d^10 (5d+48)^2 / [(5d+4)^4 R^2] < 0.
+
+The global neutral-inertia theorem says every principal 12-minor is
+nonnegative at an actual midpoint, including higher-corank points;
+therefore no point of this entire branch is actual. The symbolic
+identity is checked by code/research/verify_neutral_hessian_face16_branch.py.
+At d=3, b=8, the point is independently shown to possess a complex
+critical-pair lift by code/research/verify_neutral_hessian_face16.py.
+The determinant identity alone is not a proof of complex lift at
+other points on the branch, and no such claim is made here.
+
+As a separate broader slice, with weights (1,b,2,3,1), the trace of
+the 12th Hessian compound is negative for all b>=7. One fixed
+principal 12-minor is negative for b>=8. This slice includes only
+b=8 on the zero-determinant locus for b>=7, so the determinant
+obstruction already excludes its other points. The independent
+polynomial identities and the sign certificates are checked in
+code/research/verify_neutral_hessian_face16_family.py.
+
+These statements prove exclusions, not the global nonnegative-support
+inequality.

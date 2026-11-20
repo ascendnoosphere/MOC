@@ -1,0 +1,128 @@
+Global coupled-rotation quadratic form of the four-dimensional determinant
+31 October 2026
+
+Scope. This is a global exact identity with arbitrary complex spectra. It
+reduces the remaining inequality to a source-coupled quadratic optimization
+on SO(3) x SO(3). The sharp inequality is not proved here.
+
+1. Why the real two-rotation model covers arbitrary U(4)
+
+The whole-profile convexification in
+docs/theorems/profile_geometry/algebra_unitary_realification.md, Sections1-5,
+expresses every U(4) squared-minor profile as a positive mixture of at most
+four real SO(4) profiles. The proof fixes one real row and decomposes the
+remaining three real PSD trace-one effects on its real three-dimensional
+orthocomplement into orthonormal bases. Cauchy-Binet transfers this identity
+to determinants simultaneously for every pair of complex spectra.
+
+Thus a uniform support inequality for real SO(4), with arbitrary complex
+spectra, proves the unrestricted U(4) case. This does not replace SO(4)
+profiles by permutation profiles.
+
+The companion moc_global_tracezero_spinor_normal_form.py establishes the
+global Mobius critical-centroid reduction to trace-zero spectra. Write
+
+ a=(x0+x1+x2,x0-x1-x2,-x0+x1-x2,-x0-x1+x2)/2
+
+and similarly b in terms of y. In the quaternionic correlation model,
+
+ det(Da+O Db O^T)=q(X+R Y S^T),
+ q(C)=[2 tr((CC^T)^2)-tr(CC^T)^2]/16,
+
+where X=diag x, Y=diag y, and R,S range independently over SO(3).
+All squares, traces and transposes here are complex bilinear; no conjugation
+of x or y is implicit. This distinction matters for arbitrary complex data.
+
+2. An entrywise quadratic, not a quartic in the rotations
+
+Set
+
+ u=sum_i xi^2, v=sum_j yj^2,
+ xhat_i=product_(k!=i) xk, yhat_j=product_(k!=j) yk,
+
+ alpha_ij=xi^2 yj^2/4,
+ beta_ij=[xi yj(xi^2+yj^2-(u+v)/2)-xhat_i yhat_j]/2,
+ c=q(X)+q(Y)-uv/8.
+
+Then the full determinant is exactly
+
+ q(X+RYS^T)
+   =c+sum_ij [alpha_ij(Rij^2+Sij^2)+beta_ij Rij Sij].       (1)
+
+For any exposed direction eta, simply replace c,alpha,beta by their real
+parts after multiplication by eta. Equation (1) becomes a real quadratic
+optimization on two compact three-dimensional rotation groups.
+
+Proof. For an arbitrary complex3-by3 matrix D, put v=tr DD^T and
+w=tr XD^T. Direct polarization of q gives the polynomial identity
+
+ q(X+D)=q(X)+q(D)-uv/8
+  +tr(X^2 DD^T)/4+tr(X^2 D^TD)/4
+  +tr(X^3 D^T)/2+tr(X DD^TD)/2
+  -(u+v)w/4-<cof X,cof D>/2.                              (2)
+
+The final cofactor term follows from
+tr((XD^T)^2)-tr(XD^T)^2=-2<cof X,cof D>.
+Substitute D=RYS^T. Orthogonality and determinant+1 give
+
+ DD^T=RY^2R^T, D^TD=SY^2S^T,
+ DD^TD=RY^3S^T, cof D=R(cof Y)S^T.
+
+Also q(D)=q(Y). Collecting entries in (2) yields (1).
+
+3. The classical24 vertices are explicit
+
+Take a permutation sigma of three labels and signs eps_i with product+1.
+Let R and S have the same permutation support, with Rij Sij=eps_i on
+that support. Their individual signs can be chosen to put both in SO(3).
+At this point (1) is
+
+ c+sum_i [2 alpha_(i,sigma(i))+eps_i beta_(i,sigma(i))].     (3)
+
+There are6*4=24 possibilities. Their values are exactly the24 original
+products product_i(ai+b_pi(i)). Equivalently they are
+q(diag(x_i+eps_i y_sigma(i))). This is the Weyl signed-assignment action
+of type D3=A3. The checker verifies all24 polynomials, with x and y free.
+
+The global missing inequality is consequently very concrete:
+
+ max_(R,S in SO3) Re eta RHS(1)
+   =max_(sigma,prod eps=1) Re eta RHS(3).                  (4)
+
+Equation (4) is asserted only as the target. Allowing arbitrary unrelated
+alpha,beta would be false: the known nonnegative-on-permutations formal
+mixed cost f34 has a negative real-SO4 evaluation. The coupled formulas
+for alpha,beta in terms of the SAME x,y therefore cannot be discarded.
+
+4. Direct Procrustes stationary/Hessian equations
+
+Use real exposed coefficients alpha,beta,c. The Euclidean gradients are
+
+ G_R=2alpha entrywise-times R+beta entrywise-times S,
+ G_S=2alpha entrywise-times S+beta entrywise-times R.
+
+Stationarity is exactly symmetry of R^T G_R and S^T G_S. Put these two
+symmetric matrices equal to Lambda_R,Lambda_S. For arbitrary real skew
+3-by3 K,L, the full six-dimensional tangent Hessian is
+
+ 2sum_ij alpha_ij[(RK)ij^2+(SL)ij^2]
+ +2sum_ij beta_ij(RK)ij(SL)ij
+ -tr(Lambda_R K^T K)-tr(Lambda_S L^T L).                    (5)
+
+This is a small global source-dependent quadratic system, without contact
+classification, surrogate nonic components, or replacing physical rotations.
+A genuine Procrustes/no-spurious-above-hull theorem for the specific coupled
+coefficients in (1) would prove MOC4 via (4). A generic quadratic-rotation
+theorem or an arbitrary coefficient-cone argument cannot be substituted.
+
+5. Exact reproduction
+
+ python3 code/research/moc_global_bell_pair_quadratic.py
+
+The replay proves (2) with all9 entries of D and all3 x coordinates free,
+then checks the24 classical polynomial identities with all6 complex source
+coordinates free. Output:
+ build/moc_global_bell_pair_quadratic_20261031.json.
+
+This exact normal form is a candidate starting point for a global matrix
+inequality or a positive decomposition. It is not the missing decomposition.

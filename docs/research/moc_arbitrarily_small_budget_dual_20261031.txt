@@ -1,0 +1,138 @@
+Constructive full matching-SOS duals with arbitrarily small ray budgets
+31 October 2026
+
+For each j in {0,7,10,13,18,23,28} and every real epsilon>0, there is a
+24-row real dual y such that
+
+  y.f34=-1,  y.rj=epsilon,
+  B^T diag(y) B is positive definite,
+
+where B is any basis of the full14-dimensional matching-function space.
+For rational epsilon the construction gives rational y. This proves that
+positive lower bounds such as beta_singleton>=1 or beta_pair>=2/3 cannot
+hold for every normalized full-PD dual. Those useful sufficient thresholds
+must be checked for the particular dual under study.
+
+This is a statement about the matching-SOS relaxation and its duals. It is
+neither a MOC counterexample nor a claim about actual spectral realizability.
+
+1. Four explicit row weights
+
+Write f=f34 and r=rj. For every listed j the joint permutation-value set
+contains the four pairs
+
+  (f,r)=(1,0), (1,1), (2,1), (0,1).
+
+Choose one row of each type, with respective weights
+
+                   -1, -2, 1, 1+epsilon.
+
+All other weights initially vanish. Direct arithmetic gives
+
+  y0.f=-1, y0.r=epsilon,
+  y0.f^2=1, y0.(fr)=0, y0.r^2=epsilon.
+
+Thus the moment restricted to the two functions (f,r) is exactly
+
+                         diag(1,epsilon)>0.
+
+The verifier chooses the following zero-based lexicographic permutation
+rows (in the order of the four pairs displayed above):
+
+  j=0:  [10,0,5,1]
+  j=7:  [0,4,5,17]
+  j=10: [2,0,5,6]
+  j=13: [0,3,5,22]
+  j=18: [0,4,5,18]
+  j=23: [2,0,5,14]
+  j=28: [0,3,5,9]
+
+These row labels are replayed directly from the retained integer ray table;
+the formulas, rather than the labels, are the essential construction.
+
+2. Why the full14-dimensional completion exists
+
+Let Z be the rows where f=r=0. Exact ranks give rank B[Z,:]=12, and its
+nullspace is exactly the coefficient span of f and r. Choose12 independent
+contact rows C. Add two noncontact rows of types (1,0) and (0,1); the
+resulting14-row evaluation matrix is invertible.
+
+Interpolation supplies12 additional matching functions D1,...,D12 that
+vanish at those two noncontact rows and evaluate as the standard basis on
+C. Consequently F=(f,r,D1,...,D12) is a basis of the matching space and
+
+                       F[C,:]=[0_(12x2) I12].
+
+In this basis write the initial moment as
+
+  H0(epsilon) = [ diag(1,epsilon)  W(epsilon) ]
+                [ W(epsilon)^T    D(epsilon) ],
+
+with W=W0+epsilon W1 and D=D0+epsilon D1. Adding mass t at each of the12
+chosen contact rows adds exactly diag(0,0,t I12), preserving y.f and y.r.
+
+Here is an explicit mass valid for EVERY epsilon>0. Let
+
+  d_k=sum_ab |(Dk)_ab|,
+  a_k=sum_b (Wk)_(1b)^2,
+  b_k=sum_b (Wk)_(2b)^2,             k=0,1,
+
+and put
+
+  t=1+d0+epsilon d1+2a0+2epsilon^2 a1+2b0/epsilon+2epsilon b1.
+
+All constants are nonnegative rationals. For any vector x,
+
+  x^T D x >= -(d0+epsilon d1)||x||^2,
+
+because the spectral norm of a matrix is bounded by the sum of the absolute
+values of its entries. Also (u+v)^2<=2u^2+2v^2 gives
+
+  ||W_(1,:)||^2 <=2a0+2epsilon^2 a1,
+  ||W_(2,:)||^2/epsilon <=2b0/epsilon+2epsilon b1.
+
+Therefore the Schur complement satisfies
+
+  D+tI-W^T diag(1,1/epsilon) W >= I.
+
+Its upper-left block diag(1,epsilon) is positive definite, so the completed
+full14 moment is positive definite. Positive definiteness is preserved by
+the invertible change from F to any other matching basis. This proves the
+all-epsilon claim; it is not inferred from finite numerical tests.
+
+For the concrete interpolation choices in the verifier the mass simplifies
+considerably: t=173+20/epsilon for j=0, t=217+20/epsilon for j=10,23,
+and t=109+20/epsilon for j=7,13,18,28. Thus the construction has an explicit
+linear growth in reciprocal epsilon, with no optimization step.
+
+3. Consequence for the full SOS cone
+
+Let C0 consist of matching functions represented by B_p^T X B_p, X>=0.
+For every such function g, the constructed y satisfies
+
+  y.g=tr(X B^T diag(y) B)>=0.
+
+For g=f+lambda r and any lambda>0, choosing 0<epsilon<1/lambda gives
+
+                    y.g=-1+lambda epsilon<0.
+
+Thus f+lambda r is outside the FULL matching-SOS cone for every lambda>0
+and every listed j. The argument uses the full14-feature cone, not a smaller
+feature selection or factor-width relaxation. It does not assert that these
+functions arise as actual spectral support deficits.
+
+4. Exact replay
+
+  python code/research/moc_arbitrarily_small_budget_dual_20261031.py
+
+The verifier checks the joint row categories, all contact/nullspace ranks,
+the interpolation change of basis, the exact2-by2 moment, the contact-mass
+formula, and full14 positive LDL pivots at epsilon=1,1/10,1/10^6 in both
+the interpolation basis and the original basis. In addition, for these
+interpolation choices the Schur complement is exactly S0+Sminus/epsilon.
+Both constant12-by12 matrices have exact positive LDL pivots, independently
+certifying positive definiteness for EVERY epsilon>0. These symbolic
+coefficients, their pivots, and the analytic Schur bound above give
+all-parameter evidence beyond the example replays. Exact matrices and rational bound constants are in
+
+  build/moc_arbitrarily_small_budget_dual_20261031.json.

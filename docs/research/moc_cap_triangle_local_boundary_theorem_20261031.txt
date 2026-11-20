@@ -1,0 +1,231 @@
+ALL-ORDERS LOCAL TRIANGLE VALIDITY AT A DISTINCT EQUALITY CONFIGURATION
+2026-10-31. Scope: an open neighborhood of one exact actual boundary point.
+This does not prove global cap-triangle membership or unrestricted MOC.
+
+GLOBAL STATUS UPDATE. The global triangle candidate was subsequently
+REFUTED by finite Gaussian-integer actual spectra; see
+  docs/research/moc_actual_triangle_failure_integer_20261031.txt
+  build/moc_cap_triangle_sos/independent_actual_counterexample.json.
+The local theorem below remains valid. The counterexample has an exact
+full matching-SOS certificate, so neither full-SOS containment nor MOC is
+refuted. The historical global triangle target in Section8 is now false;
+it is retained only as a record of its stationarity formulation.
+
+Exact verifier:
+  python code/research/moc_cap_triangle_local_boundary_theorem.py
+Artifact:
+  build/moc_cap_triangle_sos/local_boundary_theorem_exact.json
+
+1. Statement and conventions
+
+Permutations are lexicographically ordered, with indices 0,...,23. The
+ordinary indicators r_j and the canonical nonordinary ray f=f34 are those
+of data/certificates/geometry/global_terminal_face_census.json.
+
+For canonical cap coordinates write
+  g = tau f + sum beta_j r_j,
+  tau = g3-g1-g9-g12-g22,
+  B1=beta18=g18, B2=beta23=g14, B3=beta28=g9.
+The triangle Gram sufficient condition is
+  sum B_i - max(0,sqrt(Bmax)-sum_{i!=max}sqrt(B_i))^2 >= 2 tau.
+Here all canonical coefficients, including tau, are nonnegative.
+
+Put u=i sqrt(7),
+  a=(0,1,infinity,x),              x=-(1+u)/4,
+  b=((u-1)/2,-(1+u)/4,(u-3)/8,1),
+  eta=-7 sqrt(7)/16+13i/16,        h=sqrt(7)/4.
+The projective products are
+  z_pi=b_pi0 (1+b_pi1) (x+b_pi3).
+The exact gaps g_pi=h-Re(eta z_pi) are
+  g=(sqrt(7)/2)(f+r23+r28)
+   =(sqrt(7)/2)(f^2+(r23-r28)^2).
+All eight projective points a_i,-b_j are distinct. The contact set is
+  C={1,6,7,8,12,15,17,18,20,22,23}.
+
+THEOREM. There is an open neighborhood of this spectral configuration and
+support direction such that every actual nonnegative supporting gap in
+the canonical cap satisfies the full triangle Gram condition. This covers
+every nearby support branch; it does not require keeping any particular
+four contacts. Consequently the proposed triangle sufficient condition
+has no arbitrarily small counterexample around this equality point.
+
+The proof gives the stronger local inequality
+  J=B1+2 sqrt(B2 B3)-2 tau >= 0.
+
+2. Exact rational coordinates and the contact chart
+
+Use z=zR+i sqrt(7) zI throughout and eta=sqrt(7)(eR+i sqrt(7)eI).
+Divide gaps by sqrt(7), which preserves signs and homogeneous inequalities.
+The thirteen real parameters are
+  (xR,xI,b0R,b0I,b1R,b1I,b2R,b2I,b3R,b3I,eR,eI,h).
+Here h is the divided height and is independent. In particular contact1
+is allowed to open under perturbation. The base parameters are
+  (-1/4,-1/4,-1/2,1/2,-1/4,-1/4,-3/8,1/8,1,0,-7/16,13/112,1/4).
+All gaps are rational polynomials of these parameters. At the base,
+  tau=B2=B3=1/2, B1=0.
+
+Define nine critical contacts
+  D={1,6,7,12,17,18,20,22,23}.
+The exact Jacobian of g_D has rank9. Appending the four coordinate rows
+  (b2I,b3R,eR,eI)
+gives an invertible 13 by13 matrix; its exact determinant is recorded in
+the artifact. The eleven-contact Jacobian has rank11.
+
+Let A=B1+B2+B3-2tau. The exact first-derivative identity is
+  dA = sum_{j in D} dg_j.
+Because B2=B3 at the base, dJ=dA there. Thus every derivative of J with
+respect to the nine contact coordinates, with the four free coordinates
+held fixed, equals +1. This is a rational coefficientwise calculation.
+
+3. Why J vanishes when all nine contact coordinates vanish
+
+The V14 matching-function subspace vanishing on D has dimension5, with
+basis (f,r22,r23,r27,r28). Thus near the base every actual gap with g_D=0
+has the unique form
+  g=tau f+alpha r22+beta r23+gamma r27+delta r28.
+Here tau,beta,delta remain positive. Alpha and gamma may have either sign
+for this analytic argument; no support assumption is used at this step.
+
+Normalize tau=1 and put (a,b,c,d)=(alpha,beta,gamma,delta)/tau. In the
+verified repository spectral cubic model,
+  F=-(a+1)(c+1),  Q=-(a+bd+c+1).
+The complete polynomial determinant calculation gives
+  Q^3 det(H_g-(F/Q)H_e)
+   =4(a+1)^4(b+1)^2(c+1)^4(d+1)^2(bd-1)^2(a+bd+c+1).
+This is computed over QQ with all four face variables retained. The
+verifier does not infer an identity from samples.
+
+For actual spectral costs, the established actual-height/secant relation
+gives height F/Q and corank at least2, hence determinant zero. All factors
+except bd-1 are nonzero near (a,b,c,d)=(0,1,0,1). Therefore
+  beta delta=tau^2.
+Since tau>0, J=0 on this whole local zero-contact manifold.
+
+This face closure is NOT a new global face result: it is contained in the
+already proved orbit51 closure under the f34 stabilizer; see
+  docs/research/moc_moonshot_ag_orbit51_closure_20261031.txt.
+The determinant recalculation independently checks the precise local
+branch needed below, including small negative alpha and gamma.
+
+4. The all-orders argument
+
+The real analytic inverse-function theorem gives local coordinates
+  (v,u)=(four free parameters, nine gaps g_D).
+J is real analytic there because B2 B3>0. Section3 proves J(v,0)=0.
+Hadamard's lemma, explicitly by the fundamental theorem of calculus,
+  J(v,u)=sum_j u_j H_j(v,u),
+  H_j(v,u)=integral_0^1 (partial J/partial u_j)(v,t u) dt.
+At the base all H_j=1 by Section2. Shrink the coordinate neighborhood to
+a product box with segments (v,t u) inside it. Continuity then gives all
+H_j>0 throughout that neighborhood. For an actual nonnegative support,
+every u_j=g_j>=0. It follows that J>=0, with equality only if u=0.
+
+This proves an actual open-neighborhood statement, rather than just a
+finite-order Taylor test. No assertion about distant actual supports is
+made. No explicit numerical neighborhood radius has been certified.
+
+5. Why J implies the requested triangle condition locally
+
+Shrink the neighborhood so B1<min(B2,B3), as holds at the base. The
+largest of sqrt(B_i) is then sqrt(B2) or sqrt(B3), so
+  max(0,sqrt(Bmax)-sum sqrt(Bothers)) <= |sqrt(B2)-sqrt(B3)|.
+Consequently the triangle capacity is at least
+  B1+B2+B3-(sqrt(B2)-sqrt(B3))^2
+   =B1+2 sqrt(B2 B3) >=2tau.
+Thus the full sufficient PSD3 Gram criterion holds for every nearby
+actual nonnegative canonical-cap cost, including directions leaving the
+five-dimensional critical face.
+
+6. Independent second-order audit
+
+The verifier also checks R=A-sum_{j in D}g_j has zero value and gradient.
+On the four-dimensional critical tangent ker d(g_D), its quadratic Taylor
+term is exactly
+  (d(B2-B3))^2/2,
+which is PSD of rank1. Since B2,0=1/2, this equals the quadratic term of
+(sqrt(B2)-sqrt(B3))^2. The all-orders proof above avoids drawing any
+conclusion from the remaining degenerate quadratic directions alone.
+
+7. Finite spectra and limits of the conclusion
+
+The common Mobius transformation T(z)=1/(z-2) sends the projective data to
+finite spectra
+  a'=(-1/2,-1,0,1/(x-2)),  b'_j=1/(b_j+2).
+All denominators are nonzero. The 24 finite products equal kappa times
+the projective products, with
+  kappa=1/[2(x-2) product_j(b_j+2)].
+Replacing eta by eta/kappa preserves every gap. This transformation is
+analytic on a neighborhood. Conversely the three distinct a-points can
+be normalized analytically to 0,1,infinity. Hence the theorem is not
+restricted to a formal projective degeneration.
+
+The conclusion rules out local triangle failures at this boundary point.
+It does not prove the global triangle condition, global matching-SOS
+membership, or unrestricted MOC. A global proof still needs a mechanism
+away from this neighborhood, or a classification of every possible
+boundary minimum.
+
+8. Historical global triangle stationarity target (subsequently refuted)
+
+The local theorem supplies one controlled neighborhood, not a covering of
+the actual canonical cap. The following NO-BAD-MINIMUM target was proposed
+before the exact actual counterexample was found. It CANNOT hold globally;
+no global triangle proof should now be pursued from this formulation.
+
+Normalize tau=1 and minimize the triangle capacity C(B1,B2,B3) over actual
+nonnegative canonical-cap gaps. At a smooth putative minimum kappa<2,
+let gamma_i=partial C/partial B_i. If the three square-root lengths form
+a triangle, gamma=(1,1,1). If sqrt(B1)>sqrt(B2)+sqrt(B3),
+  gamma1=(sqrt(B2)+sqrt(B3))/sqrt(B1),
+  gamma2=(sqrt(B1)-sqrt(B3))/sqrt(B2),
+  gamma3=(sqrt(B1)-sqrt(B2))/sqrt(B3),
+and permute these formulas when another length is largest.
+
+Put t=delta3-delta1-delta9-delta12-delta22 and let I be the active zero
+canonical coefficients, identified with their permutation slots. KKT gives
+nonnegative multipliers lambda_j and the explicit real 24-vector
+  q=gamma1 delta18+gamma2 delta14+gamma3 delta9
+       -kappa t-sum_{j in I}lambda_j delta_j.
+In the projective chart z_pi=x u_pi+v_pi, stationarity in height, eta, x,
+and the four complex b variables requires the finite polynomial system
+  sum q_pi=0,
+  sum q_pi u_pi=0,   sum q_pi v_pi=0,
+  sum q_pi partial_{b_k}(x u_pi+v_pi)=0  (k=0,1,2,3).
+These equalities are complex except the first. In particular
+  sum lambda_j=sum gamma_i+3 kappa.
+The local equality point realizes kappa=2 and lambda_j=1 on the nine
+critical contacts, with zero multipliers on contacts8 and15.
+
+A sufficient global advance would prove that every feasible solution of
+this KKT system with kappa<2 has a descending feasible direction (possibly
+of higher order), or belongs to an already controlled collision/contact
+stratum. This avoids the false stronger assertion that every nonpermutation
+critical point of a fixed physical support objective is a saddle. Cases
+with zero B_i, nonregular contact Jacobian, or noncompact normalizations
+must be included; they cannot be discarded as generic exceptions.
+
+There is a useful complex-leaf refinement of this target. Fix one contact
+j0 and freeze the COMPLEX values eta(z_j-z_j0) for all other active
+contacts j. These holomorphic equations preserve their real zero gaps.
+Along every smooth complex leaf the gap coordinates are pluriharmonic.
+Because C is concave, C-kappa tau is plurisuperharmonic. A local minimum
+therefore forces this function to be constant on that leaf. In the strict
+unbalanced region its Levi form is strictly negative unless the three
+normalized coordinates B_i/tau are constant on the leaf.
+
+The strict-concavity calculation is explicit. Write l_i=sqrt(B_i), assume
+l1>l2+l3, and put dB_i=B_i r_i. Then
+  -2 d^2 C
+   =l1 l2(r1-r2)^2+l1 l3(r1-r3)^2-l2 l3(r2-r3)^2
+   =(l1-l2-l3)[l2(r1-r2)^2+l3(r1-r3)^2]
+       +[l2(r1-r2)+l3(r1-r3)]^2.
+Its kernel consists exactly of common scaling r1=r2=r3. Thus any proposed
+strict-unbalanced negative minimum must lie in the explicit algebraic
+rank-drop locus where the complex derivatives of the three normalized
+triangle coordinates vanish on the contact leaf. In the balanced region
+the analogous necessary condition is constancy of the holomorphic linear
+functional corresponding to B1+B2+B3-kappa tau.
+
+The exact counterexample shows that a global classification would have to
+retain genuine triangle failures. The broader question whether all actual
+support gaps lie in the FULL matching-SOS cone remains open.

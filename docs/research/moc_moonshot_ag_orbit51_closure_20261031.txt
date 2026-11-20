@@ -1,0 +1,158 @@
+FULL FIVE-PARAMETER CLOSURE OF CANONICAL EIGHT-CONTACT ORBIT 51
+31 October 2026. Independently audited PASS; unrestricted MOC4 remains open.
+
+Theorem. Let an actual n=4 spectral support gap, in the established canonical
+24-permutation coordinates and after positive normalization, have the form
+
+  g=f34+a r17+b r20+p r18+q r23+r r28,   a,b,p,q,r>=0.
+
+Then its three compensator budgets satisfy C(p,q,r)>=1. The established
+weighted-minor triangle certificate therefore proves g(U)>=0 for every U(4).
+All five coefficients are independent. This closes orbit51, including its
+coefficient boundaries, conditional on the already audited repository inputs
+listed below. No unrestricted-dimension conclusion follows.
+
+Write u=p+q, v=pq, and define
+
+ F=ab(r-1)-a-b-pqr-1,
+ Q=(a+b)(r-1)-pq-pr-qr-1,
+ A=(1-r)[pq+r(p+q)-2r-1],
+ B=(pq-1)(r^2-r+1)+r(p+q-2),
+ C0=(r+1)[pq(1-2r)+r(p+q)-1],
+ D=ab A+(a+b)B+C0,
+ N=-(a+1)(b+1)(p+1)(q+1)D.
+
+The letter C0 here is a polynomial, not the triangle capacity C.
+The exact cubic model gives F=F(g), Q=D_1 F(g), and, whenever Q!=0,
+
+ det H_F(g-(F/Q)1) = -4 N^2/Q^2.                         (1)
+
+The portable verifier reconstructs the original cubic, computes the full
+six-variable Hessian pencil by exact fraction-field elimination, and checks
+Q^3 det(H_g-(F/Q)H_1)=-4 Q N^2 as a polynomial identity. It does not infer
+(1) from sampled parameters or assume a reconstructed nonic is correct.
+
+For an actual support gap the real vector x=g-h1 is the negative real part
+of a complex critical matching-product vector. Thus F(x)=0, rank H_x<=12,
+and, if that rank equals12, its inertia is (6,6,2). Cubic polarization gives
+F(x)=F-hQ. These facts hold for either sign of h.
+
+Suppose, towards contradiction, that the triangle capacity is less than1.
+Its explicit formula partitions this region into the following cases:
+(i) all three budgets are <=1; (ii) p>1 and p(q+r)<1; (iii) q>1 and
+q(p+r)<1; (iv) r>1 and r(p+q)<1. Values equal to1 are included in(i).
+
+1. Cube and the p/q stars.
+
+In(i), A<=0 and B<=0. Also
+
+ -C0/(r+1)=(1-r)(1-pq)+r(1-p)(1-q)>=0.
+
+Equality would require at least two budgets to equal1, and hence capacity
+at least1. Thus C0<0 in the insufficient-capacity part of the cube and D<0.
+Here F<=-1, so Q=0 is incompatible with F-hQ=0. Equation(1) now contradicts
+actual Hessian singularity.
+
+In(ii), put delta=1-p(q+r)>0. Then q,r<1. The identities
+
+ A=(1-r)[-delta+r(q-2)],
+ B=-delta(r^2-r+1)+r[pr(1-r)+q-2],
+ C0=-(r+1)[delta+rq(2p-1)]
+
+show A,B,C0<0: pr<1, q<1 and 0<=r<1 make the bracket in B negative,
+while r^2-r+1>0. Consequently D<0. Again r<1 gives F<=-1, excludes Q=0,
+and contradicts(1). Case(iii) follows by the explicit p/q symmetry.
+
+2. The remaining r star.
+
+Now r>1, u=p+q<1/r, and 0<=v=pq<=u^2/4<1/4. Set
+
+ A0=1+2r-v-ru>0, so A=(r-1)A0>0.
+
+The displayed formulas show B<0 and C0<0. First dispose of Q=0 without
+using (1). If s=a+b and Q=0, then s=(v+ru+1)/(r-1), with 0<v+ru+1<9/4.
+Since ab<=s^2/4,
+
+ F <= [(v+ru+1)^2-4(v+ru+1)]/[4(r-1)]-vr-1 <0.
+
+Thus no actual gap in this star has Q=0. Every remaining actual candidate
+must have D=0 by(1).
+
+Put t=-B/A>0 and k=t^2-C0/A>t^2. The positive solutions of D=0 are exactly
+
+ a=t+s,  b=t+k/s,   s>0.                                (2)
+
+Indeed b(aA+B)=-aB-C0>0 forces both b>0 and a>t; completing the product
+then proves(2). In particular a+b>4t.
+
+Every point of this entire D=0 branch has Q>0, not merely the actual points.
+To see this, set Q0=v+ru+1. From v<1/4 and ru<1,
+
+ -4B>3r^2+5r-1,
+ A0 Q0<(9/4)(1+2r),
+ -4B-A0 Q0>3(r-1)^2+(13/2)(r-1)+1/4>0.
+
+Therefore 4t(r-1)>Q0 and Q=(a+b)(r-1)-Q0>0.
+
+The base domain r>1, p,q>=0, r(p+q)<1 is connected: use coordinates
+r>1, P=rp>=0, R=rq>=0, P+R<1. Formula(2), with s>0, parametrizes the
+whole positive D=0 branch continuously. It is therefore connected,
+including p=0 or q=0. The entire branch remains in the same r-star domain
+and in Q>0.
+
+3. Exact rank and constant inertia on this branch.
+
+This step uses two already audited complex-algebraic inputs, and does not
+infer rank12 from a determinant square alone:
+
+(a) On the cubic {F=0}, the zero set of det H_F is the complex secant cone
+    over M8. This is the HMSV divisor identification, with its audited
+    invertible coordinate bridge: docs/research/HMSV_COMPATIBILITY.md,
+    original arXiv:1103.5255v1 active Proposition3.19 and following paragraph,
+    together with Proposition3.13. It is not the suppressed septic draft.
+(b) Every point of that secant cone has Hessian rank at most12, proved by
+    generic gradient contraction and polynomial continuation in
+    docs/research/CORANK_TWO_LIFT_EXACTNESS.md, section2.
+
+For each point of the connected branch, x=g-(F/Q)1 lies on F=0 and satisfies
+(1), so(a),(b) give rank H_x<=12. For the reverse inequality, vary b alone
+near that point. The matrix is analytic because Q>0, and
+
+ partial D/partial b = aA+B = As >0.
+
+The right side of(1) has a zero of exactly order2 along this variation;
+all factors a+1,b+1,p+1,q+1 and Q are nonzero. An analytic matrix whose
+value has corank k has determinant vanishing to order at least k along
+every analytic curve: after constant invertible row and column operations,
+the bottom k rows are O(epsilon), and multilinearity proves the claim.
+Thus corank H_x<=2, and the rank is exactly12 everywhere on the branch.
+
+The inertia of a continuous real symmetric matrix of constant rank is
+constant on a connected set. At the rational point
+
+ (a,b,p,q,r)=(2,17/3,0,0,2),
+ F=8/3, Q=20/3, h=2/5,
+
+exact rational symmetric congruence gives inertia(H_x)=(5,7,2).
+Therefore every point of the branch has that same nonneutral inertia.
+None can be actual, because an actual rank12 Hessian has inertia(6,6,2).
+This excludes the last insufficient-capacity sector and proves the theorem.
+
+The argument neither assumes finite distinct matching products nor discards
+zero ordinary coefficients. The original mixed coefficient lambda>0 is
+normalized to1 by division; lambda=0 is already an ordinary-minor sum.
+Once C>=1, the existing weighted triangle inequalities supply the unitary
+support certificate. No half-plane/negative-height theorem is needed here.
+
+Proof artifacts:
+ code/research/moc_moonshot_ag_orbit51_verify.py
+ build/moc_moonshots_20261031/ag/orbit51_verified.json
+ docs/research/HMSV_COMPATIBILITY.md
+ docs/research/CORANK_TWO_LIFT_EXACTNESS.md
+ docs/research/session_actual_neutral_hessian.txt
+ docs/research/canonical_cap_triangle_budget.txt
+
+Independent audit: docs/research/moc_moonshot_independent_audit_20261031.txt.
+A fresh full polynomial compilation with a different Schur stop size agrees,
+and exact characteristic-polynomial root counts independently give the anchor
+inertia(5,7,2). Artifact: build/moc_moonshots_20261031/ag/orbit51_independent_audit.json.

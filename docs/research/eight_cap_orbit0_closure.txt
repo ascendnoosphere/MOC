@@ -1,0 +1,142 @@
+Full five-coefficient eight-contact cap [0,7,10,17,28,34]
+======================================================
+
+Claim and scope
+---------------
+Let g=a r0+b r7+c r10+d r17+e r28+f f34, with all coefficients
+nonnegative. The desired support inequality holds for every actual gap
+in this cone, including unequal ordinary coefficients. This is orbit0
+of the 58 marked canonical eight-contact cap types in
+verify_eight_uniform_profiles.py; its stabilizer orbit has 12 patterns.
+It is not the earlier nine-contact face12, and does not close all58
+unequal-coefficient types.
+
+For f=0 the function is ordinary and nonnegative. Normalize f=1 otherwise.
+Use the checked cubic F and e0=ones(14), and write Q=D_e0 F. The ray data
+and model are reconstructed independently in
+code/research/verify_eight_cap_orbit0.py. For clarity below e is the
+coefficient of r28, not the vector e0.
+
+Model and exact pencil
+----------------------
+Put B=b+1,C=c+1,A=a+d+1 and
+ Q=de-d-1,
+ U=BC+e(b+c+1-d),
+ V=A U+e(d+1)^2,
+ P=A U+de(d+e+1).
+Then F(g)=-BC A<0. Thus F=0 and F=Q=0 are impossible in this normalized
+cone. A positive spectral height h=F/Q requires Q<0. Negative height is
+covered by the established negative-height argument.
+The exact pencil identity is
+ det[H_F(g)-t H_F(e0)]
+ =4t(a+1)^2 BC [BCde(d+e+1)-t Q U][eBC A-t V].
+At t=h=F/Q the first bracket is BC P and the second is BC A P/Q.
+Consequently
+ det H_F(g-he0)=-4 (a+1)^2 B^4 C^4 A^2 P^2/Q^2.
+Equivalently the projected nonic is
+ N=(a+1)B^2 C^2 A P.
+An actual real-gradient lift makes H_F(x) singular. Indeed, if y!=0,
+H_F(x)y=0 supplies a kernel; if y=0, gradF(x)=0 gives H_F(x)x=0, with
+x!=0 since F(g)<0 excludes g=h e0. Therefore P=0 is necessary.
+
+The branch and its connectedness
+--------------------------------
+Expanding P as a polynomial in a gives
+ P=a U+(d+1)[BC+e(b+c+1)]+de^2.
+Its constant coefficient is strictly positive, so a>=0 and P=0 imply
+U<0 and hence d,e>0. The unique a is
+ a=[(d+1){BC+e(b+c+1)}+de^2]/[de-BC-e(b+c+1)]>0.
+For fixed b,c>=0 put D0=b+c+1+BC/e. The branch is exactly the graph of
+this a over
+ b,c>=0, e>0, d>D0, Q<0.
+For e<=1 there is no upper d bound; for e>1 the last condition is
+ d<1/(e-1).
+For each b,c the feasible e range is (0,E(b,c)), where E>1 is the unique
+root of (e-1)D0(e)=1. Its derivative for e>1 is
+ b+c+1+BC/e^2>0, so the root exists uniquely and varies continuously.
+The (b,c,e) base is path connected: lower e to1/2, vary b,c, then raise
+e to the target value. These paths are feasible since E>1 everywhere.
+The d fibers have continuous bounds and the continuous section
+ m=max(e-1,0), d*=D0+(1-mD0)/(1+m).
+It lies strictly inside every fiber. Connect each point to this section,
+travel along the section, and return within the destination fiber.
+Thus the full branch, including b=0 and c=0, is path connected. An
+independent construction is in eight12_branch_connectedness.txt.
+
+Everywhere-valid Schur rank certificate
+---------------------------------------
+Let L(z) be the four coordinates B00,B01,B10,B11 used by the exact model
+for Q(z)=B00 B11-B01 B10. The verifier gives the explicit integral change
+of basis T obtained by adjoining L to ten complementary standard rows;
+det(T)^2=1. In this basis H(e0) is zero in its first ten rows and columns.
+Let J be the leading9 block of T^T[H(g)-tH(e0)]T. Direct exact calculation
+gives
+ det J=2(a+1)^2 BC U V.
+On P=0 we have V=P-eQ=-eQ>0, while U<0; hence J is invertible at EVERY
+branch point. The 5-dimensional Schur complement S has upper block
+ A2=[[0,-e],[-e,0]],
+and off-diagonal block
+ B2=[[-(d+1),e-1,1],[0,0,-h]].
+The verifier checks all15 bordered10-minor identities determining S.
+Its further Schur complement is exactly
+ R3=BC/(2e Q U) w w^T,
+ w=((d+1)(d+e+1), -(de-d-e-1), de-d-e-1).
+Since e>0, Q<0, U<0 and the first entry of w is positive, R3 has rank1
+everywhere. A2 has rank2, so the Hessian rank is9+2+1=12 everywhere.
+There are no omitted charts or exceptional rank-drop loci.
+
+For independent reproduction of the full pencil identity, the verifier
+uses the same bordered10 minors and clears their common denominator2UV.
+After eliminating A2, its3-by-3 determinant is computed by six products
+in the exact multivariate polynomial ring. This avoids a slow generic
+14-by-14 expansion and verifies the displayed pencil coefficientwise.
+No cached matrix or floating-point computation enters this verifier.
+
+Short exclusion using the reusable actual-pencil theorem
+---------------------------------------------------------
+The independently audited actual-pencil theorem in actual_pencil_sign.txt
+states that [z^2]det(H_F(x)+zH_F(e0))<=0 at every actual spectral x.
+On the P=0 branch, the pencil is proportional to t(t-h)^2, and the
+coefficient at x=g-he0 is p'(0)/h>0, where
+ p'(0)=4de^2(a+1)^2 B^3 C^3 A(d+e+1).
+This contradiction already excludes the full branch, without using any
+rank or connectedness calculation. The following independent argument
+uses only the exact cubic identities and real-gradient lift equations;
+it does not require the reusable theorem.
+
+Kernel Q positivity and independent exclusion
+---------------------------------------------
+At a branch point the two bracketed pencil factors vanish at t=h>0.
+The derivative of the whole pencil at t=0 is
+ p'(0)=4de^2(a+1)^2 B^3 C^3 A(d+e+1)>0.
+Since p(t) is proportional to t(t-h)^2, the coefficient of z^2 in
+ det[H_F(x)+z H_F(e0)] is p'(0)/h>0. With rank H_F(x)=12 already proved,
+this means H_F(e0) restricted to its2-dimensional kernel is nonsingular.
+The kernel bundle and restricted quadratic vary continuously on the
+connected branch, so their inertia is constant.
+At the exact interior reference
+ (a,b,c,d,e)=(71,1,1,8,1), F=-320,Q=-1,h=320,
+the verifier computes the complete Hessian kernel and obtains
+ Q|ker H_F(x)=[[9/2164820,-31/86592800],
+               [-31/86592800,60561/13854848000]].
+Its first entry is positive and its determinant is1/55419392000>0.
+Thus Q is positive definite on the kernel throughout the branch.
+But any actual real-gradient lift would satisfy
+ H_F(x)y=0, gradF(y)=gradF(x),
+and hence Q(y)=Q(x)=Q(g)<0. This contradicts kernel positivity and excludes
+all potentially violating positive-height lifts in this full cone.
+
+Verification and provenance
+----------------------------
+Run python3 code/research/verify_eight_cap_orbit0.py from repository root.
+The program imports the primary exact model and ray census, checks F,Q,
+contacts, the generic9-minor, all15 bordered10-minors, the full pencil via
+a3-by-3 polynomial identity, the global rank-one branch Schur matrix, the
+nonzero pencil coefficient and the exact positive kernel reference.
+The connectedness proof was independently derived by lift_audit_v2.
+The primary generic14 determinant was also executed directly in the
+exploratory build/eight12/model.py run (826.10seconds); the portable
+bordered-minor verifier is an independent, faster reconstruction.
+
+Fresh portable execution passed all stages in232.25seconds; log:
+ build/eight12/full_portable_verify.log.

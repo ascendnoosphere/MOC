@@ -1,0 +1,85 @@
+Two rational polynomial capacities for the three critical budgets
+2026-10-31. All ordinary-ray indices use the canonical cap34 convention.
+
+For arbitrary t,a,b,c>=0, set
+  g=t f34+a r18+b r23+c r28,
+  S=ab+ac+bc, T=abc,
+  D5=tS-2T-t^3, D6=3S-4t^2.
+Either D5>=0 or D6>=0 is a sufficient full matching-SOS condition.
+In particular EVERY nonnegative determinant zero in this three-budget
+family has a full matching-SOS certificate. This is a small-core theorem;
+the unrestricted ALL-N9 theorem is false elsewhere and is not inferred.
+
+Replay:
+  python code/research/moc_critical_triangle_rational_core.py
+Data:
+  build/moc_critical_triangle_rational_core.json
+Formal polynomial inequalities:
+  code/lean/MocCriticalTriangleCapacity.lean
+
+THE RATIONAL GRAM
+
+If t=0, g is an ordinary sum of Boolean squares. Suppose t>0. Under either
+capacity, S>=t^2>0. In the four matching functions(f34,r18,r23,r28), use
+the block Gram diag(t,G), where
+  G=[[a,-tab/S,-tac/S],[-tab/S,b,-tbc/S],[-tac/S,-tbc/S,c]].
+The three off-diagonal entries sum to-t. Direct exact interpolation at
+ALL24 permutations proves that its quadratic evaluation is exactly g.
+
+The diagonal principal minors are a,b,c>=0. Its2x2 principal minors are
+  ab(S^2-t^2ab)/S^2,
+  ac(S^2-t^2ac)/S^2,
+  bc(S^2-t^2bc)/S^2.
+These are nonnegative because
+  S^2-t^2ab=S(S-t^2)+t^2(ac+bc)>=0,
+and similarly. Finally
+  det G=abc*N/S^3,
+  N=S^3-t^2S^2-2t^3T.
+Thus S>=t^2 and N>=0 suffice for PSD, by the complete principal-minor
+criterion for a real symmetric3x3 matrix. This proof includes zero
+budgets; no division by a,b,c occurs.
+
+CAPACITY D5
+
+From D5>=0 and t>0, t(S-t^2)>=2T>=0, hence S>=t^2. The exact identity
+  N=(S-t^2)^2(S+t^2)+t^3D5
+then proves N>=0.
+
+The universal9x9 determinant on this entire family is
+  2^32 det M(g)=-t^3(a+t)(b+t)(c+t)D5.
+Consequently a nonnegative positive-cap determinant zero has D5=0 and
+the displayed rational Gram is PSD. An actual cost has det M(g)=0 by
+the separate source rank-four theorem, but actuality is not needed for
+the conclusion once this determinant vanishes.
+
+CAPACITY D6
+
+This sufficient condition covers a different balanced regime; it is not
+claimed to be the optimal critical-triangle capacity. D6>=0 and t>0 imply
+S>=4t^2/3>t^2. Let A=S^3-t^2S^2+2t^3T>0. The exact identity is
+  27 N A = S^3(3S-4t^2)(3S-t^2)^2+4t^6(S^3-27T^2).
+Its last defect is explicitly nonnegative. With x=ab,y=ac,z=bc,
+  2(S^3-27T^2)
+   =S[(x-y)^2+(y-z)^2+(z-x)^2]
+     +6[x(y-z)^2+y(z-x)^2+z(x-y)^2]>=0.
+Therefore N A>=0, and A>0 gives N>=0, as required.
+
+WHY BOTH CAPACITIES HELP
+
+They have different algebraic shapes at t=1:
+  D5=ab+ac+bc-2abc-1,
+  D6=3ab+3ac+3bc-4.
+The first includes the entire restricted nonic; the second also covers,
+for example, a=b=c=.7, where D5<0. Both yield exact sparse polynomial
+core conditions for larger-budget proofs, without square roots or a
+numerical Gram search. No historical novelty claim is made.
+
+LEAN STATUS AND LIMITS
+
+Lean4.19 accepts the actual displayed AMGM-SOS identity, both capacity
+identities, S>=t^2 under D5, and N>=0 under D5 or D6, uniformly in all
+real parameters satisfying the stated inequalities. Only standard axioms
+propext, Classical.choice, Quot.sound occur; no sorry/custom axioms.
+The exact Python verifier supplies the link to all24 matching evaluations
+and the three-by-three principal-minor formulas. This is not a claim that
+every aspect of the MOC source geometry has been formalized.

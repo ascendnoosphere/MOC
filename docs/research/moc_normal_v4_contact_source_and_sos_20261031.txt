@@ -1,0 +1,291 @@
+Normal Klein-four contacts: source chart, an ordinary-cone obstruction,
+and an exact full matching-SOS certificate
+31 October 2026
+
+Same-date theorem update: the uniform actual V4-to-C0 implication is
+now proved in moc_normal_v4_uniform_triangle_sos_theorem_20261031.txt,
+with exact replay moc_normal_v4_neutral_triangle_sos.py. The earlier
+unproved-status statements below record the intermediate discovery
+stage. The ordinary-cone counterexample remains valid.
+
+Scope
+
+The contact subgroup in this note is
+ C={id,(01)(23),(02)(13),(03)(12)}, indices [0,7,16,23].
+It is the NORMAL Klein-four subgroup. It differs from the subgroup
+[0,1,6,7] handled by the separate actual ordinary-cone theorem.
+
+For normal V4 the uniform actual ordinary-ray claim is FALSE. An exact
+rational spectral example is given below. That same example has an
+exact positive-definite Gram in the FULL ten-dimensional contact-null
+matching feature space. Thus no MOC or full matching-SOS counterexample
+is claimed. A uniform actual-V4-to-C0 theorem remains unproved here.
+
+1. A ten-coordinate face and its exact ordinary cone
+
+Identify the four labels with F2^2, and its three nontrivial characters
+with 1,2,3. Every permutation is affine: pi(x)=Lx+t. Its linear part
+permutes the three nontrivial characters, giving sigma in S3. The signed
+standard representation has entries rho31(pi)_(k,L^T k)=(-1)^(k.t).
+
+Vanishing on all four translations removes the three diagonal standard
+coefficients and relates the scalar to the trace of the [22] block.
+Write the six remaining standard coefficients as a_ij, i!=j. The five
+nonidentity quotient baselines are b0,b1,b2,c+,c-, with
+
+                    c++c-=b0+b1+b2=:B.
+
+The three b's correspond to quotient transpositions fixing axes0,1,2,
+respectively. The c+ cycle is (0,1,2)->(1,2,0). The resulting 24x10
+evaluation table spans exactly the contact-null matching space.
+
+Pointwise nonnegativity is equivalent to three rectangle inequalities
+
+ b0>=|a12|+|a21|, b1>=|a20|+|a02|, b2>=|a01|+|a10|,
+
+and two tetrahedron families
+
+ c+ +eps0*a01+eps1*a12+eps2*a20>=0,
+ c- +eps0*a10+eps1*a21+eps2*a02>=0,
+                    eps0 eps1 eps2=1.
+
+The ordinary contact rays are exactly
+ [17,18,19,20,22,24,25,27,28,29,32,33].
+Each is a plus or minus coordinate ray a_ij with the appropriate
+baseline allocation. Consequently the ordinary cone is described by
+the same three rectangle inequalities and the STRONGER two bounds
+
+        c+>=|a01|+|a12|+|a20|,
+        c->=|a10|+|a21|+|a02|.                         (O)
+
+For completeness, ordinary coefficients may be grouped into six total
+weights u_ij>=|a_ij|. They must satisfy
+ b0=u12+u21, b1=u20+u02, b2=u01+u10,
+ c+=u01+u12+u20.
+The possible sum in the last equation is the full interval
+ [|a01|+|a12|+|a20|, B-|a10|-|a21|-|a02|].
+Thus (O) and the rectangle inequalities are necessary and sufficient,
+including every zero or equality case. Splitting u_ij into the two
+nonnegative weights (u_ij+a_ij)/2 and (u_ij-a_ij)/2 constructs the
+ordinary-ray certificate.
+
+Equivalently, in either four-element three-cycle coset, each gap must be
+at most the sum of the other three. For the c+ coset [3,11,12,20], one
+of these ordinary facets is
+
+                 L(g)=(g11+g12+g20-g3)/2>=0.           (2)
+
+The eight mixed rays of this face are
+ [35,40,51,56,58,65,74,81]. They account for the tetrahedral sectors
+permitted by pointwise positivity but excluded by (O).
+
+2. Compact restricted cubic and a checked secant line
+
+Put
+ M+=[[c+-b0,a01,a20],[a01,c+-b1,a12],[a20,a12,c+-b2]],
+ M-=[[c--b0,a10,a02],[a10,c--b1,a21],[a02,a21,c--b2]].
+In the existing primitive-cubic normalization, exact coefficient
+comparison gives
+
+ F=2(det M+ +det M- +b0*b1*b2),
+ Q=4(c+^2-B*c+ +b0*b1+b0*b2+b1*b2).                   (3)
+
+There is no uniform sign of F on this face: F(r35)=1, while
+F(r17+r20+r22)=-1. Thus a sign or coefficient-positivity shortcut for
+F cannot be imported from the other Klein-four contact type.
+
+On the symmetric line g(t)=r35+t sum(all twelve ordinary contact rays),
+exact symbolic determinant calculation gives
+
+ F=20t^3+15t^2+3t+1, Q=12t^2+6t+1,
+ N9(g(t))^2=(t+1)^2(2t-1)^4(4t^2+3t+1)^6.
+
+Hence the only nonnegative secant point on this line is t=1/2, and it
+is ordinary because (O) holds exactly when t>=1/3. This is a line
+calculation, not a theorem for the full ten-dimensional face.
+
+3. A rational actual-source chart from three linear equations
+
+On the generic finite configuration chart, use the common PSL2 action
+on the eight spinor labels to normalize a0=0,a1=1,a2=i. The action
+multiplies every permutation product by the same nonzero complex
+factor, absorbed into eta; it preserves all phased real scores.
+
+For arbitrary complex b0,...,b3 put
+ U_pi=product_(i=0,1,2)(a_i+b_pi(i)),
+ V_pi=U_pi*b_pi(3).
+Then z_pi=U_pi*a3+V_pi. Set w=eta*a3. The four contact scores agree
+exactly when the three differences impose
+
+ Re((U_k-U_0)w+(V_k-V_0)eta)=0, k=7,16,23.            (4)
+
+This is a REAL LINEAR 3x4 system in
+ (Re w,Im w,Re eta,Im eta), with rows
+ (Re deltaU,-Im deltaU,Re deltaV,-Im deltaV).
+At rank three its signed maximal cofactors give the unique projective
+solution. If eta!=0 then a3=w/eta. Rational real and imaginary parts
+of b therefore give rational real and imaginary parts of a3 and eta.
+All twenty supporting inequalities can then be checked exactly.
+
+This is more useful than numerically solving three quartic contact
+equations in the original spectral variables. It gives an eight-real-
+parameter rational chart, plus common real score scale. Rank-drop and
+infinite-label strata require separate treatment in a uniform theorem;
+they are not declared covered merely by the generic chart.
+
+4. Exact actual support outside the ordinary cone
+
+Choose
+ b=(-571/1000-121i/200, -3-3i, 23/1000+i/40, 33/1000-7i/200),
+and solve (4) with Im eta=-1. The exact result has
+
+ eta=200244213618472722105/2972319526076390639744-i,
+
+ a3=-511838854642973067398893384315547293121301917
+       /8874781110182659992617556577246466148016561000
+     +20794703602611505563752067721563270307580797 i
+       /1774956222036531998523511315449293229603312200.
+
+With a=(0,1,i,a3), the exact supporting height is
+
+ h=16628832635700938457688141401/185769970379774414984000000000.
+
+The gap g_pi=h-Re(eta product_i(a_i+b_pi(i))) has EXACTLY the four
+contacts C and twenty strictly positive other entries. Nevertheless
+
+ L(g)=-8671531254642415809759591
+          /106154268788442522848000000 <0.
+
+The ordinary ray claim is refuted without an optimization inference:
+all ordinary nonnegative summands of a cost vanishing on C must themselves
+vanish on C; there are exactly the twelve rays listed in Section 1;
+the verifier evaluates L on each and obtains nonnegative values, while
+the exact actual gap gives the displayed strict negative rational.
+
+5. Full ten-feature SOS succeeds exactly for this same example
+
+The discovery used the complete contact-null matching feature space,
+not a selected ordinary subspace or a block-diagonal ansatz. A Dykstra
+search with a small positive Gram floor was followed by rational
+rounding and exact repair of all twenty noncontact cost equations.
+
+The saved certificate consists of a 24x10 rational feature table F0,
+a positive rational scale s=max g, and a rational symmetric matrix T,
+with the exact identities
+
+ columns(F0) subset V14, rank F0=10, F0|C=0,
+                   diag(F0 T F0^T)=g/s,
+                   T=L diag(d1,...,d10) L^T, d_i>0.
+
+Every identity and all ten strictly positive rational LDL pivots are
+independently replayed. The smallest LDL pivot is approximately
+3.31154885065e-6; the proof uses its exact rational sign. Thus
+
+       g=s sum_j d_j ((F0 L)_j)^2 belongs to full C0.
+
+The established physical kernel theorem consequently certifies the
+MOC support inequality for every mixer at these exact spectra. An SO4
+numerical minimization would add no strength to this certificate.
+
+The full contact dual oracle was also run after a row/column symmetry,
+and returned a positive dual objective. That objective alone was not
+used to claim membership: the repaired primal at that barrier tolerance
+had a small negative numerical eigenvalue. The independent rational PD
+Gram above supplies the actual proof.
+
+6. Executable artifacts and remaining obligation
+
+ python code/research/moc_normal_v4_actual_nonordinary.py
+ python code/research/moc_normal_v4_full_sos_verify.py
+
+Both PASS. They reconstruct the finite rational spectra, check all24
+product scores, the exact contact set, twenty strict gaps, ordinary
+separation, full matching-feature membership, all24 SOS equations, and
+the ten positive LDL pivots. Outputs:
+ build/moc_normal_v4_actual_nonordinary_20261031.json
+ build/moc_normal_v4_actual_full_sos_20261031.json.
+
+The optional numerical discovery script is
+ code/research/moc_normal_v4_full_sos_discover.py.
+The exact verifier needs no numerical optimizer.
+
+An additional exact derivative calculation is
+ python code/research/moc_normal_v4_source_chart_rank.py.
+It checks that the eight real b derivatives of the rational chart are
+independent at the displayed supported point; adding common score scale
+gives rank nine. The saved nonzero 9x9 minor is in
+build/moc_normal_v4_source_chart_rank_20261031.json. Since all twenty gaps
+are strict and the full Gram is PD, an actual open eight-parameter
+nonordinary V4 chamber is certified inside C0. This is a local statement,
+not continuation across every component of the supporting region.
+
+The face geometry and compact polynomial formulas have the exact replay
+ python code/research/moc_normal_v4_face_geometry.py,
+with output build/moc_normal_v4_face_geometry_20261031.json. It verifies
+the full 24x10 chart, all twenty face rays, (3), and the stated secant
+line factorization by the symbolic fourteen-by-fourteen determinant.
+
+7. A full vector Gram criterion retaining all cross modules
+
+Here is a uniform necessary-and-sufficient C0 criterion for an arbitrary
+cost on this face. It is a finite PSD criterion, not yet a proof that the
+actual source always satisfies it.
+
+Order the three undirected axes so that
+ p=(a01,a12,a20), q=(a10,a21,a02), beta=(b2,b0,b1).
+There are matching features d,f_i,x_i,y_i, i=0,1,2, with values
+
+ transposition coset i:
+       d=0, f=e_i, x_i=eps, y_i=delta, all other x,y zero;
+ plus three-cycle coset:
+       d=1, f=(1,1,1), y=0, x=s, product(s_i)=1;
+ minus three-cycle coset:
+       d=-1, f=0, x=0, y=s, product(s_i)=1;
+ contacts: all ten features zero.
+
+These ten features form a basis of the contact-null V. Concretely x,y
+are the respective offdiagonal standard coefficient functions, d is
+the c+ chart column, and f_i is the corresponding beta column plus d.
+The twelve ordinary rays are (f_i+/-x_i)/2 and
+(f_i-d+/-y_i)/2, which also verifies the ordinary criterion in Section 1.
+
+The cost g belongs to FULL C0 if and only if there are ten vectors
+
+                 D,F0,F1,F2,X0,X1,X2,Y0,Y1,Y2
+
+in a real inner-product space, of dimension at most ten, satisfying
+the following twenty real scalar equations. Put G=D+F0+F1+F2.
+For each i and the complementary pair {j,k}:
+
+ beta_i=||F_i||^2+||X_i||^2+||Y_i||^2,
+ p_i=2<F_i,X_i>, q_i=2<F_i,Y_i>, <X_i,Y_i>=0;
+
+ c+=||G||^2+sum_i ||X_i||^2,
+ p_i=2<G,X_i>+2<X_j,X_k>;
+
+ c-=||D||^2+sum_i ||Y_i||^2,
+ q_i=-2<D,Y_i>+2<Y_j,Y_k>.                            (G)
+
+Proof: an SOS Gram supplies these vectors as the ten column factors.
+On a transposition coset the squared norm is
+||F_i+eps X_i+delta Y_i||^2. Comparing its four independent Boolean
+characters gives the first twelve equations. On a three-cycle coset
+use s_j s_k=s_i and compare the constant and three characters in
+||G+sum s_i X_i||^2 or ||-D+sum s_i Y_i||^2. This gives the remaining
+eight equations. Conversely those same comparisons check the gap at
+all twenty noncontacts; contacts vanish identically. Factoring the
+resulting ten-vector PSD Gram gives a full matching SOS. No other
+point or Fourier equation is missing.
+
+Criterion (G) retains cross terms among the four trivial features and
+the six nontrivial-character features. In particular it is not a
+block-diagonal or ordinary-ray ansatz. It exposes the remaining uniform
+task as constructing these vectors from the rational actual source in
+Section 3, or proving existence without choosing a restricted Gram.
+
+This establishes a genuine distinction between the normal V4 case and
+the previously closed nonnormal Klein-four case. The remaining uniform
+target is full C0 membership for every actual nonnegative V4 supporting
+cost, or the stronger all-nonnegative-N9 face theorem. Neither follows
+from this one positive full Gram, the rational source chart, or the
+symmetric-line factorization.

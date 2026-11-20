@@ -1,0 +1,40 @@
+Independent review: the 35-direction pencil test is not sufficient
+2026-10-30
+
+Verdict: the exact uniform orbit7 point passes all 35 critical-direction
+pencil-sign necessary conditions yet has no real gradient lift. It is not an
+actual spectral gap or a counterexample to MOC. The point has exactly eight
+zero permutation gaps, positive height, a Hessian of rank 12 and neutral
+inertia (6,6,2). The point uses common ordinary weight alpha, the unique
+positive root of t^5-8t^4-18t^3-15t^2-6t-1, on rays
+ (0,7,17,20,28), with mixed ray34 of coefficient 1.
+
+I independently executed code/research/verify_eight_uniform7_direction_obstruction.py.
+It reconstructs the checked model and all 35 direction Hessians, isolates the
+root with rational endpoints, performs exact arithmetic in Q(alpha), and uses
+Sturm root counts to certify signs. Its rational-field symmetric congruence
+gives 6 positive, 6 negative and 2 zero directions. A nonzero principal-12
+minor is strictly positive. If K is its full two-column kernel basis, the
+corresponding complementary 2-minor of K gives the nonzero wedge coordinate;
+dividing the principal-12 minor by its square gives a positive scalar rho.
+The 12th compound is rho times the outer product of the complementary kernel
+Plucker vector, so a2(v)=rho det(K^T H_v K) for the scaled Hessian M=Q H_x.
+Undoing the scaling changes a2 by Q^12>0. Therefore the 31 negative and 4 zero
+exact Gram determinants prove all 35 original pencil-sign inequalities.
+
+The exact gradient system is consistent as a linear system in u^2,uv,v^2;
+its rank is two. Its Veronese residual has all three coefficients strictly
+negative on z=v^2>=0, ruling out a real y. This was independently checked in
+the same exact number field, so there is no floating-point root or sign
+assumption in the obstruction.
+
+There is also a simpler strict separator outside the fixed 35 directions.
+ code/research/verify_uniform7_adaptive_separator.py
+reuses the independently rebuilt number-field kernel and proves that
+ -(partial_0 F+3 partial_1 F) is positive definite on ker H_x but negative
+at x. The form has positive first principal entry and positive determinant,
+while the target is negative; all three signs are certified by exact Sturm
+counts over the isolating interval. I ran this portable checker successfully.
+This fixed non-ordinary direction excludes this point, but no claim is made
+that it excludes the entire orbit7 family or that it has a universal pencil
+sign theorem.

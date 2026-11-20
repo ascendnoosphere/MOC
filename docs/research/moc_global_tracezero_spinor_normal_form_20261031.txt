@@ -1,0 +1,81 @@
+GLOBAL NORMAL FORM FOR THE ENTIRE MOC PROBLEM
+31 October 2026. No unrestricted MOC proof is claimed.
+
+This is an input to the whole-proof moonshots, not another special case.
+The exact symbolic checker is
+  code/research/moc_global_tracezero_spinor_normal_form.py
+and its PASS data are
+  build/moc_global_tracezero_spinor_normal_form.json.
+
+1. BOTH SPECTRA CAN BE MADE TRACELESS, FOR EVERY n>=2
+
+Write c_j=-b_j and assume the2n labels a_i,c_j are all distinct.
+Let P(t)=prod(t-a_i), Q(t)=prod(t-c_j), D=P-Q. Distinct labels imply
+D!=0; write d=degree(D)<=n-1. The critical polynomial is
+
+  W=P'Q-PQ'=D'Q-DQ'.
+
+Its degree is n+d-1>=n-1>=1, with leading coefficient
+(d-n)*lead(D), so it has a finite complex root t. No root of W is one
+of the labels: W(a_i)=P'(a_i)Q(a_i)!=0 and
+W(c_j)=-P(c_j)Q'(c_j)!=0.
+
+At such a t,
+  sum_i1/(a_i-t) = sum_j1/(c_j-t).
+Let s be their common average and m(z)=1/(z-t)-s. Then
+  a_i'=m(a_i), b_j'=-m(c_j)
+have BOTH sums zero. All labels remain finite and distinct.
+
+For any fractional linear m(z)=(rz+s)/(tz+u) with Delta=ru-st!=0,
+the noncommuting matrix identity is
+  m(A)-m(-B)=Delta*(tA+uI)^-1*(A+B)*(-tB+uI)^-1.
+Consequently the determinant and every permutation product acquire
+the SAME nonzero scalar factor. MOC is invariant under this operation.
+For the critical-centroid m above, that factor is (-1)^n/(P(t)Q(t)).
+
+Thus a theorem for ALL traceless pairs proves unrestricted MOC for
+all disjoint simple sources. Continuity of determinant and the finite
+permutation polygon extends it to all sources. This is a uniform
+normalization of the original problem, not an assumption of real
+spectra, circle geometry, or repeated eigenvalues.
+
+2. THE n4 SPINOR QUARTIC
+
+For a trace-zero4-tuple, set
+  X=(a0+a1,a0+a2,a0+a3).
+Then a=(X0+X1+X2, X0-X1-X2, -X0+X1-X2, -X0-X1+X2)/2.
+Write
+  q(C)=[2tr((C C^T)^2)-(tr(C C^T))^2]/16
+for an arbitrary COMPLEX3x3 matrix C; transpose is not conjugation.
+The quaternion left/right multiplication matrices L_i,R_j give
+  H(C)=-(1/2)sum_ij Cij L_i R_j,
+  H(diag X)=diag(a), det H(C)=q(C)
+as a54-term polynomial identity, audited for all9 complex entries.
+Every realSO4 conjugation acts on C by C->R C S^T, R,S in SO3.
+
+The audited whole-U4-to-SO4 squared-minor convexification is in
+  docs/theorems/profile_geometry/algebra_unitary_realification.md.
+It makes an inequality for every realSO4 sufficient for unrestricted
+complex-unitary MOC4, with arbitrary complex spectra throughout.
+
+Therefore the remaining whole4x4 theorem can be written
+
+ Re[eta*q(diag X+R diag Y S^T)]
+   <= max_{w in Weyl(D3)} Re[eta*q(diag(X+wY))]
+
+for ALL X,Y in C3, R,S in SO3, eta in C. Weyl(D3) consists of the24
+signed permutations of3 coordinates with product of signs +1; these
+are precisely the original24 permutations of the spinor4-spectrum.
+THIS INEQUALITY IS UNPROVED. No new name or analogy substitutes for it.
+
+3. SOURCE-COUPLED Spin6 COEFFICIENTS
+
+Let sx_i=Xi^2-(sum Xk^2)/2, sy_j=Yj^2-(sum Yk^2)/2,
+Xhat_i=prod_{k!=i}Xk and similarly Yhat. In the exact whole-SO6
+quadratic from moc_global_spin6_hessian.py, the coefficients become
+  Aij=sx_i*sy_j/2,
+  Bij=[XiYj(sx_i+sy_j)-Xhat_iYhat_j]/2,
+  c=prod a+prod b.
+The root checker verifies all18 coefficient identities symbolically.
+These coupled coefficients, rather than arbitrary quadratic costs,
+are the data a global rearrangement/Hessian/Fierz proof must exploit.

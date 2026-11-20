@@ -1,0 +1,231 @@
+Complete psi fiber and branchwise exclusion for the both-dependent normal
+31 October 2026
+
+Result
+------
+For the exact normal n in
+  build/moc_both_dependent_double_contact_escape/exact.json,
+the projective quadratic map psi has exactly TWO complex projective
+preimages. Both preimages are rational real rank-two matrices. They have
+psi(H)=alpha*n with alpha<0, so there is NO real affine solution of
+psi(H)=n and no real lift onto the positive oriented ray of n. There are
+four normalized complex affine lifts, two purely imaginary signs for each
+projective lift.
+
+For EACH lift, the legitimate differential condition
+
+                     M(g)*vec(H)=0
+
+admits no nonzero matching cost with g>=0 and g_0=g_7=0. This is proved
+by exact positive Stiemke certificates, not a numerical LP status and not
+the derivative of a possibly ramified source-label quotient.
+
+The fiber audit also excludes exceptional lifts from the base locus of
+psi. The two computed lifts therefore exhaust the closed graph fiber.
+The two affine differential images have rank nine separately and rank ten
+together. This directly proves singularity of the nine-dimensional image
+cone at n; the earlier 32-label derivative observation was insufficient
+for that conclusion by itself.
+
+Reproduction
+------------
+python code/research/moc_both_dependent_psi_fiber_branch_audit.py
+
+Output:
+  build/moc_both_dependent_psi_fiber_branch_audit/exact.json
+
+The replay uses rational polynomial arithmetic and exact linear algebra.
+It needs no LP solver. Runtime is about two seconds.
+
+1. Reduction of every possible lift to four coordinates
+-----------------------------------------------------
+Let L be the standard tetrahedral 4-by-3 orthonormal matrix and let P be
+the singleton matrix of n. Singleton recovery for the universal pencil
+gives
+
+                       C=4*L^T*P*L=cof(H)
+
+when psi(H)=n. Projectively the equality has an arbitrary nonzero scalar.
+For this normal C=u*v^T, where
+
+  u=(-4,-51/625,-2673/1250)^T,
+  v=(1,3/10000,7701/10000)^T.
+
+Any projective lift has rank two: a rank-three H has full-rank cofactor,
+and a rank-at-most-one H has zero cofactor. Its two nullspace identities
+are H*v=0 and u^T*H=0. Consequently EVERY lift is
+
+  H=A*X*B^T,
+
+       [-51/2500  -2673/5000]       [-3/10000  -7701/10000]
+  A=   [ 1          0      ], B=   [ 1          0       ],
+       [ 0          1      ]       [ 0          1       ]
+
+with X a 2-by-2 matrix and det X nonzero. Exact expansion gives
+
+                   cof(H)=-(det X)/4*C.
+
+Substituting H into all fourteen quadratic coordinates of psi produces
+four independent homogeneous quadratic equations expressing
+
+                   psi(H)=-(det X)/4*n.
+
+2. Complete projective fiber
+---------------------------
+Write X=[[x0,x1],[x2,x3]]. In the chart x3=1, the exact lexicographic
+Groebner basis is equivalent to
+
+  19508123584005328883271*x0
+    -1082366318403221576535*x2-46737484031732046027554=0,
+
+  6502707861335109627757*x1
+    +7490889472339524487632*x2-386983280916665072355=0,
+
+  (115293213417*x2+93639480343)
+    *(196279158657*x2-178993785823)=0.
+
+The det-X-saturated x3=0 chart has Groebner basis [1], so there are no
+missing projective solutions at infinity. Both displayed roots are simple
+and give nonzero determinant. Explicitly the two matrices X are
+
+  X1=[[271023631703/115293213417, 38243531741/38431071139],
+      [-93639480343/115293213417, 1]],
+
+  X2=[[480175904573/196279158657, -64837907531/65426386219],
+      [178993785823/196279158657, 1]].
+
+For Hi=A*Xi*B^T, the scales alpha_i=-(det Xi)/4 are approximately
+
+                     -0.7897389423, -0.8375312646.
+
+Their strict negativity is checked rationally. Thus the real projective
+fiber has two points, the complex projective fiber has the same two points,
+and the normalized affine solutions are exactly
+
+                    +/- i*Hi/sqrt(-alpha_i), i=1,2.
+
+In particular, the negative affine orientation is essential. Generic real
+source labels do not imply that the positively oriented normal has a real
+affine psi lift.
+
+3. No hidden lifts from the base locus
+------------------------------------
+The exact base locus can be determined without a numerical search.
+If psi(H)=0, singleton recovery forces cof(H)=0, hence rank H<=1.
+Projectively write H=a*b^T. Each two-set coordinate factors into a
+row factor and a column factor:
+
+  +/-[(w_I*a)(w_Ic*a)]*[(w_J*b)(w_Jc*b)].
+
+For I=01,02,03 the three row quadratics span precisely
+
+                         a0^2-a1^2, a0^2-a2^2.
+
+Their common projective zeros are the four rows of L. The same holds for
+b. Therefore the full base locus is exactly the eight projective planes
+
+           a proportional to a row of L, or b proportional to a row of L.
+
+Let Gamma be the closed graph of the projective map psi. The adjugate
+identities imply throughout Gamma that
+
+                   H*C(n)^T and C(n)^T*H
+
+are scalar multiples of the identity. This is a closed bilinear incidence
+condition. If H=a*b^T is a rank-one base point, those scalar multiples
+must be zero. For C(n)=u*v^T this requires
+
+                         u^T*a=0, b^T*v=0.
+
+But all four entries of L*u and all four entries of L*v are nonzero in
+the present example. Equivalently P has no zero row or column. Thus no
+point of any base plane can lie in the graph fiber over n.
+
+The graph is proper and generically birational over its image: on the
+invertible chart the cofactor map is projectively birational. Its fiber
+over n consists only of the two nonbase points found above. Near these
+points it is the graph of a map from smooth projective eight-space, and
+the projective differential has rank eight. Locally these give the two
+smooth normalization branches; no additional branch can appear from an
+exceptional graph point.
+
+4. Exact branchwise Stiemke certificates
+--------------------------------------
+Let F be the twelve contact-null ordinary features with IDs
+
+                   2,3,6,7,8,9,12,17,18,22,24,25.
+
+They span the full contact space W={g in V14:g_0=g_7=0}, because they are
+independent and the two contact evaluations are independent on V14.
+
+For each Hi form the 9-by-12 exact matrix
+
+                  Ti=[M(F_j)*vec(Hi)]_j.
+
+Its rank is nine on BOTH branches. Consequently the costs satisfying the
+legitimate branch condition form a three-dimensional subspace
+
+                         V_i=F*ker Ti.
+
+For each V_i the verifier gives a rational vector y_i with
+
+                  V_i^T*y_i=0,
+                  (y_i)_0=(y_i)_7=0,
+                  (y_i)_pi>=1 for every other permutation.
+
+All but three noncontact entries are exactly one. The exceptional entries
+are approximately
+
+  branch 1: pi15=1.63016623, pi16=4.53741390, pi23=17.10483401;
+  branch 2: pi16=4.46282261, pi20=1.69641333, pi23=17.95563088.
+
+Every exact fraction is in the JSON. These approximate values are only
+for readability; the proof checks all three rational signs directly.
+
+If a nonzero g in V_i were pointwise nonnegative, its contact values would
+be zero and y_i^T*g would be strictly positive, contradicting V_i^T*y_i=0.
+Hence the nonnegative cone in each legitimate branch is just {0}.
+
+The replay additionally constructs the requested derivative-plus-gauge
+form. It solves exactly for delta Hi and the complete ten-dimensional
+matching-annihilator gauge Z*b_i, adjusting only the two irrelevant contact
+entries, to obtain a functional v_i satisfying
+
+  v_i = Dpsi_Hi(delta Hi)+Z*b_i,
+  (v_i)_pi>=1 outside the contacts.
+
+Here Dpsi_H(delta H)(g)=2*vec(delta H)^T*M(g)*vec(H). The recorded
+identity is checked on the full fourteen-dimensional matching basis.
+Thus these are genuine branchwise Gauss/Stiemke exclusions, not the
+stronger condition of annihilating all 32 original source-label derivatives.
+
+The completeness statement needed for LIMITING conormals also has a direct
+compactness proof. Take generic pairs (g_k,psi(H_k)) with
+M(g_k)*vec(H_k)=0 tending projectively to (g,n). After a subsequence the
+projective matrices H_k converge. Their limit lies in the closed graph
+fiber over n, which has just the two nonbase points Hi. Choosing compatible
+homogeneous representatives and taking limits gives M(g)*vec(Hi)=0.
+Thus every limiting conormal pair over this normal satisfies one of the
+two separately excluded equations. No assertion about the tangent of a
+ramified label quotient is needed for this argument.
+
+5. Direct singularity check and scope
+------------------------------------
+The two affine psi differential images have dimension nine separately.
+Their combined span has dimension ten, checked exactly. The affine image
+cone has dimension nine, since psi is generically finite and has rank
+nine at each lift. Every differential image lies in the Zariski tangent
+space at the common projective image. Thus that tangent has dimension at
+least ten and the image cone is singular there.
+
+This validates singularity using the actual quadratic map. It also shows
+why annihilating the sum of both tangent images would have been an
+unjustified strengthening of the branch condition: a conormal may belong
+to either branch. The two separate exact certificates avoid that issue.
+
+The original example remains a valid counterexample to the normal-only
+positivity shortcut. It is NOT a Gauss-compatible cost or a MOC
+counterexample. The new audit establishes that neither local psi branch
+can pair this particular normal with a nonzero nonnegative cost having
+the two specified contacts. It does not assert a uniform result for all
+both-dependent normals or solve unrestricted MOC.

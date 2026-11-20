@@ -1,0 +1,197 @@
+Unrestricted 4x4 source: quadratic SO6 model and complete flag Hessian
+====================================================================
+
+Status and scope
+----------------
+This is a global algebraic reformulation and derivative calculation for
+arbitrary complex spectra and arbitrary 4x4 unitary matrices. It is not
+a partial spectral/contact family. It does not yet prove the required
+global rearrangement inequality, and it is not a proof of MOC4.
+
+Exact APIs and replay:
+    code/research/moc_global_spin6_hessian.py
+    python code/research/moc_global_spin6_hessian.py
+Data:
+    build/moc_global_spin6_hessian.json
+
+The replay checks universal symbolic trace identities, all six-variable
+centroid-zero coefficient identities, the full su4->so6 derivative rank,
+and a dense genuinely complex SU4 source. For that source it independently
+checks all 12 flag-gradient entries and all 78 independent mixed-Hessian
+entries against determinant Frechet derivatives. Replay is about 4s.
+
+1. Global Hodge-real representation
+-----------------------------------
+Index wedge^2 C4 by 01,02,03,12,13,23. Use representatives I=01,02,03,
+complements Ic=23,13,12, and Hodge signs h=+1,-1,+1. An orthonormal
+real basis of the Hodge-antilinear fixed space consists, interleaved, of
+
+    (eI+h eIc)/sqrt2,  i(eI-h eIc)/sqrt2.
+
+Let S be this basis matrix. After a harmless left diagonal-unitary gauge
+we may assume detU=1: such a gauge commutes with Da and preserves the
+determinant under study. Then
+
+    R=S* (wedge^2 U) S
+
+is real orthogonal with determinant 1. This map SU4->SO6 is onto: its
+derivative maps the 15-dimensional su4 injectively onto so6, as verified
+by exact rank 15. The image is consequently open and closed in the
+connected group SO6. The kernel is {+I,-I}. Thus optimization over R
+does not enlarge the actual unitary source domain.
+
+2. Exact quadratic objective
+----------------------------
+For x in C4 write x#_i=product_{k!=i} xk. Define
+
+    Kx=S* diag(xi+xj-sum(x)/2)_{ij} S,
+    La=S* diag(product_{k notin I} ak)_I S,
+    Lb=S* diag(product_{k in I} bk)_I S.
+
+All these source matrices have three commuting normal 2x2 Cartan blocks.
+No inverses or nonzero-spectrum assumptions occur. Cauchy--Binet and
+the additive-wedge trace identity give, exactly,
+
+    det(Da+U Db U*) = c + tr(La R Lb R^T)
+       + tr(K_a# R K_b R^T)/2
+       + tr(K_a R K_b# R^T)/2,                         (1)
+
+    c=product(a)+product(b)
+       +sum(a#)sum(b)/4+sum(a)sum(b#)/4.
+
+For arbitrary 4x4 matrices X,Y, the identity used here is
+
+    tr(KX KY)=2tr(XY)-tr(X)tr(Y)/2.
+
+It follows directly from
+tr(dLambda2(X)dLambda2(Y))=2tr(XY)+tr(X)tr(Y). The replay proves the
+displayed identity symbolically for 32 independent matrix variables.
+
+Equation (1) reduces the full determinant objective to a quadratic
+assignment functional of a real 6x6 orthogonal matrix. It retains all
+complex spectra and all unitary phases.
+
+3. Concrete 3x3 block variables
+--------------------------------
+Partition R into 2x2 blocks and define
+
+    Qij=||Rij||_F^2/2,     Pij=det(Rij).
+
+Q is doubly stochastic and |Pij|<=Qij. Write
+
+    sa,I=aI+aIc,    da,I=aIc-aI,
+    lambda_x,I=xi+xj-sum(x)/2,
+
+where aI denotes a pair product. Then
+
+    determinant = c+sum_ij (Aij Qij+Bij Pij),            (2)
+
+    Aij=sa,i sb,j/2,
+    Bij=da,i (bJ-bJc)/2
+        +lambda_a#,i lambda_b,j+lambda_a,i lambda_b#,j.
+
+The elementary block identity behind (2) is
+
+    tr((alpha I+beta J)M(gamma I+delta J)M^T)
+      =alpha gamma ||M||_F^2-2 beta delta detM,
+    J=[0 1;-1 0].
+
+This is checked symbolically with all eight scalar/block variables
+independent. For a real support function use Re(eta*c), Re(eta*A), and
+Re(eta*B).
+
+At a permutation endpoint, Q is a 3x3 permutation matrix and
+P_i,sigma(i)=epsilon_i, with epsilon_i=+/-1 and product epsilon=+1.
+There are 6*4=24 such Weyl D3 endpoints. The replay identifies each
+of them with its original 4x4 permutation and checks the actual product
+value, not merely equality of maxima.
+
+The constraints Q doubly stochastic and |P|<=Q are insufficient alone.
+The source coefficients A,B are coupled polynomially; exploiting that
+coupling is the unproved global inequality, rather than an assumed
+universal convexity theorem for arbitrary A,B.
+
+4. Centroid-zero global coordinates
+------------------------------------
+The parent's common-Mobius normalization reduces generic disjoint sources
+to sum(a)=sum(b)=0; continuity is needed only after a uniform proof.
+The coefficient formulas themselves are polynomial and need no generic
+assumption. Put
+
+    X=(a0+a1,a0+a2,a0+a3),
+    Y=(b0+b1,b0+b2,b0+b3),
+    sa,i=Xi^2-(X0^2+X1^2+X2^2)/2,
+    sb,j=Yj^2-(Y0^2+Y1^2+Y2^2)/2,
+    X#i=product_{k!=i}Xk,  Y#j=product_{l!=j}Yl.
+
+Then (2) simplifies to
+
+    c=product(a)+product(b),
+    Aij=sa,i sb,j/2,
+    Bij=[Xi Yj(sa,i+sb,j)-X#i Y#j]/2.                 (3)
+
+The API tracezero_sources(X,Y) exports (3) and the corresponding spectra.
+Every coefficient equality with (2) is checked symbolically for six
+arbitrary complex variables. These compact equations are the actual
+source constraints for a possible global SO6 rearrangement theorem.
+
+5. Exact stationarity condition
+--------------------------------
+Let X=Da+B, B=U Db U*, C=eta adj(X). Along a skew-Hermitian direction K,
+
+    df(K)=Re tr(C[K,B])=Re tr([B,C]K).
+
+Therefore stationarity on the unitary flag is precisely
+
+    [B,eta adj(X)] is Hermitian.                       (4)
+
+Since adj(X) commutes with X, [B,C]=-[Da,C]. In the B-eigenbasis,
+replace X by U*DaU+Db and B by Db. For the 12 real root generators
+Eij-Eji and i(Eij+Eji), the replay verifies the quantitative identity
+
+    sum_root (df)^2 = ||stress-stress*||_F^2/2,
+    stress=[Db,eta adj(X)].
+
+Thus (4) is an exact real-form condition. Replacing it by the stronger
+complex commutation condition [B,C]=0 would lose genuine stationary
+points and is not justified.
+
+6. Complete Hessian
+--------------------
+In the B-eigenbasis put EK=[K,Db]. For invertible X, the exponential-chart
+Hessian is
+
+    Hess(K,L)=Re eta * {
+      tr(adj(X)([K,[L,Db]]+[L,[K,Db]])/2)
+      +det(X)[tr(X^-1 EK)tr(X^-1 EL)
+               -tr(X^-1 EK X^-1 EL)] }.
+
+At a stationary point this is the intrinsic second variation; every
+mixed root direction matters. The direct inverse formula is used only
+as an independent verification example.
+
+For a polynomial formula valid also at singular X, use (1). Let
+Lell,Nell be its three source pairs, C_ell=R^T Lell R, and J,K be real
+skew6 generators lifted from the su4 flag. Then
+
+    Hess(J,K)=Re eta/2 * sum_ell tr C_ell *
+       ([J,[K,Nell]]+[K,[J,Nell]]).                    (5)
+
+The API qap_flag_derivatives uses (5), has no inverse, and covers zero
+and repeated spectra and singular Da+UDbU*. It includes all 12 tangent
+directions and all 78 independent Hessian entries.
+
+7. The missing maximum principle
+----------------------------------
+The global proof target is not the overly strong assertion that every
+noncommuting stationary point has a positive Hessian direction. A local
+maximum below the permutation support is harmless. What is required is
+an actual-source identity or inequality showing that (4), together with
+
+    Re eta*det(Da+UDbU*) > max_pi Re eta*product_i(ai+b_pi(i)),
+
+forces a positive direction in (5). A positive weighted sum of these
+Hessian directions, using the coupled coefficients (3) and the strict
+24 support gaps, would provide such a mechanism. No such inequality is
+claimed by the present calculation. Root and other agents are examining
+the equivalent global block and three-mode Bogoliubov formulations.

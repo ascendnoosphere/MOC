@@ -1,0 +1,322 @@
+Direct physical N9 search and a compact global-minimum criterion
+31 October 2026
+
+Status. No MOC counterexample and no global MOC proof is claimed. This note
+records direct searches for a negative physical expectation, then derives a
+precise global obstruction that a proof could exclude. The obstruction is
+stronger than an unsupported analogy to local-maximizer geometry.
+
+1. Direct original-MOC objective
+
+Use the verified real matching-function space V of dimension14 on S4.
+Let c_O(pi)=sign(pi) product_i O_i,pi(i)/det(O), O in SO4, and
+
+ L_O(g)=sum_pi c_O(pi) g(pi).
+
+The canonical nonordinary cap is
+
+ g=t f34+sum_(j in Z) nu_j r_j,
+ Z=(0,7,10,13,17,18,20,22,23,27,28,30,31), t,nu_j>=0.
+
+The direct falsification target is N9(g)=0, actual future real lift, and
+L_O(g)<0. A negative triangle-budget or feature-restricted SOS result is
+not this target. A putative numerical hit must be reconstructed to finite
+spectra and checked by the original determinant against all24 products.
+
+At t=1 and L_O(f34)<0, let beta_j=L_O(r_j)/(-L_O(f34)). Then the physical
+negative-budget region is the simplex sum beta_j nu_j<1, nu_j>=0.
+
+code/research/moc_future_physical_budget_search.py samples that simplex,
+solves quadratic N9 fibers, independently checks the Hessian kernel, and
+tests the future lift whenever a negative physical root is found.
+
+Completed finite runs:
+ * corrected generic60000 trial run:742 positive formal roots; no negative
+   physical root;
+ * robust boundary-profile100000 trial run:12105 independently validated
+   positive formal roots; no negative physical root. It included48 physical
+   mixers, the sharp f34 minimizer, perturbations, and O(r) boundary points
+   from r=1e-4 through r=.595. All nine quadratic coordinates were used.
+
+The second output is
+ build/moc_future_physical_boundary_search_20261031.json.
+This is discovery evidence, not a global exclusion argument. No future
+filter was needed in these runs because no formal root entered the
+negative physical simplex.
+
+The engine also accepts arbitrary24-entry dual profiles through repeated
+--dual-npz arguments and --dual-only. A further60000 robust trials using
+two strongly nonphysical full matching-SOS PSD duals yielded7348 validated
+positive roots and no negative pairings. The data are in
+build/moc_future_full_dual_budget_search_20261031.json. These arbitrary-dual
+searches test the BROADER matching-SOS containment conjecture. A negative
+pairing there would not automatically be a MOC counterexample.
+
+Alternating actual-future cost and SO4 optimization is implemented in
+code/research/moc_future_physical_optimize.py. The unrestricted physical
+minima of the known actual anchors converged to zero at permutations.
+Constraining L_O(f34)<=-.005 gave sparse weighted-minor limit costs,
+including nu18 approximately nu28 approximately1, with positive physical
+expectation about.0011054. This again supplies no global theorem.
+
+2. Compactification eliminates the unbounded-budget issue
+
+Write u(g)=24^(-1) sum_pi g(pi). The set
+
+ K={g in V: g>=0 pointwise, u(g)=1, N9(g)=0}
+
+is compact: each coordinate lies in[0,24], and all constraints are closed.
+SO4 is compact as well. Therefore, if ANY nonnegative N9 cost has a
+negative physical expectation, the normalized joint problem attains a
+negative global minimum m at some(g,O). This stronger set includes the
+actual future costs. Proving its nonnegativity would suffice, without
+assuming that the real-lift image itself is closed.
+
+The normalization is an actual positive matching law, rather than an
+arbitrary coefficient sum. That fact makes the next condition strict.
+
+3. Exact smooth-face Gauss-normal condition
+
+Let S={pi:g(pi)=0} at a negative global minimum. Put
+
+ W_S={h in V: h(pi)=0 for every pi in S}.
+
+The point g is in the relative interior of its pointwise-nonnegative face.
+Let n=D N9(g), regarded as a functional on V. Assume its restriction to
+W_S is nonzero. This is a smoothness condition on the CONTACT FACE, not
+merely nonvanishing of the ambient N9 gradient.
+
+Homogeneity gives n(g)=9N9(g)=0, while u(g)=1. Hence n|W_S and u|W_S
+are independent. Ordinary Lagrange multipliers on that relative face give
+
+ (L_O - m u)|W_S = lambda n|W_S.                       (A)
+
+The coefficient of u is exactly m: pair the multiplier equation with g.
+No inequality multiplier regularity is needed, since the calculation is
+performed inside W_S. In ambient24 coordinates, (A) means
+
+ c_O-m uniform-lambda n_lift
+       belongs to V^perp+span{delta_pi:pi in S}.        (B)
+
+Here n_lift is ANY extension of n to R24. The10-dimensional freedom
+V^perp is essential and cannot be discarded when forming moment matrices.
+
+4. Strictly positive conormal moment completion
+
+The established real Clifford-jet identity gives an alternating gauge
+delta_O for which the complete matching moment of
+c_O+delta_O sign(pi) is PSD on V; see
+docs/research/moc_intrinsic_matching_sos_20261031.txt, section4.
+The alternating function belongs to V^perp. The uniform moment is positive
+definite on V: every nonzero matching function has a nonzero value on at
+least one permutation.
+
+Let E be any full-column-rank evaluation table for W_S. For every24-vector
+y write M_S(y)=E^T diag(y) E. Contact atoms give zero in this compression.
+By (B), for SOME eta in V^perp,
+
+ M_S(lambda n_lift+eta)
+  =M_S(c_O+delta_O sign-m uniform) >0.                (C)
+
+Strictness follows from m<0. The space W_S is nonzero because it contains
+g. Thus lambda cannot vanish. A negative global minimum at a smooth
+contact-face point therefore forces an N9 Gauss normal, up to either
+overall sign, to admit a STRICTLY POSITIVE matching-moment completion on
+the contact-null feature space.
+
+A sufficient global closure statement would be:
+
+ For every nonnegative N9 point g with u(g)=1, either the contact-face
+ restriction is singular, or neither sign of D N9(g) admits the PD
+ completion(C).
+
+The singular contact-face strata then require a separate argument.
+Neither statement has been proved. Testing only one chosen extension
+n_lift would not establish the completion obstruction.
+
+Subsequent audit: merely replacing the actual Gauss pair(g,n) by the
+conditions n in N8' and n(e)=0 is insufficient. The parent found rank3
+Markov-chart normals with a strictly positive contact-null moment. The
+primal compatibility n(g)=0 with nonnegative contact cost g must be kept.
+The exact Markov compatibility theorem is recorded separately in
+docs/research/moc_markov_gauss_contact_bridge_20261031.txt.
+
+5. A weaker concrete necessary sign test
+
+Every ordinary ray r_j is a0/1 matching function and L_O(r_j)>=0. If a
+canonical representation has nu_j>0, then r_j vanishes at every contact of
+g: all summands of g are nonnegative. Hence r_j lies in W_S, and (A) gives
+
+ lambda D_(r_j)N9(g)=L_O(r_j)-m u(r_j)>0.             (D)
+
+Consequently all N9 ordinary-budget partial derivatives corresponding to
+POSITIVE coefficients must be NONZERO and have the SAME sign at a
+negative smooth-face global minimum. A mixed-sign theorem on the
+available ordinary rays would contradict(D), before using the whole
+moment condition(C).
+
+There is an important automatic identity that invalidates naive sampling:
+
+ e=sum_(j in Z) r_j-3 f34.
+
+N9 is invariant under addition of e and homogeneous of degree9. At t>0,
+N9(g)=0 therefore implies
+
+ sum_j (nu_j+t/3) partial_(nu_j)N9=0.                 (E)
+
+Mixed signs among ALL13 partials when all13 budgets are positive are
+therefore automatic. Those samples do not test the proposed lemma. At a
+zero budget, its derivative must be omitted from(D); then(E) alone does
+not force mixed signs on the remaining available rays.
+
+The13 ordinary coefficients are exactly the costs at the13 zero entries
+of f34, in the following order:
+
+ j:      0  7 10 13 17 18 20 22 23 27 28 30 31
+ pi_j:   1 17  6 22 12 18 20  8 14 15  9 23  7
+
+Thus nu_j=0 creates the actual permutation contact pi_j. These identities
+are directly checked in the compiled matching table.
+
+6. Gradient audit and precise remaining gap
+
+code/research/moc_nonic_gauss_budget_audit.py evaluates the analytic
+Reynolds-form N9 gradient on independently validated quadratic fibers.
+The initial500 trials yielded138 positive roots,46 future points including
+two anchors,93 past points, and one ambiguous point. Every future point
+had mixed signs on its positive-budget partials. Some of these points had
+no contact, so their mixed signs are vacuous by(E). Both known actual
+anchors do have one contact and strong mixed signs after omitting the
+unavailable derivative:
+ * fullcap anchor:nu31=0, contact7;
+ * exact integer actual triangle counter:nu28=0, contact9.
+
+A separate contact-only audit is recorded in
+build/moc_nonic_gauss_budget_audit_contact_allstatus_20261031.json.
+It completed916 fiber trials, with253 roots plus the two anchors. All255
+genuine contact cases had mixed signs on the available positive-budget
+partials:81 future,173 past, one ambiguous. One, two, or five budgets were
+forced to zero and their derivatives omitted. No same-sign case occurred.
+
+The mixed-available-sign condition is NOT universal across all contact
+strata. The exact controlled point g0=f34+r23+r28 has eleven contacts,
+projected Hessian rank12, and same-sign nonzero derivatives on its only
+two positive budgets. Normalizing D_23 N9=1, the exact derivative ratios
+in the ordered13coordinates are
+
+              (-1,-1,-1,-1,-1,0,-1,0,1,0,1,-1,-1).
+
+This point is already a known weighted-minor SOS cost. It refutes a
+blanket mixed-sign lemma; higher-contact strata require a stronger
+argument or their own classification.
+
+7. Exact Gauss-gradient recovery by a two-by-two Schur complement
+
+The mixed-sign test need not use the342720-term Reynolds polynomial.
+At any rational point g with Q!=0 and projected Hessian rank12, set
+
+ X=Q(g) H_g-F(g) H_e.
+
+The verified square identity is N9(g)^2=-det(X)/(4 Q(g)^12). Choose an
+invertible principal12-by12 block A=X[I,I], let J be the remaining two
+indices, and use the kernel chart
+
+ K[I,:]=-A^(-1) X[I,J],  K[J,:]=I2.
+
+For an ordinary direction r_j define
+
+ D_j=(D_j Q) H_g+Q H_(r_j)-(D_j F) H_e,
+ R_j=K^T D_j K.                                      (F)
+
+The leading term of the Schur complement under a perturbation h is
+sum_j h_j R_j. All base Schur-complement entries are zero, so the degree2
+part of det(X(g+h)) is det(A) det(sum_j h_j R_j). Derivatives of the
+nonzero factor Q^(-12) do not enter that degree2 term. Hence, for any
+reference direction a with det(R_a)!=0,
+
+ (D_j N9)/(D_a N9)
+   =[det(R_a+R_j)-det(R_a)-det(R_j)]/[2 det(R_a)].     (G)
+
+All quantities in(G) are rational at rational g. The unknown overall sign
+and square normalization of N9 cancel. This proves an exact algorithm for
+recovering the conormal; it is not a universal sign statement.
+
+code/research/moc_nonic_gauss_adjugate2_exact.py verifies(F)-(G) on the
+finite integer actual triangle anchor, checking rank12, the exact kernel,
+and the exact identity(E). With D_0 N9 normalized to1, examples are
+
+ D_10 N9/D_0 N9=-.4970743856,
+ D_20 N9/D_0 N9=-.6047798973,
+ D_13 N9/D_0 N9=+2.8856560224.
+
+All three corresponding budgets are positive. The only zero budget is
+nu28, giving contact9. Full exact rational ratios and the principal chart
+are saved in build/moc_nonic_gauss_adjugate2_exact_20261031.json.
+The verifier completed in2.88 seconds in the observed run.
+
+There is also a source expression. If z=x+i y is an actual critical
+matching source with x=g-(F/Q)e, then q(y)=q(x), H_x y=0, F(x)=0.
+Choose k independent of y in kerH_x and set kappa=y^T H_e k. Then
+
+                 n_source=Q H_y k-kappa q(x).          (H)
+
+The y-y entry of every compressed derivative matrix in(F) is zero, and
+its y-k entry is n_source(r_j), so its determinant is minus that entry
+squared. Thus(H) is proportional to the Gauss normal. The exact verifier
+recovers y directly from the original integer eta and matching products,
+and checks all13 ratios from(H) against(G), as well as n_source(e)=0 and
+n_source(g)=0. This independent source check passed.
+
+8. Remaining gap
+
+The remaining problem is to exclude negative compact minima using the
+FULL Gauss/contact compatibility, including multiple contacts and
+singular contact-face strata. The simple universal mixed-sign statement
+is false at the controlled higher-contact example above. The single
+contact Markov theorem supplies a genuine partial bridge, subject to its
+Gauss-chart input; it does not settle the unrestricted problem. The full
+original MOC problem remains open in this work.
+
+9. A physical mixed-variation condition along a linear Gauss leaf
+
+Suppose a linear subspace G of cost vectors is contained in the relevant
+N9 component and contains g. At a negative joint global minimum let
+
+ v in G, u(v)=0, v(pi)=0 for every active contact pi.
+
+Because every remaining cost coordinate of g is strictly positive,
+g+t v is feasible for both signs of sufficiently small t. The objective
+L_O(g+t v) is affine in t. Global minimality makes its first derivative
+zero, and its second derivative is identically zero.
+
+Now vary the mixer as O(s)=exp(sA)O, A real skew-symmetric. The two-variable
+objective L_(O(s))(g+t v) has a PSD Hessian at(s,t)=(0,0). Its t-t entry is
+zero, so its mixed s-t entry MUST vanish:
+
+                       D_A L_O(v)=0 for every A.       (I)
+
+This uses the Hessian of the actual smooth objective on a feasible leaf;
+it does not assume a fixed nonsmooth contact multiplier is PSD. It also
+avoids division by matrix entries, including at mixers with zero entries:
+
+ D_A L_O(v)=sum_pi sign(pi) v(pi)
+             sum_a (AO)_(a,pi(a)) product_(i!=a) O_(i,pi(i)).
+
+Thus the physical mixer must be stationary for EVERY contact-preserving
+Gauss-leaf direction, as well as for the original cost g. This is stronger
+than merely requiring a conditional PSD completion of an arbitrary normal.
+
+If the independently proposed generic Gauss fiber is a projective P4,
+then its cone G has dimension5 and contains e. The normalized affine leaf
+has dimension4. With k independent contacts, the available directions in
+(I) have dimension at least4-k. Moving along such directions preserves
+the negative value and the chosen mixer until additional contacts occur.
+Consequently a minimum on a generic compact leaf section can be pushed
+to a vertex with at least four active contacts. The projective fiber input
+and singular limits are separate geometric obligations; this paragraph
+does not prove them from dimension counting alone.
+
+The parent and positive-representation agents now own the exact5D normal
+leaf/4D polytope construction and classification of four-contact faces.
+This supplies a concrete finite-case direction for the remaining problem,
+not a completed unrestricted argument.

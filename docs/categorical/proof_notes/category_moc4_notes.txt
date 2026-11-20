@@ -1,0 +1,91 @@
+ADVANCED/CATEGORICAL ORDER-FOUR MOC ROUND
+Exact all-real-parameter theorem, positive-minor certificates, and scope
+
+MAIN THEOREM
+For every real epsilon, put
+ a(epsilon)=(epsilon+i,-epsilon+i,1,2+i),
+ b=(-1+i,-2-2i,2-i,1+2i).
+For every unitary U in U(4),
+ det(D_a+U D_b U*) belongs to the convex hull of
+ {product_{i=1}^4 (a_i+b_{pi(i)}): pi in S4}.
+This is full MOC for the entire real parameter line, with all unitary eigenvector changes and every complex support direction. Both spectra are noncollinear. The a-spectrum is simple except at epsilon=0,+2,-2; b is always simple. No historical priority is claimed.
+
+This extends the previously certified interval |epsilon|<=1/20 to EVERY real epsilon. It does not establish unrestricted MOC for arbitrary spectral pairs or arbitrary n.
+
+CERTIFICATE FILES
+ category_moc4_all_real_certificate.json
+ category_moc4_all_real_verify.py
+ category_moc4_algebra.py
+
+The first file contains all rational polynomial coefficient data and exact algebraic parameter-cell endpoints. The second is the independent verification-only program. The third implements exact rational polynomial arithmetic, Sturm sequences, real algebraic endpoint signs, and squarefree multiplicity handling. Both Python files use only the standard library; the verifier invokes no optimizer, floating-point arithmetic, numerical root routine, or sampling-based inference.
+
+The final verification-only run passed:
+ - 89 contiguous algebraic parameter cells;
+ - 17 polygon types;
+ - 726 facet identities;
+ - 8,703 nonnegative polynomial coefficient functions;
+ - 17,424 polynomial identities on permutations;
+ - all strict polygon-turn and pairwise-distinctness checks.
+
+The JSON is 3,086,434 bytes. All polynomial coefficients are explicit rational strings. The numerical discovery routines are unnecessary for checking the theorem.
+
+PROOF
+1. Compact parameterization.
+It suffices first to take epsilon>=0. Set x=epsilon/(1+epsilon), so 0<=x<1 and epsilon=x/(1-x). Let
+ z_pi(epsilon)=product_i(a_i(epsilon)+b_{pi(i)}),
+ d_U(epsilon)=det(D_a(epsilon)+U D_b U*).
+Only a1 and a2 vary with epsilon, so all these functions are polynomials of degree at most two in epsilon. Define normalized values
+ Z_pi(x)=(1-x)^2 z_pi(x/(1-x)),
+ D_U(x)=(1-x)^2 d_U(x/(1-x)).
+They are degree-at-most-two polynomials in x. For x<1 the common multiplier (1-x)^2 is positive, so their convex-hull inclusion is equivalent to the original one. The endpoint x=1 is merely the compactification point epsilon=infinity; it need not correspond to a finite spectral instance.
+
+2. The actual polygon on each cell.
+The interval (0,1) is divided by finitely many exact real algebraic numbers into 89 open cells. Each nonrational endpoint is specified by a rational squarefree polynomial and a rational isolating interval containing exactly one real root. Rational endpoints are stored directly. The verifier checks that the first endpoint is 0, the last is 1, every cell has an exact rational interior point, and consecutive endpoints represent the SAME algebraic number. Equality is certified by a polynomial gcd and a root count on the intersection of the isolating intervals. Thus there are no uncovered open gaps and no unsupported assumption about numerical root locations.
+
+For each cell the certificate lists a cyclic sequence of permutation labels p0,...,p_(m-1). These give the vertices of the actual permutation polygon in counterclockwise order. Across all cells there are 17 such sequences.
+
+3. Exact facet identities.
+For each consecutive pair (l,r) of labels on a cell, define
+ G_lr(w;x)=Im(conj(Z_r(x)-Z_l(x))*(w-Z_l(x))).
+The half-plane G_lr>=0 is the left half-plane of the directed edge from Z_l to Z_r. The certificate supplies an identity
+ G_lr(D_U(x);x)
+ = sum_t lambda_{lr,t}(x) |det U[I_t,J_t]|^2,
+where |I_t|=|J_t| is 1 or 2, and each lambda is an explicitly stored real rational polynomial of degree at most four. There are 726 such identities and 8,703 terms.
+
+The verifier independently reconstructs all 24 normalized product polynomials from the stated a and b. For every facet, every permutation, and every coefficient of x^0 through x^4, it checks that the proposed sum of minor indicators agrees exactly with G_lr(Z_pi(x);x). The common-minor permutation evaluation map in order four is injective (the dimension-fourteen identity established in the supplied volume). Therefore these checked identities hold for every unitary U, not only permutation matrices.
+
+4. Positivity on full algebraic intervals.
+Each lambda is proved nonnegative on its entire open algebraic cell. The verifier removes square factors by exact polynomial gcd arithmetic. Its odd-multiplicity squarefree factor has NO root inside the cell, certified by Sturm variation counts evaluated exactly at the algebraic endpoints. The original lambda is positive at the stored rational interior point, or is identically zero. Its sign therefore cannot become negative anywhere in the cell; even-multiplicity roots cause no sign change. This is a proof on an interval, not a finite sample test.
+
+Consequently every facet identity is a sum of nonnegative squared minors for every x in its cell. Hence G_lr(D_U(x);x)>=0 for every U.
+
+5. Verify that these half-planes give the actual convex hull.
+The verifier checks that all selected vertices are pairwise distinct and every consecutive turn is strictly counterclockwise throughout each cell. The relevant squared distances and cross products are polynomial. Strict positivity is established by an exact positive value at an interior point and the absence of ANY root inside the cell, again using Sturm theory. In addition, each certified edge half-plane contains all 24 permutation points, as follows already from its nonnegative-minor identity evaluated on permutations. The cyclic list is therefore precisely the boundary of their convex hull. Satisfying all its edge inequalities implies D_U(x) belongs to that hull.
+
+6. Cell boundaries and all real parameters.
+At any finite cell boundary x0<1, take x approaching x0 through an adjacent certified cell. Determinants and all 24 vertices are continuous. Choose convex weights for each approaching point; compactness of the 24-simplex gives a convergent subsequence, whose limit proves the inclusion at x0. This includes x=0 and all eigenvalue-collision parameters. There is no division by a vanishing polynomial at a finite boundary: all certificate weights are polynomials in x, and normalization is inverted only when x<1.
+
+This proves all finite epsilon>=0. For epsilon<0, interchange the first two a-labels. The spectra then become those for -epsilon, while the class of all U and the permutation polygon are unchanged. Thus the theorem holds for every real epsilon.
+
+EXACT ALGEBRA DETAILS
+For a squarefree real polynomial p, a Sturm chain is p,p', followed by negatives of Euclidean remainders, with only positive rescalings. If V(t) is its sign variation after zeros are omitted, V(L)-V(R) counts roots in (L,R] under the adopted endpoint convention. The verifier subtracts one when p(R)=0 to obtain the open-interval count.
+
+To evaluate the sign of a rational polynomial q at an algebraic endpoint alpha, first compute gcd(q,f), where f isolates alpha. If that gcd has its root in alpha's isolating interval, q(alpha)=0. Otherwise refine the rational isolating interval until q has no root there; its sign at any rational point in that interval is then the exact sign at alpha. All degrees are at most four in the sign checks, and every refinement is justified by a Sturm root count.
+
+The sample value in a cell is used only to choose the sign AFTER an exact absence-of-roots certificate has established sign constancy. It is never used by itself as evidence of interval positivity.
+
+MOBIUS-ORBIT EXTENSION
+The entire theorem is transported by any common projective change of the eight spectral points. Let alpha,beta,gamma,delta be complex numbers with Delta=alpha*delta-beta*gamma nonzero. Suppose all denominators below are nonzero, and set
+ a'_i=(alpha*a_i+beta)/(gamma*a_i+delta),
+ b'_j=(alpha*b_j-beta)/(-gamma*b_j+delta).
+Then MOC holds for a',b' whenever it holds for a,b.
+
+Indeed,
+ a'_i+b'_j = Delta*(a_i+b_j)/[(gamma*a_i+delta)*(-gamma*b_j+delta)].
+Thus the matrix D_a' U+U D_b' is obtained from D_a U+U D_b by diagonal row and column scaling, with overall Delta. Its determinant, divided by det U, and every permutation product are multiplied by the same nonzero complex scalar
+ kappa=Delta^4/[product_i(gamma*a_i+delta)*product_j(-gamma*b_j+delta)].
+Multiplication by kappa preserves complex convex-hull inclusion. Therefore the all-real-epsilon family and its full admissible Mobius orbit are proved. Independent row/column relabelings and complex conjugation also preserve the conclusion.
+
+SCOPE
+This round proves an unbounded, genuinely complex, generically simple spectral family and its projective transforms. It supplies exact mathematics, complete coefficient data, and a verification-only program. It does not prove unrestricted MOC, nor does it provide a counterexample. No unsupported global positivity conclusion is inferred from the categorical reformulation.
+

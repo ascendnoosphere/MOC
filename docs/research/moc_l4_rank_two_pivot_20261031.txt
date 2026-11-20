@@ -1,0 +1,138 @@
+The entrywise-l4 rank-two pivot: source verification and an exact MOC obstruction
+31 October 2026
+
+The primary paper is Dian Jin, Local Maxima of the Entrywise l4 Norm on the
+Orthogonal Group, arXiv:2607.12431v2, dated30 July2026; v1 was submitted14
+July2026. I read the full v2 HTML, especially Sections4--6:
+https://arxiv.org/html/2607.12431v2.
+
+Its objective is sum Q_ij^4 for REAL orthogonal Q. The proof uses full
+stationarity and an explicit rank-two tangent at a largest nonunit squared
+entry. It classifies that objective's local maxima. It does not address a
+determinant support or MOC. The v2 introduction credits Boumal's earlier
+qualitative strict-saddle result and does not claim priority for that result.
+
+1. Extracted construction and the proof ingredient that is objective-specific
+
+Let q=Q_ij, p=q^2<1, x=Q^T e_i, and
+
+ v=(e_j-qx)/sqrt(1-p),      Omega=xv^T-vx^T.
+
+Then x,v are orthonormal, Omega has rank two, and
+
+ delta Q=Q Omega=(e_i e_j^T-Q_:j Q_i:)/sqrt(1-p).
+
+The paper's Hessian identity reduces its sign to a polynomial in the
+doubly stochastic matrix M=Q circ Q. At a largest entry m, the numerator
+has the two positive decompositions
+
+ 3R+(3m-1)Dplus+3m(1-m)^2,              m>=1/3,
+ 3R+(1-3m)Dminus+m(1-m)(1+3m),         m<=1/3,
+
+where R,Dplus,Dminus are nonnegative. I independently checked the algebra
+of these substitutions and the normalization. The reduction uses the exact
+entrywise cubic gradient and cannot be assumed for another objective.
+
+2. Every one of these pivots descends the actual MOC support in an exact family
+
+Let Q be the Walsh orthogonal matrix
+
+      [1  1  1  1]
+ Q=1/2[1 -1  1 -1],
+      [1  1 -1 -1]
+      [1 -1 -1  1]
+
+and take
+
+ a=(1,-1,-ir,ir),    b=(-r,r,-i,i),    eta=i,    r>1.
+
+Every entry of Q has squared magnitude1/4, so all16 entries qualify as
+largest-entry pivots. For each of the paper's normalized rank-two directions,
+
+ d/dt sum_(k,l)(Q exp(tOmega))_kl^4 at0 =0,
+ d^2/dt^2 sum_(k,l)(Q exp(tOmega))_kl^4 at0 =4,
+
+but for the ACTUAL determinant support
+
+ F(O)=Re(i det(diag(a)+O diag(b) O^T)),
+
+             F'(Q;Omega)=0,
+             F''(Q;Omega)=-2r(r^2-1)<0.                     (1)
+
+At r=3 the two second derivatives are respectively+4 and-48. Both objectives
+are fully stationary at Q, so failure to transfer the sign is not explained
+by incomplete stationarity. The determinant support does have a different
+coupled cubic escape, already proved in moc_pair_maximum_moonshot.txt.
+
+This is an obstruction to transplanting the paper's explicit positive-pivot
+mechanism, not a counterexample to MOC or to a hypothetical theorem using
+additional global spectral minimax conditions.
+
+The verifier uses K0=2(e_i Q_:j^T-Q_:j e_i^T), so the paper's left generator
+is K=K0/sqrt(3). It verifies K0^3=-3K0, rank K0=2, and ||K0||_F^2=6. The
+unscaled second derivatives are12 and-6r(r^2-1); division by3 gives (1).
+All16 pivots and their first/second derivatives are checked symbolically
+as polynomials in the real parameter r. No interpolation or floating point
+step enters this obstruction.
+
+3. Concrete insertion into the combined compact minimax condition
+
+The construction still supplies a computable test at a hypothetical negative
+compact minimum. Let O be real orthogonal, choose any pivot with p<1, and put
+
+ E=e_i e_j^T,     V=O_:j O_i:,
+ A=E-V,
+ B=q(E+V)-e_i O_i:-O_:j e_j^T.
+
+Direct multiplication of the rank-two generator gives
+
+ delta O=A/sqrt(1-p),         delta^2 O=B/(1-p).             (2)
+
+Use the spinor bracket matrix C_kl=[u_k,v_l] and M=C circ O. Define the
+cofactor polynomials
+
+ n=C circ A,      r=C circ B,
+
+ T=-Re{(D^2det_M[n,n]+Ddet_M[r])/det O},
+
+ B_z=-Re{(D^2det_M[C_z circ O,n]+Ddet_M[C_z circ A])/det O}.
+
+At an actual negative compact minimum, fixed-spinor unitary maximality gives
+T>=0. The mixed acceleration-LP argument in
+moc_compact_mixed_hessian_20261031.txt then gives, for each contact-critical
+spinor tangent z,
+
+             B_z^2 <= T max_(lambda in Lambda_KKT) Q_lambda(z). (3)
+
+Every factor1-p has canceled from (3). The test is valid at singular M,
+since Ddet and D^2det are row-replacement determinant polynomials.
+
+If the active matching is unique, the phase tangent gives the sharper test
+
+             |Ddet_M[n]/det O|^2 <= (-m)T,                  (4)
+
+where m<0 is the compact objective value. Equation (4) is the normalized
+phase/unitary Schur bound with its pivot denominator canceled.
+
+These are concrete necessary inequalities for the actual minimax problem.
+The l4 paper does not supply a sign or a lower bound for the MOC polynomial
+T, or a bound contradicting (3)-(4). In particular, replacing its positive
+Hessian numerator by a determinant-support numerator is invalid by (1).
+
+4. Relation to the fixed-b Clifford kernel
+
+The positive coefficient kernel in
+moc_fixed_b_clifford_kernel_20261031.txt controls joint signed Hermitian
+moments of fixed-b row features. It does not change (1): all that theorem's
+hypotheses hold for the real Walsh mixer and the displayed complex b.
+Therefore fixed-b kernel positivity plus full support stationarity cannot
+by themselves imply positivity of this rank-two support curvature. A use of
+that kernel in (3) must also incorporate the contact constraints and the
+mixed spectral terms explicitly.
+
+Reproduction:
+ python code/research/moc_l4_pivot_audit.py
+
+Output: build/moc_l4_pivot_audit_20261031.json.
+All exact polynomial assertions pass. The unrestricted MOC gap is unchanged:
+no contradiction excluding a negative compact minimum has been proved here.

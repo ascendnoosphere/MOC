@@ -1,0 +1,206 @@
+Independent mathematical audit of the universal n5 kernel theorem
+31 October 2026
+
+Conclusion and scope
+
+No gap was found in the structural passage from the14 formal base
+identities to the full1024-entry Gram identity. The Hodge convention,
+permutation equivariance, common complementary column transformation,
+and singular-spectrum limit are consistent. Combined with the separately
+replayed30-variable base certificates, these steps prove PSD and rank at
+most16 for every real orthogonal5 by5 mixer and every complex spectrum.
+
+This is a theorem about the signed fixed-spectrum product kernel. It is
+not MOC, not a theorem for arbitrary complex unitary mixers, and not an
+all-dimensional statement. Fixed rational examples are not premises of
+the universal argument. This audit does not claim that the complete
+universal theorem has itself been encoded in Lean.
+
+Sources reviewed
+
+ docs/research/moc_n5_universal_clifford_kernel_20261031.txt
+ code/research/moc_n5_universal_clifford_kernel.py
+ docs/research/moc_n5_clifford_complement_20261031.txt
+
+The source constructs B,C as independent symmetric matrices in30 formal
+variables. Its conjugation operation exchanges the two variable lists
+simultaneously. Its row determinants and Clifford minor factors are
+expanded before the commutator certificates are compared. Thus the
+normality assumptions have not been silently substituted into the
+formal base calculations.
+
+1. The row-determinant bridge has the correct orientation
+
+Write M for the matrix whose row i is the row of O multiplied entrywise
+by1, bar(b), b, or |b|^2 according to membership in the two subsets.
+Then the desired signed permutation sum is det(M)/det(O).
+Multiplication by O^T gives exactly the four row types I,C,B,BC used
+in the proof. Since O is real orthogonal, det(O)^2=1 and
+
+ det(M O^T)=det(M) det(O)=det(M)/det(O).
+
+This covers det(O)=-1 as well as det(O)=1. Deleting an identity row
+and its matching column has positive cofactor sign, so restriction to
+the subset union introduces no extra sign.
+
+2. The Hodge/cofactor correction has the stated sign
+
+For a three-subset I and missing index m in I, the grade-four coordinate
+is the minor with columns I^c union {m}. Move m to the final column and
+expand that determinant. Combining the Clifford sign, Hodge sign(-1)^m,
+and column-reordering sign gives(-1)^sum(I), independently of m.
+The ordinary final-column cofactor sign contributes(-1)^a for the
+a-th row of I. This is exactly the stated
+
+ r_ia=(-1)^(sum(I)+a) det C[I without ia,I^c].
+
+For m outside I, the untwisted grade-four coefficient is zero. The
+right-hand side r C is also zero, because the cofactor cross product
+annihilates each of the two columns C[I,I^c]. Consequently
+
+ v_C,I,grade4 H = r_C,I C
+
+holds without assuming invertibility, normality, or commutation. The
+independent structural verifier checks all50 entries as polynomial
+identities in15 independent symmetric entries.
+
+For invertible B and C=bar(B), commutation gives
+
+ bar(v_B,I,grade4) H B C^-1 H^T = r_C,I B H^T.
+
+This proves that the division-free correction used in the theorem
+really is the proposed polar correction, with the correct side of
+matrix multiplication. No phase choice or square root is introduced.
+
+3. Permutation equivariance discards no row-dependent sign
+
+Let P send generator e_i to e_p(i). If sorting p(I) has sign s_I,
+the transformed input blade and its transformed exterior image both
+acquire s_I. The two signs multiply to1. Thus the untwisted Clifford
+row transforms by one signed orthogonal blade-coordinate map, the
+same map for every subset row.
+
+More explicitly, if S=I symmetric_difference J, the required sign
+identity is
+
+ sigma(p(I),p(J)) s_I s_J = sigma(I,J) s_S,
+
+with all image sets sorted. The independent audit exhausts all120
+permutations and all252 equal-cardinality minor pairs:30240 checks.
+It also checks that the resulting16 by16 coordinate maps are orthogonal.
+
+The Hodge map obeys T4=det(P) H P H^T for column coordinates. This rule
+is verified for all120 permutations, including the60 odd permutations.
+It implies r_(P C P^T),p(I)=det(P) r_C,I P^T. One way to see this is
+to use the already proved identity r C=v4 H for invertible C, cancel C,
+then extend the resulting polynomial identity to singular C.
+
+Therefore r B H^T transforms by exactly the same grade-four coordinate
+map as every other corrected row. Complex conjugation commutes with
+that real map. All grades together have one common real orthogonal
+column action. Hermitian exchange is legitimate for the actual kernel
+because the signed weights are real; the proposed Gram matrix is
+Hermitian by construction.
+
+4. Complementation has one common scaled unitary column map
+
+Jacobi's identity is
+
+ det B[I,J]=(-1)^(sum I+sum J) det(B) det B^-1[J^c,I^c].
+
+Symmetry of B^-1 is essential: it transposes the last minor to the
+ordering used by the Clifford formula. The sign identity
+
+ sigma(I,J)(-1)^(sum I+sum J)=sigma(I^c,J^c)
+
+then yields v_B,I=d v_(B^-1),I^c. The independent audit checks all252
+equal-cardinality pairs, including the empty and full sets. Its parity
+proof is valid because the exponent difference is
+n(n-1)-2nk+k(k+1), an even integer.
+
+Let M_B=H B bar(B)^-1 H^T. For symmetric normal B, M_B is unitary and
+M_(B^-1)=M_B^-1. For subset size2 the complementary corrected row has
+size3, so undoing its polar factor produces M_B. For subset size3 the
+same M_B is already present. Hence EVERY row has the same transformation
+
+ w_B,I=w_(B^-1),I^c diag(d I11,bar(d) M_B).
+
+The column matrix times its adjoint is |d|^2 I16. For the stated Gram
+convention, bar(w_I) w_K^T, its conjugate times its transpose is also
+|d|^2 I16. Thus the Gram entries transform with exactly that scalar.
+There is no subset-dependent unitary left inside the inner product.
+
+The row determinant transforms identically. Right multiplication by
+(BC)^-1 converts its four row types to
+
+ (BC)^-1, B^-1, C^-1, I,
+
+which are precisely the complementary row types for B^-1,C^-1. The
+determinant multiplier is det(BC)=|d|^2. Both sides of the proposed
+identity therefore share the same complement rule.
+
+5. All1024 entries are covered
+
+After complementing pairs with total size above5 and, if necessary,
+exchanging the two subsets, every nonempty pair has sizes
+
+ (1,l), l=1,2,3,4, with intersection0 or1;
+ (2,l), l=2,3, with intersection0,1,2.
+
+These are exactly14 orbit types. A permutation is determined by matching
+the four cells I intersection K, I without K, K without I, and the
+outside of their union. This gives an explicit relabelling to each
+representative. Empty cases are immediate scalar-coordinate identities.
+
+The first implementation of the coverage loop mutated its outer-loop
+subset while complementing or exchanging a pair. Its count1024 alone
+therefore did not certify enumeration of the original1024 pairs. The
+author independently identified and corrected that implementation issue.
+It does not alter the mathematical orbit classification.
+
+The independent audit starts from fresh immutable left/right subsets
+for each pair and saves an actual five-index permutation witness for
+every one of the1024 original ordered pairs. Thus coverage no longer
+depends only on an iteration count or on cardinality labels.
+
+The contained-pair compact commutator formula was also checked by hand:
+for A=BC, symmetry gives CB=A^T. Expanding the difference between the
+two3 by3 determinants along their common final row gives
+
+ Q01(B02 A12-B12 A20)
+ +Q02(B12 A10-B02 A11)
+ +Q12(B02 A10-B12 A00).
+
+This independently confirms the telescoping step used for the most
+substantial two/three contained orbit.
+
+6. Singular and repeated spectra require no additional assumption
+
+The inverse is used only in the proof of the complement rule on the
+open class where every b_j is nonzero. The asserted factor itself is
+polynomial: its exceptional weight-three rows are r_bar(B),I B H^T,
+and all other rows are ordinary minors or conjugated minors.
+
+For fixed real O, approximate any b by vectors with no zero entry.
+The approximating B and bar(B) remain symmetric and commuting and
+share the same real orthogonal diagonalizer. Every entry of both the
+kernel and its16-column factor converges polynomially. Thus the full
+Gram identity, PSD, and the rank bound extend to all zero spectra.
+Repeated nonzero values already lie in the invertible class; no
+spectral-separation denominator appears anywhere. The polynomial factor
+also gives a direct value at all degenerate spectra without choosing
+a unitary polar phase there.
+
+Independent artifacts
+
+ code/research/moc_n5_kernel_structural_audit.py
+ build/moc_n5_kernel_structural_audit/summary.json
+ build/moc_n5_kernel_structural_audit/ordered_pair_witnesses.json
+
+Run:
+
+ python code/research/moc_n5_kernel_structural_audit.py
+
+The earlier fixed-example Gram checks are useful implementation controls,
+but the universal conclusion uses the formal base identities plus the
+structural proof audited here.

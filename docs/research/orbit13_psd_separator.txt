@@ -1,0 +1,53 @@
+Orbit13 seed: exact PSD separator and the rank-reduction lemma
+2026-10-30
+
+For the previously verified seed
+ g=f34+2r0+r7+2r13+(331/17)r17+(r18+r23+r28)/4,
+let x=g-(F(g)/Q(g))e and K be the exact rational nullspace basis selected by
+SymPy in code/research/verify_orbit13_psd_separator.py. The Hessian has
+rank12. The quadratic form obtained by restricting the linear combination
+  -(partial_0 F+partial_2 F)
+to y=K(u,v) has 2-by-2 matrix M with
+ M_00=1624211758050588142295/1318261690049352340113>0,
+ det M=319323071772507802750/1318261690049352340113>0.
+Its value at x is
+  -(partial_0 F(x)+partial_2 F(x))=-6541059/233648<0.
+Thus no real y in ker H_x satisfies grad F(y)=grad F(x). More strongly, no
+PSD moment matrix Y satisfies the lifted linear gradient equations, because
+the required value is tr(MY)<0 whereas M is positive definite. The exact
+portable checker recomputes K and these three rational values from the source
+model and passes; this is a pointwise certificate, not a parametric theorem.
+
+General rank reduction. Let L:Sym_2(R)->R^m be linear with rank at most 2 and
+let g!=0. If some Y>=0 satisfies L(Y)=g, then some rank-one Y>=0 also does.
+If Y already has rank one, nothing remains. If Y is positive definite, the
+nullspace of L contains a nonzero symmetric direction D. Choose the sign of
+t so Y+tD eventually ceases to be PSD, and move from t=0 to the first
+boundary point. It remains PSD and has rank at most one; it cannot be zero
+because its L-image is g!=0. Therefore PSD feasibility is equivalent to
+rank-one feasibility under these hypotheses.
+
+A strict separating functional does not follow merely from infeasibility:
+linear images of the PSD cone need not be closed. For example
+ L([[u,v],[v,w]])=(u,v), g=(0,1) is infeasible, but is the limit of images
+of positive semidefinite matrices [[epsilon,1],[1,1/epsilon]] as epsilon
+approaches zero. Thus the separator displayed above is an additional exact
+certificate, rather than an automatic consequence of the rank lemma.
+
+Additional structure: the selected coordinates of r30 are e0+e2, so the
+separator is exactly -Q_r30(y), where Q_v(z)=D_v F(z)=z^T H_v z/2.
+For this direction the checked Hessian has characteristic polynomial
+ t^10(t-1)^2(t+1)^2, hence inertia (2,2,10). At the seed,
+ Q_r30(x)=6541059/233648>0 and
+ [t^2]det(H_x+tH_r30)=75170998993410519723441/1992995093905280>0.
+The extended script checks all of these values exactly.
+
+The global pencil-sign argument for the all-ones direction generalizes to
+any fixed v such that H_v has inertia (2,2,10): H_x v=H_v x and a real
+lift obeys Q_v(y)=Q_v(x). If Q_v(x)!=0, a definite H_v restriction on the
+2-dimensional Hessian kernel is impossible for the same two-index reason;
+rank-12 neutrality then gives [t^2]det(H_x+tH_v)<=0, and lower ranks give
+zero. A Q_v=0 extension by actual-spectral continuity requires that Q_v is
+not identically zero on spectral parameters; it should not be presumed for
+an arbitrary direction v. An exact common spectral anchor with all 34
+ordinary-ray Q_v nonzero was independently computed and sent to the team.

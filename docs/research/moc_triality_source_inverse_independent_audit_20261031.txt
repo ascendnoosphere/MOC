@@ -1,0 +1,180 @@
+Independent audit: generic global triality source inverse and real form
+31 October2026. No sparse-family or numerical source campaign is used.
+
+CONCLUSION. The algebraic source inverse is sound on the following
+explicit open chart. Let Z be a complex symmetric form in the universal
+13-dimensional pencil, with
+  rank_C Z=4, rank_R Q=8 for Q=Re Z,
+  det H_h !=0, where h spans ker Q and H_h is its3x3 reshaping.
+Then the determinant factorization of Z has the required opposite row
+and column rulings, its intersection scalar matrix Lambda has rank2,
+and the Gale identity reconstructs a finite complex spectral product
+whose pencil is a NONZERO complex scalar multiple of Z.
+
+No sign or gauge error was found. The full Lorentz Gram signatures of
+four selected row/column spinors require the additional independence
+of those four pure lines. Their containment in orthogonal Lorentz
+ambient spaces does not require this frame independence. A positive14
+matching Gram or positive probability law is still NOT constructed.
+
+Independent exact replay:
+  python code/research/moc_triality_source_inverse_independent_audit.py
+  python code/research/moc_rank_two_gale_inverse_identity.py
+The first finishes in about1s and checks universal symbolic identities,
+not additional source examples. Its certificate is
+  build/moc_triality_source_inverse_independent_audit.json.
+The second expands all81 coefficient entries in all8 spectral variables.
+
+1. Common radical and source complex structure
+
+The5D complex kernels of Z and bar Z intersect in dimension at least1.
+Their intersection is contained in ker Q_C, which has dimension1.
+Thus their common kernel is C h and BOTH Re Z and Im Z kill h. The
+complex source descends to the8D real radical quotient without an extra
+assumption. Write its descended form Q+iR, Q real nonsingular, and
+I=Q^{-1}R. Symmetry gives I^T Q=QI.
+
+Both Id+iI and Id-iI have rank4. Their kernels are disjoint, since a
+vector killed by both is zero. Each kernel has dimension4, so they
+span the complexified quotient, with I-eigenvalues+i and-i. Therefore
+I^2=-Id, without a diagonalizability assumption. In particular
+Q(Ix,Iy)=-Q(x,y), so Q has signature(4,4).
+
+2. Rulings are forced by the invertible-radical chart
+
+Factor the rank4 complex quadratic as det F(H), with F:Mat3(C)->Mat2(C)
+surjective. Its kernel equals ker Z. Every universal row and column
+3-plane is Z-isotropic, so its F-image has dimension at most2.
+
+If such an image had dimension at most1, ker F would meet that
+complexified3-plane in dimension at least2. Its conjugate kernel would
+also meet it in dimension at least2. Their intersection would then
+contain h. But every matrix in a row or column3-plane has rank at most1,
+contrary to det H_h!=0. Hence every image is a maximal null2-plane.
+
+For h_ij=vec(l_i^T l_j), F(h_ij) cannot be zero: h_ij is real, so it
+would lie in ker Q=R h, again contradicting the invertible reshape.
+If a row and column image2-plane coincided, the real5D sum of their
+original3-planes would be Q-isotropic. A5D null space in a neutral
+rank8 form on9 variables must contain its radical. But that sum consists
+of matrices l_i^T v+u l_j, all of rank at most2; it cannot contain H_h.
+Thus no row image coincides with a column image.
+
+A maximal null2-plane of the2x2 determinant has either a fixed left
+factor or a fixed right factor. Two distinct planes of the same ruling
+have zero intersection. Since every row/column pair shares the nonzero
+F(h_ij), they must have opposite rulings. Consequently all four rows
+share one ruling type and all four columns the other. Interchanging
+the two types by matrix transposition causes no determinant sign.
+
+3. Intersection scalars and rank2
+
+Choose nonzero alpha_i,beta_j with
+  F(h_ij)=lambda_ij alpha_i beta_j^T.
+All16 lambda_ij are nonzero on this chart. Let A,B have these vectors as
+columns. The real tetrahedral identities sum_i l_i=0 and L^T L=Id give
+  A Lambda=0, Lambda B^T=0,
+  F(H)=A*(Lambda Hadamard(L H L^T))*B^T.
+Surjectivity of F forces rank A=rank B=2. Therefore rank Lambda<=2.
+
+Rank0 would make F zero. If Lambda=r c^T had rank1, then
+  F(H)=X H Y,
+  X=A diag(r)L, Y=L^T diag(c)B^T.
+Cauchy-Binet gives det(X H Y)=u^T cof(H)v for complex vectors u,v.
+Its real part has a cofactor coefficient matrix of real rank at most2.
+By real left/right changes of H, a rank2 cofactor coefficient reduces
+to diag(s1,s2,0); its quadratic is
+  s1(h22 h33-h23 h32)+s2(h11 h33-h13 h31),
+whose rank is6. Rank1 gives rank4. Thus rank Re Z<=6, contradicting8.
+So rank Lambda is EXACTLY2. This step is essential: rank_C Z=4 alone
+would not exclude the rank1 cofactor branch.
+
+4. Gale gauges and the scalar sign
+
+Write Lambda=X Y^T, with X,Y4x2 of rank2. A and B are full Gale kernel
+bases. Generic row/column diagonal gauges put Lambda into C_ij=a_i+b_j:
+choose factor coordinates with X_i2 and Y_j1 nonzero, then
+  Lambda_ij=X_i2*Y_j1*(X_i1/X_i2+Y_j2/Y_j1).
+The factor-coordinate choice avoids finitely many lines. Row and column
+gauges multiply every matching product by the same nonzero scalar.
+Their absorption into A and B is on the CORRECT side: A changes to A D
+and B to B E when Lambda=D C E.
+
+The general sign can be tracked without ratios. For a4x2 factor X use
+the Plucker Gale rows (Delta_1i,-Delta_0i,Delta_01 at slot i), i=2,3.
+For C=a+b, X=(a,1) and Y=(1,b), so this A is MINUS the displayed a-Gale
+basis and B is PLUS the b-Gale basis. The global identity is therefore
+  det[A_X*(Lambda Hadamard LHL^T)*A_Y^T]
+    =16 Delta_01(X) Delta_01(Y) vec(H)^T M(prod Lambda)vec(H).
+It specializes to the stated -16(a1-a0)(b1-b0) identity. Arbitrary Gale
+basis changes contribute their two2x2 determinants. Hence the scalar
+relating M(prod Lambda) to Z is nonzero on a valid rank2 anchor chart.
+The code's mat(v)=[[v0,v1],[-2v3,2v2]] also has the CORRECT factor:
+its determinant is2(v0v2+v1v3)=v^T J4 v.
+
+5. Universal selected Lorentz real form
+
+A Q-selfadjoint complex structure has a canonical real model
+  Q=diag(I4,-I4), I(x,y)=(-y,x).
+One way to obtain it is to regard Q-iR as a nondegenerate complex
+symmetric bilinear form for the complex structure I and diagonalize it
+over C. Every real maximal null4-plane is a graph y=O x, O orthogonal.
+I-stability is exactly O^2=-Id. These orthogonal complex structures on
+R4 form the two quaternion sphere families: O is left or right
+multiplication by a unit imaginary quaternion.
+
+The independent verifier derives their pure spinors in the ACTUAL
+wedge/contraction Clifford matrices used by the construction. It solves
+for s(q)=S(1,q1,q2,q3) by coefficient identities modulo |q|^2-1 and
+checks the resulting annihilation identities for every unit q. Both
+families lie in the plus half-spin module, in this canonical convention.
+Their coefficient-frame Chevalley Grams are EXACTLY
+  S_left^T Bplus S_left=diag(2,-2,-2,-2),
+  S_right^T Bplus S_right=diag(-2,2,2,2),
+  S_left^T Bplus S_right=0.
+This supplies an explicit universal Clifford proof of the two
+orthogonal Lorentz4-spaces; it is not a signature observed at one source.
+The opposite parity or a common sign can change with the chosen Witt
+orientation, without changing this conclusion.
+
+The generic opposite-ruling result places all row pure lines in one
+of these ambient spaces and all column lines in the other. Four null
+lines may span a proper subspace, for example when their sphere points
+lie on a circle. Thus a full(3,1)/(1,3) FOUR-LINE GRAM signature requires
+frame independence; this is an extra open condition, not a consequence
+of merely calling the ambient real form Lorentz.
+
+6. Closed-form source generator from a Clifford four-volume
+
+For r in Splus define A_r:V->Sminus by A_r(v)=gamma(v)r, and
+  A_r*=J A_r^T Bminus.
+All64 pairs of basis spinors satisfy BOTH block identities
+  A_r* A_s+A_s* A_r=Bplus(r,s)Id,
+  A_r A_s*+A_s A_r*=Bplus(r,s)Id.
+They therefore define a full16D Clifford representation
+  C(r)=[[0,A_r*],[A_r,0]], {C(r),C(s)}=Bplus(r,s)Id.
+
+For a four-frame r1..r4 its alternating Clifford volume has vector block
+  T=(1/24)sum_sigma sign(sigma)
+       A_rsigma1* A_rsigma2 A_rsigma3* A_rsigma4.
+Orthogonalizing a nondegenerate frame gives
+  T^2=det(Gram(r1..r4))*Id/16;
+the factor16 comes from C(r)^2=Bplus(r,r)/2. Polynomial continuation
+proves the identity also for degenerate frames. Reversal of four
+generators has sign(+1), so T is Q-selfadjoint. Its trace is zero:
+an invertible Clifford generator inside the four-space makes the two
+block traces opposite; one in its orthogonal complement makes them
+equal. The degenerate case follows polynomially.
+
+The volume anticommutes with C(s) for s in the four-space and commutes
+for s in its orthogonal complement. Consequently T preserves ker A_s
+for both row and column pure lines. The verifier checks that the
+canonical two Lorentz coefficient frames recover the source complex
+structure up to sign. For an independent Lorentz row frame, det Gram<0,
+so normalizing this T gives the selected source I up to sign, with no
+36-variable extension-algebra solve. A dependent frame has zero volume;
+the normalized formula is then unavailable.
+
+The missing MOC step remains positivity of a full matching Gram or a
+positive law on permutations. Neither source reconstruction, the
+Lorentz model, nor this source-volume identity supplies that step.

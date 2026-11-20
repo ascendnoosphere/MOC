@@ -1,0 +1,75 @@
+MOONSHOTS 17-18: VIRTUAL ARCS AND TWO-CONTACT REDUCTION
+
+Status: both calculations are executed. They concern the sufficient
+triangle-budget candidate, not a proof of MOC4. In particular, the
+candidate has not been proved necessary for MOC4.
+
+17. Rational virtual arcs and sharp edge tangency
+
+For lexicographic matching products P_i, define
+
+  L=P1+P6+P14+P23-P0,  H=max_i Re(eta P_i),
+  lambda=Re(eta L)-3H,
+  p=H-Re(eta P18), q=H-Re(eta P14), r=H-Re(eta P9).
+
+The full cap has lambda>=0 and the triangle-budget test asks
+lambda<=C(p,q,r). If lambda<0 this inequality holds automatically,
+since all gaps and C are nonnegative. For each i in {18,14,9}, with
+j,k the other two, define
+
+  W_i(t)=(4t L+4t^2 P_i+P_j+P_k)/(12t+4t^2+2),  0<=t<=1/2.
+
+For fixed alpha,beta, the triangle inequality for all complex eta is
+equivalent to containment of every W_i(t) in the convex hull of the
+24 P_i. The dual edge-budget variables are the symmetric point
+(1/2,1/2,1/2) and permutations of (t,1/(4t),1/(4t)) with
+0<t<=1/2; the support-function test gives the displayed points.
+This is an exact equivalent geometric problem, not a proof of it.
+
+Each W_i is a positive rational quadratic Bezier arc. Its endpoints
+are the pair midpoint (P_j+P_k)/2 and the common point
+
+  W_*=(2L+P18+P14+P9)/9,
+
+and its control point is V_i=(L+P_j+P_k)/5. A sufficient strengthening
+would put W_* and all three V_i in the hull, but these stronger
+statements are not claimed. In gap coordinates they are the four
+inequalities 2lambda<=p+q+r and lambda<=p+q,p+r,q+r.
+
+At the independently found real-lift candidate
+(lambda,p,q,r)=(1,1/2,2,0), the q-centered dual slack is
+
+  2t+(1/2)/(4t)-1 = (4t-1)^2/(8t).
+
+Thus its supporting line is tangent to the q-centered arc at t=1/4,
+while the q-centered control inequality lambda<=p+r fails. Whether
+this candidate has a finite spectral reconstruction is a separate
+question; a real critical-point lift alone does not establish that.
+
+18. Finite edge normals and two-contact sufficiency
+
+For fixed alpha,beta with a two-dimensional product hull, it suffices
+to check the triangle inequality at the outward normals of that hull's
+edges. In the normal cone of any hull vertex, every eta is a
+nonnegative combination of the two incident edge normals. The support
+height, all gaps and lambda are linear on this cone. The function C
+is concave and positively homogeneous: combine feasible pair-budget
+allocations and use concavity of the geometric mean. Consequently
+C-lambda at an interior direction is at least the corresponding
+nonnegative linear combination of its values at the edge normals.
+
+Each edge normal gives at least two permutation contacts. Therefore,
+to establish the candidate for all actual gaps it is enough to prove
+it on actual gaps with at least two contacts. Product hulls of dimension
+zero or one are limits of two-dimensional product hulls; perturb the
+spectral parameters and use continuity of all products, the maximum,
+lambda, and C to pass to the limit. This is a reduction to two-contact
+gaps, not a resolution of those gaps or of the candidate.
+
+The Gaussian-integer alpha,beta from
+actual_gap_outside_ordinary_cone.txt have a two-dimensional product
+hull. Portable code/research/verify_f34_triangle_hull_edges.py checks
+the candidate exactly at all nine outward hull-edge normals. The
+normal-cone argument therefore proves the candidate for that fixed
+alpha,beta and every complex eta, extending the earlier single-eta
+check. It does not establish the candidate for arbitrary spectra.

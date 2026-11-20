@@ -1,0 +1,77 @@
+1. CORRECT THE TYPES BEFORE USING CONVEXITY.
+
+For U unitary, define
+  omega_pi(U)=sgn(pi) product_i U_i,pi(i) / det U,
+  F_U(z)=sum_pi omega_pi(U) z_pi,  z in C^(n!).
+The actual scalar support functional is
+  L_(U,eta)(z)=Re(eta F_U(z)).
+It is NOT sum_pi Re(eta omega_pi) z_pi: the latter need not be real.
+The comparison is max_pi Re(eta z_pi), not an application of a functional
+on C^(n!) to a scalar coordinate z_pi.
+
+The natural corrected universal good set is
+  G_n={z: F_U(z) belongs to conv{z_pi:pi in S_n} for every unitary U}
+     ={z: Re(eta F_U(z))<=max_pi Re(eta z_pi) for every U and eta}.
+It is closed, invariant under complex scalar multiplication, and invariant
+under addition of c times the all-ones vector. These facts follow from
+continuity and sum_pi omega_pi=1. They do NOT imply convexity. The right
+side of the support inequality varies with z and is a maximum of linear
+functions; its hypograph need not be convex.
+
+The coordinate hull conv{z_pi} is a subset of C, whereas G_n is a subset
+of C^(n!). A claimed containment between those objects needs a specified
+embedding and cannot be used as written.
+
+
+4. A CORRECT CONVEX OBJECT: THE COEFFICIENT BODY AND ITS NORMAL CONES.
+
+View C^(n!) as a real vector space with pairing
+  <w,z>_R=Re sum_pi w_pi z_pi.
+Let
+  K_n=conv{omega(U):U in U(n)},
+  Delta=conv{e_pi:pi in S_n}.
+K_n is compact and convex. It contains Delta, because monomial unitary
+matrices give the coordinate vectors e_pi. For a FIXED support direction,
+  F_U(z) has the required real support bound for all U
+is exactly
+  h_Kn(z)=h_Delta(z).
+This equality uses Delta subset K_n; it is not an assumed inequality.
+
+For each permutation pi0 define the normal cone
+  N_Kn(e_pi0)={z:<w-e_pi0,z>_R<=0 for every w in K_n}.
+Then
+  {z:h_Kn(z)=h_Delta(z)}=union_pi0 N_Kn(e_pi0).
+Each cone is closed and convex, but their union need not be convex.
+For the full complex hull condition one must require every rotation eta z
+to lie in that union:
+  G_n={z:eta z belongs to union_pi N_Kn(e_pi) for every eta in C}.
+
+This gives a meaningful fixed-chamber convex object. It does not give
+finite facets for K_n or its normal cones: a compact convex hull of a
+continuous family need not be a polytope. A finite-facet theorem would
+need an independent proof, including why every non-permutation exposed
+face has been handled.
+
+On the actual complex spectral linear span E_n, imaginary parts of omega
+annihilate all product profiles. Thus omega can be replaced there by
+q=Re omega, and the real coefficient body can be projected to E_n^*.
+Equivalently one may use the convex hull of the complete squared-minor
+kernels R(U), with the permutation-kernel polytope inside it. MOC requires
+equality of their support functions only on actual spectral functionals
+Re(eta z(a,b)), not on every functional in the linear span. The n=4
+certificate above proves that the unrestricted linear-span assertion is
+false.
+
+5. WHAT THE REPAIR DOES AND DOES NOT PROVE.
+
+The universal-polytope claim fails at the type check and at convexity,
+even after its natural correction. The fixed-support normal cones above
+are genuine convex objects and provide a precise place to formulate a
+positivity certificate. Calling their intersection a universal polytope
+does not establish that certificate.
+
+The still-needed closing statement is actual-spectral membership in the
+appropriate normal cone at every supporting permutation. Neither the
+normal-cone definition nor the exact counterexample proves that statement.
+No universal positive decomposition or terminal-case proof was obtained
+from the user's proposed convexity claim in this audit.

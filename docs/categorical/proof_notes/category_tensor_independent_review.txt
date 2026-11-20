@@ -1,0 +1,72 @@
+INDEPENDENT AUDIT: THE U(2) KRONECKER U(2) COMMON-LAW CERTIFICATE
+Reviewer: variational track. 17 October 2026.
+
+Conclusion: the certificate in category_tensor_verify.py proves the claimed
+full common permutation law for every tensor product of two 2x2 complex
+unitaries. I found no gap and executed the exact verifier successfully.
+
+1. The formal matrix in the script is exactly
+
+ R(p) tensor R(q), R(p)=[[sqrt(1-p),sqrt(p)],[-sqrt(p),sqrt(1-p)]].
+
+It is real orthogonal for 0<=p,q<=1. Therefore its minor square is the
+required absolute square. The formal expansion before substitution proves
+that every squared 1x1 or 2x2 minor contains only even powers of the four
+square-root variables. Substitution then produces a polynomial of total
+degree at most two in p,q. Both evenness and the final degree are checked
+coefficientwise using exact rational arithmetic, not assumed numerically.
+
+The helper for weight three/four uses complementary minors. This is valid
+for the orthogonal matrix because |det W|=1; complementary squared minors
+agree. Empty and full minors are exactly one. Hence all five weights are
+covered correctly.
+
+2. On the fundamental triangle 0<=p<=q<=1/2, the barycentric coordinates
+
+ x0=1-2q, x1=2(q-p), x2=2p
+
+are nonnegative and sum to one. The six weights x_i^2 (diagonal controls)
+and 2x_i x_j (off-diagonal controls) are nonnegative and sum to
+(x0+x1+x2)^2=1. Each supplied control kernel is explicitly a positive
+permutation mixture of total mass one. Their Bernstein interpolation is
+therefore a positive permutation mixture everywhere in the closed
+triangle, including all edges, vertices, and degenerate cases.
+
+The script verifies every interpolated entry against the actual minor
+polynomial for all 70 equally sized subset pairs. Consequently the
+interpolation is the whole actual squared-minor kernel, not merely selected
+entries or a sampled support functional. The resulting law uses ten
+permutations in this parameter chart and is independent of spectra.
+
+3. The reduction from arbitrary complex U(2) factors is valid.
+Every 2x2 unitary is equivalent to R(p) by left/right diagonal phases;
+the cases p=0 or p=1 are monomial and follow directly. Tensor products of
+such phase matrices remain diagonal, so they do not affect any squared
+minor of the four-dimensional product.
+
+The exact flip relation is
+
+ R(1-p)=P_swap R(p) diag(-1,1).
+
+Thus each p,q can independently be folded into [0,1/2] by monomial row/
+column transformations. Exchanging the tensor factors is conjugation by
+the perfect-shuffle permutation, so the folded parameters can be ordered
+p<=q. Common permutation laws are invariant under those row/column
+permutations and diagonal phases. This covers every complex U(2) tensor
+U(2), without an interior-only genericity restriction.
+
+4. Verification run.
+Command:
+ python /workspace/scratch/0be490851879/category_tensor_verify.py
+Output:
+ PASS: all70 full-kernel polynomial identities over Q[p,q].
+ Six positive control laws give 10 permutations.
+ Valid on 0<=p<=q<=1/2; monomial gauges cover all U(2) tensor U(2).
+
+5. Scope.
+The certificate proves MOC for these relative unitaries and every pair of
+complex four-dimensional spectra. It is also a legitimate common-law seed
+for the incidence-forest gluing theorem. It does not by itself extend to
+three or more Kronecker U(2) factors: the standard Boolean-kernel monoidal
+closure corresponds to direct sums of physical unitaries, not to their
+Kronecker products. No such stronger extension is used in this audit.

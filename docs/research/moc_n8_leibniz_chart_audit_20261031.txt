@@ -1,0 +1,113 @@
+N8' LEIBNIZ CHART AND THE MISSING BOTH-DEPENDENT CHART
+31 October 2026
+
+Scope. This audits the elementary coordinate/rank part of the one-contact
+conormal argument. The input identifying N8' with the SL4 invariant image
+of eight projective3-space labels, including quotient surjectivity, is an
+algebraic-geometric premise to be cited from the audited HMSV framework.
+The document does not infer the multiple-contact case.
+
+Let R,C be the4-by-4 matrices whose columns are the two groups of four
+SL4 labels. Define the degree(1,...,1) singleton invariant
+
+ P_ij=det(R with column i replaced by C_j)
+      det(C with column j replaced by R_i).
+
+The replacement positions incorporate the determinant signs; no additional
+checkerboard sign belongs in this formula. Matrix notation is
+
+ P=(adj(R)C) Hadamard (adj(C)R)^T.
+
+The invariant height is d=det(R)det(C). Every row and column of P sums to d:
+for example adj(R)C adj(C)R=det(C)adj(R)R=d I.
+
+INDEPENDENT GROUP CHART
+
+If R is invertible, put T=R^(-1)C. Then d=det(R)^2 det(T), and
+
+ P_ij=det(R)^2 T_ij Cof_ij(T).
+
+More generally the grade-k invariant obtained by replacing columns I of R
+by columns J of C, and columns J of C by columns I of R, is
+
+ det(R)^2 (-1)^(sum I+sum J)
+             det T[I,J] det T[Ic,Jc].
+
+These are exactly the common-minor profiles of
+
+ c_pi(T)=sign(pi) product_i T_i,pi(i),
+
+multiplied by det(R)^2. Thus the chart identification agrees with the
+Leibniz normalization in all grades, and d is its sum coordinate.
+
+If d=0 then T is singular. Rank(T)<=2 makes adj(T)=0 and every singleton
+invariant zero. Hence strict positivity of off-diagonal singleton entries
+forces rank(T)=3. Write adj(T)=u v^T. Every u_j and v_i is nonzero, since
+otherwise a full singleton column or row would vanish.
+
+Absorb the projective scalar into a nonzero lambda so the real conormal
+profile is n=lambda c(T). Set
+
+ S=lambda diag(v) T diag(u).
+
+Then S_ij equals the singleton profile n_ij. Also S1=0 and1^T S=0.
+If all off-diagonal singleton values are strictly positive, S is a real
+balanced Markov generator: its diagonal is minus the positive row sum.
+
+Put kappa=lambda^3 product_i u_i product_i v_i. Direct adjugate covariance
+gives adj(S)=kappa11^T and c(S)=kappa n on every matching coordinate.
+Because a strictly positive4-vertex Markov generator has negative principal
+3-by-3 cofactor, kappa<0. For example -S with one row/column removed is a
+strictly diagonally dominant M-matrix; its determinant is positive by a
+continuous diagonal-to-full-matrix deformation. Therefore
+
+ n = -positive_scalar c(S),
+
+with the sign required by the cycle-capacity theorem. If C is invertible
+instead, exchange the groups; this transposes singleton profiles and sends
+permutations to inverses, preserving the identity contact and positivity.
+
+BOTH GROUPS DEPENDENT: NO EXCEPTIONAL ESCAPE
+
+If rank(R)<=2 or rank(C)<=2, its adjugate is zero, so P=0. Otherwise both
+groups have rank3. Write
+
+ adj(R)=r ell^T, adj(C)=s t^T.
+
+The exact replacement formula factors as
+
+ P_ij=[r_i(t^T R_i)] [s_j(ell^T C_j)] = a_i b_j.
+
+Thus rank P<=1. Moreover
+
+ sum_i a_i=t^T Rr=0,
+ sum_j b_j=ell^T Cs=0.
+
+Even if the factorization is complex, P is real after the conormal scalar
+normalization. A real rank-one matrix with zero row and column sums cannot
+have every off-diagonal entry strictly positive for n>=3. Indeed, comparing
+two rows in a third column forces their nonzero rank-one row factors to
+have the same real sign. Then all column factors have that sign as well,
+so diagonal entries are positive, contradicting zero row sums. Equivalently,
+a zero-row-sum matrix with strictly positive off-diagonal entries has kernel
+exactly the constants and hence rank n-1, not rank1.
+
+This exhausts both-dependent charts, including rank-drop cases and common
+hyperplanes. The coordinate argument needs no genericity assumption.
+
+CONNECTION TO STRICT MOMENTS
+
+For a single active matching relabeled to identity, strict positivity of
+the contact-null moment matrix makes every off-diagonal singleton indicator
+strictly positive, and also makes all three disjoint ordinary indicators
+strictly positive. The chart audit therefore either gives an immediate
+rank contradiction (both groups dependent) or the strictly positive Markov
+generator above. The cycle-capacity theorem then makes its conormal strictly
+positive on every nonzero nonnegative matching cost vanishing at identity,
+contradicting a compatible conormal pairing of zero.
+
+To promote this to a global stationary-minimum exclusion, retain the precise
+KKT hypotheses and the N8' Gauss-normal identification. In particular this
+argument addresses ONE active contact. A positive combination of several
+contact atoms need not leave all off-diagonal singleton conormal values
+positive; the Markov gauge and the conclusion then do not follow.

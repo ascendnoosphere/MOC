@@ -1,0 +1,55 @@
+3. A faithful fixed-spectral repair has completely computable topology.
+
+Fix a single matching vector z, with pairwise distinct entries and a
+two-dimensional hull P. Define
+
+ K(z)={A subset S_n: some eta!=0 has A subset argmax_pi Re(eta z_pi)}.
+
+This retains the common spectral witness lost in the existential union.
+Its maximal simplices are the full label sets lying on the exposed edges
+of P. Adjacent edge simplices meet at their one common extreme-point
+label; nonadjacent edge simplices are disjoint. Labels lying strictly in
+the interior of P are not vertices of this complex.
+
+PROPOSITION. K(z) is homotopy equivalent to a circle.
+Proof. On every edge simplex choose a linear retraction onto the interval
+joining its two endpoint labels, sending each intermediate collinear
+label to its affine position on that interval. The straight-line homotopy
+from identity to this retraction stays in the simplex and fixes its two
+endpoints. Because different edge simplices meet only at fixed endpoints,
+the homotopies fit together. The resulting deformation retract is the
+polygonal cycle. QED.
+
+If P is a segment, a perpendicular support direction exposes every label
+at once, so K(z) is a full simplex and contractible. The same is true
+when P is one point. Thus the fixed-spectral contact complex has only the
+circle/contractible alternatives for elementary planar reasons. It does
+not depend on U or on det(D_a+U D_b U*), so its topology cannot distinguish
+unitaries satisfying or violating the desired inclusion.
+
+For one FIXED direction eta, the local contact complex is simply the full
+simplex on its active labels. The proved high-contact theorem says that
+a hypothetical counterexample can be moved to a point with at least2n-2
+distinct active labels. This supplies a large simplex, which is acyclic;
+it does not imply nonzero homology in any positive degree.
+
+4. Adding the determinant yields a contractible visible contact complex.
+
+For a fixed z and a point d outside P, the strict separating directions are
+
+ V(d)={eta in S^1: Re[eta(d-z_pi)]>0 for all pi}.
+
+Before intersecting S^1 these directions form an open convex cone in R^2.
+Since the cone is nonempty and contains no line, V(d) is one open angular
+interval of length at most pi. The contact faces encountered while eta
+runs through this interval form one consecutive chain of vertices and
+edges on the boundary of P. The simplicial complex they generate is
+contractible: collapse each edge simplex as above to obtain a path, a
+single interval, or a point. When d is in P there are no such directions.
+
+Therefore merely restricting contacts to violation directions does not
+produce a homological contradiction: when a violation exists, its visible
+contact complex is contractible, as it is for any exterior point of any
+convex polygon. The nonemptiness of V(d) is exactly separation, not a new
+unitary-specific obstruction.
+

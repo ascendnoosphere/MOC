@@ -1,0 +1,91 @@
+MOC numerical campaign, 31 October 2026: 20,127 records across 1000 dimensions.
+
+This file describes the generated data. It does not prove or refute unrestricted MOC.
+The common file preserves each producer record and adds a _campaign provenance and interpretation block.
+
+Counts by source: {"adversarial": 3189, "dense": 1578, "large": 5994, "small": 9364, "triangle": 1, "trivial": 1}
+Record roles: {"dense_haar_draws": 1578, "exact_scalar_controls": 1, "fixed_rank_reflector_draws": 5994, "optimizer_starts_with_reused_spectra": 3189, "selected_exact_triangle_certificates": 1, "small_controls_and_special_loci": 1599, "small_noncontrol_spectral_draws": 7765}
+Classifications by source: {"adversarial": {"numeric_member_at_optimizer_tolerance": 3189}, "dense": {"numeric_inner_hull_witness": 1528, "numeric_interior_complete_hull": 50}, "large": {"degenerate": 44, "numeric_inner_hull_witness": 5950}, "small": {"degenerate_within_tolerance": 2004, "numeric_boundary_complete_hull": 192, "numeric_interior_complete_hull": 7168}, "triangle": {"exact_three_product_containment_certificate": 1}, "trivial": {"exact_scalar_equality_control": 1}}
+Missing dimensions between 1 and 1000: none
+
+Interpretation limits:
+- Finite generated spectra and mixers cannot exhaust unrestricted complex normal matrices.
+- Containment in a subset of permutation products implies containment in the full hull for that instance.
+- Exterior to a sampled permutation hull alone is inconclusive for the full hull.
+- A radial log-ratio at most zero is necessary, not sufficient, for hull containment.
+- Structured low-rank unitary samples are a restricted mixer family even when their spectra are arbitrary.
+- No confidence interval or counterexample probability is asserted without a specified sampling model.
+- Numerical signs near tolerance require separate precision/error review.
+
+Four-by-four comparisons from complete permutation hulls:
+- anisotropic, haar, 625 records: median inward margin 8.845050577556184e-06; median whitened margin 0.8098616950865717; median log radial ratio -1.7309505313380074.
+- anisotropic, near_permutation, 208 records: median inward margin 1.3668906311044407e-07; median whitened margin 0.12596014039470438; median log radial ratio -1.5043471015610446.
+- clustered, haar, 625 records: median inward margin 0.00031475163505671153; median whitened margin 0.4858429667157117; median log radial ratio -0.26726951755625317.
+- clustered, near_permutation, 208 records: median inward margin 1.0305720059346686e-06; median whitened margin 0.0003274399262601646; median log radial ratio -0.024946740823257985.
+- control_commuting, identity_control, 2 records: median inward margin 0.04057934668875212; median whitened margin undefined; median log radial ratio -1.6660902058492413.
+- control_real, haar, 2 records: median inward margin undefined (degenerate hull); median whitened margin undefined; median log radial ratio -1.4597639684458354.
+- control_scalar_a, haar, 2 records: median inward margin undefined (degenerate hull); median whitened margin undefined; median log radial ratio 2.220446049250313e-16.
+- disk, haar, 626 records: median inward margin 0.17434216680216474; median whitened margin 0.9026421265071725; median log radial ratio -1.5209201249179247.
+- disk, near_permutation, 208 records: median inward margin 0.04872515624200362; median whitened margin 0.20350309457250154; median log radial ratio -1.3527582573491896.
+- gaussian, haar, 626 records: median inward margin 0.20189186782927993; median whitened margin 0.9281048807735687; median log radial ratio -1.4755417270010356.
+- gaussian, near_permutation, 208 records: median inward margin 0.0639483764702988; median whitened margin 0.27235698409371445; median log radial ratio -1.0758125918548815.
+- near_pair_cancellation, haar, 625 records: median inward margin 0.11262016866471067; median whitened margin 0.7564706873439828; median log radial ratio -2.2275778153573103.
+- near_pair_cancellation, near_permutation, 208 records: median inward margin 0.020759129314258058; median whitened margin 0.176230392708671; median log radial ratio -5.874733988617811.
+- unit_circle, haar, 625 records: median inward margin undefined (degenerate hull); median whitened margin undefined; median log radial ratio -1.8119325781370585.
+- unit_circle, near_permutation, 208 records: median inward margin undefined (degenerate hull); median whitened margin undefined; median log radial ratio -1.418337263903134.
+
+The clearest small-matrix pattern is the effect of affine conditioning.
+In these n=4 Haar draws, Gaussian and disk spectra leave substantial raw inward clearance. Anisotropic and clustered spectra produce much smaller raw margins. Whitening the covariance of all 24 permutation products largely removes the anisotropic contrast. Invertible affine maps preserve hull membership, so this is a direct geometric control rather than a different conjecture.
+The Gaussian/anisotropic median raw-margin ratio is about 23,000; the corresponding whitened-margin ratio is about 1.15. Much of the apparent near-real difficulty is hull flattening. Clustered spectra retain smaller whitened margins and therefore remain the more useful boundary-biased family in this experiment.
+Whitened margins are descriptive diagnostics only; their calculation can amplify roundoff. The code requires covariance axis ratio > 1e-10 and keeps the original robust classification.
+The following within-family associations help separate that observation from a pooled family comparison:
+- anisotropic: pair_sum_cloud_axis_ratio versus inward margin has Spearman rho 0.992940 across 625 draws.
+- anisotropic: hull_area_over_perimeter_squared versus inward margin has Spearman rho 0.996427 across 625 draws.
+- near_pair_cancellation: minimum_pair_sum_over_rms versus inward margin has Spearman rho 0.071576 across 625 draws.
+Sensitivity check with the whitening transform condition number below 10,000 (axis ratio > 1e-4):
+- anisotropic: 264 retained, 361 excluded; median whitened margin 0.8172735773892323.
+- clustered: 460 retained, 165 excluded; median whitened margin 0.4699495137952445.
+- disk: 626 retained, 0 excluded; median whitened margin 0.9026421265071725.
+- gaussian: 626 retained, 0 excluded; median whitened margin 0.9281048807735687.
+- near_pair_cancellation: 625 retained, 0 excluded; median whitened margin 0.7564706873439828.
+These are descriptive correlations. The draws were selected by a specified family schedule, and the near-permutation schedule adds another source of boundary proximity.
+
+Large dimensions:
+- large, gaussian, n=301..1000: median (log|det|-max sampled log|product|)/n is -0.457768, using 700 records.
+- large, near_real, n=301..1000: median (log|det|-max sampled log|product|)/n is -0.682525, using 700 records.
+- large, pair_cancellation, n=301..1000: median (log|det|-max sampled log|product|)/n is -4.247001, using 700 records.
+- dense, cancellation, n=301..1000: median (log|det|-max sampled log|product|)/n is -0.690231, using 143 records.
+- dense, gaussian, n=301..1000: median (log|det|-max sampled log|product|)/n is -0.615114, using 143 records.
+- dense, near_real, n=301..1000: median (log|det|-max sampled log|product|)/n is -0.683667, using 144 records.
+Negative values show radial contraction relative to the selected product maximum. They do not establish convex-hull membership. Sampling and matching heuristics differ between parts, so differences between their medians are not controlled mixer comparisons.
+The sampled permutation lists include deterministic choices based on spectral order as well as random permutations. Their maxima are biased upward relative to a single random permutation and remain lower bounds on the full permutation maximum.
+
+Numerical scaling was a large source of apparent difficulty:
+- large: 5216 of 5994 records use a successful bounded-log-radius subset witness; 5216 change a recorded full-sample failure into a numerical inner-hull certificate.
+- dense: 871 of 1578 records use a successful bounded-log-radius subset witness; 0 change a recorded full-sample failure into a numerical inner-hull certificate.
+One enormous product can erase the other products at floating-point hull tolerances. A separately scaled subset with enough angular spread can contain the target. This subset inclusion is sufficient for full-hull membership of that instance; subset exclusion would be inconclusive. Subset-scaled margins and full-set-scaled margins are separate metrics in the summary tables.
+
+Support maximization:
+There are 3189 optimization starts. The largest normalized support excess is 1.16557e-15; the largest complete-hull excess is 1.33227e-15.
+0 starts exceed the support threshold 1e-8. Repeated starts and directions share spectra; their count is not an independent-sample count.
+Low-gradient nonmonomial random-direction outputs by family: {"clustered": 43, "pair_cancellation": 2}
+A small gradient does not certify a local maximum. The companion adversarial_stationarity.json, when present, records pair-rotation polishing that tests whether these outputs are optimization artefacts.
+The separate polishing audit examined 45 saved clustered candidates: 35 had a positive numerical Hessian eigenvalue; 45 polished to mixing score below 1e-4; 39 improved support by more than 1e-10.
+3 polished outputs remain more than 1e-8 below the global permutation support. Pair rotations therefore help audit stationarity, but this experiment does not establish global convergence.
+
+An exact obstruction found after the sampling campaign strengthens this limitation. For a=(1,-1,-3i,3i), b=(-3,3,-i,i), eta=i, and the dense Walsh matrix U, every coordinate SU(2) fiber is globally maximized at U. The full nontrivial Hessian has eigenvalues -96 six times and zero six times. Nevertheless an explicit coupled direction K gives F((cI+sK)U)=24+384cs^3 when c^2+3s^2=1, so F has cubic ascent and U is not a local maximum.
+The determinant is strictly inside its permutation hull. This is an obstruction to the sufficiency of pairwise maximality plus a negative semidefinite Hessian, not a MOC counterexample. It is a separate exact construction and does not change the campaign's sample counts.
+Exact note: docs/research/moc_pair_maximum_moonshot.txt. Verifier: code/research/moc_pair_maximum_obstruction.py. Certificate: build/moc_campaign_20261031/pair_maximum_obstruction.json.
+
+Consequences for the next attack:
+Use affine-conditioned hull clearance to select difficult n=4 instances. Raw thin-hull margins and tiny pair sums were weak proxies for intrinsic proximity to violation. Clustered spectra remain tighter after conditioning. For nearly flat objectives, normalize by directional support width and require pair-rotation improvement checks before treating a small gradient as stationary.
+A broad Gaussian sweep at large n becomes easier because generic mixing contracts the determinant while selected matching products retain a large radius. The exact second-moment identities in moc_campaign_theory_20261031.txt explain this sampling effect: for independent centered variance-one entries, Haar mixing gives E|det|^2=(n+2)(n+3)/6, versus E|z_pi|^2=2^n for one fixed matching product.
+The same theory document gives E|det|^2=2^n(28n-4)/((n+1)(n+2)(n+3)) for one uniformly oriented complex Householder reflection. The comparison establishes that mixer distribution matters. The data's products of 2,4,8 reflections are a different family, so that one-reflection formula is not a fit to those records.
+The useful follow-up is an adversarial search that keeps the determinant near a genuine supporting edge while varying spectral thickness and mixing. More independent generic samples would add coverage but would not resolve the remaining unrestricted four-dimensional claim.
+
+Artifacts:
+- all_moc_data.jsonl: original records plus common metadata and derived geometric diagnostics.
+- analysis_summary.json: provenance hashes, exact dimension coverage, classifications, and grouped descriptive statistics.
+- coverage.csv, sample_groups.csv, metric_summary.csv, dimension_associations.csv, geometry_associations.csv, optimizer_groups.csv, radial_ratio_per_dimension.csv.
+- Four PNG figures: coverage, radial ratios, n=4 family margins, and n=4 spectral geometry.
+All paths above are relative to build/moc_campaign_20261031/.

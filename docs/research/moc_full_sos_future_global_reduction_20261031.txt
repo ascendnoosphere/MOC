@@ -1,0 +1,157 @@
+FULL MATCHING-SOS: GLOBAL SEPARATION REDUCTION AND FUTURE-FIBER ADVERSARY
+2026-10-31
+
+Status. No actual negative full matching-SOS pairing has been found. The
+global actual-SOS and original MOC objectives remain OPEN. This note
+records the complete full-cone separation target, exact search symmetries,
+validated numerical APIs and the limitations of the current alternation.
+No reduced three- or eight-feature Gram is imposed.
+
+1. The full cone and strict separating witnesses
+
+Let B be a full-column-rank real24x14 matching frame and define
+ C0={diag(B X B^T): X>=0}.
+This cone is closed. Indeed sum_pi g_pi=tr(X B^T B) bounds tr X whenever
+g is bounded and X>=0; B^T B is positive definite. A bounded sequence of
+costs therefore has bounded Gram proposals and a convergent PSD subsequence.
+
+For a zero-contact set C let F=B E, where the columns of E span the kernel
+of B[C,:]. A nonnegative g vanishing on C is in C0 if and only if
+ g=diag(F S F^T), S>=0.
+Every square in any SOS must vanish at each zero of g, proving necessity.
+Sufficiency is immediate. This is an exact full-cone reduction, retaining
+all14 matching features before the unavoidable contact directions are removed.
+
+If g is outside this cone, closed-cone separation gives a functional y with
+ F^T diag(y) F>=0 and y dot g<0. A small addition of a strictly positive
+moment functional preserves the negative pairing and makes the contact
+moment positive definite. Contact weights can be set to zero, since they
+do not affect this contact moment, g, or the mixed ray f34.
+
+For a canonical nonordinary cap
+ g=t f34+sum_{j in Z} beta_j r_j, t>0,beta_j>=0,
+all ordinary-ray evaluations at a PSD moment are nonnegative. Hence a
+negative pairing necessarily has y dot f34<0. Positive scaling gives the
+EXACT homogeneous search gauge y dot f34=-1; no arbitrary negativity cut
+or trace normalization is needed.
+
+A strict contact-moment witness also has a full14 PSD completion. Add
+sufficient positive point mass at each contact. In the decomposition into
+contact-null and contact-evaluation directions, its Schur complement is
+positive once the added contact block is large enough. This preserves
+y dot g and y dot f34. Thus any robust negative hit here really separates
+the entire C0 cone. It would not alone refute MOC; a physical negative
+orthogonal profile would still be needed.
+
+2. Exact three-orbit contact reduction
+
+Canonical ray ordering is the one in global_terminal_face_census.json.
+ Z=(0,7,10,13,17,18,20,22,23,27,28,30,31).
+The unique zero of f34 on which r_j is nonzero, in this order, is
+ (1,17,6,22,12,18,20,8,14,15,9,23,7).
+Consequently beta_j is exactly the corresponding support gap, without an LP.
+
+Enumerating the576 left/right permutations gives twelve stabilizers of f34.
+Their action partitions its thirteen zero positions into
+ U orbit: (1,6,17,22),       ordinary IDs(0,7,10,13);
+ P orbit: (7,8,12,15,20,23), ordinary IDs(17,20,22,27,30,31);
+ C orbit: (9,14,18),        ordinary IDs(18,23,28).
+Thus contacts1,7,9 cover the three canonical single-contact types up to
+the exact mixed-ray stabilizer. This justifies the three separate initial
+alternations. It is a symmetry reduction, not a claim that the search is
+globally optimized.
+
+Any outside-C0 actual cost is also nonordinary, since the ordinary cone
+is contained in C0. Its cap coefficient t is positive. Closedness of C0
+and continuity of the actual spectral map mean a robust counterexample
+persists under sufficiently small generic spectral/support perturbations.
+Hence generic unique-contact configurations are the relevant discovery
+target; a proof of absence would still have to justify density/charts and
+handle all exceptional boundaries rather than cite numerical searches.
+
+3. Validated full inner oracle
+
+ from moc_full_contact_sos_oracle import FullContactSosOracle
+ oracle=FullContactSosOracle((9,))
+ y,info=oracle.solve(g24,warm_start=None,mu_final=2e-7)
+
+The Newton logdet oracle retains the complete contact-null matching frame,
+imposes y.f34=-1 and uses no cap-strength or trace cut. certify=True checks
+the returned binary-rational weights by exact rational LDL. The method
+ complete_dual(y,g24,certify=True)
+adds contact masses and verifies the full14 moment exactly.
+
+Controls include the known exact positive full-Gram triangle-countercost
+and planted f34, whose full completed separating pairing is exactly-1.
+Documentation and replay:
+ moc_full_contact_sos_oracle_20261031.txt
+ code/research/moc_full_contact_sos_oracle.py
+ build/moc_full_contact_sos_oracle/controls.json.
+
+CRITICAL SCOPE: a positive returned feasible pairing is only an upper bound
+on the dual minimum. It is NOT an SOS membership certificate. A repaired
+primal Gram whose least eigenvalue remains slightly negative is not a
+certified lower bound. Negative feasible pairings, by contrast, suffice
+for separation once exact moment/cost checks pass.
+
+4. Actual future-filtered quadratic fibers
+
+ from moc_nonic_quadratic_fiber import NonicFiber
+ fiber=NonicFiber()
+ rows=fiber.roots(weights,variable=17,classify=True,reconstruct=True)
+
+The thirteen ordinary weights use the Z order above and t=1. Nine of the
+ordinary coordinates have proved nonic degree at most2. The numerical API
+reconstructs their squared determinant quartic, tries independent square
+roots/scales, and checks candidates by the independent Hessian/moment-line
+actual-lift filter. A selected branch leaves every other ordinary budget
+free, except the fixed zero-contact coordinate.
+
+The exact lift test is in moc_kernel_lift_sign_20261031.txt. On the generic
+Hessianrank12/moment-maprank2 locus, compatibility gives an affine real
+Sym2 moment line. A PSD rank-one endpoint gives an actual conjugate critical
+lift, and the audited M8 quotient identification supplies spectral existence.
+Floating interpolation/future decisions are discovery data only; a negative
+candidate must be exactified as an algebraic root and an exact lift, or
+reconstructed into directly checkable finite spectra.
+
+5. Alternating implementation and current observations
+
+ code/research/moc_full_sos_future_alternating.py
+
+Each cycle minimizes the fixed full-SOS dual pairing along an actual
+future-filtered nonic fiber, then minimizes over full contact-moment PSD
+duals for the resulting cost. The cap coefficient is fixed to1, so ordinary
+t=0 collapse does not give a spurious success. Feasible cost iterates and
+moment margins are saved; any negative pairing invokes exact full-dual
+completion before handoff for cost/root exactification.
+
+The first campaign in the three contact orbits found no negative pairing.
+It can approach familiar sparse SOS boundaries. Floating fiber charts can
+be ill-conditioned there; the code tries another quadratic coordinate and
+independently reconstructs the final critical witness rather than accepting
+a small determinant alone.
+
+Additional targeted runs use two explicitly labeled SEARCH GUARDS:
+ - triangle capacity<=1.9, excluding the known triangle-SOS region;
+ - a normalized full-dual f34 cut below-0.068, isolating a known nonphysical
+   part of the full PSD-moment body.
+The second cut is optional and not an equivalence for all potential C0
+separators. Bounds on weights, future gaps and strict residuals are also
+numerical guards. None is asserted as a theorem restriction.
+
+Saved discovery campaigns are under build/moc_full_sos_future_alternating/.
+The opened_halfpower_full_dual campaign starts from a perturbation of the
+new actual low-triangle/negative-half-power-section configuration, including
+all otherwise missing ordinary-feature couplings. Its full dual pairings
+remain positive so far. This is not an SOS certificate or global bound.
+
+6. What remains decisive
+
+Either find an exact actual negative full-C0 pairing and then test physical
+orthogonal profiles, or prove a uniform full14 Gram completion using the
+actual complex-orthogonal frame/imaginary lift and all68 Gram-kernel
+directions. Positive numerical pairings and explicit-section failures do
+neither. The separate conormal/first-exit route must quantify over all ten
+V14-annihilator extensions of a Gauss-normal profile before claiming a
+contact-moment rank obstruction.

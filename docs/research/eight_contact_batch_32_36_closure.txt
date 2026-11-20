@@ -1,0 +1,63 @@
+Full five-parameter eight-contact closures: canonical orbits32 and36
+=================================================================
+
+For f=r34 and arbitrary nonnegative a,b,c,d,e, the following whole
+families satisfy g(U)>=0 for every U in U(4):
+
+  orbit32: g=f+a r0+b r17+c r18+d r23+e r27;
+  orbit36: g=f+a r0+b r17+c r18+d r27+e r31.
+
+Each canonical cap orbit has24 images. Their eight contacts are respectively
+[6,7,8,9,17,20,22,23] and[6,8,9,14,17,20,22,23]. Positive mixed
+coefficient is normalized to1; mixed coefficient0 is ordinary-minor positive.
+
+Portable exact checker:
+  code/research/verify_eight_contact_batch_32_36.py
+Permanent data:
+  data/certificates/research/eight_contact_full_batch_32_36.json
+Reusable exact compiler:
+  code/research/eight_contact_pencil_compiler.py
+No build intermediate is used by the checker.
+
+Actual-spectrum criterion
+-------------------------
+For Q=D_1F, every actual gap at height h satisfies F(g)=h Q(g). Both
+families have F<0, hence Q!=0. The checker reconstructs the full determinant
+pencil and proves the exact identity
+
+  det H_F(g-F(g)/Q(g)*1)=-4 N^2/Q(g)^2.
+
+Actual Hessian singularity therefore forces N=0. The polynomials below
+exclude this on the required coefficient regions, for every height sign.
+Neither family requires the stronger actual-pencil sign theorem.
+
+Orbit32
+--------
+Here F=-(e+1)(a+b+1), Q=-be-b-cd+ce-e-1, and
+
+  N=(d+1)(e+1)(a+b+1)^2 P,
+  P=a(c+1)(e+1)+(c+1+e)(1-cd)+c(c+1)e.
+
+If cd<1, the middle term is strictly positive and all remaining terms are
+nonnegative. Thus N>0 and there is no actual positive-mixed gap, regardless
+of height. If cd>=1, then c>0 and the established weighted-minor theorem
+
+  f+c r18+c^(-1)r23>=0
+
+recovers g>=0, because d-c^(-1)>=0 and the other terms are ordinary rays.
+This proves the entire five-parameter family, including cd=1.
+
+Orbit36
+--------
+Here F=-(d+1)(e+1)(a+b+1), Q=-bd-be-b+cd-de-d-e-1, and
+
+  N=(d+1)(e+1)^2(a+b+1)^2 P,
+  P=(a+1)(c+1)+d[(a+c)(c+1)+1]>0.
+
+Consequently there is no actual positive-mixed gap anywhere on this whole
+family at any height. Coefficient boundaries and vanishing Q are covered:
+Q=0 would contradict F<0 for an actual gap.
+
+All elimination pivots define rational charts solely for computation.
+Exact denominator clearing proves the displayed polynomial identities
+through their chart boundaries. No generic coefficient assumption remains.

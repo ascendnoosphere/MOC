@@ -1,0 +1,174 @@
+Actual support costs and a dual-dependent five-plane bridge
+31 October2026
+
+STATUS UPDATE. The universal all-dual common-five-plane assertion below
+is now EXACTLY FALSE. A rational full14-PD dual with beta7=beta10=1/100
+admits no such plane, proved by an18-dimensional matrix amplification
+with nine exact negative directions. See
+moc_joined_positive_plane_ansatz_refuted_20261031.txt. This refutes the
+certificate ansatz, not MOC or the fixed/family theorems below.
+
+The fixed full-PD escape dual is proved positive on EVERY
+nonzero actual nonnegative support cost, globally in V14. This does not
+prove that every full matching-SOS dual has the required certificate.
+Seven further exact fixed-dual certificates are recorded. The attempted
+universal dual-dependent common-plane construction is refuted.
+
+1. The actual input
+
+The universal symmetric pencil satisfies
+
+                  n_+(M(g))<=4, n_-(M(g))<=4
+
+for every actual complex spectral support gap g. The elementary source
+rank4 proof is in moc_actual_inverse_pencil_rank_four_20261031.txt.
+Its algebra was independently added to the universal exact checker.
+The finite-dimensional inertia step and a normalized compression-budget
+lemma are formalized in code/lean/MocComplexDeterminantInertia.lean,
+with standard axioms and no sorry, as reported by the parent audit.
+
+2. Thirteen coordinate rows replace the82-ray census
+
+Put f=f34 and take the13 ordinary rays with labels
+
+ A=(0,7,10,13,17,18,20,22,23,27,28,30,31).
+
+The zero set of f is
+
+ S=(1,6,7,8,9,12,14,15,17,18,20,22,23).
+
+The13-by13 evaluation table r_j(pi), pi in S,j in A, is a permutation
+matrix. Its determinant is-1. Therefore every g in V14 has a unique
+decomposition
+
+                      g=t f+sum_j nu_j r_j,                 (1)
+
+where nu_j=g(pi_j) for the unique associated row pi_j in S. In
+particular, pointwise g>=0 implies nu_j>=0. The coefficient t may have
+either sign. This identity is linear algebra on the full matching
+space, not a completeness assumption about the82-ray census.
+
+3. Positive-plane lemma
+
+Fix a dual y with y(f)=-1 and beta_j=y(r_j). Let R be a real9-by5 matrix
+such that
+
+ C=R^T M(f)R>0,
+ X_j=R^T M(r_j)R+beta_j C>=0, j in A.                       (2)
+
+Then the following POINTWISE POSITIVE MATRIX IDENTITY holds for all g:
+
+ R^T M(g)R+y(g)C =sum_j g(pi_j) X_j.                        (3)
+
+Indeed substitute(1); its f coefficient cancels because y(f)=-1.
+For g>=0 the right side is PSD. If y(g)<0, then
+
+                R^T M(g)R =sum_j g(pi_j)X_j-y(g)C>0,
+
+so M(g) has five positive directions. This is impossible for actual g.
+Thus y(g)>=0 for all actual g>=0. If all X_j are PD, equality y(g)=0
+also excludes every nonzero actual cost: either some nu_j>0 gives a
+positive compression or all nu_j=0 gives g=t f, whose nonzero
+nonnegative multiples have y(g)<0.
+
+This is an actual-aware matrix certificate. It allows N9 past roots
+with five positive directions and does not revive the false all-N9
+matching-SOS statement.
+
+4. Exact global certificate for the escape dual
+
+Use the fixed five-plane independently found by the n5 agent and scout:
+
+ h1=h3=h8=0, h6=-h2-h4;
+ free coordinates(h0,h2,h4,h5,h7).
+
+Let U be its integer9-by5 inclusion and use the scaled cap matrix
+
+                 C=16 U^T M(f)U
+                  =diag(1,[[2,1],[1,2]],1,1)>0.
+
+The rational full14-PD y from the exact past escape has, for every one
+of the13 ordinary rays,
+
+           16 U^T M(r_j)U+beta_j C > C/10000.
+
+All65 leading principal minors for these corrections are verified
+exactly. Identity(3), with the harmless common factor16 on its pencil
+term, is replayed on all14 basis columns. It proves the fixed dual is
+STRICTLY POSITIVE on all nonzero actual nonnegative costs.
+
+Independent replay: all81 other cone-ray corrections are also greater
+than C/10000 and the cap correction is zero. This additional82-ray
+check is redundant for the global theorem, because(3) is explicit.
+
+ code/research/moc_fixed_escape_dual_actual_global.py
+ build/moc_fixed_escape_dual_actual_global_20261031.json
+
+The complete exact run takes about.5 seconds. This resolves the question
+whether this particular full-SOS separator can also separate an actual
+spectral cost: it cannot, globally, not merely near the past root.
+
+5. A uniform necessary actual budget inequality
+
+The same U obeys
+
+ 16 U^T M(r_j)U+c_j C>=0,
+
+where c_j=1 for j=0,7,10,13;
+c_j=2/3 for j=18,23,28; and c_j=0 for the six other ordinary rays.
+These exact PSD claims are checked by all principal minors in
+
+ code/research/moc_neutral_fixed_dual_five_plane.py
+ build/moc_neutral_fixed_dual_five_plane.json.
+
+For every actual g=t f+sum nu_j r_j with nu>=0, the five-positive-index
+obstruction therefore gives
+
+       t<=nu0+nu7+nu10+nu13+(2/3)(nu18+nu23+nu28).           (4)
+
+The three ordinary coordinates absent from face30 can simply be set
+to zero for that face. Statement(4) is a necessary actual/inertia
+constraint, not an unconditional inequality on all nonnegative N9
+costs and not a universal lower bound on dual budgets.
+
+In fact full14-PD duals with y(f)=-1 and any one of these seven
+expensive beta_j arbitrarily small exist explicitly. See
+moc_arbitrarily_small_budget_dual_20261031.txt. Thus the fixed U cannot
+serve every dual; a genuine y-dependent construction is required.
+
+6. Exact adaptive tests and the subsequently refuted conjecture
+
+Seven independent full14-PD duals, each with one expensive budget near
+.05, all admit exact rational R_y satisfying(2) with all13 X_j PD.
+Each certificate is global on all actual nonnegative costs, by(3).
+Their combined discovery and exact replay takes about.5 seconds:
+
+ code/research/moc_dual_dependent_positive_planes.py
+ build/moc_dual_dependent_positive_planes_20261031.json.
+
+This has now been strengthened beyond fixed parameter values: explicit
+rational moving planes work for EVERY epsilon>0 in all seven boundary
+families from moc_arbitrarily_small_budget_dual_20261031.txt. The
+singleton proof is moc_singleton_budget_tilt_20261031.txt; the three-pair
+proof is moc_pair_budget_tilt_20261031.txt. Both combine exact nilpotent
+block identities with a uniform1/epsilon contact-mass bound. Thus the
+degenerate small-budget boundary is handled continuously in these
+families, not merely at finitely many tested epsilon values.
+
+The finite certificates and seven continuous-family theorems do not
+extend to the following stronger sufficient statement, now refuted:
+
+ For every full matching-SOS positive moment y with y(f)<0, after
+ normalizing y(f)=-1, there exists a five-plane R_y satisfying(2).
+
+Had that statement held for the relevant cap representatives, separation
+would put all actual costs in full C0 and imply MOC4 through the audited
+Clifford physical-moment theorem. The joined-budget counterexample shows
+it is too strong. No conclusion about neutral-cost C0 containment or
+unrestricted-dimensional MOC follows from its failure.
+
+The boundary analysis already shows the dependence on y must be real:
+there is no fixed five-plane with M(f)>0 and M(r7)>=0, even though
+det(M(f)+t M(r7)) never vanishes for t>=0. Feasible planes at beta7>0
+must approach a cap-isotropic boundary as beta7 tends to zero. A
+Schur/Gram or Riccati formula must account for that degeneration.

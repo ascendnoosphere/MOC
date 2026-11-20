@@ -1,0 +1,80 @@
+MOC RESEARCH: METHODOLOGY AUDIT, FIRST-JET TEST, AND INDEPENDENT EXACT CERTIFICATE
+
+Attachment coverage: read entire metaproof(9).txt (68,779 bytes). It supplies research methodology, not an additional mathematical axiom or a proof of MOC. The applicable requirements are to preserve the unrestricted target, close actual obligations, distinguish finite evidence from proof, and state the first unresolved implication honestly.
+
+1. CLOSED FAMILY: THREE DISTINCT VALUES WITH ONE SINGLETON
+
+Independently checked the algebraic agent's theorem and proved a direct determinant presentation.
+
+Theorem. Let A,B be normal n by n matrices. Suppose B has at most three spectral values b0,b1,b2, with b2 of multiplicity one and the others of arbitrary multiplicities r,s (r+s+1=n). Then det(A+B) lies in the permutation-product convex hull. For a fixed relative unitary U and fixed index groups, one probability distribution over permutations works simultaneously for all complex eigenvalues a1,...,an and all b0,b1,b2.
+
+Proof. Diagonalize A and write
+  B=b0 I+delta P+kappa vv*,
+where P is an orthogonal rank-s projection, v is a unit vector orthogonal to its range, delta=b1-b0, and kappa=b2-b0. Put Q=P+vv*. If delta!=0, let tau=kappa/delta. The determinant is affine in a rank-one perturbation, so
+  det(A+B)=(1-tau)det(A+b0 I+delta P)
+                  +tau det(A+b0 I+delta Q).
+This is an algebraic identity; tau may be nonreal.
+
+For a rank-s projection P, define p(X)=det P[X,X] for |X|=s. Cauchy-Binet gives p(X)>=0 and sum_X p(X)=1. The projection generating polynomial identity gives, simultaneously for arbitrary complex a,b0,b1,
+  det(diag(a)+b0 I+(b1-b0)P)
+     =sum_|X|=s p(X) product_i in X(a_i+b1) product_i outside X(a_i+b0).
+One proof expands the left determinant in principal minors and uses the DPP marginal identity
+  det P[I,I]=sum_{X superset I, |X|=s} det P[X,X],
+itself a Cauchy-Binet identity for an orthonormal frame. The corresponding rank-(s+1) probability q(Y)=det Q[Y,Y] has the same identity.
+
+There exists a coupling mu(X,Y) with nonnegative entries, row marginal p, column marginal q, supported on X subset Y. Here is a self-contained proof of the only nontrivial transport fact. Choose an orthonormal basis u1,...,us of range(P), put x=u1 wedge ... wedge us and y=x wedge v. Their squared coordinate moduli are p and q. For a family F of s-subsets, let A_F be the orthogonal coordinate projection of x onto F, and let N(F) contain all (s+1)-subsets containing some member of F. A_F wedge v is supported on N(F), has norm at most ||A_F||, and, by the adjoint contraction identity and v perpendicular range(P),
+  |<A_F wedge v,y>|=||A_F||^2.
+Cauchy-Schwarz, projecting y onto N(F), gives
+  p(F)=||A_F||^2 <= ||A_F|| sqrt(q(N(F))).
+Hence p(F)<=q(N(F)), including the zero case. These are exactly the weighted Hall conditions. The finite capacitated max-flow/min-cut theorem supplies mu.
+
+For every coupled X subset Y, let c be the single member of Y\X. The corresponding two vertex polynomials satisfy
+ (1-tau)[product_X(a_i+b1) product_outsideX(a_i+b0)]
+ +tau[product_Y(a_i+b1) product_outsideY(a_i+b0)]
+ =product_X(a_i+b1) (a_c+b2) product_outsideY(a_i+b0).
+Thus pairing the two projection expansions with the SAME nonnegative mu produces exactly the desired permutation-product convex combination. The weights depend only on P,v, hence U and the index groups, not on any spectral value. The case delta=0 follows directly from rank-one MOC or by continuity; coincidences and singular sums cause no issue because all identities are polynomial.
+
+Scope: this proves a whole all-dimensional family, not unrestricted MOC. At n=4 it reproduces repeated-eigenvalue cases; n=5 multiplicities (2,2,1) are the first case not covered merely by the n-2 multiplicity condition. No global priority claim is made. Multiple exceptional eigenvalues require a compatible coupling on a branching family of subset inclusions; pairwise nested couplings alone do not establish that.
+
+2. EXECUTED EXACT N=5 CERTIFICATE
+
+Files:
+  verify_nested_dpp_n5.py
+  nested_dpp_n5_certificate.json
+
+The verifier uses only Python standard library rational arithmetic, no numerical solver. U is the dense rational real orthogonal matrix H(v)H(w), with H(z)=I-2zz^T/(z^Tz), v=(1,2,3,4,5), w=(2,-1,1,0,3). Source columns 1,2 have b1, column3 has b2, columns4,5 have b0. All ten rank-two and all ten rank-three DPP masses are strictly positive. An integral max-flow gives all30 allowed edge weights,19 positive, common integer denominator680625. The verifier checks all32 independent a-monomial coefficients and132 scalar b0,b1,b2 coefficients exactly.
+
+A separate Q(i) determinant check used
+ a=(1+i,2-i,-1+2i,3+i,-2-i),
+ b=(-2+i,-2+i,3+3i,1-2i,1-2i).
+Both direct determinant and convex combination equal
+  894536/226875 - (3793184/75625)i.
+The verifier command `python verify_nested_dpp_n5.py` exited0.
+
+3. FIRST-JET NECESSARY CONDITION: PROVED IMPLICATION, NOT A SUFFICIENT THEOREM
+
+For real a,b, C=diag(a)+Udiag(b)U*, D=det C is real. If unrestricted MOC holds, then
+ (D, partial_a D, partial_b D)
+ belongs to the convex hull of
+ (z_pi, partial_a z_pi, partial_b z_pi).
+Proof: choose arbitrary real c,h,k; perturb a to a+i epsilon h and b to b+i epsilon k, and choose support parameter eta=-i+epsilon c. Both determinant and each permutation product are holomorphic in spectral entries, with real Taylor coefficients at real data. The coefficient of epsilon in the support inequality is
+ cD+h.partial_a D+k.partial_b D
+ <= max_pi(c z_pi+h.partial_a z_pi+k.partial_b z_pi).
+This holds for every real functional if MOC holds, giving the joint convex hull. Conversely, a strictly separating first-jet functional would produce an actual MOC counterexample for all sufficiently small positive epsilon, by Taylor expansion with a strict margin. That converse concerns failure only; first-jet feasibility alone does not prove MOC.
+
+For nonsingular C, gradients are diag(adj C) and diag(U*adj C U); at singular C use polynomial cofactors directly. Vertex gradients are products with one factor omitted, avoiding division at zeros.
+
+Executed numerical LP probes:300 random n4,150 random n5,50 random n6 instances, real mixed-sign spectra and complex Haar unitaries. Every first-jet LP was feasible. These runs are evidence only. Script gradient_hull_probe.py records the experiment; no theorem of universal feasibility was proved.
+
+
+5. INDEPENDENT ORDER-FOUR REVIEW
+
+Read the complete moc4_notes.txt and ran moc4_exact_verify.py. The transposition-invariant cone proof and its nonsymmetric m/84 neighborhood extension check. The exact verifier confirms23 active minors vanishing at id and the transposition, maximum H=6, and inverse coefficient norm14. Consequently a perturbation of supnorm<=m/84 can be absorbed into the active-minor certificate. This gives a restricted nonsymmetric support theorem, not a universal support theorem.
+
+6. INDEPENDENT FINAL AUDIT: FULL MOC ON AN EXPLICIT FOUR-DIMENSIONAL COMPLEX FAMILY
+
+Read and executed moc4_full_family_verify.py against moc4_full_family_certificate.json. The stated spectra are a=(u+i,-u+i,1,2+i), b=(-1+i,-2-2i,2-i,1+2i), with |u|<=1/20. Exact rational verification passed9 facet identities,108 nonnegative polynomial coefficients,9 strict polygon turns, and pairwise distinctness of the9 listed vertices for0<u<=1/20. All coefficient arrays have exactly5 entries (degree<=4).
+
+Audit of the analytic bridge: each permutation vertex is a polynomial of degree at most2 in u, because only the first two entries of a depend on u. Oriented-area facet gaps therefore have degree at most4. Bernstein coefficients nonnegative on[0,E] establish nonnegativity. For strict turns and distances, at leastone positive Bernstein coefficient gives positivity on(0,E), and the last coefficient positive coversE. Every one of24 permutation products lies in all9 left halfplanes. The9 distinct selected vertices and strict consecutive turns, together with those supporting halfplanes, identify all9 edges of their convex hull. The same inequalities hold for every unitary determinant via the common-minor functional, since every right side is a nonnegative combination of squared minors. Thus this verifies full convex-hull membership, not only one support direction, throughout0<u<=1/20. The degenerate endpointu=0 follows by continuity of the determinant and of a finite convex hull. Negativeu interchanges the first two a entries and hence the first two rows of the arbitrary relative unitary; this preserves the universal statement.
+
+No gap found. This is an exact theorem for the displayed family, not unrestricted MOC.

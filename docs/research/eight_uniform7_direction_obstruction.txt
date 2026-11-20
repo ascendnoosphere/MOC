@@ -1,0 +1,78 @@
+An exact eight-contact obstruction to the finite35-pencil library
+================================================================
+
+Status: the35 special critical-ray pencil inequalities, even together with
+nonic singularity and exact neutral Hessian inertia(6,6), are NOT sufficient
+for the real-gradient lift equations. This is not an actual spectral gap
+and is not a counterexample to MOC4.
+
+Let alpha be the unique positive root of
+ p(t)=t^5-8t^4-18t^3-15t^2-6t-1.
+The polynomial is irreducible over Q and has one positive root by Descartes'
+rule; p(9)<0<p(10). A rational isolating interval used by the verifier is
+ (122344660/12278917, 163073093/16366558).
+Set
+ g=f34+alpha(r0+r7+r17+r20+r28),
+ F=t^3-4t^2-4t-1, Q=2t^2-2t-1 evaluated at t=alpha,
+ h=F/Q, x=g-h e0, e0=ones(14).
+Here F,Q,h are strictly positive, g is coordinatewise nonnegative, and its
+contacts are exactly permutation indices6,7,8,14,15,18,22,23. This is
+canonical uniform eight-contact orbit7 in the marked cap census.
+
+Exact necessary tests that it passes
+------------------------------------
+The verifier works over Q[t]/(p), then uses the displayed isolating interval
+to select the positive real embedding. It reconstructs the checked cubic,
+the ray data and the matrix M=QH_F(x). Its complete kernel has dimension2.
+An exact symmetric-congruence elimination over this number field proves
+inertia(M)=(6,6,2); Q>0 gives the same inertia for H_F(x).
+
+Let K be the exact14-by2 kernel basis, and let I be the complement of
+coordinates7,8. The exact principal12-minor det M[I,I], reduced modulo p,
+has five strictly positive coefficients. Thus it is positive, and
+ w=K_7,0 K_8,1-K_8,0 K_7,1 is nonzero. The complementary-minor identity gives
+ [z^2]det(M+zE)=rho det(K^T E K), rho=det M[I,I]/w^2>0.
+
+For each v in {r0,...,r33,e0}, the verifier independently checks
+ gradF(v)=0, rankH_F(v)=4, H_F(v)v=0,
+ and inertiaH_F(v)=(2,2,10).
+For all35 such matrices E=H_F(v), exact number-field arithmetic and Sturm
+signs give det(K^T E K)<=0. There are31 strictly negative determinants and
+four zero determinants, for directions r10,r13,r24,r25. Since Q^12>0,
+this proves all35 necessary coefficients
+ [z^2]det(H_F(x)+zH_F(v))<=0.
+No floating point or cached intermediate matrix is used in the certificate.
+
+Why the complete real lift still fails
+--------------------------------------
+Write y=u k+v0 l in the complete real kernel basis. All14 equations
+ gradF(y)=gradF(x)
+become a linear system in z0=u^2,z1=u v0,z2=v0^2. Exact RREF has pivots(0,1),
+so z0=A+Bz2 and z1=C+Dz2. The Veronese equation z0 z2-z1^2=0 is
+ q2 z2^2+q1 z2+q0=0,
+where, in the verifier's exact normalized basis,
+ q2=-alpha^4/4+2alpha^3+19alpha^2/4+5alpha/4-1/2,
+ q1=129alpha^4/50-1209alpha^3/50-1511alpha^2/50-99alpha/10-6/25,
+ q0=-222alpha^4/125+4863alpha^3/2500+11459alpha^2/2500
+    +1221alpha/625+84/625.
+All three numbers are strictly negative. Their signs are checked by exact
+Sturm counts on the positive root interval. For example, reducing alpha*q2
+with p(alpha)=0 gives
+ 4alpha q2=alpha^3-10alpha^2-8alpha-1<0
+because0<alpha<10. Therefore the quadratic cannot vanish for z2>=0.
+No real u,v0, and hence no real y, can satisfy the complete lift equations.
+
+Reproduction
+-------------
+ python3 code/research/verify_eight_uniform7_direction_obstruction.py \
+   --report data/certificates/geometry/eight_uniform7_direction_obstruction.json
+Fresh exact execution passed all35 directions, neutral inertia and the
+full-gradient obstruction in12.97seconds after model initialization.
+Log: build/eight12/uniform7_all35.log.
+The report contains the exact kernel, all35 Gram determinants and signs,
+the positive12-minor, and the Veronese coefficients.
+
+The general actual-pencil sign theorem remains valid. This example only
+refutes sufficiency of its finite35-direction specialization; it does not
+assert that all possible critical directions, or a full polarization of
+the necessary pencil inequality, also fail.

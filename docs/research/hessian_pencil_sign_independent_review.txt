@@ -1,0 +1,46 @@
+Independent review of the global Hessian-pencil sign obstruction
+2026-10-30
+
+Verdict: for every actual real spectral midpoint x, the coefficient
+ a2(x)=[t^2] det(H_F(x)+t H_F(e))
+is nonpositive. The proof uses the audited universal rank bound and neutral
+inertia theorem for actual secants. It supplies a necessary spectral test,
+not by itself an unrestricted MOC4 proof.
+
+Let E=H_F(e), Q(z)=z^T E z/2. The model identities give E e=0 and
+H_F(x)e=E x. For an actual midpoint there is a real y with
+ H_F(x)y=0 and grad F(y)=grad F(x), so Q(y)=Q(x).
+The exact script code/research/verify_hessian_pencil_sign_anchor.py verifies
+that E has inertia (2,2,10); its nonzero characteristic factor is
+ t^4+8t^3-42t^2-40t+201.
+
+If rank H_F(x)<=11, the determinant vanishes to order at least three at
+zero and a2=0. Suppose rank is 12 and Q(x)!=0. The two-dimensional kernel K
+satisfies K subset x-perp for the E-form, because for k in K,
+ k^T E x=k^T H_F(x)e=0. Passing to the nondegenerate (2,2) quotient of E,
+the E-orthogonal complement of nonisotropic x has only one direction of the
+same sign as Q(x). Thus E restricted to K cannot be definite with that sign.
+It also cannot be definite with the opposite sign, because y lies in K and
+Q(y)=Q(x). Its determinant is therefore nonpositive, even if it is singular.
+
+In an orthonormal kernel/complement splitting, a2 is the product of that
+2-by-2 restricted determinant with the determinant of the invertible
+12-by-12 Hessian block. The latter determinant is positive by the audited
+actual-neutrality result (six positive and six negative eigenvalues).
+Consequently a2<=0. No assertion is made that the converse holds.
+
+The condition Q(x)!=0 may be removed by density in the real spectral
+parameter space: Q composed with the finite complex spectral map is a real
+polynomial and is not identically zero. The script verifies an explicit
+actual anchor with Q=-7200. Perturb any actual input to Q!=0 and take the
+limit, using continuity of a2. The same applies at singular spectral inputs
+and Hessian ranks below 12.
+
+For the five-coefficient eight-contact child in eight12_branch_connectedness.txt,
+the separate exact pencil factorization gives p(0)=0 and a double root h>0
+on the positive-height determinant branch. Its linear coefficient p'(0)
+is strictly positive there, so [t^2]det(H_x+tE)=p'(0)/h>0. The global
+lemma therefore rules out all actual inputs on that branch without needing
+an independent rank, connectedness, or reference-kernel-sign calculation.
+The pencil factorization itself must be independently certified before that
+child's closure is finalized.

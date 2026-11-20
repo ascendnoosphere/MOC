@@ -1,0 +1,119 @@
+EXACT FAILURE OF THE p=-1 PROJECTOR SECTION ON AN ACTUAL SPECTRAL COST
+2026-10-31
+
+Result and scope
+
+The explicit weighted-projector Gram section with power p=-1 need not be
+positive semidefinite, even on an actual nonnegative4x4 spectral supporting
+cost with four contacts. The example below nevertheless has a different,
+elementary positive semidefinite matching Gram. It is not a counterexample to
+the full matching-SOS cone or to MOC. In particular it does not refute the
+stronger proposal combining the old triangle certificate with a half-power
+projector section.
+
+Exact independent replay:
+  python code/research/moc_projector_section_exact_replay.py
+
+This uses only SymPy and the Python standard library, no input files, numerical
+optimization, nonic equation, or future-lift criterion. It verifies all24
+finite rational spectral gaps, all20 projector-section interpolation
+identities, an exact strictly negative quadratic form, and a separate exact
+PSD Gram. The replay passed. The discovery/generation implementation is
+code/research/moc_projector_section_actual_obstruction.py.
+
+The exact certificate is
+build/moc_projector_section_actual_obstruction/exact_obstruction.json;
+the independent replay is recorded in the same directory/standalone_replay.json.
+
+Actual cost, specified by four small rational column parameters
+
+Let the24 permutations be in lexicographic order and take
+  beta0 = -81/100 -203i/500,
+  beta1 = -11/1000 +1001i/1000,
+  beta2 = -41/200 +3i/500,
+  beta3 = -31/125 -32i/125.
+Set u_pi=beta_pi(0)*(1+beta_pi(1)), w_pi=u_pi*beta_pi(3), and
+  cloud_pi=(Re u_pi,-Im u_pi,Re w_pi,-Im w_pi).
+The contacts are C={6,15,20,22}. The three cloud-contact differences have
+rank3. Take their primitive integer null vector n and the contact height h;
+choose the sign for which h-cloud_pi*n is nonnegative for all pi. Divide
+these rational gaps by their common factor to obtain primitive integer g.
+All gaps outside C are strictly positive.
+
+This is an actual finite spectral cost, not merely a formal cofactor cost.
+After applying the same positive primitive normalization factor k, put
+  mu=k(n0+i n1), eta=k(n2+i n3), x=mu/eta,
+  a=(-1/2,-1,0,1/(x-2)),
+  b_j=1/(beta_j+2),
+  eta_fin=2*eta*(x-2)*product_j(beta_j+2).
+Then, exactly for all24 permutations,
+  g_pi=k*h-Re(eta_fin*product_i(a_i+b_pi(i))).
+The standalone replay checks these24 identities directly over Q(i).
+
+Canonical cap coordinates
+
+In the established order of ordinary rays
+  Z=(0,7,10,13,17,18,20,22,23,27,28,30,31),
+the exact cap coefficient is
+  lambda=55487103105293722916598184,
+and the ordinary coefficients are
+   0:    50055047724704594061347
+   7:    1396287270408334877094300
+  10:    0
+  13:    0
+  17:    34397572609518336895798842
+  18:    57608933910714617481484940
+  20:    0
+  22:    548040432406014005330169
+  23:    58793146661120174242070169
+  27:    0
+  28:    389841560232796580469000
+  30:    2993554976574954061299300
+  31:    418685574565145120299847.
+The replay verifies g=lambda*f34+sum_j beta_j*r_j at all24 permutations.
+Here these beta_j are cap coefficients, distinct from the four column
+parameters above.
+
+Exact failure of the section
+
+Let B be the24x14 basis obtained by taking the first independent ordinary
+matching-indicator columns, in increasing k=1,2 and lexicographic subset
+order. Let N be SymPy's standard rational nullspace basis of B[C,:] and
+R=B[C-complement,:]*N, a20x10 matrix. Write gbar=g/max(g), and on the20
+positive entries put
+  a_i=1/gbar_i,
+  D=diag(a_i^2), M=R^T D R, H=R M^(-1) R^T,
+  A=D*(H Hadamard H)*D,
+  ell=A^(-1)*a,
+  K=R^T diag(a_i^2*ell_i) R.
+The proposed p=-1 Gram is congruent to K. Its physical Gram is
+M^(-1)*K*M^(-1), whose diagonal evaluations equal gbar exactly.
+
+For the integer vector
+  v=(-32,-56,-12,-12,-12,0,44,47,12,-33),
+the standalone exact calculation proves
+  v^T K v < -2800.
+Its approximate value is -2822.547541260465. The full exact rational value
+is saved in the certificate; its numerator and denominator together have
+12656 decimal characters. No floating point sign test is used in the proof.
+For orientation, the correlation-normalized Gram has least eigenvalue
+approximately -.0118057962 and the20x20 frame condition is approximately
+207345; these numerical diagnostics are not needed for the exact proof.
+
+Separate PSD certificate for this same cost
+
+In the14 canonical features (f34,r_j for j in Z), take the diagonal Gram
+diag(lambda,beta_j), with the two symmetric off-diagonal entries indexed
+by18 and23 set to -lambda. The identities
+  f34^2=f34+2*delta_5,
+  r18*r23=delta_5,
+  r_j^2=r_j
+show exact interpolation. Every coefficient is nonnegative and the only
+nontrivial block determinant is
+  beta18*beta23-lambda^2
+  =308191889385927586334393339521266091939046884657004>0.
+Thus this alternate Gram is PSD. The replay also checks that all14 of
+these features belong to the ordinary matching-indicator span.
+
+Consequently the obstruction is to this particular projector section.
+It supplies no separation from the full intrinsic matching-SOS cone.

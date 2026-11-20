@@ -1,0 +1,483 @@
+VARIATIONAL TRACK: A COMPLETE SMALL-SPECTRUM POSITIVE THEOREM
+17 October 2026. Derived in this session; no priority claim.
+
+This note does NOT prove unrestricted MOC. It proves MOC on an explicit,
+nonempty open class in every fixed dimension. Its new input relative to the
+volume's stability method is a complete assignment-face classification at a
+scalar-spectrum limit. All assertions below concern actual determinant data.
+
+THEOREM.
+Let n>=2, a_i in C\{0}, beta_j in C, and x_i=1/a_i. Suppose the n! numbers
+
+             s_pi = sum_i x_i beta_{pi(i)}
+
+are pairwise distinct and no three are collinear in the real plane C. Then
+there is epsilon>0 such that for every complex t with |t|<epsilon and every
+unitary U,
+
+ det(diag(a)+t U diag(beta) U*)
+       belongs to conv{ product_i(a_i+t beta_{pi(i)}): pi in S_n }.
+
+The hypothesis is satisfied on a nonempty open dense subset of (a,beta) in
+(C\{0})^n x C^n. Thus for n>=3 this gives genuinely complex, noncollinear
+instances. Appendices A--C give explicit radius certificates, including the
+certified radius 10^(-12) for the exact four-dimensional example below.
+
+1. THE NORMALIZED LIMIT IS AN ASSIGNMENT FUNCTIONAL.
+Write d=product_i a_i and
+
+ G_t(U) = [det(diag(a)+t U diag(beta)U*)/d - 1]/t   (t nonzero).
+
+The exterior-minor expansion extends G_t polynomially to t=0:
+
+ G_t(U)=sum_{k=1}^n t^{k-1}
+        sum_{|I|=|J|=k} x_I beta_J |det U[I,J]|^2,
+
+so G_0(U)=sum_ij x_i beta_j |U_ij|^2. For t nonzero, the affine complex map
+w -> (w/d-1)/t preserves convex-hull membership. It therefore suffices to
+prove G_t(U) is in conv{G_t(P_pi)}.
+
+Fix a unit complex support phase eta. At t=0 the real objective is
+F_{eta,0}(U)=sum_ij c_ij |U_ij|^2 with c_ij=Re(eta x_i beta_j).
+The matrix (|U_ij|^2) is doubly stochastic, so its maximum equals
+h_{eta,0}=max_pi Re(eta s_pi). The hypothesis implies precisely one or two
+optimal permutations, since a line supports at most two of the s_pi.
+
+2. THE TWO OPTIMAL PERMUTATIONS DIFFER BY ONE CYCLE.
+After relabeling, suppose the optimal permutations are id and rho. If rho
+has two or more disjoint nontrivial cycles, apply each cycle separately to
+id. Each such partial permutation has nonnegative deficit from h, and
+the sum of their deficits is the deficit of rho, which is zero. Therefore
+each partial permutation is also optimal. This contradicts having exactly
+two optimal permutations. Hence rho is a single cycle, of length k>=2.
+
+3. STRICT ASSIGNMENT DUAL SLACKS.
+Let E be the union of the edges of the one or two optimal permutations.
+There exist row and column potentials r_i,q_j such that
+
+ c_ij <= r_i+q_j,
+ r_i+q_j-c_ij=0 on E,
+ r_i+q_j-c_ij>=gamma>0 outside E,
+ sum_i r_i+sum_j q_j=h.
+
+Here is an elementary strictness argument using ordinary finite LP duality.
+Every nonoptimal permutation has deficit at least delta>0. Choose
+0<gamma<delta/n, and replace c_ij by c_ij+gamma outside E. The same optimal
+permutations still maximize and have the same value h. A dual solution for
+the modified assignment problem has nonnegative modified slacks. Its
+original slacks are at least gamma outside E. Equality on every edge in E
+follows by summing original slacks along the optimal permutation containing
+that edge. (If there are no nonoptimal permutations, n=2 and the full orbit
+is already a two-dimensional solved block.)
+
+Consequently the exact support deficit is
+
+ h-F_{eta,0}(U)=sum_ij d_ij |U_ij|^2
+                    >=gamma L_E(U),
+ L_E(U)=sum_{(i,j) not in E}|U_ij|^2.
+
+4. COMPLETE CLASSIFICATION OF THE UNITARY EQUALITY SET.
+By strict slacks, equality holds precisely when U is supported on E.
+If there is one optimal permutation, these are its monomial phase torus.
+If there are two and their cycle has length 2, these are a full U(2) block
+on that cycle together with scalar phase blocks at the other indices.
+If the cycle has length >=3, only the two monomial phase tori occur.
+
+To verify the last assertion, every doubly stochastic matrix supported on
+E is in the assignment face, namely the segment between the two optimal
+permutation matrices. If it is a strict mixture, every row along the cycle
+has both its allowed entries nonzero. Consecutive cycle rows have exactly
+one allowed column in common, so their unitary inner product cannot be
+zero. Thus the strict mixture is not unistochastic. This proves the claim.
+
+Denote this compact equality manifold (possibly disconnected) by S. Each
+connected component is either a monomial phase torus or a U(2) block with
+scalar phase blocks. In particular every component is a solved block
+family for the actual determinant in every dimension.
+
+5. STRICT NEGATIVE NORMAL HESSIAN AT THE LIMIT.
+For U0 in S and a skew-Hermitian tangent generator K,
+
+ L_E(e^{sK}U0)=s^2 sum_{(i,j) not in E}|(KU0)_ij|^2+O(s^3).
+
+The displayed quadratic vanishes exactly on the tangent space of S:
+
+* One permutation: after phases and relabeling U0=I, only diagonal K can
+  have no forbidden entries.
+* Transposition: E is exactly a 2x2 diagonal block plus singleton blocks.
+  Since U0 is block unitary, KU0 is supported on E iff K is block diagonal,
+  which is precisely tangency to S.
+* Longer cycle: at either monomial U0, an additional allowed off-diagonal
+  edge lacks its transpose in E. Skew-Hermiticity forces that entry to
+  vanish as soon as all forbidden entries vanish. Thus only diagonal K
+  remains, again exactly tangent to the phase torus.
+
+On the normal complement, compactness of the unit normal bundle gives a
+uniform positive lower bound for this quadratic. The exact slack formula
+then makes the Hessian of F_{eta,0} uniformly negative definite in all
+normal directions. This argument deals explicitly with the long-cycle
+case; it does not assume all linear assignment maximizers are isolated.
+
+6. NORMAL FIRST DERIVATIVES VANISH IDENTICALLY FOR ALL PERTURBATIONS.
+At every U0 in S the matrix diag(a)+t U0 diag(beta)U0* is block diagonal
+with the corresponding block partition. A tangent direction normal to the
+block family has off-block K, so the first variation
+t[K,U0 diag(beta)U0*] is off-block. The adjugate of a block-diagonal matrix
+is block diagonal, including singular cases by polynomial continuation.
+The derivative of the determinant, tr(adj(C) delta C), is therefore zero.
+
+For monomial phase tori the same argument uses singleton blocks. It follows
+that the normal derivative of G_t and of every real support F_{eta',t}
+vanishes identically on S, for every t and eta'. The assertion at t=0
+follows either directly or by polynomial continuation.
+
+7. QUADRATIC ERROR DOMINATION, NOT JUST CONTINUITY.
+Use normal exponential coordinates U=e^K U0 near S. Section 5 gives,
+after taking a sufficiently small tubular neighborhood,
+
+ F_{eta,0}(e^K U0)-F_{eta,0}(U0) <= -c ||K||^2
+
+uniformly on S, with c>0. Define E_t=G_t-G_0. Its polynomial expansion has
+a factor t, and its first normal derivative on S is zero by Section 6.
+Taylor's theorem with an integral remainder and compactness therefore give
+
+ |E_t(e^K U0)-E_t(U0)| <= C |t| ||K||^2.
+
+Likewise the change in support phase contributes at most
+C' |eta'-eta| ||K||^2. These are quadratic bounds, crucially stronger than
+a plain O(t) bound near the equality locus. Since the leakage quadratic is
+uniformly positive on normals, locally ||K||^2 <= C'' L_E(e^K U0); hence
+the perturbation error is also bounded by C'''|t| times forbidden mass.
+
+For |t| and |eta'-eta| sufficiently small, it follows that
+
+ F_{eta',t}(e^K U0) <= F_{eta',t}(U0).
+
+On a monomial family U0 is already a permutation value. On a U(2) block,
+the determinant is a convex combination of its two block permutation
+values, with weights |(U0)_11|^2 and |(U0)_12|^2; the exterior singleton
+factors multiply both endpoints identically. Therefore in either case
+
+ F_{eta',t}(U0) <= max_pi F_{eta',t}(P_pi).
+
+The complement of the chosen tube is compact and has a strictly positive
+base support gap. Uniform continuity preserves that gap for the same kind
+of sufficiently small perturbations. This proves the desired inequality
+for every U, for all eta' in a neighborhood of eta, and all sufficiently
+small complex t.
+
+8. UNIFORMITY OVER EVERY SUPPORT PHASE.
+The unit support circle is compact. Finitely many phase neighborhoods from
+Section 7 cover it. Take the minimum of their positive t-radii. Every phase
+then satisfies the support inequality for every |t| below that minimum.
+The support characterization of planar convex hulls gives the theorem.
+The t=0 original determinant is the single value d, so it is also covered.
+
+9. GENERICITY OF THE HYPOTHESIS.
+For distinct permutations pi,rho the polynomial
+s_pi-s_rho = sum_ij (P_pi-P_rho)_ij x_i beta_j is not identically zero.
+For three distinct permutations pi,rho,tau, suppose the real polynomial
+Im[(s_rho-s_pi) conjugate(s_tau-s_pi)] vanished identically. On a connected
+complex open set where s_tau-s_pi is nonzero, the holomorphic rational
+function (s_rho-s_pi)/(s_tau-s_pi) would be real-valued, hence constant,
+with a real constant c. Polynomial continuation would imply
+P_rho-P_pi=c(P_tau-P_pi). But no three distinct vertices of the Birkhoff
+polytope are collinear: one would lie on the segment between the others
+and fail to be an extreme point. This is a contradiction.
+
+Thus each forbidden equality/collinearity is a proper real-algebraic zero
+set. A finite union of them has empty interior; its complement is open
+dense and nonempty. Intersecting with x_i!=0 preserves this conclusion,
+and inversion x_i=1/a_i is a homeomorphism on that open domain.
+
+10. EXACT NONEMPTY FOUR-DIMENSIONAL EXAMPLE.
+Take
+x=(16+27i, 14-7i, 16+20i, -19-27i), a_i=1/x_i,
+beta=(-13+8i, -22+11i, 6+25i, -22+6i).
+In lexicographic permutation order the 24 assignment sums are
+(-479+1085i, -566-896i, -157+301i, 78+126i, -701-886i, -379+920i,
+ -599+785i, -686-1196i, -178+238i, -399-255i, -722-949i, -856+539i,
+ -697+981i, -462+806i, -598+1218i, -819+725i, -498+1053i, -954+735i,
+ -651-1196i, -329+610i, -552-959i, -686+529i, 92+63i, -364-255i).
+They are distinct. For every one of the 2024 triples, the integer
+Im[conjugate(s_j-s_i)(s_k-s_i)] is nonzero; its minimum absolute value is
+315. The companion script variational_example_check.py verifies this using
+Python integer arithmetic only.
+The four-point concyclicity determinant with rows
+(|z_i|^2,Re z_i,Im z_i,1) is 173208 for x and 36750 for beta.
+Both are nonzero. Complex inversion preserves generalized circles, so a=1/x
+is also nonconcyclic; nonzero scaling preserves this property for t beta.
+Thus the example is outside the classes where both spectra lie on circles
+or lines, for every t!=0.
+
+11. WHAT THIS DOES NOT DO.
+The theorem supplies actual convex-hull membership in a full neighborhood
+of a scalar-spectrum limit along every generic fixed spectral shape. It
+does not continue that neighborhood to t=1, and no such continuation is
+claimed. Beyond the controlled neighborhood a non-block equality locus or
+loss of normal coercivity may occur. The unrestricted conjecture is not
+proved by this note.
+
+APPENDIX A. A GLOBAL QUANTITATIVE PERTURBATION CERTIFICATE.
+
+The following strengthens the local tube argument. Equip U(n) with its
+bi-invariant Frobenius Riemannian metric. Keep a base phase eta0 and its
+one/two optimal assignment permutations, allowed edges E, solved equality
+manifold S, and forbidden mass L=L_E(U). If there are nonoptimal
+permutations, put
+
+ delta=min_{pi nonoptimal} [h_{eta0,0}-Re(eta0 s_pi)]>0,
+ gamma=delta/n,
+ C_n=(pi^2/2)(1+12n).
+
+Then the explicit fixed-phase certificate is
+
+ B_1 |eta-eta0| + sum_{k=2}^n B_k |t|^{k-1} <= 2 gamma/C_n,       (A1)
+ B_k=4k^2 e_k(|x_1|,...,|x_n|) e_k(|beta_1|,...,|beta_n|),
+
+where |eta|=|eta0|=1. Under (A1), the entire actual support inequality for
+G_t is valid in direction eta. This is a proved sufficient condition with
+explicit constants, not an equivalent unsolved condition.
+
+A.1. The leakage bound needs no LP duality.
+By a Birkhoff decomposition, p_ij=|U_ij|^2=sum_pi lambda_pi (P_pi)_ij.
+The base objective gap is at least delta times the total weight of the
+nonoptimal permutations. Every optimal permutation has no forbidden edge,
+and every other permutation has at most n forbidden edges. Therefore
+
+ h_{eta0,0}-F_{eta0,0}(U) >= (delta/n) L_E(U)=gamma L_E(U).
+
+A.2. A global distance estimate.
+For all U,
+
+                     dist(U,S)^2 <= C_n L_E(U).                (A2)
+
+For a single monomial family, or a U(2)-plus-singletons family, mask U to
+its allowed diagonal blocks, obtaining W. Each block is a contraction.
+Choose a unitary polar factor in each block, giving V in S. If sigma_l
+are all block singular values, then
+
+ ||U-V||_F^2 = L + sum_l(1-sigma_l)^2
+             <= L + sum_l(1-sigma_l^2)=2L.
+
+The geodesic distance between any two unitaries is at most pi/2 times
+their Frobenius chord distance, since theta^2 <= (pi^2/4)|e^{i theta}-1|^2
+for |theta|<=pi. This proves dist(U,S)^2<=pi^2 L/2 in the block cases.
+
+For a single cycle of length k>=3, relabel so allowed cycle entries are
+U_ii and U_i,i+1 (cyclic indices). Put d_i=|U_ii|^2, c_i=|U_i,i+1|^2,
+and let r_i and q_i be the forbidden mass in cycle row i and column i.
+Row/column normalization gives
+
+ d_i+c_i=1-r_i, d_i+c_{i-1}=1-q_i,
+ |c_i-c_j|<=sum_l(r_l+q_l)<=2L.
+
+For consecutive cycle rows the masked row vectors W_i,W_{i+1} share exactly
+one column. Orthogonality of the full rows gives
+
+ |W_i W_{i+1}*| <= sqrt(r_i)+sqrt(r_{i+1}),
+ c_i d_{i+1} <=2(r_i+r_{i+1})<=2L.
+
+Writing c=c_1, we have d_2>=1-c-3L, so c(1-c)<=5L. Consequently
+min(c,1-c)<=10L. If c<=10L, every c_i<=12L; if 1-c<=10L, every d_i<=12L.
+Choose the corresponding identity or cycle permutation. Its total
+off-permutation mass is at most (1+12k)L. Choosing phases to match the
+selected entries gives a monomial V with
+
+ ||U-V||_F^2=2 sum_i(1-|U_i,pi(i)|)
+            <=2 sum_i(1-|U_i,pi(i)|^2)
+            <=2(1+12n)L.
+
+The same chord/geodesic inequality proves (A2). The bound holds globally,
+including large L; its looseness is harmless for a positive certificate.
+
+A.3. Explicit second derivative bound.
+For f_IJ(U)=|det U[I,J]|^2 with |I|=|J|=k, exterior powers show that along
+U(s)=e^{sK}U, K skew-Hermitian,
+
+ |d^2/ds^2 f_IJ(U(s))| <=4k^2 ||K||_F^2.
+
+Indeed the induced exterior generator has operator norm at most
+k||K||_op<=k||K||_F, and differentiating the squared matrix coefficient
+twice gives 2|z'|^2+2Re(z'' conjugate(z)), with |z|<=1. Summing the
+absolute spectral coefficients gives the B_k above.
+
+Let H=F_{eta,t}-F_{eta0,0}. It follows that every geodesic directional
+second derivative of H is bounded in absolute value by
+
+ M ||K||_F^2,
+ M=B_1|eta-eta0|+sum_{k=2}^n B_k|t|^{k-1}.
+
+Choose V in S closest to U in the Riemannian distance, and a minimizing
+geodesic from V to U. Its initial velocity is normal to S (first variation
+of length; S is compact and each component is a smooth block subgroup
+coset). Section 6 shows the first derivative of H along that normal is
+zero. Taylor's integral remainder over the full geodesic therefore gives
+
+ H(U)-H(V) <= (M/2)dist(U,S)^2 <=(M C_n/2)L.
+
+Since F_{eta0,0}(V)=h_{eta0,0}, Section A.1 now gives
+
+ F_{eta,t}(U)-F_{eta,t}(V) <=(-gamma+M C_n/2)L <=0
+
+under (A1). Every V in S satisfies actual MOC by its at-most-two-dimensional
+blocks, so the support inequality follows. If n=2 and both permutations
+are optimal, S=U(2) and MOC already holds without this certificate.
+
+A.4. Consequence.
+At each phase eta0, (A1) provides an explicit positive disk in t and an
+explicit phase neighborhood. A finite subcover still yields the complete
+small-spectrum theorem. Calculating a convenient finite cover and its
+radius is a numerical certification task. Appendix B avoids that task by
+checking only the finitely many edge normals of the perturbed polygon and
+provides a numerical certified radius for the exact example.
+
+APPENDIX B. FINITE EDGE CERTIFICATES AND AN EXPLICIT RADIUS.
+The edge-normal method in this appendix was suggested by the root agent
+and checked jointly with this track. It removes the phase-cover computation.
+
+B.1. Definitions and sufficient radius conditions.
+Assume n>=3 and the theorem's generic hypothesis. Let
+
+ alpha=min_{distinct pi,rho,tau}
+       |Im(conjugate(s_rho-s_pi)(s_tau-s_pi))| >0,
+ D >= max_{pi,rho}|s_pi-s_rho|,
+ l <= min_{pi!=rho}|s_pi-s_rho|,  l>0.
+
+Let A_k=e_k(|x|)e_k(|beta|), B_k=4k^2 A_k,
+S=sum_{k=2}^n A_k, T=sum_{k=2}^n B_k,
+Q=4 B_1 S/l+T, and C>=C_n.
+Larger nonnegative coefficient bounds A_k are equally valid.
+If 0<r<=1 satisfies
+
+                 4 D S r+4 S^2 r^2 < alpha/2,                (B1)
+                 C r Q < alpha/(n D),                       (B2)
+
+then MOC holds for the entire complex disk |t|<=r.
+These are explicit sufficient bounds in the original spectral data.
+
+B.2. Proof of preservation of the supporting edges.
+At each permutation,
+v_pi(t)=G_t(P_pi)=s_pi+error_pi(t), |error_pi(t)|<=R:=rS,
+because |t|<=r<=1 and the determinant expansion is finite.
+For any three points, the change in their oriented area determinant is at
+most 4DR+4R^2: each of the two difference vectors changes by at most 2R
+and each original difference vector has length at most D. Condition (B1)
+therefore preserves every triple orientation sign. An edge is supporting
+exactly when all other labeled points lie strictly on the same side of its
+line, so the original and perturbed polygons have precisely the same
+supporting edges and vertex labels.
+
+For an original supporting edge between s_pi and s_rho, let eta0 be its
+outward unit support direction. Its nonendpoint vertex gaps are the
+absolute oriented triangle areas divided by the edge length, so
+
+       delta_edge >= alpha/D, gamma_edge>=alpha/(nD).
+
+Let eta(t) be the corresponding perturbed edge's outward unit direction.
+The edge vector changes by at most 2R, and its original length is at least
+l. For nonzero vectors, the difference between normalized directions is
+at most twice the vector perturbation divided by original length. Hence
+
+                    |eta(t)-eta0| <=4R/l.
+
+The quantity M in (A1) is consequently at most
+
+ B_1(4R/l)+sum_{k=2}^n B_k r^{k-1} <= r Q.
+
+Condition (B2) is stronger than M<=2gamma_edge/C_n, so Appendix A proves
+the support inequality for every perturbed polygon edge. A convex polygon
+is the intersection of its edge half-planes. This proves full MOC for
+|t|<=r without estimating an uncountable support family individually.
+
+B.3. Certified numerical radius for Section 10's example.
+Use integer upper bounds on absolute values:
+
+ X=(43,21,36,46), Y=(21,33,31,28).
+
+Then the respective products e_k(X)e_k(Y), k=1,2,3,4, are
+
+ 16498, 37059829, 15799252770, 899499740832.
+
+The corresponding B_k are
+
+ 65992, 592957264, 568773099720, 57567983413248.
+
+Therefore
+
+ S=915336053431,
+ T=58137349470232,
+ Q=4 B_1 S+T=241677564701544440.
+
+All s_pi are Gaussian integers, distinct, so l=1 is valid. From the listed
+values max_pi(|Re s_pi|+|Im s_pi|)=1882, hence D=3764 is valid.
+The exact orientation audit gives alpha=315. Since pi^2<10,
+C_4=(pi^2/2)(1+48)<245, so take C=245.
+
+Set r=10^(-22). Exact rational arithmetic verifies
+
+ 4 D S r+4 S^2 r^2 < 315/2,
+ 245 r Q < 315/(4*3764).
+
+For scale, the two left sides are respectively less than 0.000001379 and
+0.005922; the right sides are 157.5 and greater than 0.02092. Thus the
+strict inequalities have substantial arithmetic slack.
+
+CONCRETE COMPLETED CONCLUSION:
+For the spectra a_i=1/x_i and beta from Section 10, for every unitary U in
+U(4) and every complex t with |t|<=10^(-22), the original determinant lies
+in the convex hull of all 24 spectral permutation products.
+
+This is an explicit certified all-unitary/all-support result for a
+genuinely complex four-dimensional family, not a sample of unitary tests.
+The radius is deliberately conservative and is not asserted optimal.
+
+APPENDIX C. IMPROVED CERTIFIED RADIUS 10^(-12) FOR THE SAME EXAMPLE.
+This refinement uses the same proved inequalities and a nine-row exact
+edge certificate. Its verification is variational_improved_radius_check.py.
+
+In dimension four the full-size term of G_t is
+t^3 x_1x_2x_3x_4 beta_1beta_2beta_3beta_4, constant in U. Subtracting this
+translation changes neither convex-hull membership nor any derivative.
+For the remaining normalized vertices, direct integer expansion gives
+the coefficient bounds
+
+ max_pi |[t]G_t(P_pi)| <=1366923,
+ max_pi |[t^2]G_t(P_pi)| <=679895624,
+
+where the bounds are actually the maximum complex L1 norms, hence valid
+upper bounds on absolute values. Thus use
+
+ R(r)=1366923 r+679895624 r^2
+
+instead of the coarser rS. The first-order hull vertices in counterclockwise
+order have zero-based lexicographic permutation indices
+
+                 17,10,7,18,22,3,5,0,14.
+
+The maximum L1 distance between any two first-order points is D=2502.
+For each of the nine directed edges (u,v), let
+
+ d=(Re(s_v-s_u),Im(s_v-s_u)),
+ l_e=max(|d_1|,|d_2|), L_e=|d_1|+|d_2|,
+ a_e=min_{j not u,v} det(d,s_j-s_u)>0,
+ gamma_e=a_e/(4L_e).
+
+The minimum of all a_e is 3320. For r=10^(-12), exact rational arithmetic
+checks, separately at every edge,
+
+ 4D R(r)+4R(r)^2 < a_e,
+ (245/2)[4 B_1 R(r)/l_e + B_2 r + B_3 r^2] < gamma_e.
+
+Here B_1=65992, B_2=592957264, B_3=568773099720 as before.
+The first inequalities keep every original edge strictly supporting and
+therefore preserve the closed boundary cycle. The second inequalities are
+Appendix A's global all-unitary support criterion at every corresponding
+perturbed edge normal. Therefore the full convex-hull inclusion holds for
+every complex |t|<=10^(-12), improving Appendix B's simpler radius.
+
+For example the most restrictive original edge 17->10 has
+gamma_e=415/958>0.43319, while the left side of the Hessian inequality is
+less than 0.09889. All nine inequalities have strict exact margins.
+This is a mathematical certificate using finite integer/rational checks;
+it does not rely on optimization or sampling unitaries.

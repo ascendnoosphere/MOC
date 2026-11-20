@@ -1,0 +1,201 @@
+Independent audit of the topology and operator moonshot claims
+31 October 2026
+
+Verdict: PASS, with the scopes stated by the producers. The winding theorem
+certifies attained inner regions. The fourteen-weight law proves unrestricted
+complex-spectra MOC on the stated one-parameter mixer family. The operator
+certificate proves full planar containment on its explicitly bounded spectral
+and unitary neighborhood. None proves unrestricted MOC for all 4 by 4 mixers.
+
+Reviewed sources:
+  docs/research/moc_moonshot_topology_20261031.txt
+  docs/research/moc_moonshot_operator_20261031.txt
+  code/research/moc_moonshot_topology.py
+  code/research/moc_moonshot_operator.py
+
+After inspecting both command-line entry points, the following exact-only
+producer modes were rerun and exited with code zero:
+
+  python code/research/moc_moonshot_topology.py --exact
+  python code/research/moc_moonshot_operator.py
+
+No full raw-data scan was requested or rerun in this audit. The producer
+scripts were not edited. Their exact arithmetic output was independently
+checked by code/research/moc_moonshot_topology_operator_audit.py, which also
+exited with code zero. The latter uses a different crossing ray for winding,
+rechecks all symbolic minor identities, checks the Walsh gauge directly, and
+checks the ordinary dual on all 52 singleton/two-subset indicators without
+calling the producer's ray generator.
+
+1. Closed graph walks, orbit topology, and attained disks: PASS
+
+An abstract edge starts from a diagonal normal matrix with entries b_pi(i).
+Conjugating its i,j block by a real Givens rotation produces the diagonal
+matrix with those entries exchanged at the other endpoint. The endpoint is
+an actual matrix in the normal orbit, independent of choices of a unitary
+representative. Hence concatenating an abstract closed graph walk genuinely
+produces a closed loop in the orbit. Repeated eigenvalues merely collapse some
+edges or identify vertices; they do not break the concatenation.
+
+For multiplicities m_1,...,m_r, the stabilizer is the connected group
+U(m_1) x ... x U(m_r). Its inclusion into U(n) maps fundamental groups by
+(k_1,...,k_r) -> sum_j k_j: one can see the generator explicitly by rotating
+one coordinate in any block through exp(2 pi i t). This map is surjective.
+The homotopy exact sequence of the quotient bundle therefore gives a trivial
+fundamental group for the normal orbit. This covers all multiplicities,
+including the scalar orbit consisting of a single point.
+
+The determinant along a Givens edge is the claimed convex segment. The audit
+rechecked the arbitrary-symbol 2 by 2 determinant identity modulo c^2+s^2=1,
+so no real-spectrum hypothesis is present. The rest of the matrix contributes
+the unchanged product of its diagonal pair sums.
+
+A null-homotopy of the orbit loop supplies a disk whose determinant image
+has the polygonal walk as boundary. If the image avoided q, this would be a
+disk in C minus q; its boundary winding would have to vanish. Nonzero winding
+therefore implies attainment. If rho is the distance to the compact boundary
+walk, B(q,rho) avoids the walk and is connected, so its winding is constant.
+Every point of that open disk is attained. No assumption that a continuous
+image of a simply connected space is itself simply connected is used.
+
+The abstract-graph qualification is necessary and correctly retained. A
+planar crossing does not authorize jumping between unrelated lifted paths.
+The proof does not fill arbitrary faces of a planarized segment drawing.
+
+The exact n=3 and two n=4 example windings and minimum squared distances
+were recomputed from the spectra. The independent crossing calculation used
+the ray in direction 1+2i instead of the producer's horizontal ray; all
+integer windings agree. Segment distances were independently computed by
+rational orthogonal projection. Every audited walk closes at its original
+permutation and every edge swaps exactly two positions.
+
+2. The fourteen-weight dense mixer family: PASS
+
+For V(t)=(tI+K)/sqrt(t^2+3), skew symmetry and K^2=-3I give orthogonality.
+The audit independently checked each of the 70 equal-cardinality squared-
+minor identities as a polynomial identity in Q[t], after clearing the
+positive denominator. It also checked normalization. Thus the result is valid
+for every real parameter in the stated positivity domain, not only the three
+displayed parameter examples.
+
+The displayed numerator weights are nonnegative for t>=0 and
+t^4+4t-3>=0. For t>=1, putting x=t-1 gives nonnegative coefficients in every
+weight numerator; their five total masses are exactly 16,16,12,4,1.
+
+The bridge from these identities to arbitrary complex spectra is valid:
+principal-minor expansion and Cauchy--Binet express the determinant as
+sum_{I,J} |det V[I,J]|^2 a_{I^c} b_J. Expanding each matching product gives
+the same monomial with coefficient 1_{pi(I)=J}. The 70 identities therefore
+equate the entire polynomials in eight independent complex variables. No
+positivity or reality assumption is imposed on those variables.
+
+Gauge invariance also checks. Multiplication on the left or right by
+diagonal unitary matrices preserves squared minor moduli. Row and column
+permutations relabel the spectra and matching labels. Transposition changes
+the common law by inverting its permutation labels, because the minor
+indices are exchanged. Hence all stated gauges retain a positive law.
+
+The Walsh path is not merely numerically similar to the certified family.
+The audit verifies exactly that P=((I+K)/2)W is a signed permutation and
+
+  (cI+sK)W = (xI-yK)P,
+  x=(c+3s)/2, y=(c-s)/2,
+  x^2+3y^2=c^2+3s^2.
+
+On c>=s>=0 and c^2+3s^2=1, x>=y>=0. If y>0, the middle matrix is precisely
+V(x/y)^T with x/y>=1; if y=0 it is the identity. This proves the entire
+specified ascent arc lies in the certified arbitrary-spectra class.
+
+3. Positive Gram bound and determinant-free center: PASS
+
+The one-vector bound follows directly from Hadamard's determinant inequality.
+Complete v/||v|| to an orthonormal basis, apply Hadamard to the corresponding
+columns of C, then apply AM--GM to the other n-1 column norm squares, whose
+sum is T-t. This yields
+
+  |det C|^2 <= t ((T-t)/(n-1))^(n-1).
+
+It remains valid at t=0, and does not assume C normal. The k-dimensional
+compression version follows from the positive block determinant inequality
+and AM--GM on the complementary block. Singular compressed blocks follow
+by continuity, or because a zero quadratic form of a positive semidefinite
+matrix is in its kernel. There is no unmentioned invertibility hypothesis.
+
+For the supplied rational U0, the audit independently checked U0*U0=I,
+reconstructed C0, and recomputed its Frobenius trace and the fixed-vector
+Rayleigh quotient. They agree with the producer's exact rational numbers:
+
+  T=10462524828662/34787905 <310000,
+  t=210085915021693/34805090225070 <7.
+
+No determinant of C0 was evaluated in the independent audit. All three
+matching products were recomputed from their permutations. Their oriented
+edge crosses are positive, and every exact squared-distance comparison
+cross^2>10^18 edge is strict. For a triangle, positive crosses place the
+origin on the inner side of each oriented edge; the minimum perpendicular
+edge distance is therefore its centered inradius. The disk conclusion is
+correct, rather than an angular sampling heuristic.
+
+4. Spectral and unitary neighborhood: PASS
+
+For entrywise spectral radius epsilon=1/100 and unitary operator-norm
+radius delta=1/1000, expand the conjugation difference using the original
+D_b and the perturbed D_b'-D_b separately. Since ||D_b||<255 and U' remains
+unitary,
+
+  ||C'-C0|| <= 2epsilon + 2*255*delta = 53/100.
+
+The original fixed vector consequently gives ||C'v||/||v||<3+0.53<4,
+and ||C'||_F<557+2*0.53<559. Substitution in the same Gram inequality
+proves the exact conservative bound |det C'|<2*10^8. The audit checks the
+integer comparison 16*559^6<27*(2*10^8)^2.
+
+Each pair sum changes by at most 1/50, while every original pair sum has
+modulus less than 700. Expansion of the product over changed factors gives
+the valid uniform perturbation bound
+
+  Delta=(700+1/50)^4-700^4
+       =171507350140001/6250000 <30*10^6.
+
+Moving each of three triangle vertices by at most Delta changes every unit
+support function by at most Delta. Support-function order characterizes
+containment of compact convex sets, so the perturbed triangle still contains
+the centered disk of radius greater than 970*10^6. This comfortably exceeds
+the determinant bound; no assumption that the orientation stays numerically
+unchanged is needed.
+
+For the claimed nonordinary spectral neighborhood, the audit recomputed
+the exact separator value -42246975256. It independently checks that the
+separator is nonnegative on every singleton and every two-subset permutation
+indicator (52 tests, including complementary duplicates), hence on the
+entire ordinary-minor cone. Its perturbation is bounded by
+
+  (|sum w|+sum |w|)*26*Delta
+     =15607168862740091/1562500 <42246975256.
+
+The absolute value on sum w is necessary and is present. This handles the
+change in the maximizing support height as well as every product. Thus the
+fixed direction remains strictly outside the ordinary cone throughout the
+stated spectral neighborhood, while full MOC holds for all mixers in the
+stated neighborhood of U0.
+
+5. Scope and verification limits
+
+The exact tests and the written mathematical bridges pass. They are not
+Lean proofs of the homogeneous-space topology, winding argument, or Gram
+inequality. The audit does not promote the producer's floating raw-data pass
+counts to exact or probabilistic statements, and does not rerun those scans.
+
+The positive topology result supplies inner attainable regions, which cannot
+exclude an exterior determinant value. The positive mixer law covers the
+specified one-parameter family and its gauges, not all of U(4). The operator
+family bounds both the spectra and mixer; it does not prove MOC for every
+mixer at those spectra. These limitations are stated accurately by both
+producers and leave the unrestricted conjecture unresolved.
+
+Independent artifacts:
+  code/research/moc_moonshot_topology_operator_audit.py
+  build/moc_moonshots_20261031/topology_operator_independent_audit.json
+  build/moc_moonshots_20261031/topology_operator_independent_audit.log
+  build/moc_moonshots_20261031/topology_independent_replay.log
+  build/moc_moonshots_20261031/operator_independent_replay.log

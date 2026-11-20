@@ -1,0 +1,122 @@
+Independent audit of the dimension-four fixed-spectrum kernel
+31 October 2026
+
+Scope
+
+This audit concerns the fixed-b 16 by 16 signed product-feature kernel for
+real orthogonal O. It does not establish the Marcus--de Oliveira support
+inequalities. The universal positive-kernel proof is in
+moc_fixed_b_clifford_kernel_20261031.txt, with its own exact nine-case
+verifier. The independent calculations below support and check that proof;
+finite examples and the numerical search are not offered as substitutes.
+
+Proof review
+
+I checked the nine-case reduction, the complementary-minor step, and the
+orientation of the row determinant. No gap was found.
+
+For B=O diag(b) O^T and C=conjugate(B), symmetry and BC=CB hold. Expanding
+the selected row flags gives the signed permutation coefficient matrix:
+the row types are I, C, B, BC according to membership in the two subsets.
+Right multiplication by O^T cancels det O, including det O=-1.
+
+For subset pairs with combined cardinality at most four, permutation of
+indices and Hermitian exchange reduce the nonempty cases to nine types.
+The top-degree conjugation commutes with index permutations because their
+action on the pseudoscalar is the real sign of the permutation. Thus the
+proposed Gram matrix has the needed permutation equivariance. Empty cases
+retain only the scalar Clifford coordinate and are immediate.
+
+The nine formal symmetric-matrix calculations have six identically zero
+errors and three errors in the commutator ideal. These are genuine
+polynomial identities before assuming commutation. They establish the
+base cases under BC=CB.
+
+For invertible B, Jacobi's complementary-minor identity transposes the
+complementary minor; symmetry of B is what removes that transposition.
+The checked Clifford sign identity then makes the pre-twist factor det B
+independent of the row subset. After the twist the factors are det B in
+degrees zero and two and conjugate(det B) in degree four. Every column
+therefore contributes the same multiplier |det B|^2 to the Gram matrix.
+The row determinant has exactly this complementary transformation after
+right multiplication by (BC)^(-1). Complementation reduces all remaining
+cases to combined cardinality below four. Polynomial continuity covers
+singular B and repeated spectra. This proves rank at most eight and PSD
+for every real orthogonal O and every complex b in dimension four.
+
+Independent compact sum-of-squares check
+
+The audit program does not import the Clifford signs, the Gram-factor
+routine, or an orthogonal diagonalizer. Instead, start with an integer
+real symmetric S and take T to be a real polynomial in S. Then
+B=S+iT is complex symmetric normal. Let A=diag(a0,a1,a2,a3), C=A+B, and
+
+ N=A conjugate(A)+A conjugate(B)+conjugate(A) B+B conjugate(B).
+
+The eight compact amplitudes are
+
+ det C;
+ (ai-aj) adj(C)_ij, one for each i<j;
+ Pf([A,conjugate(B)]).
+
+Their Hermitian coefficient Gram matrix equals the row-flag determinant
+kernel. Consequently the universal Clifford theorem gives the explicit
+scalar identity
+
+ det N = |det C|^2
+         + sum_{i<j}|(ai-aj) adj(C)_ij|^2
+         + |Pf([A,conjugate(B)])|^2.                    (1)
+
+The program expands the eight amplitudes in all sixteen complementary
+squarefree a-monomials, independently computes every row-flag determinant,
+and checks all 256 coefficients. Results:
+
+ * generic integer symmetric normal B: 256/256 exact, Gram rank eight;
+ * singular integer symmetric normal B: 256/256 exact, Gram rank seven;
+ * nonnormal negative control: 87 coefficients fail, as expected.
+
+The negative control demonstrates that the normality hypothesis is doing
+real work. The examples audit formula orientation and the singular case;
+universality rests on the reviewed nine-case/complement argument.
+
+One equality consequence
+
+Suppose the ai are pairwise distinct and C=A+B is invertible. Equality in
+the scalar variance bound det N >= |det C|^2 holds if and only if B is
+diagonal. Indeed, (1) forces all off-diagonal entries of adj(C) to vanish;
+invertibility makes C^(-1), and hence C and B, diagonal. The converse is
+immediate. No conclusion about singular C follows from that argument.
+
+Numerical falsification search
+
+A separate optimization used six real Cayley coordinates for dense SO(4)
+and the generic GL2-normalized spectrum (0,1,i,w). The eight real variables
+were optimized for 600 differential-evolution iterations, totaling 48,080
+objective evaluations. The objective was the smallest generalized
+eigenvalue of the first eight principal features against the corresponding
+absolute-weight Gram matrix. This avoids the eight structural zero modes
+that flatten optimization of the full minimum eigenvalue.
+
+No robust negative was found. The best objective was 2.5386652328929227e-10.
+At that point the full normalized kernel had eight eigenvalues within
+4e-17 of zero and eight positive eigenvalues from 0.00540336 to 0.40397643.
+The small principal objective does not indicate a nearly negative full
+kernel; its feature restriction is approaching alignment with the exact
+nullspace. These numerical observations have been superseded by the
+universal factorization, and no additional random search is needed for
+this kernel theorem.
+
+Files and reproduction
+
+ code/research/moc_twisted_gram_independent_audit.py
+ build/moc_product_kernel_audit/compact_sos_exact.json
+ code/research/moc_product_kernel_audit.py
+ build/moc_product_kernel_audit/reduced_search_811483.json
+
+Run the independent exact compact audit with:
+
+ python code/research/moc_twisted_gram_independent_audit.py
+
+The unrestricted MOC4 support step remains a separate problem. A support
+gap need not belong to this one-sided square cone; positivity of the
+fixed-b kernel alone does not supply the missing representation.

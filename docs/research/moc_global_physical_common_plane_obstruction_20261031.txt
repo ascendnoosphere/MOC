@@ -1,0 +1,102 @@
+THE PHYSICAL MIXER-ONLY COMMON-FIVE-PLANE PROGRAM IS FALSE
+2026-10-31; variational_closure
+
+This is a fatal obstruction to the whole physical-R-dependent COMMON
+five-plane mechanism. Unlike the earlier synthetic full-PD moment dual,
+the witness is an actual real orthogonal mixer. It is NOT a MOC
+counterexample and does not exclude a plane depending on both the source
+and the mixer, a nonlinear source-aware certificate, or a full14 Gram.
+
+1. The common-plane claim being refuted
+
+Let y_O be the actual signed-Leibniz determinant functional of a real
+SO4 mixer. Normalize by y_O(f34)<0, and put
+ beta_j=y_O(r_j)/(-y_O(f34)), C=M(f34), Rj=M(r_j).
+A common positive-five-plane comparison working for every nonnegative
+matching cost with this physical mixer would in particular require
+ C|W>0, (R7+beta7 C)|W>=0, (R10+beta10 C)|W>=0.             (1)
+The plane may depend arbitrarily on O. It cannot depend on the actual
+spectral source if it is to give a single mixer-only comparison.
+
+Even a more general pointwise positive-map identity has these necessary
+conditions. If its positive metric is C0, evaluation at f34 gives
+ C|W>=-y_O(f34) C0>0; replacing C0 by C|W/(-y_O(f34)) only enlarges the
+ordinary corrections because their y_O scores are nonnegative. Thus it
+also implies (1). The sign-reversed inverse-pencil version is excluded
+below as well.
+
+2. A whole genuine physical family enters the forbidden region
+
+Use the sharp-physical-bound family already verified independently:
+
+ Oraw(r)=[[-r,-1,-1,1], [1,-1,1,r],
+          [1,1,-r,1], [1,-r,-1,-1]],
+ O(r)=Oraw(r)/sqrt(r^2+3).
+
+Exactly Oraw^T Oraw=(r^2+3)I and det Oraw=(r^2+3)^2, so O(r) is in SO4.
+Its24 physical weights are the signed products of its four selected
+entries. Direct polynomial identities give
+
+ y_O(f34)=2r(r^3+3r-2)/(r^2+3)^2,
+ y_O(r0)=y_O(r7)=y_O(r10)=y_O(r13)=r^2/(r^2+3),
+ beta7=beta10=r(r^2+3)/(2(2-3r-r^3)).
+
+For every0<r<=1/100 the cap score is negative and the budgets are positive
+and at most their value at r=1/100. The derivative of beta is
+ 3(r^2+1)/(r^3+3r-2)^2>0.
+At that rational parameter,
+
+ y_O(f34)=-3939998/900060001,
+ beta7=beta10=30001/3939998 < 1/65.                        (2)
+
+All16 entries of this actual mixer are nonzero. The strict inequalities
+persist in an open neighborhood inside SO4, so this obstruction cannot
+be removed by assuming a generic physical mixer.
+
+3. Exact18-dimensional obstruction, for either sign
+
+Let A=diag(1,0), B=32 ones(2), both PSD, and set
+ L=I2 tensor C+A tensor R7+B tensor R10.
+The new checker replays an integer9-dimensional negative compression from
+the earlier joined-budget certificate and supplies an independent integer
+9-dimensional positive compression. All18 strict Sylvester signs are
+exact. Hence inertia(L)=(9,9).
+
+For0<=beta7,beta10<=1/65,
+ D=I2-beta7 A-beta10 B >=I2-(A+B)/65>0,
+since the last matrix has leading entry32/65 and determinant32/4225.
+If (1) held, the restriction of L to R2 tensor W would be
+
+ D tensor(C|W)
+ +A tensor[(R7+beta7 C)|W]
+ +B tensor[(R10+beta10 C)|W] >0.
+
+It would have ten positive directions, impossible for inertia(9,9).
+If the cap restriction and both corrections were negative instead,
+the same argument would produce ten negative directions, also impossible.
+Thus neither inverse-pencil sign supplies a common definite five-plane.
+
+4. Consequence and still-valid global targets
+
+The proposed common-plane theorem fails for actual physical determinant
+functionals, not only for artificial SOS-dual moments. An analytic formula
+depending only on R cannot prove the unrestricted support inequality by
+this common-plane comparison. More interpolation, a different choice of
+the plane, or a different Clifford channel projection cannot fix that
+quantifier obstruction.
+
+The unrestricted MOC target remains open. A jointly source-and-mixer
+dependent definite plane could still work; it need not be nonnegative on
+both ordinary rays used above. Likewise a source-dependent14 Gram or a
+nonlinear Riccati identity using the actual complex source structure is
+not contradicted here. The stronger conjecture g>=0 with both inertia
+indices of M(g) at most4 implies g in C0 is also not refuted.
+
+Exact replay:
+ python code/research/moc_global_physical_common_plane_obstruction.py
+Artifact:
+ build/moc_global_physical_common_plane_obstruction_20261031.json
+
+The only numerical calculation finds integer compression bases. Every
+final matrix identity and every definitive sign is checked over Q. The
+physical family and budget identities are checked with r indeterminate.

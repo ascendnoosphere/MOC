@@ -1,0 +1,43 @@
+Primary theorem check: two separate generalized-circle spectra
+31 October 2026
+
+Verified from the ORIGINAL full paper:
+ S. W. Drury, Essentially Hermitian matrices revisited,
+ Electronic Journal of Linear Algebra 15 (2006), 285--296.
+ Official full PDF:
+ https://journals.uwyo.edu/index.php/ela/article/download/403/403/403
+
+Theorem1.2, p285: MOC holds for Hermitian A and B a nonreal scalar
+multiple of a Hermitian matrix.
+
+Corollary1.3, p286: if the spectrum of A is contained in a circle C_A
+and the spectrum of B is contained in a circle C_B, MOC holds. The two
+circles are independent. Its proof explicitly treats coincident,
+disjoint, tangent, and two-point-intersecting circles. It uses common
+Mobius transformations and earlier results for the disjoint and
+tangent cases. Thus this is not restricted to a single common circle.
+
+The paper writes det(A-B); replacing B by -B gives the sum convention.
+Lines are included by the Mobius/limit argument. For example, finite
+points on the real axis are limits of points on circles with centres
+iR and radii R; transform this construction affinely for any line.
+Use such approximations independently for each spectrum and apply
+the closure-under-limits statement in the paper. No openness claim
+is involved.
+
+Independent primary confirmation: Shitov2025's introduction explicitly
+lists the sufficient condition that A's spectrum lies on a line or
+circle and B's spectrum lies on a line or circle, independently, citing
+Drury2006 and Drury2007.
+ https://www.mathnet.ru/eng/im9292
+
+Consequence for the current boundary branch: a four-point spectrum
+on one generalized circle and another four-point spectrum on any
+other generalized circle already satisfy a published MOC theorem.
+An inverse-pencil rank-seven mechanism or a full matching-SOS
+certificate for that family could still be additional structure;
+the MOC conclusion for the two-circle family must not be called new.
+
+This does not cover arbitrary one or two common eigenvalue pairs
+between A and -B. The separate zero-pair literature audit found no
+verified primary theorem for that general condition.

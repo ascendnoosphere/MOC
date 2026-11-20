@@ -1,0 +1,64 @@
+Independent review: neutral Hessian for actual conjugate secants
+2026-10-30
+
+Verdict. The proof in session_actual_neutral_hessian.txt is valid, using the
+imported irreducibility, dimension, contraction and critical-ideal facts
+recorded in CORANK_TWO_LIFT_EXACTNESS.md. It proves that an actual rank-12
+spectral midpoint has inertia (6,6,2); it is not a proof of unrestricted MOC.
+The sample and the explicit point below have been checked exactly, while the
+HMSV source inputs and their coordinate bridge are imported from the existing
+independent audit rather than reproved here.
+
+Density. The finite spectral-product map has irreducible closure of dimension
+six (closing_high_contact_standalone.txt). The verified gradient identities
+put that image in the irreducible six-dimensional critical cone X, so its
+closure is X. Two independent spectral inputs dominate X x X, and addition
+therefore dominates S. The locus of smooth S and transverse endpoint tangent
+spaces is a nonempty Zariski open condition on the pair space. Nonemptiness
+of the tangent rank condition is checked by neutral_verify.py; smoothness is
+obtained by dominance of addition and density of the smooth locus, not merely
+from the single tangent-rank calculation. If a complex polynomial in the two
+spectral parameter copies vanishes for (z,conj z), writing z=u+iv and
+complexifying u,v makes that polynomial vanish identically. Thus the conjugate
+pairs meet every nonempty pair-space open condition and their good locus is
+Euclidean dense in the original real spectral-parameter space.
+
+At good secants, the mixed Hessian block on T_w X plus T_conj(w) X is zero:
+H_w annihilates T_w X, and H_conj(w) annihilates T_conj(w) X. Its real
+restriction has equal positive/negative indices and even nullity. The
+contraction gives rank(H_x|W)<=10; since rank H_x=12, ker H_x is contained
+in W. Also x lies in W and in the radical of the restriction, but not in the
+full kernel: if H_x x=0 then grad F(x)=0, and the critical ideal gives a
+kernel of dimension at least six. The restricted radical has dimension at
+least 3, hence at least 4, and at most 4 because W has codimension 2 and the
+full radical has dimension 2. It is exactly 4, with inertia (4,4,4). The
+two radical directions outside the full kernel pair nondegenerately with
+the complement, giving two hyperbolic planes and full inertia (6,6,2).
+
+All actual points belong to S and the contraction implies rank H_x<=12
+throughout S, including singular points. At any actual rank-12 point,
+approximating by good actual points is legitimate; a nonzero 12-minor
+keeps rank at least 12 nearby, so the nearby ranks are exactly 12 and their
+inertia is locally constant. This establishes the extension even if the
+limiting secant is singular or a spectral degeneracy is present.
+
+A genuine unbalanced complex secant. For the coefficient point
+ (a,b,c,d)=(1,8,2,3) on rays (3,16,21,30,53), the independent portable
+ code/research/verify_neutral_hessian_face16.py
+recomputes the coordinate vector, F=12, Q=19, h=12/19, and exact Hessian
+inertia (5,7,2), using exact characteristic-polynomial root counts.
+It also proves secant membership directly: with K a rational kernel basis,
+y=K(u,v), the equations grad F(y)=grad F(x) have Groebner basis
+  u^2-(48/43)uv-9808/16967,  v^2+12943/16967.
+These have complex solutions; H_x y=0 and the cubic identities then show
+x+i y and x-i y are critical, so x is their midpoint in S. The second
+polynomial also shows directly that no real y exists at this point. Thus the
+point is a genuine real point of the complex secant excluded as an actual
+conjugate secant. The inertia theorem is a global necessary test, not a
+claim that this point could evade other exact lift tests.
+
+Execution: the portable face16 verifier passed from the repository root,
+including the Groebner-basis and exact root-count checks. The generic tangent anchor build/global_square/neutral_verify.py also passed
+independently: real tangent rank 12, Hessian rank 12, mixed block zero, and
+pure block rank 4. The anchor is not generated data used by the portable
+point checker.

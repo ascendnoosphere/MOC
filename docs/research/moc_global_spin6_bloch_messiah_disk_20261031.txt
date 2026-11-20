@@ -1,0 +1,91 @@
+GLOBAL SO6 THREE-MODE DISK ELIMINATION: EXACT FORMULA AND ITS LIMIT
+2026-10-31; variational_closure
+
+Status: the one-pair canonical parameter is eliminated globally and
+exactly. An endpoint-only reduction is false for genuine finite distinct
+spectra with no cross collision. No MOC4 proof or counterexample follows.
+
+1. Whole determinant support functional
+
+Use the exact unrestricted Spin6 source representation from
+code/research/moc_global_spin6_hessian.py:
+ F(R)=c+sum A_ij Q_ij+B_ij P_ij,
+ Q_ij=||R_ij||_F^2/2, P_ij=det(R_ij),
+where R is real6x6 special orthogonal and R_ij are its2x2 blocks. The
+coefficients here already include taking Re(eta times complex source).
+The24 matching vertices are all Weyl D3 signed block permutations.
+
+For a block [[a,b],[c,d]], define
+ X=(a+d+i(c-b))/2, Y=(a-d+i(c+b))/2.
+Then Q=|X|^2+|Y|^2 and P=|X|^2-|Y|^2. Thus with C=A+B,D=A-B,
+ F=c+sum C_ij|X_ij|^2+D_ij|Y_ij|^2.
+The real orthogonality equations are exactly the fermionic Bogoliubov
+relations XX*+YY*=I, XY^T+YX^T=0 (and the corresponding column equations).
+Orientation selects the even component and must not be discarded.
+
+2. Canonical disk, covering all SO6
+
+Let V,W be unitary3x3, J=[[0,1,0],[-1,0,0],[0,0,0]], and
+ Z=V diag(1,1,0) W*, uv*=V diag(0,0,1) W*, K=V J W^T.
+For any |z|<=1 put X=zZ+uv*, Y=sqrt(1-|z|^2)K. These obey the canonical
+relations and yield a matrix in SO6, by continuity from |z|=1.
+
+Conversely, on the dense invertible-X subset put T=X^{-1}Y. The row
+relations give T^T=-T and X(I+TT*)X*=I. A3x3 complex skew matrix has a
+unitary congruence form tJ, hence its two nonzero singular values coincide.
+Polar decomposition then gives X=V diag(c,c,1)W*, Y=V(sJ)W^T, c^2+s^2=1.
+The relative phase between the first two columns and the last column
+absorbs the phase of z. Taking closures covers singular X as well. This
+is a global parametrization, not an assumption that an extremum has a
+zero entry or a special contact set.
+
+3. Eliminate z exactly
+
+For fixed V,W define
+ F0=c+sum C_ij|u_i conjugate(v_j)|^2+D_ij|K_ij|^2,
+ S=sum C_ij Z_ij conjugate(u_i conjugate(v_j)),
+ d=sum C_ij|Z_ij|^2-D_ij|K_ij|^2.
+Then F(z)=F0+2Re(zS)+d|z|^2. Writing r=|S|,
+ max_disk F = F0+d+2r             if d>=-r,
+              F0+r^2/(-d)         if d<-r.
+The first line is the boundary value. The second is attained at
+z=-conjugate(S)/d, strictly inside unless r=0.
+
+For the desired matching maximum M, positivity on the entire disk is
+equivalent to the scalar complex S-lemma certificate
+ lambda>=0,
+ [[M-F0-lambda,-S],[-conjugate(S),lambda-d]] >=0.
+Indeed M-F(z)=[1,z]*G[1,z]+lambda(1-|z|^2). Necessity also follows from
+the displayed exact maximum (including d=0 and r=0 endpoints).
+
+On |z|=1, X is unitary3x3 and Y=0. Ordinary doubly-stochastic
+rearrangement bounds this boundary by the six all-positive Weyl vertices.
+The interior disk requires the extra Schur inequality; boundary positivity
+alone does not imply it. A global construction of lambda(V,W,source) from
+the coupled spectral coefficients would prove the full support statement.
+No such construction is supplied here.
+
+4. Exact fatal obstruction to endpoint-only peeling
+
+Take a=(0,1,i,2), b=(1,2,i,3+i), eta=(7-3i)/4. All four a and all four b
+are distinct, and every ai+bj is nonzero. Let V=W be the real45-degree
+rotation of coordinates0 and2. Exact substitution gives
+ F(z)=12+Re(z)-|z|^2.
+Thus z=0 has value12, the whole unit-circle boundary has maximum12, but
+z=1/2 gives49/4. The corresponding explicit real6x6 matrix is special
+orthogonal, checked exactly. The true24 matching maximum is49, so this
+is not a MOC violation. It rules out replacing the canonical disk by its
+center and boundary while keeping V,W fixed, even for genuine sources.
+
+5. Exact replay and remaining global statement
+
+ python code/research/moc_global_spin6_bloch_messiah_disk.py
+ build/moc_global_spin6_bloch_messiah_disk_20261031.json
+
+The checker proves the block identities with independent scalar variables,
+the scalar disk and S-lemma polynomial identities, and the actual-source
+obstruction including orthogonality, determinant+1, all24 products, and
+the strict interior inequality. The canonical-form argument above is
+elementary linear algebra and is stated separately from those computations.
+The unsolved global statement is the all-V,W Schur/disk comparison, or a
+global positive14matching Gram construction. Neither is asserted.

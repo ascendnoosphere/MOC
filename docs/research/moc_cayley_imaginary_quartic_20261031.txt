@@ -1,0 +1,155 @@
+Imaginary-coordinate quartic and the remaining cubic interference
+31 October 2026
+
+This calculation does not prove unrestricted MOC4. It locates a concrete
+global bottleneck inside the existing full-range Sinkhorn/Cayley reduction.
+The target remains arbitrary complex spectra and every U(4), with the original
+permutation hull and no enlargement. The result below is algebraic, not an
+inference from numerical sampling.
+
+The existing canonical support polynomial is
+
+ G(T)=q(T)^T M q(T),
+ q(T)=(coords(T),coords(adj(T)),det(T)),
+
+with T Hermitian 3 by 3 and M a canonical 19 by 19 Gram representative.
+M need not be positive. Conjugation averaging always allows M to preserve
+the plus/minus coordinate decomposition in PARITY_REDUCED_COMPLETION.md.
+Write its canonical blocks A,B,D,u,e,g as in that report. Real-coordinate
+indices are R=(11,22,33,Re12,Re13,Re23); imaginary indices are I=(Im12,Im13,Im23).
+The parity blocks are (t_I,c_R) and (t_R,c_I,d). This representation is valid
+for the original support polynomial before any positivity assumption.
+
+1. Exact polynomial identities
+
+Let X be any real symmetric 3 by 3 matrix, y any real three-vector, and set
+
+ [y]_cross = [[0,-y3,y2],[y3,0,-y1],[-y2,y1,0]],
+ T = X+i[y]_cross.
+
+Then
+
+ adj(T) = adj(X)-yy^T-i[Xy]_cross,                     (1)
+ det(T) = det(X)-y^T X y.                             (2)
+
+The minus sign in the imaginary adjugate term is essential for this cross
+convention. Both identities follow by expanding cofactors, and the exact
+verifier checks every coefficient with all nine real parameters symbolic.
+
+Consequently, for every fixed X, the original degree-six polynomial G(T)
+has degree at most FOUR in y. No term of degree five or six in y remains.
+This uses the actual adjugate/determinant relations, not a free formal
+cofactor relaxation.
+
+Its homogeneous degree-four part is exactly
+
+ P4(X;y) = coords(yy^T)^T D_RR coords(yy^T)
+                  +g (y^T X y)^2.                   (3)
+
+Here the coordinates of a real symmetric matrix have zero imaginary slots;
+equivalently D_RR is the six-dimensional real-cofactor block. The other
+parity block variables have degrees at most one in y, apart from d, whose
+degree-two part is -y^T X y. The parity decomposition therefore gives (3)
+without any assertion that the full M is positive.
+
+2. Both the constant and leading term are nonnegative
+
+Assume identity maximizes the ORIGINAL 24 permutation costs in the support
+direction, so all original gaps Delta_pi are nonnegative and Delta_id=0.
+The known real-Cayley theorem REAL_COFACTOR_BOUND.md gives
+
+ P0(X)=G(X)>=0.
+
+The same report proves a decomposition of the real-cofactor quadratic form
+using baseline atoms, special atoms, and a nonnegative Laplacian remainder.
+For a rank-one real symmetric matrix C=yy^T, adj(C)=0. All the z_e(C) terms
+in those atoms therefore vanish, leaving only the nonnegative squares
+
+ 4 b_e(yy^T)^2,     4 s_e(yy^T)^2,
+
+and the remaining diagonal-difference squares. Thus
+
+ coords(yy^T)^T D_RR coords(yy^T)>=0.
+
+Also g=(1/4)sum_(i<j)Delta_(ij)>=0. Equation (3) proves P4(X;y)>=0 for
+every X,y. This conclusion uses only the supported formal common-minor
+identities and inequalities, not the stronger actual spectral model.
+
+3. Cubic interference still defeats endpoint positivity
+
+Endpoint positivity does not close the original polynomial. This exact
+formal mixed-ray example gives a reproducible control.
+
+Use the fixed e,Y from SINKHORN_GLOBAL_REDUCTION.md and let
+
+ y=t(-2/3,1/3,0),    X=0,
+ V=(I-[y]_cross)(I+[y]_cross)^(-1),
+ W=ee^T+Y V Y^T,
+ U=W P, where P reorders columns as (3,1,0,2), zero based.
+
+Every real t gives an actual real orthogonal U. For the canonical mixed cost
+
+ f34(U)=|U33|^2+|U24|^2+|det U[12,13]|^2-|det U[13,23]|^2
+
+(one-based minor labels), direct rational algebra gives
+
+ f34(U)=6t^2(2t-3)(2t-1)/(5t^2+9)^2.                  (4)
+
+At t=0 this is zero, so the chosen identity chart is a formal contact. The
+Cayley denominator is (5t^2+9)^2/81, so its numerator is
+
+ (2/9)t^2-(16/27)t^3+(8/27)t^4.                     (5)
+
+Both its quadratic and quartic coefficients are positive. Nevertheless
+f34(U)=-3/98 at t=1, and it is negative throughout 1/2<t<3/2. At t=2 it
+is positive. The radial quadratic discriminant is exactly 64/729>0.
+The verifier checks these rational identities independently of the
+repository's historical Cayley/SOS code.
+
+This is a FORMAL COST control. f34 is nonnegative on permutations but is
+not asserted to be an actual spectral support gap. It is NOT a counterexample
+to MOC. Its purpose is to show precisely why (3), the positive quadratic
+block, and the established real-Cayley theorem cannot imply the desired
+full inequality without an additional actual-spectral restriction.
+
+4. A precise interference target on the pure-imaginary branch
+
+For X=0, det(T)=0, adj(T)=-yy^T, and G(0)=0. Thus
+
+ G(i[y]_cross)=A2(y)+B3(y)+D4(y),
+
+where the subscripts denote homogeneous degrees and A2,D4 are nonnegative.
+Along each fixed y and every real scalar t, this becomes
+
+ t^2[A2(y)+t B3(y)+t^2 D4(y)].
+
+It is nonnegative for every real t if and only if
+
+ B3(y)^2 <= 4 A2(y)D4(y).                             (6)
+
+This includes zero values of A2 or D4: the inequality then forces B3=0,
+which is exactly the condition that a degree-one radial term cannot have
+both signs. The displayed control violates (6). Proving (6) for every actual
+supported spectral cost would close this entire three-real-parameter branch,
+but it does not yet handle X!=0 and is not a restatement of unrestricted
+MOC4 as a solved theorem. The product-linked actual spectral constraints
+are the only plausible source of the missing control; arbitrary formal
+nonnegative permutation costs provably do not supply it.
+
+Artifacts and exact replay
+
+ python code/research/moc_cayley_imaginary_quartic.py
+ build/moc_global_20261031/imaginary_quartic_exact.json
+
+The verifier checks symbolic adjugate/determinant identities, the quartic
+degree and leading coefficient on a dense rational representative containing
+every allowed parity coupling, the exact formula (4), three exact values,
+and the strict discriminant. The proof of degree and leading structure is
+the parity argument above; a sample Gram is not substituted for that proof.
+
+External source used by the inherited global cover:
+Martin Idel and Michael M. Wolf, Sinkhorn normal form for unitary matrices,
+arXiv:1408.5728v3, https://arxiv.org/abs/1408.5728v3 . The current versioned
+abstract was checked. The full balancing theorem and its use were already
+source-audited in SINKHORN_GLOBAL_REDUCTION.md; this note adds no external
+positivity theorem and does not infer SOS from nonnegativity.

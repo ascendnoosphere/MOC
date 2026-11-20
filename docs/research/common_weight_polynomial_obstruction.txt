@@ -1,0 +1,71 @@
+An exact isospectral obstruction to a common polynomial weight
+
+This concerns an auxiliary strengthening, not a counterexample to the
+original Marcus-de Oliveira conjecture. The proposed strengthening
+would require one probability vector w_pi, independent of t, such that
+
+ det(t Id + diag(a)+U diag(b) U*)
+    = sum_pi w_pi prod_i(t+a_i+b_{pi(i)})
+
+as a polynomial in t. Drury's Hermitian version is stated in Theorem
+0.3 of K. Rodtes, https://arxiv.org/html/2006.14846. Huang's survey
+reports that the corresponding normal-matrix statement is false for
+n>=4 and attributes it to Drury and Cload, "On the determinantal
+conjecture of Marcus and de Oliveira", Linear Algebra Appl. 177
+(1992), 105-109, https://doi.org/10.1016/0024-3795(92)90319-6.
+The primary paper was identified, but its full counterexample was not
+available to this session. The exact example below was found independently
+and is not claimed to reproduce that paper's particular matrices.
+
+Take identical complex spectra
+
+ a=b=(-3+6i, -7+3i, 4+6i, 4+3i)
+
+and the rational orthogonal matrix
+
+ U=(1/42)[[-2,24,-28,20], [20,12,-14,-32],
+           [-8,-30,-28,-4], [36,-12,0,18]].
+
+Write a polynomial as t^4+c3 t^3+c2 t^2+c1 t+c0. The target
+determinant and all 24 matching polynomials share c3 and leading
+coefficient. On the six real coordinates
+
+ (Re c2, Re c1, Re c0, Im c2, Im c1, Im c0),
+
+the integer functional
+
+ (-326197,-82678,667,-1000000,21037,4777)
+
+strictly separates the target from all 24 matching polynomials; the
+smallest target-minus-matching value is exactly 9247841/441>0. Thus
+no one probability vector works for the full polynomial. The exact
+unitarity, polynomial coefficients, and all 24 strict inequalities are
+checked in code/research/verify_polynomial_normal_counterexample.py.
+
+The example also demonstrates why adaptive weights matter. At t=0 and
+t=1 the very same five positive weights work: with zero-based lexicographic
+permutation indices (1,2,6,11,23), the weights are
+
+ 100218024/1036746557, 27980631911/1632875827275,
+ 2868667728/181430647475, 3718742120/9330719013,
+ 10005895156/21206179575.
+
+They sum to one, and both scalar identities hold exactly. Nevertheless,
+the same weights cannot be required to work at t=0,1,2: the nonleading
+difference has degree at most two, so agreement at those three points
+would give a polynomial identity. Equivalently, evaluation at t=0,1,2
+has an explicit separating functional with real-part coefficients
+(-76829,321682,-243519) and imaginary-part coefficients
+(-1053557,2084148,-1021037); its minimum strict gap is 18495682/441.
+The same verifier checks both the positive two-point weights and the
+three-point separator. This leaves the original pointwise question
+untouched: for each t, an admissible probability vector may depend on t.
+
+An elementary positive family is U block diagonal with blocks of size at
+most two, up to permutation matrices, for arbitrary complex spectra.
+For a 2 by 2 block, its determinant polynomial is the convex combination
+of the two matching polynomials with weights |U11|^2 and |U12|^2.
+Multiplying independent block identities gives common weights as products
+of these block weights. code/research/verify_common_weight_block_family.py
+checks a non-Hermitian complex 4 by 4 example exactly. This special family
+does not extend to arbitrary unitaries by the counterexample above.

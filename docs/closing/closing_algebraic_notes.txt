@@ -1,0 +1,351 @@
+COMPLEX-CURVE PROPAGATION FOR ACTUAL SPECTRAL MOC SUPPORT COUNTEREXAMPLES
+2026-10-17. Constructive research notes. This is not a proof of unrestricted MOC.
+
+Main new result of this round (Sections7-8). For any fixed unitary U and
+n>=4, a strict MOC violation, if one exists, can be moved to spectra with
+at least 2n-2 active permutation labels, keeping the same U. Any prescribed
+dense Zariski-open condition on the actual spectral invariant vector may
+be preserved. The exact positive support gap can be kept unchanged.
+No global minimum or bounded spectral parameters are assumed. The simplest
+proof uses meromorphic functions on a compactified algebraic curve and
+connectedness after deletion of finitely many exceptional points.
+
+The argument was first established for the four-site single-cycle
+capacity and its stronger complementary-pair bound (Sections1-4). That
+version likewise reduces a violation to at least six active labels.
+The terminal high-contact configurations still need an independent
+positivity theorem; these notes do not settle them.
+
+The harmonic observation was developed by the variational agent; the
+bounded-subharmonic compactification/gluing argument and the elementary
+quartet obstruction to invisible curves were developed here and audited
+with that agent. The capacity upgrade is due to the variational agent.
+
+1. DEFINITIONS AND EXACT SIGN CONVENTIONS.
+
+Let a,b be four complex spectra. For pi in S4 put
+  z_pi = product_(i=0..3) (a_i+b_pi(i)).
+Use P={(0,1),(2,3)}, Q={(0,2),(1,3)}. For a bit string
+s=(s0,s1,s2,s3), let p_s perform the first two optional P-swaps and q_s
+the last two optional Q-swaps, and put pi_s=q_s o p_s. Let
+chi_s=(-1)^(s0+s1+s2+s3). The exact alternating identity is
+  sum_s chi_s z_pi_s = 2 Gamma,
+  Gamma=(a1-a0)(a3-a2)(b0-b2)(b1-b3).
+Thus the normalized top Walsh coefficient is Gamma/8.
+
+For fixed eta in C, put h=max_pi Re(eta z_pi) and
+  delta_pi=h-Re(eta z_pi)>=0.
+The target is T=2|Re(eta Gamma)|=|sum_s chi_s delta_pi_s|.
+If T=0 there is nothing to prove. In the rest of the argument T>0,
+so Gamma is nonzero. The exact all-bias single-cycle support condition is
+  C(delta) >= T,
+  C(delta)=inf_(x in R4) sum_s delta_pi_s exp(<2s-1,x>).
+This equivalence, including coherent phase maximization, is proved in
+residual_variational_notes.txt; it does not assert the condition is true.
+
+The stronger complementary-pair quantity is
+  B(delta)=2 sum_(s=0..7) sqrt(delta_pi_s delta_pi_(15-s)).
+Pairwise AM-GM gives C>=B. Both C and B are nonnegative, continuous,
+concave functions of the nonnegative deficit vector.
+
+For C, concavity follows because it is the infimum of positive linear
+forms. Upper semicontinuity follows from the same formula. If delta^(j)
+converges to delta>=0, then for each epsilon>0, eventually
+delta^(j)>=(1-epsilon)delta componentwise. Monotonicity and homogeneity
+give liminf C(delta^(j))>=C(delta). Hence C is continuous, including
+points with zero deficits and capacities whose infimum is not attained.
+
+2. THE OMITTED QUARTET AND THE COMMON-TRANSLATION OBSTRUCTION.
+
+Use these four permutations in zero-based notation:
+  u00=(0,2,1,3), u01=(0,2,3,1),
+  u10=(2,0,1,3), u11=(2,0,3,1).
+Writing Cij=a_i+b_j, define
+  x0=C00 C12, x1=C02 C10,
+  y0=C21 C33, y1=C23 C31.
+Then z_uij=xi yj. Therefore
+  z_u00 z_u11-z_u01 z_u10=0,                         (Q1)
+  z_u00-z_u01-z_u10+z_u11=Gamma.                    (Q2)
+The second equality is the product of two 2-by-2 additive determinants.
+
+If all 24 coordinates are shifted by a common complex c, the left side
+of (Q1) becomes c Gamma. Consequently, on the actual spectral invariant
+variety with Gamma nonzero, there is no nonconstant curve on which all
+permutation differences z_pi-z_pi0 are constant. This is elementary;
+no Hessian or nonic elimination is needed for this particular fact.
+
+3. AN ABSTRACT ALGEBRAIC-CURVE MAXIMUM PRINCIPLE.
+
+Let X be an irreducible affine algebraic curve over C, let z_1,...,z_N
+be regular coordinate functions on X, and choose a reference label 0.
+Fix eta. Some differences z_j-z_0 are constant with zero real part after
+multiplication by eta. Let S be those labels, including 0. Put
+  d_j=Re(eta(z_0-z_j)).
+Suppose p in X has d_j(p)>0 for j not in S and d_j=0 for j in S.
+Let Psi be a nonnegative continuous concave function on R^N_+ and let
+T>0 be constant on X. On the feasible locus define
+  u=T-Psi(d).
+
+Claim. If some d_j is nonconstant and u(p)>0, then some FINITE point q
+in X has d_j(q)>=0 for every j, has a NEW zero d_j(q)=0 for j not in S,
+and satisfies u(q)>0.
+
+Proof. Normalize X and compactify the normalization to a compact connected
+Riemann surface Sigma. The missing set E is finite. Every z_j becomes a
+meromorphic function on Sigma, holomorphic on Sigma\E. Pick a point over p.
+Let Omega be its connected component in the locus d_j>0 for j not in S.
+Deficits in S vanish identically. On Omega all deficits are harmonic.
+
+Concavity and the mean-value property imply that Psi(d) is superharmonic:
+  Psi(d(center))=Psi(mean d)>=mean Psi(d).
+Thus u is subharmonic on Omega, and u<=T everywhere on Omega. This includes
+Psi=C: alternatively, inf_x mean L_x(d)>=mean inf_x L_x(d) proves it
+directly. No differentiability of Psi is needed.
+
+Suppose the conclusion is false. At every boundary point of Omega in
+Sigma\E, continuity gives nonnegative deficits and at least one new zero;
+by supposition u<=0 there. Define v=max(u,0) on Omega and v=0 outside Omega.
+The usual subharmonic pasting lemma applies across every such boundary:
+the inside limsup is at most the outside value 0. Hence v is subharmonic
+on Sigma\E. It is globally bounded above by T. Bounded-above isolated
+singularities of a subharmonic function are removable, so v extends
+subharmonically to all of Sigma. It is therefore constant.
+
+A nonconstant d_j is the real part of a nonconstant meromorphic function
+on Sigma. Such a function takes values with negative real part on an open
+set disjoint from E. This set is strictly infeasible, and v=0 there.
+Thus v is identically zero, contrary to u(p)>0. This proves the claim.
+
+Details that matter. Normalization handles singular points and their
+separate branches. At finite boundaries where complementary deficits
+vanish, continuity of Psi suffices; no derivative of a square root is
+used. Points at infinity need no prescribed boundary limit: the uniform
+upper bound u<=T is precisely what permits their removal after pasting.
+
+Quantitative version. For any 0<r<u(p), applying the same argument to
+max(u-r,0) shows that some finite new-contact boundary has u>r. Exact
+preservation of u(p) is not needed and is not claimed. In a finite
+iteration one may, for example, retain at least half the positive gap
+at each step.
+
+4. WHY A CURVE EXISTS BEFORE SIX CONTACTS.
+
+Work in the affine cone V of four-by-four complex spectral product
+vectors (z_pi) in their 14-dimensional linear invariant span. This is
+the usual eight-spinor invariant cone. Its complex dimension is six:
+eight points on P1 modulo PGL2 have dimension five, and overall scale
+adds one. Generically the invariants recover all cross-ratios. One can
+see this without a coordinate formula: products of arbitrary perfect
+matching brackets are linear combinations of bipartite products by
+repeated Plucker straightening; ratios of two such matching products
+recover cross-ratios. The affine cone is irreducible and pure dimensional.
+
+The standard invariant-cone model includes projective spectral points
+and collision limits. For a nonzero realizable invariant point, a common
+Mobius chart can make all 8 spinors finite; the resulting common nonzero
+product scale is absorbed by rescaling spectra or the support multiplier.
+When using this lemma as part of a final proof, one must retain this
+standard identification of V with compactified actual spectral products,
+not replace V by the full 14-dimensional linear cost space.
+
+Suppose a violating point has exactly k active labels. Choose an active
+reference pi0. Impose the following complex affine equations on V:
+  z_pi-z_pi0 = its value at the point, for the k-1 other active labels;
+  Gamma = its value at the point.
+There are at most k equations. Every local component of their intersection
+through the point has dimension at least 6-k. If k<=5, an irreducible
+algebraic curve through the point exists in this fiber.
+
+On that curve, the originally active real differences remain zero, eta
+is fixed, and T=2|Re(eta Gamma)| stays fixed. If every deficit were
+constant, holomorphicity would force every complex difference to be
+constant. Section 2 would then force the whole z-vector to be constant,
+contradicting the choice of a nonconstant curve in V. Thus the abstract
+lemma applies and supplies an additional finite active label with a
+positive violation. The support level at a feasible point is exactly
+h=Re(eta z_pi0); no separate assumption that the old reference remains
+maximal is needed, since all deficits are required nonnegative.
+
+Repeat. Each step adds at least one active label, never deletes an old
+one, and preserves a positive violation. After at most 6-k steps, one
+has a violating actual compactified product vector with at least six
+active permutation labels. This works for Psi=C and for Psi=B.
+
+Precise conclusion: to prove the all-bias four-site matching-cycle
+statement, it is sufficient to prove C>=T on all actual spectral
+configurations with at least six active labels. Likewise, proving B>=T
+on those configurations proves the stronger B bound everywhere.
+It is NOT asserted here that all six-contact configurations satisfy
+either inequality. Their classification/positivity is the remaining step.
+
+
+7. UPGRADE TO ARBITRARY FIXED UNITARIES (JOINT TEAM DERIVATION).
+
+The variational agent and parent found a stronger normalization after
+the preceding proof was written. It removes the restriction to matching
+cycles. The same proof then gives the following genuine necessary form
+of any unrestricted MOC counterexample, for n>=4:
+
+  If MOC fails for a fixed unitary U, there are spectra giving a strict
+  failure for the SAME U and a support direction with at least 2n-2
+  active permutation LABELS. The spectra may be required to lie in any
+  prescribed dense Zariski-open part of the actual invariant model.
+
+This is still a reduction, not the exclusion of those counterexamples.
+Here is the complete proof and its hypotheses.
+
+Write d_U(z)=sum_pi q_pi z_pi with real coefficients q_pi and sum q_pi=1.
+Such coefficients exist explicitly:
+  q_pi=Re( sgn(pi) product_i U_i,pi(i) / det U ).
+Indeed the complex Leibniz coefficients give the exact determinant, whose
+polynomial in the a,b variables has real coefficients |minor(U)|^2;
+discarding the imaginary parts of the Leibniz coefficients leaves the
+same polynomial. The sum of the coefficients is one by det U's own
+Leibniz expansion.
+
+Fix an active reference pi0 and put
+  delta_pi=Re(eta(z_pi0-z_pi)),
+  S=sum_pi(z_pi0-z_pi),
+  M=Re(eta S)=sum_pi delta_pi.
+A strict counterexample has M>0: if M=0 all nonnegative deficits vanish
+and sum q=1 forces zero support gap. Freeze the COMPLEX value S and the
+k-1 complex active differences. On every feasible point of the resulting
+fiber, M is a fixed positive real number and
+  u=Re(eta d_U)-Re(eta z_pi0)=-sum_pi q_pi delta_pi
+is harmonic along holomorphic curves and bounded above, for example by
+  u <= M max_pi(-q_pi).
+The deficits lie in the compact real simplex delta>=0, sum delta=M;
+their imaginary counterparts need not be bounded and need not be.
+
+The actual 2n-spinor invariant cone has complex dimension D=2n-2, by the
+same cross-ratio argument as in Section4. Freezing S and k-1 active
+differences imposes at most k complex equations. If k<=D-1, there is a
+nonconstant algebraic curve in the fiber through the point.
+
+Choose a disjoint-swap quartet with nonzero mixed difference R at the
+starting point. Such a choice can be made after arbitrarily small generic
+perturbation of a strict counterexample: for n>=4, a fixed disjoint-swap
+mixed difference is a nonzero polynomial in the actual spectra. For a
+quartet differing by independent disjoint row swaps,
+  z00 z11=z01 z10,
+and R=z00-z01-z10+z11. Thus a common translation c changes its determinant
+relation by cR, exactly as before.
+
+Along each chosen irreducible curve R is not identically zero. Delete
+its finitely many zero points and include them in the exceptional set E.
+The pasting/removability proof in Section3 is unchanged: u remains
+uniformly bounded above, so the extra isolated holes cause no problem.
+Hence any strict violation reaches a finite new-contact point where R
+is still nonzero. All old contacts persist, U and eta remain fixed, and
+S remains fixed. A curve with all deficits constant would have every
+complex difference constant; since R is nonzero it would have constant
+z, impossible for a nonconstant curve in the invariant cone.
+
+Iterate until k>=D=2n-2. At every step a positive support violation is
+preserved. This proves the assertion.
+
+Dense-open strengthening. Let W be a fixed dense Zariski-open subset
+of the invariant cone, and start with a generic strict counterexample
+in W. Every curve through a point of W meets the closed complement in
+only finitely many points, unless contained in it, which it is not.
+Delete these points along with the zeros of R and infinity. The same
+bounded-above removable-singularity proof applies. Consequently every
+step can remain in W. In particular, choose W in the dense actual
+finite-spectrum image furnished by the dominant invariant parametrization;
+this avoids relying on realization of every boundary point of the full
+algebraic closure. One may also exclude algebraic collisions or vanishing
+brackets when these define a proper closed subset.
+
+This dense-open argument answers a technical realization issue in the
+earlier cycle version as well. It does not exclude real support ties:
+those are equations on real parts, not a proper complex algebraic
+exceptional subset that can automatically be deleted.
+
+The analytic gluing argument has been independently audited with the
+variational agent; the full upgrade has been sent to the parent and
+literature agent for their independent checks.
+The terminal high-contact positivity problem remains unsolved here.
+
+8. SIMPLER ARBITRARY-U PROOF: PRESERVE THE EXACT COMPLEX VIOLATION.
+
+The parent and literature agent identified a simpler normalization after
+Section7. It strengthens that theorem by preserving the EXACT complex
+quantity d_U-z_pi0, so in particular the positive support gap is unchanged.
+The capacity versions above still need the subharmonic argument; this
+arbitrary-U version does not.
+
+For fixed U, the Leibniz expression makes d_U a complex linear function
+of the product coordinates z. At a strict counterexample choose an active
+reference pi0 and put P_U=d_U-z_pi0. Fix P_U as one complex affine equation,
+and fix the k-1 complex differences of the other active labels from pi0.
+There are at most k equations on the D=2n-2 dimensional invariant cone.
+For k<D choose a nonconstant irreducible algebraic curve through the
+point in this fiber, normalize and compactify it, and delete all points
+at infinity together with zeros of a fixed nonzero quartet mixed
+difference R and the complement of the chosen dense actual chart W.
+Only finitely many points are deleted. The resulting punctured compact
+Riemann surface Y is connected.
+
+Let Omega be the component containing the original point of the locus
+where every previously inactive deficit is strictly positive. If Omega
+has a boundary in Y, continuity gives an actual finite feasible point
+with at least one new active label. All original contacts persist, and
+the support gap remains exactly Re(eta P_U)>0. This is the desired point.
+
+Suppose there is no such boundary. Then Omega is both open and closed
+in connected Y, hence equals Y. Every deficit is now nonnegative on Y
+and is the real part of a meromorphic function on the compactification.
+A nonconstant meromorphic function takes values with negative real part
+on an open set; a finite deleted set cannot remove that open set. Hence
+every deficit is constant. Holomorphicity then makes every complex
+permutation difference constant. Since R is nonzero, the quartet
+translation identity forces every z-coordinate constant. This contradicts
+the choice of a nonconstant curve in the invariant cone.
+
+Thus a new active label is obtained with exactly the old positive gap.
+Iterating proves the arbitrary-U theorem through k>=2n-2. It preserves
+U, eta, P_U, every previous complex active difference, and the prescribed
+dense open chart. No assumptions about minima, growth, or attainment
+occur. The real signed permutation expansion of Section7 is valid but
+unnecessary for this shorter proof.
+
+The independent algebraic agent audit agrees with this simplified
+argument. A proof that every terminal high-contact configuration obeys
+MOC is still required before the unrestricted conjecture is resolved.
+
+9. ELEMENTARY DIMENSION AND ACTUAL-CHART JUSTIFICATION.
+
+The literature agent supplied the following convenient independent
+dimension calculation, avoiding any reliance on the eight-point cubic.
+Let C be a generic n-by-n rank-two complex matrix and let
+z_pi(C)=product_i C_i,pi(i). The rank-two matrix variety has dimension
+4n-4. Suppose generic full-support matrices C and C' have identical
+nonzero matching products. For any distinct i,k and distinct j,l, extend
+the two assignments i->j,k->l and i->l,k->j by the SAME matching on the
+remaining rows and columns. Taking the ratio of their equal matching
+products shows
+  Cij Ckl/(Cil Ckj) = C'ij C'kl/(C'il C'kj).
+Thus the entrywise ratio Mij=C'ij/Cij has every 2-by-2 determinant zero,
+so Mij=r_i c_j. Equality of the complete matching products imposes
+  product_i r_i product_j c_j=1.
+Conversely these row and column scalings preserve every matching product.
+The scalings have 2n parameters, minus the one-dimensional redundant
+transformation r->t r,c->t^(-1)c, minus the product-one equation. Generic
+fibers therefore have dimension 2n-2. The image cone has dimension
+  (4n-4)-(2n-2)=2n-2,
+and is irreducible because the rank-two source is irreducible.
+
+A generic rank-two matrix can be written
+  Cij=u_i v_j+x_i y_j
+with every u_i and y_j nonzero. Then
+  Cij=u_i y_j(a_i+b_j),
+  a_i=x_i/u_i, b_j=v_j/y_j.
+Its matching products equal the actual additive spectral products times
+the common nonzero scalar lambda=product_i u_i product_j y_j. Taking an
+n-th root t of lambda and replacing a,b by ta,tb realizes those products
+EXACTLY by finite spectra, not just projectively. Hence the finite
+spectral-product parametrization is dominant onto the image cone.
+By constructibility of the image of a polynomial map, that image contains
+a nonempty dense Zariski-open subset W. The preservation-of-W argument
+in Sections7-8 therefore ensures genuine finite spectral realizations at
+every step, without an assertion about all nongeneric closure points.

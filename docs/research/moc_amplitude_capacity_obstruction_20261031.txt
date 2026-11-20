@@ -1,0 +1,237 @@
+The signed-amplitude cancellation strategy needs genuine increases
+2026-10-31
+
+The natural monotone repair of the real Leibniz amplitudes is false, already
+for a real orthogonal matrix of order four. This eliminates one possible
+closure of the surviving positive-amplitude-support proposal. It does not
+refute that proposal or MOC, and no unrestricted proof is claimed.
+
+Let permutations be indexed from zero in lexicographic order in S4. Set
+
+  Q=(1/59)[-25  46  16  22
+           -46 -31  20  -2
+           -16  20 -11 -52
+            22   2  52 -17],
+
+  a=(-2,1+2i,-1+i,1), b=(0,i,2+2i,-1-i).
+
+Direct rational arithmetic gives Q^T Q=I, det Q=1, and
+
+  d=det(D_a+Q D_b Q^T)=(29760+106340i)/3481.
+
+Define c_pi=sgn(pi) product_i Q_i,pi(i), and z_pi=product_i(a_i+b_pi(i)).
+Then sum c=1 and d=sum c_pi z_pi. The only negative c indices are
+2,10,13,21, with numerators -170000,-76544,-76544,-165044, respectively,
+over D=59^4=12117361. Thus their total negative mass is 488132/D.
+
+One tempting repair removes this negative mass by subtracting a positive
+submeasure from c^+. Such a repair would give weights
+
+  sum w_pi=1, 0<=w_pi<=c_pi^+, sum w_pi z_pi=d.                (1)
+
+For this example (1) is impossible. Put
+
+  h(z)=-18 Re(z)+20 Im(z), lambda=-296.
+
+For every nonnegative w with sum w=1 and w<=c^+,
+
+  sum w_pi h(z_pi)
+    = lambda+sum w_pi(h(z_pi)-lambda)
+    <= lambda+sum c_pi^+ max(h(z_pi)-lambda,0)
+    = 5538488640/D.                                          (2)
+
+On the other hand,
+
+  h(d)=1591120/3481,
+  h(d)-5538488640/D=200080/D>0.                              (3)
+
+The upper bound in (2) is exact: assign w_pi=c_pi to every positive c_pi
+with h(z_pi)>-296, zero to every positive c_pi with h(z_pi)<-296, and
+w_15=295156/D. These weights sum to one and attain (2). All signs and
+identities are checked by the standalone rational verifier below.
+
+MOC and positive-amplitude support do hold for these inputs. The exact law
+
+  d=(285161 z_3+39662 z_17+145112 z_18)/469935                (4)
+
+has strictly positive coefficients summing to one. Each selected c_pi is
+strictly positive. Thus allowing the final positive weights to exceed the
+initial positive amplitudes is essential. The example does not imply that
+every successful law increases each individual positive amplitude; it says
+that no law can satisfy all upper bounds in (1) simultaneously.
+
+The same input also rules out a simpler geometric prerequisite. For the
+negative-amplitude permutation 21, z_21=30-10i, hence h(z_21)=-740, while
+min_{c_pi>0} h(z_pi)=-530. Thus a negative-amplitude product need not belong
+to the convex hull of the positive-amplitude products. In particular one
+cannot first represent each individual negative product by positive-support
+products and then try to cancel its weight.
+
+This is stronger than a failure of the previously tested affine covariance
+formula: it excludes every positive moment correction satisfying the stated
+capacity bounds, regardless of its dependence on the spectra.
+
+A second exact obstruction: a single holomorphic affine squared tilt
+
+Allowing weights to increase removes the first obstruction, but the simple
+positive formula
+
+  w_pi=c_pi^+ |alpha+beta z_pi|^2
+       /sum_sigma c_sigma^+ |alpha+beta z_sigma|^2             (5)
+
+does not always represent d either. At the same Q, take
+
+  a=(-1,3,i,-1+3i), b=(2-2i,-3-3i,3+3i,1+2i).
+
+Now d=(1152029-375238i)/3481. Let h(z)=Re z+2 Im z and f_pi=(1,z_pi)^T.
+The Hermitian matrix
+
+  K=sum_{c_pi>0} c_pi (h(d)-h(z_pi)) conjugate(f_pi) f_pi^T
+
+is exactly
+
+  (1/42180533641)
+  [720501298460               170393190885776-240685785143152i
+   170393190885776+240685785143152i   142783480810534560].
+
+Its leading diagonal entry is strictly positive, and
+
+  det K=15912196652416618402093160320/1779197418239532716881>0.
+
+Hence K is positive definite. For every nonzero coefficient vector t=(alpha,beta),
+
+  sum c_pi^+ |alpha+beta z_pi|^2 (h(d)-h(z_pi))=t* K t>0.
+
+After dividing by the strictly positive denominator in (5), every such law
+has support expectation strictly below h(d). No choice of alpha,beta, even
+spectral-dependent, fixes this. Positive mixtures of these laws also fail.
+This is a finite exact exclusion of a specified positive tilt family; it
+does not exclude general positive-support weights.
+
+A computable larger positive family
+
+For comparison, let q_pi be any positive probability weights on any finite
+planar point set, and suppose the q covariance is positive definite. Whiten
+the points to vectors v_pi with E_q v=0 and E_q vv^T=I2. Let delta be the
+whitened target and m=E_q[v|v|^2]. For any real t define
+
+  p_t(v)=1-2t+(delta-t m).v+t|v|^2,
+  w_pi=q_pi p_t(v_pi).
+
+Then sum w=1 and sum w v=delta. If t>0, completing the square shows p_t>=0
+on all of R2 exactly when
+
+  (8+|m|^2)t^2-(4+2 delta.m)t+|delta|^2<=0.                  (6)
+
+At t=0, global nonnegativity holds exactly when delta=0. Thus the scalar
+quadratic test (6) yields a concrete sufficient positive-weight formula,
+with no LP solver. These weights may exceed q and are quadratic in both
+z and conjugate z. This calculation is elementary and is not claimed to
+prove that (6) holds for every MOC input.
+
+The still larger family w_pi proportional to q_pi|alpha+beta Re z_pi+
+gamma Im z_pi|^2 is the numerical range of the 3 by 3 compression of
+diag(z_pi) to the q-weighted span of 1,Re z,Im z. This is a useful bounded
+positive-operator formulation, but its universal validity requires a new
+theorem. A numerical scan of the existing 4095 shape-qualified n4 records
+in 256 directions found no support separation above 1e-7; the largest was
+7.43e-9 in a near-permutation case. This scan is not a membership proof.
+The separate QFT lane found a fresh robust failure of this larger family,
+so it is not promoted to a universal criterion here. Its exactification
+is recorded by that lane rather than duplicated.
+
+The scalar formula (6) was tested separately on all 14 prior covariance-
+affine failures: it repaired nine, including all five robust failures whose
+old minimum weight was below -1e-6. The other five are numerically delicate
+near-permutation cases; their failed floating scalar test alone is not an
+exact obstruction. Full values are in
+build/moc_amplitude_capacity/isotropic_prior_failures.json.
+
+The QFT lane's fresh rational counterexample does rigorously exclude universal
+validity of (6). It uses
+
+  O=(1/3701)[999 2010 -2230 1920
+            3090 849 660 -1730
+            1230 -2860 -2001 30
+            1280 -870 2070 2649],
+  a=(2-i,-3-i,2+2i,-1+3i),
+  b=(-2-2i,-2-3i,-2-2i,2-2i).
+
+This O is exactly special orthogonal. For q=c^+/sum c^+, let r=z-mu be raw
+planar centered coordinates, Sigma=E_q rr^T, delta=d-mu, and
+k=E_q[r(r^T Sigma^(-1)r)]. The whitened coefficients in (6) can be computed
+without radicals as
+
+  A=8+k^T Sigma^(-1)k,
+  B=4+2 delta^T Sigma^(-1)k,
+  C=delta^T Sigma^(-1)delta.
+
+Independent exact rational arithmetic gives
+
+  A>397, 0<B<9/5, C>37/10000,
+  B^2-4AC < -6589/2500 <0.
+
+Thus no real t satisfies (6). Numerically A=397.74212865, B=1.77925539,
+C=.00371933085, and the discriminant is -2.75158855. The exact verifier
+recomputes the matrix, products, determinant, covariance, third moment and
+all four rational inequalities; it does not rely on the numerical data.
+QFT's stronger negative-definite 3 by 3 localizer excludes every real-affine
+squared tilt at this input, and is stored separately in
+build/moc_qft_polynomial_tilt/affine_exact_obstruction.json.
+
+The signed scalar-variance theorem cannot simply be iterated
+
+The literature lane proves that L_c|z|^2-|L_c z|^2>=0 for real orthogonal
+mixers, with L_c g=sum c_pi g_pi. This gives a positive Hermitian moment
+matrix on {1,z}; it does not give the analogous theorem on {1,z,z^2}.
+An exact counterexample to that extension uses the original Q/59 and
+
+  a=(3,-1,2,3+3i), b=(3+i,-1,1+3i,-3-i).
+
+Direct exact calculation gives
+
+  L_c z^2=(-338962240-766999480i)/205379,
+  L_c |z|^4=200832621006224/12117361,
+  L_c |z|^4-|L_c z^2|^2
+    =-4085248743422256/42180533641<0.
+
+Thus the signed Hermitian moment matrix on {1,z,z^2} is indefinite. The
+positive-part six-feature localizer remains a different, unproved candidate;
+this witness does not refute it. It does prevent deriving its feasibility
+by blindly iterating the real-orthogonal scalar-variance argument through
+entrywise powers of the rank-two matrix (a_i+b_j).
+
+Primary-paper relation
+
+Bebiano, de Providencia and Kovacec, On the corners of certain determinantal
+ranges, Coimbra preprint 05-11 (2005), page 3, already state the real
+orthogonal version of MOC as
+
+  det(M Hadamard Q) in conv{product_i M_i,pi(i)}, rank M=2.
+
+https://www.mat.uc.pt/preprints/ps/p0511.pdf
+
+Their Theorem 11 concerns local corners under a uniqueness-of-preimage
+hypothesis. It is not a positive global determinant-ratio theorem. The
+matrix M_ij=a_i+b_j in the exact witness has rank at most two, so the
+capacity obstruction applies within precisely that established formulation.
+The paper was inspected directly with the web PDF tool; no novelty claim
+is made for the rank-two Hadamard reformulation.
+
+The invoked arXiv sources remain Lyons, Determinantal probability measures,
+math/0204325v4, and Olshanski, Determinantal point processes and fermion
+quasifree states, 2002.10723v2. They provide the relevant positive-state and
+coupling framework, while the exact witness above shows that a repair of
+the signed amplitudes must permit redistribution beyond monotone mass
+removal. Neither source asserts the missing MOC matching law.
+
+Reproduction
+
+  python code/research/moc_amplitude_capacity_obstruction.py
+
+This independently evaluates det(D_a+Q D_b Q^T), every amplitude and product,
+the dual bound, an attaining capped law, and the uncapped positive law.
+It uses SymPy rational algebra and no numerical optimization. The initial
+small-integer search used NumPy seed 146990 and found the witness at draw 4;
+the search is not trusted for any final claim. Exact data are written to
+build/moc_amplitude_capacity/exact.json.

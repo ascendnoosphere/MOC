@@ -1,0 +1,368 @@
+Extensive reflector analysis of the frozen MOC campaign
+2026-10-31
+
+The 5,994 reflector records support three distinct conclusions. Their Gaussian
+contraction fits a logarithmically corrected fixed-rank rate. Their large
+negative gaps against the largest sampled product are mostly caused by matching
+heuristics, rather than by the fixed-rank determinant correction. A simple
+angular certificate, combined with a Hadamard upper bound, verifies a sufficient
+containment test in 2,759 of these original cases without evaluating their
+determinants. The underlying criterion is valid in every dimension; the
+reported passes are floating-point diagnostics, not exact interval certificates.
+
+Source and replay boundary
+
+The input is the immutable 20,127-record file
+build/moc_campaign_20261031/all_moc_data.jsonl. Its SHA-256 before and after
+analysis is
+079d7550cedeb1b6743404140b1c94855e1065690ae214e9da0cf639e36e0ff0.
+
+This lane uses all 5,994 records with source large_reflector: six spectral
+families at every integer n=2,...,1000. For n>=8, reflector rank r is 2,4,8,
+cycling deterministically with dimension and family. At smaller dimensions the
+rank is clipped to n. Those exceptional ranks remain in totals but are excluded
+from the r=2,4,8 rate comparisons. The matrices are generally dense in their
+entries, but rank(U-I)<=r. They are not unrestricted U(n) samples.
+
+The replay reconstructs the original spectra, reflector vectors and first 128
+uniformly sampled permutations from the saved seeds. It adds no independent
+spectral instances. The original remaining 47 products include deterministic
+orders, nearby transpositions and a greedy magnitude-improving matching. Only
+their already recorded maximum is used in the comparisons below. The first 128
+products alone supply the new angular tests.
+
+Code and machine-readable results are under build/moc_extensive_20261031:
+
+  analyze_reflectors.py           complete replay and analysis
+  reflector_replay.jsonl          one diagnostic row per original record
+  reflector_summary.json         totals, family summaries and provenance
+  reflector_groups.json          family/rank/dimension-bin quantiles
+  reflector_rate_fits.json/.csv   all descriptive rate fits
+  reflector_family_comparison.csv
+  reflector_algorithm_verification.json
+
+The replay took 35.7 seconds. The angular threshold algorithm agreed with an
+independent brute-force threshold calculation in 400 test cases, including
+repeated angles and antipodal points; maximum log-radius discrepancy was
+5.33e-15. Compact row norms agreed with explicitly formed matrices in 72 cases,
+with maximum relative discrepancy 1.81e-15. These checks validate implementation
+consistency; they do not establish interval error bounds for the full campaign.
+
+1. Separate the natural product, a random matching, and the selected maximum
+
+Let z_id=prod_i(a_i+b_i), and define
+
+  L_nat = log|det(A+UBU*)| - log|z_id|.
+
+This is the logarithm of the small determinant kernel used by the reflector
+algorithm. It is different from the radial gap against the maximum of all 175
+selected products. The latter also includes a substantial matching advantage.
+
+For n=600,...,1000, each row below summarizes 401 original cases. The second
+column is median L_nat/r. The third is the median improvement of the largest
+175-product log modulus over the largest of the 128 uniform-product log moduli,
+divided by n. The last column compares the natural product with the median of
+the uniform products, again divided by n.
+
+family             L_nat/r    heuristic lift/n    natural-minus-median/n
+Gaussian           -3.08845       0.39065                -0.00066
+disk               -2.70409       0.44664                 0.00247
+near real           0.35528       0.60036                 0.00123
+clustered          -3.25856       0.40374                -0.00118
+pair cancellation   5.25447       0.39280                -3.84497
+logwide            -0.84740       0.61215                -0.00181
+
+For five families, the natural matching is close to the median random matching
+on this per-dimension scale. In the cancellation family, b_i=-a_i+0.03 c_i makes
+the natural matching exceptionally small by design. Its baseline deficit is
+about 3.845 n. A large positive L_nat there does not mean the determinant is
+large relative to the full permutation hull.
+
+The magnitude heuristic adds a linear-in-n advantage in every family. Thus a
+gap of several hundred in log modulus against the selected maximum should not
+be attributed entirely to random-unitary mixing. The fixed-rank correction is
+usually much smaller. This decomposition is visible directly in each replay
+row, rather than inferred from a pooled correlation.
+
+2. A precise fixed-rank limit separates the six spectral families
+
+Here is a useful extension of the earlier fixed-reflector observation. Suppose
+coordinate pairs (a_i,b_i) are iid; dependence within each pair is allowed. Let
+r be fixed and let the reflector vectors be independent uniform complex unit
+vectors. Assume the expectations below are absolutely integrable, and write
+
+  p=E[b/(a+b)],       q=E[1/(a+b)],
+  h=E[ab/(a+b)],      m=E[b].
+
+Assume a+b is nonzero almost surely. Then
+
+  det(A+UBU*) / prod_i(a_i+b_i)
+       --> [ (1-2p)^2 + 4qh ]^r                 in probability.       (1)
+
+The same convergence is almost sure under the nested Gaussian-vector coupling
+used in the earlier note.
+
+Proof. Write U=I+VTV*, where V contains r normalized independent Gaussian
+vectors. The compact reflector recurrence gives T --> -2I. With D=A+B, define
+Q=V*D^-1 V, P=V*D^-1 B V, J=V*D^-1 B^2 V, G=V*BV. Weighted laws of large
+numbers give
+
+  Q --> qI, P --> pI, J --> tI, G --> mI,
+  t=E[b^2/(a+b)]=m-h.
+
+The exact determinant kernel is I+MS, where
+
+  M=[TGT*, T; T*,0],        S=[Q,P;P,J].
+
+Its scalar 2 by 2 limiting block has determinant
+
+  (1-2p)^2+4q(m-t)=(1-2p)^2+4qh.
+
+There are r identical blocks, proving (1).
+
+This formula explains genuine differences between the data families:
+
+- For independent identically distributed a,b, exchangeability gives p=1/2.
+  If their joint law is invariant under (a,b)->(-a,-b), then q=h=0. Gaussian,
+  disk, near-real and logwide inputs satisfy these symmetries, so their limit
+  is zero. The symmetries do not give a uniform finite-n convergence rate.
+- In the pair-cancellation family, b=-a+epsilon c with independent centered
+  circular Gaussian a,c. Direct expectation gives p=1 and q=h=0. Its limit is
+  one, so L_nat eventually tends to zero. The positive finite-n correction is
+  a long crossover, not evidence for a nonzero positive asymptotic exponent.
+- The clustered family is iid across a and b but is not centrally symmetric.
+  Its limit is the nonzero number (4qh)^r.
+
+The clustered prediction can be evaluated accurately without fitting data.
+Its centers are c=(-1-0.7i,0.8-0.2i,0.1+1.1i), with independent circular Gaussian
+noise of standard deviation sigma=0.035. Conditional on two centers, put
+mu=c_j+c_k and nu=c_j-c_k. Then
+
+  E[1/(a+b) | j,k] = (1-exp(-|mu|^2/(2 sigma^2)))/mu,
+  E[ab/(a+b) | j,k] = mu/4 - (nu^2/4) E[1/(a+b) | j,k].
+
+For the first identity, averaging 1/(mu+rho exp(i theta)) over theta gives
+1/mu for rho<|mu| and zero for rho>|mu|; integrate the Gaussian radial density.
+For the second, a+b and a-b are independent proper complex Gaussians given
+the centers, and ab/(a+b)=(a+b)/4-(a-b)^2/[4(a+b)].
+
+Average the formulas over the nine center pairs. The smallest |mu|^2 is 0.85,
+so the Gaussian corrections are below exp(-346.9). To the displayed precision,
+
+  4qh = -0.013607512381172367 - 0.022332580263230557i,
+  log|4qh| = -3.643843185447626.
+
+The observed late-dimensional median L_nat/r=-3.25856 is moving toward this
+finite limit. Fitting a zero-kernel power law to this family would be the wrong
+asymptotic model.
+
+3. Why the Gaussian rate needs a logarithmic correction
+
+For Gaussian or disk spectra, fixed-rank kernel entries obey the upper rate
+
+  I+MS = O_p(sqrt(log n/n)) entrywise,
+
+and consequently
+
+  |det(A+UBU*) / prod_i(a_i+b_i)|
+       = O_p((log n/n)^r).                                    (2)
+
+Here r is fixed. This is a proved upper rate, not a two-sided distributional
+limit for the log determinant.
+
+An elementary truncation proof explains the logarithm. For Gaussian spectra
+write d=a+b and e=a-b. They are independent proper complex Gaussians, and
+
+  1/d,       b/d=1/2-e/(2d),
+  b^2/d=d/4-e/2+e^2/(4d).
+
+Each weighted compression entry is an empirical average involving these
+variables and products of independent Gaussian reflector coordinates. The
+reciprocal terms have tails bounded by C/t^2. For example, when a numerator N
+is independent of d, P(|N/d|>t)<=E|N|^2/(2t^2). The Gaussian-coordinate weights
+have the needed finite moments. For disk spectra, bounded numerators and a
+bounded planar density for a+b give the same tail bound.
+
+A centered iid variable with this tail bound, truncated at sqrt(n log n), has
+truncated second moment O(log n). The probability that any of n observations
+exceeds the threshold is O(1/log n), and the truncation bias of the sample mean
+is O(1/sqrt(n log n)). Chebyshev's inequality therefore gives sample-mean error
+O_p(sqrt(log n/n)). Normalizing the Gaussian reflector columns changes the
+matrices only at the smaller O_p(n^-1/2) scale. Their Gram matrix tends to I,
+and T+2I=O_p(n^-1/2). Substitution in the exact kernel proves its entrywise rate.
+The determinant has size 2r, so its polynomial formula gives (2).
+
+The reciprocal variables generally have infinite second moments. An ordinary
+finite-variance central limit theorem would therefore miss the logarithm.
+A nonsingular limiting Gaussian kernel would suggest the stronger typical
+shape
+
+  L_nat = -r log n + r log log n + O_p(1),                       (3)
+
+but establishing that joint limit and its nonsingularity is beyond the upper-
+rate proof above. The dataset can test the shape; it cannot prove (3).
+
+For n=100,...,1000, regress L_nat/r separately for each family and rank. The
+following slopes use either log n or log n-log log n as the predictor. The
+latter would have slope -1 under (3).
+
+family       r    slope versus log n    slope versus log n-log log n
+Gaussian     2          -0.865                    -1.041
+Gaussian     4          -0.858                    -1.034
+Gaussian     8          -0.800                    -0.964
+disk         2          -0.834                    -1.005
+disk         4          -0.718                    -0.864
+disk         8          -0.671                    -0.808
+
+Gaussian data fit the log-corrected shape well in this dimension range. Disk
+ranks 4 and 8 have appreciable finite-size departures. Fits starting at n=50,
+100 and 300 are retained in the rate-fit output, rather than selecting a single
+favorable interval. The figures show raw observations and binned medians; only
+the vertical offsets of the reference shapes are fitted.
+
+Near-real slopes per rank are approximately -0.047, 0.041 and 0.032. A fixed
+imaginary scale of 0.001 makes these spectra nearly one-dimensional on the
+sampled range. Constants in the planar reciprocal-tail estimates become large.
+The asymptotic zero-kernel statement alone does not predict their finite-n
+behavior. The logwide family also converges slowly on these dimensions.
+
+The earlier 108-case probe at n=100,1000,10000 is an auxiliary illustration,
+not part of the 20,127 records or this replay. Its Gaussian rank-4 median
+L_nat values -6.305,-13.836,-21.980 support the same trend, but they do not add
+108 containment observations.
+
+Neither (1) nor (2) proves containment in a fixed sampled inner hull. The
+natural product itself fluctuates relative to other matchings. A ratio that
+shrinks relative to one vertex does not supply angular coverage or a lower
+inradius for the other sampled vertices.
+
+4. Conditioning and selection effects
+
+The maximum compact-kernel condition number is 106751.9. Family medians are
+28.4,31.4,97.3,11.2,24.3,134.4 in the table's family order. The implementation's
+1e12 cutoff rejects none of these records. Its near-zero-baseline regeneration
+rule also regenerated no spectra. Thus these particular acceptance rules did
+not censor this dataset, although both matter for reproducing the method.
+
+The compact kernel can be ill-conditioned when its determinant is small even
+though the original determinant calculation is sound. The reference diagonal
+D=A+B can also contain small entries and amplify the determinant ratio. The
+rank correction, kernel condition number and minimum pair sum are different
+quantities; the report preserves each. For example, within Gaussian records,
+Spearman correlation between log kernel condition and L_nat is -0.586, whereas
+correlation with the minimum reference-diagonal magnitude is only -0.155.
+These are descriptive, unadjusted associations across the dimension/rank
+schedule, not causal or error-probability estimates.
+
+Original global scaling classified 5,260 hull calculations as degenerate.
+Selecting bounded-log-radius subsets recovered 5,216 numerical inclusions.
+That is a computational selection effect: a very large selected product erased
+smaller products at the chosen floating-point tolerance. A successful subset
+remains a valid inner-hull witness, but its rescaled margin cannot be compared
+directly with a margin normalized by the full maximum. The subset search is a
+post-selected certificate search, not an independent sample of hull geometry.
+
+5. An all-dimension angular/Hadamard sufficient criterion
+
+Let z_1,...,z_k be any actual permutation products. Suppose their nonzero
+arguments, in circular order, have maximum gap Delta<pi and all moduli are at
+least R. Then
+
+  disk(0,R cos(Delta/2)) subset conv{z_1,...,z_k}.                (4)
+
+Proof. In every direction, some selected argument lies within Delta/2. The
+support function in that direction is at least R cos(Delta/2). Comparing
+support functions proves disk containment. This argument allows unequal
+vertex radii; assuming a particular ordered chord is a hull edge is unnecessary.
+
+For arbitrary dimension, spectra and unitary U, put
+
+  H_row = prod_i sqrt(sum_j |a_i+b_j|^2 |U_ij|^2).
+
+Hadamard's determinant inequality applied to C=diag(a)U+U diag(b) gives
+
+  |det(diag(a)+U diag(b)U*)| = |det C| <= H_row.                (5)
+
+Consequently H_row <= R cos(Delta/2) is a sufficient MOC containment criterion
+in every dimension. It uses spectral data, unitary entries and selected
+permutation products; it does not require computing the target determinant.
+The analogous column-norm bound can improve it, but this replay uses rows only.
+The criterion does not claim that the inequality always holds.
+
+For rational complex input one can turn such an argument into exact algebra:
+choose a polygon of permutation products containing the origin, compute the
+squared distances from the origin to its supporting edge lines, and compare
+them with H_row^2, a product of rational row-norm squares. This avoids relying
+on floating-point angles for an exact certificate. No such interval/rational
+conversion is asserted for these random floating-point records.
+
+The replay optimizes (4) over every radial threshold among the first 128
+uniform products. For each threshold it retains all products above that radius,
+computes the maximum angular gap, and keeps the largest disk bound. A sorted
+circular list and heap update the maximum gap in O(m log m), m=128. Duplicate
+angles retain their true circular wrap gap. Using zero for the wrap gap of
+coincident points would create false origin-coverage certificates; explicit
+degenerate tests and the brute-force comparison guard against this error.
+
+Numerical results, 999 original records per family:
+
+family              disk exceeds actual |det|    disk exceeds H_row
+Gaussian                       992                        459
+disk                           990                        497
+near real                      937                         27
+clustered                      991                        784
+pair cancellation              996                        992
+logwide                        974                          0
+TOTAL                         5880                       2759
+
+Seventeen originally degenerate rows pass the angular determinant test
+(12 near-real, five logwide). Conversely, 87 originally successful hull rows
+fail this origin-centered disk test: a containing hull need not contain a
+sufficiently large disk centered at zero. These results are complementary,
+not replacements for the original classifications.
+
+The Hadamard sufficient test passes at least one original instance at 995 of
+the 999 dimensions; the only dimensions without a pass are 2,3,4 and 22. This
+is finite coverage of instances, not a theorem about every matrix at those
+orders. At n>=100, every one of the 901 pair-cancellation cases passes the
+Hadamard test. Their small reference pairing makes them easy for this criterion
+even though their natural-product ratios are large and positive.
+
+Among successful angular tests with n>=100, the selected threshold retains a
+median of five products in every family; the 90th percentile is eight or nine.
+Thus much of the observed containment has a short angular witness. This does
+not make those products independent angular observations: all come from the
+same pair of spectra, and the threshold is selected after seeing them.
+
+For n>=8, Hadamard passes decrease with reflector rank: 1141/1986 for r=2,
+955/1986 for r=4 and 657/1986 for r=8. Actual determinant disk tests pass
+1947,1959 and1962 of those respective groups. More mixing makes the determinant
+smaller in the observed symmetric families while making the row bound less
+sharp. A certificate's failure can therefore mean its norm bound is loose,
+rather than that the determinant is near the true hull boundary.
+
+Figures:
+  build/moc_extensive_20261031/reflector_rate_patterns.png
+  build/moc_extensive_20261031/reflector_angular_hadamard_counts.png
+
+These results provide a quantitative sampling diagnosis and an inexpensive
+all-n sufficient test. They leave unrestricted MOC, including the general
+four-dimensional case, unresolved.
+
+Exact closing experiment, kept separate from the frozen data
+
+The large dimensional sufficient criterion was converted into a rigorous
+certificate for a new rationalized n=1000 pair-cancellation instance using two
+noncommuting exact Householder reflections. The exact bound
+
+  ||A+UBU*||F^2/1000 <=226788766/1000000000<1/4
+
+gives |det|<2^-1000. Three exact permutation products have a triangle inradius
+strictly greater than 2^86, checked with Gaussian-integer cross products. The
+target determinant was never evaluated. Exact checks also establish that A
+and UBU* do not commute, the two-reflection product is not a single Hermitian
+Householder reflection, and neither spectrum lies on a generalized circle.
+This proves one 1000-dimensional instance and illustrates a data-to-proof
+conversion with substantial slack; it does not change the 20,127 sample count.
+See docs/research/moc_exact_n1000_certificate.txt and the standalone verifier
+build/moc_extensive_20261031/verify_exact_n1000_certificate.py.

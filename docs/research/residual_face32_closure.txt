@@ -1,0 +1,231 @@
+EXACT CLOSURE OF THE MOC4 FACE (3,21,27,32,53)
+2026-10-30
+
+Scope: this treats the entire displayed coefficient face and its coefficient
+boundaries. It does not prove unrestricted complex MOC4. The spectral cubic,
+the n=4 external-half-plane theorem, and the established identification of
+permutation profiles with their unitary minor functions are imported inputs.
+The standalone verifier is code/research/verify_residual_face_32.py. It reads
+no generated build data and runs its model, pencil, rank, and reference checks
+once. Its rank subroutine is code/research/verify_residual_face_32_rank.py.
+
+Use one-based indices and rho(I,J)(U)=|det U[I,J]|^2. The canonical labels are
+
+ r3=rho(1,4),       r21=rho(12,34),
+ r27=rho(13,34),    r32=rho(23,13),
+ f53=rho(2,2)+rho(3,3)+rho(12,34)-rho(13,13).
+
+Let z_pi=product_i(alpha_i+beta_pi(i)), eta!=0, and
+h=max_pi Re(eta z_pi). Suppose the permutation support gap has the form
+
+              g=a r3+b r21+c r27+d r32+f53,   a,b,c,d>=0.          (1)
+
+The positive mixed coefficient has been normalized to one by positive
+scaling of eta,h and all coefficients. The result is that no such actual
+spectral gap has h>=0. For h<0, the imported external-half-plane theorem
+proves the support inequality. If the mixed coefficient is zero, the
+support gap is already an ordinary nonnegative squared-minor sum.
+
+1. Necessary equations for actual spectra
+-----------------------------------------
+The exact model code/geometry/closing_moc4_model_verify.py constructs the
+homogeneous cubic F in 14 selected matching coordinates and verifies
+coefficientwise that grad F(z)=0 for every actual complex spectral matching
+vector. Write e=(1,...,1), H_v=H_F(v), and
+
+                  Q(v)=D_e F(v)=sum_i partial_i F(v).
+
+The model also checks H_e e=0. Set x=g-he and let y be the real
+imaginary-part vector of eta z. Expanding grad F(-x+iy)=0 gives
+
+              H_x y=0,       grad F(y)=grad F(x).                 (2)
+
+Euler's identity and cubic polarization give
+
+ 3F(x)=x.grad F(x)=x.grad F(y)=y^T H_x y/2=0.
+
+Consequently
+
+                   F(g)=hQ(g),        Q(x)=Q(g).                  (3)
+
+On (1), direct exact evaluation yields
+
+ F(g)=-(a+bd+b+d+1)<0,
+ Q(g)=cd-(b+1)(d+1).                                             (4)
+
+Thus h=0 is impossible, Q!=0, and h=F/Q. For h>0, necessarily Q<0.
+No simple-spectrum or distinct-product assumption enters these identities.
+
+H_x must be singular. If y!=0 this follows from (2). If y=0, then
+H_x x=2 grad F(x)=0. Here x!=0: otherwise g=he and F(g)=h^3F(e)=0,
+contrary to (4). This handles a zero imaginary part without a genericity
+assumption.
+
+2. The entire determinant branch and its connected domain
+----------------------------------------------------------
+Put
+
+ N=(a+1)(c+1)(a+b+1)>0,
+ T=-a^2 c+ac^2+a+c^2+c+1+b(a^2-ac+a+c^2+c+1),
+ P=N+dT.
+
+The exact determinant identity is
+
+           det(QH_g-F(g)H_e)=-4F(g)^2 Q^12 P^2.                  (5)
+
+Singularity and Q!=0 therefore force P=0. Since N>0, every nonnegative
+coefficient point on this branch has d>0,T<0 and
+
+                             d=-N/T.                            (6)
+
+In particular there is no omitted T=0 component.
+
+The coefficient of b in T is strictly positive, since
+
+ 2(a^2-ac+a+c^2+c+1)=(a-c)^2+a^2+c^2+2a+2c+2.
+
+Moreover T at b=c equals (c+1)(a+c^2+c+1)>0. Thus T<0 requires
+k=c-b>0. Substitute c=b+k, and define
+
+ L=bk+k^2+b+1>0,       M=(b+1)(c^2+c+1)>0.
+
+Then
+
+ T=-k a^2+L a+M,
+ d=(c+1)[a^2+(b+2)a+b+1]/[k a^2-L a-M].                        (7)
+
+For fixed b>=0,k>0, T has exactly one positive root a_T(b,k), and T<0
+is equivalent to a>a_T. In particular a,c,d are all strictly positive.
+The derivative of d on that ray is
+
+ -(c+1)[(L+k(b+2))a^2+2(M+k(b+1))a
+           +M(b+2)-L(b+1)]/[k a^2-L a-M]^2 <0.                 (8)
+
+The constant term in the bracket is positive because
+
+ M(b+2)-L(b+1)=(b+1)[b^3+2b^2k+3b^2+bk^2+4bk+2b+k^2+2k+1].
+
+Its limits are infinity at a_T and (c+1)/k at infinity. Also
+
+ Q=(k-1)d-b-1,
+ lim_(a->infinity) Q=(k^2-k-b-1)/k.                             (9)
+
+If k<=1, Q<0 throughout the ray a>a_T. If k>1, Q<0 is a nonempty
+upper ray precisely when b>k^2-k-1. Hence the projection of the whole
+positive-height branch onto (b,k) is
+
+                    b>=0,  k>0,  b>k^2-k-1.                   (10)
+
+Its b>0 part is a path-connected epigraph. Above each point, the allowed
+a form an upper ray with a continuous threshold: a_T for k<=1, and the
+unique Q=0 root for k>1. The latter threshold tends to a_T as k decreases
+to one. To see this, every fixed a>a_T has Q<0 at k=1 and remains
+admissible in a neighborhood, while every threshold is at least a_T.
+The strict upper-ray description over this connected base proves path
+connectedness of the b>0 branch. Every admissible b=0 point is a limit
+of b>0 points: keep k,a fixed and use the strict inequalities T<0,Q<0
+and the continuous formula (6). There are no a=0,c=0,d=0 points.
+
+Equations (7)--(9) and their derivative and factor identities are checked
+symbolically by the standalone verifier. Connectedness itself follows from
+the argument above, rather than from a parameter grid.
+
+3. Corank two and a nonsingular kernel quadratic
+-----------------------------------------------
+Let p(t)=det(H_g-tH_e). Its degree is at most three, independently of any
+interpolation. Indeed rank H_e=4 gives degree at most four. The vector e
+lies in ker H_e, and H_g e=H_e g. Therefore, for every u in ker H_e,
+
+                    e^T H_g u=g^T H_e u=0.
+
+Thus e is a nonzero radical vector of H_g restricted to ker H_e; the
+determinant of that restriction vanishes. This is, up to a fixed nonzero
+factor, the degree-four coefficient. The verifier constructs an explicit
+basis of ker H_e and checks this radical identity exactly. Four exact
+pencil evaluations at 0,1,-1,2 then determine every coefficient.
+
+Besides (5), those calculations establish p(0)=0, p(h)=p'(h)=0 on (6),
+and
+
+ p'(0)=-4cd(ab-ac-bc-c)(a+bd+b+d+1)
+             (abd+ac+ad+a+bc+bd+b+c+d+1)>0.                    (11)
+
+The sign holds on the entire nonnegative branch T<0: c,d>0 and
+ab-ac-bc-c=-ak-c(b+1)<0, while the other factors are positive.
+Since h>0, a cubic with roots 0 and the double root h satisfies
+
+                   [z^2]det(H_x+zH_e)=p'(0)/h>0.              (12)
+
+Separately, the verifier proves rank H_x<=12 identically on the rational
+graph (6), h=F/Q. Exact elimination of ten variables leaves a 4x4 system
+in the original coordinates numbered (1,6,7,8), using zero-based indices.
+A 2x2 principal block in positions (0,2) is invertible at the exact seed
+
+              (a,b,c,d,h)=(7,1,2,216/7,495/14).
+
+All four entries of its remaining 2x2 Schur complement vanish identically
+after (6) and h=F/Q. The ten initial pivots at this seed are
+
+ 495/14,495/14,1,1,216/7,216/7,-495/14,1,-495/14,-55,
+
+and the final 2x2 minor is 1150362889/485149500!=0. These nonzero values
+certify a nonempty rational chart. Every 13x13 minor is therefore the zero
+rational function of (a,b,c), and polynomial continuation extends rank<=12
+to every point with T<0,Q<0, including points where a chart pivot vanishes.
+No fixed elimination chart is assumed to work everywhere.
+
+A matrix of corank at least three would make its pencil determinant vanish
+to order at least three in z. Thus (12), together with rank<=12, gives
+rank H_x=12 everywhere on this branch. In a kernel/complement orthonormal
+decomposition, the coefficient in (12) is the determinant of the invertible
+complementary Hessian block times det(H_e restricted to ker H_x).
+Therefore Q(y)=y^T H_e y/2 is nonsingular on this two-dimensional kernel.
+The nonzero coefficient (12) alone would not prove corank two; the separate
+Schur certificate is essential.
+
+4. The real lift is impossible at positive height
+------------------------------------------------
+At the displayed rational seed, exact arithmetic gives Q(g)=-2, rank H_x=12,
+and, in the verifier's nullspace basis,
+
+ (Q|ker H_x)00=15739047339848/11203238751694609>0,
+ det(Q|ker H_x)=16429754880/11203238751694609>0.
+
+The restricted quadratic is positive definite there. Constant rank makes
+its kernel vary continuously, and its nonsingularity prevents its inertia
+from changing on the path-connected b>0 branch. It remains positive definite
+at admissible b=0 points by continuity and nonsingularity.
+
+For the actual real vector y in (2), this gives Q(y)>=0. But summing the
+gradient identity in (2) gives Q(y)=Q(x)=Q(g)<0. This contradiction excludes
+every actual positive-height gap (1).
+
+5. Other heights, coefficient boundaries, and scope
+---------------------------------------------------
+The h=0 case was already excluded by F(g)<0 and F(g)=hQ(g).
+For h<0, use S. W. Drury, The external vertices conjecture in case n=4,
+Electronic Journal of Linear Algebra 11 (2004), 180--191, Theorem 1.1 and
+the half-plane assertion in the proof of Corollary 1.2, page 181:
+ https://journals.uwyo.edu/index.php/ela/article/download/263/263/263
+
+That assertion states that a closed half-plane excluding zero and containing
+all permutation vertices also contains the determinant of the normal sum
+(with the paper's subtraction convention absorbed into the second spectrum).
+Here H={w:Re(eta w)<=h} excludes zero because h<0 and contains all vertices
+by the definition of h. It therefore contains det(A+UBU*) for every unitary U.
+Equivalently, one may rotate and scale to Re(-eta z/(-h))>=1 and apply the
+paper's normalized assertion. This is an imported theorem, not a consequence
+of the positive-height inertia argument.
+
+If the f53 coefficient is zero, the four remaining rays are the ordinary
+squared minors listed at the start, so their nonnegative combination is
+nonnegative on every U(4). If it is positive, positive normalization reduces
+to (1) and preserves the sign of h. This proves the support inequality on
+the entire face and its coefficient boundaries, at every height.
+
+The conclusion covers the row/column/inversion images of this canonical
+nine-contact face. It does not by itself settle other face types, gaps with
+fewer contacts, or unrestricted complex MOC4. The result is conditional on
+the imported exact spectral model and Drury theorem; the coefficient signs,
+determinant identities, generic-corank certificate, degree bound, ordinary
+ray labels, and reference positivity are recomputed by the portable verifier.

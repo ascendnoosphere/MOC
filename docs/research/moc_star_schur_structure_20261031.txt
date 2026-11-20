@@ -1,0 +1,149 @@
+STAR FOUR-CONTACT FACE: EXACT CUBIC AND INTRINSIC PSD SCHUR MATRIX
+31 October 2026
+
+Contacts are zero-based lexicographic permutations C=(0,1,2,14): identity,
+(23),(12),(02). The central index is2. This note constructs an intrinsic
+source-dependent positive matrix. It does NOT yet translate it into the
+full matching-SOS Gram required for unrestricted MOC.
+
+1. Full face coordinates
+
+The pointwise nonnegative face has15 ordinary extreme rays
+
+ (1,3,4,7,12,13,18,20,21,25,26,27,28,31,32)
+
+and two mixed rays40,81. Their span has dimension10. The exact identity
+
+ r40+r81=r18+r20+r25+r27+r28+r32
+
+allows eliminating a common positive coefficient on the two mixed rays.
+Conjugation by the leaf transposition(01) exchanges r40,r81.
+
+Use the basis (40,1,3,4,7,12,13,18,20,26) with coefficients
+
+ (u,a,d-t,e-u,c-r+u,b,f-u,r-u,t-u,s).
+
+These are algebraic coordinates, not an assertion that all ten listed
+coefficients are nonnegative. Retain ALL ordinary rays/pointwise inequalities.
+The24 gap values are recorded in structure.json. In particular
+
+ a=g8,b=g15,c=g4,d=g20,e=g12,f=g3 >=0.
+
+In this full ten-coordinate face the verified HMSV cubic and its derivative
+along the constant vector are especially simple:
+
+ F=abc+def,  Q=ut-rs.
+
+For Q!=0 put h=F/Q and x=g-h e. Then F(x)=0 exactly.
+
+2. A four-dimensional critical complement
+
+Let B be the24-by-10 cost basis above, ordered by
+w=(a,b,c,d,e,f,u,r,s,t). Use the four central-row singleton indicators
+N=(r8,r9,r10,r11) as a complement. They partition the constant function.
+They span a linear criticalP3 of M8, so the full Hessian restricted to
+their span vanishes identically. In coordinates U=[B,N],
+
+ U^T H_x U = [[A,L],[L^T,0]],
+ A=Hess_w(abc+def-h(ut-rs)),
+ L=Jacobian_w(Q0,Q1,Q2,Q3)^T.
+
+The four quadrics, in complement order8,9,10,11, satisfy sum Qj=ut-rs.
+Three sparse formulas are
+
+ Q0=c(f-a-s)-f(d+r+s-t-u),
+ Q1=b(d-c+r-t)+d(u-e),
+ Q3=a(e+r-b-u)+e(t-f),
+ Q2=ut-rs-Q0-Q1-Q3.
+
+All block identities were checked exactly in the full ten-coordinate model.
+
+3. Actual-source inertia supplies positivity
+
+Assume a,b,c,d,e,f>0,h!=0 and a generic actual conjugate critical source.
+Then A is invertible and splits as
+
+ H_abc directsum H_def directsum (-h H_(ut-rs)).
+
+The first two3-by-3 blocks each have inertia(1+,2-); the last block has
+inertia(2+,2-). Therefore A has inertia(4+,6-).
+
+Here is the intrinsic actual-source argument for the full Hessian inertia.
+At a smooth critical M8 cone point p, ker H_p is its six-dimensional complex
+tangent space. For v,w in ker H_p,
+
+ w* H_Re(p) v =0,
+
+because H_p v=0 and conjugating H_p w=0 gives w* H_barp=0.
+Thus this six-dimensional space is Hermitian-isotropic. For a generic
+conjugate pair, Terracini gives ker H_p intersect ker H_barp=0, so its
+projection to the nondegenerate quotient of H_Re(p) is still six-dimensional.
+At a rank12 secant point this forces inertia(6+,6-,2zero). A sign or complex
+scalar in the actual source does not alter this argument.
+
+Sylvester inertia additivity for the block Schur complement now gives
+
+ S4=-L^T A^(-1)L >=0, rank S4=2.
+
+This is a uniform intrinsic NECESSARY positivity statement for generic actual
+star costs in this positive-gap chart. It is not a guessed affine section.
+Degenerate a..f or source pairs require limits/separate charts.
+
+The inverse of each product block is explicit:
+
+ H_abc^(-1)=[vv^T-2diag(a^2,b^2,c^2)]/(2abc), v=(a,b,c),
+
+and similarly for d,e,f. The determinant2 block inverse is -H_(ut-rs)/h.
+Thus S4 is a fully explicit rational4-by-4 matrix.
+
+4. Restricted nonic and exact control
+
+The exact14-by-14 pencil determinant was compiled by nine sparse eliminations
+to a5-by-5 residual. It has8068 terms in the u=1 chart and was computed in
+about40 seconds. Its actual-height square root is a single irreducible
+degree9 polynomial; the complete expression and pivot metadata are saved.
+The verified identity is
+
+ Q^3 det(H_g-(F/Q)H_e)=-4 Q N9^2.
+
+Homogenization in u recovers the full face identity; choosing u=1 does not
+justify dropping any positivity branch.
+
+At the independently exact actual, nonordinary star counterexample, S4 has
+rank2 and all principal minors of orders1,2 are nonnegative exactly. A
+positive principal2-by-2 pivot gives a rational factor S4=C M C^T with M>0.
+The actual imaginary source coordinates satisfy
+
+ Y_face=-A^(-1)L Y_complement, S4 Y_complement=0.
+
+All these facts are checked by moc_star_schur_exact_control.py. The example
+also has an independent full matching-SOS Gram; it refutes ordinary-cone
+membership only.
+
+The complementary polynomial
+
+ T4=S4^2-tr(S4)S4+sigma2(S4) I
+
+is PSD rank2 and supported on ker S4. It may be useful when translating
+source kernels rather than source-normal images into matching squares.
+
+5. What has NOT worked
+
+The simple positive pullbacks
+
+ (A^(-1)L) S4 (A^(-1)L)^T and L S4 L^T
+
+have substantial nonmatching Fourier components on the actual control
+(relative residual about.38). They are NOT matching-SOS certificates.
+No universal rank-two SOS claim is made: a separate exact past-N9 example
+has a unique rank3 Gram, and its nearby four-contact N9 costs preclude an
+all-N9 two-square theorem. Source-dependent ordinary/ordinary cross terms
+and the full ten nonmatching cancellations must remain available.
+
+Files:
+ code/research/moc_star_contact_nonic.py
+ code/research/moc_star_schur_psd.py
+ code/research/moc_star_schur_exact_control.py
+ build/moc_star_contact/{structure,pencil,nonic,schur_psd,schur_exact_control}.json
+
+Positive_representation owns the next factor-to-full-matching-Gram step.

@@ -1,0 +1,182 @@
+THE FULL SEVEN-PARAMETER SYMMETRIC SIX-CONTACT CHILD
+2026-10-30
+
+STATUS: VERIFIED FULL SEVEN-PARAMETER CHILD CLOSURE.
+The fresh portable verifier passed all 480700 exact degree18-unisolvent
+identity nodes and every coefficient-sign check in 423.91 seconds.
+Execution log: build/six_symmetric/full_general_verify.log.
+
+Scope: the entire marked child with ordinary rays (0,7,10,13,18,23,28)
+and mixed ray34, including all coefficient boundaries. This is one
+six-contact child, not unrestricted complex MOC4. The first four ordinary
+coefficients are independent; no equal-coefficient assumption remains.
+
+Let f=f34, A=r18, B=r23, C=r28. In the repository's canonical numbering,
+consider an actual spectral support gap with permutation profile
+
+ g=a r0+b r7+c r10+d r13+p A+q B+r C+f,
+                          a,b,c,d,p,q,r>=0.                     (1)
+
+Then g(U)>=0 for every U in U(4). A positive coefficient of f is normalized
+to one by positive scaling of all coefficients, eta and support height.
+A zero coefficient of f leaves only an ordinary nonnegative squared-minor
+sum. The eight rays in (1) have exactly six common permutation contacts.
+
+Certificate files
+------------------
+ code/research/verify_six_symmetric_general.py
+ code/research/six_symmetric_nonic_coefficients.py
+
+The coefficient module contains 2285 explicit integer monomials in the
+fixed variable order (a,b,c,d,p,q,r), and a 366-state integer Horner evaluator.
+The verifier checks that evaluator against the coefficient table exactly.
+It reads no generated build files. The projected-Hessian identity is checked
+independently on a complete degree18-unisolvent lower-simplex grid of 480700
+integer nodes. The nonnegative generating-function coefficients below are
+recomputed directly from the table using binomial and multinomial integers.
+
+1. Necessary spectral cubic and projected determinant
+-----------------------------------------------------
+Use the exact homogeneous cubic F in 14 selected matching coordinates from
+code/geometry/closing_moc4_model_verify.py. Write e=ones(14), H_v=H_F(v),
+and Q=D_e F. The verified model gives grad F(z)=0 for actual complex
+spectral matching vectors and H_e e=0. For an actual support gap, put
+x=g-he and let y be the imaginary part of the scaled spectral vector.
+Then
+
+ H_x y=0,      grad F(y)=grad F(x),      F(x)=0,
+ F(g)=hQ(g),   Q(x)=Q(g).
+
+The F(x) identity follows from Euler's identity and cubic polarization:
+3F(x)=x.grad F(y)=y^T H_x y/2=0. The Hessian is singular also when y=0:
+then H_x x=2grad F(x)=0, and x cannot vanish because F(g)<0 below.
+No converse spectral-realization assertion is used.
+
+Let e_i denote the elementary symmetric functions of a,b,c,d. Exact
+restricted cubic evaluation gives
+
+ F(g)=-(1+e1+e2+e3+pqr)<0,
+ Q(g)=-(1+pq+pr+qr)<0.                                         (2)
+
+The verifier checks these identities on a degree3-unisolvent120-node grid.
+Thus every actual normalized gap (1) has h=F/Q>0; h=0 and negative height
+are impossible in this child. There is no Q=0 component on the nonnegative
+coefficient orthant.
+
+Define
+
+              N(g)=Q(g)^2 det H_(g-F(g)e/Q(g)).                 (3)
+
+This rational expression is a polynomial of degree at most18. The model's
+rank H_e=4, H_e e=0 and H(g)e=H_e g give the direct block proof in
+Section4A of docs/geometry/closing_moc4_notes.txt: the Hessian pencil has
+degree at most three, and its cubic coefficient is divisible by Q. After
+substituting F/Q, (3) therefore has no denominator and degree18. This degree
+bound is a mathematical lemma, not inferred from samples.
+
+The complete exact certificate is
+
+                 N(g)=-4 P9(a,b,c,d,p,q,r)^2.                  (4)
+
+Here P9 is the displayed integer coefficient table, with constant1, total
+degree9 and multidegrees (3,3,3,3,2,2,2). The checker verifies equivalently
+
+       det(QH_g-FH_e)=-4 Q^12 P9^2                             (5)
+
+at every lower-simplex node of total degree at most18. By the proved degree
+bound and unisolvence, (4) holds identically. Singularity and Q!=0 force
+P9=0 for every actual gap (1).
+
+2. Two exact positive generating functions
+------------------------------------------
+For nonnegative a,b,c,d,x,y,z, define
+
+ Gcube=(1+x)^2(1+y)^2(1+z)^2
+        P9(a,b,c,d,x/(1+x),y/(1+y),z/(1+z)).                    (6)
+
+Its exact expansion has 6496 nonzero integer coefficients, all strictly
+positive, and constant1. The powers2 suffice because the last three
+multidegrees of P9 are two. Consequently
+
+         P9>0 whenever a,b,c,d>=0 and 0<=p,q,r<1.               (7)
+
+For nonnegative a,b,c,d,s,x,y, put L=1+x+y and define
+
+ Gp=(1+s)^4 L^4
+      P9(a,b,c,d,1+s,x/((1+s)L),y/((1+s)L)).                    (8)
+
+This expansion has 21195 nonzero integer coefficients, all strictly positive,
+and constant2. The two analogous transformations with q and r in the
+dominant position independently have the same coefficient counts and signs.
+The verifier checks all three, so the sign argument does not assume an
+unverified permutation symmetry of the polynomial.
+
+The parametrization in (8) covers exactly the relevant strict star region:
+if p>=1, q,r>=0 and p(q+r)<1, take
+
+ s=p-1,  x=pq/[1-p(q+r)],  y=pr/[1-p(q+r)].
+
+All are nonnegative, and L=1/[1-p(q+r)]. Thus the positive constant in (8)
+proves
+
+              P9>0 if p>=1 and p(q+r)<1.                      (9)
+
+The same holds for the other two dominant coefficients.
+
+These are explicit finite coefficient certificates, not numerical sign tests.
+For reference, if C_(alpha,i,j,k) is the coefficient of a^alpha1 b^alpha2
+c^alpha3 d^alpha4 p^i q^j r^k in P9, the coefficient of ordinary monomial
+alpha times x^e y^f z^g in (6) is
+
+ sum_(i,j,k) C_(alpha,i,j,k)
+    binom(2-i,e-i) binom(2-j,f-j) binom(2-k,g-k).
+
+The coefficient of ordinary monomial alpha times s^l x^m y^n in (8) is
+
+ sum_(i,j,k) C_(alpha,i,j,k) binom(4+i-j-k,l)
+     (4-j-k)! /[(m-j)!(n-k)!(4-m-n)!],
+
+where out-of-range factorial/binomial terms are zero. These formulas are
+implemented with integer binomial/multinomial arithmetic and produce the
+reported positive expansions.
+
+3. Nonic vanishing forces an established weighted certificate
+-------------------------------------------------------------
+An actual gap has P9=0. Equation (7) therefore implies that at least one
+of p,q,r is at least one. Relabel notation so p>=1. Equation (9) then forces
+
+                              p(q+r)>=1.                       (10)
+
+In particular q+r>0. Each edge of (A,B,C) is an exact relabeling of the
+proved continuous weighted-minor theorem, so for every tau>0,
+
+ f+tau A+tau^(-1)B>=0,        f+tau A+tau^(-1)C>=0.              (11)
+
+The portable verifier reconstructs all three compensator pairs
+(18,23),(18,28),(23,28). The analytic input is the already proved theorem
+in docs/geometry/global_weighted_minor_notes.txt.
+
+Choose tau=1/(q+r) and lambda=q/(q+r). The convex combination of the two
+inequalities in (11), with weights lambda and 1-lambda, is
+
+                        f+tau A+q B+r C>=0.                    (12)
+
+Equation (10) gives p>=tau. Adding (p-tau)A and the four remaining ordinary
+terms in (1) proves g(U)>=0 for every complex unitary U. Other choices of
+the dominant coefficient use the corresponding two edges of the triangle.
+This handles equality in (10) and all zero coefficient boundaries.
+
+4. Status and limits of the result
+-----------------------------------
+The complete exact verification closes the full seven-parameter child (1),
+with independent a,b,c,d. The earlier
+uniform-ordinary theorem is a restricted special case; its proof did not
+justify passing to unequal coefficients by averaging. In fact a separate
+exact unitary witness disproves the required pointwise domination for
+naive coefficient averaging; see verify_six_singleton_symmetrization.py.
+
+The dependencies of the present closure are the verified spectral cubic,
+the direct degree18 block lemma, and the established continuous weighted-
+minor theorem. No general positivity claim for arbitrary mixed-ray costs
+or unrestricted complex MOC4 is made. Other six-contact children and the
+larger simplex containing thirteen ordinary rays remain separate targets.

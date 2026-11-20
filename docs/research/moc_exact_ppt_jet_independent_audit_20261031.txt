@@ -1,0 +1,181 @@
+Independent audit of the exact nonordinary PPT-jet certificate
+31 October 2026
+
+Result: PASS. No conjugation, contact-coordinate, exceptional-corner, or
+Gaussian-rational pivot defect was found. The default verifier completed
+successfully without invoking an optimizer or reading the numerical NPZ.
+The later ordinary-ray folding extension was independently audited and
+replayed successfully as well; it yields one pure reduced Gram certificate.
+
+Audited source, unchanged by this review:
+ code/research/moc_exact_ppt_jet_certificate.py
+Exact input:
+ data/certificates/moc_exact_ppt_jet_certificate.json
+SHA256:
+ d62963ca47a3e1a33960a0bef38fbc5a5873c6bf7c03da6c72ae40ec4c5439e7
+
+The input has integer real/imaginary14-by14 arrays,27 integer ordinary-ray
+coefficients, and denominator10^12. It is a procedural exact certificate:
+the stored rational proposal is projected onto the contact face and corrected
+by the displayed exact23-by23 inverse. The final matrix and weights are
+then checked; no floating-point proposal is trusted. The reconstructed
+matrix is exported to build/moc_auxiliary_ppt_jet/exact_nonordinary_support.json.
+
+1. Physical evaluations and contact coordinates
+
+J has rows j_pi^T, for the exact auxiliary jet beta(w)=(0,1,i,w). The code
+places a monomial in parameter block1 exactly when its selected labels
+include3; the temporary base value1 for that label records the coefficient
+of w. Otherwise it belongs to block0. This gives f_pi(w)=f_pi,0+w f_pi,1.
+
+W consists of14 independent columns of J^T and spans range(J^T). In the
+physical convention T=W C W*, the row psi_pi=j_pi^T conjugate(W) satisfies
+
+ j_pi* T j_pi = conjugate(psi_pi) C psi_pi^T.
+
+Thus the evaluation used in the verifier has the correct conjugations.
+The contact vector is k=psi_1^T. Its orthogonal projector
+P=I-k k*/(k*k) satisfies Pk=0. Replacing C by P C P therefore imposes
+Ck=0, exactly the zero-cost contact condition for a PSD matrix.
+
+Writing pp=psi P^T, the exact correction
+
+ C_delta=pp^T diag(delta) conjugate(pp),
+ w_delta=R^T delta
+
+changes the24 costs by (abs(inner)^2+R R^T)delta, where
+inner=conjugate(pp)pp^T. This is precisely the matrix G inverted in the
+code. The contact row and column vanish because pp_1=0 and R_1=0. The
+remaining23-by23 inverse therefore corrects every noncontact cost without
+changing the contact. The code subsequently verifies the final24 identities
+directly, rather than relying only on this derivation.
+
+2. The reduced PSD proof
+
+The final C is checked Hermitian with Ck=0. The columns of N span ker(k*),
+and N has shape14-by13. Positivity of all13 exact Schur pivots of N*C N
+proves that this restricted form is positive definite. Together with Ck=0
+and Hermiticity, this proves C>=0, with the single contact kernel direction.
+No numerical eigenvalue or approximate nullspace is used.
+
+3. Exceptional E4 corner and partial transpose
+
+The real feature basis e has the two complementary-pair/sum-zero columns
+of Boolean[22]. E=diag(e,e)=I2_parameter tensor e is32-by4. Its range is
+checked to lie in W. It need not be orthonormal.
+
+Q=W*E gives the physical corner
+
+ E*T E=Q* C Q.
+
+For indices i=2a+u,j=2b+v, the code's partial transpose has entries
+D_PT[i,j]=D[2b+u,2a+v]. It transposes the parameter index and leaves the
+two-dimensional feature index fixed. This is the required operation.
+
+Nonorthonormality of e does not require an additional Gram factor: if the
+rank-one co-CP channel is E S E* with S>=0, then its trace pairing with T
+is tr(S (E*T E)^PT). The real product form of E transports partial
+transpose exactly. Therefore positivity of the stated4-by4 corner PT is
+the correct reduced condition.
+
+4. Canonical Gaussian-rational Schur pivots
+
+The pivot routine converts every entry to QQ_I and conjugates its exact
+imaginary coordinate. Its update is
+
+ B_ij <- B_ij-B_ik conjugate(B_jk)/d_k,
+
+which is the Hermitian Schur complement. Keeping the old eliminated
+column does not affect later updates, since it is never reused as a
+future pivot column. Every pivot is checked to have exactly zero imaginary
+part and strictly positive rational real part.
+
+Independent primitive tests recovered the known pivots2,3,5 from L D L*
+with a dense Gaussian-integer lower-triangular L. Replacing the second
+diagonal entry of D by-3 was rejected. The PT routine independently passed
+the Bell-projector spectrum(+1,+1,+1,-1) and the involution test.
+
+5. Exact replay outcome and mathematical scope
+
+Command:
+ python code/research/moc_exact_ppt_jet_certificate.py
+
+The original independent run terminated with exit0 and all three PASS lines:
+ 24 exact actual-support identities with27 positive ordinary weights;
+ 14-dimensional Gram PSD from13 positive contact-face pivots;
+ exceptional4-dimensional partial-transpose PSD from4 positive pivots.
+
+The gap scale is209130300207 and the unique contact is lexicographic
+permutation index1. Decimal diagnostics only (all corresponding signs
+were verified exactly): the smallest ordinary weight is about1.59034e-7,
+the smallest contact-face pivot about1.06525e-5, and the smallest corner-PT
+pivot about.0894529.
+
+The universal jet identity H=P0+Q0^PT has P0,Q0>=0, with Q0 supported in E.
+For T=W C W* certified here, its pairing is
+
+ tr(H T)=tr(P0 T)+tr(Q0 T^PT)>=0,
+
+where the second term uses only the certified E-corner partial transpose.
+The ordinary-ray expectations are squared minors and are nonnegative.
+Consequently the exact24-value identity proves the designated support
+inequality for every real orthogonal mixer. The previously proved order-four
+unitary/orthogonal common-minor profile convexification transfers this actual
+support functional to every complex unitary mixer.
+
+This conclusion concerns exactly
+ a=(0,100,-214+146i,269-294i),
+ b=(-207-148i,-28-84i,-59+82i,83+104i), eta=-25+i.
+It is one support direction. It does not establish all directions for
+these spectra, unrestricted MOC4, or unrestricted all-dimensional MOC.
+
+The example provides a valid certificate outside the previously refuted
+fixed-a/fixed-b-plus-ordinary SOS mechanism. This witness by itself does
+not prove containment between entire one-sided and two-sided cones.
+
+6. Independent audit of the ordinary-free extension
+
+The updated default verifier also reads
+ data/certificates/moc_ppt_ordinary_rankone_witnesses.json.
+Its SHA256 is
+ 8cf2917f0741feebb33e3447578ace0b8e46333e79429b8afbe722f8da4ac443.
+The standalone exact verification and mathematical proof are
+ code/research/moc_ppt_ordinary_rankone_witnesses.py,
+ docs/research/moc_intrinsic_ppt_fourier_cone_20261031.txt.
+That artifact supplies canonical rank-one witnesses for all34 distinct
+ordinary indicators. Its fields are not trusted merely because they are
+stored: the main verifier rechecks the necessary identities in its own
+current physical coordinate system.
+
+The fold selects the27 records with zero value at contact index1, preserving
+the original order. Each selected Boolean ray is checked equal to the
+corresponding current R column. For its stored v, the code verifies
+
+ psi conjugate(v)=ray,
+ u=Q^*v, PT(u u*)=factor factor*.
+
+Since the entries of each current R column are
+zero or one, the first equality implies that vv* has exactly that cost.
+The second equality directly proves its exceptional-corner PT is PSD;
+it does not rely on a numerical determinant or eigenvalue. All weights
+were already checked strictly positive. Thus
+
+ Ctotal=C+sum_j weight_j v_j v_j*
+
+is PSD and has PSD exceptional PT. Zero contact evaluation gives
+v_j*k=0, so Ctotal kills the same contact vector. The code additionally
+checks this exact contact identity after folding, all24 pure-Gram cost
+identities, and fresh13+4 positive exact Schur pivots. These new pivot
+checks independently establish the final pure matrix signs, beyond the
+sum-of-PSD derivation.
+
+The updated command was independently rerun and terminated with exit0,
+printing the fourth PASS line:
+ all27 ordinary terms absorbed into one exact reduced Gram matrix,
+ with13+4 positive pivots.
+The exported record now includes pure_gram_matrix and both pure-Gram
+pivot lists. Decimal diagnostics of these exactly positive values are
+minimum contact-face pivot1.3727961694723448e-5 and minimum corner-PT
+pivot0.09003080779928302. Its mathematical scope is unchanged: the single designated
+support direction for the stated spectra, for every O4 and then U4 via
+the established profile bridge. This is not universal MOC feasibility.

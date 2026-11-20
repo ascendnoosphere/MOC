@@ -1,0 +1,156 @@
+A positive fixed-spectrum coefficient kernel in dimension four
+31 October 2026
+
+The following is a complete four-dimensional kernel theorem. It gives joint
+positivity for all row spectral derivatives, beyond positivity on separate
+three-dimensional derivative planes. It does not itself prove MOC: converting
+an actual nonnegative support gap into squares in the relevant feature spaces
+requires another argument. The parent lane has in fact found an exact
+obstruction to using just one fixed-column-spectrum square cone for that step.
+
+Theorem
+
+Let O be any real orthogonal 4 by 4 matrix, let b be any complex four-vector,
+and index all16 subsets I of {0,1,2,3}. Define
+
+ c_pi=sgn(pi) product_i O_i,pi(i)/det O,
+ f_I(pi)=product_{i in I} b_pi(i),
+ G_IK=sum_pi c_pi conjugate(f_I(pi)) f_K(pi).
+
+Then G is Hermitian PSD and has rank at most8.
+
+Here is an explicit eight-column Gram factor. Put B=O diag(b) O^T. In the
+Euclidean Clifford algebra on four generators, e_i^2=1 and e_i e_j=-e_j e_i
+for i!=j, write e_I in increasing order and reverse(e_I) in reverse order.
+Set
+
+ v_I=sum_{|J|=|I|} det B[I,J] reverse(e_I) e_J.
+
+Every v_I has even Clifford degree, so its coordinates are indexed by
+the eight even subsets S. Replace ONLY the coefficient of e_0123 by its
+complex conjugate, calling the resulting vector w_I. Then
+
+                 G_IK=sum_{S even} conjugate(w_I,S) w_K,S.       (1)
+
+The top-grade conjugation is essential. Omitting it gives the wrong imaginary
+part in the overlapping two-subset block for generic complex b. The formula
+as stated is specific to dimension four; applying the same top-grade twist
+in larger dimensions has not been justified.
+
+Proof: reduce to symmetric commuting matrices
+
+Let C=conjugate(B). Both B and C are symmetric and BC=CB, because they are
+simultaneously diagonalized by the same real O. Determinant expansion gives
+G_IK=det R_IK, where row i of R_IK is
+
+  e_i^T          if i is in neither I nor K,
+  C_i,*          if i is in I only,
+  B_i,*          if i is in K only,
+  (BC)_i,*       if i is in both.
+
+Indeed, before right multiplication by O^T the selected row is the row of
+O multiplied entrywise by1, conjugate(b), b, or |b|^2. Right multiplication
+by O^T cancels the determinant denominator, including det O=-1. Rows outside
+I union K are identity rows, so they may be removed together with their
+matching columns without a sign.
+
+The Clifford coefficient of det B[I,J] is
+
+ sigma(I,J)=(-1)^(|I|(|I|-1)/2 + #{(i,j) in I times J:i>j})
+
+in coordinate S=I symmetric_difference J. Thus all formulas in (1) are
+explicit finite minor formulas, with no unexplained Clifford operation.
+
+Nine base cases
+
+First suppose |I|+|K|<=4 and neither subset is empty. Simultaneous index
+permutations and Hermitian exchange I,K reduce every pair to the following
+nine cases:
+
+ (0),(0); (0),(1);
+ (0),(01); (0),(12);
+ (0),(012); (0),(123);
+ (01),(01); (01),(02); (01),(23).
+
+For this calculation temporarily regard B,C as independent symmetric matrices,
+and let Q=BC-CB. Formal conjugation exchanges B and C. Define D_IK to be the
+row determinant minus the proposed twisted Gram entry. Six of the nine
+differences vanish identically, without requiring Q=0. The other three are
+
+ D_{0,01}=-B_01 Q_01,
+
+ D_{0,012}=-(B_01 B_22-B_02 B_12)Q_01
+           +(B_01 B_12-B_02 B_11)Q_02,
+
+ D_{01,02}=B_02(C_12 Q_01-C_11 Q_02+C_01 Q_12).
+
+These identities follow by ordinary determinant expansion. The accompanying
+verifier checks them as polynomial identities in20 independent formal entries
+of B and C. Since Q=0 in the theorem, all nine entries agree. The empty-subset
+case is immediate: only the scalar Clifford coefficient contributes.
+
+Complementation covers every remaining pair
+
+Suppose B is invertible; then C is too. Right multiply the row-flag matrix
+R_IK by (BC)^(-1). Using BC=CB, its four row types become respectively
+(BC)^(-1), B^(-1), C^(-1), I. These are exactly the row types for the
+complementary pair I^c,K^c with B,C replaced by B^(-1),C^(-1). Consequently
+
+ det R_B(I,K)=|det B|^2 det R_{B^(-1)}(I^c,K^c).                 (2)
+
+Jacobi's complementary-minor identity, symmetry of B, and the elementary
+four-index sign identity
+
+ sigma(I,J)(-1)^(sum I+sum J)=sigma(I^c,J^c)
+
+give, before the top-degree conjugation,
+
+ v_B,I,S=det B v_{B^(-1),I^c,S}
+
+for every even S. After conjugation, the multiplier is det B for S of
+degree0 or2, and conjugate(det B) for S of degree4. Each multiplier is
+independent of I and has modulus |det B|. The Gram side of (1) therefore
+satisfies exactly the same complementary identity (2).
+
+Any pair with |I|+|K|>4 is reduced to one with complementary size sum<4.
+The base cases prove all256 entries when B is invertible. Replace b by a
+sequence of pole-free complex vectors with no zero entry and take limits
+to cover singular B and repeated eigenvalues. Both sides of (1) are
+polynomials in b and conjugate(b), so this last passage is immediate.
+
+This proves the theorem, including det O=-1 and all degenerate spectra.
+
+The constant-column Schur complement gives the variance kernel
+
+The empty-subset feature is identically1, so G_empty,empty=1. It follows
+from the Schur complement of this entry that
+
+ sum_pi c_pi |sum_I alpha_I f_I(pi)|^2
+       >= |sum_pi c_pi sum_I alpha_I f_I(pi)|^2                 (3)
+
+for every coefficient vector alpha. In particular every product
+z_pi=product_i(a_i+b_pi(i)) and all its row-coordinate derivatives are
+linear combinations of these fixed-b features. Their JOINT signed
+Hermitian moment matrix is PSD. This gives all row derivatives at once;
+interchanging a,b gives the corresponding all-column statement. It does
+not permit freely combining the two positive kernels into one joint row-
+and-column kernel without another proof.
+
+Equation (3) is a genuine strengthening of the signed scalar variance
+bound. A nonnegative support gap is a linear observable, and need not
+admit a sum-of-squares identity in this one fixed-b space. Positivity of
+G therefore is not promoted to an unrestricted MOC conclusion.
+
+Reproduction
+
+  python code/research/moc_fixed_b_clifford_kernel.py
+
+The verifier establishes the nine formal polynomial identities, all70
+Jacobi-Clifford signs, and the complete orbit-type reduction of all256
+subset pairs. Three rational dense examples independently audit expansion
+orientation and degeneracies. Output:
+build/moc_fixed_b_clifford_kernel/exact.json.
+
+The theorem is the nine-case proof with complementation, rather than an
+inference from those examples. The corrected Clifford Gram construction
+was developed jointly with the QFT lane; no historical priority is claimed.

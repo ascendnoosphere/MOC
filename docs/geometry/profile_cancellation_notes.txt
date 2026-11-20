@@ -1,0 +1,433 @@
+EXACT UNITARY CANCELLATION AND A POSITIVE TERMINAL FAMILY
+2026-10-17. Status: full complex MOC is proved for the local n4 spectral
+family in Section7, using the established N114/N128 base theorem. All five
+edges and the analytic transfer have been independently audited. The
+unrestricted MOC conjecture is not proved here. Sections1--3 audit the
+n2 cancellation and its higher-dimensional scope; Section8 is an exactly
+checked tangent appendix.
+
+1. Audit of the proposed n2 profile argument.
+
+Write A=diag(a1,a2), B=U diag(b1,b2) U*, and p=|u11|^2.
+Unitarity gives |u22|^2=p, |u12|^2=|u21|^2=1-p and
+u11 conjugate(u21)+u12 conjugate(u22)=0. Therefore, exactly,
+
+ B11=p b1+(1-p)b2,       B22=(1-p)b1+p b2,
+ B12=(b1-b2)u11 conjugate(u21),
+ B21=(b1-b2)u21 conjugate(u11).
+
+For complex b1,b2, B21 is generally NOT conjugate(B12). Their product is
+
+ B12 B21=p(1-p)(b1-b2)^2,                                  (1)
+
+with the complex square, not an absolute square. Consequently
+
+ det(A+B)
+  =(a1+p b1+(1-p)b2)(a2+(1-p)b1+p b2)
+        -p(1-p)(b1-b2)^2
+  =p(a1+b1)(a2+b2)+(1-p)(a1+b2)(a2+b1).                    (2)
+
+All p^2 terms cancel. Equation (2) holds for arbitrary complex a and b.
+It proves the full n2 MOC statement, with weights p and 1-p, directly.
+Every real support profile is affine in p, not a genuinely concave
+quadratic. No additional planar argument is needed for complex n2.
+
+2. The cancellation that does extend to every dimension.
+
+Fix normal A,B, with A diagonal, and vary A only in the coordinate plane
+spanned by ei,ej. Let A0 agree with A off this plane and have both plane
+eigenvalues equal to aj. Put C0=A0+B, Delta=ai-aj. Every such two-plane
+orbit has the form
+
+ A(v)=A0+Delta vv*,  ||v||=1, v supported on {i,j}.
+
+The rank-one determinant identity, valid also for singular C0, gives
+
+ det(A(v)+B)=det(C0)+Delta v* adj(C0) v.                    (3)
+
+For a fixed support multiplier eta, let H be the Hermitian part of the
+two-by-two compression of eta Delta adj(C0), and alpha=Re(eta det C0).
+If p=|vi|^2, optimization over the relative phase gives the exact profile
+
+ alpha+H11 p+H22(1-p)+2|H12|sqrt(p(1-p)).                  (4)
+
+This is concave, but it generally has a strict interior maximum. The
+maximum over the whole plane is alpha+lambda_max(H). Thus rank-one
+affinity survives in all dimensions; endpoint maximization does not.
+The off-diagonal cofactor term is an actual coupled contribution that
+cannot be discarded or replaced by a free phase interval.
+
+
+4. A positive n4 terminal result from the exact six-contact deformation.
+
+This section discharges the specific terminal family constructed in
+closing_contact_tangent_verify.py. It uses the full-unitary tetrahedral
+base inequality proved in N114/N128 of the supplied research volume.
+It does not assume that arbitrary permutation-positive costs are
+unitary-positive.
+
+The base spectra and support direction are
+
+ a=(0,1/2,(1+i sqrt(3))/2,(1-i sqrt(3))/2),
+ b=(-1,1,(-2+i sqrt(3))/7,(-2-i sqrt(3))/7),
+ eta=14/3-(14/9)i sqrt(3), h=1.
+
+Let F0(U)=1-Re[eta det(Da+U Db U*)]. The cited base theorem gives
+F0(U)>=0 for every U in U(4). Its 24 permutation values, in lexicographic
+order, are
+
+ g0=(10,4,4,2,0,4,4,2,0,0,0,2,2,0,4,0,2,0,0,0,2,4,0,2).
+
+The exact IFT certificate supplies a real analytic spectral curve through
+this base, keeping eta fixed and retaining precisely the six support
+contacts
+
+ 1423, 2314, 2341, 2413, 3142, 3241
+
+for every sufficiently small positive parameter t. It proves that all
+24 complex products become pairwise distinct and stay nonzero. The
+support height h(t) is the common real value at these six contacts.
+The curve's exact tangent is recorded in that verifier; no numerical
+approximation is used in the following certificate.
+
+For all U define the nine nonnegative functions, with one-based indices,
+
+ M0=|u14|^2,
+ M1=|det U_{12,34}|^2,
+ M2=|det U_{14,34}|^2,
+ M3=|det U_{13,23}|^2,
+ M4=|det U_{13,14}|^2,
+ M5=|det U_{13,13}|^2,
+ M6=|u33|^2,
+ M7=|det U_{14,14}|^2,
+ M8=|det U_{12,12}|^2.
+
+Put Ft(U)=h(t)-Re[eta det(Da(t)+U Db(t) U*)]. The exact first derivative is
+
+ F'_0 = -(401443/528)F0 + sum_(j=0)^8 lambda_j Mj,          (5)
+
+where
+
+ lambda=(1/10,1/10,1234439/1320,9/10,762293/440,
+         246967/264,9/10,1/10,762953/440).
+
+Every lambda_j is at least 1/10. The negative coefficient of F0 in the
+derivative is harmless because its coefficient in Ft starts at one.
+
+5. Why the exact tangent certificate controls the whole analytic curve.
+
+Let V be the real vector space of permutation profiles of all squared
+minors, including the constant profile. Exact row reduction gives
+dim V=14. Evaluation on the six retained contacts has rank6, so
+
+ L={f in V: f vanishes at those six contacts}
+
+has dimension8. The ten profiles F0,M0,...,M8 all belong to L and span
+an eight-dimensional space. They therefore span all of L.
+
+For completeness, identities between these profiles on permutations
+hold on every unitary. Indeed the exact coefficients
+
+ c_pi(U)=sgn(pi) product_i u_(i,pi(i))/det U
+
+satisfy, for every equal-size I,J,
+
+ |det U_{I,J}|^2=sum_{pi:pi(I)=J} c_pi(U).
+
+This follows either from the complementary-minor identity or by comparing
+coefficients in
+
+ det(Da+U Db U*)=sum_pi c_pi(U) product_i(a_i+b_pi(i)).
+
+Consequently a linear relation vanishing on all permutation profiles
+vanishes identically on U(4). This also shows that every Ft has a profile
+in V, by the squared-minor expansion of the determinant.
+
+Because all six ties are retained, Ft belongs to L. Choose a fixed linear
+right inverse from L to the ten generator coefficients. Apply it only to
+
+ Ft-F0-t F'_0=O(t^2).
+
+Combining with (5) gives exact functions epsilon_j(t)=O(t^2) such that
+
+ Ft=[1-(401443/528)t+epsilon_9(t)]F0
+       +sum_(j=0)^8 [t lambda_j+epsilon_j(t)]Mj.             (6)
+
+For every sufficiently small positive t, all ten coefficients in (6)
+are strictly positive. In particular Ft(U)>=0 simultaneously for every
+U. This proves the retained six-contact support inequality.
+
+SCOPE OF SECTIONS4--5 ALONE (completed for all edges in Section7):
+Equation (6) proves the retained
+supporting-line inequality for this family, uniformly over all U. It
+does not, by itself, prove all other supporting-line inequalities for
+the perturbed spectra. The base N114/N128 theorem covers all directions
+at t=0, but such a full theorem does not automatically persist under
+spectral perturbation. Therefore the unconditional new conclusion of
+this certificate is the single terminal support inequality represented
+by the six retained contacts. A full MOC theorem for the perturbed
+spectra would additionally require controlling their other polygon edges.
+
+Moreover, the positive coefficients and full span imply relative-interior
+positivity: an open neighborhood of each such Ft inside the eight-
+dimensional contact space L has a nonnegative decomposition. Thus the
+certificate eliminates an open set of the terminal cost stratum, not
+merely one isolated numerical tangent.
+
+profile_terminal_cone_verify.py checks (5) in exact Fraction arithmetic,
+all three ranks (14,6,8), the six common zero coordinates, and the strictly
+positive coefficient margin. The IFT input is independently checked by
+closing_contact_tangent_verify.py.
+
+6. Scope of the first certificate, before the all-edge completion.
+
+The n2 identity is a complete proof of the n2 case. The n3 example is a
+rigorous obstruction to a direct endpoint/compression induction. The n4
+certificate proves an open family of the specific six-contact support
+inequalities, using a known full-unitary base inequality and nine explicit
+squared minors. Neither the concave plane profile nor this local terminal
+certificate proves positivity on all terminal strata, so neither proves
+unrestricted MOC.
+
+For avoidance of a naming collision: an exploratory script generated 48
+row/column relabelings of THIS positive tetrahedral gap and 34 individual
+minor rays. This is a different 82-ray set from the older permutation-
+nonnegative cone whose mixed rays include the Drury obstruction. The
+accepted certificate (5)--(6) uses only the one stated positive base ray
+and the nine stated individual minors; no unsafe mixed ray enters it.
+7. Completion for all support directions of the same local spectral curve.
+
+After the limited certificate above, all other polygon edges were checked
+separately. This section supplies the additional obligations explicitly;
+it does not infer their positivity from continuity of the base theorem.
+
+THEOREM (using the proved N114/N128 tetrahedral inequality).
+Let a(t),b(t) be any real analytic IFT curve with the base point and exact
+tangent specified in closing_contact_tangent_verify.py, preserving the
+five real support-tie equations there. For all sufficiently small positive
+t, the pair a(t),b(t) satisfies the full complex MOC conclusion, for every
+relative U in U(4) and every support direction. Its 24 matching products
+are pairwise distinct and nonzero, and six lie on one supporting line.
+
+7.1 The five edges and their exact first-order data.
+
+Use zero-based lexicographic permutation indices. The candidate boundary
+cycle is
+
+ 15 -> 0 -> 20 -> 11 -> 9 -> 15,
+
+or, in one-based permutation notation,
+
+ 3241 -> 1234 -> 4213 -> 2431 -> 2341 -> 3241.
+
+Put J=i sqrt(3). Every base product and every first derivative is in
+Q(J), as is the supplied certificate arithmetic. For an oriented edge
+(i,j) with z_j(0)!=z_i(0), use the actual analytic normal
+
+ eta_ij(t)=J conjugate(z_j(t)-z_i(t)).
+
+Its positive scale is irrelevant to the support inequality. For the
+single split-vertex edge (20,11), z20(0)=z11(0), while their derivatives
+are different; use instead
+
+ eta_20,11(t)=J conjugate((z11(t)-z20(t))/t).
+
+This extends real analytically to t=0 and has a nonzero value there.
+Define the edge deficit profile
+
+ g_ij,pi(t)=Re[eta_ij(t)(z_i(t)-z_pi(t))].                  (7)
+
+For a nonsplit edge its constant and linear terms are computed exactly
+from the base products and first derivatives alone. For the split edge,
+the known first derivative used in the certificate is
+
+ g1_pi=Re[eta_20,11(0)(z'_20(0)-z'_pi(0))].                 (8)
+
+The additional, not yet computed normal-derivative contribution is
+
+ w_pi=Re[eta'_20,11(0)(z20(0)-z_pi(0))].                   (9)
+
+It is treated exactly in Section 7.3, not silently set equal to zero.
+
+The exact old active sets and final contact sets are:
+
+ edge       old active labels                 final contacts
+ 15,0       0,4,8,15,19                        0,15
+ 0,20       0,3,11,12,20                       0,20
+ 20,11      3,11,12,20                         11,20
+ 11,9       3,9,10,11,12,13,17,18,20,22        9,11
+ 9,15       4,8,9,10,13,15,17,18,19,22         4,8,9,10,13,15
+
+For every edge the constant deficits are nonnegative. At every old
+active label outside the final set, the first derivative is strictly
+positive. These are exact rational sign checks. For the split edge all
+four old active products coincide as complex numbers at t=0, so (9)
+vanishes on them. Thus the strict active-label slopes are the actual
+slopes, despite the uncomputed normal derivative.
+
+For the first four edges the final contact equalities are exact because
+they are the two endpoints used to define the normal. For the last edge,
+all six equalities remain exact by the IFT constraints: their products
+remain on the fixed eta supporting line, and the edge normal is a real
+multiple of that eta. Its sign stays positive for sufficiently small t.
+
+It follows that all five candidate segments are exposed hull segments
+for sufficiently small positive t. There is no assumption that a sampled
+linear approximation has the same hull as the actual curve: positivity
+is inferred from exact nonzero constant terms or exact positive first
+derivatives, with the final zero terms preserved identically.
+
+Each neighboring candidate vertex has strictly positive deficit for
+every nonincident edge. In particular the two incident supporting lines
+at each of the five vertices are distinct. Thus all five vertices are
+extreme and the five segments are entire edges of the convex hull; no
+collinear product can extend past an endpoint without destroying that
+endpoint's extremality. The five edges form a closed connected boundary
+cycle. A convex polygon boundary is itself a connected cycle, so no
+additional edge or vertex remains. This proves that these are exactly
+all the hull edges of the actual curve. The other four retained labels
+are interior points of the edge 9--15.
+
+7.2 Positive generators and exact certificate data.
+
+For this step use the 34 distinct nonconstant squared-minor profiles
+and the 48 distinct row/column relabelings of the single proved
+tetrahedral gap g0 in Section 4. Every one is nonnegative for all U.
+As already emphasized, these are SAFE tetrahedral rays, not the older
+permutation-positive but unitary-negative Drury facet rays.
+
+For each edge retain only generators vanishing on its final contacts.
+The exact rational data in profile_family_edges_certificate.json give
+representations
+
+ g_ij(0)=sum_l b_l G_l,
+ known g'_ij(0)=sum_l d_l G_l,
+
+such that
+
+ b_l>=0, and d_l>0 whenever b_l=0.                         (10)
+
+No positivity of d_l is required when b_l>0. The numbers of generators
+and their exact ranks are respectively
+
+ edge       number      rank
+ 15,0       27          12
+ 0,20       27          12
+ 20,11      33          12
+ 11,9       31          12
+ 9,15       10           8.
+
+These ranks equal the dimensions of their entire final-contact spaces
+inside V: rank12 for two specified zeros, rank8 for the six specified
+zeros. The checker independently reconstructs all safe profiles from
+the base gap, verifies every rational coefficient identity on all 24
+permutations, verifies (10), and computes all ranks without a floating-
+point solver. The complex-permutation coefficient identity in Section 5
+transfers every profile equality to all U exactly.
+
+7.3 The split normal's unknown correction is absorbed in positive terms.
+
+For edge20,11, the four old products indexed3,11,12,20 are the same
+complex number. Hence w from (9) belongs to the subspace of V vanishing
+on these four labels. This subspace has dimension10. The certificate
+verifies that the generators having b_l>0 span that entire subspace.
+Thus w is some real linear combination of already-positive-base
+generators. Adding it to the derivative coefficients changes only d_l
+where b_l>0, and leaves every strict condition in (10) unchanged. This
+argument covers the actual unknown second-order IFT data; it requires
+neither an estimate of them nor their numerical calculation.
+
+7.4 Exact absorption and the full local conclusion.
+
+For each edge the actual analytic profile belongs to its fixed final-
+contact space. The generators span that space. After including the
+correction just discussed, the profile remainder after its constant and
+linear terms is O(t^2). A fixed linear right inverse assigns an O(t^2)
+coefficient correction. Thus the exact edge profile has coefficients
+
+ b_l+t d_l+O(t^2).
+
+They are positive for sufficiently small positive t: if b_l>0 this is
+continuity; if b_l=0 it follows from d_l>0. Because there are finitely
+many coefficients and five edges, one common positive parameter interval
+works for all edges and every U. All five support inequalities therefore
+hold simultaneously for the determinant. Section 7.1 proved that their
+intersection is exactly the permutation-product hull. This proves the
+full MOC theorem stated at the start of Section 7.
+
+This is a local family theorem in dimension four. It uses the previously
+proved tetrahedral base inequality; it neither proves positivity on every
+terminal family nor repairs the failed universal safe-cone assertion.
+The all-edge completion supersedes the single-direction limitation only
+for the particular curve specified here, after the additional checks in
+this section have been performed.
+
+8. Uniform first-order positivity in the same six-contact stratum.
+
+The large chosen spectral tangent is not necessary for the retained
+support direction. There is an exact five-dimensional tangent statement.
+Keep the same base point, eta, and six retained contacts. Let D be the
+24-by-16 Jacobian of the deficits, with h equal to the retained reference
+value, and let E be the five tie-equation rows. Exact row reduction gives
+rank(D)=10 and rank(E)=5. Since ker D is contained in ker E, the deficit
+image of the allowed spectral tangent space ker E has dimension5.
+
+The four released labels are17,18,19,22. Define the following profiles:
+
+ R17=M3+M8-F0/10,
+ R18=M2+M5-F0/10,
+ R19=(M5+M7+M8)/2+M6-F0/4,
+ R22=M4+M8-F0/10.
+
+Each Rj belongs to that actual tangent image, has value0 at permutation
+index0, and takes values1 at its named released label and0 at the other
+three. The scale profile F0 belongs to the image, vanishes at all four
+released labels, and has value10 at index0. These five profiles are
+independent and hence form a basis of the entire allowed tangent image.
+Thus every actual fixed-six-contact spectral tangent is exactly
+
+ alpha F0+a R17+b R18+c R19+d R22,
+
+where a,b,c,d are its four released deficit slopes. For a transverse
+departure in which all four old ties become strict, a,b,c,d are positive.
+
+Two exact relations among the generators are
+
+ -M0+M1+M2-M3-M5+M6=0,
+ 2M1-2M3-2M4-4M5-4M7-2M8+F0=0.
+
+Subtract epsilon times the first relation and add epsilon times the
+second to the preceding tangent decomposition. Its nine minor
+coefficients become
+
+ (epsilon, epsilon, b-epsilon, a-epsilon, d-2epsilon,
+  b+c/2-3epsilon, c-epsilon, c/2-4epsilon,
+  a+c/2+d-2epsilon).
+
+Taking epsilon=min(a,b,c,d)/16 makes every one strictly positive; in
+fact each is at least epsilon. The F0 coefficient is unrestricted at
+first order because its zeroth-order coefficient is1. The full-space
+span and O(t^2) absorption argument from Section5 now applies to every
+such transverse analytic spectral curve. Therefore the retained support
+inequality is locally safe throughout this transverse component of the
+six-contact stratum, not just along the single tangent used in Section4.
+
+The exact checker profile_terminal_tangent_verify.py verifies both ranks,
+membership of all five basis profiles in the actual spectral Jacobian
+image, their released-coordinate values, and the two redistribution
+relations. This additional result concerns the retained direction; the
+all-direction conclusion of Section7 is established for the curve and
+its relative neighborhood certified there, not for every tangent merely
+from this one-direction argument.
+
+9. Independent audit status.
+
+The literature track independently executed profile_terminal_cone_verify.py
+and audited the common-minor transfer, right inverse, and strict positivity
+argument. It then independently executed profile_family_edges_verify.py
+and audited the split-normal correction, all five edge positivity
+transfers, and actual hull exhaustion. Both audits passed. The detailed
+second review is profile_family_edges_independent_review.txt. The later
+five-dimensional tangent simplification in Section8 has been checked
+exactly by its named standard-library verifier; it has not yet received
+a separate agent audit as of this note.

@@ -1,0 +1,159 @@
+An actual spectral support outside the fixed-b multiaffine SOS cone
+31 October 2026
+
+The fixed-b multiaffine positive-kernel route cannot by itself prove every
+actual MOC support inequality. This note gives an exact separating
+certificate for a concrete actual spectral support, not merely a failed
+numerical SDP or an arbitrary formal cost. It does not refute MOC.
+
+Use the known nonordinary spectra
+
+  a=(0,100,-214+146i,269-294i),
+  b=(-207-148i,-28-84i,-59+82i,83+104i).
+
+Let permutations have zero-based lexicographic indices. Set
+
+  z_pi=product_i(a_i+b_pi(i)),
+  h_pi=Re[(-25+i)z_pi],
+  g_pi=max_sigma h_sigma-h_pi.
+
+All g_pi are nonnegative. The only zero is g_1=0. The conjecture requires
+L_U(g)>=0 for every unitary U, where L_U denotes the real signed determinant
+amplitude functional. Positivity of a separate fixed-b moment kernel can
+certify this if the cost itself is a sum of squared absolute values of
+multiaffine polynomials in the assigned b-values.
+
+Define the 24 by 16 exact evaluation matrix
+
+  F_pi,I=product_{i in I}(b_pi(i)/512), I subset {0,1,2,3}.
+
+Scaling by512 does not change the function space. The tested cone is
+
+  g_pi=sum_l |(F v_l)_pi|^2, v_l arbitrary complex vectors.    (1)
+
+Equivalently, g is the diagonal evaluation of a Hermitian PSD Gram matrix
+on the full sixteen multiaffine features. The coefficients may depend on
+the stated spectra arbitrarily. The exact result is that (1) is impossible.
+
+The certificate is stored in
+data/certificates/moc_multiaffine_sos_obstruction.json. It contains a rational
+real vector y on the24 permutations and a rational complex congruence
+matrix R. Its two decisive properties are
+
+  sum_pi y_pi g_pi=4336227117440549/2500000>0,                (2)
+
+and strict negativity of the y-weighted square form on every multiaffine
+function that vanishes at permutation1.
+
+Why the restricted square form covers every possible SOS
+
+Let N be an exact basis of ker(F_1), and let T=F N. Any summand in(1) must
+vanish at permutation1, because g_1=0 and every summand is nonnegative.
+Thus every possible summand belongs to the evaluation image of T.
+
+The four elementary-symmetric identities
+
+  sum_{|I|=k} F_pi,I=e_k(b/512), k=1,2,3,4,
+
+give four independent column relations after subtracting the corresponding
+constant columns. Hence rank F<=12. Its function space contains the
+constant function, whose value at permutation1 is1, so the contact-vanishing
+evaluation image has dimension at most11.
+
+The certificate selects11 columns of T, forming T0. It supplies a rational
+complex matrix R and defines E=T0 R. Exact rational multiplication verifies
+
+  K=E* diag(y) E=K*.
+
+For every row i, the exact rational number
+
+  -K_ii-sum_{j!=i}(|Re K_ij|+|Im K_ij|)
+
+is strictly positive. The ordinary absolute value of K_ij is no larger than
+the displayed real-plus-imaginary bound. Gershgorin's theorem therefore
+makes K strictly negative definite. In particular E has11 independent
+columns. Its columns vanish at permutation1, so they span the entire
+contact-vanishing image established above.
+
+For every nonzero possible SOS summand f in this image,
+
+  sum_pi y_pi |f_pi|^2<0.
+
+Summing gives sum y_pi g_pi<=0, contradicting(2). This proves the claimed
+nonexistence without a numerical semidefinite decision or a rank tolerance.
+
+Discovery and verification are distinct
+
+The certificate was found by column generation. An LP approximates the SOS
+cone with sampled rank-one squares. Its dual supplies y. The largest
+eigenvector of the dual feature localizer adds an omitted square. A small
+negative constant shift of the resulting dual makes the feature localizer
+strictly negative while retaining positive pairing with g. The final dual
+and a diagonalizing congruence are rounded to rational numbers, after which
+all proof obligations above are rechecked exactly. The LP, floating
+eigenvalues, and their stopping tolerances are not used in the proof.
+
+Reproduction of the proof, requiring SymPy but no optimizer:
+
+  python code/research/moc_multiaffine_sos_obstruction.py
+
+Optional reconstruction of a certificate, using SciPy for discovery:
+
+  python code/research/moc_multiaffine_sos_obstruction.py --discover
+
+The exact output, including all24 support gaps and all11 strict Gershgorin
+margins, is build/moc_amplitude_capacity/multiaffine_sos_exact_report.json.
+
+The result leaves the full MOC target intact. A sum of row-side and
+column-side kernel certificates, additional ordinary-minor rays, or a
+different spectral argument is a larger class than(1), and is not excluded
+by this single-sided certificate.
+
+The combined row-and-column extension also fails exactly
+
+A second exact certificate excludes that larger combined class for the
+same actual spectra and support direction. Define
+
+  F_b(pi,I)=product_{i in I}(b_pi(i)/512),
+  F_a(pi,I)=product_{i in I}(a_pi^(-1)(i)/512).
+
+The proposed larger cone consists of arbitrary sums of squared absolute
+values from the F_b feature space, arbitrary such sums from F_a, and
+nonnegative combinations of all ordinary singleton and two-subset matching
+indicator rays. These are precisely the usual34 distinct ordinary rays.
+
+The new rational separator y satisfies
+
+  y.g=52996832583341777/12500000>0.
+
+For each of the two contact-vanishing feature spaces, the certificate gives
+an eleven-column rational evaluation basis and a rational complex
+congruence. Each of the resulting11-by-11 y-localizers is strictly negative
+definite, certified by11 strict rational Gershgorin margins. All27 ordinary
+rays vanishing at the unique contact have strictly negative y scores. The
+other seven ordinary rays have value1 at the contact and cannot have a
+positive coefficient in any nonnegative representation of g, because
+g_contact=0.
+
+Thus every nonzero element of the combined cone that vanishes at the
+contact pairs negatively with y, whereas this actual gap pairs positively.
+It follows that g is outside the sum of both fixed-spectral SOS cones and
+the complete ordinary-ray cone. This quantifies the obstruction after
+allowing both row and column kernel positivity; it is not a failure of the
+kernel PSD theorem or of MOC.
+
+The proof is reproduced with rational arithmetic by
+
+  python code/research/moc_two_sided_sos_obstruction.py
+
+The certificate input is
+data/certificates/moc_two_sided_sos_obstruction.json. All22 strict localizer
+margins, the27 ordinary-ray scores and the exact pairing are recorded in
+build/moc_amplitude_capacity/two_sided_sos_exact_report.json. Optional
+--discover runs the two-block LP/eigenvector oracle and then the exact
+verification; the optimizer is used only to propose the rational proof.
+
+This does not exclude auxiliary spectral kernels: the fixed-b PSD theorem
+may be invoked at an arbitrary auxiliary tuple b' unrelated to the actual
+b. It also does not exclude the larger PPT jet cone derived from varying
+an auxiliary cross ratio. Those are separate closure obligations.

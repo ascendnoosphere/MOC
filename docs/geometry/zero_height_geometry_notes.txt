@@ -1,0 +1,347 @@
+ZERO-HEIGHT SUPPORT GEOMETRY FOR 4x4 MOC
+Exact terminal-stratum results; not a proof of unrestricted MOC.
+CURRENT STRONGEST RESULT: Theorem B at the end proves h=0 support
+positivity with>=7 active labels, under nonzero/distinct matching products.
+
+SETUP AND SCOPE
+Let z_pi=product_i(a_i+b_pi(i)), with pi in lexicographic S4 order.
+Fix eta nonzero and assume Re(eta z_pi)<=0 for every pi. Put
+  g_pi=-Re(eta z_pi)>=0, S={pi:g_pi=0}.
+Throughout the theorems below all24 matching products are NONZERO and
+PAIRWISE DISTINCT. In particular, the eight points a_i and beta_j=-b_j
+are distinct. Equal points within either spectrum would cause matching
+product coincidences; a_i=beta_j would cause a zero matching product.
+This is the same generic scope preserved by the contact-transfer theorem.
+No assertion here silently extends a terminal theorem to repeated products.
+
+The real common-minor cost space has dimension14, its permutation
+restriction is injective, and its nonnegative cone has82 extreme rays:
+34 ordinary squared-minor rays, and48 mixed rays. Completeness of this
+classification is internally certified by cone82_completeness_verify.py
+and its JSON certificate, independently audited. Canonical vectors are
+in terminal_profile_faces.json and independently regenerated in the
+existing exact verifiers.
+
+THEOREM A: ZERO-HEIGHT EIGHT-CONTACT POSITIVITY
+Under the setup above, if |S|>=8, then g is a nonnegative combination of
+ordinary squared-minor rays. Hence for EVERY unitary U,
+  -Re(eta det(diag(a)+U diag(b) U*))>=0.
+This theorem uses only the82-ray classification, the exact matching-cubic
+identity, and elementary generalized-circle geometry. It does not use
+Shitov's sufficient condition or extend EVC by continuity.
+
+Proof, with finite certificates:
+1. Any three active corners in a disjoint-swap rectangle force the fourth
+active. The identity z00*z11=z01*z10 and nonzero pure-imaginary active
+values give a pure-imaginary fourth value. Thus no rectangle meets S
+in exactly3 labels.
+
+2. If g has a mixed coefficient in an82-ray representation, each ray with
+positive coefficient vanishes on S. Let C(S) be all82 rays vanishing on S.
+Then the intersection of their zero sets equals S: it contains S, and is
+contained in the zero set of their positive subcombination g. Therefore
+S is an exactly closed ray-zero face. zero_height_face_census.py enumerates
+all such faces with>=6 labels, at least one allowed mixed ray, and no
+3-corner rectangle. It gives27024 faces and46 row/column/inversion orbits:
+  contacts     6      7      8     9    10
+  faces     17280   7512   1728   312   192
+  orbits      28     13      2     2     1
+There are no such mixed faces with>=11 labels. The census was independently
+regenerated and audited by the metaproof agent, including disjoint orbit
+coverage and exact canonical rays.
+
+3. Let F be the exact homogeneous cubic from closing_moc4_model_certificate.
+For actual matching vectors, Re(eta z) satisfies F=0, hence F(g)=0 at h=0.
+zero_height_cubic_screen.py expands F(sum_j t_j r_j) on all46 faces using
+exact integer polarization. On22 faces all nonzero coefficients have one
+sign, and the pure cube of every mixed ray has coefficient+1 or-1 of that
+same sign. A positive mixed coefficient would therefore force F(g)!=0.
+All these faces are ordinary-minor positive. The independent audit also
+checked every mixed pure cube, not merely absence of opposite signs.
+
+4. For two active matchings differing by one transposition, their ratio is
+real and nonzero. Cancellation shows that the cross ratio of the two
+corresponding a points and two beta points is real. The four distinct
+points therefore lie on one generalized circle (a circle or a line).
+Two such circles sharing>=3 distinct points coincide. This gives exact
+circle-block merging.
+
+5. Circle phase saturation: suppose a set C of spectral points is on one
+generalized circle, and pi is active. Choose any rows I such that both a_i
+and beta_pi(i) belong to C. Every matching obtained by permuting pi(I)
+inside those rows is active. To prove this, choose a common Mobius map
+m sending C to the real line, with its pole outside all8 points. Write
+m(x)-m(y)=Delta*(x-y)/((gamma*x+delta)*(gamma*y+delta)). Every full matching
+product is multiplied by the SAME nonzero factor
+  Delta^4 / product_i(gamma*a_i+delta)
+              product_j(gamma*beta_j+delta).
+The quotient of the internally rematched transformed products is a
+nonzero real number, because all their changed factors are real. Thus the
+original full-product ratio is real; multiplying an active pure-imaginary
+value by that ratio stays pure imaginary. This proves the assertion.
+
+6. zero_height_circle_saturation.py iterates steps4--5 to a fixed point,
+with explicit witnesses for each circle, merge, and new active label.
+Among24 cubic-indefinite representatives, indices0,5,6,19,33,34 acquire
+new active labels, contradicting their claimed exact zero sets:
+  index  initial contacts  saturated contacts
+     0          6                 8
+     5          7                24
+     6          7                24
+    19          6                10
+    33          8                10
+    34          9                24
+All other cubic-indefinite representatives have<=7 contacts. Thus every
+face with>=8 contacts is excluded or has no positive mixed coefficient.
+This proves Theorem A. The metaproof agent independently replayed every pair-circle, merge, and
+phase witness and verified that every h0>=8 orbit is closed. Audit PASS.
+
+A FURTHER SIX-CONTACT POSITIVE TYPE
+Index30 among the cubic-indefinite types forces the six points
+{a2,a3,beta0,beta1,beta2,beta3} onto a common circle. The same Mobius argument
+makes all four beta points and two a points real. Shitov2025, Theorem1,
+then implies MOC (one spectrum wholly real and at least n-3=1 entries of
+the other real). This type need not have an ordinary-minor certificate.
+The other circle-safe types5,6,34 were already eliminated by saturation.
+Checking the known condition of separately concyclic whole spectra adds
+no further types: no remaining circle block contains all4 of either side.
+
+GENERIC SIX-CONTACT AVOIDANCE LEMMA
+zero_height_jacobian_probe.py evaluates the six-coordinate matching-map
+Jacobian at one explicit Gaussian-integer spectral pair, modulo prime
+65537 with i represented by256. Of the28 six-contact h0 orbit types,
+all23 rectangle-free types have rank6. A nonzero minor modulo this prime
+proves a nonzero complex polynomial minor, hence generic rank6. The five
+rectangle-bearing types have modular rank5; this deficient rank alone
+is NOT asserted to prove global rank deficiency.
+
+Let Y be the irreducible six-dimensional complex matching variety used
+in the contact-transfer theorem. The preceding full-rank certificates
+allow the theorem's dense conic open set O to be further intersected with
+the smooth full-rank loci of these coordinate projections and all their
+finitely many relabelings. This intersection remains nonempty and dense.
+At an h0 strict violation in O with exactly six active labels of one of
+these23 types, the six active coordinates form a local holomorphic chart.
+Perturb them so all their real support values become strictly negative.
+Every initially inactive support value stays negative, and the strict
+unitary support violation persists by continuity. All nearby Y points
+in O are actual finite spectra. This would produce a strict violation
+with negative support height h<0, contradicting n4 EVC. Therefore such
+an h0 terminal point cannot occur.
+This is a GENERIC AVOIDANCE result after strengthening the transfer open
+set. It is not universal positivity at every possibly singular point of
+these23 types. Type0 of the five exceptions is now excluded by circle
+saturation. Four generic six-contact exceptions remain: indices1,3,4,26.
+The metaproof agent independently audited this exact-six-contact inference.
+
+
+PRIMARY REFERENCES READ
+S.W.Drury, "The external vertices conjecture in case n=4", Electronic
+Journal of Linear Algebra11(2004),180--191 (article PDF supplied by journal):
+https://journals.uwyo.edu/index.php/ela/article/download/263/263/263
+Theorem1.1 and definition of EVC; Corollary1.2; Proposition5.1 and section6.
+Y.Shitov, "A further sufficient condition for the determinantal conjecture",
+Izvestiya: Mathematics89:4(2025),862--869; Theorems1 and12:
+https://www.mathnet.ru/php/archive.phtml?jrnid=im&option_lang=eng&paperid=9292&wshow=paper
+
+
+ADDENDUM: SEVEN-CONTACT TYPE36 IS IMPOSSIBLE (INDEPENDENT AUDIT PASS)
+The exact active set is
+ {0132,0312,0321,1023,1230,2013,2103}
+in zero-based permutation notation. Its forced circles are
+ {a0,a2,a3,beta1,beta2} and {a1,a2,beta0,beta1,beta3}.
+Use projective coordinates to send their two intersection points a2,beta1
+to0,infinity and the first circle to the real line. If the circles
+coincide, all8 points lie on one circle, forcing all24 products active;
+this contradicts the exact seven-label active set. Otherwise write
+ a=(x,t,0,y), beta=(p*t,infinity,z,q*t),
+with x,y,z,p,q real and t nonreal. All parameters/divisors used below are
+nonzero by the eight-point distinctness assumption.
+
+To justify infinity rigorously, use homogeneous bracket products:
+Z_pi=product_i det(v_a_i,v_beta_pi(i)). A common GL2 change multiplies
+each matching product by the same determinant power, and individual
+point rescalings also multiply every product by the same factor. With
+beta1=infinity, each product has the same constant factor at that column;
+we suppress it and retain the remaining cubic product. Thus all ratios
+and zero-height halfspace relations are preserved. No finite-matrix
+identity or EVC is applied to an infinite eigenvalue.
+
+Activeness of0132 and1023 makes (x-p*t)/(y-q*t) real. Since Im(t)!=0,
+this gives x*q=p*y. A real nonzero common rescaling c=x/p=y/q gives
+ a=(p,t,0,q), beta=(p*t,infinity,z,q*t).
+Set H=t*(1-t), r=|t|^2>0 and s=|1-t|^2>0. The first six active products
+are real multiples of H. The remaining1230 product divided by H is
+ -q*(t-z)*(q-p*t)/(1-t).
+Its imaginary part vanishes exactly when
+ p*s+(q-p)*(1-z)=0,
+so s=(p-q)*(1-z)/p.
+
+For any matching cubic Z(t)=c0+c1*t+c2*t^2+c3*t^3 with real coefficients,
+ Im(Z/H)/Im(t)=(c0+c1+c2+c3)/s-c0/r-c3.
+Define N_pi=p*r*s*Im(Z_pi/H)/Im(t). All inactive N_pi must have the same
+strict sign, because some nonzero real multiple of H is active and all
+inactive products lie in the same strict halfplane. Substitution for s
+makes N_pi a real polynomial in p,q,z,r. Five exact identities suffice:
+ N0123 = -p*q*z*(z-1)*(p-q),
+ N0231 = p*q*(z-1)*(p-q)*r,
+ N1320 = -p*z*(q-1)*(p-q)*r,
+ N3021 = p*z*(p-1)*(p-q)*r,
+ N1032 = p*q*(p-1)*(q-z)*r.
+Every listed label is inactive in this exact face.
+
+Positivity of N0231/N0123 gives z<0. Positivity of N1320/N0123 then
+gives0<q<1. Positivity of N3021/N0123 gives p>1. These inequalities
+force N0123<0<N1032, contradicting the common-sign requirement.
+Therefore type36 is impossible for an actual zero-height support profile.
+
+zero_height_36_symbolic.py proves the five polynomial identities exactly
+using rational-coefficient dictionaries, and asserts that all seven
+active polynomial numerators vanish. The metaproof agent independently
+audited both the projective chart and all sign inferences. No numerical
+probe is used in the proof; zero_height_36_probe.py was exploratory only.
+
+UPDATED UNRESOLVED h0 COUNT after this addendum and Shitov type30:
+16 exact mixed types remain:14 six-contact types and TWO seven-contact
+types27,32. After the enhanced generic-six-contact avoidance, the six-label
+terminal exceptions are1,3,4,26. Algebraic agent separately reports type1
+progress; its result is not assumed in this document until independently
+certified in its own notes. The unrestricted4x4 conjecture remains open
+within this work.
+
+ADDENDUM: SEVEN-CONTACT TYPE27 IS IMPOSSIBLE
+Exact verifier PASS; independent mathematical audit by metaproof PASS.
+The exact active set is
+ {0123,0231,0321,1032,1230,1320,2013}.
+Its circles are {a0,a3,beta0,beta1}, {a1,a3,beta0,beta2},
+{a1,a2,beta2,beta3}, {a1,a3,beta1,beta3}.
+Normalize a1=0,a3=infinity,beta0=1. The second circle is the real line.
+The fourth is a line through0; write beta1=t,beta3=z*t. The first line
+then gives a0=1-u+u*t. The third circle gives
+ C=a2=y*z*t/[z*t*(1-v)+v*y].
+Thus a=(A,0,C,infinity), beta=(1,t,y,z*t), A=1-u+u*t,
+with u,v,y,z real and t nonreal. If t were real, all8 points would be
+concyclic and all24 products active. All u,v,y,z are nonzero;
+u,v are not1 and y,z are not1; the denominator of C is nonzero.
+These exclusions all follow from eight-point distinctness. Infinity is
+interpreted by the homogeneous bracket justification in the type36 proof.
+
+Omit the common row-at-infinity factor. Set H=(t-1)*(C-z*t),
+r=|t|^2,s=|t-1|^2,w=|z*t-y|^2, all positive. The first six active products
+are real nonzero multiples of H. The seventh gives L=Z2013/H real nonzero.
+For inactive labels let Gpi=Im(Zpi/H)/Im(t). Every Gpi has the same
+strict sign. Exact identities give
+ G0132=-u,
+ G2031=(1-y)/s,
+ G0213=u*y^2*(1-z)/[(1-v)*w],
+ G1302=(1-u)*y*z*(y-1)/[(1-v)*w],
+ G1023=(1-u)*y*v/[z*(1-v)*r].
+Comparing their signs with G0132 gives, in order,
+ u*(y-1)>0,
+ (z-1)*(1-v)>0,
+ (u-1)*y*z/(1-v)>0,
+ u*v>0.
+For the last implication divide the G1023-derived inequality by the
+preceding one; the quotient has sign v/u.
+
+There are also exact expressions
+ G2310=L*z,
+ G2031=L*y*(1-z)/[(1-v)*w*|R|^2], R=(C-t)/(C-z*t).
+Their same sign, together with (z-1)/(1-v)>0, forces y*z<0.
+The five sign restrictions leave just two possibilities:
+ (A) u,v<0, y<0, z>1;
+ (D) u,v>1, y>1, z<0.
+Indeed u>0 forces y>1, then z<0, then v>1, then u>1;
+u<0 forces v<0, then z>1 and y<0.
+
+In case(A), the two inactive labels3012 and2310 have ratio
+ G3012/G2310 = [z*(u+y-1)-u*y]/[z*|A-y|^2]<0,
+since z>0 and both terms in the numerator are negative.
+In case(D), the two inactive labels2103 and2310 have ratio
+ G2103/G2310 = y*[z*(y+v-1)-y*v]
+                  / |y*(z-v)-z*(1-v)*t|^2 <0.
+Again the numerator is strictly negative. Each contradicts the required
+positive ratio of two inactive G values. Therefore exact type27 cannot
+occur as an actual zero-height support profile.
+
+zero_height_27_verify.py checks20 exact polynomial identities: matching
+ratios, real coefficients for the first six active products, and the
+five real-Mobius imaginary-part determinants used above. It also verifies
+all active/inactive label memberships. It uses only rational arithmetic,
+without numerical sampling.
+
+UPDATED FRONTIER after this addendum: only seven-contact type32 remains
+in this zero-height analysis. The generic six-contact exception types
+remain1,3,4,26 before incorporating algebraic agent's separate results.
+
+ADDENDUM: SEVEN-CONTACT TYPE32 HAS AN ORDINARY-MINOR CERTIFICATE
+Exact verifier PASS; independent mathematical audit and checker run by
+metaproof PASS.
+The active labels are {0213,0231,0312,1203,1302,2013,2031}.
+Unlike types27 and36, this type need not be excluded by circle incidence
+or by all active values lying on one ray. Instead the cubic identity
+forces membership in the ordinary-minor cone.
+
+Let the allowed ordinary ray indices be J=(3,5,10,12,16,21,23,26),
+and write any nonnegative face cost as
+ g=sum_{j in J} a_j*r_j + alpha*r53 + beta*r80,
+where every coefficient is nonnegative. Exact24-coordinate identities are
+ r53=r5+r10+r21-r23,
+ r80=r3+r12-r21+r23,
+ -r3+r5+r10-r12-r16+r21-r23+r26=0.
+Put
+ L1=a23+a26-alpha+beta,
+ L2=a16+a21+alpha-beta.
+
+If L1<0, set alpha=a23+a26+beta+u with u>0. Expanding the actual exact
+matching cubic F(g) after this substitution gives117 nonzero monomial
+coefficients, ALL STRICTLY NEGATIVE; in particular the coefficient of
+u^3 is-1. Since every substituted variable is nonnegative and u>0,
+F(g)<0. Similarly L2<0 permits beta=a16+a21+alpha+u, and the second exact
+expansion again has117 negative coefficients and coefficient-1 at u^3.
+Thus the necessary spectral identity F(g)=0 forces L1>=0 and L2>=0.
+
+These two inequalities suffice for an ordinary decomposition. Replace
+r53,r80 by their ordinary linear combinations, then add t times the
+zero relation. The resulting ordinary coefficients, in J order, are
+ [a3+beta-t,
+  a5+alpha+t,
+  a10+alpha+t,
+  a12+beta-t,
+  a16-t,
+  a21+alpha-beta+t,
+  a23-alpha+beta-t,
+  a26+t].
+They are all nonnegative exactly when t lies between
+ max(-a5-alpha,-a10-alpha,-a21-alpha+beta,-a26)
+and
+ min(a3+beta,a12+beta,a16,a23-alpha+beta).
+Of the16 comparisons between lower and upper bounds,14 follow directly
+from nonnegativity of the original coefficients, and the remaining two
+are precisely L2>=0 and L1>=0. Thus the interval is nonempty, and choosing
+any t in it gives the claimed ordinary-minor certificate.
+
+zero_height_32_verify.py independently rebuilds F from the certified
+matching model, verifies all ray identities in24 coordinates, checks
+both117-term expansions coefficient by coefficient, and verifies the
+16 linear interval comparisons. Its output is
+zero_height_32_certificate.json. No numerical sampling enters this proof.
+
+THEOREM B: ZERO-HEIGHT SEVEN-CONTACT POSITIVITY
+Under the setup at the top of this document (all24 matching products
+nonzero and pairwise distinct), any h=0 support profile with at least
+SEVEN active labels admits a nonnegative ordinary-minor decomposition.
+Proof: Theorem A handles>=8; the complete seven-contact census leaves
+only types27,32,36 after the earlier cubic/circle screens. Types27,36
+are impossible by their exact sign proofs. Type32 is ordinary-positive
+by the preceding cubic-cone argument. This proves the theorem for allU.
+
+FINAL LOCAL RESIDUAL
+This document now closes ALL zero-height terminal profiles with>=7
+active labels. For exactly6 active labels, the enhanced generic-coordinate
+avoidance removes23 rectangle-free types; circle saturation removes
+rectangle type0. The four remaining generic six-contact types are
+1,3,4,26, before incorporating algebraic agent's separate closure proofs.
+Those separate proofs must be checked in their own notes. Nonzero-height
+terminal profiles require the other agents' results. This document does
+not claim unrestricted4x4 MOC or unrestricted dimension MOC.

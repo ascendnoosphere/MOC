@@ -1,0 +1,126 @@
+AN EXACT SCHUR PENCIL AND A COMMON COMPLETION OBSTRUCTION
+31 October2026
+
+This classifies one entire low-dimensional completion family and excludes
+it for both exact actual regression costs. It does not exclude completion
+in the full68-dimensional contact Gram kernel and is not an MOC
+counterexample.
+
+Exact verifier:
+  python code/research/moc_cap_arrow_critical_schur.py
+Certificate:
+  build/moc_cap_arrow_critical_schur/exact_identity_and_obstruction.json
+
+1. The proposed common completion
+
+Use the canonical features F=(f34,r_j:j in Z), with
+  Z=(0,7,10,13,17,18,20,22,23,27,28,30,31),
+and cost g=lambda*f34+sum beta_j*r_j. Let p=beta18,q=beta23,r=beta28
+and S=p+q+r. The ordinary Gram diagonal is necessarily beta_j: at each
+of the13 zeros of f34, exactly one of these13 ordinary features is1.
+
+Allow arbitrary f34-to-ordinary couplings and an arbitrary critical3x3
+block on(r18,r23,r28), while setting all other ordinary cross terms to
+zero. This includes couplings from f34 to all six directed features,
+not merely the eight-feature subsystem considered previously.
+
+The resulting17 unknown Gram entries obey11 independent interpolation
+constraints. ALL solutions have the following six-parameter form:
+  parameters a,x,z,s,c12,c13;
+  G_ff=k=lambda-2(a+x+z+s);
+  G_f,j=a,                         j=0,7,10,13;
+  G_f,17=G_f,20=x;
+  G_f,22=G_f,27=z;
+  G_f,30=G_f,31=s;
+  G_f,18=-a+x+s;
+  G_f,23=-a+x+z;
+  G_f,28=-a+z+s.
+The critical block C has diagonal(p,q,r) and
+  C12=c12, C13=c13, C23=2a-lambda-c12-c13.
+All other off-diagonal entries vanish. Exact coefficient comparison
+checks diag(F G F^T)=g at all24 permutations. The rank11 constraint
+matrix and rank6 parameter map prove completeness within this pattern.
+
+2. Explicit Schur reduction
+
+Let O be the ten noncritical ordinary coordinates and u their displayed
+couplings to f34. For positive beta_j on O, eliminate their diagonal
+block. The entire Gram is PSD precisely when the4x4 matrix
+
+  [ kappa                  (-a+x+s,-a+x+z,-a+z+s) ]
+  [ (-a+x+s,-a+x+z,-a+z+s)^T          C          ]
+
+is PSD, where
+  kappa=lambda-2(a+x+z+s)-sum_(j in O)u_j^2/beta_j.
+The verifier checks the exact triangular congruence, not just equality
+of determinants. At a zero ordinary budget, PSD requires its coupling
+to vanish, after which that coordinate can be deleted.
+
+3. A fixed rank-two obstruction to the WHOLE pencil
+
+If the Gram were PSD, write Fvec for its mixed-feature vector and
+P,Q,R for the three critical feature vectors. The interpolation
+parameterization gives the exact identity
+
+  4||P+Q+R||^2 + ||2Fvec+P+Q+R||^2 = 5S-6lambda.    (*)
+
+Indeed ||P+Q+R||^2=S+4a-2lambda and the second squared norm is
+S+2lambda-16a. Therefore PSD requires S>=6lambda/5, independent of
+all ten other budgets and of how the six free parameters depend on them.
+This obstruction also applies on zero-budget boundary faces.
+
+Both actual regression costs violate this necessary condition strongly:
+
+  Compact Gaussian-integer triangle example:
+    S/lambda=7419131496547/44307916343453 <1.
+    Actualness replay: moc_actual_triangle_failure_integer_verify.py.
+
+  Exact actual two-chart example:
+    S/lambda=743081013331832045010363882937
+             /879030115394518122894206262413 <1.
+    Actualness and full-SOS replay: moc_two_chart_exact_replay.py.
+
+Thus this common Schur scheme fails on BOTH anchors. Enlarging only the
+mixed-feature arrow cannot repair it: additional ordinary-to-ordinary
+cross terms outside the critical triangle are essential.
+
+4. Exact connection to the complete68-dimensional kernel
+
+At contact index1, beta0=0 forces a=0. The remaining five tangent
+directions belong to the complete contact Gram kernel. Use the ordinary
+basis
+  B=(r7,r10,r13,r17,r18,r20,r22,r23,r27,r28,r30,r31,r1)
+and Q_ab=sym(x_a*x_b^T), with sym(A)=(A+A^T)/2, where x_j is the
+coordinate vector of r_j in B. Each direction has a four-term expression:
+
+  dG/dx =2Q_7,33+2Q_13,33-2Q_21,33+2Q_30,33;
+  dG/dz =2Q_7,19+2Q_13,19-2Q_19,21+2Q_19,30;
+  dG/ds =2Q_10,26+2Q_13,26+2Q_22,26-2Q_26,32;
+  dG/dc12=-2Q_1,23+2Q_4,23-2Q_17,23+2Q_22,23;
+  dG/dc13=-2Q_2,28+2Q_9,28+2Q_27,28-2Q_28,30.
+
+Every displayed pair is disjoint on all24 permutations. These are exact
+equalities of13x13 matrices after changing from canonical to B
+coordinates. The verifier independently confirms that all162 disjoint
+pair generators span the full68-dimensional contact kernel. The
+five-dimensional subspace above cannot supply the uniform completion.
+
+5. An exact diagnostic for missing Gram couplings
+
+The integer cost functional
+  y=(-4,5,2,-4,-4,5,5,0,0,8,2,-4,
+     0,2,8,0,-4,5,8,-4,0,2,5,0)
+satisfies y.g=5S-6lambda. In canonical feature coordinates let
+  Y=4ww^T+vv^T,
+where w is1 on the three critical coordinates and0 elsewhere, and
+v=w+2e_f. Then
+  F^T diag(y) F = Y+E.
+Here E vanishes on every entry permitted in the six-parameter pattern.
+Its48 nonzero off-diagonal ordinary edges are listed exactly in the
+certificate. For ANY full Gram giving g,
+  5S-6lambda=tr(YG)+tr(EG).
+The first term is nonnegative for PSD G. Consequently low-S actual
+costs must acquire a negative contribution from the excluded ordinary
+cross terms. This is a concrete budget-transfer requirement for the
+full completion problem; it is not a PSD construction or a dual
+separator for the full intrinsic matching-SOS cone.

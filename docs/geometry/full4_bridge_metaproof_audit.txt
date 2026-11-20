@@ -1,0 +1,714 @@
+FULL 4x4 MOC: INDEPENDENT AUDIT OF THE TWO CLOSURE BRIDGES
+2026-10-17. This is an audit and a sharpened combined reduction, not a
+proof of the unrestricted conjecture.
+
+1. THE FULL PROFILE CONVEXIFICATION IS VALID, WITH A FOUR-POINT BOUND.
+
+Write p(U)_{I,J}=|det U[I,J]|^2 for every pair of equal-size subsets.
+For each U in U(4), choose any row r. Column phases make that row a real
+unit vector v without changing any p(U) coordinate or U D_b U*.
+If x_i is another row transposed, let E_i=Re(x_i x_i*) on v-perp.
+These three effects are real symmetric positive semidefinite, have trace
+one and rank at most two, and sum to the identity of real dimension 3.
+
+The real effect-triple set
+ C={ (E_1,E_2,E_3): E_i>=0, tr(E_i)=1, sum E_i=I_3 }
+has exactly ordered orthogonal rank-one frames as its extreme points.
+Indeed, if all ranks are >=2, the supported symmetric perturbation spaces
+have total dimension >=9, while the sum and trace conditions impose at
+most 8 independent constraints. There is a nonzero supported perturbation
+of both signs, contradicting extremality. If one E_i is rank one, it is
+a projection; the two other effects are supported on its orthogonal
+complement, sum to I_2, and are simultaneously diagonalizable. Their
+eigenvalues are theta,1-theta and 1-theta,theta, so the triple is a mixture
+of two ordered orthogonal frames. At an extreme point theta is 0 or 1.
+
+For the actual triples above there is the stronger cardinality bound 4.
+If one effect has rank one, use the two-frame formula. Otherwise all have
+rank two. Along a nonzero supported trace-preserving perturbation, the
+maximal PSD interval is bounded in both directions and contains 0 in its
+interior. At each endpoint at least one effect loses rank, because an
+endpoint with all effects positive definite on their fixed supports could
+be extended. Trace one excludes rank zero. Each endpoint is consequently
+a mixture of at most two frames, hence the original triple of at most 4.
+
+Insert the fixed v as row r of each resulting real orthogonal matrix O_s.
+The same weights preserve all minors, for these separate reasons:
+ - Singletons are the diagonal entries of E_i.
+ - A 2-minor in rows i,r and columns j,k is
+   (v_k e_j-v_j e_k)^T E_i (v_k e_j-v_j e_k), hence linear in E_i.
+ - Every remaining 2-minor has complementary row set containing r, and
+   unitary complementary minors have equal squared modulus.
+ - 3-minors are complementary to singletons, and ranks 0 and 4 are 1.
+Changing the sign of one nonanchor row makes det(O_s)=1 when necessary,
+without changing any profile or the anchor. Thus
+
+ p(U)=sum_{s=1}^q lambda_s p(O_s),
+ q<=4, lambda_s>=0, sum lambda_s=1, O_s in SO(4), row_r(O_s)=v.
+
+No claim concerning real dimension 4 effect triples or n>=5 is used.
+The rank-perturbation dimension count is specifically for three effects
+on a real three-dimensional space. All effects and perturbations here
+are REAL symmetric; the proof does not silently import a complex POVM
+extreme-point assertion.
+
+The determinant expansion
+ det(D_a+U D_b U*)=sum_{|I|=|J|} a_{I^c} b_J p(U)_{I,J}
+then gives, with the SAME spectrum-independent weights and O_s,
+ det(D_a+U D_b U*)=sum_s lambda_s det(D_a+O_s D_b O_s^T)
+for every complex a,b. Therefore conv p(U(4))=conv p(SO(4)), including
+their anchored fibers.
+
+Useful strengthened formulation: for any fixed a,b,eta, the maximum
+of Re(eta det(D_a+U D_b U*)) over U(4) equals the maximum over SO(4).
+If U is a global maximizer, each positive-weight O_s in its decomposition
+is also a global maximizer, and may retain any chosen phase-adjusted
+anchor row of U. The same equality holds when the anchor row is prescribed.
+This proves existence of an orthogonal maximizer, not that every maximizer
+is orthogonal, monomial, or commuting.
+
+2. THE HIGH-CONTACT TRANSFER HAS NO IDENTIFIED GAP.
+
+Audited source: closing_high_contact_standalone.txt. Critical points:
+
+(a) The rank-at-most-two matching variety Y has complex dimension 2n-2.
+On the nonzero-entry rank-two locus, equality of all permutation products
+recovers all 2x2 cross-ratios. Equal product vectors differ precisely by
+row/column scaling with product of all scalings 1. This orbit has dimension
+2n-2, and rank-two matrices have dimension 4n-4. The fiber calculation is
+valid for every point of that open locus, not merely a guessed generic
+parameter count.
+
+(b) A dense conic Zariski-open part of Y consists of actual finite additive
+spectra. A generic common GL2 change in a rank-two factorization permits
+C_ij=r_i s_j(a_i+b_j); an nth root absorbs the common product of r_i,s_j.
+Chevalley supplies a dense open subset of the constructible image. Only
+this open realization is needed; global quotient surjectivity is not.
+Removing all coordinate zeros, all matching-coordinate coincidences, and
+one nonzero disjoint-swap quartet difference still leaves a dense open set.
+Perturbation into its inverse image preserves strict violation; positive
+common rescaling restores its exact original value.
+
+(c) At k current active labels, imposing the complex value d_U-z_pi0 and
+the k-1 old active differences imposes at most k complex equations. Even
+at singular points of the irreducible pure-dimensional affine Y, every
+local component through that point has dimension at least (2n-2)-k.
+Thus k<2n-2 leaves a nonconstant algebraic curve through the point. The
+curve cannot lie in the excluded closed set because the point is in the
+chosen open set. The old labels remain tied along the curve, and are
+active on the region where every inactive deficit is positive.
+
+(d) The compact normalization of that irreducible curve is connected.
+The deleted points at infinity or outside the chosen open set are finite;
+their removal leaves a connected Riemann surface. If the positive-deficit
+component has no boundary there, it is the whole punctured surface.
+Each meromorphic difference then has nonnegative real part on a punctured
+neighborhood of every deleted point. A genuine pole would take both signs,
+so there are no poles; compactness makes every difference constant.
+
+(e) Constant differences would force z=m+c*1 along the curve. The disjoint
+swap relation z00*z11=z10*z01 gives c*(m00-m10-m01+m11)=0. The chosen open
+set ensures the last factor is nonzero, so the curve would be constant.
+Hence a boundary point exists inside the actual finite open set and adds
+an active label while retaining the fixed U, eta and exact positive gap.
+Iteration ends with at least 2n-2 active, pairwise distinct products.
+
+All of (a)--(e) survive independent audit. No positivity of the complex
+Leibniz coefficients c_pi(U) is assumed. No argument turns the final
+number of active products into a contradiction.
+
+3. THE STRONGER COMBINED NECESSARY FORM OF ANY 4x4 COUNTEREXAMPLE.
+
+Suppose U,a,b,eta have strict support gap g>0. Decompose p(U) as in section1.
+The weighted average of the corresponding orthogonal gaps is g, so some
+O in SO(4) has gap g_O>=g>0. Scaling both spectra by (g/g_O)^(1/4), a
+positive real number, restores gap g with this SAME O and eta. Apply
+section2 with that O held fixed throughout. The resulting spectra satisfy:
+
+ - the mixer is a fixed real O in SO(4);
+ - eta and the original exact gap g are unchanged;
+ - all 24 matching products are nonzero and pairwise distinct;
+ - at least 6 distinct matching products lie on the maximizing support line;
+ - both spectra are simple, since a repeated a or b would repeat products;
+ - the generic disjoint-swap quartet difference remains nonzero.
+
+The O can retain any prescribed phase-adjusted anchor row of the initial U.
+More generally, any additional nonempty conic Zariski-open conditions on
+the matching-coordinate variety can be retained: intersect them with the
+open set in section2.
+Real support inequalities or prescribed zero faces are not such conditions
+and cannot be inserted by this statement.
+
+Thus an exact positivity theorem for all real O on this actual six-contact
+locus WOULD prove full 4x4 MOC. Neither bridge by itself proves that theorem.
+
+
+5. INDEPENDENT AUDIT: THE NEW TEN-CONTACT POSITIVITY THEOREM PASSES.
+
+Audited inputs: terminal_profile_ten_census_verify.py,
+terminal_ten_verify.py, terminal_ten_rows.json,
+terminal_ten_last_row.json, and terminal_profile_secantry.py. The prior
+degree-18 projected-Hessian polynomial theorem and the >=11-contact
+theorem are reused as already proved dependencies. The 82-ray completeness
+dependency is supplied internally by cone82_completeness_verify.py and its
+exact certificate; it need not rest on a computational assertion in N046.
+
+The precise theorem is: if all 24 matching products are pairwise distinct,
+and an actual order-four support cost has at least 10 active labels and
+support height h!=0, that cost is a nonnegative sum of ordinary squared-
+minor indicators. Its value on every U(4) is consequently nonnegative.
+
+For h!=0 a four-corner independent-swap rectangle cannot be entirely
+active with distinct products. The complete cone classification implies
+that, if a mixed ray occurs, the full zero set is contained in its 13 zeros.
+Cases with >=11 zeros are already handled. For exactly 10 zeros the full
+zero set must equal its ray-face closure: every ray in a decomposition of
+the cost vanishes on that zero set, so the common zeros of all such rays
+both contain it and are contained in the zero set of the cost itself.
+The exact census gives 4,320 such closed faces in 10 symmetry orbits.
+
+Every representative face consists of three ordinary rays and one mixed
+ray. If the mixed coefficient is zero there is nothing to prove. Otherwise
+divide the whole actual cost, its support height and eta by that positive
+coefficient, and write g=a r_0+b r_1+c r_2+f, with a,b,c>=0. This
+normalization preserves the actual-spectral property and product
+distinctness. The ten exact certificates split into three classes:
+
+(i) Four representatives have N(g)=-4 p(a,b,c)^2, with p having strictly
+positive nonzero coefficients and constant coefficient 1. Thus p>0 on
+the entire nonnegative orthant and the necessary actual-spectral equation
+N(g)=0 is impossible. Even if one uses only the determinant quotient on
+Q!=0, the independently checked nonzero, one-sign F on these faces and
+F(g)=h Q(g) exclude Q=0.
+
+(ii) Five representatives have a constant real row w and active labels
+i!=j such that
+ w^T H_F(g-h e)=(A a+B b+C c+D)(E_i-E_j),
+where A,B,C>=0 and D>0. The coefficient of h is exactly zero, checked
+coefficientwise. Actual complex spectral singularity, written
+-eta*z=(g-h e)+i d, implies H_F(g-h e)d=0. Hence d_i=d_j. Since i,j
+are both active, their real parts also coincide, contradicting distinct
+matching products. This argument does not require an unproved real lift
+or a converse to the spectral singularity equations.
+
+(iii) The last face is (r3,r21,r26,f52). Its exact formulas are
+ F=1+a, Q=1+bc,
+ p=(1+a)^2(1+b)(1+c)(1+a-bc).
+N=0 and a,b,c>=0 imply bc=1+a>=1, so b,c>0 and Q>0. Necessarily
+h=F/Q=bc/(1+bc). An explicit polynomial row w0+c*w1 satisfies
+ (w0+c*w1)^T H_F(g-h e)=c(1+b)(E_0-E_3).
+The exact verifier checks the equivalent identity after multiplication by
+1+bc, including every coefficient in b,c. Both labels are active and
+c(1+b)>0, so the same imaginary-kernel argument contradicts distinctness.
+
+Independent execution results:
+ - The ten-face census passed exactly: 4,320 faces, ten disjoint orbits.
+ - A separate cross-check regenerated its 82 ray vectors and established
+   exact equality with terminal_profile_secantry.py's JSON ray list; every
+   algebraic JSON face/zero set also matched the census.
+ - terminal_ten_verify.py passed all ten orbit types, with 13,300 exact
+   rational/integer evaluations and all constant and polynomial row
+   identities. No numerical discovery output is trusted by this verifier.
+
+For each face the 1,330 nodes (2i,2j,2k), i+j+k<=18, form a lower-simplex
+grid unisolvent for total degree <=18 in three variables. Both the proved
+polynomial N and the asserted squared nonic have that degree bound. The
+verifier checks Q!=0 at every node, so its quotient evaluation computes N
+there correctly. Equality at those nodes proves a polynomial identity;
+homogeneity extends the mixed-coefficient-one identity to any positive
+mixed coefficient. Polynomial continuation also covers coefficient zero,
+though that case already has a direct ordinary-minor certificate.
+
+Independent mathematical audit finds no gap in this ten-contact theorem.
+The bridge in section3 gives only six contacts. Thus the remaining
+terminal strata are six through nine contacts when h!=0, plus the h=0
+case, for which the rectangle-free census is not applicable. Calling the
+ten-contact theorem a full 4x4 MOC proof would overstate its scope.
+
+6. ZERO-HEIGHT SCREEN: AUDIT PASSES AND REMOVES h!=0 FROM SECTION5.
+
+Independently executed zero_height_face_census.py and
+zero_height_cubic_screen.py. The toric rectangle identity implies that,
+when h=0 and all matching products are nonzero, three active corners
+force the fourth active: three purely imaginary nonzero values have a
+purely imaginary product/quotient for the fourth corner. Thus a full
+active set cannot meet any independent-swap rectangle in exactly three
+labels. This needs nonzero products, but not pairwise distinctness.
+
+Using the same complete 82-ray cone, enumerate every subset of size >=6
+of each mixed ray's 13 zeros, impose the rectangle condition, and require
+equality with its ray-face closure. This produces exactly 27,024 closed
+faces, in 46 symmetry orbits. The face counts by number of active labels
+are 17,280 at six, 7,512 at seven, 1,728 at eight, 312 at nine, and 192 at
+ten. The orbit counts are respectively 28,13,2,2,1. There are no qualifying
+mixed faces with eleven or more active labels.
+
+I independently checked that the ray list agrees with the canonical
+regenerated list, that every representative's ray set is the exact face
+defined by its zeros, and that all symmetry orbits are disjoint and cover
+the complete enumerated face set. These are exact integer calculations.
+
+For h=0 an actual spectral cost satisfies F(g)=0. For g=sum t_i r_i,
+the cubic expansion uses the symmetric tensor
+ T(u,v,w)=u^T H_F(v)w:
+ the coefficient of t_i^3 is T(r_i,r_i,r_i)/6;
+ that of t_i^2 t_j is T(r_i,r_i,r_j)/2;
+ that of three distinct variables is T(r_i,r_j,r_k).
+The screen computes these exact coefficients. On 22 representative faces
+all nonzero coefficients have one sign. In EACH such face, I separately
+verified that the pure-cube coefficient for EVERY mixed generator is
+nonzero, indeed +1 or -1. Therefore F(g)=0 with all t_i>=0 forces every
+mixed coefficient to vanish, including on the boundary where some other
+coefficients are zero. Only ordinary-minor generators remain.
+
+The unique ten-contact zero-height orbit is one of those 22 closed cases.
+Consequently the zero-height screen proves ordinary-minor positivity for
+ALL actual costs with h=0, nonzero products and >=10 active labels. Combined
+with section5, the strengthened theorem is:
+
+ If all24 complex matching products are nonzero and pairwise distinct,
+ every actual 4x4 support cost with >=10 active labels is ordinary-minor
+ positive, for EVERY support height h, including h=0.
+
+This supersedes the residual-scope sentence at the end of section5:
+after the high-contact transfer, the remaining terminal contact counts
+are SIX THROUGH NINE for any h. Of the 46 zero-height face orbits, 24 are
+not settled by this cubic sign screen. No full zero-height theorem or
+unrestricted 4x4 MOC theorem is asserted.
+
+7. AN EXACT SIX-CONTACT FACE: INDEPENDENT ROW-CERTIFICATE AUDIT PASSES.
+
+The final record of global_six_row_certificates.json, face82 in
+terminal_profile_faces.json, has active labels (zero-based lexicographic)
+ S={0,5,7,9,14,18}
+and face generators
+ {r17,r20,r21,r22,r24,r25,r27,r29,r32,f72,f76}.
+It has 72 independent-row/column/inversion relabelings. Let
+ w=(-1,0,0,0,0,0,1,0,1,0,0,0,-1,1).
+For EVERY nonnegative coefficient vector on this face and every real h,
+ w^T H_F(g-h e)=(t21+t72+t76)(E0-E7).
+
+I independently computed all eleven coefficient rows, the separate
+identity w^T H_F(e)=0, the fact that labels0 and7 vanish on all eleven
+generators, and that the only mixed generators are72 and76. All exact
+rational checks passed.
+
+For an actual cost write -eta*z=(g-h e)+i d. Spectral singularity implies
+H_F(g-h e)d=0. If z0!=z7, their already equal active real parts imply
+d0!=d7. The displayed identity therefore forces
+t21+t72+t76=0. Coefficient nonnegativity gives t21=t72=t76=0, leaving
+eight ordinary rays. This closes the entire face and its72 relabelings
+for all support heights. Only the distinctness of that one active pair
+is needed; global pairwise distinctness is a sufficient stronger condition.
+
+This is one six-contact orbit, not a proof for the full six-contact census.
+
+8. ZERO-HEIGHT CIRCLE SATURATION: THE >=8-CONTACT THEOREM PASSES.
+
+New audited files: zero_height_circle_saturation.py and its exact JSON
+witness log. I ran the saturation and independently replayed every logged
+operation, without relying on the discovery loop for its validity.
+
+Let the eight complex points be a_1,...,a_4,beta_1,...,beta_4, where
+beta_j=-b_j. Pairwise distinct matching products force both individual
+spectra to be simple. Nonzero matching products force a_i!=beta_j for
+every i,j. Thus all eight points are distinct. At h=0, if two active
+permutations differ by a transposition in rows i,k, their product ratio
+is real and nonzero. Cancelling all unchanged factors gives the cross-ratio
+ (a_i-beta_l)(a_k-beta_j)/((a_i-beta_j)(a_k-beta_l)) in R.
+Four distinct complex points have a real cross-ratio exactly when they
+lie on one generalized circle, with a straight line allowed as a circle.
+Two such forced circles sharing three distinct points must be the same
+circle; their point sets may therefore be merged.
+
+There is a stronger consequence than circle merging. Suppose an active
+matching assigns some set of row points in a forced circle to a set of
+column points in that same circle. Reassign those columns arbitrarily
+among those rows, leaving all other assignments fixed. Choose a common
+Mobius transformation sending the circle to the real line, with pole
+avoiding all eight points. In a ratio of the two partial matching products,
+the row and column denominators of the Mobius formula cancel because
+the row set and column set have not changed. The remaining ratio is a
+ratio of nonzero products of real differences, hence real and nonzero.
+The original full matching ratio is therefore real. Multiplication of
+the original purely imaginary active product by this real ratio preserves
+zero real part, so the new matching is also active. No sign condition on
+that real ratio is needed at height zero.
+
+Every logged operation was checked independently:
+ - pair_circle: both labels currently active, differing in exactly two
+   rows, with the exact four corresponding point labels recorded;
+ - merge: two already established circles share at least three points,
+   and the logged result is exactly their union;
+ - phase: source currently active and circle already established; the
+   target changes only the logged rows and retains their assigned column set.
+The replayed active sets and circle sets exactly equal the saved endpoints.
+
+Six previously cubic-indefinite representative types acquire an active
+label missing from their claimed FULL active set: indices0,5,6,19,33,34
+in zero_height_cubic_screen.json. They consequently cannot occur as those
+exact zero sets of actual spectral support costs. Crucially, every remaining
+zero-height face with >=8 active labels is now either cubic-sign closed
+or excluded by these exact circle/phase witnesses. Thus:
+
+ If all24 matching products are nonzero and pairwise distinct, every
+ actual order-four cost at support height h=0 with >=8 active labels is
+ a nonnegative combination of ordinary squared-minor indicators.
+
+This proof uses no external sufficient spectral theorem and no assertion
+that every remaining six- or seven-contact face is impossible. The current
+unsettled zero-height terminal counts are SIX AND SEVEN; section5 still
+gives the uniform >=10-contact theorem for arbitrary support height.
+
+9. FIVE ADDITIONAL NINE-CONTACT TYPES: EXACT AUDIT PASSES.
+
+Independently executed terminal_nine_additional_verify.py to completion.
+All 36,575 exact lower-simplex comparisons passed: 7,315 nodes per
+four-variable restriction, for three positive-nonic types and two further
+constrained-row types. The three positive cases have a strictly positive
+nonic on all nonnegative coefficient parameters, so actual N=0 is
+impossible whenever their mixed coefficient is positive.
+
+For rays(3,19,21,24,46), normalizing the mixed coefficient to1 gives
+ p=(1+a)^2(1+b)^2(1+c)(1+d)(1+a-cd),
+ F=-(1+a)(1+b), Q=-(1+b+cd).
+Thus cd=1+a>=1, c,d>0 and h=cd(1+b)/(1+b+cd). The denominator-cleared
+polynomial Hessian row has positive coefficient
+d(1+c)(1+b+cd) times the difference of two active evaluation rows.
+
+For rays(3,20,21,27,53), the formulas are
+ p=(1+b)(1+d)(1+a+c)^2(1+a-bd),
+ F=-(1+a+c), Q=-(1+c+bd).
+Thus bd=1+a>=1, b,d>0 and h=(bd+c)/(1+c+bd). Its polynomial row has
+positive coefficient (1+b)(1+d)(1+c+bd)(c+bd) times an active pair
+difference. Both identities are verified coefficientwise. Positivity
+holds also on ordinary-coefficient boundaries because the displayed
+forced-positive factors cannot vanish. Actual Hessian-kernel membership
+would identify distinct active products, excluding the mixed cases.
+
+These five cases supplement the separately verified fourteen constant-row
+types. The resulting count is nineteen of twenty-nine nine-contact types;
+this addendum independently executed the NEW FIVE, not the earlier fourteen.
+
+10. ZERO-HEIGHT SIX-CONTACT TYPE1: SIGN-CHAMBER AUDIT PASSES.
+
+For type1 in zero_height_cubic_screen.json, the exact active labels are
+{0,1,3,6,7,8}. Its forced circles allow a common projective normalization
+a_1=0,a_2=1,beta_2=infinity (indices here zero-based), after which
+ a=(lambda*x*y*t/[x(lambda-1)+yt], 0,1,t),
+ beta=(x,yt,infinity,1+z(t-1)),
+with x,y,z,lambda real. Indeed beta_0 lies on the real circle through
+0,1,infinity; beta_1 lies on the line through0,t; beta_3 lies on the line
+through1,t; and the fourth circle gives
+lambda=a_0(x-yt)/[x(a_0-yt)].
+
+All eight points are distinct. Consequently x,y,z,lambda avoid0 and1.
+If t were real, all eight points would be real in this chart and all24
+matching ratios real, making every label active at height0. Thus Im(t)!=0
+for this exact six-label set. The projective infinity factor contributes
+one common factor to every matching, so it cancels in all ratios.
+
+zero_height_type1_verify.py independently executed successfully. It checks
+the six exact active ratios, five exact ratios between inactive imaginary
+parts, and all81 interval sign chambers for four variables in the three
+intervals(-infinity,0),(0,1),(1,infinity). Every inactive imaginary part
+must have the same strict sign relative to the chosen active product.
+The necessary positive ratios leave only
+ x<0,y>1,z<0,0<lambda<1,
+or x>1,y<0,z>1,lambda<0.
+In both chambers all six active product ratios are strictly positive.
+These conclusions were checked algebraically and by an independent
+derivation of the chart; they do not rely on sampling actual spectra.
+
+Therefore all active products lie on the SAME imaginary ray after the
+support multiplier. A sufficiently small rotation of that multiplier
+makes all active real parts negative; the initially inactive values remain
+negative by continuity. Drury's negative-height EVC applies. Letting the
+rotation tend to0 proves the original support inequality for every U.
+More strongly, the negative-height costs have ordinary-minor certificates;
+the ordinary-minor cone is finitely generated and closed, so their limit
+is also ordinary-minor positive. Thus this is a pointwise closure of the
+entire exact type1, not merely generic avoidance.
+
+11. ZERO-HEIGHT SEVEN-CONTACT TYPE36: SIGN CONTRADICTION AUDITED.
+
+The two forced circles for type36 share a_2,beta_1. Normalize these to
+0,infinity and make the first circle real. Then
+ a=(x,t,0,y), beta=(pt,infinity,z,qt),
+with x,y,z,p,q real and t nonreal. Real t would again make all24 labels
+active. The active0132/1023 ratio forces xq=py: its only nonreal factor is
+(x-pt)/(y-qt), whose imaginary part is
+ Im(t)*(xq-py)/|y-qt|^2.
+All eight points are distinct, so x,y,p,q are nonzero. Divide all finite
+coordinates by the nonzero real number x/p=y/q to obtain
+ a=(p,t,0,q), beta=(pt,infinity,z,qt).
+The active1230 condition then gives, exactly,
+ p*|1-t|^2=(p-q)(1-z).
+
+Put r=|t|^2>0 and s=|1-t|^2>0. Normalize matching products by t(1-t).
+If its numerator polynomial is c0+c1*t+c2*t^2+c3*t^3, then independently
+expanding the partial fractions gives
+ Im[Z/(t(1-t))]/Im(t)=(c0+c1+c2+c3)/s-c0/r-c3.
+Multiplication by p*r*s and the displayed active relation produces the
+exact real polynomials N_pi computed by zero_height_36_symbolic.py.
+All inactive N_pi must have one common strict sign; p may have either
+sign but is a common nonzero multiplier for every label.
+
+The explicit factors independently checked are
+ N_0123=-p*q*z*(z-1)*(p-q),
+ N_1032=p*q*(p-1)*(q-z)*r,
+and the ratios to N_0123 of labels0231,1320,3021 are respectively
+ -r/z, (q-1)r/[q(z-1)], -(p-1)r/[q(z-1)].
+Their positivity first forces z<0, then0<q<1, then p>1. But under these
+strict signs N_0123<0<N_1032, a contradiction. Hence this exact active
+set cannot occur for actual nonzero/distinct matching products at height0.
+
+I independently rederived both chart constraints, the general N formula,
+and all three sign ratios, and ran the exact polynomial factor derivation.
+The derivation originally printed its factors; its author was asked to add
+explicit verification assertions for the final standalone certificate.
+
+
+12. NINE-CONTACT REAL IMAGINARY-LIFT EXCLUSION: FULL AUDIT PASSES.
+
+For the canonical face (3,19,21,26,52), normalize its mixed coefficient to
+one and write g=a*r3+b*r19+c*r21+d*r26+f52. All coefficients are nonnegative.
+The exact restriction is
+ F=(a+1)(b+1), Q=1+b+cd-bd,
+ N=-4[(a+1)^2(b+1)(c+1)R]^2,
+ R=(a+1)(b+1)(d+1)+bd^2-cd(b+d+1).
+I independently checked this identity on all7315 exact lower-simplex
+nodes using the previously proved degree18 bound. Actuality forces R=0,
+d>0, and, with S=b+d+1 and L=(a+2)(d+1)+b(1-d),
+ c=((a+1)(b+1)(d+1)+bd^2)/(dS), Q=(b+1)L/S,
+ h=(a+1)S/L, L!=0. The b=0 boundary is the proved ten-contact face.
+
+For b>0, global_moc4_nine_lift_verify.py independently passed. It verifies
+an exact rational kernel basis u,v of H=H_F(g-he), normalized by
+ p(u)=1,r(u)=0,p(v)=0,r(v)=1,
+where r=E0-E12. The bordered determinant is
+ det(H+pp^T+rr^T)=
+ 4*b^2*(a+1)^4*(b+1)^2*(d+1)^2*(a+d+1)^2/L^2>0.
+The complementary-minor calculation is valid generically and extends as a
+rational identity to every allowed parameter; its final expression never
+vanishes. Hence this really is the full kernel, including special values.
+
+Put G=grad F(g-he) and J=grad F(u+v)-grad F(u)-grad F(v). The verifier proves
+ grad F(u)=kappa*G,
+ grad F(v)=-C*G, C=S^2/[4*b^2*(a+d+1)^2]>0,
+and G,J linearly independent. The latter uses two exact 2x2 minors whose
+potential vanishing factors differ by b(a+1)>0. G13=b+1>0 ensures that no
+implicit division by a possibly zero gradient coordinate is being made.
+For an actual real imaginary lift y=s*u+t*v, the spectral equation
+ grad F(y)=G gives (kappa*s^2-C*t^2-1)G+s*t*J=0.
+Thus st=0; t!=0 would force -C*t^2=1. Hence r(y)=t=0, so two active complex
+matching products coincide, contrary to the distinctness hypothesis.
+This is a real-lift exclusion, not an assertion that every complex point
+of the nonic hypersurface is impossible. It closes one1152-face orbit.
+
+13. UNIVERSAL WEIGHTED-MINOR INEQUALITY: FULL ANALYTIC AUDIT PASSES.
+
+For every U in U(4) and tau>0, with one-based indices,
+ f=rho(3,3)+rho(2,4)+rho(12,13)-rho(13,23),
+ f+tau*rho(23,34)+tau^{-1}*rho(13,13)>=0.
+The proof in global_weighted_minor_notes.txt was independently audited
+through every compact-minimum case: positive radii and p>0 by symmetry
+and continuity; constrained t=0 minima, including paired zero cosines,
+kl=1 and k=-1 degeneracies; and unconstrained t>0 minima, including both
+zero-cosine pairs. No missing stationary or boundary case was found.
+In particular, all nonzero cosines force t=-2p, whereas one zero pair
+makes a two-variable Hessian determinant force signs incompatible with
+the remaining circle radii. The t=0 exceptional k=-1 branch has value0.
+
+The exact quaternion identities and these stationary numerator identities
+passed global_weighted_minor_verify.py. The proof first establishes each
+fixed-tau LINEAR profile inequality on SO(4), then uses the audited convex
+profile bridge to U(4). It does not apply Jensen in the wrong direction
+to the equivalent square-root expression.
+
+For the face (3,12,21,30,78), let
+ g=a*r3+b*r12+c*r21+d*r30+f78, A=1+a, B=1+b.
+The exact restriction, independently verified at all7315 unisolvent nodes
+by global_weighted_nine_nonic_verify.py, is
+ F=AB, Q=1+cd,
+ N=-4[A^2*B^2*(1+c)*((A+d)(B+d)-d(1+c)(1+d))]^2.
+Actuality forces d>0 and
+ c=(AB+d(A+B-1))/(d(1+d))>=1/d.
+The last inequality follows from A,B>=1. The relabeled universal weighted
+inequality gives f78+(1/d)r21+d*r30>=0, so the remaining coefficients are
+ordinary nonnegative costs. This closes the576-face orbit. The certificate
+uses Q>0 on its grid and the proved degree18 polynomial quotient bound;
+it is an identity proof, not a test of finitely many spectral inputs.
+
+14. ZERO-HEIGHT SEVEN-CONTACT TYPE27: FULL AUDIT PASSES.
+
+The forced circles give the projective chart
+ a=(A,0,C,infinity), beta=(1,t,y,zt),
+ A=1-u+ut, C=yzt/[zt(1-v)+vy],
+with u,v,y,z real and t nonreal. Distinctness excludes every zero or unit
+parameter used as a denominator, and real t would make all24 labels active.
+Put H=(t-1)(C-zt), and G_pi=Im(Z_pi/H)/Im(t). Six prescribed active ratios
+are explicitly real; the remaining active2013 ratio is a nonzero real L.
+Exact ratios of the strictly same-sign inactive G values imply
+ u(y-1)>0, (z-1)(1-v)>0, (u-1)yz/(1-v)>0, uv>0, yz<0.
+These reduce to two possibilities:
+ u,v<0,y<0,z>1, or u,v>1,y>1,z<0.
+In the first case G3012/G2310 is negative, because its numerator is
+ z(u+y-1)-uy<0 and its denominator z|A-y|^2>0.
+In the second case G2103/G2310 is negative, because its numerator is
+ y[z(y+v-1)-yv]<0 and its denominator is a nonzero squared modulus.
+Both contradict the support condition. The chart, sign argument, and
+all20 exact polynomial identities in zero_height_27_verify.py were
+independently audited and the checker passed.
+
+15. ZERO-HEIGHT SIX-CONTACT TYPES3 AND4: FULL AUDIT PASSES.
+
+zero_height_types34_verify.py independently passed its full exact run.
+For type3, the six inactive-imaginary-part ratios have no consistent sign
+chamber. The algebraic proof checks all27 chambers after lambda drops out:
+y>0, x(y-1)>0, x<0 or x>1, z has the sign of x-1,
+z/(z-1)>0, and y-1 has the opposite sign to z-1. Both x cases contradict
+x(y-1)>0. Thus the exact active set cannot occur.
+
+For type4, the six ratios force x,y,z,lambda>1. Its normalized G4 is
+1/(y|t|^2)>0. Since g4 is strictly positive, the common real multiplier
+between every g_pi and G_pi is POSITIVE. This fixes a potentially important
+orientation issue: the two verified squared-norm formulas really imply
+ g18-g4>0 and g13-g3>0.
+The ordinary face has nine generating rays of rank8; all eleven rays of
+the full cost face lie in this same8-dimensional span. The exact checker
+enumerates every hyperplane through seven independent ordinary rays and
+finds all ten facets of the pointed full-dimensional ordinary cone.
+Eight are nonnegative on all eleven full-face rays. The other two are
+precisely the inequalities above, using g2=g3+g4. Therefore every actual
+cost of this type lies in the ordinary-minor cone. This is a pointwise
+positive representation result, not merely exclusion at generic inputs.
+No external-vertices boundary theorem is used in this type4 proof.
+
+
+16. ADDENDA: CONSTRUCTIVE TYPE4, WEIGHTED PROPAGATION, AND TYPE32.
+
+The updated type3/4 verifier was independently rerun and passed. Its type4
+proof now has a direct ordinary-ray decomposition, so no facet enumeration
+is needed for the conclusion. Let A=g18-g4, B=g13-g3 and
+ tau=max(0,g14-g16,g14-B).
+The coefficients on rays(2,3,9,12,17,20,21,27,33) are
+ (g14-tau,A-tau,g4,g9,g3,g10,g16-g14+tau,B-g14+tau,tau).
+The exact active-subspace identities g19=A+B-g14 and g22=A+g16-g14
+imply tau<=A. Nonnegativity of B,g16 gives tau<=g14. Thus all coefficients
+are nonnegative, and the checker verifies the identity in all24 coordinates.
+
+The further nine-contact face(3,12,21,26,78) is also closed by the universal
+weighted inequality. For g=a*r3+b*r12+c*r21+d*r26+f78, put A=a+1,B=b+1.
+The exact nonic factor is
+ P=AB(AB-cd)[AB(c+d+1)+cd(a+b+1)].
+Every factor except AB-cd is strictly positive for nonnegative parameters.
+Thus actual N=0 forces cd=AB>=1. The exact transpose/column relabeling maps
+the standard weighted inequality to mixed ray78 and compensation rays21,26.
+Choosing a reciprocal pair of weights bounded by c,d proves positivity.
+global_moc4_weighted_propagation_verify.py independently passed the exact
+relabeling and all7315 degree18-unisolvent integer nodes. This is a third
+additional nine-contact type beyond the original nineteen.
+
+For zero-height seven-contact type32, the exact cubic-cone proof was
+independently checked by reading and executing zero_height_32_verify.py.
+Write the full cost in ordinary rays3,5,10,12,16,21,23,26 with coefficients
+a_j, plus alpha*r53+beta*r80. The exact identities are
+ r53=r5+r10+r21-r23, r80=r3+r12-r21+r23,
+ -r3+r5+r10-r12-r16+r21-r23+r26=0.
+Put L1=a23+a26-alpha+beta and L2=a16+a21+alpha-beta.
+If L1<0, substitute alpha=a23+a26+beta+u, u>0; if L2<0, substitute
+beta=a16+a21+alpha+u. The rebuilt cubic in either substitution has117
+strictly negative coefficients, including -u^3. Thus F(g)=0 implies
+L1,L2>=0. Adding t times the displayed ordinary-ray relation gives
+nonnegative coefficients precisely when
+ max(-a5-alpha,-a10-alpha,-a21-alpha+beta,-a26)
+ <= t <= min(a3+beta,a12+beta,a16,a23-alpha+beta).
+All sixteen lower/upper comparisons hold: fourteen are sums of original
+nonnegative coefficients and the remaining two are exactly L1,L2>=0.
+This proves an explicit ordinary-minor decomposition. It uses only F=0
+and nonnegative face coefficients, a stronger statement than necessary
+for actual spectral inputs. Together with the previously audited seven-
+contact exclusions, it improves the pointwise zero-height threshold to
+at least SEVEN active labels under the same nonzero/distinct hypotheses.
+
+Scope reminder: generic rank pruning of the remaining six-contact types
+applies to localized counterexamples in a strengthened conic Zariski-open
+set. A contact-transfer path can change support height. Consequently that
+pruning does not by itself prove a pointwise theorem for all original
+zero-height spectral inputs.
+
+
+17. TYPE26 CUBIC CONE AND THE NINE-CONTACT TRIANGLE: BOTH PASSED.
+
+zero_height_type26_verify.py independently passed; its entire code and
+mathematical coverage argument were audited. The nine ordinary rays
+(3,8,14,21,22,27,29,31,32) have rank8 and span the full face, whose only
+other ray is74. Exhaustive supporting-hyperplane enumeration gives twelve
+facets. Exactly one is additional to inequalities holding on the full
+face: L=a21+a31-alpha74. If L<0, write
+ alpha74=a21+a31+u, u>0.
+The verifier reconstructs the cubic directly from the105 matching forms.
+After substitution it has101 strictly positive coefficients, including
++u^3. Thus F(g)>0, contradicting F(g)=0 at height0. Hence L>=0 and the
+whole cost lies in the ordinary-minor cone, including the boundary L=0.
+This closes the last exceptional six-contact type needed alongside the
+strengthened-open rank-pruning argument. It does not turn that generic
+argument into a pointwise theorem on every zero-height input.
+
+For the nine-contact face(3,21,26,30,52), write
+ g=a*r3+b*r21+c*r26+d*r30+f52.
+Its necessary nonic P(a,b,c,d) is symmetric in b,c,d. The exact verifier
+checks all7315 degree18-unisolvent nodes for N=-4P^2, with
+ F=1+a+bcd>0, Q=1+bc+bd+cd>0.
+It also certifies P>0 throughout two regions by exact positive-coefficient
+substitutions. First, b=x/(1+x),c=y/(1+y),d=z/(1+z) covers all
+0<=b,c,d<1; clearing the positive denominator yields100 positive terms.
+Second, b=1+x,c=y/[b(1+y+z)],d=z/[b(1+y+z)] covers
+b>=1, b(c+d)<1; clearing its positive denominator yields345 positive terms.
+Both transformed polynomials have positive constants, so their positivity
+includes every zero parameter. The first substitution uses degree at most2
+in each of b,c,d; I explicitly checked that bound in the fixed nonic data.
+
+Therefore P=0 implies a largest coefficient, relabeled b, satisfies
+ b>=1 and b(c+d)>=1. All THREE weighted-compensation pair witnesses among
+rays21,26,30 are exactly verified, so this relabeling is legitimate.
+Combine the pair inequalities incident to b with weights c/(c+d) and
+d/(c+d). This proves
+ f52+b*r21+c/[b(c+d)]*r26+d/[b(c+d)]*r30>=0.
+The desired coefficients c,d dominate these because b(c+d)>=1. Adding the
+ordinary remainder a*r3 proves the full face inequality for every U.
+
+global_moc4_triangle_verify.py independently passed all exact identities,
+both positivity certificates, all three relabelings, and all7315 nodes.
+No nonzero/distinct-product assumption is needed once the actual spectral
+cost belongs to this face; those hypotheses are used only by the global
+face classification.
+
+
+18. FINAL CONSOLIDATED REPORT SCOPE AUDIT.
+
+The updated output/MOC4_Verified_Results.md was read in full after the
+triangle and zero-height terminal closures were incorporated. Its scope is
+correct:23 of29 nonzero-height nine-contact types, covering14640 of18192
+faces and leaving3552; a pointwise zero-height theorem at seven contacts;
+and elimination of zero-height counterexamples only after localization
+in the strengthened conic open. The original unrestricted conjecture is
+plainly stated to remain unproved. No hidden removal of the contact or
+nonzero/distinctness hypotheses was found.
+
+The type26 proof now gives the direct identities
+ f74+r21=r3+r8+r29, f74+r31=r8+r14+r27.
+Given the audited cubic bound alpha<=a21+a31, take s=min(alpha,a21),
+t=alpha-s. Then0<=s<=a21,0<=t<=a31 and s+t=alpha, so the two identities
+absorb the mixed contribution and leave nonnegative ordinary coefficients.
+This construction is mathematically correct and removes any need for
+facet-completeness in the type26 conclusion. The latest two identities
+were reported checked by their author's exact verifier; I did not repeat
+that updated execution during this final scope-only review.
+
+One minor wording correction was sent to the parent: in the rank-six
+perturbation paragraph the coordinates moved into the negative real
+half-plane are eta*z_pi, not necessarily the unmultiplied z_pi. With that
+clarification, the paragraph accurately states the already audited local
+submersion and strict-violation continuity argument.

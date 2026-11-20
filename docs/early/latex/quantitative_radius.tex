@@ -1,0 +1,67 @@
+\subsection{Explicit radius: a finite quantitative certificate}
+For the displayed example, one certified radius is
+\[
+\boxed{|t|\le10^{-22}.}
+\]
+This conservative value is proved by the following explicit estimates; it is not a numerical search threshold. Both spectra are nonconcyclic when $t\ne0$: the circle-test determinants with rows $(|z|^2,\Re z,\Im z,1)$ are $173208$ for $x$ and $36750$ for $\beta$. Inversion carries generalized circles to generalized circles, so $a=1/x$ is also nonconcyclic.
+
+Here are sufficient computable conditions for $n\ge3$. Let $\alpha>0$ be the smallest absolute triple orientation among the $s_\pi$, let $D$ bound their diameter, and let $\ell>0$ be a lower bound on their pairwise distances. Choose upper bounds
+\[
+A_k\ge e_k(|x|)e_k(|\beta|),\quad B_k=4k^2A_k,\quad
+S=\sum_{k=2}^nA_k,\quad T=\sum_{k=2}^nB_k,
+\]
+\[
+Q=4B_1S/\ell+T,\qquad C\ge\frac{\pi^2}{2}(1+12n).
+\]
+Every $0<r\le1$ satisfying
+\begin{equation}\label{radius}
+4DSr+4S^2r^2<\alpha/2,\qquad CrQ<\frac{\alpha}{nD}
+\end{equation}
+is an admissible complex radius.
+
+To prove this, first strengthen \eqref{leak} with the global distance estimate
+\begin{equation}\label{globaldist}
+\operatorname{dist}(U,S)^2\le C L_E(U).
+\end{equation}
+For a monomial or $U(2)$ block equality family, mask $U$ to its allowed blocks. Polar decomposition within each block gives $V\in S$ with
+\[
+\|U-V\|_F^2=L_E(U)+\sum_j(1-\sigma_j)^2
+\le L_E(U)+\sum_j(1-\sigma_j^2)=2L_E(U),
+\]
+where the block singular values lie in $[0,1]$. The geodesic distance is at most $\pi/2$ times the chord distance.
+
+For a cycle of length $k\ge3$, relabel its allowed entries to $(i,i)$ and $(i,i+1)$ cyclically, and put $d_i=|U_{ii}|^2$, $c_i=|U_{i,i+1}|^2$. Write $L=L_E(U)$. Row and column normalization imply $|c_i-c_j|\le2L$. Orthogonality of consecutive rows and Cauchy--Schwarz give $c_i d_{i+1}\le2L$, since all terms other than their one shared allowed column use a forbidden entry. Thus with $c=c_1$, $d_2\ge1-c-3L$, and
+\[
+c(1-c)\le5L,\qquad \min(c,1-c)\le10L.
+\]
+Consequently either all $c_i\le12L$, or all $d_i\le12L$. One of the two allowed permutations then has total off-permutation mass at most $(1+12n)L$. Choosing phases at its selected entries gives chord distance squared at most $2(1+12n)L$, proving \eqref{globaldist}.
+
+Exterior powers give a uniform geodesic second derivative estimate
+\[
+\left|\frac{d^2}{du^2}|\det(e^{uK}U)[I,J]|^2\right|
+\le4k^2\|K\|_F^2\quad(|I|=|J|=k).
+\]
+Indeed the induced exterior generator has norm at most $k\|K\|_F$; differentiate the squared matrix coefficient twice. By \eqref{Gt}, the Hessian norm of
+$H=F_{\eta,t}-F_{\eta_0,0}$ is at most
+\[
+M=B_1|\eta-\eta_0|+\sum_{k=2}^nB_k|t|^{k-1}.
+\]
+Take a closest point $V\in S$ and a minimizing geodesic from it to $U$. Its initial direction is normal to $S$, so $H$ has zero first derivative there. Integration of the second derivative yields
+\[
+H(U)-H(V)\le\tfrac12 M\operatorname{dist}(U,S)^2\le\tfrac12 MC L_E(U).
+\]
+Together with \eqref{leak}, the support bound holds whenever $MC/2\le\delta/n$.
+
+Finally, every normalized permutation value $G_t(P_\pi)$ moves by at most $R=rS$. The change of any triple orientation is at most $4DR+4R^2$. The first condition in \eqref{radius} therefore preserves all supporting edges and their labels. At an original edge, each nonendpoint gap is at least $\alpha/D$. Its perturbed outward unit normal differs by at most $4R/\ell$ from the original one. Thus $M\le rQ$, and the second condition in \eqref{radius} proves the support bound at every perturbed polygon edge. Their half-planes intersect in the desired convex hull.
+
+For the exact example use $X=(43,21,36,46)$ and $Y=(21,33,31,28)$ as integer upper bounds on $|x|,|\beta|$. This gives
+\[
+(A_1,A_2,A_3,A_4)=(16498,37059829,15799252770,899499740832),
+\]
+\[
+S=915336053431,\quad Q=241677564701544440,
+\quad \alpha=315,\quad D=3764,\quad\ell=1,\quad C=245.
+\]
+The inequality $C>(\pi^2/2)49$ follows already from $\pi^2<10$. With $r=10^{-22}$, the two left sides in \eqref{radius} are respectively less than $1.379\cdot10^{-6}$ and $0.005922$; their right sides are $157.5$ and greater than $0.02092$. The verifier checks the unrounded rational comparisons exactly.
+
+The same example admits the stronger certified radius $10^{-12}$ by removing its common degree-four translation and estimating the nine polygon edges separately. Appendix C of the bundled \nolinkurl{variational_notes.txt} supplies the complete bounds; \nolinkurl{variational_improved_radius_check.py} verifies them with rational arithmetic. The conservative calculation above is self-contained in this report.

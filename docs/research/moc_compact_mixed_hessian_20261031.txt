@@ -1,0 +1,255 @@
+Combined spinor/unitary minimax: acceleration duality and the mixed Schur bound
+31 October 2026
+
+This note strengthens the necessary conditions in
+docs/research/moc_compact_spinor_minimax_20261031.txt. It does not exclude a
+negative compact minimum, so it is not a proof of unrestricted MOC.
+
+1. Setup and the correct nonsmooth second-order statement
+
+Let x=(w,U) be a hypothetical negative global minimum of
+
+ h(w,U)=max_pi f_pi(w,U),       f_pi=Re(p_pi(w)-d(w,U)),
+
+on eight unit spinors and U(4). Put h(x)=m<0 and let A be the active set.
+The same argument below applies to every dimension with 2n spinors.
+
+All derivatives here are real derivatives on the product manifold. Let
+g_pi be the first derivative covector of f_pi at x, and write
+
+ Lambda={lambda_pi>=0: sum_A lambda_pi=1,
+                         sum_A lambda_pi g_pi=0}.
+
+This set is nonempty by the first-order maximum-function KKT condition.
+Equivalently, separation of 0 from conv{g_pi} would give a common strict
+descent direction. Lambda includes all sphere-phase stationarity equations,
+not only the complex-orthogonal CP1 equations.
+
+Call v critical here if g_pi(v)=0 for EVERY active pi. Let q_pi(v) denote
+the second derivative along the product geodesic with initial velocity v.
+For any real tangent acceleration a, a smooth curve can be chosen with
+these initial velocity and covariant acceleration. Taylor expansion gives
+
+ f_pi(x(t))=m+(t^2/2)(q_pi(v)+g_pi(a))+O(t^3),    pi in A.
+
+The inactive functions stay inactive for small t. Local minimality therefore
+implies max_A(q_pi(v)+g_pi(a))>=0 for every a. Finite linear-program duality
+now gives the exact necessary condition
+
+   max_(lambda in Lambda) sum_A lambda_pi q_pi(v) >=0.           (1)
+
+Indeed the left side equals inf_a max_A(q_pi(v)+g_pi(a)); the dual equations
+are exactly sum lambda=1 and sum lambda g=0. Both the finiteness and dual
+feasibility follow from Lambda nonempty. This derivation is a finite LP
+argument, not an appeal to a smooth Hessian of the maximum.
+
+An arbitrary FIXED lambda in Lambda need not give a nonnegative quadratic
+form, even on this critical space. If Lambda is a singleton, (1) does give
+that stronger condition. Without uniqueness or a suitable additional
+constraint qualification, the maximizing lambda in (1) can depend on v.
+
+2. A concrete warning against a fixed-multiplier Hessian
+
+In R2 take three unit line directions at angles 0,pi/3,2pi/3 and put
+
+ q_j(x)=(e_j dot x)^2-(2/3)||x||^2.
+
+Every line direction is within pi/6 of one of these three lines, so
+
+ max_j q_j(x)>=(3/4-2/3)||x||^2=||x||^2/12.
+
+Thus max_j q_j has a strict minimum at 0, and all active first derivatives
+are zero there. But every convex combination of the three quadratic matrices
+has trace 1-4/3=-1/3 and hence cannot be positive semidefinite. In particular,
+there need not be ANY single multiplier vector whose Hessian works for all
+critical directions. Direction-dependent maximization in (1) is essential.
+
+3. Exploit that all unitary terms are shared by the active contacts
+
+Take a complex-orthogonal spinor tangent z=(z_k), w_k^*z_k=0. Impose the
+additional real critical equations
+
+   Re D_z(p_pi-d)=0                 for every active pi.       (2)
+
+Let K be any traceless skew-Hermitian unitary tangent. At the global minimum
+U maximizes Re d for these fixed spinors, since the p_pi do not depend on U.
+Consequently Re D_K d=0 and
+
+   H(K,L)=-Re D_KD_L d
+
+is a positive semidefinite real symmetric form (with the orbit-geodesic
+interpretation for its diagonal). Every v=(z,K) satisfies the active critical
+equations, regardless of K.
+
+Write
+
+ b_z(K)=-Re D_zD_K d,
+
+ Q_lambda(z)=Re D_z^2(sum lambda_pi p_pi-d)
+                             -m sum_k ||z_k||^2.              (3)
+
+The sphere correction in (3) is exact: every p_pi and d is linear in each
+individual spinor, and each active gap has value m. Along the spinor sphere
+geodesic the normal acceleration of spinor k is -||z_k||^2 w_k.
+
+All active second derivatives therefore have the common unitary and mixed
+terms, and (1) becomes
+
+ max_(lambda in Lambda) Q_lambda(z)+2 b_z(K)+H(K,K)>=0
+                                                   for every K. (4)
+
+This yields two rigorous additional constraints:
+
+   b_z annihilates ker H;                                      (5)
+
+   b_z^T H^dagger b_z <= max_(lambda in Lambda) Q_lambda(z).    (6)
+
+For (5), if H(K0,K0)=0 and b_z(K0) were nonzero, substitute arbitrary real
+multiples of K0 in (4). The affine term has one sign of unbounded descent.
+For (6), after (5) the minimum of H(K,K)+2b_z(K) is exactly
+-b_z^T H^dagger b_z. This follows by diagonalizing the positive semidefinite
+real form H; dagger is its inverse on its range and zero on its kernel.
+
+Both statements are invariant under a change of the real coordinates on the
+unitary tangent. Stabilizer directions have zero b_z automatically. Physical
+null directions impose nontrivial mixed derivative identities.
+
+The quantifier is important: (5)-(6) hold for each z satisfying (2), and the
+right side of (6) can choose a different KKT multiplier for each z. Replacing
+it by Q_lambda for an arbitrarily chosen multiplier is not justified.
+
+One-sided extension. The same conclusions hold on the larger critical cone
+g_pi(v)<=0 for all active pi. First-order stationarity implies the maximum
+of these derivatives is zero. Only A0(v)={pi:g_pi(v)=0} remains active for
+t>0. Every lambda in Lambda is automatically supported on A0(v), because
+sum lambda_pi g_pi(v)=0 is a convex combination of nonpositive numbers.
+Consequently the acceleration LP on A0(v) has the SAME dual Lambda, and the
+proof of (1),(5),(6) is unchanged. For this extension a feasible spinor z
+need only satisfy Re D_z(p_pi-d)<=0 for all active pi. The opposite direction
+-z may not belong to this cone; no two-sided Hessian inference should be made
+from a one-sided critical direction.
+
+Full sphere tangents. Complex orthogonality w_k^*z_k=0 was only a convenient
+restriction above. The derivation of (3)-(8) works for every real sphere
+tangent Re(w_k^*z_k)=0, including phase components. Its geodesic still has
+normal acceleration -||z_k||^2w_k. Allowing these phase components can enlarge
+the contact-critical cone; the KKT set Lambda already includes them.
+
+4. Polynomial computation of the mixed block, including singular matrices
+
+Write u_i=w_i, v_j=w_(n+j), C_ij=[u_i,v_j], M=C circ U. For fixed K put
+
+ N=C circ (KU),       R=C circ (K^2 U),
+ M_z=C_z circ U,      N_z=C_z circ (KU).
+
+Since K is traceless, det(exp(tK)U)=det U. Determinant multilinearity gives
+
+ D_K d=(det U)^(-1) Ddet_M[N],
+ D_K^2 d=(det U)^(-1)
+                 (D^2det_M[N,N]+Ddet_M[R]),
+
+ D_zD_K d=(det U)^(-1)
+                 (D^2det_M[M_z,N]+Ddet_M[N_z]).                (7)
+
+These expressions are cofactor polynomials and require no inverse of M.
+Explicitly Ddet_M[N] is the sum of the determinants obtained by replacing
+one row of M with the corresponding row of N. The bilinear second derivative
+D^2det_M[N,L] sums over ordered distinct row replacements. Thus (7), H and
+b_z are computable exactly at singular and nonsingular inputs alike.
+
+The purely spectral second derivative must include the second derivative of
+the brackets: (C_zz)_ij=2[z_i,z_(n+j)]. In particular
+
+ D_z^2 d=(det U)^(-1)
+       (D^2det_M[M_z,M_z]+Ddet_M[C_zz circ U]).                (8)
+
+The sphere correction is then added separately as in (3). Omitting either
+term in (8) when both halves of a bracket vary gives an incorrect pencil.
+
+5. What this resolves and what remains
+
+The combined condition retains information unavailable to a fixed-spectra
+support maximization: the spectral perturbations must be compatible with
+all active matching contacts, and they constrain the physical kernel of the
+unitary Hessian through (5), as well as its inverse through (6).
+
+For a pairwise-strict support maximum whose unitary Hessian is positive
+definite after gauge removal, (6) becomes an ordinary Schur-complement bound.
+For a degenerate maximum, (5) is the first test; it generalizes the principle
+that an actual flat maximum stays stationary under support-preserving
+transport. No sign identity is proved here that contradicts (6) when m<0.
+The balance equation sum w_k w_k^*=nI and the tensor eigen-equations must
+still be used together with (2),(5),(6) to obtain a universal contradiction.
+
+6. An exact mixed cancellation for row-pair transfers
+
+Let K be supported on row pair i,j. Define the unconstrained complex-linear
+spinor replacement Z by Z u_i=u_j and all other spinor variations zero.
+Then
+
+                 D_ZD_K d=0.                                  (9)
+
+To verify (9) directly in (7), write the two nonzero rows of KU as
+alpha U_j and -conjugate(alpha) U_i. The only row changed in M_Z is
+[u_j,v_l]U_(i,l). In D^2det[M_Z,N], the only possible other changed row is
+row j of N, which is proportional to this same row; the determinant is zero.
+In Ddet[N_Z], the replaced row i is proportional to original row j of M;
+this determinant is zero too. This proves the identity at singular M as well.
+The reverse transfer and the corresponding column-pair transfers also hold.
+
+Since d is linear in u_i, replacing u_i by itself gives D_Kd. For
+c=u_i^*u_j and the complex-orthogonal tangent supported at i,
+
+ z_i=beta(u_j-c u_i),
+
+we consequently have the exact identities
+
+ D_zD_Kd=-beta c D_Kd,       ||z_i||^2=|beta|^2(1-|c|^2).     (10)
+
+At a support maximum D_Kd is purely imaginary. If the whole single-label
+complex tangent plane belongs to the active critical space (2), then its
+pure spectral second derivative vanishes by separate linearity. Restricting
+(4) to real multiples of this K and optimizing the phase of beta gives
+
+ |c|^2 |D_Kd|^2 <= (-m)(1-|c|^2) H(K,K).                    (11)
+
+For H(K,K)=0 this is read as c D_Kd=0, in accordance with (5). For
+H(K,K)>0 it follows by minimizing the scalar quadratic in K; no matrix
+inverse is needed. A unique active contact implies all first derivatives of
+that contact vanish at the minimum, so the stated single-label critical-plane
+hypothesis holds automatically. With multiple active contacts it must be
+checked explicitly: arbitrary beta need not preserve the contact equations.
+
+Equation (11) quantitatively bounds the transverse complex determinant
+derivative by the negative minimum m and the actual unitary curvature. It
+does not yet contradict balance or the other KKT equations.
+
+7. A stronger phase/unitary bound when the active contact is unique
+
+If there is a unique active matching, its gap f_pi is smooth near the
+minimum and every real sphere tangent is critical. Take z_i=i u_i and all
+other spinor components zero. Separate linearity gives
+
+ D_zD_Kd=iD_Kd,      D_z^2(p_pi-d)=0,      ||z||=1.
+
+At the minimum Re D_Kd=0, so |D_Kd|=|Im D_Kd|. Applying the scalar Schur
+bound to this phase direction and any unitary direction gives
+
+             |D_Kd|^2 <= (-m) H(K,K).                        (12)
+
+This stronger estimate needs no row-overlap factor and applies to any K,
+not only a row-pair generator. It is simply the nonnegative determinant of
+the phase/unitary 2x2 Hessian block with diagonal entries -m and H(K,K).
+
+For an orthonormal real unitary tangent basis K_a, summing (12) gives
+
+ sum_a |D_(K_a)d|^2 <= (-m) tr H.                            (13)
+
+Both sides vanish on stabilizer directions, so they can equivalently be
+computed after removing gauge directions. This is a quantitative relation
+between the complex determinant gradient energy and support curvature.
+
+With multiple active contacts the phase derivative is
+-Im(p_pi-d), which can differ among the contacts. The phase direction may
+therefore fail the critical-cone inequalities; (12) cannot be asserted in
+that case without an explicit additional contact-preserving perturbation.

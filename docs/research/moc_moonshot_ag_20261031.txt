@@ -1,0 +1,186 @@
+ALGEBRAIC GEOMETRY MOONSHOT: A FULL NEW FIVE-PARAMETER CLOSURE
+31 October 2026
+
+This pass closes the full canonical eight-contact orbit 51, comprising three
+symmetry patterns, by combining the M8 secant variety with real Hessian inertia.
+The proof and its complete polynomial identity passed independent audit. It is
+one additional family of support costs; unrestricted MOC4 and the all-dimensional
+conjecture remain open. A second exact result shows that actual nonordinary
+support gaps can occupy the indefinite real moment chamber, which the previous
+88 targeted hard examples had all missed.
+
+The main proof is docs/research/moc_moonshot_ag_orbit51_closure_20261031.txt.
+Its verifier is code/research/moc_moonshot_ag_orbit51_verify.py, with result
+build/moc_moonshots_20261031/ag/orbit51_verified.json. The independent audit is
+in docs/research/moc_moonshot_independent_audit_20261031.txt; it recompiled the
+entire determinant using a different elimination stop and checked the anchor
+inertia by exact characteristic-polynomial root counts.
+
+1. What the geometry actually accomplished
+
+Consider every nonnegative five-parameter gap
+
+  g=f34+a r17+b r20+p r18+q r23+r r28.
+
+The support gap is normalized to mixed coefficient 1. The three known weighted
+minor certificates combine with exact capacity
+
+  C(p,q,r)=(p+q+r)/2 if no budget exceeds the sum of the others,
+           sqrt(m(p+q+r-m)) otherwise, m=max(p,q,r).
+
+The new theorem proves that every actual spectral gap of this form has C>=1.
+Consequently the support inequality holds for every complex unitary U, with
+all five coefficients independent and with zero coefficients allowed.
+
+The calculation is a factorization of the secant obstruction. Put
+
+ A=(1-r)[pq+r(p+q)-2r-1],
+ B=(pq-1)(r^2-r+1)+r(p+q-2),
+ C0=(r+1)[pq(1-2r)+r(p+q)-1],
+ D=ab A+(a+b)B+C0.
+
+The full projected nonic is just
+
+  N=-(a+1)(b+1)(p+1)(q+1)D.
+
+Exact computation from the original cubic proves
+
+  det H_F(g-(F(g)/Q(g))1)=-4N^2/Q(g)^2.
+
+This identity was not fitted to sample points. The verifier reconstructs the
+entire six-variable Hessian determinant over the rationals: 2,776 coefficients
+are retained, and the full cleared polynomial identity is checked.
+
+In three of the four insufficient-capacity sectors, elementary inequalities
+force A,B,C0<0 or A,B<=0,C0<0, making D=0 impossible. The only remaining sector
+is r>1 and r(p+q)<1. Here A>0,B<0,C0<0, and D=0 has a single positive branch:
+
+  a=t+s, b=t+k/s, s>0,
+  t=-B/A>0, k=t^2-C0/A>t^2.
+
+This branch is connected and stays in Q>0. The proof explicitly handles the
+possible Q=0 locus before dividing; it cannot contain an actual point.
+
+The HMSV theorem identifies the cubic/Hessian-zero locus with the complex
+secant cone over M8. The previously audited rank theorem gives rank H<=12 on
+that cone. Conversely, the exact order-two determinant zero along a transverse
+b variation forces rank H>=12. Thus the rank is exactly12 along the entire
+connected branch, so its real inertia cannot change. At
+
+  (a,b,p,q,r)=(2,17/3,0,0,2)
+
+exact arithmetic gives inertia(5,7,2). Actual complex spectral real parts must
+instead have inertia(6,6,2). Therefore the whole branch is forbidden for actual
+spectra. This closes the last sector without subdividing it into more faces.
+
+Three exact checks illustrate the separation:
+
+  (2,17/3,0,0,2):           D=0, rank 12, inertia(5,7,2), capacity0;
+  (2,167/29,1/10,1/10,2):   D=0, rank 12, inertia(5,7,2), capacity sqrt(2/5);
+  (1/3,2/5,1,1,1/20):       D=0, rank 12, inertia(6,6,2), capacity41/40.
+
+The third is a neutral complex-secant candidate; no finite spectral realization
+is asserted merely from its neutral inertia. This distinction is essential.
+The argument imports neither a universal hyperbolicity direction nor a universal
+split-real decomposition; both shortcuts had already been refuted.
+
+The factorization also explains the targeted optimizer's p=q=1 pattern:
+A=B=C0=0 identically on that slice, for every a,b,r. The secant equation
+therefore vanishes without any tuning of a or b. For 0<=r<=2 its triangle
+capacity is exactly 1+r/2, matching the observed 1.025 when r was constrained
+to 0.05. This explains that numerical attractor; it does not assert that all
+secant points on the slice are actual finite spectra.
+
+The relevant original source is Howard–Millson–Snowden–Vakil,
+https://arxiv.org/abs/1103.5255, whose active divisor theorem was checked against
+the retained source. The concrete coordinate bridge and rank theorem are audited
+in HMSV_COMPATIBILITY.md and CORANK_TWO_LIFT_EXACTNESS.md. No historical priority
+claim is made for the general method or for this computational closure.
+
+2. Raw data exposed another missing geometric regime
+
+I computed the rank-two real moment chart for the n4 raw spectral records,
+using the outward normal nearest their recorded determinant. The chamber is
+the sign of det W, where W spans the one-dimensional kernel of
+
+  grad F(K(u,v))=B(u^2,uv,v^2), K a basis of ker H_x.
+
+Among 3,984 cases passing a hull-shape guard, 2,619 passed the numerical Hessian
+rank guard: 2,164 had definite W, 371 indefinite W, and 84 were near-degenerate.
+The remaining 1,365 failed the rank guard and were not assigned a chamber. These
+are floating-point descriptors, not exact classifications of every raw record;
+maximum moment reconstruction error among retained rows was 4.13e-9.
+
+All 88 targeted nonordinary examples from the previous campaign were definite.
+That looked like a useful invariant restriction, but an additional search
+around the adversarial optimizer spectra refuted it on its 15th perturbation.
+Rounding the spectra to small Gaussian integers then gave an exact example:
+
+ a=(-3-i,4i,-11-i,13-2i),
+ b=(2-11i,5-3i,-4+i,1+6i), eta=1.
+
+All 24 matching products are distinct. Both spectra are nonconcyclic, with
+circle determinants -15864 and -7170. The support height is 4872, with only
+permutation 12 in contact. Its canonical mixed coefficient and budgets are
+
+  lambda=1250, (p,q,r)=(5950,3570,11222).
+
+The exact ordinary-cone dual evaluates to -1250, so this is outside
+the ordinary-minor cone. Its rank 12 Hessian has a rank-two moment map, and
+
+ det W=-7750312937188011581413904646852132730836293702645801079 /
+        1911403934178585407043727749335594184830957252492726416 <0.
+
+The affine moment line has exactly two rank-one endpoints, both positive
+semidefinite and with positive parameter. It has no negative-semidefinite
+point, so the actual real spectral vector cannot be decomposed as the midpoint
+of two real critical points. Thus this omitted chamber is present even among
+actual nonordinary gaps, not just among ordinary easy examples.
+
+It remains a safe MOC support direction: its weighted capacity squared is
+106833440, exceeding lambda^2 by 105270940. It is not a counterexample to MOC.
+The example rules out a tempting new simplification suggested by all 88 prior
+mixed samples, and supplies an exact test for future certificate strategies.
+
+Reproduce:
+ code/research/moc_moonshot_ag_exact_mixed.py
+ build/moc_moonshots_20261031/ag/exact_mixed_indefinite.json
+The numerical chamber census and search are in moc_moonshot_ag_chambers.py,
+moc_moonshot_ag_indefinite_search.py, and their ag/ JSON outputs.
+
+3. A local equality calculation that did not prove the global inequality
+
+At the archived exact weighted equality seed, the capacity defect
+J=q(p+r)-lambda^2 has exact nonnegative KKT multipliers on the active spectral
+support constraints. The seed has 11 contacts, not 9; the generic numerical
+optimizer attractor had 9. Nine multipliers are positive and two are zero.
+On the resulting eight-dimensional critical tangent space, the entire
+Lagrangian Hessian is exactly zero. Consequently a second-order local test at
+this seed provides no strict curvature estimate for the desired global capacity
+inequality. This was checked rationally after scaling imaginary coordinates by
+sqrt(23); it is not a numerical small-eigenvalue observation.
+
+The computation is code/research/moc_moonshot_ag_local.py and local_boundary.json.
+It explains why optimizing around the equality seed repeatedly sticks to a
+very flat boundary. The orbit 51 proof avoids this flat local test by using the connected real
+secant branch described above.
+
+4. Formalization and remaining scope
+
+code/lean/MocOrbit51.lean now contains 19 accepted scalar theorems, with no
+sorry, admit, or custom axiom. These include the polynomial identities, the
+signs derived from the original r-star assumptions, Q=0 exclusion, D=0 implying
+Q>0, and positivity of the derivative used to prove constant rank. The accepted
+source and compiler hashes are recorded in
+build/moc_moonshots_20261031/ag/orbit51_lean_status.json and
+moc_orbit51_lean_status_20261031.txt.
+
+The full HMSV variety, constant-rank inertia argument, and bridge from actual
+spectra are not yet formalized in that module. The full closure currently has
+an exact Python algebra certificate and an independent mathematical audit.
+
+The unrestricted task still requires the remaining spectral support families.
+The new result gives a concrete mechanism worth extending: factor the complex
+secant equation, parametrize a whole insufficient-capacity component, keep it
+away from Q=0, and use its exact real inertia to exclude the entire component.
+It worked for all five parameters here. It has not been shown to work globally.

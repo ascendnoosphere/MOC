@@ -1,0 +1,122 @@
+Corpus visual analysis, 31 October 2026
+
+Seven figures use the frozen unified file containing the same 20,127 original
+records. They do not create additional observations. Every final PNG was opened
+with view_image. Inspection led to more footer space, higher-contrast matrix
+labels, explicit symlog thresholds, and a narrower optimizer roundoff zoom.
+Code: code/research/moc_visual_corpus.py.
+Figures, metrics and inspection hashes: build/moc_visual_atlas_20261031/corpus/.
+
+01_sampling_and_scope.png
+All integer dimensions 1 through 1000 occur, but the generators and tests change
+with dimension. The 3,189 optimizer endpoints reuse 532 spectral cases. Large
+records mostly use low-rank Householder products and selected inner hulls;
+small records have complete permutation hulls. Source-by-family counts make
+these differences visible. The classifications are original producer outputs:
+7,478 numeric inner-hull witnesses, 7,218 numeric complete-hull interior cases,
+3,189 members at optimizer tolerance, 2,004 degenerate-within-tolerance cases,
+192 complete-hull boundary cases, 44 initially unresolved degenerate cases,
+and two separately labelled exact/control records. These categories are not
+independent unrestricted tests or exact certificates unless so indicated.
+
+02_analysis_reach.png
+This shows coverage of all eleven earlier roles and six new per-record roles.
+Missing diagnostics are not failures. The seven research approaches produced
+six per-record diagnostic roles because several contributions are exact family
+theorems or cone certificates, not corpus-level measurements. New exact probes
+are separately inventoried and do not inflate the original row count.
+
+03_conditioning_and_family.png
+The two upper boxplots use the SAME guarded n4 Haar cases. Their Gaussian to
+anisotropic median raw-clearance ratio is 41.31, while the whitened ratio is
+1.136. This isolates coordinate normalization within a retained sample.
+The approximately 23,000 ratio in the earlier report used the broader raw
+population; it also includes the effect of excluding numerically thin hulls.
+Neither comparison should be substituted for the other.
+
+Only 264/625 anisotropic and 444/625 clustered Haar cases pass the primary
+shape guards, versus every Gaussian and disk case. Selection is therefore
+part of the result. Clustered median whitened clearance is still only 0.4683,
+against Gaussian 0.9281. The Gaussian dimension curve rises rapidly, while
+the clustered curve is almost flat. Counts at n8 and n9 are only 15 and five
+per family, so the right-hand ends cannot support precise asymptotic claims.
+The boxplots omit individual outlier markers for legibility; full distributions
+and extremes are retained in the scalar appendix and machine-readable data.
+
+04_near_permutation_geometry.png
+Among 857 eligible near-permutation cases, 277 have the identity matching
+product on the numerical boundary and 580 have it in the interior. Their
+clearance distributions differ by orders of magnitude, despite similar
+mixing-versus-displacement trends. This follows the elementary Lipschitz
+bound between the edge clearances of d and z_id; it is not a new conjecture.
+
+The retrospective holdout illustrates the danger of pooled prediction.
+Mixing-only AUC is 0.918 overall, 0.635 within near-permutation cases, and
+0.587 within Haar cases. Adding identity-product clearance gives near-
+permutation AUC 0.913. There are only nine positive Haar labels. The label
+means normalized boundary proximity, not failure of MOC. The original trained
+models and split were reused; no model was refitted to improve these plots.
+
+05_weak_patterns_and_negative_control.png
+This intentionally retains weak associations. Within Haar data the rank
+correlation of mixing with clearance is 0.182; near a permutation it is 0.267.
+Identity-product clearance correlates 0.245 with Haar clearance but 0.932
+with near-permutation clearance. Correlations involving target radius and
+clearance can partly reflect definitions and should not be treated as causal.
+
+For 626 Gaussian Haar n4 cases, determinant phase versus whitened clearance
+has rank correlation -0.0431. Its absolute value is exceeded in about 30% of
+1,000 seeded random-label permutations. This exploratory comparison was not
+a prespecified significance test; the numerical scatter is the relevant point.
+
+There is a simple exact reason to expect this null relation in the circular
+Gaussian model. Simultaneously rotating both spectra by exp(i theta) leaves
+their joint law unchanged, rotates every product and d by exp(i n theta),
+and leaves affine-normalized clearance unchanged. For d nonzero, every nonzero
+Fourier coefficient of its phase conditional on any rotation-invariant
+statistic must therefore vanish. Thus phase is uniform and independent of
+that statistic under this rotationally invariant ensemble. This argument
+does not apply to arbitrary fixed spectra or anisotropic sampling, and says
+nothing about MOC validity. It explains why absolute phase is a useful
+negative control rather than a promising search coordinate here.
+
+06_optimizer_noise_and_reuse.png
+The largest recorded positive support excess is 1.166e-15. The zoom shows the
+floating noise near zero instead of hiding it beneath the broad negative
+tail. Of 3,189 starts, 1,629 lie within +/-1e-12 of zero. Gradient convergence
+alone neither proves a global maximum nor certifies an exact boundary point.
+The figure separates real orthogonal and complex unitary searches; the real
+subgroup is insufficient for the unrestricted target.
+
+07_cross_method_failure_sets.png
+This is a new join across the approaches. It uses 3,178 records satisfying
+the primary shape guard and the topology edge guard, with the required
+diagnostics present. It is a smaller denominator than each individual lane.
+
+The covariance-formula failure set (weight below -1e-9) has nine elements;
+the whitened initial heat-expansion set has 21; the winding-miss set has 78.
+These three sets are pairwise disjoint in this retained sample. All 78 winding
+misses are clustered; 59 also defeat diagonal pinching. None of the nine
+covariance failures defeats pinching, and only one is within the descriptive
+0.05 boundary threshold. Thus a single observed notion of numerical difficulty
+does not explain these three failed approaches.
+
+The explicit covariance formula or the winding test succeeds for every one
+of these 3,178 records. A nonzero winding supplies hull membership for the
+tested point as well as the separate attained-region interpretation. This
+suggests complementary constructive certificates. It does not prove that
+the union covers arbitrary spectra or mixers. In particular these ordinary-
+support campaign records do not adequately sample the remaining nonordinary
+support families.
+
+Every retained record has a negative entry in the canonical heat law. That
+law's sign therefore cannot distinguish these successful and unsuccessful
+methods. The fixed law's failure is a constraint on the representation, not
+an MOC counterexample. Six of the nine covariance failures are inconclusive
+for Gram; three receive a numerical Gram certificate. All 78 winding misses
+are inconclusive for Gram, which is another reason not to equate missing a
+certificate with leaving the permutation hull.
+
+The reports and atlas preserve raw IDs for follow-up. The findings are
+descriptive except for the separately stated symmetry argument. No full
+unrestricted proof follows from these plots.

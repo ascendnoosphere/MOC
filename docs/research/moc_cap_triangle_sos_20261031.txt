@@ -1,0 +1,280 @@
+CANONICAL CAP34: A THREE-BUDGET MATCHING-SOS REPAIR
+2026-10-31
+
+Status. The conditional Gram theorem and the sparse actual-seed certificate
+below are exact. Universal applicability to actual spectral costs is FALSE:
+see the direct Gaussian-integer counterexample in Section9.
+The criterion is strictly stronger than mere membership in the full matching
+SOS cone. Failure of this criterion would not refute matching-SOS sufficiency,
+and failure of matching-SOS sufficiency would not by itself refute MOC.
+
+1. Canonical coordinates and exact Boolean identities
+
+Use lexicographic permutations of 0,1,2,3 and the ray order in
+data/certificates/geometry/global_terminal_face_census.json. Set f=f34 and
+
+ Z = (0,7,10,13,17,18,20,22,23,27,28,30,31).
+
+The fourteen matching functions (f, r_j for j in Z) are linearly independent.
+Consequently the canonical-cap expansion
+
+ g = t f + sum_{j in Z} beta_j r_j,   t,beta_j >= 0,
+
+is UNIQUE. This is not an optimized positive decomposition in the full
+34-ray ordinary cone. The latter has linear relations; this simplicial cap
+does not. Relabeling takes the other 47 nonordinary caps to this one.
+
+The mixed ray f has values 0,1,2, with its unique value 2 at permutation5.
+Writing delta for the point mass at that permutation, direct integer checks
+give
+
+ f^2 = f + 2 delta,
+ r18 r23 = r18 r28 = r23 r28 = delta,
+ r_j^2 = r_j.
+
+At three particularly useful positions, only one zero-facet ordinary ray is
+active. Thus
+
+ beta18 = g18,  beta23 = g14,  beta28 = g9,
+ t = g3 - g1 - g9 - g12 - g22.
+
+The three selected permutations differ from the unique-2 permutation by the
+three double transpositions. More explicitly, permutation5=(0,3,2,1), while
+permutations18=(3,0,1,2),14=(2,1,0,3),9=(1,2,3,0); the relative permutations
+are (01)(23),(02)(13),(03)(12). This Klein-four pattern could be relevant to
+a Pluecker or Pfaffian proof, but no such universal proof is asserted.
+
+2. Exact conditional triangle-Gram theorem
+
+Put b=(beta18,beta23,beta28). There is a positive-semidefinite real 3x3
+matrix Gamma with diagonal b and sum of its three off-diagonal entries -t
+if and only if
+
+ T(b) := sum b - max(0, sqrt(b_max)-sum_{other two} sqrt(b))^2 >= 2t.    (1)
+
+Proof. Realize Gamma as the Gram matrix of three vectors of lengths
+sqrt(b_i). Their sum has squared norm sum b - 2t. The possible norms of
+their sum form the closed interval
+
+ [max(0,largest length - sum other lengths), sum all lengths].
+
+The desired norm is at most the upper endpoint because t>=0. It is
+attainable exactly when its square is at least the lower endpoint squared,
+which is (1). This includes zero lengths and degenerate Gram matrices.
+
+If (1) holds, the Boolean identities give
+
+ g = t f^2 + sum_{j outside {18,23,28}} beta_j r_j^2
+             + (r18,r23,r28) Gamma (r18,r23,r28)^T.                  (2)
+
+The two delta contributions cancel. Therefore g is a real sum of squares
+of matching functions. The established corrected real matching-moment
+kernel for SO4 then makes every such actual support cost nonnegative at
+every real orthogonal determinant profile. The existing n4 profile bridge
+transfers this linear support conclusion to complex unitary profiles.
+
+Equivalently, four lengths sqrt(b18),sqrt(b23),sqrt(b28), and
+sqrt(sum b-2t) can form a closed quadrilateral. This formulation does not
+provide the missing actual-spinor identity realizing the four lengths.
+
+There is also a radical-free version. Put A=sum b-2t,
+S2=b18*b23+b18*b28+b23*b28, P3=b18*b23*b28. Then (1) is equivalent to
+
+ A>=0 AND [t^2<=S2 OR 4A P3-(t^2-S2)^2>=0].
+
+Indeed the Brahmagupta product for those four lengths is
+4(S2-t^2)+8 sqrt(A P3). For nonnegative lengths its nonnegativity is
+equivalent to the quadrilateral inequality. Squaring is valid only on
+the branch t^2>S2. This branch qualification is essential.
+
+A still simpler sufficient condition is b_i b_j >= t^2 for some pair.
+Then use a 2x2 Gram with off-diagonal entry -t and leave the third ray
+diagonal. This pair condition is stronger than (1), not equivalent to it.
+
+3. Exact thirteen-square certificate for the actual seed support
+
+Take
+ a=(0,100,-214+146i,269-294i),
+ b=(-207-148i,-28-84i,-59+82i,83+104i), eta=-25+i.
+
+For z_pi=product_i(a_i+b_pi(i)), h=max Re(eta z_pi)=32952360312,
+the actual gap g_pi=h-Re(eta z_pi) has unique contact at permutation1.
+Its canonical coefficients include
+
+ t = 42246975256,
+ A = beta18 = 65769370688,
+ C = beta28 = 58010468072,
+ AC-t^2 = 2030505060130680408000 > 0.
+
+Hence the following explicit identity has thirteen nonzero positive squares:
+
+ g = t f^2 + A(r18-(t/A)r28)^2
+       + (C-t^2/A)r28^2 + sum_{j in Z minus {18,28}} beta_j r_j^2.
+
+All coefficients beta_j are nonnegative. The zero coefficient is omitted.
+The exact verifier recomputes the support from the displayed spectra,
+solves the independent14-column cap expansion, and checks the identity at
+all24 permutations using rational arithmetic. No optimizer is used.
+
+Replay:
+ python code/research/moc_cap_triangle_seed_certificate.py
+
+Output: PASS: exact sparse seed SOS;13 positive squares.
+Data: build/moc_cap_triangle_sos/exact_seed_sparse_sos.json.
+
+This is a much smaller certificate for the SAME single support previously
+certified with a large auxiliary PPT Gram. It does not certify all support
+directions of the seed, much less unrestricted MOC.
+
+4. What the spectral experiments do and do not show
+
+The cofactor reduction fixes a=(0,1,infinity,x) projectively and writes
+z_pi=u_pi x+v_pi. Hull facets of (u_pi,v_pi) in C^2 supply extreme supported
+costs at a fixed beta tuple. Since (1) defines a convex Gram-image cone,
+checking every such facet at a fixed beta proves (1) for all x and support
+directions at that beta. Sampling beta does not establish the global claim.
+
+The initial saved scans found:
+ - all19 nonordinary costs among the fresh249 planar hull-edge cases pass;
+ - among2644 saved cofactor facets, only32 are nonordinary; all32 pass,
+   with smallest normalized T about19.9778 (required lower bound2).
+
+The latter healthy margin should not be mistaken for adversarial evidence:
+most generic cofactor facets lie in the ordinary cone. A targeted actual
+cap-normalized search reaches much harder costs. Its direct triangle
+adversary attained T=2+8.95e-10 with beta/t approximately
+(.99981033,1.000189705,0), a rank4 cofactor cloud and nine contacts.
+No violation was found in that run. A floating boundary approach is not a
+proof of T>=2.
+
+Scripts:
+ code/research/moc_cap_triangle_sos_probe.py
+ code/research/moc_cap_triangle_spectral_adversary.py
+
+Saved data:
+ build/moc_cap_triangle_sos/saved_cofactor_facets.json
+ build/moc_cap_triangle_sos/actual_cap_triangle/campaign.json
+
+The direct search uses canonical cap coefficient t>1e-5 as a numerical
+guard; this guard is not a claimed theorem restriction. It searches all
+cofactor hull facets at each visited beta tuple. Exact replay is required
+for any proposed failure.
+
+5. Exact obstruction to a complex-secant-only proof
+
+Grace supplied the established nonactual nonic point
+
+ f34 + 2r0 + r7 + 2r13 + (331/17)r17 + (r18+r23+r28)/4.
+
+It is nonnegative, has N9=0 and rank/signature12(6,6,2), but the critical
+budget sum is .75<2. Thus nonnegative canonical-cap coefficients plus the
+complex-secant nonic cannot force (1). Its actual conjugate-spinor lift is
+obstructed; it has an SOS using other ordinary budgets. Any proof of (1)
+for actual spectral costs must retain more than N9=0.
+
+6. An exact explicit-section failure that the sparse repair survives
+
+The independent ellipsoid-section adversary found an exact actual support
+for which the power -1/2 ellipsoid-fit Gram is indefinite. Its rational
+finite spectra, all24 integer gaps and exact negative-vector test are in
+build/moc_ellipsoid_section_obstruction/exact_obstruction.json and are
+explained in moc_ellipsoid_section_obstruction_20261031.txt.
+
+That same actual cost passes (1), with normalized critical budgets about
+(.02490259,1.03057200,1.03477748) and last-two product1.06641270>1.
+It therefore has the simpler two-critical-ray sparse SOS repair above.
+This illustrates why failure of one explicit Gram selection is not a
+failure of SOS membership.
+
+The formerly remaining global statement was to prove (1) for every actual
+nonnegative canonical-cap spectral cost, or produce an exact actual
+counterexample. The latter has now been achieved; see Section9.
+
+7. Exact sharp actual boundary with distinct finite spectra
+
+The adversarial near-equality configuration has a particularly simple
+exact realization. Write u=i sqrt(7) and take FINITE spectra
+
+ a=(-1/2,-1,0,(-9+u)/22),
+ b=((3-u)/8,(7+u)/14,(13-u)/22,1/3),
+ eta=(363+33u)/4, h=1/2.
+
+Then at all24 permutations, EXACTLY,
+
+ h-Re[eta product_i(a_i+b_pi(i))]
+       = f34+r23+r28 = f34^2+(r23-r28)^2.
+
+Each spectrum is simple, the two projective point sets a and -b are
+disjoint, and no factor a_i+b_j vanishes. The eleven contacts are
+(1,6,7,8,12,15,17,18,20,22,23). The critical budgets are (0,1,1),
+so (1) is sharp. This is not a repeated-spectrum or paired-zero limit.
+
+The cofactor chart has q=((1-u)/2,(1+u)/4,(3-u)/8,-1),
+x=-(1+u)/4. Its full cloud has affine rank4; its eleven contact points
+have affine rank3, so this is an actual nonsimplicial cofactor facet.
+The finite spectra above follow by the common Mobius map z->1/(z-2).
+
+Replay:
+ python code/research/moc_triangle_sharp_actual_boundary.py
+
+The verifier checks all24 finite costs, the two-square identity, simple
+spectra, no zero factors, both exact affine ranks and the projective
+normalization. Output/artifact:
+ build/moc_cap_triangle_sos/exact_sharp_actual_boundary.json.
+
+This supplies an exact local target for investigating nearby facet fans
+and the missing global minimum argument. Its sharpness does not prove
+the global lower bound.
+
+8. All-orders local validity is now proved
+
+The subsequent exact Jacobian calculation does rule out every sufficiently
+small actual counterexample around the sharp configuration, including
+all nearby support branches. This is a genuine local neighborhood result,
+not a claim of unrestricted validity. The proof and verifier are
+ moc_cap_triangle_local_boundary_theorem_20261031.txt
+ code/research/moc_cap_triangle_local_boundary_theorem.py.
+
+With independent height there are13 real parameters. Nine selected contact
+gaps, together with four free coordinates, form an exact local chart whose
+Jacobian determinant is -13/8. The smooth sufficient quantity
+ J=beta18+2sqrt(beta23 beta28)-2t
+vanishes on the zero-contact slice by a polynomial subcase of the already
+known orbit51 factorization. All nine contact derivatives of J are +1.
+The inverse-function theorem and the integral form of Hadamard's lemma
+therefore express J as a sum of the nonnegative contact gaps with locally
+positive coefficients. The local ordering beta18<min(beta23,beta28)
+makes J>=0 sufficient for the full triangle criterion. Both the ordering
+and the polynomial identity away from the nonnegative cone are essential.
+
+The independent replay passed the complete contact-chart, second-order
+and full polynomial determinant checks. No explicit neighborhood radius
+or global lower bound is certified.
+
+9. Global triangle candidate REFUTED by direct actual products
+
+The Grace lane subsequently produced the finite Gaussian-integer spectra
+ a=(100000+100000i,0,-300000-100000i,7256-11910i),
+ b=(-340+953i,-1240+2373i,5750-9071i,-1484+2182i),
+ eta=-802442+596731i.
+Direct exact products give unique support contact9 and
+ t=8412997598488012479616,
+ beta18=716336099653867664712,
+ beta23=155106963601811855672,
+ beta28=0.
+All13 canonical ordinary coefficients are nonnegative and all24 cap
+identities hold exactly. Here beta18+beta23<2t and beta18*beta23<t^2;
+indeed the normalized triangle capacity T/t is about0.07924161, far below2.
+
+Independent pure-Python Gaussian-integer audit:
+ code/research/moc_triangle_counterexample_independent_audit.py
+ build/moc_cap_triangle_sos/independent_actual_counterexample.json.
+No floating-point lift classification, HMSV geometry or spectral existence
+argument is needed for this direct counterexample.
+
+The global sufficient triangle candidate is therefore false. The
+conditional Gram identity, exact seed certificate, sharp boundary example
+and all-orders local theorem remain valid. This does NOT refute MOC or
+the full matching-SOS cone. In fact scout_positive has independently
+constructed an exact positive full14 matching Gram for this SAME cost;
+see build/moc_future_hit_exact_gram/exact_positive_gram.json.

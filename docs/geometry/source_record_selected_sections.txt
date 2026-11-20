@@ -1,0 +1,1112 @@
+SOURCE RECORD N128
+N128. A tetrahedral simplex inequality and
+one complex MOC theorem
+
+Status and scope
+The probability-vector inequality proved below, together with the exact Hodge and quaternion identi-
+ties in the exact quaternion reduction verifier, completes the hard support inequalities for the explicit complex spectral pair
+in Chapter N115. The argument proves MOC for that pair, in every unitary conjugation and every
+support direction.
+The theorem concerns this explicit spectral pair; no unrestricted MOC theorem or novelty priority is asserted.
+
+
+1. The simplex inequality
+Theorem. If 𝑝, 𝑞 ∈ ℝ4≥0 and ∑𝑖 𝑝𝑖 = ∑𝑖 𝑞𝑖 = 1, then
+
+
+                        Φ(𝑝, 𝑞) ∶= ∑ 𝑝𝑖2 + ∑ 𝑞𝑖2 + 4 ∑ 𝑝𝑖 𝑞𝑖 − 1 − 4√∏ 𝑝𝑖 − 4√∏ 𝑞𝑖 ≥ 0.              (1)
+                                    𝑖          𝑖          𝑖                 𝑖          𝑖
+
+
+The proof uses compactness, an exact boundary estimate, and a complete classification of the possible
+multiplicities at an interior stationary point.
+
+1.1 Both products vanish
+
+Put 𝑃 = √∏𝑖 𝑝𝑖 and 𝑄 = √∏𝑖 𝑞𝑖 . If 𝑃 = 𝑄 = 0, then
+
+
+                                          Φ(𝑝, 𝑞) = ‖𝑝 + 𝑞‖22 + 2𝑝 ⋅ 𝑞 − 1 ≥ 0,                      (2)
+
+because ∑𝑖 (𝑝𝑖 + 𝑞𝑖 ) = 2, so ‖𝑝 + 𝑞‖22 ≥ 1.
+
+1.2 A vector supported on at most two coordinates
+By simultaneous relabeling and symmetry in the two vectors, suppose 𝑝 = (𝑡, 1 − 𝑡, 0, 0). For fixed 𝑞,
+minimizing the quadratic dependence on 𝑡 over the entire real line gives a lower bound. Write 𝑢 = 𝑞1 𝑞2 ,
+𝑣 = 𝑞3 𝑞4 . Direct completion of the square gives
+
+                                                        1              √
+                                           Φ(𝑝, 𝑞) ≥      + 6𝑢 − 2𝑣 − 4 𝑢𝑣.                          (3)
+                                                        2
+                √
+Also 𝑞1 + 𝑞2 ≥ 2 𝑢, and therefore
+
+                                                         √
+                                                   (1 − 2 𝑢)2           √        1
+                                        0≤𝑣≤                  ,    0≤       𝑢≤     .                 (4)
+                                                        4                        2
+The right side of (3) decreases with 𝑣. Substituting the upper bound from (4) gives exactly 8𝑢 ≥ 0. This
+proves the required boundary case, including support one.
+
+                                                              40
+COMPLEX MARCUS-DE OLIVEIRA                                                              COMPLETE RESEARCH VOLUME
+
+
+1.3 A support-three vector cannot cause a negative global minimum
+Suppose 𝑝4 = 0, 𝑝1 𝑝2 𝑝3 > 0, and 𝑄 > 0. For small 𝜀 > 0, replace 𝑝4 by 𝜀 and 𝑝1 by 𝑝1 − 𝜀, leaving everything
+else fixed. The polynomial part of Φ changes by 𝑂(𝜀), whereas
+
+                                                    √        √
+                                    −4√∏ 𝑝𝑖 (𝜀) = −4 𝑝1 𝑝2 𝑝3 𝜀 + 𝑂(𝜀3/2 ).                                   (5)
+                                          𝑖
+
+
+Consequently Φ strictly decreases for sufficiently small positive 𝜀. Such a boundary point cannot be a
+global minimum. If 𝑄 = 0, equation (2) already proves nonnegativity.
+The compact domain thus has no negative global minimum on its boundary. It remains to show that
+every interior stationary point has Φ ≥ 0.
+
+
+2. Interior stationary points
+At an interior stationary point, 𝑃 , 𝑄 > 0. Use half the ordinary Lagrange multipliers and write the
+stationary equations as
+
+                                                 𝑃                            𝑄
+                                    𝑝𝑖 + 2𝑞𝑖 −      = 𝛼,         𝑞𝑖 + 2𝑝𝑖 −      = 𝛽.                         (6)
+                                                 𝑝𝑖                           𝑞𝑖
+
+Equal 𝑝-coordinates imply equal 𝑞-coordinates by the first equation; equal 𝑞-coordinates imply equal
+𝑝-coordinates by the second. Thus the multiplicity partitions of the four pairs (𝑝𝑖 , 𝑞𝑖 ) agree with those
+of either coordinate vector.
+Multiplying (6) by 𝑝𝑖 , 𝑞𝑖 respectively and summing gives the useful identity
+
+                                                 𝛼 + 𝛽 = Φ(𝑝, 𝑞) + 1.                                         (7)
+
+2.1 At most three distinct coordinate pairs
+Eliminate
+
+                                                        −𝑝𝑖2 + 𝛼𝑝𝑖 + 𝑃
+                                                 𝑞𝑖 =
+                                                              2𝑝𝑖
+
+from the other stationary equation. Every positive 𝑝𝑖 is a root of the quartic
+
+                                       𝑓(𝑧) = − 3𝑧 4 + 2(𝛼 + 𝛽)𝑧 3
+                                                 + (𝛼2 − 2𝛼𝛽 + 2𝑃 − 4𝑄)𝑧 2                                    (8)
+                                                                        2
+                                                 + 2𝑃 (𝛼 − 𝛽)𝑧 + 𝑃 .
+
+If all four 𝑝𝑖 were distinct, they would be all the roots of 𝑓; their product would be −𝑃 2 /3 < 0, which is
+impossible. There are at most three distinct coordinate pairs.
+
+2.2 Three distinct coordinate pairs are impossible
+Assume there are exactly three pair types, and relabel them as
+
+
+                                        𝑝 = (𝑡, 𝑡, 𝑎, 𝑏),        𝑞 = (𝑢, 𝑢, 𝑐, 𝑑).                            (9)
+
+Here 𝑡, 𝑎, 𝑏 are distinct, and so are 𝑢, 𝑐, 𝑑. Since 𝑃 2 = 𝑡2 𝑎𝑏, the fourth root of the quartic (8), whose other
+three roots are 𝑡, 𝑎, 𝑏, equals −𝑡/3. Comparing the root sum with the cubic coefficient gives
+
+
+                                                 2(𝛼 + 𝛽) = 3 − 4𝑡.                                         (10)
+
+                                                            41
+COMPLEX MARCUS-DE OLIVEIRA                                                          COMPLETE RESEARCH VOLUME
+
+
+Apply the same quartic argument after interchanging 𝑝, 𝑞. It gives 2(𝛼 + 𝛽) = 3 − 4𝑢, hence 𝑢 = 𝑡.
+       √       √
+Put 𝑟 = 𝑎𝑏, 𝑠 = 𝑐𝑑. Then 𝑃 = 𝑡𝑟, 𝑄 = 𝑡𝑠, and the repeated coordinates in (6) give
+
+
+                                           𝛼 = 3𝑡 − 𝑟,          𝛽 = 3𝑡 − 𝑠.                               (11)
+
+Sum the first equation in (6) over the two unrepeated coordinates. Using 𝑎 + 𝑏 = 𝑐 + 𝑑 = 1 − 2𝑡 and
+1/𝑎 + 1/𝑏 = (1 − 2𝑡)/𝑟2 , this becomes
+
+
+                                        2𝑟2 − (12𝑡 − 3)𝑟 − 𝑡(1 − 2𝑡) = 0.                                 (12)
+
+The symmetric argument gives the same equation for 𝑠. Since 0 < 𝑡 < 1/2, its constant term is negative.
+The quadratic therefore has exactly one positive root, so 𝑟 = 𝑠. It follows that 𝑃 = 𝑄, 𝛼 = 𝛽, and the
+pairs (𝑎, 𝑏), (𝑐, 𝑑) have the same sum and product.
+If (𝑐, 𝑑) = (𝑎, 𝑏), then 𝑝 = 𝑞. Equation (6) makes 3𝑝𝑖 − 𝑃 /𝑝𝑖 constant; this expression is strictly increasing
+on positive arguments, forcing uniformity, a contradiction.
+Otherwise (𝑐, 𝑑) = (𝑏, 𝑎), with 𝑎 ≠ 𝑏. Subtract the two equations in (6):
+
+                                                            𝑃
+                                            (𝑝𝑖 − 𝑞𝑖 ) (         − 1) = 0.                                (13)
+                                                           𝑝𝑖 𝑞𝑖
+
+For an unrepeated coordinate this implies 𝑎𝑏 = 𝑃 = 𝑡𝑟, hence 𝑟2 = 𝑡𝑟 and 𝑟 = 𝑡. Now (11) gives 𝛼 + 𝛽 = 4𝑡.
+Combining with (10) yields 𝑡 = 1/4. But then 𝑎 + 𝑏 = 1/2, 𝑎𝑏 = 1/16, forcing 𝑎 = 𝑏 = 1/4, again a
+contradiction.
+There are no interior stationary points with exactly three distinct coordinate pairs.
+
+
+3. The remaining multiplicity partitions
+3.1 One pair type
+Both vectors are uniform, and Φ = 0.
+
+3.2 Two pair types with multiplicities two and two
+Write
+
+
+                                     𝑝 = (1/4 + 𝑠, 1/4 + 𝑠, 1/4 − 𝑠, 1/4 − 𝑠),
+
+
+                                     𝑞 = (1/4 + 𝑡, 1/4 + 𝑡, 1/4 − 𝑡, 1/4 − 𝑡).
+
+The parameter 𝑡 may have either sign; this includes both relative orderings of the two types. Direct
+substitution gives
+
+
+                                             Φ(𝑝, 𝑞) = 8(𝑠 + 𝑡)2 ≥ 0.                                     (14)
+
+This identity holds throughout this family, without stationarity.
+
+
+
+
+                                                           42
+COMPLEX MARCUS-DE OLIVEIRA                                                                        COMPLETE RESEARCH VOLUME
+
+
+3.3 Two pair types with multiplicities one and three
+Write
+
+
+                             𝑝 = (𝑎, 𝑏, 𝑏, 𝑏),     𝑞 = (𝑐, 𝑑, 𝑑, 𝑑),    𝑎 + 3𝑏 = 𝑐 + 3𝑑 = 1,
+
+and set 𝑟 = √𝑎/𝑏, 𝑠 = √𝑐/𝑑. Subtract the stationary equations between the distinguished coordinate
+and a repeated coordinate. Since 𝑃 /(𝑎𝑏) = 1/𝑟 and 𝑄/(𝑐𝑑) = 1/𝑠,
+
+
+                                              (𝑎 − 𝑏)(1 + 1/𝑟) + 2(𝑐 − 𝑑) = 0,
+
+
+                                              (𝑐 − 𝑑)(1 + 1/𝑠) + 2(𝑎 − 𝑏) = 0.                                        (15)
+
+If either difference vanishes, both vanish, giving the uniform point. Otherwise they have opposite
+signs. Interchanging 𝑝, 𝑞 if necessary, assume 𝑟 > 1, 𝑠 < 1. Multiplying the two equations in (15) after
+canceling the nonzero differences gives
+
+                                                                            𝑟+1
+                                          (𝑟 + 1)(𝑠 + 1) = 4𝑟𝑠,        𝑠=          .                                  (16)
+                                                                            3𝑟 − 1
+
+Normalization gives
+
+                                                    𝑟2 − 1                  𝑠2 − 1
+                                          𝑎−𝑏 =            ,        𝑐−𝑑 =          .                                  (17)
+                                                    𝑟2 + 3                  𝑠2 + 3
+
+Substitute (16)–(17) into the first equation of (15), and cancel 𝑟 − 1 > 0. The resulting equation is
+
+                                          4𝑟2 (𝑟2 + 3) = (𝑟 + 1)2 (7𝑟2 − 4𝑟 + 1).                                     (18)
+
+But its right side minus its left side factors as
+
+
+                                      (𝑟 − 1)(3𝑟3 + 13𝑟2 + 𝑟 − 1) > 0          (𝑟 > 1),                               (19)
+
+a contradiction. No nonuniform stationary point of this type exists.
+All possible interior stationary points have now been covered. Together with the boundary argument
+and compactness, this proves Theorem (1).
+Equality is exactly the continuous family, up to simultaneous relabeling,
+
+
+                          𝑝 = (𝑎, 𝑎, 𝑏, 𝑏),       𝑞 = (𝑏, 𝑏, 𝑎, 𝑎),    𝑎, 𝑏 ≥ 0,       𝑎 + 𝑏 = 1/2.                   (20)
+
+For completeness, any interior equality point is stationary, so the above classification puts it in (20).
+A support-three equality with the other vector interior is impossible by the same square-root pertur-
+bation. If both products vanish, equality in (2) requires both 𝑝 + 𝑞 = (1/2, 1/2, 1/2, 1/2) and 𝑝 · 𝑞 = 0;
+therefore each vector is uniform on two complementary coordinates. If one vector has support at
+most two and the other is interior, the lower bound 8𝑢 > 0 excludes equality. These are precisely the
+endpoints already included in (20).
+
+
+
+
+                                                               43
+COMPLEX MARCUS-DE OLIVEIRA                                                                        COMPLETE RESEARCH VOLUME
+
+
+4. Consequence for the hard unitary minor inequality
+For 𝑈 ∈ 𝑈 (4), define
+
+
+                                𝑠1 (𝑈 ) = ∑ |𝑈𝑖𝑖 |2 ,      𝑠2 (𝑈 ) = ∑ | det 𝑈 [𝐼, 𝐼]|2 .
+                                           𝑖                           |𝐼|=2
+
+
+Let 𝑠+ (𝑈 ) sum the twelve squared minors with one-based row/column index pairs
+
+
+                                (12, 13), (12, 24), (13, 14), (13, 23), (14, 12), (14, 34),
+
+
+                                (23, 12), (23, 34), (24, 14), (24, 23), (34, 13), (34, 24).                           (21)
+
+The quaternion calculation in the exact quaternion reduction verifier proves for 𝑂 ∈ 𝑆𝑂(4) that
+
+
+             2𝑠1 (𝑂) + 4𝑠2 (𝑂) + 𝑠+ (𝑂) − 2 = 6 (∑ 𝑝𝑖2 + ∑ 𝑞𝑖2 + 4 ∑ 𝑝𝑖 𝑞𝑖 − 1 − 4 ∏ 𝜉𝑖 + 4 ∏ 𝜂𝑖 ) ,                  (22)
+                                                       𝑖          𝑖            𝑖              𝑖        𝑖
+
+
+where 𝜉, 𝜂 are unit quaternions and 𝑝𝑖 = 𝜉𝑖2 , 𝑞𝑖 = 𝜂𝑖2 . The right side is at least 6Φ(𝑝, 𝑞), proving nonneg-
+ativity. Changing the determinant sign of a real orthogonal matrix by a row sign leaves all squared
+minors unchanged, so the inequality also holds for every 𝑂 ∈ 𝑂(4).
+The previously proved order-four equality of the convex hulls of unitary and real orthogonal common-
+minor profiles extends this linear profile inequality to every 𝑈 ∈ 𝑈 (4). The explicit proof is in Chapter
+N090, Section 7: after making an anchor row real, the three remaining rows give trace-one real
+positive semidefinite effects summing to the identity on its three-dimensional orthogonal complement.
+Every extreme such triple is a real orthogonal frame, so every complex profile is a convex mixture of
+real profiles. We therefore obtain
+
+
+                                   2𝑠1 (𝑈 ) + 4𝑠2 (𝑈 ) + 𝑠+ (𝑈 ) ≥ 2           (𝑈 ∈ 𝑈 (4)).                           (23)
+
+The transpose inequality follows by applying (23) to 𝑈 T .
+The equal-norm condition in (22) is essential. The superficially stronger unrestricted homogeneous
+quartic is false: 𝜉 = (2, 2, 1, 2), 𝜂 = (0, 0, 2, 0) gives value −3 for the version with both product terms
+negative. Its squared norms are 13 and 4. A global homogeneous sum-of-squares proof of that stronger
+assertion is therefore impossible.
+
+
+5. A complete complex MOC theorem for an explicit finite pair
+               √
+Let 𝜔 = (−1 + 𝑖 3)/2, and take
+
+
+                                                                           2𝜔 − 1 2𝜔2 − 1
+                             𝑎 = (0, 1/2, −𝜔2 , −𝜔),       𝑏 = (−1, 1,           ,        ).                          (24)
+                                                                             7       7
+
+For every pair of normal matrices 𝐴, 𝐵 having these ordered spectra,
+
+                                                             4
+                                  det(𝐴 + 𝐵) ∈ conv {∏(𝑎𝑖 + 𝑏𝜋(𝑖) ) ∶ 𝜋 ∈ 𝑆4 } .                                      (25)
+                                                            𝑖=1
+
+
+Here is the reduction to the preceding theorem. After multiplying permutation products by 7/9, their
+convex hull has vertices
+
+
+                                                           44
+COMPLEX MARCUS-DE OLIVEIRA                                                          COMPLETE RESEARCH VOLUME
+
+
+
+                                      3        1        𝑖               𝑖
+                                     − ,         ,     √ ,            −√ .                              (26)
+                                      2        6        12              12
+
+The exact field computation in Program P143 verifies all twenty-four products. Real support directions
+on this plane are parameterized by (𝑥, 𝑘), with support-edge rays
+
+
+                                   (−2, 3),   (−2, −3),     (6, 1),   (6, −1).                          (27)
+
+For the first two rays the support deficits are
+
+                                               2                2
+                                           𝑠+ + 𝑠𝑐 ,        𝑠− + 𝑠𝑐 ,
+                                               3                3
+
+where 𝑠𝑐 is the sum of complementary two-minor squares and 𝑠− is the transpose of the orbit in (21).
+These are nonnegative term by term. The other two deficits are
+
+                               −2 + 2𝑠1 + 4𝑠2 + 𝑠+          −2 + 2𝑠1 + 4𝑠2 + 𝑠−
+                                                   ,                            ,
+                                        3                            3
+
+which are nonnegative by (23) and its transpose. The four edges determine the entire polygon, so
+every support direction is proved.
+Equivalently, all actual 𝐴4 -symmetric costs in the plane 𝑦 = 4𝑥/3 satisfy full order-four MOC. This is
+a complete restricted theorem; the other nonic branches and general nonsymmetric actual spectra
+require additional arguments.
+
+
+
+
+                                                       45
+Chapter 12
+
+
+
+
+SOURCE RECORD N114
+N114. Full MOC for every actual tetrahedral-
+ly symmetric order-four cost
+
+Stronger closure theorem. The subsequent proof in Chapter N117 establishes 𝑌 + |𝑍| ≤ 1 for every
+unitary profile. Consequently the theorem below holds for every real tetrahedrally symmetric cost on
+the projected spectral secant closure, including its border-only components. Actual spectral costs are
+a special case. The complete three-branch proof remains organized below.
+
+
+The theorem
+Let 𝑎, 𝑏 ∈ ℂ4 , let 𝜂 ∈ ℂ, and put
+
+                                                           4
+                                             𝑐𝜋 = Re (𝜂 ∏(𝑎𝑖 + 𝑏𝜋(𝑖) )) .
+                                                          𝑖=1
+
+
+Suppose 𝑐𝜎𝜋𝜎−1 = 𝑐𝜋 for every 𝜎 ∈ 𝐴4 . Then, for every 𝑈 ∈ 𝑈 (4),
+
+
+                                          Re (𝜂 det(𝐷𝑎 + 𝑈 𝐷𝑏 𝑈 ∗ )) ≤ max 𝑐𝜋 .                      (1)
+                                                                       𝜋∈𝑆4
+
+
+This is a full-unitary theorem for every actual spectral support direction with the stated tetrahedral
+symmetry. It does not assume that the spectrum is real or collinear. It does not cover arbitrary non-
+symmetric costs: averaging an arbitrary actual cost over 𝐴4 need not preserve its spectral realization
+or the projected secant nonic.
+The proof combines the exact nonic factorization, the simplex theorem, and the elementary minor
+certificates below. All computations used for the factorization and finite-versus-border distinction are
+recorded in Program P143 and Data record D170. The complete simplex proof is in Chapter N128.
+
+
+1. Three scalar profile coordinates
+After subtracting the identity cost 𝑐id , the class values are
+
+                                     Conjugacy class under 𝐴4       Centered cost
+                                     Identity                                        0
+                                     Transpositions                                  𝑥
+                                     Double transpositions                           𝑦
+                                     Four-cycles                               𝑥 + 𝑦/2
+                                     Two three-cycle classes                  3𝑥/2 ± 𝑘
+
+
+The relative support height is
+
+
+                                         ℎ = max{0, 𝑥, 𝑦, 𝑥 + 𝑦/2, 3𝑥/2 + |𝑘|}.                      (2)
+
+
+
+
+                                                           60
+COMPLEX MARCUS-DE OLIVEIRA                                                                     COMPLETE RESEARCH VOLUME
+
+
+Use the squared-minor sums 𝑠1 , 𝑠2 , 𝑠+ , 𝑠− , 𝑠𝑐 defined in the companion notes: diagonal one-minors, prin-
+cipal two-minors, the two oriented twelve-element off-diagonal two-minor orbits, and complementary
+two-minors.
+The centered cost on a unitary profile is
+
+
+                                   𝑐(𝑈 ) − 𝑐id = 𝑥𝑋(𝑈 ) + 𝑦𝑌 (𝑈 ) + 𝑘𝑍(𝑈 ),                                         (3)
+
+where the following identities all hold exactly:
+
+                                  𝑠1 − 𝑠2  𝑠 + 𝑠−                  𝑠𝑐             𝑠− − 𝑠 +
+                          𝑋 =1+           = +     ,          𝑌 =      ,      𝑍=            .                        (4)
+                                     2        4                    4                 6
+
+Also
+
+
+                                 𝑠2 + 𝑠+ + 𝑠− + 𝑠𝑐 = 6,       𝑠𝑐 = 2 − 2𝑠1 + 𝑠2 ,                                   (5)
+
+and consequently
+
+                                                                𝑠1
+                                                𝑋 + 2𝑌 = 2 −       .                                                (6)
+                                                                2
+
+The identities are verified on the twenty-four permutation profiles, which span the full common-minor
+profile space. Alternatively (5) follows from compound-matrix unitarity and the ordinary row/column
+identities.
+Since all five minor sums are nonnegative,
+
+
+                                     𝑋 ≥ 0,        0 ≤ 𝑌 ≤ 1,          |𝑍| ≤ 1.                                     (7)
+
+For the last inequality, use |𝑠− − 𝑠+ | ≤ 𝑠− + 𝑠+ ≤ 6. Thus no quaternion argument is needed for these
+elementary bounds.
+
+
+2. The exact three-branch restriction
+The projected M8 secant nonic restricts to
+
+                                              1
+                                    𝑃9 = ±      𝑥(3𝑦 − 4𝑥)2 (4𝑘2 + 𝑥𝑦 − 𝑥2 )3 .                                     (8)
+                                             32
+
+Every actual centered spectral cost satisfies 𝑃9 = 0, so it lies on
+
+                                   𝑥 = 0,      𝑦 = 4𝑥/3,        4𝑘2 = 𝑥(𝑥 − 𝑦).                                     (9)
+
+The derivation, including the three isotypic Hessian blocks, is in Chapter N116.
+The plane 𝑦 = 4𝑥/3 satisfies the full scalar support inequality by the simplex theorem and its quaternion
+application in Chapter N128. Its four polygonal support rays have the explicit gaps
+
+                         2           2        −2 + 2𝑠1 + 4𝑠2 + 𝑠+          −2 + 2𝑠1 + 4𝑠2 + 𝑠−
+                     𝑠+ + 𝑠𝑐 ,   𝑠− + 𝑠𝑐 ,                        ,                            .                   (10)
+                         3           3                 3                            3
+
+The first two are elementary; the last two are the simplex theorem.
+
+
+
+
+                                                        61
+COMPLEX MARCUS-DE OLIVEIRA                                                          COMPLETE RESEARCH VOLUME
+
+
+3. The entire quadratic branch has elementary certificates
+Assume
+
+
+                                                4𝑘2 = 𝑥(𝑥 − 𝑦).                                           (11)
+
+If 𝑥 = 0, then 𝑘 = 0, and Section 4 applies. For 𝑥 ≠ 0, put 𝑟 = 2|𝑘|/|𝑥|. Transposition exchanges 𝑠+ , 𝑠−
+and changes the sign of 𝑘, so it is enough to assume 𝑘 ≥ 0.
+
+3.1 Positive 𝑥
+Now 𝑦 = 𝑥(1 − 𝑟2 ), 𝑘 = 𝑥𝑟/2, and direct comparison of the entries in (2) gives
+
+
+                                                ℎ = 𝑥(3 + 𝑟)/2.
+
+The support gap has the exact certificate
+
+                             ℎ − 𝑥𝑋 − 𝑦𝑌 − 𝑘𝑍   3+𝑟     𝑟     𝑟(3𝑟 + 1)
+                                              =     𝑠2 + 𝑠+ +           𝑠𝑐 ≥ 0.                           (12)
+                                    𝑥            12     6        12
+
+One derivation starts with
+
+                                  ℎ − 𝑥𝑋 − 𝑦𝑌 − 𝑘𝑍  𝑠          𝑟
+                                                   = 2 + 𝑟2 𝑌 + (1 − 𝑍),
+                                         𝑥           4         2
+
+then uses 1 − 𝑍 = (𝑠2 + 𝑠𝑐 + 2𝑠+ )/6. All coefficients in (12) are nonnegative for every 𝑟 ≥ 0.
+
+3.2 Negative 𝑥, with 0 ≤ 𝑟 ≤ 1
+Write 𝑥 = −𝑢, 𝑢 > 0. Then 𝑦 = 𝑢(𝑟2 − 1), 𝑘 = 𝑢𝑟/2. In this range ℎ = 0. Equations (3)–(4) give
+
+
+                             ℎ − 𝑥𝑋 − 𝑦𝑌 − 𝑘𝑍   3+𝑟      3−𝑟      1 − 𝑟2
+                                              =     𝑠+ +     𝑠− +        𝑠𝑐 ≥ 0.                          (13)
+                                    𝑢            12       12        4
+
+3.3 Negative 𝑥, with 𝑟 ≥ 1
+Here ℎ = 𝑢(𝑟2 − 1). Using 1 − 𝑌 = 𝑋/2 + 𝑠1 /4, which follows from (6), gives
+
+
+                     ℎ − 𝑥𝑋 − 𝑦𝑌 − 𝑘𝑍   3𝑟2 + 2𝑟 + 3      3𝑟2 − 2𝑟 + 3      𝑟2 − 1
+                                      =              𝑠+ +              𝑠− +        𝑠1 ≥ 0.                (14)
+                            𝑢                24                24              4
+
+The middle coefficient is strictly positive: 3𝑟2 − 2𝑟 + 3 = 3(𝑟 − 1/3)2 + 8/3. This proves the entire quadratic
+branch without requiring finite actual spectral realizability.
+
+
+4. The remaining 𝑥 = 0 component
+The stronger argument now covers this entire component. The complementary simplex theorem gives
+𝑌 + |𝑍| ≤ 1, and here ℎ = max(0, 𝑦, |𝑘|). Therefore
+
+
+                                          𝑦𝑌 + 𝑘𝑍 ≤ ℎ𝑌 + ℎ|𝑍| ≤ ℎ.                                       (15a)
+
+Equivalently, the new pair of minor inequalities is
+
+
+                                      𝑠𝑐 ≤ 2𝑠2 + 4𝑠+ ,        𝑠𝑐 ≤ 2𝑠2 + 4𝑠− .                           (15b)
+
+                                                         62
+COMPLEX MARCUS-DE OLIVEIRA                                                                     COMPLETE RESEARCH VOLUME
+
+
+This removes every finite-realizability requirement from the support proof on this component. The fol-
+lowing algebraic distinction is still valid and records why the original actual-cost theorem had already
+closed before the stronger inequality was found.
+The exact finite-secant calculation in Chapter N115 proves that a point with
+
+
+                                                  𝑥 = 0,          𝑦𝑘 ≠ 0
+
+cannot be an actual spectral cost. Its unique cubic lift has a two-dimensional Hessian kernel on which
+the gradient is supported in coordinate 0, whereas the required target gradient has coordinate 1 equal
+to 𝑘2 ≠ 0. This excludes a finite secant representation, even over the complexes.
+Thus every actual point on 𝑥 = 0 belongs to one of its axes:
+  • If 𝑘 = 0, its cost is 𝑦𝑌 , and 0 ≤ 𝑌 ≤ 1 proves 𝑦𝑌 ≤ max(0, 𝑦) = ℎ.
+  • If 𝑦 = 0, its cost is 𝑘𝑍, and |𝑍| ≤ 1 proves 𝑘𝑍 ≤ |𝑘| = ℎ.
+No assertion about the generic border-only part of 𝑥 = 0 is needed.
+Every branch in (9) that can contain actual costs is now proved. This establishes Theorem (1).
+
+
+5. A finite complex pair covered in every support direction
+               √
+Let 𝜔 = (−1 + 𝑖 3)/2 and
+
+                                                                           2𝜔 − 1 2𝜔2 − 1
+                             𝑎 = (0, 1/2, −𝜔2 , −𝜔),        𝑏 = (−1, 1,          ,        ).
+                                                                             7       7
+
+Every support cost of this pair belongs to the plane 𝑦 = 4𝑥/3, so Theorem (1) proves full complex MOC
+for this pair. The twenty-four products, after multiplication by 7/9, have convex hull
+
+                                                  3 1 𝑖       𝑖
+                                           conv {− , , √ , − √ } .
+                                                  2 6   12    12
+
+The exact products and the full support proof are in the companion simplex note. The pair illustrates
+that the theorem includes genuinely complex, noncollinear finite spectra.
+
+Projective covariance gives a continuous family of spectral pairs
+The same conclusion holds throughout the following fractional-linear orbit of this pair. Let
+
+                                                𝛼𝑧 + 𝛽
+                                       𝑓(𝑧) =          ,        Δ = 𝛼𝛿 − 𝛽𝛾 ≠ 0,
+                                                𝛾𝑧 + 𝛿
+
+and assume that none of the displayed spectral values is a pole. Set
+
+
+                                           𝑎′𝑖 = 𝑓(𝑎𝑖 ),       𝑏𝑗′ = −𝑓(−𝑏𝑗 ).
+
+Then
+
+                                                              Δ(𝑎𝑖 + 𝑏𝑗 )
+                                            𝑎′𝑖 + 𝑏𝑗′ =                       .                                    (15)
+                                                          (𝛾𝑎𝑖 + 𝛿)(𝛿 − 𝛾𝑏𝑗 )
+
+For every unitary 𝑈 ,
+
+                                                                  det[(𝑎𝑖 + 𝑏𝑗 )𝑈𝑖𝑗 ]
+                                      det(𝐷𝑎 + 𝑈 𝐷𝑏 𝑈 ∗ ) =                           .                            (16)
+                                                                       det 𝑈
+
+
+                                                             63
+COMPLEX MARCUS-DE OLIVEIRA                                                       COMPLETE RESEARCH VOLUME
+
+
+Equation (15) multiplies every row and every column of the determinant in (16) by fixed scalars. There-
+fore every determinant value and every permutation product is multiplied by the same nonzero scalar
+
+                                                        Δ4
+                                        𝜅=                              .                              (17)
+                                             ∏𝑖 (𝛾𝑎𝑖 + 𝛿) ∏𝑗 (𝛿 − 𝛾𝑏𝑗 )
+
+Convex containment is preserved under multiplication by 𝜅. The explicit pair theorem thus transports
+to its entire finite fractional-linear orbit. This covariance is a direct algebraic identity; it does not
+assert that arbitrary configurations belong to that orbit.
+
+
+
+SOURCE RECORD N115
+N115. An explicit tetrahedral spectral pair
+and its exact remaining inequality
+
+Completion update. The hard inequality below is now proved in Chapter N128. The full theorem
+for every actual tetrahedrally symmetric cost, including the other nonic branches, is in Chapter N114.
+This note retains the finite-realization and border-secant derivations that feed those proofs.
+
+
+1. Scope
+The nonic factorization and isoclinic support theorem are proved in Chapter N116. This companion
+note distinguishes actual finite complex spectra from border-secant points and reduces one entire
+actual spectral plane to a concrete full-unitary minor inequality.
+The exact verifier is Program P143; its JSON output retains all coordinates, field elements, Hessian
+kernels, and minor orbits below. The M8 singular-locus and finite-chart inputs are documented in
+Chapter N067, with the primary geometric source https://arxiv.org/abs/1103.5255 . No unrestricted
+MOC proof is claimed.
+
+
+2. The actual plane y=4x/3
+The A4-invariant cost coordinates have class values
+
+
+         𝑐id = ℎ0 ,   𝑐trans = ℎ0 + 𝑥,     𝑐double = ℎ0 + 𝑦,     𝑐four = ℎ0 + 𝑥 + 𝑦/2,   𝑐three,± = ℎ0 + 3𝑥/2 ± 𝑘.
+
+On the branch 𝑦 = 4𝑥/3, away from (𝑥, 𝑘) = (0, 0), the unique cubic lift has ℎ0 = −3𝑥/2. At the zero
+point we choose this same formula by continuity. Let 𝑐𝑋 be the lift for (𝑥, 𝑘) = (1, 0), and let 𝑐𝐾 be
+the cost equal to +1, −1 on the two oriented three-cycle classes and zero on every other class. Exact
+differentiation gives
+
+
+                                         ∇𝐹 (𝑐𝐾 ) = 12∇𝐹 (𝑐𝑋 ),       𝐻𝐹 (𝑐𝑋 )𝑐𝐾 = 0.                                (1)
+
+Consequently both complex lines
+
+                                                               𝑖
+                                                    𝑚± = 𝑐𝑋 ± √ 𝑐𝐾                                                   (2)
+                                                               12
+
+lie on the singular locus of the cubic, and
+
+                                                                  √
+                                             𝑥𝑐𝑋 + 𝑘𝑐𝐾 = Re[(𝑥 − 𝑖 12𝑘)𝑚+ ].                                         (3)
+                                                        √
+There is an explicit finite realization. Let 𝜔 = (−1 + 𝑖 3)/2, and take
+
+
+                                                                             2𝜔 − 1 2𝜔2 − 1
+                              𝑎 = (0, 1/2, −𝜔2 , −𝜔),          𝑏 = (−1, 1,         ,        ).                       (4)
+                                                                               7       7
+
+All twenty-four products satisfy exactly
+
+
+                                                               65
+COMPLEX MARCUS-DE OLIVEIRA                                                               COMPLETE RESEARCH VOLUME
+
+
+
+
+                                      7                           𝑖
+                                        ∏(𝑎 + 𝑏𝜋(𝑖) ) = (𝑐𝑋 )𝜋 + √ (𝑐𝐾 )𝜋 .                                   (5)
+                                      9 𝑖 𝑖                       12
+
+The verifier checks every equality in ℚ(𝜔). A direct derivation starts from 𝐶𝑖𝑗 = 1 + 𝑢𝑖 𝑣𝑗 , where 𝑢 = (0,
+1, 𝜔, 𝜔2 ), 𝑣 = (0, 2, 2𝜔2 , 2𝜔), then uses 𝑎𝑖 = 𝑢𝑖 /(𝑢𝑖 + 1), 𝑏𝑗 = 1/(𝑣𝑗 − 1). The product of the row and column
+factors is −14, giving the factor 7/9 in (5).
+Thus the whole real plane is obtained from different support directions for one fixed pair of finite,
+noncollinear four-point complex spectra. Equivalently, for 𝑐 = 𝑥𝑐𝑋 + 𝑘𝑐𝐾 , the explicit imaginary cost
+
+                                                     √             𝑥
+                                               𝑑=        12𝑘 𝑐𝑋 − √ 𝑐𝐾
+                                                                   12
+
+satisfies 𝐻𝐹 (𝑐)𝑑 = 0 and ∇𝐹 (𝑑) = ∇𝐹 (𝑐).
+
+
+3. A component consisting generically only of border secants
+On the branch 𝑥 = 0, with 𝑦𝑘 ≠ 0, the unique cubic lift has ℎ0 = 0. In the fourteen-coordinate basis from
+the prior campaign, put 𝑐 = 𝑦𝑐𝑌 + 𝑘𝑐𝐾 , with 𝑐𝑌 the vector for (𝑥, 𝑦, 𝑘) = (0, 1, 0). Its exact Hessian kernel
+is spanned by
+
+
+                                       𝑣 = (0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0),
+
+
+                                      𝑤 = (0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, −1, 1).
+
+The isotypic block determinants prove that this kernel has exactly dimension two for 𝑦𝑘 ≠ 0. On its
+vectors,
+
+
+                                        ∇𝐹 (𝑠𝑣 + 𝑡𝑤) = −(𝑠2 + 𝑠𝑡 + 𝑡2 )𝑒0 ,                                   (6)
+
+whereas coordinate 1 of ∇𝐹 (𝑐) is 𝑘2 ≠ 0. Therefore the required gradient equality, with either sign, is
+impossible over the reals or complexes. These points have no finite two-point secant representation,
+including no actual conjugate spectral realization. They lie only in the projected closure of the secant
+variety.
+This result does not classify the degenerate axes 𝑦𝑘 = 0, nor the quadratic branch 4𝑘2 = 𝑥(𝑥 − 𝑦).
+Scaling the inversion-odd part sends 𝑘 ↦ 𝑠𝑘. On the generic quadratic branch, with 𝑥(3𝑦 − 4𝑥)𝑘 ≠ 0, the
+exact nonic factorization shows that the scaled cost lies on the spectral closure only at 𝑠 = ±1. This
+rules out a naive proof that rescales odd parts and silently preserves spectral realizability. On the
+actual plane in Section 2, equation (3) does preserve finite actual realizability under that scaling.
+
+
+4. Four support rays, of which two are immediately proved
+For the plane in Section 2, the complex permutation hull has four vertices: the identity value, the
+four-cycle value, and the two three-cycle values. Its four support-edge directions are
+
+
+                                    (𝑥, 𝑘) = (−2, 3), (−2, −3), (6, 1), (6, −1).                              (7)
+
+Thus full complex MOC for the fixed pair (4), in every support direction, reduces to four scalar inequal-
+ities. Two have immediate certificates; the remaining two are transposes of one another.
+For a unitary 𝑈 , put
+
+
+
+
+                                                            66
+COMPLEX MARCUS-DE OLIVEIRA                                                                       COMPLETE RESEARCH VOLUME
+
+
+
+
+                    𝑠1 = ∑ |𝑈𝑖𝑖 |2 ,      𝑠2 = ∑ | det 𝑈 [𝐼, 𝐼]|2 ,         𝑠𝑐 = ∑ | det 𝑈 [𝐼, 𝐼 𝑐 ]|2 .
+                           𝑖                    |𝐼|=2                             |𝐼|=2
+
+
+Let 𝑠+ sum the twelve squared minors with the following one-based row/column index pairs:
+
+
+                                (12, 13), (12, 24), (13, 14), (13, 23), (14, 12), (14, 34),
+                                (23, 12), (23, 34), (24, 14), (24, 23), (34, 13), (34, 24).                           (8)
+
+This is the simultaneous 𝐴4 -orbit of (12, 13); its transpose orbit is denoted 𝑠− . The exact gap identities
+are
+
+                                              2                                       2
+                           𝑔(−2,3) (𝑈 ) = 𝑠+ + 𝑠𝑐 ≥ 0,            𝑔(−2,−3) (𝑈 ) = 𝑠− + 𝑠𝑐 ≥ 0,                        (9)
+                                              3                                       3
+
+and
+
+                                                          −2 + 2𝑠1 + 4𝑠2 + 𝑠+
+                                          𝑔(6,1) (𝑈 ) =                       .                                      (10)
+                                                                   3
+
+The opposite hard ray replaces 𝑠+ by 𝑠− . Therefore the remaining full-unitary assertion for the explicit
+complex spectral pair is
+
+
+                                        2𝑠1 + 4𝑠2 + 𝑠+ ≥ 2           (𝑈 ∈ 𝑈 (4)).                                    (11)
+
+Equation (11) is proved in Chapter N128, using the root’s exact quaternion reduction and a complete
+simplex inequality. The isoclinic subfamily also has the stronger direct estimate in the spectral-support
+companion note.
+
+5. Two preliminary lemmas for the root’s simplex reduction
+The root derived a sufficient full-unitary reduction to the following inequality for probability vectors
+𝑝, 𝑞 ∈ ℝ4+ :
+
+
+                      Φ(𝑝, 𝑞) ∶= ∑ 𝑝𝑖2 + ∑ 𝑞𝑖2 + 4 ∑ 𝑝𝑖 𝑞𝑖 − 1 − 4√∏ 𝑝𝑖 − 4√∏ 𝑞𝑖 ≥ 0.                                (12)
+
+The root owns the unitary-to-simplex derivation. The two arguments below were the initial partial
+results. The complete proof of (12), including the boundary and all interior stationary-point types, is
+now in Chapter N128.
+
+
+
+
+                                                             67
+COMPLEX MARCUS-DE OLIVEIRA                                                                    COMPLETE RESEARCH VOLUME
+
+
+5.1 Complementary marginals
+Suppose 𝑝𝑖 + 𝑞𝑖 = 1/2 for every 𝑖. Write 𝑧𝑖 = 2(𝑝𝑖 − 𝑞𝑖 ), so |𝑧𝑖 | ≤ 1, ∑ 𝑧𝑖 = 0, and 𝑝𝑖 = (1 + 𝑧𝑖 )/4, 𝑞𝑖 = (1 − 𝑧𝑖 )/4.
+Let 𝑠 = ∑ 𝑧𝑖2 , and denote the elementary symmetric polynomials by 𝑒𝑗 . Then 𝑒2 = −𝑠/2, and
+
+
+                               √∏(1 + 𝑧𝑖 ) + √∏(1 − 𝑧𝑖 ) ≤ 2√1 − 𝑠/2 + 𝑒4
+                                                                                                                    (13)
+                                                                 ≤ 2√(1 − 𝑠/4)2 = 2 − 𝑠/2.
+
+The first step is concavity of the square root applied to the two nonnegative products; the second is
+𝑒4 ≤ 𝑠2 /16, which follows by AM–GM on 𝑧𝑖2 . Also 𝑠 ≤ 4, so the last sign is correct. Equation (13) is
+exactly (12) after substitution.
+Equality includes the continuum
+
+
+                                  𝑝 = (𝑎, 𝑎, 𝑏, 𝑏),      𝑞 = (𝑏, 𝑏, 𝑎, 𝑎),     𝑎 + 𝑏 = 1/2.                         (14)
+
+5.2 One vector supported on at most two coordinates
+Assume 𝑝3 = 𝑝4 = 0, and put 𝑝1 = 𝑡, 𝑝2 = 1 − 𝑡. For fixed 𝑞, minimizing its quadratic dependence on 𝑡 over
+the whole real line only lowers Φ. Put 𝑢 = 𝑞1 𝑞2 , 𝑣 = 𝑞3 𝑞4 . The unconstrained minimum is exactly
+
+                                                         1              √
+                                             Φ(𝑝, 𝑞) ≥     + 6𝑢 − 2𝑣 − 4 𝑢𝑣.                                        (15)
+                                                         2
+                 √
+Since 𝑞1 + 𝑞2 ≥ 2 𝑢,
+
+                                                        √
+                                                  (1 − 2 𝑢)2                 √
+                                        0≤𝑣≤                 ,        0≤      𝑢 ≤ 1/2.
+                                                       4
+
+The right side of (15) decreases with 𝑣, so substituting its upper bound gives
+
+
+                                                      Φ(𝑝, 𝑞) ≥ 8𝑢 ≥ 0.                                             (16)
+
+The same statement holds with 𝑝 and 𝑞 exchanged and under all coordinate permutations. In particular,
+every boundary stratum where one probability vector has support at most two is completely settled.
+
+
+
+
+                                                              68
+Chapter 17
+
+
+
+
+SOURCE RECORD N090
+N090. A sharp common-minor facet bound
+for every complex unitary matrix of order
+four
+
+Result and logical scope
+Let 𝑈 ∈ 𝑈 (4). For a row set 𝐼 and column set 𝐽 of equal size, write 𝜌𝐼,𝐽 (𝑈 ) = | det 𝑈 [𝐼, 𝐽 ]|2 . Single indices
+denote singleton sets. Define
+
+
+                                             𝑓(𝑈 ) = 𝜌3,3 + 𝜌2,4 + 𝜌12,13 − 𝜌13,23 .                               (1)
+
+Let 𝑡 be the unique real root of
+
+
+                                                         𝑡3 + 𝑡2 + 3𝑡 − 1 = 0,                                     (2)
+
+and put
+
+                                                                  𝑡(1 − 𝑡2 )
+                                                            𝛿=               .                                     (3)
+                                                                      4
+
+Then
+
+
+                                        min 𝑓(𝑈 ) = −𝛿          with 𝛿 ≈ 0.067442248868.                           (4)
+                                    𝑈∈𝑈(4)
+
+
+Every permutation matrix has 𝑓 ≥ 0. Thus (4) quantifies, sharply, the failure of this common-minor
+permutation inequality on actual unitaries. It is a result about a stronger common-law conjecture,
+and is not a MOC counterexample. The exact bound also separates the quadratic-certificate moment
+relaxation from the convex hull of actual unitary profiles.
+The algebraic identities below are checked by Program P086. The global minimization is proved here
+by angle elimination and concavity, rather than inferred from optimization samples.
+
+
+1. The anchored profile form
+Use rows 𝑟, 𝑣, 𝑠, 𝑡row , in that order, with 𝑣 the anchor. Put
+
+
+                        𝑅𝑖 = |𝑟𝑖 |2 ,    𝑆𝑖 = |𝑠𝑖 |2 ,     𝑃𝑖𝑗 = |𝑟𝑖 𝑣𝑗 − 𝑟𝑗 𝑣𝑖 |2 ,   𝑄𝑖𝑗 = |𝑠𝑖 𝑣𝑗 − 𝑠𝑗 𝑣𝑖 |2 .
+
+The same functional is
+
+
+                                                   𝑓 = 𝑅1 + 𝑆3 − 𝑃12 + 𝑄14 .                                       (5)
+                                                                                 𝑡
+Indeed, with 𝑚𝑖 = |𝑣𝑖 |2 , the third anchor wedge satisfies 𝑃𝑖𝑗row = 𝑚𝑖 + 𝑚𝑗 − 𝑃𝑖𝑗 − 𝑄𝑖𝑗 . Complementarity
+                𝑡
+gives 𝜌13,23 = 𝑃14row , while ∑𝑗≠1 𝑃1𝑗 = 𝑅1 + 𝑚1 . Substituting these two identities in (1) proves (5).
+
+
+                                                                  191
+COMPLEX MARCUS-DE OLIVEIRA                                                                             COMPLETE RESEARCH VOLUME
+
+
+2. Quaternion coordinates
+Every real special orthogonal matrix of order four has the form 𝑂 = 𝐿(𝑞)𝑅(𝑟), with 𝑞, 𝑟 unit real quater-
+nions. Here 𝐿 and 𝑅 are ordinary left and right quaternion multiplication, so that
+
+                                                      𝑞0      −𝑞1       −𝑞2     −𝑞3
+                                                    ⎛
+                                                    ⎜ 𝑞1      𝑞0        −𝑞3      𝑞2 ⎞
+                                                                                    ⎟
+                                             𝐿(𝑞) = ⎜
+                                                    ⎜𝑞2                             ⎟,
+                                                              𝑞3        𝑞0      −𝑞1 ⎟
+                                                    ⎝𝑞3       −𝑞2       𝑞1       𝑞0 ⎠
+
+                                                    𝑟0        −𝑟1        −𝑟2    −𝑟3
+                                                   ⎛𝑟          𝑟0         𝑟3    −𝑟2 ⎞
+                                            𝑅(𝑟) = ⎜
+                                                   ⎜
+                                                   ⎜𝑟2
+                                                      1                             ⎟
+                                                                                    ⎟.
+                                                              −𝑟3         𝑟0     𝑟1 ⎟
+                                                   ⎝𝑟3         𝑟2        −𝑟1     𝑟0 ⎠
+
+Expanding (1), using the two unit norm identities, gives the sparse quartic
+
+                                   𝑓(𝑞, 𝑟) = (𝑞02 − 𝑞22 )(𝑞32 − 𝑞12 ) + (𝑟02 − 𝑟22 )(𝑟32 − 𝑟12 )
+                                               + (𝑞0 𝑟0 − 𝑞2 𝑟2 )2 + (𝑞0 𝑟2 − 𝑞2 𝑟0 )2                                      (6)
+                                                                    2                     2
+                                               + (𝑞1 𝑟1 + 𝑞3 𝑟3 ) + (𝑞1 𝑟3 + 𝑞3 𝑟1 ) .
+
+The original integer expansion is recorded in Program P128/json. The companion verifier indepen-
+dently expands the right side of (6) and checks equality with its eighteen monomials.
+
+
+3. Eliminate all four angles exactly
+Write
+
+
+                             𝑋 = 𝑞02 + 𝑞22 ,   𝑌 = 1 − 𝑋,               𝑈 = 𝑟02 + 𝑟22 ,   𝑉 = 1 − 𝑈.
+
+The following four vectors range independently over circles of the stated radii:
+
+                                                     vector                     radius
+                                            (𝑎, 𝑥) = (𝑞02 − 𝑞22 , 2𝑞0 𝑞2 )        𝑋
+                                            (𝑏, 𝑦) = (𝑞32 − 𝑞12 , 2𝑞1 𝑞3 )        𝑌
+                                            (𝑐, 𝑢) = (𝑟02 − 𝑟22 , 2𝑟0 𝑟2 )        𝑈
+                                            (𝑑, 𝑣) = (𝑟32 − 𝑟12 , 2𝑟1 𝑟3 )        𝑉
+
+Equation (6) becomes
+
+
+                                           𝑓 = 𝑎𝑏 + 𝑐𝑑 + 𝑋𝑈 + 𝑌 𝑉 − 𝑥𝑢 + 𝑦𝑣.                                                (7)
+
+Hold the second and third circle vectors fixed. Minimizing over the first and fourth gives
+
+
+                                          𝑋𝑈 + 𝑌 𝑉 − 𝑋 √𝑏2 + 𝑢2 − 𝑉 √𝑐2 + 𝑦2 .                                              (8)
+
+Since 𝑢2 = 𝑈 2 − 𝑐2 and 𝑦2 = 𝑌 2 − 𝑏2 , put 𝑤 = 𝑏2 − 𝑐2 . The variable 𝑤 ranges over the entire interval [−𝑈 2 ,
+𝑌 2 ]. Thus 𝑧 = 𝑈 2 + 𝑤 ranges over [0, 𝑈 2 + 𝑌 2 ], and the two squared radicals in (8) are 𝑧 and 𝑈 2 + 𝑌 2 − 𝑧.
+Cauchy’s inequality is attained:
+
+                                          √
+                            max         (𝑋 𝑧 + 𝑉 √𝑈 2 + 𝑌 2 − 𝑧) = √(𝑋 2 + 𝑉 2 )(𝑈 2 + 𝑌 2 ).                               (9)
+                         0≤𝑧≤𝑈 2 +𝑌 2
+
+
+
+
+                                                              192
+COMPLEX MARCUS-DE OLIVEIRA                                                              COMPLETE RESEARCH VOLUME
+
+
+For 𝑋 2 + 𝑉 2 > 0, the maximizing value is 𝑧 = (𝑈 2 + 𝑌 2 )𝑋 2 /(𝑋 2 + 𝑉 2 ), which lies in the permitted interval.
+If 𝑋 = 𝑉 = 0, both sides vanish. The choices of circle angles giving each admissible 𝑧 exist because 𝑏2 ,
+𝑐2 vary independently over their full intervals.
+Consequently the exact angular minimum is
+
+
+                      𝑚(𝑋, 𝑈 ) = 𝑋𝑈 + (1 − 𝑋)(1 − 𝑈 ) − √(𝑋 2 + (1 − 𝑈 )2 )((1 − 𝑋)2 + 𝑈 2 ).                 (10)
+
+No inequality has been lost in passing from (6) to (10), including at degenerate radii.
+
+
+4. A radial concavity argument reduces the square to its boundary
+Set
+
+
+                                           𝑝 = 𝑋 + 𝑈 − 1,         𝑑 = 𝑋 − 𝑈.
+
+The square 0 ≤ 𝑋, 𝑈 ≤ 1 becomes the diamond |𝑝| + |𝑑| ≤ 1, and (10) becomes
+
+                                       1
+                                  𝑚=     [1 + 𝑝2 − 𝑑2 − √(1 + 𝑝2 + 𝑑2 )2 − 4𝑑2 ] .                            (11)
+                                       2
+
+This depends only on 𝑝2 , 𝑑2 . On each ray write |𝑝| = 𝜌𝑎, |𝑑| = 𝜌𝑏, where 𝑎, 𝑏 ≥ 0, 𝑎 + 𝑏 = 1, 0 ≤ 𝜌 ≤ 1. With
+𝑠 = 𝜌2 , 𝐶 = 𝑎2 − 𝑏2 , and 𝐷 = (𝑎2 + 𝑏2 )2 , the value is
+
+                                               1
+                                     𝑔(𝑠) =      (1 + 𝐶𝑠 − √1 + 2𝐶𝑠 + 𝐷𝑠2 ) .                                 (12)
+                                               2
+
+If 𝑎, 𝑏 > 0, the radical is positive and
+
+                                                     𝐷 − 𝐶2                    2𝑎2 𝑏2
+                    𝑔′ (0) = 0,   𝑔″ (𝑠) = −                        = −                     < 0.              (13)
+                                               2(1 + 2𝐶𝑠 + 𝐷𝑠2 )3/2     (1 + 2𝐶𝑠 + 𝐷𝑠2 )3/2
+
+Hence 𝑔 decreases along that ray, and its minimum is at 𝜌 = 1. If 𝑎 = 0 or 𝑏 = 0, (12) is identically zero
+on the permitted interval, including its endpoint by continuity.
+Therefore the global minimum occurs on the diamond boundary, equivalently where at least one of 𝑋,
+𝑈 equals 0 or 1. The four sides reduce by substitution to the same one-variable problem:
+
+                                      min 𝑚 = − max (1 − 𝑦)(√1 + 𝑦2 − 1).                                     (14)
+                                                    0≤𝑦≤1
+
+
+This proves the boundary reduction globally, including the corners at which a derivative expression
+for the radical could otherwise be singular.
+
+
+5. Solve the remaining one-variable problem
+Let
+
+
+                                           𝐶0 (𝑦) = (1 − 𝑦)(√1 + 𝑦2 − 1).
+
+Its endpoint values are zero and it is positive in the interior. For 𝑦 > 0, a stationary point satisfies
+
+                                               √1 + 𝑦2 = 1 + 2𝑦2 − 𝑦.                                         (15)
+
+The right side is positive for all real 𝑦, so squaring introduces no sign ambiguity. The difference of
+squares factors as
+
+                                                            193
+COMPLEX MARCUS-DE OLIVEIRA                                                            COMPLETE RESEARCH VOLUME
+
+
+
+
+                               (1 + 2𝑦2 − 𝑦)2 − (1 + 𝑦2 ) = 2𝑦(2𝑦3 − 2𝑦2 + 2𝑦 − 1).                        (16)
+
+The cubic on the right has derivative 6𝑦2 − 4𝑦 + 2 > 0, takes opposite signs at 0 and 1, and therefore has
+exactly one root in the interval. The derivative of 𝐶0 changes from positive to negative there, so that
+root is its unique maximum.
+At the maximizing root, (15) gives
+
+
+                                            𝐶0 (𝑦) = 𝑦(1 − 𝑦)(2𝑦 − 1).
+
+Set 𝑡 = 2𝑦 − 1. The cubic becomes (2), and
+
+                                                        𝑡(1 − 𝑡2 )
+                                             𝐶0 (𝑦) =              = 𝛿.
+                                                            4
+
+The derivative of (2) is 3𝑡2 + 2𝑡 + 3 > 0. Exact evaluations give 𝑝(29/100) < 0 < 𝑝(3/10), so 29/100 < 𝑡 < 3/10.
+In particular,
+
+                                                                3
+                                                   0<𝛿<           .                                        (17)
+                                                               40
+
+Combining Sections 2–5 proves the lower bound for every 𝑂 ∈ 𝑆𝑂(4).
+
+
+6. An explicit matrix attaining the bound
+For a real parameter 𝑡, define
+
+                                                     𝑡         1        1 −1
+                                              1    ⎛
+                                                   ⎜−1          1       −1 −𝑡 ⎞
+                                                                              ⎟
+                                    𝑂(𝑡) = √       ⎜                          ⎟.                           (18)
+                                            𝑡2 + 3 ⎜−1         −1        𝑡 −1⎟
+                                                   ⎝−1          𝑡        1  1⎠
+
+Its rows are orthonormal and its determinant is 1. Direct use of (5) gives
+
+                                                            4𝑡        2𝑡2
+                                         −𝑓(𝑂(𝑡)) =               −        .                               (19)
+                                                        (𝑡2 + 3)2   𝑡2 + 3
+
+At the root of (2), this equals 𝛿. After clearing the positive denominator, the difference of (19) and (3)
+is divisible by the cubic (2); the exact verifier checks this identity.
+Thus the lower bound is attained, completing the real special orthogonal case. Row sign changes
+preserve every squared minor, so the same bound holds on all of 𝑂(4).
+
+
+7. Extension from real orthogonal to complex unitary profiles
+This step uses the special three-dimensional anchor complement.
+Make the anchor row 𝑣 real by column phases. The other three rows define real symmetric effects
+
+                                                  ∗
+                                      𝐸𝛼 = Re(𝑟𝛼 𝑟𝛼 ) ∣𝑣⟂ ,           𝛼 = 𝑅, 𝑆, 𝑇 .
+
+They are PSD, have trace one, and sum to the identity on the three-dimensional real space 𝑣⟂ . Every
+anchored singleton and wedge coordinate is linear in the corresponding 𝐸𝛼 .
+We prove that any such triple is a convex combination of rank-one orthogonal frames. Consider an
+extreme triple. If all three effects have rank at least two, the space of symmetric perturbations sup-
+ported in their ranges has dimension at least 3 + 3 + 3 = 9. The constraints that each perturbation
+
+                                                         194
+COMPLEX MARCUS-DE OLIVEIRA                                                      COMPLETE RESEARCH VOLUME
+
+
+has trace zero and their sum is zero impose at most eight independent equations: six sum equations
+and three traces, with one redundant trace equation. There is consequently a nonzero supported per-
+turbation satisfying every constraint. A sufficiently small perturbation in either sign preserves PSD,
+contradicting extremality.
+At least one effect at an extreme point has rank one. Its trace being one, it is an orthogonal projection
+𝑤𝑤𝑇 . The remaining two effects vanish on 𝑤, are supported on the two-dimensional complement,
+and sum to its identity. They commute and can be diagonalized together. Their trace-one condition
+makes them a convex combination of the two ordered orthogonal rank-one frames on that complement.
+Unless the original triple is already a frame, this again contradicts extremality.
+Hence every extreme triple is a frame. Compactness and finite-dimensional convexity now express
+every effect triple as a finite mixture of frames. The corresponding real orthogonal matrices have the
+same anchor, and their averaged twenty profiles equal the original complex profile.
+Applying the real bound to each frame and averaging proves (4) for every complex unitary 𝑈 . The real
+matrix (18) remains an attainer in the complex class.
+This argument is dimension-specific. The analogous effect purification is false for an anchor comple-
+ment of dimension four.

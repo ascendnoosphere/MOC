@@ -1,0 +1,63 @@
+Eight-contact orbit 6: full five-parameter support closure
+
+Let
+
+ g=f34+a r0+b r7+c r17+d r18+e r28,    a,b,c,d,e>=0.
+
+The verified cubic gives
+
+ F=-(b+1)(a+c+1)<0,   Q=ce-c-de-1.
+
+An actual gap obeys F=hQ. Therefore Q=0 and h=0 are impossible. If
+h<0, the previously proved Drury external-half-plane theorem covers
+the support inequality; see section 6 of docs/geometry/MOC4_Verified_Results.md
+and https://journals.uwyo.edu/index.php/ela/article/download/263/263/263.
+If de>=1, the established weighted-minor pair (r18,r28) covers support.
+It remains to exclude actual gaps with h>0 and de<1.
+
+Let p(s)=det(H_g-s H_1). The exact full pencil calculation gives
+p(0)=0, degree(p)<=3, and the height-substituted determinant is a
+nonzero prefactor times P^2. The explicit P is in the verifier; it is
+linear in b with
+
+ dP/db=(e+1)(a+c+1)(a+d+1)>0.
+
+Moreover Q^2 p'(F/Q) is divisible by P. Thus on the actual branch,
+where Q!=0 and P=0, both p(h)=0 and p'(h)=0. The coefficient k1 of s
+in p(s) is
+
+  4e(b+1)^3(d+1)(a+c+1) K R,
+
+ K=c[(a+1)e-d]-d(a+1)(e+1),
+ R=ac+ade+ad+ae+a+cd+c+de+d+e+1>0.
+
+If e=0, the unsafe branch has
+ P=(a+c+1)(ab+ad+a+bd+b+d+1)>0, impossible.
+For e>0 and de<1 put u=1-de in (0,1]. The exact identity
+
+ e(P|b=0+aK) = a^2 e(e+1)
+   +(a+1)c e[e^2+(2-u)e+1]+c u(1-u)
+   +a[e^2(u+1)+e(1+u(2-u))+u(1-u)]
+   +e^2 u+e u(2-u)+u(1-u)
+
+has nonnegative summands and a strictly positive e^2 u term. Since
+P=0 and b>=0 give P|b=0<=0, this forces aK>0 and k1>0.
+The three roots p(0)=p(h)=p'(h)=0 imply
+
+  [t^2] det(H_(g-h1)+t H_1)=k1/h>0.
+
+This contradicts the audited universal actual-data inequality that
+the quadratic coefficient is <=0; see
+docs/research/actual_pencil_sign.txt. Hence no actual positive-height
+gap lies in the unsafe region. Together with the negative-height
+theorem and weighted safe region, this proves support on the entire
+family, including boundary parameter values and without a genericity
+assumption. The zero mixed-coefficient case is an ordinary-minor sum;
+positive mixed coefficients are normalized to one by scaling.
+
+code/research/verify_eight_contact_orbit6.py checks the full pencil,
+the P^2 determinant, derivative divisibility, k1 factor, boundary case,
+and positivity decomposition coefficientwise. A fresh full execution
+passed in 202.75 seconds.
+No converse spectral-realization claim is made, and this single-family
+closure does not settle unrestricted MOC4.

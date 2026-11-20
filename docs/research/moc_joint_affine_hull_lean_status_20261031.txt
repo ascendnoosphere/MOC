@@ -1,0 +1,128 @@
+Lean verification of joint complex slope/intercept support duality
+31 October 2026
+
+Source: code/lean/MocJointAffineHull.lean
+Object: code/lean/MocJointAffineHull.olean
+Compiler: Lean4.19.0 and pinned local mathlib.
+Log: build/lean0710/moc_joint_affine_hull_compile.log
+Full source compilation passed with exit0 and no warnings.
+
+Scope
+
+Let I be any nonempty finite index type, u,v:I->C be arbitrary complex
+cloud coordinates, and d,e be arbitrary complex candidate means. The
+convex hull is taken over REAL scalars in C times C, hence in four real
+dimensions. No spectral normalization or matrix identity is used.
+
+For a real function a on I, finiteMax(a) is the exact finite supremum
+Finset.univ.sup'. It is a maximum, not a numerical approximation and
+not an extended-real supremum.
+
+The file proves all of the following equivalent:
+
+1. (d,e) belongs to conv_R{(u_i,v_i):i in I}.
+
+2. For every complex mu,eta,
+ Re(mu*d+eta*e)<=max_i Re(mu*u_i+eta*v_i).
+
+3. For every complex x,eta,
+ Re(eta*(d*x+e))<=max_i Re(eta*(u_i*x+v_i)),
+and for every complex mu,
+ Re(mu*d)<=max_i Re(mu*u_i).
+
+4. There exist REAL weights w_i>=0 with sum_i w_i=1 and
+ sum_i w_i*u_i=d, sum_i w_i*v_i=e.
+The formal sums use the equivalent real scalar action on C.
+The weights are on the ORIGINAL finite index set, including when two
+cloud points coincide; no injectivity assumption is required.
+
+It also proves a stronger equivalence:
+
+5. The planar inequality in3 for all FINITE complex x already suffices;
+the separate infinity/slope inequality follows automatically.
+
+Proof ingredients checked in Lean
+
+- finite_convex_hull_support_iff proves the real functional separation
+  characterization for a finite hull in any real normed space. It uses
+  mathlib's proved strict separation theorem for closed convex sets and
+  proved compactness/closedness of a finite convex hull.
+
+- continuous_functional_as_complex_pair explicitly represents every
+  continuous REAL linear functional f on C^2 as Re(mu*z+eta*w), with
+  mu=f(1,0)-i*f(i,0), eta=f(0,1)-i*f(0,i).
+  Thus the duality does not accidentally test only complex-linear maps.
+
+- joint_support_iff_planar_and_slope handles eta!=0 by x=mu/eta and
+  eta=0 by the slope inequality. Complex distributivity is checked by
+  ring normalization.
+
+- finite_convex_hull_weights_iff obtains a finitely supported affine
+  combination from hull membership and extends its weights by zero
+  to the original finite index type. The converse uses the proved
+  finite convex-combination membership theorem.
+
+- joint_support_iff_common_weights specializes that result to the two
+  complex components.
+
+- slope_support_of_planar removes the separate infinity condition by
+  an entirely finite algebraic argument. For fixed mu let
+  A=Re(mu*d), B=Re(mu*e), M=max_i Re(mu*u_i), N=max_i Re(mu*v_i).
+  The planar inequality at x=0 gives B<=N. If A>M, choose the positive
+  real parameter t=(N-B+1)/(A-M). The planar inequality at x=t gives
+  t*A+B<=t*M+N, while t*(A-M)=N-B+1, a contradiction.
+  There is no unformalized limiting argument at infinity.
+
+- common_weights_uniform_affine_identity proves that the SAME weights
+  give sum_i w_i*(u_i*x+v_i)=d*x+e simultaneously for EVERY complex x.
+
+Principal theorem names
+
+ MOC.JointAffineHull.joint_support_iff_convex_hull
+ MOC.JointAffineHull.joint_support_iff_planar_and_slope
+ MOC.JointAffineHull.joint_hull_iff_all_affine_supports
+ MOC.JointAffineHull.joint_support_iff_common_weights
+ MOC.JointAffineHull.slope_support_of_planar
+ MOC.JointAffineHull.joint_support_iff_planar
+ MOC.JointAffineHull.common_weights_iff_all_affine_supports
+ MOC.JointAffineHull.common_weights_uniform_affine_identity
+
+Compiler feedback
+
+The finite support algebra and the explicit real-functional coordinate
+representation were accepted on the first run. The general separation
+client needed the current Convex.linear_preimage API and an explicit
+classical decision instance. The finite-index weight extension needed
+beta reduction before splitting its if-expression and simplification
+of the intersection with Finset.univ. The large-parameter proof needed
+its finite-maximum function made explicit for type inference. The final
+uniform affine-mean identity needed scalar/multiplication associativity
+rewritten in the correct direction. The complete final module compiles.
+
+Every printed axiom list consists exactly of
+ propext, Classical.choice, Quot.sound.
+There is no sorry, admit, custom axiom, numerical optimizer, or unchecked
+convex-duality assumption in the source.
+
+Reproduce from /data/MOC/build/lean0710/mathlib:
+
+ /data/MOC/build/lean0710/lean-4.19.0-linux/bin/lake env lean \
+   --root=/data/MOC/code/lean \
+   -o /data/MOC/code/lean/MocJointAffineHull.olean \
+   /data/MOC/code/lean/MocJointAffineHull.lean
+
+What remains outside this module
+
+For the proposed normalized MOC4 application, one intends to use
+ u_pi=b_pi(0)*(1+b_pi(1)), v_pi=u_pi*b_pi(3),
+and the actual determinant's corresponding slope/intercept means.
+The common Mobius normalization to a=(0,1,infinity,x), the determinant
+coefficient identification, the transfer between real orthogonal and
+arbitrary complex unitary mixers, and degenerate spectral limits are
+not formalized here.
+
+Most importantly, the existence of the common nonnegative weights for
+ALL actual b and mixers is NOT proved. The theorem proves the exact
+equivalence between that joint-weight statement and the family of all
+one-parameter planar support inequalities. It provides a verified
+global reduction, not a completed unrestricted MOC proof.

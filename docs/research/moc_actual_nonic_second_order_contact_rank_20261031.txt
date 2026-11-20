@@ -1,0 +1,283 @@
+Second-order contact rank at a regular actual nonic minimum
+31 October 2026
+
+Result. Under the precise regularity assumptions below, a negative
+minimum of a physical linear functional cannot have contact-evaluation
+rank at most4. More generally, write k for that rank and r for the
+rank of contact evaluation on the five-dimensional affine Gauss kernel.
+At a stationary minimum with nonzero nonic multiplier one necessarily
+has
+
+                             k-r >= 4.                     (1)
+
+For any nonempty contact set r>=1, so (1) forces k>=5. This is a local
+necessary condition, not a proof of MOC. Singular pencils, failure of
+face regularity, and a boundary of the actual source image remain
+outside the theorem.
+
+1. Setup and hypotheses
+
+Let V be the real14-dimensional matching space. Let M:V->Sym9(R) be
+the universal inverse quadratic pencil and set
+
+                 N(g)=2^32 det M(g), M(e)=0,
+
+where e is the constant matching function. Let ell be the uniform
+mean of the24 matching values. Fix an actual nonnegative cost g with
+ell(g)=1. Let C:V->R^s evaluate all its active zero contacts, and put
+k=rank C. Thus Cg=0 and Ce=(1,...,1).
+
+The needed assumptions are:
+
+ (a) A=M(g) has rank8 and inertia(4+,4-,1zero).
+ (b) For a nonzero h in ker A, the linear map
+                       B(d)=M(d)h
+     has rank9.
+ (c) DN(g) is nonzero on ker C. This is the constraint qualification
+     for the nonic inside the contact face. It also gives constraint
+     qualification after adding ell(g)=1, since DN(g)[g]=0,
+     Cg=0, and ell(g)=1.
+ (d) Near g, the admissible actual costs contain a relative open
+     neighborhood in the real manifold
+               N=0, Cg=0, ell(g)=1.
+     In particular no future/realization boundary is active there.
+
+For actual costs the inertia bound proved in
+moc_actual_inverse_pencil_rank_four_20261031.txt gives (a) whenever
+rank A=8. It does not by itself establish (b), (c), or (d).
+At a negative minimum, condition(c) follows automatically when k<=5,
+as established in Section8 below; it need not be an extra assumption
+for the conclusion excluding k<=4.
+
+Set K=ker B. Assumption(b) gives dim K=5. Both g and e belong to K:
+M(g)h=0 and M(e)=0. They are independent because Cg=0 and Ce!=0.
+Define r=rank(C restricted to K). Therefore
+
+                            1 <= r <= 4.                  (2)
+
+2. Exact determinant Hessian
+
+Choose h of unit length and decompose R9=h-perp direct-sum Rh. In
+this orthonormal basis,
+
+                      A=[A8 0;0 0],
+
+with A8 invertible of inertia(4,4). Put kappa=2^32 det A8>0.
+The determinant derivative is
+
+                    DN(g)[d]=kappa h^T B(d).                (3)
+
+For a direction d tangent to the nonic, h^T B(d)=0. Expanding the
+bordered determinant by its Schur complement gives
+
+ D²N(g)[d,d]=-2 kappa B(d)^T A_plus B(d),                    (4)
+
+where A_plus is the inverse of A on h-perp and is zero on Rh.
+There is no trace term in (4): the bottom-right linear coefficient is
+zero in a tangent direction. The form A_plus on h-perp has inertia
+(4,4). Formula(4) is a direct derivative of a linear symmetric pencil;
+it does not assume that arbitrary nonic points are actual.
+
+3. Contact restrictions and the dimension count
+
+The tangent space of the normalized contact manifold is
+
+ T={d: Cd=0, ell(d)=0, DN(g)[d]=0}.
+
+By(c), dim T=12-k. Its intersection with K has dimension4-r: first
+dim(K intersect ker C)=5-r, then normalization removes exactly one
+dimension because g is in that intersection and ell(g)=1. Thus
+
+                 dim B(T)=8-k+r.
+
+By(3), B(T) lies in h-perp, of dimension8. Its codimension there is
+exactly
+
+                              q=k-r.                      (5)
+
+Restricting a form of inertia(4,4) to a subspace of codimension q
+leaves at least4-q positive and4-q negative directions. Indeed the
+subspace meets each of a positive4-space and a negative4-space in
+dimension at least4-q. In particular if q<=3 the restriction is
+indefinite. Formula(4) therefore makes D²N restricted to T indefinite.
+
+4. The multiplier and the minimum condition
+
+Let L be the physical linear objective, and put m=L(g)<0. At a local
+minimum satisfying(a)--(d), first-order stationarity gives
+
+                L-m ell=lambda DN(g)+C^T beta.              (6)
+
+The second-order necessary condition on T is
+
+                       -lambda D²N(g)|T >= 0.              (7)
+
+If lambda!=0, indefiniteness from q<=3 contradicts(7), proving(1).
+The argument applies with the physical mixer fixed at its minimizing
+value: joint minimization over mixers still supplies a local minimum
+with respect to g alone.
+
+The nonzero multiplier is automatic if there is a nonzero ordinary
+matching indicator p with Cp=0. Such an indicator has ell(p)>0 and
+L(p)>=0 by the physical common-minor identity. If lambda=0, evaluating
+(6) on p would give
+
+                   0=L(p)-m ell(p)>0,
+
+a contradiction.
+
+Whenever k<=5 such an ordinary indicator ALWAYS exists. Choose k
+contact evaluations spanning the row space of C. Fix any two-set I.
+Those k permutations use at most k of its six possible images J.
+An unused J gives the nonzero ordinary indicator p(pi)=1_{pi(I)=J},
+which vanishes on the chosen spanning contacts, hence on all contacts.
+Thus in particular the k<=4 exclusion has no multiplier loophole.
+
+Consequences for regular minima with a nonzero multiplier are:
+ k=5 requires r=1;
+ k=6 requires r<=2;
+ k=7 requires r<=3.
+For k=5, all contact evaluations have IDENTICAL restrictions to K,
+since those restrictions span a line and all evaluate e as1. The
+Gauss leaf need not vanish on the contacts: e is in K and prevents
+that incorrect conclusion.
+
+5. A concrete sufficient test for actual-image interior
+
+Assumption(d) should be verified, not inferred from inertia alone.
+A sufficient source test is available. Let Z be the smooth complex
+critical cone of M8, of complex dimension6, and realize
+
+                         g=t e-Re z, z in Z.
+
+If
+
+       dim_C span(e,T_z Z,T_conjugate(z) Z)=13,              (8)
+
+then the real source map(t,z)->t e-Re z has differential rank13.
+To see this, (8) says the two conjugate6-spaces have zero intersection
+and e is outside their sum. The real-part map on T_z Z is then
+injective as a map of real12-spaces, and e supplies a thirteenth
+direction. The real submersion theorem makes its image open in the
+smooth real nonic. This establishes(d), including after contact and
+mean restrictions. In the audited critical cubic model T_z Z can be
+computed as ker Hess(F)(z) at a smooth source point.
+
+If (8) fails, or the source point is singular, this argument gives no
+actual-image neighborhood. Such a boundary must be treated separately.
+
+6. What remains for a global proof
+
+The theorem reduces regular interior negative minima to special
+contact configurations of rank at least5 with (1). It does not show
+that those configurations are SOS or impossible. It also does not
+exclude rank<=7 pencils, failure of the nonic constraint qualification
+on the face, or a critical/future boundary of the realization map.
+No all-N9 or all-real-normal positivity assertion is used.
+
+7. Extension when rank Dpsi drops
+
+The same argument gives a useful version without assumption(b). Put
+t=rank B and assume DN(g)!=0, so B(V) meets a direction not orthogonal
+to h. Then dim K=14-t and, with r=rank(C restricted to K),
+
+                   dim B(T)=t-1-k+r.
+
+Its codimension in the full neutral8-space h-perp is
+
+                         q=9-t+k-r.
+
+Consequently a nonzero-multiplier local minimum requires
+
+                         k-r >= t-5.                      (9)
+
+This is only a dimension bound; it does not identify the actual
+inertia on B(T) if q>=4. It nevertheless extends the exclusion into
+some lower-rank strata. For example rank B=8 is excluded when
+k-r<=2, and rank B=7 is excluded when k-r<=1.
+
+Rank B=9 must not be inferred just from rank M(g)=8. The exact actual
+H-contact example a=(100,200,i,2i), b=(300,400,3i,4i), eta=i has
+rank M(g)=8, rank B=7, k=4, r=3, and face regularity. It still falls
+under the exclusion(9), since k-r=1<t-5=2, but illustrates why the
+rank hypothesis needs its own check. No source-image interior claim
+for that particular example is being made here.
+
+8. Full inequality KKT and the generic multiplier argument
+
+There is a useful way to justify first-order KKT before imposing face
+constraint qualification. Assume only that the real nonic is smooth
+and the actual-image neighborhood condition holds. The equalities
+N=0 and ell=1 have independent gradients, since DN(g)[g]=0 while
+ell(g)=1. The direction
+
+                              d=e-g
+
+satisfies DN(g)[d]=0, ell(d)=0, and Cd=(1,...,1). Thus the full problem
+with inequalities g_pi>=0 satisfies the Mangasarian--Fromovitz
+constraint qualification. Full KKT gives
+
+              L=m ell+lambda DN(g)+sum_C mu_pi eval_pi,
+                              mu_pi>=0.                   (10)
+
+When k<=5 the ordinary indicator p constructed in Section4 now yields
+
+                    lambda DN(g)[p]=L(p)-m ell(p)>0.
+
+This proves BOTH lambda!=0 and face constraint qualification(c).
+Consequently, for k<=4, the regular-rank9 theorem needs no separate
+face-CQ hypothesis beyond smoothness and the actual-image neighborhood.
+
+For arbitrary k, the parent's generic-objective argument also removes
+the zero-multiplier possibility. If lambda=0 in(10), then L(u)>=m for
+EVERY pointwise nonnegative matching function u with ell(u)=1; hence
+g globally minimizes L on that polytope. For a generic L, that minimum
+is a unique normalized extreme ray. A negative minimum excludes every
+ordinary ray by physical positivity. Each of the48 mixed census rays
+has det M nonzero: direct exact replay gives N9=+1 or-1 on them. Thus
+the unique mixed minimizer cannot satisfy N(g)=0. This contradicts
+lambda=0.
+
+The required generic objective is available without assuming a generic
+single mixer. Permutation mixers give all24 evaluation functionals,
+whose affine span on V14 is the full13-dimensional hyperplane L(e)=1.
+Their convex hull therefore has nonempty relative interior. Starting
+from any physical negative separator, a sufficiently small mixture
+with an interior point of this hull preserves its negative value on
+the given actual cost. A further arbitrarily small generic perturbation
+inside that convex hull remains a convex combination of physical
+functionals. Positivity for every physical functional is equivalent
+to positivity for their convex combinations, and the needed common-
+minor nonnegativity is preserved by these combinations.
+
+For k>5 this argument removes lambda=0, but DOES NOT by itself supply
+face constraint qualification. The second-order theorem still needs
+that condition, or a separate analysis of a singular contact section.
+
+9. A direct rank formulation for computation
+
+Let W_C=ker C. Under face constraint qualification,
+
+                    rank(B restricted to W_C)=t+r-k.
+
+The nonic tangent removes exactly the h-component from this image;
+mean normalization removes only the radial kernel direction g. Thus
+the subspace on which the determinant Hessian is tested has dimension
+
+                    rank(B restricted to W_C)-1.
+
+Any subspace of dimension at least5 in a nonsingular neutral8-space
+has both positive and negative vectors. Therefore the necessary
+second-order condition is equivalently
+
+                  rank(B restricted to W_C)<=5.            (11)
+
+For a fixed contact set this is an explicit determinantal condition:
+choose a basis f_j of W_C and form the9-by-d matrix with columns
+M(f_j)h. Every6-by6 minor must vanish at a regular interior negative
+minimum. This avoids computing k and r separately.
+
+If k>=8, dim W_C<=6 and g is already a nonzero kernel vector, so(11)
+is automatic. These small-dimensional high-contact faces are therefore
+not excluded just by the index count. For k<=7, the rank condition may
+still give a nontrivial algebraic restriction on possible minima.

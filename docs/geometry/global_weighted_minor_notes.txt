@@ -1,0 +1,184 @@
+UNIVERSAL WEIGHTED-MINOR COMPENSATION: ANALYTIC PROOF
+Research certificate, 2026-10-17. This proves one inequality and one residual
+nine-contact face; it is not an unrestricted MOC4 proof.
+
+THEOREM. For every complex U in U(4), put rho(I,J)=|det U[I,J]|^2 and
+f=rho(3,3)+rho(2,4)+rho(12,13)-rho(13,23), using one-based indices.
+Then, for every tau>0,
+  f + tau rho(23,34) + tau^{-1} rho(13,13) >= 0.             (W)
+Equivalently f >= -2 sqrt(rho(23,34)rho(13,13)).
+
+The equivalence follows by minimizing over tau>0 (and taking limits when
+one minor vanishes). The proof first establishes (W) on SO(4), then uses
+the previously proved equality of convex hulls of real-orthogonal and
+complex-unitary common-minor profiles (supplied volume N013). It does NOT
+apply Jensen directly to the nonlinear square-root expression.
+
+FOUR-CIRCLE LEMMA.
+Let X,Y,U,V>=0, X+Y=U+V=1. Let
+ a^2+x^2=X^2, b^2+y^2=Y^2, c^2+u^2=U^2, d^2+v^2=V^2.
+Define
+ p=X+U-1=X-V=U-Y,
+ t=-x+y+u+v,
+ f=ab+cd+XU+YV-xu+yv.
+Then f+|p t|>=0.
+
+PROOF OF THE LEMMA.
+By continuity it suffices to take positive radii and p != 0. The map
+ (X,Y,U,V)->(Y,X,V,U),
+ (a,x;b,y;c,u;d,v)->(b,y;a,x;d,-v;c,-u)
+ preserves f and maps (p,t) to (-p,-t). Thus assume p>0.
+
+First prove f>=0 on t=0. A minimum exists on this compact constraint set.
+If all four cosine coordinates a,b,c,d vanish, then x=eps1 X,
+y=eps2 Y,u=eps3 U,v=eps4 V and
+ f=XU(1-eps1 eps3)+YV(1+eps2 eps4)>=0.
+Otherwise the gradient of t on the four circles is nonzero: its components
+are, up to harmless choices of angle orientation, (-a,b,c,d).
+Consequently Lagrange multipliers mu,lambda1,...,lambda4 exist at a
+constrained minimum, with
+ b=lambda1 a,       -u-mu=lambda1 x,
+ a=lambda2 b,        v+mu=lambda2 y,
+ d=lambda3 c,       -x+mu=lambda3 u,
+ c=lambda4 d,        y+mu=lambda4 v.                       (S)
+The first equations imply that a,b either are both zero or both nonzero;
+the same holds for c,d.
+
+If a=b=0 and c,d are not both zero, x,y cannot have opposite signs:
+t=0 would give |u+v|=X+Y=1, forcing |u|=U,|v|=V and c=d=0.
+Flipping all four vertical coordinates does not change f or t=0, so take
+x=X,y=Y. Put alpha=U-u and beta=V+v. Both are nonnegative. The equation
+t=0 implies U+u=2X-beta and V-v=2Y-alpha. Hence
+ f=cd+X alpha+Y beta
+ >= X alpha+Y beta-sqrt(alpha beta(2X-beta)(2Y-alpha))
+ >= X alpha+Y beta-2 sqrt(XY alpha beta) >=0.
+Here 2X-beta=U+u>=0 and 2Y-alpha=V-v>=0; their product is at most4XY.
+
+If c=d=0 and a,b are not both zero, u,v cannot have the same sign:
+t=0 would force |x-y|=1 and then a=b=0. Flip all vertical signs to take
+u=U,v=-V. Put alpha=X-x,beta=Y-y. Then
+ 2X-alpha=2U-beta, 2Y-beta=2V-alpha,
+and
+ f=ab+U alpha+V beta
+ >= U alpha+V beta-sqrt(alpha beta(2U-beta)(2V-alpha))
+ >= U alpha+V beta-2 sqrt(UV alpha beta)>=0.
+
+It remains to consider a,b,c,d all nonzero. Set k=lambda1,l=lambda3;
+then lambda2=1/k,lambda4=1/l. If kl!=1, solving the four vertical
+equations in(S) gives
+ x=mu(1+l)/(1-kl), u=-mu(1+k)/(1-kl), y=kx, v=-lu,
+and therefore t=-2mu. Since t=0, mu=0 and x=y=u=v=0. Thus
+ f>=XU+YV-XY-UV=p^2>=0.
+If kl=1, the first/third vertical equations force mu(1+l)=0 and
+mu(1+k)=0. If mu!=0, then k=l=-1 and again t=-2mu, impossible.
+So mu=0, u=-kx,v=y/k, and t=0 gives (k+1)(y-kx)=0.
+For k!=-1 this yields Y=|k|X,V=U/|k|, hence XU=YV, contradicting
+p=XU-YV>0. For k=-1, b=-a,d=-c,u=x,v=-y. The norm equations give
+X^2-Y^2=U^2-V^2; since both radius sums equal1, X=U,Y=V. Substitution
+then gives f=0. This proves the entire t=0 boundary assertion.
+
+Now suppose f+p|t| has a negative global minimum. It cannot have t=0.
+Flipping all vertical signs preserves f and reverses t, so assume t>0.
+In a neighborhood of this point the objective is f+p t. Equations(S)
+hold with mu=p. Individual-circle second variations give lambda_i<=0.
+At a vanishing cosine pair (a,b)=(0,0), the second variation in these
+two cosine coordinates has matrix [[-lambda1,1],[1,-lambda2]]; hence
+lambda1 lambda2>=1. At (c,d)=(0,0), likewise lambda3 lambda4>=1.
+
+If both pairs are nonzero, the preceding solution of(S), including the
+kl=1 exceptional case, gives t=-2p, impossible.
+
+If a=b=0 and c,d are nonzero, write lambda3=-k,lambda4=-1/k with k>0.
+Then u=(x-p)/k,v=-k(y+p). Direct algebra gives
+ lambda1 lambda2-1 = -p(t+2p)/(xy).
+Its required nonnegativity forces xy<0. If x=X,y=-Y, then
+ t=-1+u+v<0 because c,d are nonzero. If x=-X,y=Y, then
+ |u|=(X+p)/k<U and |v|=k(Y+p)=kU<V.
+Thus k>(X+p)/U=(V+2p)/U but k<V/U, impossible.
+
+If c=d=0 and a,b are nonzero, write lambda1=-k,lambda2=-1/k, k>0.
+Then x=(u+p)/k,y=-k(v+p), and direct algebra gives
+ lambda3 lambda4-1 = p(t+2p)/(uv).
+Its required nonnegativity forces uv>0. If u=-U,v=-V, then
+ t=-x+y-1<0. If u=U,v=V, then |x|=(U+p)/k<X and
+ |y|=k(V+p)=kX<Y. Hence k>(U+p)/X=(Y+2p)/X and k<Y/X,
+again impossible.
+
+Finally, when all cosine coordinates vanish, the displayed corner
+formula already gives f>=0. This exhausts all possibilities and proves
+f+p|t|>=0. Continuity supplies zero radii and p=0. QED.
+
+FROM THE CIRCLE LEMMA TO SO(4).
+Write O=L(q)R(r) with unit real quaternions, in the conventions of N090.
+Set
+ X=q0^2+q2^2, Y=q1^2+q3^2, U=r0^2+r2^2, V=r1^2+r3^2,
+ a=q0^2-q2^2, x=2q0q2,
+ b=q3^2-q1^2, y=2q1q3,
+ c=r0^2-r2^2, u=2r0r2,
+ d=r3^2-r1^2, v=2r1r3.
+Exact quaternion minor identities give
+ f=ab+cd+XU+YV-xu+yv,
+ det O[23,34]=(-x+y+u+v)/2=t/2,
+ det O[13,13]=X+U-1=p.
+Thus the lemma gives f>=-2|det O[23,34]det O[13,13]|.
+Weighted AM-GM proves(W) for each tau, and convexification proves it for
+all complex unitary matrices. In particular, the result has no phase
+assumption or restriction on the unitary's zero pattern.
+
+APPLICATION TO ONE NINE-CONTACT FACE.
+In the old82-ray nonnegative-permutation common-minor cone, consider
+ g=a r3+b r12+c r21+d r30+f78, with a,b,c,d>=0.
+Its mixed ray f78 is the row/column relabeling of f given by
+ alpha=(0,1,3,2), beta=(3,1,0,2), with transformed permutation
+ pi -> alpha o pi o beta. The two compensation rays become
+ r21=rho(23,34), r30=rho(13,13) in standard-f coordinates.
+Let A=1+a,B=1+b. The exactly reconstructed necessary spectral nonic is
+ A^2 B^2(1+c)[(A+d)(B+d)-d(1+c)(1+d)].
+For an actual spectral cost this polynomial vanishes. Since A,B>=1,
+this forces d>0 and
+ c=[AB+d(A+B-1)]/[d(1+d)]>=1/d.
+Consequently
+ g(U)>= f78(U)+(1/d)r21(U)+d r30(U)>=0
+for every complex unitary U. The removed a r3,b r12 and
+(c-1/d)r21 terms are nonnegative ordinary squared minors.
+An arbitrary nonnegative coefficient lambda on f78 causes no gap: if
+lambda=0 the cost is already an ordinary-minor sum; if lambda>0, divide
+the entire actual cost by lambda and apply the normalized argument.
+Positive scaling preserves actuality and support inequalities.
+This closes that entire coefficient face once the stated necessary
+spectral-nonic identity is imported; no converse lifting claim is used.
+
+VERIFICATION AND AUDIT.
+- global_weighted_minor_verify.py is a pure standard-library exact
+  polynomial verifier for all quaternion identities, stationary
+  numerator identities, the p^2 formula, nonic factor, and ray labels.
+- global_weighted_nine_nonic_verify.py verifies the actual restriction
+  F=(1+a)(1+b), Q=1+cd and N=-4P9^2 on all7315 degree18-unisolvent
+  exact nodes; Q>0 on the full nonnegative coefficient orthant. It ran
+  successfully in2.92seconds. Together with the imported degree18
+  spectral-model theorem, this certifies the necessary nonic used here.
+- /root and /root/metaproof independently audited the complete analytic
+  four-circle proof and found no gap.
+- global_weighted_minor_orbits.py enumerates all exact row/column and
+  inverse relabelings: each of the48 mixed rays has exactly3 compensator
+  pairs. The output global_weighted_minor_orbits.json is propagation
+  data; positivity follows from the theorem for every listed pair.
+
+APPENDIX: THREE-COMPENSATOR PROPAGATION.
+For every mixed ray, its three relabeled compensator pairs are the three
+edges of a triangle on three ordinary squared-minor values x,y,z. Thus
+  f>=-2 min(sqrt(xy),sqrt(xz),sqrt(yz)).
+Let a,b,c>=0 and S=a+b+c. A sufficient condition for
+  f+a x+b y+c z>=0
+is, for each coefficient w among a,b,c,
+  if w<=1: S>=2;
+  if w>=1: w(S-w)>=1.
+Proof: order the three values so x is smallest and y is second smallest.
+Then min(sqrt(xy),sqrt(xz),sqrt(yz))=sqrt(xy), and z>=y gives
+ a x+b y+c z-2sqrt(xy)>=y[a t^2-2t+(b+c)], t=sqrt(x/y) in[0,1].
+If y=0 the conclusion is immediate. Otherwise the quadratic's minimum
+is S-2 when a<=1, and b+c-1/a when a>=1. Applying the stated conditions
+for whichever coefficient is attached to the smallest value proves the
+claim. At w=1 the two formulas agree.
+This is a propagation rule, not a claim that every spectral cost meets
+its hypotheses.

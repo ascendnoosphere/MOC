@@ -1,0 +1,152 @@
+Exact classification of joined small budgets among seven ordinary rays
+31 October 2026
+
+Among the21 pairs from {0,7,10,13,18,23,28}, exactly18 admit normalized
+full14 matching-SOS positive-definite duals with BOTH ray budgets equal to
+epsilon, for EVERY epsilon>0. The three exceptions are
+
+                     {18,23}, {18,28}, {23,28}.
+
+For these exceptions any full-PD dual has beta_a beta_b>1/4, and therefore
+equal budgets require epsilon>1/2. For every one of the21 pairs, the full
+space of matching functions vanishing at its zero contacts is exactly
+span(f34,r_a,r_b), of dimension3. Thus the classification uses the full
+matching-SOS cone and does not omit additional contact-null features.
+
+This classifies dual feasibility. It makes no claim that the associated
+support costs are actual spectral configurations, and does not prove MOC.
+
+1. The common joint-value table
+
+Every pair has the seven joint values (f,r_a,r_b)
+
+  (0,0,0), (0,0,1), (0,1,0), (1,0,0),
+  (1,0,1), (1,1,0), (2,1,1).
+
+Exactly the18 feasible pairs also have (1,1,1). No other joint values occur.
+Each pair has11 common zero rows, whose evaluation matrix has rank11 in
+the14-dimensional matching space. All counts/ranks are checked over Q.
+
+2. Explicit all-epsilon duals for the18 feasible pairs
+
+Choose a permutation row for each of the following six categories and
+assign the displayed initial weights:
+
+  category       (2,1,1) (1,1,0) (1,0,1) (1,1,1) (0,1,0) (0,0,1)
+  weight              1       -1       -1       -1     1+eps   1+eps.
+
+Direct arithmetic gives
+
+  y0.f=-1, y0.r_a=y0.r_b=epsilon,
+  moment(f,r_a,r_b)=diag(1,epsilon,epsilon)>0.               (1)
+
+For a concrete requested case {7,10}, the zero-based lexicographic
+permutation rows are [5,4,0,11,17,6] in that order. Its11 common contacts
+are [1,7,8,9,12,14,15,18,20,22,23].
+
+To make the full14 moment positive definite, interpolate11 additional
+features D on the11 zero contacts, with delta evaluations there and zero
+at three chosen external rows of categories(1,0,0),(0,1,0),(0,0,1).
+These contacts are linearly independent and the resulting full14-feature
+basis is invertible. In that basis the initial moment is
+
+  H0=[diag(1,epsilon,epsilon)  W;
+                   W^T       D],
+
+where W,D are independent of epsilon. Adding mass t at EACH zero contact
+adds diag(0_(3x3),t I11). Write
+
+  d=sum_ij |D_ij|,   a=||W_(1,:)||^2,
+  b=||W_(2,:)||^2+||W_(3,:)||^2,
+  t=1+d+2a+2b/epsilon.
+
+The Schur complement is exactly
+
+  S0+S1/epsilon,
+  S0=D+(1+d+2a)I-W_(1,:)^T W_(1,:),
+  S1=2b I-W_(2:3,:)^T W_(2:3,:).
+
+Both S0 and S1 are positive definite, directly from the norm bounds and
+also by exact rational LDL pivots in every one of the18 cases. Thus the
+full14 moment is positive definite for every epsilon>0. Contact masses
+preserve (1). There are no optimization or floating-point decisions.
+
+The particular interpolation choices yield these masses:
+
+  {0,7}:144+28/eps     {0,10}:156+28/eps   {0,13}:144+28/eps
+  {0,18}:108+16/eps    {0,23}:156+28/eps   {0,28}:108+16/eps
+  {7,10}:126+16/eps    {7,13}:64+16/eps    {7,18}:106+28/eps
+  {7,23}:126+16/eps    {7,28}:64+16/eps    {10,13}:126+16/eps
+  {10,18}:126+16/eps   {10,23}:108+16/eps  {10,28}:126+16/eps
+  {13,18}:64+16/eps    {13,23}:126+16/eps  {13,28}:106+28/eps.
+
+For each pair, every other ordinary ray has at least one unit entry on
+the contact rows. Its budget is therefore at least t-3, since the only
+negative initial masses are the three copies of -1. In particular the
+{7,10} family has all other budgets>=123+16/epsilon. This supplies a
+precise next test for moving-plane constructions with two small budgets.
+
+3. Full-Gram classification along each joined positive ray
+
+For g=f+lambda(r_a+r_b), any full matching-SOS Gram matrix must annihilate
+the11 common zero contacts; hence it reduces to the three-feature basis
+(f,r_a,r_b). The joint-value rows(1,0,0),(0,1,0),(0,0,1),(1,1,0),(1,0,1)
+force its entries to have the form
+
+                        [1    0     0;
+                         0 lambda   z;
+                         0    z  lambda].
+
+The row(2,1,1) forces z=-1. When present, the row(1,1,1) instead forces
+z=0. Therefore the18 feasible-small-budget pairs have NO full matching-SOS
+representation for this g, for ANY lambda>=0. This agrees with the dual
+construction: choose epsilon<1/(2lambda) to obtain negative pairing.
+
+For each of the three remaining pairs, the extra row is absent, so the
+unique Gram is
+
+                      diag(1, [[lambda,-1],[-1,lambda]]).
+
+It is PSD exactly when lambda>=1. At lambda=1 the identity is particularly
+simple:
+
+                    f+r_a+r_b=f^2+(r_a-r_b)^2.              (2)
+
+It holds on all24 permutation rows and is checked as an exact matching
+function identity. Thus every normalized PSD dual satisfies
+beta_a+beta_b>=1.
+
+The sharper product bound follows from the same joint-value table. Since
+(1,1,1) and (0,1,1) are absent, the only row with r_a r_b=1 has f=2.
+The functional identity f^2-f=2r_a r_b therefore gives
+
+  y.(r_a r_b)=(y.f^2+1)/2>1/2
+
+for any full-PD dual with y.f=-1. Positive definiteness of its2-by2 ray
+moment then requires beta_a beta_b>[y.(r_a r_b)]^2>1/4.
+
+For equal budgets the bound epsilon>1/2 is sufficient as well. Choose
+t0=epsilon/2+1/4, A=epsilon-1/2>0, and initial row weights
+
+  (2,1,1):t0, (1,1,0):-2t0, (1,0,1):-2t0,
+  (1,0,0):A, (0,1,0):epsilon+t0, (0,0,1):epsilon+t0.
+
+Their gauge is -1, their two budgets are epsilon, and their three-feature
+moment is diag(A, [[epsilon,t0],[t0,epsilon]])>0. The same contact-mass
+completion argument extends it to a full14-PD dual. At epsilon=1/2 no
+full-PD dual is possible.
+
+4. Exact replay and outputs
+
+  python code/research/moc_joined_small_budget_classification_20261031.py
+
+The script checks all21 contact spaces/ranks and value tables, every Gram
+identity,18 symbolic all-epsilon positive Schur decompositions, every
+other-ray contact count, and full14 rational LDL replays. All checks passed.
+
+  build/moc_joined_small_budget_classification_20261031.json
+
+The certificate records the selected six rows, all budget formulas, contact
+masses and positive Schur pivots for each feasible pair. The sharp product
+bound and sufficient construction above are elementary deductions from the
+checked value tables.

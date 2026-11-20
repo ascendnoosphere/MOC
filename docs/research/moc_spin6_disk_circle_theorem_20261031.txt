@@ -1,0 +1,128 @@
+SPIN6 DISK: CIRCLE THEOREM AND THE REMAINING INTERIOR SCHUR GAP
+31 October 2026. Unrestricted complex MOC4 is not proved.
+
+The canonical disk of docs/research/moc_global_spin6_bloch_messiah_disk_20261031.txt
+eliminates the radial SO6 coordinate. This note proves that every such
+circle lies under the matching maximum, and isolates the precise scalar
+inequality that is still open.
+
+1. Traceless Weyl identification
+
+For X,Y in C^3 let a,b be the traceless spinor spectra of
+moc_global_spin6_hessian.tracezero_sources, and let A,B,constant be its
+coefficient matrices. For each of the 24 audited block maps
+(sigma, signs, pi) in build/moc_global_spin6_hessian.json,
+
+  constant + sum_i (A[i,sigma(i)] + signs_i B[i,sigma(i)])
+      = prod_k (a_k + b_{pi(k)})
+
+as a polynomial identity in the six coordinates of X and Y. The checker
+expands all 24 differences and gets zero. The six maps with all signs
+positive are exactly the six permutation assignments of C = A+B.
+
+Replay:
+  PYTHONPATH=code/research python3 -B code/research/moc_unrestricted_disk_gap.py
+The identity step prints traceless_weyl_identities = 24 before any search.
+A separate 30-source float check of the six positive vertices against the
+permutation products has error at most 6e-15.
+
+2. Circle theorem
+
+Fix a phase eta and write c0 = Re(eta*constant), C = Re(eta*(A+B)),
+D = Re(eta*(A-B)). On a canonical disk,
+
+  F(z) = F0 + 2 Re(z S) + d |z|^2,    |z| <= 1,
+
+with the audited formulas for F0, S, d. At |z| = 1 the Bogoliubov partner
+Y vanishes and X = V diag(z,z,1) W* is unitary, so
+
+  F(z) = c0 + sum_ij C_ij |X_ij|^2.
+
+The matrix (|X_ij|^2) is doubly stochastic. Birkhoff's theorem gives
+
+  F(z) <= max over 6 permutations of (c0 + sum_i C[i,sigma(i)]).
+
+The right-hand side is the maximum M6 of the six all-positive Weyl
+vertices, hence at most the full matching maximum M. Therefore every
+circle maximum obeys
+
+  F0 + d + 2|S| <= M6 <= M.
+
+The identity F(e^{it}) = c0 + <C, |X|^2> was checked on 200 Haar frames
+and 8 phases, with error at most 2e-14. No source disk in the 2500-frame
+census had its circle above M6.
+
+3. Interior reduction
+
+The quadratic in z has circle maximum F0+d+2r, r = |S|. If d >= -r the
+disk maximum is that circle value, so section 2 closes the disk. If
+d < -r the maximum is interior,
+
+  max F = F0 + r^2/(-d) = (F0+d+2r) + (r+d)^2/(-d),
+
+and the second term is the exact stick-up above the circle. The Schur
+certificate
+
+  lambda >= 0 and [[M-F0-lambda, -S], [-conj(S), lambda-d]] positive semidefinite
+
+exists if and only if M >= max F. Consequently, inside the canonical
+chart, the support inequality holds for every disk if and only if
+
+  (M - F0)(-d) >= |S|^2    whenever d < -|S|.
+
+The chart-covering argument that every SO6 matrix lies on some disk is
+the one already written in the Bloch-Messiah note. This file does not
+reprove that covering. With it, the displayed scalar inequality is the
+remaining unrestricted MOC4 statement for traceless sources, hence, by
+the Mobius normalization in moc_global_tracezero_spinor_normal_form_20261031.txt,
+for all disjoint simple spectra.
+
+4. The six positive vertices do not control the interior
+
+Source coupling is necessary, and the eighteen signed vertices are
+necessary as well.
+
+An uncoupled real pair (C,D), drawn from seed 7 of
+uncoupled_obstruction in the same script, has an interior peak 0.345
+above its own Birkhoff maximum M6. Arbitrary block costs are not enough.
+
+For actual traceless sources the same gap occurs. Of 2500 normalized
+Haar samples (seed 20261031), 1012 disks were in the regime d < -r.
+In 341 samples the interior peak exceeded M6, while every sample stayed
+under the full matching maximum M. The smallest slack M - max F in the
+whole cloud is 8.0e-4, and it sits on a circle rather than in the
+interior. Among the 1012 interior disks the smallest slack is 5.8e-3
+and the median slack of all 2500 disks is 4.1e-2. The figure
+  build/moc_unrestricted_20261031/disk/interior_gap.png
+shows only the interior regime. Points below the diagonal are exactly
+the open inequality stick-up <= circle slack.
+
+5. Numerical sharpness, and what the near-equality is
+
+Minimizing the slack with no interior constraint (36 BFGS starts, seed
+2026103112) produced no negative value. The smallest slack was 2.1e-6,
+on a circle. The smallest interior slack in that run was 2.7e-4.
+
+Forcing d+r <= -1e-4 (8 SLSQP starts, seed 2026103119) drives the
+interior slack down to 1.1e-6. The best point is not a counterexample
+and not a new equality stratum. Its two leading spinor coordinates of X
+agree through 1e-6, so rows 0 and 1 of both Re(eta A) and Re(eta B)
+agree. The top two Weyl vertices,
+
+  sigma (1,2,0) and (2,1,0), signs (-1,-1,+1),
+
+differ by 3e-12 and both equal M. The block masses at the disk center
+are a fractional matrix at Frobenius distance 0.645 from the nearest
+single vertex, with the same value, because that face is flat. At the
+same point M6 = -2.1e-4 while M = 2.46e-2, so the signed vertices are
+what meet the interior peak. Data:
+  build/moc_unrestricted_20261031/disk/interior_geometry.json
+  build/moc_unrestricted_20261031/disk/gap.json
+
+6. Status
+
+Proved here: the polynomial Weyl identification for every traceless
+source, and the circle bound F0+d+2|S| <= M6 <= M.
+Still open: (M-F0)(-d) >= |S|^2 on d < -|S|, for source-coupled C,D.
+No search in this file found a negative slack. A nonnegative sample is
+not a proof.

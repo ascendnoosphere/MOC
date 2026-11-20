@@ -1,0 +1,152 @@
+Full canonical cap: nonic multidegrees and the limit of inertia exclusion
+31 October 2026
+
+The full MOC4 gap-to-certificate implication remains unproved. This note
+establishes a uniform degree bound on the entire13-coordinate cap, and
+shows why a constant-inertia exclusion cannot cover its entire
+insufficient-capacity locus.
+
+Notation and imported facts
+
+Use the checked homogeneous cubic F in14matching coordinates, e=ones(14),
+H_x=Hessian F(x), and Q(g)=D_e F(g). On the full canonical mixed cap
+
+ g=f34+sum_(j in Z) v_j r_j,
+ Z=(0,7,10,13,17,18,20,22,23,27,28,30,31),
+
+the projected Hessian square theorem supplies a rational polynomial N9
+of total degree at most9 satisfying
+
+  Q(g)^2 det H_(g-F(g)e/Q(g))=-4 N9(v)^2.                 (1)
+
+Its sign is immaterial. The square normalization is that of the checked
+source model; the degree conclusions are unchanged by any nonzero scalar
+normalization. Polynomiality and the square theorem are the audited
+HMSV consequences in HMSV_COMPATIBILITY.md. No assertion that N9=0 alone
+implies actual real spectra is made.
+
+1. General critical-direction Hessian degree lemma
+
+Let F be any homogeneous cubic on a finite-dimensional vector space over
+characteristic zero. If z is nonzero, gradF(z)=0, and rankH_z=r, then
+
+                degree_t det(H_b+tH_z)<=r-1.              (2)
+
+Proof. Put H_z into a constant congruence block diag(A,0), with A
+nonsingular of size r. The coefficient of t^r in the determinant equals
+det(A) times det(H_b restricted to kerH_z). Euler gives H_z z=0, so
+z belongs to that kernel. Cubic polarization gives H_b z=H_z b. Hence
+for every k in kerH_z,
+
+  k^T H_b z=k^T H_z b=0.
+
+Thus the restricted form has nonzero radical vector z, its determinant
+vanishes, and the degree drops from at most r to at most r-1. This proves
+(2). The lemma requires no nonsingular H_b, spectral realization,
+positivity, or genericity.
+
+2. Uniform multidegrees of the full cap nonic
+
+Every ordinary cap ray r_j is critical and has rankH_rj=4. The source
+model also gives gradF(e)=0, rankH_e=4, H_e e=0.
+
+For fixed g0, let g(t)=g0+t r_j. Criticality of r_j implies that F(g(t))
+and Q(g(t)) are affine in t. There are two cases.
+
+For j in {17,18,20,22,23,27,28,30,31}, H_e r_j is nonzero. On the dense
+set of g0 where the slope of Q(g(t)) is nonzero, F/Q stays bounded as
+t goes to infinity. Applying (2) with r=4 and with
+b=g0-(F/Q)e shows
+
+  det H_(g(t)-(F/Q)e)=O(t^3).
+
+Equation(1) now gives N9(g(t))^2=O(t^5). Since the left side is the
+square of a polynomial, its degree is even, hence at most4. Therefore
+
+             degree_(v_j) N9<=2                         (3)
+
+for all nine of these coordinates. Vanishing of the higher coefficient
+polynomials on a dense set extends(3) through zero-slope and Q=0
+specializations; no division at Q=0 is used to infer realization.
+
+For j in {0,7,10,13}, H_e r_j=0 identically. Now Q(g(t)) is constant.
+Where that constant is nonzero, F/Q=alpha+beta t. Thus
+
+  g(t)-(F/Q)e=b+t z,  z=r_j-beta e.
+
+Because both e and r_j are critical and H_e r_j=0, z is critical for
+every beta. Direct exact symbolic rank over Q(beta), or the dimension
+bound for the critical M8 cone, gives rankH_z<=8 everywhere. Applying
+(2) gives determinant degree at most7. Equation(1), with constant Q,
+then gives
+
+             degree_(v_j) N9<=3.                        (4)
+
+Again polynomial continuation handles Q=0. The complete multidegree
+bound, in the ordered13cap coordinates, is therefore
+
+          (3,3,3,3,2,2,2,2,2,2,2,2,2).
+
+Together with total degree9, this leaves at most242900 possible
+monomials, rather than497420 for a general degree9 polynomial in13
+variables. More concretely: fixing any12other coordinates makes the
+secant equation at most quadratic in any of the nine nonsingleton
+ordinary coordinates. This uniform fact does not require choosing a
+five- or seven-parameter face.
+
+3. A full-dimensional neutral but nonactual secant chamber
+
+The already checked point
+
+ g=f34+2r0+r7+2r13+(331/17)r17+(r18+r23+r28)/4
+
+has capacity3/8<1, Q<0, positive recovered height, Hessian rank12 and
+inertia(6,6,2), but no real gradient lift. See the exact source
+six_triangle_nonic_obstruction.txt. Therefore neutrality cannot by
+itself exclude the entire capacity-failure set.
+
+The obstruction is not confined to that boundary face. Fix the other
+coefficients at this point and vary t=v17. The exact specialization is
+
+  N9(t)^2=(17t-331)^2(11338t+109659)^2/16777216.          (5)
+
+At t=331/17,
+
+  (N9'(t))^2=31551598960561/16777216>0.
+
+Thus the implicit function theorem gives a real analytic N9=0 graph
+for v17 over all other12coordinates near the point. Q remains nonzero.
+The HMSV secant/rank theorem gives rankH<=12 along this graph, while
+the previously positive principal12minor stays positive. Hence the
+rank remains12 and the inertia stays(6,6,2).
+
+The existing strict r33 real-lift separator also persists: at the anchor
+the restriction of H_r33 to the Hessian kernel is positive definite,
+but Q_r33(x)<0. A continuously chosen local kernel basis preserves
+positive definiteness and the strict negative target. Therefore a
+neighborhood of this graph has no real gradient lift.
+
+Choosing the six previously absent ordinary coefficients strictly
+positive and sufficiently small produces a relatively open subset of
+the FULL cap secant hypersurface with all13ordinary coefficients
+positive, capacity below1, and neutral Hessian inertia. This is a
+12-dimensional local chamber, not an inferred actual spectral family.
+Its failure of realization is established by the persistent strict
+separator, rather than by inertia or Hessian singularity.
+
+Consequently a proposed full-cap proof must distinguish real-lift
+chambers within the neutral secant locus. Merely parametrizing a
+connected neutral branch and comparing its inertia to(6,6,2) cannot
+exclude this chamber. The full real-lift equations or a stronger
+universal support certificate remain necessary ingredients.
+
+Exact replay
+
+  python code/research/moc_full_cap_nonic_degree.py
+
+The verifier checks every ray's criticality and rank, all four
+singleton zero-slope identities, symbolic generic rank8 on their
+critical lines, and (5). Its five exact evaluation nodes determine
+(5) because(3) already bounds the squared specialization by degree4.
+The degree theorem is the general argument above, not an extrapolation
+from those nodes.

@@ -1,0 +1,135 @@
+Primary-literature bridge audit, 31 October 2026
+
+The unrestricted MOC target remains unchanged. No full proof was found or
+derived in this audit. The useful changes are a new exterior-power primary
+source, a precise rejection of an invalid compression induction, and a
+quantifier correction that preserves the global variational route.
+
+Sources checked
+
+1. Y. N. Shitov, A further sufficient condition for the determinantal
+conjecture, Izvestiya: Mathematics 89:4 (2025), 862-869,
+DOI 10.4213/im9292e. Primary full text:
+https://www.mathnet.ru/php/archive.phtml?jrnid=im&option_lang=rus&paperid=9292&wshow=paper
+
+Theorem 1 assumes Hermitian A and at most three nonreal eigenvalues of B.
+Theorem 19 lifts a proved base class A(m,k) to A(n,k), n>=m, where A is
+Hermitian and B has at most k nonreal diagonal entries. It sends a real
+eigenvalue b1 of B to infinity by inversion; A remains Hermitian. Corollary
+18 uses Hermitian compression and real interlacing. Neither hypothesis
+survives unchanged for a general complex normal A.
+
+2. Yuki Ueda, Finite free position of maximal abelian *-subalgebras of the
+matrix algebra, arXiv:2609.39677v1, 30 September 2026.
+https://arxiv.org/html/2609.39677v1
+
+Theorem 4.4 splits centered exterior-minor matrices into an inherited block
+and an orthogonal residual block, giving monotonicity of their squared
+Frobenius discrepancies. Theorem 3.1 excludes exact uniform all-order
+minor marginals for n>=4. Example 5.5 gives the exact order-four flat
+discrepancy. This concerns uniform Haar averaging, a stronger requirement
+than spectral-dependent MOC weights, and supplies no support upper bound.
+
+3. S. M. Malamud, Inverse spectral problem for normal matrices and a
+generalization of the Gauss-Lucas theorem, arXiv:math/0304158v3.
+https://arxiv.org/html/math/0304158v3
+
+The paper provides complex-compression interlacing through majorization,
+including exterior-product statements. This does not restore normality of
+the compressed operator. Its positive statements can control spectra of a
+compression; they do not establish a determinant-of-sum enclosure when the
+compressed summand is nonnormal.
+
+4. J. I. Mulero-Martinez, A variational framework for determinantal
+inequalities of normal matrices: Successes and obstructions, Linear
+Algebra and its Applications 740 (2026), 19-38,
+DOI 10.1016/j.laa.2026.03.019. Publisher abstract:
+https://www.sciencedirect.com/science/article/pii/S0024379526001266
+
+The abstract retains the unrestricted conjecture and describes structured
+classes. It says support maximizers need not be monomial. Full text was
+not obtained: publisher PDF access returned HTTP 403. No stronger claim
+about its precise examples or proofs is attributed here.
+
+5. Primary OpenAI mathematics catalog, overview.tex, dated 26 October 2026:
+https://raw.githubusercontent.com/openai/math/main/overview.tex
+https://github.com/openai/math/blob/main/overview.tex
+
+Both primary representations were inspected. Exact finds for Marcus,
+Oliveira, and normal matrices returned no matches. This bounded result
+does not establish absence of an unindexed relevant claim in all papers.
+
+Exact computation 1: the failed compression induction
+
+Let
+    N = [[0,1,0],[0,0,1],[1,0,0]],
+    C = [[0,1],[0,0]],
+    B = [[0,1],[1,0]].
+N is unitary, C is its leading codimension-one compression, and B is
+Hermitian. Yet C has spectrum (0,0), B has spectrum (1,-1), and
+    det(C+B) = -2,
+while both eigenvalue matching products equal -1.
+
+Thus even a codimension-one compression of a unitary matrix can fail the
+eigenvalue version of MOC against a Hermitian second summand in order two.
+Replacing Shitov's Hermitian compression by a general normal compression,
+then applying lower-order MOC to its eigenvalues, is invalid. Complex
+interlacing alone cannot fix this exact failure. This is not a
+counterexample to MOC because C is nonnormal.
+
+Exact computation 2: every versus some support maximizer
+
+For n=2, write p=|U11|^2. Direct expansion yields
+    D(U) = p (a0+b0)(a1+b1) + (1-p)(a0+b1)(a1+b0).
+For any real support functional, a monomial endpoint therefore maximizes.
+If a genuinely interior segment point also maximizes, the support must be
+constant on the segment. Nonmonomial maximizers do not invalidate the
+existence assertion needed by MOC.
+
+For a=(0,1), b=(0,2), and U=[[3,4],[-4,3]]/5,
+    D(U)=32/25, while the two monomial values are 0 and 2.
+All maximize imaginary support, whose value is zero throughout. The unitary
+is dense and the two spectra are simple. Therefore even such a
+nondegenerate-spectrum example refutes only the unnecessary universal
+assertion that every maximizing unitary must be monomial.
+
+The useful all-dimensional variational assertion remains:
+For each fixed a,b and support eta, at least one global maximizer of
+Re(eta D(U)) can be chosen monomial. Compactness and planar separation
+show that this is exactly equivalent to MOC. This audit supplies no proof
+of that assertion in arbitrary dimension.
+
+Exact computation 3: order-four flat residuals
+
+Let |z|=1 and
+  U(z)=1/2 [[1,1,1,1],[1,z,-1,-z],
+            [1,-1,1,-1],[1,-z,-1,z]].
+For the 6 by 6 matrix P2(z) of squared order-two minors, direct Laurent
+arithmetic, with c=(z+z^-1)/2, gives
+    P2(z) = (1+c)/2 P2(1) + (1-c)/2 P2(-1).
+Also
+    sum_(I,J)(P2(z)[I,J]-1/6)^2
+       = (z^4+6z^2+1)/(16z^2) = (1+c^2)/4.
+The 4 by 6 inclusion matrix D satisfies
+    D P2 = (J4/4)D,  P2 D^T = D^T(J4/4).
+The centered matrix P2-J6/6 is entirely supported on ker D, dimension two.
+These identities were independently derived from all 36 minors. The
+interpolation can transfer an endpoint positive matching law throughout
+this flat family; the existing repository already has Walsh and Fourier
+laws, so no new full-family theorem is claimed.
+
+What changes for the next full-proof attempt
+
+The global variational route should target existence of a monomial
+maximizer, allowing nonmonomial maximizers on flat support faces. A route
+through Shitov or Malamud must retain the full rectangular compression
+operator, including its nonnormal coupling; merely controlling its
+eigenvalues is insufficient. Ueda's residual blocks give exact coordinates
+for that coupling but their discrepancy norms alone have no directional
+sign. The missing step is a directional support bound tied to actual
+spectral tensors or an independent global optimizer argument.
+
+Reproduction (all exact symbolic arithmetic):
+    python3 code/research/moc_literature_bridge_audit_20261031.py
+All three groups passed on 31 October 2026. The checks verify the identities
+and counterexamples stated here; they do not verify unrestricted MOC.

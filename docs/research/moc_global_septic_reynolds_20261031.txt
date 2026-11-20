@@ -1,0 +1,257 @@
+EXPLICIT GLOBAL SEPTIC AND A DETERMINANT-FREE PROJECTED NONIC
+31 October 2026
+
+Status: exact global algebraic identities, conditional on the already audited
+HMSV invariant-septic and projected-polynomial theorems.  The finite linear
+algebra below identifies elements of completely computed invariant spaces.
+This is not an SOS-containment or MOC theorem.
+
+Verifier:
+  python code/research/moc_global_septic_reynolds_verify.py
+Certificate:
+  data/certificates/geometry/moc_global_septic_reynolds_certificate.json
+
+1. Main formula
+
+Use the selected14 matching coordinates and the precise F, gradient and
+Hessian normalization in eight_contact_pencil_compiler.SpectralModel.  Put
+e=ones14 and Q=D_e F.  Thus F(f34)=Q(f34)=-1.  Let L_0,...,L_104 be the
+oriented perfect-matching linear forms, in model.MM/model.L order.
+
+For a list I of matching indices define the S8 Reynolds average
+
+  R_I(x)=(1/40320) sum_{sigma in S8} product_{i in I} (sigma L_i)(x).
+
+The action includes the signs caused by reversing oriented bracket edges.
+For the following13 lists, let a_j be the integer in the right column:
+
+  (30,30,30,30,30,30,81)                    -310
+  (34,34,34,34,34,65,97)                   -1109
+  (98,98,98,98,48,92,61)                   -1430
+  (88,88,88,52,52,52,54)                     945
+  (1,1,1,93,93,24,24)                       500
+  (8,8,47,47,50,50,70)                     -600
+  (76,76,97,97,39,81,28)                     360
+  (32,77,18,16,94,15,69)                    -720
+  (34,34,34,34,88,88,88)                    -340
+  (67,67,67,67,36,36,102)                   -855
+  (52,52,52,52,34,8,55)                     -850
+  (71,71,71,0,0,94,94)                       900
+  (17,17,81,81,85,85,93)                    -630
+
+Define
+
+  S7=(1/6) sum_j a_j R_{I_j}.
+
+Then, as a global identity modulo F,
+
+  det H_F = -4 S7^2 mod F.                         (1)
+
+The normalization is S7(f34-e)=1, where F(f34-e)=0 and
+det H_F(f34-e)=-4.
+
+Define also the alternating Reynolds average
+
+  W4=(1/40320) sum_sigma sgn(sigma)
+                    (sigma L54)(sigma L55)(sigma L35)(sigma L44),
+  R7=S7+395 F W4.                                  (2)
+
+In the audited Fourier coordinates (c,A,B), with T and K exactly as in
+verify_m8_fourier_bridge.cubic, put
+
+  B3=det(A)/192 + T(A,B)/2304 - K(B)/2592.           (3)
+
+Here c=sum_pi g_pi, A=sum_pi g_pi rho31(pi^-1), and
+B=sum_pi g_pi rho22(pi^-1); no rescaling of A or B is intended.
+The resulting global polynomial identity is
+
+  N9(g)=Q(g)R7(g)-F(g)D_eR7(g)+F(g)^2 B3(g).        (4)
+
+It gives the projected nonic without a Hessian determinant or division.
+In particular, on Q!=0,
+
+  -Q(g)^2 det H_F(g-F(g)e/Q(g))/4=N9(g)^2.          (5)
+
+The sign of N9 is a normalization choice; (5) matches the existing global
+nonic square.  R7 has height degree2 and satisfies the additional identity
+
+  D_e^3 R7=0,   D_e^2 R7=2 Q B3.                   (6)
+
+2. Why the finite reconstruction proves (1) globally
+
+HMSV, arXiv:1103.5255v1, Proposition3.19 explicitly supplies an S8-invariant
+degree7 lift whose square is the Hessian modulo F.  Its scalar is fixed by
+the rational point f34-e above.  The compatibility and rational square
+normalization are already audited in HMSV_COMPATIBILITY.md.  Primary source:
+https://arxiv.org/abs/1103.5255
+
+This invariant section is identified by a full character computation:
+
+  dim Sym^7(V44)^S8=14,
+  dim (Sym^4(V44) tensor sign)^S8=1.
+
+Consequently its restriction space modulo F has dimension13, since F is
+skew and multiplication by the nonzero F is injective.  The character used
+is not an estimated parameter count: for cycle lengths ell_i,
+
+  chi_V44(sigma)=[t^4] product_i(1+t^ell_i)
+                    -[t^3] product_i(1+t^ell_i).
+
+Newton's recurrence for symmetric powers and all22 partitions of8 give the
+displayed dimensions exactly.  The verifier reproduces this calculation.
+
+The certificate gives13 integer delta vectors with sup norm<=1 and
+D=100000000.  For g=D f34+delta put
+
+  X=F(g)e-Q(g)g.
+
+Then F(X)=0.  The13-by13 evaluation matrix of the undivided Reynolds sums
+has full rank modulo1000003, hence over Q.  These13 restrictions therefore
+form a basis of the full invariant restriction space.
+
+The square-root signs are justified uniformly, rather than guessed at13
+unrelated points.  Write g'=f34+delta/D and
+x=g'-F(g')e/Q(g').  At x0=f34-e,
+
+  ||H_F(x0)^-1||_infinity=15/2,
+  ||H_F(y)||_infinity<=56 ||y||_infinity.
+
+The verifier obtains a crude common Lipschitz bound for F and Q directly
+from all exact gradient coefficients.  The sufficient combined bound is
+9073680<D.  The mixed ray has maximum coordinate2, and the gradient bound
+uses the whole |g'|<=3 cube.  Throughout the connected delta cube Q(g')<0 and
+||H_F(x0)^-1(H_F(x)-H_F(x0))||_infinity<1/4.  Thus the Hessian remains
+nonsingular there.  The normalized true invariant septic has a constant
+positive sign on this cube.  Moreover X=(-D Q(g))x is a positive multiple
+of x, so its sign remains positive.
+
+At every one of the13 points the proposed formula has positive value and
+its square is exactly -det H_F(X)/4.  The evaluation isomorphism now
+identifies its restriction with the true normalized septic.  This proves
+(1) globally; it is not an inference from generic numerical sampling.
+
+Four independent random rational points far outside that cube also satisfy
+(1) exactly.  Their integer septic values are
+-4697620480, 51662970072, 2037803034960, -1440417686400.
+These are additional bookkeeping checks, not the basis of the proof.
+
+3. Proof of the height reduction and (3)-(4)
+
+Let G0=S4 x S4 permute the first and last four labels separately.  It fixes
+e.  Its character on V is
+
+  1+chi31(p)chi31(q)+chi22(p)chi22(q).
+
+The verifier computes the following dimensions exactly:
+
+  invariant cubics:6;
+  skew linears:0; skew quadratics:1; skew cubics:4.
+
+Here skew means the character sgn(p)sgn(q).
+
+D_e^4 S7 is a G0-invariant cubic.  The certificate gives a basis of the
+six-dimensional invariant cubic space using six G0 Reynolds monomials.
+At its six exact test points the evaluation matrix determinant is
+
+  -499311377426274582528 !=0.
+
+All six values of the h^4 coefficient of S7(g+h e) are exactly zero.
+Hence D_e^4 S7=0 globally.
+
+Write the cubic height expansion S7(g+h e)=a0+a1h+a2h^2+a3h^3.
+The already established global projected polynomial is
+Q S7(g-F e/Q).  Q is irreducible: it is -det(B)/12 in the audited Fourier
+coordinates.  Q and F are coprime; at B=0,A=I3 the cubic term det(A)
+is nonzero.  Clearing the denominator Q^2 in this expression first implies
+Q divides a3.  Since a3 is G0-invariant, a3/Q is a skew quadratic.  That
+one-dimensional space is spanned by Q, so
+
+  a3=(79/28) Q^2.
+
+The coefficient follows from one nonzero exact evaluation after the full
+space argument.  Likewise W4 is skew, so its height degree is at most2
+(the prospective third derivative is a skew linear), and its quadratic
+height coefficient is
+
+  -(1/140) Q.
+
+The choice395 in (2) therefore cancels the cubic height term globally.
+
+For R7=b0+b1h+b2h^2, projected polynomiality and coprimality imply
+Q divides b2.  Thus b2=Q B3, where B3 is a translation-invariant skew
+cubic.  The space of such cubics has dimension3: the full skew cubic
+space has dimension4, and D_e maps it onto the one-dimensional skew
+quadratic space (the term c detB has nonzero derivative).  Its basis is
+detA,T,K.  They are skew because they are the distinct A/B homogeneous
+parts of the already audited Fourier skew cubic; their independence is
+also checked by a nonsingular three-point evaluation matrix.
+
+Three exact evaluations now give (3), and substitution gives (4).  The
+verifier checks (5) independently at six generic exact points.
+
+4. Consequence and limit
+
+This supplies a uniform polynomial formula for the complete13-variable
+projected nonic and replaces a large Hessian determinant by invariant
+Reynolds sums, derivatives, and the small explicit cubic (3).  It may be
+used to attack a global SOS Gram construction or coefficient positivity.
+No sign property of (4), positive Gram matrix, or implication
+N9=0 and g>=0 => g in the intrinsic matching SOS cone has been proved.
+
+A separate exact obstruction rules out a simple hyperbolicity argument:
+the known uniform-orbit7 restriction contains the quintic
+t^5-8t^4-18t^3-15t^2-6t-1.  Its Sturm count is one real root, hence it
+has four nonreal roots.  Thus N9 is not hyperbolic in the f34 direction.
+This fact is compatible with the desired SOS containment and does not
+provide an MOC counterexample.
+
+5. A four-term dual-quintic formula
+
+There is a smaller related global covariant.  Let
+
+  K0=sum_{i=0}^{104} L_i^T L_i.
+
+This is the invariant positive definite metric in the selected coordinates;
+the common denominator of its inverse is60.  For the following four lists
+J_j and coefficients b_j,
+
+  (8,74,81,16,2)       -1127
+  (34,23,42,55,36)      5300
+  (29,45,7,42,11)       -444
+  (28,17,54,28,25)         3
+
+define, using an UNDIVIDED group sum,
+
+  U5(z)=(1/6) sum_j b_j sum_sigma product_{i in J_j}(sigma L_i)(z).
+
+Then the global pullback identity is
+
+  U5(K0^-1 gradF)=F(S7+465 F W4).                   (7)
+
+The difference between the residual septic in (7) and the height-reduced
+R7 is70 F W4.  In terms of the averages R_J used in Section1, U5 is
+6720 sum_j b_j R_{J_j}; the distinction between the sum and average matters.
+
+Additional exact verifier:
+  python code/research/moc_dual_quintic_reynolds_verify.py
+It saves its independently reconstructed evaluation matrices and points to
+build/moc_dual_quintic_reynolds/exact_audit.json.
+
+The global identification uses a small complete space, rather than only
+independent point tests.  The Molien calculation gives dimension4 for
+S8-invariant quintics.  Metric identification converts HMSV's skew dual
+quintic into precisely this invariant character.  Four exact evaluations
+prove that the four displayed quintics form a basis.  Three independent
+polar-image equations on F=0 have rank3 and identify the coefficient vector
+uniquely.  The existing HMSV dual-quintic theorem supplies a nonzero vector
+in that kernel, so the identified quintic is the true dual equation.
+
+Its polar pullback is divisible by F.  The residual invariant septic
+vanishes on the secant divisor: there gradF maps into the singular locus
+of the dual quintic, so differentiating the pullback shows that its
+residual value times gradF is zero.  At generic smooth cubic points on the
+secant, gradF is nonzero.  Hence this residual belongs to the two-dimensional
+space spanned by S7 and F W4.  Two exact evaluations with a nonsingular
+evaluation matrix give the coefficients in (7); three further points are
+independent exact checks.  This is another algebraic identity, with the
+same lack of a positivity conclusion as (4).

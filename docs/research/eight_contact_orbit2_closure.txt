@@ -1,0 +1,103 @@
+FULL FIVE-PARAMETER CLOSURE OF EIGHT-CONTACT ORBIT2
+2026-10-30
+
+THEOREM. In canonical ray notation, let
+
+ g=f34+a r0+b r7+c r10+d r18+e r23,    a,b,c,d,e>=0.
+
+If its permutation values form an actual spectral support gap, then de>=1.
+Consequently g(U)>=0 for every U in U(4). This treats the whole coefficient
+face, including boundary coefficients, without distinct spectra or products.
+
+The mixed coefficient is normalized to one. Any positive mixed coefficient
+can be normalized by positive scaling; a zero mixed coefficient is already
+an ordinary minor sum. The face has eight permutation contacts
+
+                    {7,8,9,12,15,20,22,23}.
+
+It is orbit2 in build/eight12/census.json, with12 images in the canonical
+f34 cap. Row/column permutations and inversion propagate the theorem to
+its complete symmetry orbit. No unrestricted MOC4 theorem is claimed.
+
+Actual spectral lift and singularity
+-----------------------------------
+Use the verified14-coordinate cubic F, let 1 be the all-ones vector,
+H_v=H_F(v), and Q(v)=D_1F(v). The exact model proves grad F(z)=0 on actual
+complex spectral matching products, H_1 1=0, and F(1)=0.
+
+If g_pi=h-Re(eta z_pi), put x=g-h1 and let y be the imaginary-part lift.
+The actual spectral equations imply
+
+                   H_x y=0, grad F(y)=grad F(x).
+
+Euler's identity gives F(x)=0, hence F(g)=hQ(g). On this face,
+
+       F(g)=-(a+1)(b+1)(c+1),       Q(g)=-de-1.
+
+Thus Q never vanishes and h=F(g)/Q(g)>0. The Hessian H_x must be singular.
+If y!=0, the first lift equation supplies its kernel vector. If y=0,
+then grad F(x)=0 and H_x x=0. Here x!=0, since x=0 would imply
+F(g)=F(h1)=0, contrary to the displayed strictly negative F(g).
+
+Exact determinant
+-----------------
+Set A=a+1, B=b+1, C=c+1 and define
+
+ P=A B^2 C^2+A B^2 C e+A B C^2 d+A B C d e
+   +B^2 C^2(d+e)+B^2 C d e-B^2 C e
+   +B C^2 d e-B C^2 d-B C d^2 e-B C d e^2-3B C d e
+   -B d^2 e^2-C d^2 e^2+d^2 e^2.
+
+The exact determinant identity is
+
+ det H_(g-F(g)/Q(g) 1)=-4 A^4 B^2 C^2 P^2/(de+1)^2.       (1)
+
+The standalone verifier reconstructs F,H from the repository model and
+proves (1) as a polynomial identity. It eliminates ten fixed entries of
+H_g-hH_1 with exact rational functions, clears the denominators of the
+remaining4x4 matrix, and expands its determinant by2x2 Laplace minors.
+The pencil has degree three in h. Substituting h=F/Q and clearing Q^3
+checks (1) coefficientwise. No sampling, interpolation grid, or stored
+build output is used.
+
+Positive expansion on the entire dangerous domain
+-------------------------------------------------
+Put u=b+c, v=bc, q=de, z=d+e, W=(d+1)(e+1). The verifier also proves
+
+ P=a B C(B+d)(C+e)
+   +v^2(z+1)+uv(q+2z+2)+u^2 W
+   +v[(2-q)z+2]+uW(2-q)+W(1-q).                            (2)
+
+For nonnegative coefficients and q<1, every term in (2) is nonnegative
+and its last term is strictly positive. Hence P>0. Formula (1) then makes
+the actual-lift Hessian nonsingular, contradicting the preceding necessary
+singularity. Therefore every actual gap has de>=1. No connectedness or
+inertia continuation argument is needed for this orbit.
+
+Recovery on all complex unitary matrices
+----------------------------------------
+The established weighted-minor theorem gives, for every t>0,
+
+                        f34+t r18+t^(-1)r23>=0.
+
+Its relabeling from the standard pair(r28,r23) uses
+alpha=beta=(0,3,1,2) in zero-based permutation notation; it fixes f34 and
+maps(r28,r23) to(r23,r18). The exact ray relabeling is checked by the
+verifier. The corresponding functional identities follow from the
+Cauchy--Binet/Jacobi relation space verified in mixed_cancellation_graph.txt.
+
+Since de>=1, d>0 and e>=1/d. Thus
+
+ g(U)=[f34(U)+d r18(U)+d^(-1)r23(U)]
+                +a r0(U)+b r7(U)+c r10(U)+(e-d^(-1))r23(U)>=0.
+
+This recovers the actual original support inequality at every mixer.
+
+Reproducibility
+---------------
+
+ python3 code/research/verify_eight_contact_orbit2.py
+
+Fresh standalone execution passed in12.93seconds. The proof closes the
+whole five-parameter eight-contact family, not only an equal-coefficient
+line or a restricted determinant branch.

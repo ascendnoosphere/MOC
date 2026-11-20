@@ -1,0 +1,186 @@
+MOC visual atlas and mathematical interpretation
+31 October 2026
+
+The atlas contains the whole recorded campaign, the seven mathematical lanes,
+and deliberately retained failed, flat, noisy, and weakly related quantities.
+The unrestricted conjecture remains unproved. Images distinguish exact
+certificates from numerical evidence and do not convert a high pass rate into
+a universal theorem.
+
+Open build/moc_visual_atlas_20261031/index.html for the searchable offline
+gallery, moc_visual_atlas.pdf for the complete volume, or
+moc_visual_atlas_main.pdf for the main research figures. Every PNG is also
+available separately. The manifest records source and output checksums.
+
+The source is the single enriched file with all 20,127 original records:
+  build/moc_moonshots_20261031/all_moc_analysis_data.jsonl.gz
+Its decompressed SHA256 is
+  cfc4b793715b382fed58728c16f68199a5b22b9616b67b2f5313219235ede3c3.
+The original observations, previous diagnostics, and exact proof artifacts
+were preserved. Array-valued payloads are inventoried; the scalar appendix
+does not expand every matrix entry or vector component into its own plot.
+
+What the visual pass added
+
+1. Failed methods occupy different parts of the sample.
+
+The combined figure corpus/07_cross_method_failure_sets.png uses the same
+3,178 guarded n4 records for all comparisons. The explicit covariance formula
+fails on nine, whitened heat flow initially expands on 21, and the winding
+test misses on 78. The three sets are pairwise disjoint. Consequently the
+covariance formula or winding test succeeds on every record in this shared
+subset. These are numerical sufficient tests with their own tolerances.
+They are not a proof that a hybrid argument covers arbitrary inputs.
+
+This is useful for the proof search: an obstruction to one construction need
+not be an obstruction to the desired hull containment. The exact Walsh
+counterexample to the covariance formula already has a positive alternative
+law; the exact rational heat example has a positive replacement law after
+the proved smoothing threshold. The task is to change the construction at
+its genuine obstruction, not insist that every desirable marginal survive.
+
+2. The positive-amplitude support candidate makes a substantial restriction.
+
+The candidate keeps matching products with
+  Re[sgn(pi) product_i U_i,pi(i)/det(U)] > 0.
+In 3,497/4,095 eligible records this removes at least one vertex of the full
+matching hull. The smallest retained/full hull-area ratio is 0.284848. Every
+one of the 4,095 tested determinants still lies in the retained hull.
+The remaining 598 hulls are unchanged. This confirms that the numerical test
+usually checks a smaller set, rather than merely rediscovering ordinary hull
+membership with redundant interior points removed.
+
+The explicit covariance-corrected formula is stronger and fails in 14 cases
+at its stated threshold, including five larger failures. Conditioning does
+not explain them all: one larger failure has covariance condition number
+about 2.29, and failures occur in all four condition-number quartiles.
+The exact minimum -2529/589540 on a separate Walsh example proves the global
+formula false. Positive-amplitude support selection itself remains unproved.
+
+3. Outward heat motion has an exact, narrow cancellation mechanism.
+
+For H(t)=exp(-4t)X+exp(-6t)Y, initial radial expansion is equivalent to
+  4|X|^2+6|Y|^2+10 Re(conj(X)Y)<0.
+It requires 1<|X|/|Y|<3/2 and angle(X,Y)>168.463 degrees. The phase diagram
+shows all 64 eligible noncontrol raw expansion cases inside this exact region.
+The modes almost cancel, and their different decay rates release the
+cancellation. Whitening removes much of the apparent tail but leaves
+24 initial expansion cases among 3,442 retained observations.
+
+The canonical heat law is also negative in every one of the 5,006 stored
+mixers. Near identity its negative mass is approximately
+  5/6-(7/6)(nonmonomial score/4).
+The measured slope 1.166675 in 662 small-mixing records matches the derived
+7/6 tangent. Identity itself has an obvious positive point mass law, so the
+large canonical negative mass cannot be interpreted as MOC difficulty.
+
+4. The apparently uninformative plots prevent false proof directions.
+
+The AG mixing score versus moment-kernel determinant has rank correlation
+0.00372 on its retained population; every within-family absolute correlation
+is at most 0.081. This is a measured absence of a monotone signal, not an
+independence theorem. The AG local-equality Hessian is exactly the zero 8 by 8
+matrix. It is shown as zero rather than omitted. It cannot supply a strict
+quadratic-curvature proof.
+
+For circular Gaussian n4 Haar inputs, absolute determinant phase versus
+normalized clearance has correlation -0.043; an exploratory shuffle gives
+an ordinary-sized tail fraction around 0.30. Rotation symmetry supplies an
+exact explanation for the null relation under that ensemble, as recorded
+in the corpus report. Absolute phase is not a useful search coordinate there.
+
+The variational figure includes an identically zero two-dimensional slice
+of the cubic x1*x2*x3. A coupled three-coordinate direction still escapes.
+The direct floating determinant difference loses the cubic signal below
+roughly 3.7e-6 in the displayed grid. Two floating differences are exactly
+zero and explicitly marked. This illustrates how a flat or noisy slice can
+conceal a genuine higher-order mechanism without proving global flatness.
+
+The Möbius-transformed hulls overlay the originals exactly after dividing
+out one complex multiplier. Their visual variety does not add independent
+planar geometry. Residual spikes at permutation labels are roundoff, and
+no line is drawn suggesting continuity in that arbitrary label order.
+
+5. Large-dimensional bands can come from experimental design.
+
+All 813 reflector target-underflow flags belong to the paired-cancellation
+family. The pooled one-sixth plateau is largely the proportion of that
+family. The conspicuous cancellation bands correspond to reflector ranks
+2, 4, and 8. At n>=600 their median log10(det/modulus-of-local-disk-radius)
+values are about 4.33, 8.94, and 19.23.
+
+The local sparse rule changes only four identity pairs. Reflector cancellation
+aligns cancellation with the identity pairing; dense cancellation shuffles
+that pairing and uses a different spectral generator. Thus the dense-versus-
+reflector contrast does not isolate the mixer. A tiny absolute determinant
+can still be too large for a triangle built from exceptionally tiny identity-
+based products. Wider sampled triangles can succeed on the same input.
+
+All 1,298 dense first-128-permutation disk replays succeed numerically, with
+the weakest radius about 5.156 times the determinant modulus. The rigorous
+Gaussian/Haar failure-probability bound remains vacuous through n=1000.
+Near-real linear disk growth has R-squared only 0.109, and its fixed-rank
+reflector dimension correlation is about 0.028. These weak plots are retained.
+Neither generic interior concentration nor ineffective current constants
+settles the worst-case unrestricted question.
+
+6. Several visual patterns expose omissions in the original search.
+
+The old 88 targeted mixed examples all had a definite moment kernel. The
+exact Gaussian-integer example occupies the omitted indefinite chamber.
+It satisfies a weighted support certificate, so it refutes that proposed
+geometric restriction without violating MOC. The picture contains a
+counterexample to a method's premise, not to the conjecture.
+
+The SOS laws produce 1,056 relabeled exact inequalities beyond the earlier
+weighted-law library, yet no additional actual spectral cost in the replay
+needed them. The corpus's 32,950 guarded SOS support tests are ordinary.
+This is a coverage gap. It persists after substantial computation and cannot
+be repaired by declaring all successful rows evidence about the missing
+nonordinary faces. Exact targeted inputs produced the strongest advances.
+
+7. Topological drawings require the abstract graph, not arbitrary crossings.
+
+The winding figures show actual attained disks. Another exact example gives
+two Givens edges with the same complex determinant at rational parameters
+but distinct normal-matrix lifts, separated by Frobenius distance about 4.174.
+A planar crossing therefore does not itself authorize splicing matrix paths.
+The proof uses closed walks in the abstract transposition graph. It supplies
+inner attained regions; it does not assert an outer bound on the determinant
+range. All 163 eligible silent winding cases remain visible in the raw plots.
+
+Proof status retained alongside the images
+
+The audited five-parameter orbit-51 closure, full cross-spectral family for
+every U(4), three universal SOS laws, positive fourteen-weight mixer family,
+explicit open nonordinary neighborhood, and all-dimensional local covariance
+theorem are substantive positive results. The Lean modules check the stated
+scalar components; the full unrestricted n4 theorem is not Lean-verified.
+See docs/research/moc_seven_moonshots_20261031.txt for exact theorem scopes,
+independent audits, and the remaining geometric/formalization gaps.
+
+The visual pass also followed up one family pattern exactly: the cross-family
+hull's full height/width ratio has maximum sqrt(3)/5 at r=2+sqrt(3), the same
+parameter at which the right support changes and product labels collide.
+That geometric identity is a fact about an already proved restricted family.
+It is not promoted to a claim about general n4 spectra.
+
+Reproduction and inspection
+
+Each focused lane has a moc_visual_<lane>.py script, corresponding report
+under docs/research/, and machine-readable metrics beside its PNGs. The
+appendix inventories all scalar fields and exact aliases and retains null,
+constant, error, and sampling-control fields. Source-separated trends prevent
+the pooled source order from being interpreted as a mathematical variable.
+
+The root inspected all seven corpus figures and selected mathematical figures;
+each lane researcher opened every final figure in its own lane. The appendix
+researcher inspected every appendix page. Inspection led to actual revisions:
+overlapping labels, inadequate inset scales, misleading connected label
+indices, insufficient zero annotations, and ambiguous scope text were fixed.
+The inspection manifests preserve final hashes. The assembler builds the
+offline gallery and PDFs from these final PNGs without changing their data.
+
+The exact certificates and empirical records have not been merged into one
+claim of proof. The unrestricted MOC4 and all-dimensional statements remain
+the unsolved targets of this investigation.

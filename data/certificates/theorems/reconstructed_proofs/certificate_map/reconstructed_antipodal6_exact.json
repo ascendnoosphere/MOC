@@ -1,0 +1,282 @@
+[
+  {
+    "inequality": 1,
+    "x": 0,
+    "gaps": [
+      4,
+      4,
+      4,
+      0,
+      6,
+      2,
+      0,
+      2,
+      0,
+      0,
+      4,
+      2,
+      0,
+      0,
+      0,
+      2,
+      2,
+      4,
+      2,
+      0,
+      2,
+      4,
+      0,
+      4
+    ],
+    "certificate": [
+      {
+        "generator": 16,
+        "coefficient": "2"
+      },
+      {
+        "generator": 31,
+        "coefficient": "2"
+      },
+      {
+        "generator": 32,
+        "coefficient": "2"
+      },
+      {
+        "generator": 71,
+        "coefficient": "4"
+      }
+    ]
+  },
+  {
+    "inequality": 1,
+    "x": 1,
+    "gaps": [
+      4,
+      6,
+      4,
+      0,
+      8,
+      2,
+      0,
+      2,
+      0,
+      0,
+      4,
+      2,
+      0,
+      0,
+      0,
+      4,
+      2,
+      6,
+      2,
+      0,
+      2,
+      4,
+      0,
+      4
+    ],
+    "certificate": [
+      {
+        "generator": 16,
+        "coefficient": "2"
+      },
+      {
+        "generator": 31,
+        "coefficient": "4"
+      },
+      {
+        "generator": 32,
+        "coefficient": "2"
+      },
+      {
+        "generator": 71,
+        "coefficient": "4"
+      }
+    ]
+  },
+  {
+    "inequality": 2,
+    "x": 0,
+    "gaps": [
+      2,
+      6,
+      0,
+      4,
+      4,
+      4,
+      0,
+      2,
+      0,
+      4,
+      2,
+      4,
+      0,
+      0,
+      2,
+      4,
+      0,
+      2,
+      2,
+      0,
+      4,
+      2,
+      0,
+      0
+    ],
+    "certificate": [
+      {
+        "generator": 18,
+        "coefficient": "4"
+      },
+      {
+        "generator": 31,
+        "coefficient": "2"
+      },
+      {
+        "generator": 32,
+        "coefficient": "2"
+      },
+      {
+        "generator": 81,
+        "coefficient": "2"
+      }
+    ]
+  },
+  {
+    "inequality": 2,
+    "x": 1,
+    "gaps": [
+      2,
+      4,
+      0,
+      4,
+      2,
+      4,
+      0,
+      2,
+      0,
+      4,
+      2,
+      4,
+      0,
+      0,
+      2,
+      2,
+      0,
+      0,
+      2,
+      0,
+      4,
+      2,
+      0,
+      0
+    ],
+    "certificate": [
+      {
+        "generator": 18,
+        "coefficient": "4"
+      },
+      {
+        "generator": 32,
+        "coefficient": "2"
+      },
+      {
+        "generator": 81,
+        "coefficient": "2"
+      }
+    ]
+  },
+  {
+    "inequality": 3,
+    "x": 0,
+    "gaps": [
+      0,
+      4,
+      0,
+      4,
+      2,
+      2,
+      0,
+      2,
+      2,
+      4,
+      2,
+      2,
+      0,
+      0,
+      2,
+      2,
+      0,
+      0,
+      2,
+      0,
+      4,
+      0,
+      2,
+      0
+    ],
+    "certificate": [
+      {
+        "generator": 8,
+        "coefficient": "2"
+      },
+      {
+        "generator": 18,
+        "coefficient": "2"
+      },
+      {
+        "generator": 32,
+        "coefficient": "2"
+      },
+      {
+        "generator": 35,
+        "coefficient": "2"
+      }
+    ]
+  },
+  {
+    "inequality": 3,
+    "x": 1,
+    "gaps": [
+      2,
+      4,
+      0,
+      4,
+      2,
+      4,
+      0,
+      2,
+      0,
+      4,
+      2,
+      4,
+      0,
+      0,
+      2,
+      2,
+      0,
+      0,
+      2,
+      0,
+      4,
+      2,
+      0,
+      0
+    ],
+    "certificate": [
+      {
+        "generator": 18,
+        "coefficient": "4"
+      },
+      {
+        "generator": 32,
+        "coefficient": "2"
+      },
+      {
+        "generator": 81,
+        "coefficient": "2"
+      }
+    ]
+  }
+]

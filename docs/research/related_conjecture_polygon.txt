@@ -1,0 +1,87 @@
+Exact counterexample to Kovacec's 2026 stronger polygon conjecture
+
+Status: a locally checked exact counterexample to Conjecture 7 of
+Alexander Kovacec, "A conjecture more precise and stronger than the
+one by Marcus and de Oliveira", CMUC preprint 26-11 (7 April 2026),
+https://www.mat.uc.pt/preprints/ps/p2611.pdf. Independent audit passed;
+see kovacec_polygon_independent_review.txt. Root also inspected the
+source statement and reran the exact verifier after adding connectivity,
+Euler-characteristic, nonzero-denominator, and exact-area checks.
+The example is strictly inside the original Marcus-de Oliveira
+convex hull; it does not disprove or settle the original conjecture.
+
+The preprint forms a straight-line graph with one vertex
+z_pi=prod_i(alpha_i+beta_pi(i)) per permutation and an edge between
+vertices whose permutations differ by one transposition. Its definition
+of exterior is ray visibility: a point is exterior if it can be joined
+to arbitrarily distant points by segments avoiding every graph edge.
+Conjecture 7 asserts that, when this exterior has a Jordan boundary J,
+every det(diag(alpha)+U diag(beta) U*) for unitary U belongs to the
+closure of the bounded component of the complement of J. For n=4 the
+graph has 24 vertices and 72 edges.
+
+Here, writing i=sqrt(-1), take
+
+ alpha=(638-1075i, -1495-569i, 555-1223i, -861-515i)/1000,
+ beta=(-1429-1493i, 2125-2624i, -1080+511i, 2082+866i)/1000.
+
+Let K=(R+i I)/1000, where
+
+ R = [[0,-200,-395,281], [200,0,1024,25],
+      [395,-1024,0,1098], [-281,-25,-1098,0]],
+ I = [[564,-1518,-176,-187], [-1518,-796,-1242,-251],
+      [-176,-1242,-222,-216], [-187,-251,-216,-278]].
+
+R is antisymmetric and I symmetric, so K*=-K. The rational Cayley
+transform U=(Id+K)(Id-K)^(-1) is exactly unitary. For these spectra,
+
+ det(diag(alpha)+U diag(beta) U*)
+ = [1152757738553382860717275886823045310903
+    -243199353456090443350853544871623343201 i]
+   / [30455402278742255382898961 * 10^12]
+ = approximately 37.85068172808221 - 7.98542574582384 i.
+
+The exact verifier code/research/verify_kovacec_polygon_counterexample.py
+reads data/certificates/research/kovacec_conjecture7_counterexample.json
+and checks the following with rational/integer arithmetic:
+
+  1. The 24 matching points are distinct. All 72 graph segments are
+     planarized by exact intersections; no two original segments are
+     collinear. The resulting embedding has 317 vertices and 343 face
+     cycles. Its unique outer-face cycle has 14 distinct vertices and
+     is a simple polygon; every other face cycle has positive area.
+
+  2. In counterclockwise order every edge of this polygon has strictly
+     positive cross product with k=(65,3) minus its initial vertex.
+     Hence k belongs to the strict kernel of the simple polygon, and
+     the polygon is star-shaped with respect to k.
+
+  3. The ray from the stated determinant in direction (-19,6) misses
+     every one of the 72 closed graph segments strictly. For each
+     segment the ray-intersection parameters show it is behind the
+     ray start (35 segments), or outside one of the two segment ends
+     (14 and 23 segments). No ray is parallel to a segment. Thus the
+     determinant is in the open unbounded face of the graph, not on
+     its boundary.
+
+  4. The determinant lies strictly inside the triangle of matching
+     points with zero-based lexicographic permutation indices 0,1,5.
+     This is an exact orientation test and places it in the interior
+     of the original MOC convex hull.
+
+The Jordan and visibility qualifications are essential. The planar
+half-edge traversal proves the outer boundary is a simple Jordan polygon,
+and all graph segments lie in its closure. For an interior point every
+ray to infinity meets this polygon's graph boundary. For an exterior
+point p, the ray p+t(p-k), t>=0, misses the polygon: otherwise a later
+point q in it would make p a point of [k,q] inside it, by star-shapedness.
+Therefore the preprint's ray-visibility exterior is exactly the exterior
+of this polygon, and its J is the certified Jordan polygon. The stated
+unitary determinant lies in its open exterior, contrary to Conjecture 7.
+The graph-boundary calculation is not replaced by the original convex
+hull test.
+
+An illustrative figure is available as
+data/figures/research/kovacec_conjecture7_counterexample.png and .svg;
+code/research/plot_kovacec_polygon_counterexample.py reproduces it.
+The drawing is explanatory only; the proof uses the exact certificate.

@@ -1,0 +1,133 @@
+EXACT PARTIAL NINE-CONTACT TERMINAL CERTIFICATES
+2026-10-17. Nineteen of29 orbit types closed, not full4x4MOC.
+
+SCOPE. Let g_pi=h-Re(eta product_i(a_i+b_pi(i))) be an actual order-four
+support deficit. Assume h!=0 and all24 complex matching products pairwise
+distinct. The previously proved ten-contact theorem handles all gaps with
+at least10 active labels. If the full active set has exactly9 labels, the
+independent census terminal_profile_nine_census_verify.py yields18192
+closed rectangle-free mixed faces in29 symmetry orbits. The present note
+proves positivity/exclusion on19 of those types, totaling12432 faces.
+Ten types, totaling5760 faces, remain untreated here. A nine-contact
+threshold theorem does NOT follow from this partial classification.
+
+Use the previously verified cubic model F, quadratic Q, Hessian H and
+constant profile e. Actual spectrality implies
+ F(g)=hQ(g), H(g-he)y=0 for y=-Im(eta z).
+If Q!=0, its degree18 projected determinant N(g) vanishes. If Q=0 then
+F=0. The ray order and14 selected coordinates are the same as in
+terminal_ten_notes.txt. Inversion and row/column relabelings preserve the
+claimed spectral and unitary assertions.
+
+1. Fourteen constant-row closures.
+For each marked face in terminal_nine_rows.json there are one or more
+exact constant rows w satisfying
+ w H(g-he) = (sum_j lambda_j t_j)(E_p-E_q),
+where g=sum_j t_j r_j, t_j>=0; p,q are active labels, all lambda_j>=0,
+and the H(e) coefficient is zero. For each mixed ray, at least one row
+has strictly positive coefficient on that ray. Thus any positive mixed
+coefficient forces an active pair's imaginary parts equal. Their real
+parts are already equal, contradicting pairwise distinct products.
+Every mixed coefficient vanishes; only ordinary minor rays remain.
+
+The fourteen representative ray lists, with orbit sizes, are:
+ (3,5,21,30,53):1152;
+ (3,19,21,26,46):1152;
+ (3,19,21,23,46):1152;
+ (3,21,27,29,53):1152;
+ (3,21,25,29,68):576;
+ (20,21,25,27,76):1152;
+ (20,21,27,30,76):576;
+ (16,20,21,27,31,53):144;
+ (20,21,27,30,53):288;
+ (16,21,27,32,53):576;
+ (21,27,29,32,53):576;
+ (21,27,30,32,53):576;
+ (16,21,27,30,53):288;
+ (16,21,25,32,53):576.
+These sum to9936 faces. terminal_nine_rows_verify.py checks each row
+coefficientwise against all generator Hessians, H(e), and the active labels.
+It cross-checks the complete regenerated census and exact ray ordering.
+
+2. Three positive-nonic closures.
+For each following five-ray face, normalize its positive mixed coefficient
+to1 and write g=a r_i+b r_j+c r_k+d r_l+f_m with a,b,c,d>=0.
+The necessary polynomial has N(g)=-4 p(a,b,c,d)^2. Its stored polynomial
+p has constant1 and every nonzero coefficient strictly positive. Thus p>0.
+The corresponding F polynomial has negative constant and only negative
+coefficients. Therefore F!=0 and both branches are excluded: Q=0 by F!=0,
+and Q!=0 by N<0.
+
+The faces are
+ (3,21,25,32,53), orbit576;
+ (3,21,24,32,53), orbit192;
+ (20,21,27,31,76), orbit576.
+Complete integer coefficients for F,Q,p are in terminal_nine_polynomials.json.
+These are finite explicit algebraic certificates, not numerical optimizations.
+
+3. First constrained row: (3,19,21,24,46), orbit576.
+Write g=a r3+b r19+c r21+d r24+f46. Then
+ F=-(1+a)(1+b), Q=-(1+b+cd),
+ p=(1+a)^2(1+b)^2(1+c)(1+d)(1+a-cd), N=-4p^2.
+Since Q<0, actual spectrality forces cd=1+a, hence c,d>0 and
+ h=cd(1+b)/(1+b+cd).
+Set K=(1+b+cd)H(g-he), eliminating a=cd-1. There is an exact polynomial
+row w=w0+d w1 satisfying
+ w K=d(1+c)(1+b+cd)(E2-E6),
+where
+ w0=(0,0,0,0,0,0,0,0,1,0,0,0,0,0),
+ w1=(0,1,0,1,0,0,1,0,1,0,0,1,0,0).
+Cancel the positive denominator. Since d(1+c)>0 and both labels2,6 are
+active, the actual imaginary kernel equation forces two equal matching
+products. This is incompatible with the inherited distinctness condition.
+The alpha=0 boundary is ordinary-minor positive as before.
+
+4. Second constrained row: (3,20,21,27,53), orbit576.
+Write g=a r3+b r20+c r21+d r27+f53. Then
+ F=-(1+a+c), Q=-(1+c+bd),
+ p=(1+b)(1+d)(1+a+c)^2(1+a-bd), N=-4p^2.
+Thus bd=1+a, b,d>0, and h=(bd+c)/(1+c+bd).
+For K=(1+c+bd)H(g-he), eliminating a=bd-1, an exact degree-three
+polynomial row w(b,c,d) satisfies
+ w K=(1+b)(1+d)(1+c+bd)(c+bd)(E5-E14).
+The row has nine nonzero monomial coefficients, each an integer14-entry
+vector. Its exact coefficients are recorded under 'rowpolynomial' in
+terminal_nine_constrained_second.json. Coefficientwise polynomial
+multiplication verifies the identity. Every factor on its right is
+positive because b,d>0 and c>=0. The active labels5,14 must therefore
+have equal imaginary parts, and hence equal complex matching products.
+This again contradicts distinctness.
+
+5. Verification and proof of the finite interpolation identities.
+terminal_nine_additional_verify.py checks all five additional types. For
+each type it verifies N=-4p^2 on every point (a,b,c,d)=2(i,j,k,l),
+i+j+k+l<=18, nonnegative integers. There are7315 points. Each has Q!=0.
+This lower-simplex grid is unisolvent for polynomials of total degree<=18;
+the previously proved degree bound on N and degree<=9 of p therefore make
+these exact integer checks a proof of the polynomial identity. F and Q
+have lower degree and are checked on the same grid. The factorization
+and both constrained row identities are then checked by exact symbolic
+polynomial arithmetic, without floating point.
+
+The independent census uses all82 regenerated rays, all18 disjoint-swap
+rectangles, and all nine-element subsets of each mixed ray's13 zeros.
+The closure filter is exhaustive because all larger active sets are
+already handled by the ten-contact theorem. Every unresolved full active
+set therefore has exactly9 labels and equals its ray-face closure.
+
+Executed verification programs:
+ terminal_profile_nine_census_verify.py: PASS29 orbits/18192 faces;
+ terminal_nine_rows_verify.py: PASS14 orbits/9936 faces;
+ terminal_nine_additional_verify.py: PASS5 orbits/2496 faces.
+Total:19 orbits/12432 faces. The remaining10 orbit representatives are
+ (3,12,21,23,30,80),288;
+ (3,19,21,26,52),1152;
+ (3,21,27,32,53),1152;
+ (3,21,27,30,53),1152;
+ (3,12,21,26,78),288;
+ (3,12,21,30,78),576;
+ (3,12,21,30,53),288;
+ (3,16,21,30,53),576;
+ (3,21,26,30,52),192;
+ (3,19,22,29,52,74),96.
+Their5760 faces and the lower-contact cases require further work.

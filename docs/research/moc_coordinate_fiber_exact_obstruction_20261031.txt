@@ -1,0 +1,56 @@
+Exact one-coordinate minimum away from spectral degeneracies
+31 October 2026
+
+This calculation tests a proposed reduction by separate spectral convexity.
+It does not refute MOC and does not prove a new global MOC theorem.
+
+Let U be the real Walsh matrix divided by 2, with rows
+ (1,1,1,1), (1,1,-1,-1), (1,-1,1,-1), (1,-1,-1,1).
+Set
+ a=(z,-1+2i,2,1+2i),
+ b=(-1-i,2i,-2-3i,2+2i),
+ eta=1,
+ d(z)=det(diag(a)+U diag(b) U^T),
+ p_pi(z)=product_k(a_k+b_pi(k)).
+The support gap is
+ h(z)=max_pi Re[p_pi(z)-d(z)].
+Since each term is real-affine in z=x+iy, h is convex piecewise affine.
+
+Exact determinant expansion gives
+ d(z)=(-7/4-21i/2)z-30+14i.
+
+In zero-based lexicographic permutation order, the three active indices at
+ z0=5i/2 are 3,8,9, corresponding respectively to
+ (0,2,3,1), (1,2,0,3), (1,2,3,0).
+Their affine support gaps are
+ phi3 = (127/4)x+(79/2)y-50,
+ phi8 = (-73/4)x-(1/2)y+50,
+ phi9 = (47/4)x-(1/2)y+50.
+Their positive weighted sum is the constant
+ (1/80)phi3+(2/5)phi8+(47/80)phi9=195/4.
+Thus h(z)>=195/4 for every complex z. At z0 all three equal 195/4.
+The 24 nonnegative slacks 195/4-phi_pi(z0) are exactly
+ [309/2,68,5,0,55,273/2,180,90,0,0,9,99,
+  40,45,19/2,23,39/2,28,73,168,5,105,6,11].
+These are a full rational primal and dual certificate of the global minimum.
+
+The minimizer is unique. Equality in the positive weighted average forces
+phi3=phi8=phi9. Since phi8-phi9=-30x and
+phi3-phi8=50x+40y-100, equality forces x=0,y=5/2.
+
+This unique minimizer is not any of the other a values or any -b_j. Therefore
+it is neither an eigenvalue collision nor a zero paired sum. The three fixed
+a values are noncollinear. Their circle has center i/4 and squared radius
+65/16, while |z0-i/4|^2=81/16. The four a values at the minimum are not
+concyclic. Every move from z0 to one of these known degeneracies strictly
+increases h.
+
+Consequence and limitation.
+Separate convexity alone cannot justify a coordinate descent that always
+pushes a support gap toward a collision, zero pairing, or a concyclic spectrum.
+The example has a strictly positive minimum, so it does not exclude a theorem
+that uses additional hypotheses specific to a negative support gap. Such a
+theorem would require a new argument beyond separate convexity.
+
+Verifier: code/research/moc_coordinate_fiber_exact_obstruction.py
+Only exact SymPy arithmetic is used; no optimizer is required to replay it.

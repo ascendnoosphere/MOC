@@ -1,0 +1,23 @@
+INDEPENDENT ADVERSARIAL AUDIT: HIGH-CONTACT TRANSFER THEOREM
+17 October 2026; volume_scout track.
+
+Audited files: output/MOC_Closing_Argument_Attempt.md and closing_high_contact_standalone.txt.
+Result: no substantive gap found in the contact-transfer theorem. It is a conditional localization theorem, not an unrestricted MOC proof.
+
+1. Dimension. On the rank-two, all-entries-nonzero locus, matching products recover every rectangle cross-ratio. Equality of vectors forces row/column scaling; equality of actual products adds the single product constraint. The resulting fiber dimension is (2n-1)-1=2n-2. Subtracting from 4n-4 gives dim_C Y=2n-2. A rank-one matrix cannot secretly occur in this fiber, since the recovered row/column scaling preserves rank.
+
+2. Finite realization. Each rank-two nonzero matrix factorization can be put in a chart with all needed row and column coordinates nonzero by one generic GL2 change. Its common matching multiplier is absorbed by a complex nth root. Chevalley's theorem supplies a nonempty open subset of the actual image. The union of its C*-scalings is still open and consists of actual finite spectra. Intersecting with the finitely many nonvanishing coordinate, coordinate-difference, and Gamma conditions preserves a nonempty open set because none of those polynomials is identically zero on irreducible Y.
+
+3. Initial perturbation. The additive spectral map is dominant onto Y, so the preimage of the chosen open set is a nonempty Zariski-open, hence Euclidean-dense subset of C^(2n). Strict violation persists under sufficiently small perturbations with U and eta fixed. A positive common scaling restores exactly the original gap and preserves the conic open set.
+
+4. Curve existence at every step. Imposing k affine complex equations on the irreducible D-dimensional affine variety leaves local dimension at least D-k at the current point. A positive-dimensional component through that point contains an algebraic curve through it, obtainable by hyperplane sections. That curve is not contained in the excluded set because it contains the current point in O. Thus its projective normalization loses only finitely many points when infinity and the preimage of Y\O are removed.
+
+5. The central boundary concern. A connected compact Riemann surface remains connected after finitely many points are deleted. Each component Omega of the open strict-deficit region is open in this remaining surface. If Omega had no relative boundary there, it would be both open and closed and hence the entire surface. Every inactive deficit would then be the real part of a meromorphic function nonnegative everywhere except finitely many punctures. A genuine pole has real part of both signs on every punctured neighborhood; therefore all poles are removable, and compactness makes every such function constant. The fixed active differences are already constant. Consequently the matching vector moves only by a common translation, ruled out by the quartet equation with nonzero Gamma. A finite boundary point IN O must therefore exist.
+
+6. Exact gap and distinctness at the new point. All old ties were fixed as complex differences. At a boundary point, all inactive deficits are nonnegative by continuity and at least one is zero. Thus the chosen old label is still a true maximizer, and the fixed complex value L_U-z_pi0 keeps exactly the same positive support gap. Membership in O guarantees actual finite spectra, nonzero matching products, and all n! product values pairwise distinct. This continues at each finite iteration. The number of contacts strictly increases until reaching D.
+
+7. Distinct spectra. Pairwise distinct matching products imply a_i are pairwise distinct: otherwise exchanging the assignments to equal rows gives two equal matching products. The same argument applies to repeated b_j. Nonzero matching products also imply every a_i+b_j is nonzero. These observations justify claims of distinct spectra within each list; they do not assert that an a_i cannot equal a b_j.
+
+Minor editorial correction requested from root: in Markdown proof Section3, replace 'old active labels stay active throughout S' with 'old active labels remain tied throughout S; they are active while pi0 is maximizing.' Outside the maintained deficit chamber another label may exceed them. The standalone proof already makes the correct distinction, and the subsequent argument uses only that distinction.
+
+No positivity statement for the terminal high-contact locus has been established by this audit.

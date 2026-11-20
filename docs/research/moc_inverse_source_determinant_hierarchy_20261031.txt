@@ -1,0 +1,115 @@
+THE INVERSE BALANCED-SOURCE DETERMINANT HIERARCHY
+31 October 2026
+
+Scope. This generalizes the elementary n=4 rank-four source factorization.
+It supplies an explicit necessary algebraic structure for actual spectral
+profiles in every dimension. It does not establish their convex-hull
+containment, a positive SOS completion, or unrestricted MOC.
+
+1. A direct identity valid for every n>=2
+
+Choose real L of size n-by-(n-1) with L^T L=I and L^T 1=0. Put
+
+ e0=1/sqrt(n), E=[e0,L], S=L K L^T,
+ A=diag(a), B=diag(b),
+ A0=L^T A L, B0=L^T B L,
+ u=L^T A e0, v=L^T B e0.
+
+For an actual matching profile z_pi=product_i(a_i+b_pi(i)),
+
+ q_z(K)=sum_pi sgn(pi) z_pi product_i S_i,pi(i)
+       =det(A S+S B).
+
+The last determinant, conjugated by the orthogonal E, becomes
+
+ det [[0,u^T K],[K v,A0 K+K B0]].
+
+If K is invertible and H=K^(-T), multiplication on both sides by
+diag(1,K^(-1)) gives the exact identity
+
+ P_z(H):=q_z(K)/(det K)^2
+        =-u^T adj(H^T A0+B0 H^T) v.                 (1)
+
+This is homogeneous of degree n-2 in the(n-1)^2 independent entries of H.
+If u or v is zero it is identically zero. Otherwise choose fixed complex
+invertible P,Q with P v=e_last and u^T Q=e_last^T. The adjugate transformation
+formula turns(1) into a nonzero scalar times the top-left(n-2)-by-(n-2)
+determinant of P(H^T A0+B0 H^T)Q. Thus actual source polynomials are small
+determinants of complex linear forms.
+
+For n=2 this is a scalar; n=3 a linear form; n=4 a determinant2 quadratic;
+n=5 a determinant3 cubic; n=6 a determinant4 quartic. The n=4 rank bound
+four and real inertia bounds(4,4) are the first quadratic instance.
+
+2. Why the inverse expression is polynomial on matching functions
+
+For an ordinary subset indicator r_{I,J}, |I|=|J|=k, the signed pairing is
+
+ q_r(K)=(-1)^(sum I+sum J) det S[I,J] det S[Ic,Jc].
+
+Cauchy-Binet expresses each S minor in K minors with constant L coefficients.
+Jacobi transforms a k-minor of K into detK times an(n-1-k)-minor of H,
+and an(n-k)-minor into detK times a(k-1)-minor. Their product divided by
+(detK)^2 is therefore polynomial of total degree n-2. For k=0,n the
+expression is detS=0. Consequently the inverse polynomial map is linear
+on the span of ordinary matching functions and kills constants.
+
+All rank-two spectral product functions lie in this span: in the expansion
+of product_i(a_i+b_pi(i)), choose which rows contribute b factors and sum
+over their image subsets. This also proves the polynomial identity for
+actual profiles without invoking any projective duality or nonic equation.
+
+3. A fermionic and complex-analysis interpretation that is computational
+
+The determinant in(1) is a Slater amplitude of n-2 linear modes. The source
+restriction therefore retains exterior-power structure that is absent from
+an arbitrary nonnegative algebraic nonic cost. For n=4 its real part is a
+difference of at most four positive and four negative squares; the exact
+new formal past cost outside full matching SOS violates this bound.
+
+In the actual n=4 star face, a different sparse3-by-3 Fricke matrix M has
+rank2 and Lorentz signature. After the six ray-trade reductions, all its
+entries and diagonal entries are positive. This gives three real rapidities
+theta_i and a positive kernel
+
+ Kij=sech(theta_i-theta_j)=2sqrt(x_i*x_j)/(x_i+x_j), x_i=e^(2theta_i)>0.
+
+The normalized exponential functions f_i(t)=sqrt(2x_i)exp(-x_i t) in L2(R+)
+have Gram K. The fermionic wedge f_1 wedge ... wedge f_m has squared norm
+
+ detK=product_(i<j)((x_i-x_j)/(x_i+x_j))^2
+     =product_(i<j)tanh(theta_i-theta_j)^2.
+
+This is an explicit positive determinant and not a claimed physical proof
+of MOC. It gives a canonical nonlinear positive covariance, and explains
+why rank3 rather than a single complex square can be natural.
+
+Derivatives provide a positive Cauchy-jet extension:
+
+ <t^k f_i,t^l f_j>
+   =2sqrt(x_i*x_j)(k+l)!/(x_i+x_j)^(k+l+1).
+
+These blocks retain nonzero cross terms and can be used for an analytic
+Hardy-space interpolation/completion problem. For the star auxiliary corner,
+functions U=ab,R=ad,S=cb,T=cd satisfy UT=RS pointwise, so their Gram obeys
+C_UT=C_RS, exactly the forced two-qubit partial-transpose invariance.
+Positive Cauchy-jet completion PLUS the twenty cost equations remains an
+unproved interpolation problem; positivity alone does not solve it.
+
+4. Independent audit of the n=4 source theorem
+
+The primary proof is moc_actual_inverse_pencil_rank_four_20261031.txt.
+I checked its normalization on singleton indicators: with tetrahedral L,
+adj S=(detK/4)11^T, so q_r=(detK/4)Sij. Dividing by(detK)^2 gives
+L_i cof(H)L_j^T/4, exactly the universal pencil generator. No factor4 is
+missing. The bordered determinant, adjugate transformation, singular-case
+closure, and complex-factor real-inertia argument all check directly.
+
+This audit uses no projective chart hypothesis beyond the invertible K
+calculation on a dense set. Polynomial equality extends to singular H.
+
+Pointers:
+ docs/research/moc_actual_inverse_pencil_rank_four_20261031.txt
+ docs/research/moc_star_lorentz_cauchy_20261031.txt
+ code/lean/MocStarSchurAlgebra.lean
+ code/lean/MocComplexDeterminantInertia.lean
