@@ -1,8 +1,9 @@
 import MOC.Weights
-import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Data.Complex.Order
+import Mathlib.LinearAlgebra.Matrix.Block
 
-/-! A permutation image of a single subset has a nonnegative signed mass.
-This suffices when one spectrum takes at most two values. -/
+/-! Squared minors are the exact subset-image marginals of the signed determinant law.
+A single subset-image law suffices when either spectrum takes at most two values. -/
 
 open BigOperators Matrix Finset
 open scoped ComplexOrder
@@ -35,30 +36,173 @@ private theorem matchingProduct_subset_marker (I J : Finset ι) (hc : I.card = J
     have hj : σ.symm i ∉ J := by rwa [Finset.mem_map_equiv] at hni
     simp [hi, hj]
 
-/-- The signed mass of the permutations taking (J) to (I) is real and nonnegative. -/
+private theorem sum_signedWeight_image_eq_marker_det (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (I J : Finset ι) (hc : I.card = J.card) :
+    (∑ σ ∈ univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I), signedWeight U σ) =
+      determinantValue (fun i => if i ∈ I then 0 else 1) (fun j => if j ∈ J then 1 else 0) U := by
+  classical
+  rw [← signed_determinant _ _ U hU, Finset.sum_filter]
+  apply Finset.sum_congr rfl
+  intro σ _
+  rw [matchingProduct_subset_marker I J hc σ]
+  split_ifs <;> simp
+
+/-- The signed mass on a subset image equals the squared modulus of the corresponding minor. -/
+theorem sum_signedWeight_image_eq_minor (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (I J : Finset ι) (e : I ≃ J) :
+    (∑ σ ∈ univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I), signedWeight U σ) =
+      (Complex.normSq (U.submatrix (fun i : I => (i : ι)) (fun i : I => ((e i : J) : ι))).det : ℂ) := by
+  classical
+  have hc : I.card = J.card := by simpa using Fintype.card_congr e
+  rw [sum_signedWeight_image_eq_marker_det U hU I J hc]
+  let p (i : ι) : ℂ := if i ∈ I then 0 else 1
+  let q (i : ι) : ℂ := if i ∈ J then 1 else 0
+  let X : Matrix ι ι ℂ := Matrix.of fun i j =>
+    if hj : j ∈ I then U i (e ⟨j, hj⟩) else (1 : Matrix ι ι ℂ) i j
+  let D := diagonal p
+  have hIdem : D * Dᴴ = D := by
+    unfold D
+    rw [Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal]
+    apply congrArg Matrix.diagonal
+    funext j
+    by_cases hj : j ∈ I <;> simp [p, hj]
+  have hsel (i k : ι) : (∑ j ∈ I, X i j * star (X k j)) =
+      ∑ j ∈ J, U i j * star (U k j) := by
+    rw [← Finset.sum_coe_sort I, ← Finset.sum_coe_sort J]
+    rw [← Equiv.sum_comp e (fun j : J => U i j * star (U k j))]
+    apply Finset.sum_congr rfl
+    intro j _
+    simp [X, j.property]
+  have hUU (i k : ι) : (U * diagonal q * Uᴴ) i k =
+      ∑ j ∈ J, U i j * star (U k j) := by
+    have hf : univ.filter (fun j => j ∈ J) = J := by ext j; simp
+    rw [Matrix.mul_apply, ← hf, Finset.sum_filter]
+    apply Finset.sum_congr rfl
+    intro j _
+    by_cases h : j ∈ J <;> simp [q, h, Matrix.mul_diagonal, Matrix.conjTranspose_apply]
+  have hGram : X * Xᴴ = D + U * diagonal q * Uᴴ := by
+    ext i k : 1
+    rw [Matrix.add_apply, hUU, ← hsel, ← hIdem, Matrix.mul_apply, Matrix.mul_apply]
+    simp only [Matrix.conjTranspose_apply]
+    have hf : univ.filter (fun j => j ∈ I) = I := by ext j; simp
+    rw [← hf, Finset.sum_filter, ← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro j _
+    by_cases hj : j ∈ I
+    · have hz (r : ι) : D r j = 0 := by
+        by_cases h : r = j <;> simp [D, p, Matrix.diagonal_apply, h, hj]
+      simp [hj, hz]
+    · have hid (r : ι) : X r j = D r j := by
+        by_cases h : r = j <;> simp [X, D, p, Matrix.diagonal_apply, Matrix.one_apply, h, hj]
+      simp [hj, hid]
+  let K := {j : ι // j ∉ I}
+  let f : I ⊕ K ≃ ι := Equiv.sumCompl (fun j => j ∈ I)
+  let N := U.submatrix (fun i : I => (i : ι)) (fun i : I => ((e i : J) : ι))
+  let Q := U.submatrix (fun i : K => (i : ι)) (fun i : I => ((e i : J) : ι))
+  have hBlock : X.submatrix f f = Matrix.fromBlocks N 0 Q 1 := by
+    ext (i | i) (j | j) : 1
+    · change X i j = N i j
+      simp [X, N, j.property, Matrix.submatrix_apply]
+    · change X i j = 0
+      have h : (i : ι) ≠ (j : ι) := fun hj => j.property (hj ▸ i.property)
+      simp [X, j.property, h, Matrix.one_apply]
+    · change X i j = Q i j
+      simp [X, Q, j.property, Matrix.submatrix_apply]
+    · change X i j = (1 : Matrix K K ℂ) i j
+      by_cases h : i = j
+      · subst j
+        simp [X, i.property]
+      · have h' : (i : ι) ≠ (j : ι) := fun h' => h (Subtype.ext h')
+        simp [X, j.property, Matrix.one_apply, h, h']
+  have hdet : X.det = N.det := by
+    rw [← Matrix.det_submatrix_equiv_self f X, hBlock, Matrix.det_fromBlocks_zero₁₂,
+      Matrix.det_one, mul_one]
+  change (D + U * diagonal q * Uᴴ).det = (Complex.normSq N.det : ℂ)
+  rw [← hGram, Matrix.det_mul, Matrix.det_conjTranspose, hdet]
+  exact Complex.mul_conj N.det
+
+/-- The signed mass of the permutations taking the second subset to the first is nonnegative. -/
 theorem sum_signedWeight_image_nonneg (U : Matrix ι ι ℂ) (hU : IsUnitary U)
     (I J : Finset ι) (hc : I.card = J.card) :
     0 ≤ ∑ σ ∈ univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I), signedWeight U σ := by
   classical
-  let p (i : ι) : ℂ := if i ∈ I then 0 else 1
-  let q (i : ι) : ℂ := if i ∈ J then 1 else 0
-  have hm : (∑ σ ∈ univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I),
-      signedWeight U σ) = determinantValue p q U := by
-    rw [← signed_determinant p q U hU, Finset.sum_filter]
-    apply Finset.sum_congr rfl
-    intro σ _
-    rw [matchingProduct_subset_marker I J hc σ]
-    split_ifs <;> simp
-  rw [hm]
-  have hp : (diagonal p).PosSemidef := Matrix.PosSemidef.diagonal (fun i => by
-    by_cases hi : i ∈ I <;> simp [p, hi])
-  have hq : (diagonal q).PosSemidef := Matrix.PosSemidef.diagonal (fun i => by
-    by_cases hi : i ∈ J <;> simp [q, hi])
-  have hM : (diagonal p + U * diagonal q * Uᴴ).PosSemidef :=
-    hp.add (hq.mul_mul_conjTranspose_same U)
-  unfold determinantValue
-  rw [hM.1.det_eq_prod_eigenvalues]
-  exact Finset.prod_nonneg (fun i _ => Complex.zero_le_real.mpr (hM.eigenvalues_nonneg i))
+  let e : I ≃ J := Fintype.equivOfCardEq (by simpa using hc)
+  rw [sum_signedWeight_image_eq_minor U hU I J e, Complex.zero_le_real]
+  exact Complex.normSq_nonneg _
+
+/-- The squared minor associated to two finite subsets, with value zero for unequal sizes. -/
+def subsetMinorSq (U : Matrix ι ι ℂ) (I J : Finset ι) : ℝ :=
+  if h : I.card = J.card then
+    let e : I ≃ J := Fintype.equivOfCardEq (by simpa using h)
+    Complex.normSq (U.submatrix (fun i : I => (i : ι)) (fun i : I => ((e i : J) : ι))).det
+  else 0
+
+theorem sum_signedWeight_image_eq_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (I J : Finset ι) :
+    (∑ σ ∈ univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I), signedWeight U σ) =
+      (subsetMinorSq U I J : ℂ) := by
+  classical
+  by_cases hc : I.card = J.card
+  · simp only [subsetMinorSq, dif_pos hc]
+    exact sum_signedWeight_image_eq_minor U hU I J (Fintype.equivOfCardEq (by simpa using hc))
+  · have he : (univ : Finset (Equiv.Perm ι)).filter
+        (fun σ => J.map σ.toEmbedding = I) = ∅ := by
+      apply Finset.filter_eq_empty_iff.mpr
+      intro σ _ hσ
+      exact hc (by rw [← hσ, Finset.card_map])
+    simp [he, subsetMinorSq, hc]
+
+omit [Fintype ι] in
+theorem subsetMinorSq_nonneg (U : Matrix ι ι ℂ) (I J : Finset ι) :
+    0 ≤ subsetMinorSq U I J := by
+  unfold subsetMinorSq
+  split_ifs
+  · exact Complex.normSq_nonneg _
+  · exact le_rfl
+
+/-- Squared minors over all possible images of a fixed subset have total mass one. -/
+theorem sum_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsUnitary U) (J : Finset ι) :
+    ∑ I : Finset ι, subsetMinorSq U I J = 1 := by
+  apply Complex.ofReal_injective
+  rw [Complex.ofReal_sum, Complex.ofReal_one]
+  simp_rw [← sum_signedWeight_image_eq_subsetMinorSq U hU]
+  rw [Finset.sum_fiberwise, sum_signedWeight U (det_ne_zero_of_unitary hU)]
+
+private theorem matchingProduct_expand_subsets (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+    matchingProduct a b σ =
+      ∑ J : Finset ι, (∏ i ∈ (J.map σ.toEmbedding)ᶜ, a i) * ∏ j ∈ J, b j := by
+  calc
+    matchingProduct a b σ = ∏ j, (b j + a (σ j)) := by simp [matchingProduct, add_comm]
+    _ = ∑ J : Finset ι, (∏ j ∈ J, b j) * ∏ j ∈ Jᶜ, a (σ j) := Fintype.prod_add _ _
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro J _
+      have hprod : (∏ j ∈ Jᶜ, a (σ j)) = ∏ i ∈ (Jᶜ).map σ.toEmbedding, a i := by
+        simpa only [Equiv.toEmbedding_apply] using (Finset.prod_map Jᶜ σ.toEmbedding a).symm
+      rw [mul_comm, hprod]
+      have he : (Jᶜ).map σ.toEmbedding = (J.map σ.toEmbedding)ᶜ := by
+        ext i
+        simp [Finset.mem_map_equiv]
+      rw [he]
+
+/-- Exact squared-minor expansion of the determinant for arbitrary complex spectra. -/
+theorem determinantValue_eq_sum_subsetMinors (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) :
+    determinantValue a b U = ∑ J : Finset ι, ∑ I : Finset ι, (subsetMinorSq U I J : ℂ) *
+      ((∏ i ∈ Iᶜ, a i) * ∏ j ∈ J, b j) := by
+  classical
+  rw [← signed_determinant a b U hU]
+  simp_rw [matchingProduct_expand_subsets, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro J _
+  rw [← Finset.sum_fiberwise univ (fun σ : Equiv.Perm ι => J.map σ.toEmbedding)]
+  apply Finset.sum_congr rfl
+  intro I _
+  rw [← sum_signedWeight_image_eq_subsetMinorSq U hU I J, Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro σ hσ
+  rw [(Finset.mem_filter.mp hσ).2]
 
 /-- A two-valued second spectrum needs only the image of one subset under the permutation. -/
 theorem holds_two_values (a : ι → ℂ) (J : Finset ι) (c d : ℂ)
