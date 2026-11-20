@@ -2,19 +2,9 @@
 
 | Path | Contents |
 | --- | --- |
-| [certificates/](certificates/) | Exact witnesses and structural input tables retained with their checks |
-| [figures/](figures/) | Retained research illustrations, separate from generated plot batches |
-| [layout.json](layout.json) | Original-to-current file map used by `code/run.py` |
+| [cone82.json](cone82.json) | Integral boundary certificate read by the [facet verifier](../Code/verify_cone82.py) |
+| [certificates/](certificates/) | Exact witnesses and structural input tables |
+| [figures/](figures/) | Research illustrations |
+| [layout.json](layout.json) | Source map for the larger historical collection, including aliases and original SHA-256 values |
 
-The layout map records original paths and provenance, current file locations,
-runnable entrypoints, and ordered source prerequisites. Multiple historical
-paths can refer to one retained file. Provenance hashes describe original
-content, not later prose edits.
-
-Keep expensive-to-discover inputs here when a checker needs them. Put generated
-reports, numerical search output, and temporary solver files in `build/`.
-Historical mixed build records are preserved in the
-[archive](../archive/README.md).
-
-See [exact input conventions](../docs/certificates.md) and the
-[execution guide](../docs/reproduction.md).
+The map includes historical destinations for programs absent from this checkout. Documentation paths refer to the copies under [Docs/](../Docs/). See the [execution guide](../Docs/reproduction.md) for commands that apply to this checkout.

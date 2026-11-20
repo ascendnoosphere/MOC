@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newcommand{\C}{\mathbb C}
+\DeclareMathOperator{\diag}{diag}
+\title{Which fixed conics suffice to test the order-four\\ Marcus--de Oliveira conjecture?}
+\date{}
+\author{}
+\begin{document}
+\maketitle
+For a fixed relative unitary $W$, the difference form of the conjecture asks whether
+\[
+ \det(D_a-WD_cW^*)\ \in\
+ \operatorname{conv}_{\mathbb R}\left\{\prod_i(a_i-c_{\pi(i)}):\pi\in S_n\right\},
+ \qquad D_a=\diag(a_1,\ldots,a_n).
+\]
+Here $c=-b$ for the usual sum convention.
+We show that testing only first spectra on the ellipse of semiaxes
+$2+\sqrt3$ and $1$ already tests every order-four pair. We also give
+a reduction to any one fixed nondegenerate parabola or hyperbola in
+orders four and five. These statements concern sufficiency of the test
+families. Positivity on the test families remains to be proved.
+
+\section*{Projective transport}
+If $f(z)=(Az+B)/(Cz+D)$ has no spectral pole, functional calculus gives
+\[
+ (CX+DI)(f(X)-f(Y))(CY+DI)=(AD-BC)(X-Y).
+\]
+Thus the determinant and all comparison products acquire the same nonzero
+complex factor. The relative eigenbasis stays fixed. Given four distinct
+points, any other ordered quadruple of the same cross-ratio is obtained
+by a fractional linear map: mapping the first three points specifies the
+map uniquely and the cross-ratio recovers the fourth. A required map can
+have a pole at a partner eigenvalue. Approximate the partner by lists
+avoiding the pole, apply the result in the original chart and pass to
+the limit. Convex membership is closed by compactness of the simplex
+of permutation weights.
+
+\section*{The ellipse threshold}
+For $r\ge1$ let $E_r=\{r\cos t+i\sin t:t\in\mathbb R\}$.
+For distinct ordered points put
+\[
+ \lambda=\frac{(z_1-z_3)(z_2-z_4)}{(z_1-z_4)(z_2-z_3)}.
+\]
+Let $\Theta$ be the maximum absolute principal argument of the values of
+$\lambda$ under relabeling, using $\pi$ for a negative real value.
+\begin{theorem}
+A quadruple is projectively equivalent, up to ordering, to four points of
+$E_r$ precisely when $\Theta\ge4\arctan(1/r)$. Every quadruple is so
+represented exactly when $r\ge 2+\sqrt3$.
+\end{theorem}
+\begin{proof}
+First construct the points. Write $T(x+iy)=rx+iy$ and $e_s=e^{is}$.
+Take $u=T(e_{s+d}), v=T(e_{s-d})$ with $0<d<\pi/2$. The
+cross-ratio of $(u,-u,v,-v)$ is the square of
+\[
+ \frac{u-v}{u+v}=\tan d\,\frac{T(e_{s+\pi/2})}{T(e_s)} .
+\]
+The oriented angle $\theta$ of the latter quotient has
+$\cot\theta=-(r^2-1)\sin(2s)/(2r)$ by the dot product and the
+positive area $r$ of the two vectors. Its range is
+$[2\arctan(1/r),\pi-2\arctan(1/r)]$. A cross-ratio with absolute
+argument at least $4\arctan(1/r)$ has a square root with absolute
+argument in $[2\arctan(1/r),\pi/2]$. Choose $s$ to give this
+angle and $d$ to give the modulus. Conjugating the four points gives
+the negative angle if needed.
+
+For necessity the circle $r=1$ has only real cross-ratios, all of
+which admit a negative ordering. For $r>1$, set $q=(r-1)/(r+1)$.
+Up to a uniform scale every ellipse point has the form
+$z_j=w_j+q/w_j$, $|w_j|=1$. Reorder so that the cross-ratio
+$\lambda(w)$ on the circle is negative. Let $p=\prod_jw_j$,
+choose either square root of $p$, and put $Z=\sqrt p/q+q/\sqrt p$.
+Factoring $z_i-z_j=(w_i-w_j)(1-q/(w_iw_j))$ gives
+\[
+ \frac{\lambda(z)}{\lambda(w)}=\frac{Z-s}{Z-t},\qquad
+ s=\frac{w_1w_3+w_2w_4}{\sqrt p},\quad
+ t=\frac{w_1w_4+w_2w_3}{\sqrt p}.
+\]
+The paired summands are conjugates, so $s,t\in[-2,2]$.
+The point $Z$ runs on the confocal ellipse with foci $\pm2$ and
+semiaxes $A=q^{-1}+q$, $B=q^{-1}-q$. The angle subtended by
+$[s,t]$ is bounded by that of $[-2,2]$. If the focal distances are
+$h,k$, then $h+k=2A$ and the cosine of this last angle is
+$2B^2/(hk)-1$. The angle is maximal at $h=k$, giving
+$2\arctan(2/B)=4\arctan q$. Hence $|\arg\lambda(z)|\ge
+\pi-4\arctan q=4\arctan(1/r)$ for the chosen ordering.
+
+For nonreal $\lambda$, the arguments in absolute value of $\lambda$,
+$1-\lambda$, and $(\lambda-1)/\lambda$ are the three interior angles of
+the triangle $0,1,\lambda$. All three belong to its relabeling orbit.
+The largest is at least $\pi/3$. The equilateral shape
+$\lambda=e^{i\pi/3}$ has only $e^{\pm i\pi/3}$ in its orbit.
+Real shapes have $\Theta=\pi$. Since $\cot(\pi/12)=2+\sqrt3$,
+these facts give the asserted sharp threshold.
+\end{proof}
+
+If MOC holds on one ellipse at or above this threshold with arbitrary
+partner and fixed $W$, transport proves MOC for that $W$ in order four.
+Repeated points follow by closure. The threshold is sharp for
+representation of quadruples. It gives no obstruction to MOC on a
+thinner ellipse.
+
+\section*{Open conics in orders four and five}
+\begin{theorem}
+In either order, testing every distinct first spectrum on one fixed
+real nondegenerate parabola, or on one fixed real nondegenerate
+hyperbola, suffices for MOC with a fixed $W$ and arbitrary partner.
+\end{theorem}
+\begin{proof}
+For a generic five-point set choose three points on a circle whose
+open disk omits the other two. Indeed a lower triangular face of the
+convex hull of the lifts $(x,y,x^2+y^2)$ gives such a circle by
+completing the square in its supporting-plane inequality. Generic
+points have no collinear triple and no four concyclic. For four
+points add a fifth generic auxiliary point and discard it after the
+construction. A fractional linear map takes the chosen circle to the
+real line and its exterior to the upper half-plane, with the three
+marked boundary points finite. Write $u,v$ for the two upper points.
+
+Apply a real fractional linear map $h_t(z)=-1/(z-t)$ with $t$ real.
+The boundary triple remains real. The direction of the line through
+$h_t(u),h_t(v)$ is that of $(u-v)/[(u-t)(v-t)]$. As $t$ increases
+from $-\infty$ to $\infty$, each denominator factor has argument
+increasing from $0$ to $\pi$. The resulting line direction traverses
+all angles modulo $\pi$. Choose it parallel to the real line for a
+parabola, or at the angle between the two asymptotes for a hyperbola.
+If a boundary point equals the selected pole, perturb that boundary
+point on the real line, keeping $u,v,t$ fixed. Other poles in the
+partner are handled by the same approximation. Thus it suffices to
+treat five points distributed on two lines with the prescribed angle.
+
+For a hyperbola move the lines by a similarity to its two asymptotes.
+In real linear coordinates $(x,y)$ along the asymptotes the fixed
+hyperbola has equation $xy=k\ne0$. Its uniform dilates $xy=\epsilon^2k$
+approximate any finite configurations on the union of the axes:
+for example $(x,\epsilon^2 k/x)\to(x,0)$ at $x\ne0$, with the
+other axis handled by exchanging coordinates. A point at the origin
+is also a limit, for example $(\epsilon,\epsilon k)$. Use the same
+dilation for all five points. Pull each approximating pair back to the
+fixed hyperbola by the inverse similarity before using the hypothesis.
+
+For a parabola all nondegenerate real parabolas are similar to
+$p(t)=t+it^2$. The upper line has positive height, so a similarity
+takes the two parallel lines to $\Re z=\pm1$. For a target
+$\eta+iy$, $\eta=\pm1$, choose $s=y/(2\eta)$. Then
+\[
+ [p(\eta T+s)-iT^2]/T=\eta+iy+(s+i s^2)/T.
+\]
+These points approach the entire specified configuration using a
+common similarity. In both cases take the limit at a fixed normalized
+partner, undo the chart, and use closedness to include all degenerate
+input lists.
+\end{proof}
+
+In case F of the question the literal exclusion of the spin image does
+not restrict the conjugated second matrix: multiplication of $W$ by
+a unit scalar can take its determinant away from one. If the exclusion
+instead concerns the entire rephasing and permutation orbit of the spin
+image, that orbit already has the separate spin certificate in the
+research report (Section 8). The general inclusion on these conics
+remains unresolved.
+\end{document}

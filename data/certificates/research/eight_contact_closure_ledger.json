@@ -24,7 +24,7 @@
       "orbit_size": 12,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_cap_orbit0_closure.txt",
+      "proof": "Docs/research/eight_cap_orbit0_closure.txt",
       "verifier": "code/research/verify_eight_cap_orbit0.py"
     },
     {
@@ -49,7 +49,7 @@
       "orbit_size": 12,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight0710_full_closure.txt",
+      "proof": "Docs/research/eight0710_full_closure.txt",
       "verifier": "code/research/verify_eight_contact_full_0710.py",
       "verification": "full degree-14 unisolvent grid, 38760 exact nodes; equal and d=0 boundary verifiers replayed",
       "lean_core": "code/lean/Moc0710Core.lean",
@@ -82,7 +82,7 @@
         ]
       ],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_orbit2_closure.txt",
+      "proof": "Docs/research/eight_contact_orbit2_closure.txt",
       "verifier": "code/research/verify_eight_contact_orbit2.py"
     },
     {
@@ -112,7 +112,7 @@
         ]
       ],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_orbit4_closure.txt",
+      "proof": "Docs/research/eight_contact_orbit4_closure.txt",
       "verifier": "code/research/verify_eight_contact_orbit4.py"
     },
     {
@@ -137,7 +137,7 @@
       "orbit_size": 24,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_orbit5_closure.txt",
+      "proof": "Docs/research/eight_contact_orbit5_closure.txt",
       "verifier": "code/research/verify_eight_contact_orbit5.py"
     },
     {
@@ -162,7 +162,7 @@
       "orbit_size": 24,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_batch_12_16_closure.txt",
+      "proof": "Docs/research/eight_contact_batch_12_16_closure.txt",
       "verifier": "code/research/verify_eight_contact_batch_12_16.py",
       "negative_height_dependency": "verified external-half-plane theorem"
     },
@@ -188,7 +188,7 @@
       "orbit_size": 24,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_batch_12_16_closure.txt",
+      "proof": "Docs/research/eight_contact_batch_12_16_closure.txt",
       "verifier": "code/research/verify_eight_contact_batch_12_16.py",
       "negative_height_dependency": "verified external-half-plane theorem"
     },
@@ -214,7 +214,7 @@
       "orbit_size": 24,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_batch_12_16_closure.txt",
+      "proof": "Docs/research/eight_contact_batch_12_16_closure.txt",
       "verifier": "code/research/verify_eight_contact_batch_12_16.py",
       "negative_height_dependency": "verified external-half-plane theorem"
     },
@@ -240,7 +240,7 @@
       "orbit_size": 12,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_batch_12_16_closure.txt",
+      "proof": "Docs/research/eight_contact_batch_12_16_closure.txt",
       "verifier": "code/research/verify_eight_contact_batch_12_16.py",
       "negative_height_dependency": null
     },
@@ -266,7 +266,7 @@
       "orbit_size": 12,
       "pairs": [],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_batch_12_16_closure.txt",
+      "proof": "Docs/research/eight_contact_batch_12_16_closure.txt",
       "verifier": "code/research/verify_eight_contact_batch_12_16.py",
       "negative_height_dependency": null
     },
@@ -297,7 +297,7 @@
         ]
       ],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_orbit19_closure.txt",
+      "proof": "Docs/research/eight_contact_orbit19_closure.txt",
       "verifier": "code/research/verify_eight_contact_orbit19.py"
     },
     {
@@ -335,7 +335,7 @@
         ]
       ],
       "status": "closed_by_inheritance",
-      "proof": "docs/research/six_symmetric_general_closure.txt",
+      "proof": "Docs/research/six_symmetric_general_closure.txt",
       "verifier": "code/research/verify_six_symmetric_general.py"
     },
     {
@@ -365,7 +365,7 @@
         ]
       ],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/eight_contact_orbit22_closure.txt",
+      "proof": "Docs/research/eight_contact_orbit22_closure.txt",
       "verifier": "code/research/verify_eight_contact_orbit22.py"
     },
     {
@@ -403,9 +403,9 @@
         ]
       ],
       "status": "closed_full_nonnegative_coefficients",
-      "proof": "docs/research/moc_moonshot_ag_orbit51_closure_20261031.txt",
+      "proof": "Docs/research/moc_moonshot_ag_orbit51_closure_20261031.txt",
       "verifier": "code/research/moc_moonshot_ag_orbit51_verify.py",
-      "independent_audit": "docs/research/moc_moonshot_independent_audit_20261031.txt",
+      "independent_audit": "Docs/research/moc_moonshot_independent_audit_20261031.txt",
       "verification": "full exact six-variable Hessian determinant; independent alternate elimination and characteristic-polynomial inertia; connected secant branch and all boundaries audited"
     }
   ],

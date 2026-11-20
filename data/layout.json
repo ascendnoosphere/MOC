@@ -4,21 +4,21 @@
   "files": [
     {
       "original": "MOC_number_systems/README.md",
-      "path": "docs/number_systems/README.md",
+      "path": "Docs/number_systems/README.md",
       "entrypoint": false,
       "source_sha256": "b46e9c6fa5aef467224b0620cd3ca54ad99492d9f7bcf551a418ebf322b917aa",
       "curated": true
     },
     {
       "original": "MOC_independent_routes/README.md",
-      "path": "docs/independent/README.md",
+      "path": "Docs/independent/README.md",
       "entrypoint": false,
       "source_sha256": "1332f43a52232aa6c1ad5ae8b727739a1be68415844283aa893e470dc13a3224",
       "curated": true
     },
     {
       "original": "MOC_structural_results/README.md",
-      "path": "docs/structural/README.md",
+      "path": "Docs/structural/README.md",
       "entrypoint": false,
       "source_sha256": "7223a9ea6905ffd30983e3aae8f9dcc30059743c6f0cac4c7bd2dbce65813fc7",
       "curated": true
@@ -39,14 +39,14 @@
     },
     {
       "original": "organized/research/MOBIUS_REDUCTION.md",
-      "path": "docs/research/MOBIUS_REDUCTION.md",
+      "path": "Docs/research/MOBIUS_REDUCTION.md",
       "entrypoint": false,
       "source_sha256": "d3501824cb34c84a17400af886f19fa61b6b6b7b3abdef1e409bdb2f809e1773",
       "curated": true
     },
     {
       "original": "organized/research/RANK_FOUR_BUDGET.md",
-      "path": "docs/research/RANK_FOUR_BUDGET.md",
+      "path": "Docs/research/RANK_FOUR_BUDGET.md",
       "entrypoint": false,
       "source_sha256": "4a1fc97e019bea3f7cc0fcfeadde14d8296594048578f13880d076a6003ad33f",
       "curated": true
@@ -60,14 +60,14 @@
     },
     {
       "original": "MOC_broader_results/literature_audit.md",
-      "path": "docs/broader/literature_audit.md",
+      "path": "Docs/broader/literature_audit.md",
       "entrypoint": false,
       "source_sha256": "4172d42f462156e2854a50f7a4c7102f3f5e2e0becd6fc1b2159030c96f18c41",
       "curated": true
     },
     {
       "original": "MOC_independent_routes/referee_notes.md",
-      "path": "docs/independent/referee_notes.md",
+      "path": "Docs/independent/referee_notes.md",
       "entrypoint": false,
       "source_sha256": "a88c043e3c7349862324d256cfe1392faafdb5445ed72310cb213594c88e40a7",
       "curated": true
@@ -88,56 +88,56 @@
     },
     {
       "original": "MOC_independent_routes/rank_two_notes.md",
-      "path": "docs/independent/rank_two_notes.md",
+      "path": "Docs/independent/rank_two_notes.md",
       "entrypoint": false,
       "source_sha256": "8ae821b673f6a37d624a74fc0843415a5b3e3cb924bb6adfb8129961157f61c0",
       "curated": true
     },
     {
       "original": "organized/research/HANKEL_RANK_BRIDGE.md",
-      "path": "docs/research/HANKEL_RANK_BRIDGE.md",
+      "path": "Docs/research/HANKEL_RANK_BRIDGE.md",
       "entrypoint": false,
       "source_sha256": "1666db0d1f81e2a64c7ce28f00b28b8378368f23dff3a7587cf899e1859162bb",
       "curated": true
     },
     {
       "original": "organized/research/HMSV_COMPATIBILITY.md",
-      "path": "docs/research/HMSV_COMPATIBILITY.md",
+      "path": "Docs/research/HMSV_COMPATIBILITY.md",
       "entrypoint": false,
       "source_sha256": "4351fe6c50b81902d93416bb375961a474f7add9dca34182f692586a20e38cad",
       "curated": true
     },
     {
       "original": "organized/research/M8_PRODUCT_LINKAGE.md",
-      "path": "docs/research/M8_PRODUCT_LINKAGE.md",
+      "path": "Docs/research/M8_PRODUCT_LINKAGE.md",
       "entrypoint": false,
       "source_sha256": "ee0f56178864d063eaf6ac09c3dbd1c0092fad2f522c84af401b723aa834b253",
       "curated": true
     },
     {
       "original": "MOC_broader_results/independent_review.md",
-      "path": "docs/broader/independent_review.md",
+      "path": "Docs/broader/independent_review.md",
       "entrypoint": false,
       "source_sha256": "0f34c6e872bb1c741753317270b5ae6f18d45f65efdc90bb93a51ed72ec72393",
       "curated": true
     },
     {
       "original": "organized/research/ODD_PROFILE_LINKAGE.md",
-      "path": "docs/research/ODD_PROFILE_LINKAGE.md",
+      "path": "Docs/research/ODD_PROFILE_LINKAGE.md",
       "entrypoint": false,
       "source_sha256": "b56b4ddd117cabcd7f3348ee23e3e216d8068b2b816364ab34c1a915932ee33f",
       "curated": true
     },
     {
       "original": "organized/research/REAL_COFACTOR_BOUND.md",
-      "path": "docs/research/REAL_COFACTOR_BOUND.md",
+      "path": "Docs/research/REAL_COFACTOR_BOUND.md",
       "entrypoint": false,
       "source_sha256": "6888f2794b283c52b83d1fb54c2f0aa43261fd777cd7ae67cef5da731f58f30d",
       "curated": true
     },
     {
       "original": "organized/research/COMMUTING_TUBE_BOUND.md",
-      "path": "docs/research/COMMUTING_TUBE_BOUND.md",
+      "path": "Docs/research/COMMUTING_TUBE_BOUND.md",
       "entrypoint": false,
       "source_sha256": "83b1518b34869d635bd6cbe055d2c9582ee1faba19b1e04a7eae640c8726acdc",
       "curated": true
@@ -151,21 +151,21 @@
     },
     {
       "original": "organized/research/COFACTOR_PLANE_BOUNDS.md",
-      "path": "docs/research/COFACTOR_PLANE_BOUNDS.md",
+      "path": "Docs/research/COFACTOR_PLANE_BOUNDS.md",
       "entrypoint": false,
       "source_sha256": "7436f325a413dd6d1a98261f20bb053659bf8ecb05760a250ac3b24e9bc71eca",
       "curated": true
     },
     {
       "original": "organized/research/LOW_RANK_DUAL_TARGETS.md",
-      "path": "docs/research/LOW_RANK_DUAL_TARGETS.md",
+      "path": "Docs/research/LOW_RANK_DUAL_TARGETS.md",
       "entrypoint": false,
       "source_sha256": "db9980782f43adcf75936ed97736b41f738b9bf6a7e15181876cfcdd7e798290",
       "curated": true
     },
     {
       "original": "organized/research/commuting_tube_review.md",
-      "path": "docs/research/commuting_tube_review.md",
+      "path": "Docs/research/commuting_tube_review.md",
       "entrypoint": false,
       "source_sha256": "82090b79ec7263dafdebbe5c5326dd3faa6b8d3de6985a35301d7af77fe57680",
       "curated": true
@@ -186,21 +186,21 @@
     },
     {
       "original": "MOC4_Verified_Results/closing_moc4_notes.txt",
-      "path": "docs/geometry/closing_moc4_notes.txt",
+      "path": "Docs/geometry/closing_moc4_notes.txt",
       "entrypoint": false,
       "source_sha256": "54d7c3282e987c21832f9aae2aa64f99a7dcd889614821bf584556fed4cdb8fe",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/plucker_moc4_notes.txt",
-      "path": "docs/geometry/plucker_moc4_notes.txt",
+      "path": "Docs/geometry/plucker_moc4_notes.txt",
       "entrypoint": false,
       "source_sha256": "af1998bba187250b646c43693a1138374c944868a85572bd15a3245c3bbf44df",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/terminal_ten_notes.txt",
-      "path": "docs/geometry/terminal_ten_notes.txt",
+      "path": "Docs/geometry/terminal_ten_notes.txt",
       "entrypoint": false,
       "source_sha256": "8537668d16729dbf5acd050a388404d823e40fa1277d52cd0a007f8e41d22e08",
       "curated": false
@@ -228,42 +228,42 @@
     },
     {
       "original": "organized/research/JOINT_CERTIFICATE_RANK.md",
-      "path": "docs/research/JOINT_CERTIFICATE_RANK.md",
+      "path": "Docs/research/JOINT_CERTIFICATE_RANK.md",
       "entrypoint": false,
       "source_sha256": "58ebcd0d8482568777cd16283173d60d0f9fc07fc9bc247ba51d16a3495ad892",
       "curated": true
     },
     {
       "original": "organized/research/RANK_ONE_TRACE_LINKAGE.md",
-      "path": "docs/research/RANK_ONE_TRACE_LINKAGE.md",
+      "path": "Docs/research/RANK_ONE_TRACE_LINKAGE.md",
       "entrypoint": false,
       "source_sha256": "783cd9dbf405743296476d68b622b27054020a1c7ba525ee5c93a8d909c13a4c",
       "curated": true
     },
     {
       "original": "organized/research/REFLECTION_AVERAGE_SOS.md",
-      "path": "docs/research/REFLECTION_AVERAGE_SOS.md",
+      "path": "Docs/research/REFLECTION_AVERAGE_SOS.md",
       "entrypoint": false,
       "source_sha256": "e5dd6777b86d0a8ffeb56b89f7a653d6a44f32732bd0deade4b7b9c96b04f16b",
       "curated": true
     },
     {
       "original": "organized/research/flat_resonance_closure.md",
-      "path": "docs/research/flat_resonance_closure.md",
+      "path": "Docs/research/flat_resonance_closure.md",
       "entrypoint": false,
       "source_sha256": "a280c6891e6af9f2c4413e52f87e42764303b08698a8cc5e2cd34a648edcf1d7",
       "curated": true
     },
     {
       "original": "organized/research/plane_family_extension.md",
-      "path": "docs/research/plane_family_extension.md",
+      "path": "Docs/research/plane_family_extension.md",
       "entrypoint": false,
       "source_sha256": "30a3a0386e42f6a920bc807b21694f592790ca9ff02033389a3f3c5e89556663",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/terminal_nine_notes.txt",
-      "path": "docs/geometry/terminal_nine_notes.txt",
+      "path": "Docs/geometry/terminal_nine_notes.txt",
       "entrypoint": false,
       "source_sha256": "b73a32c35b260e1865c529676d4c8c0db4830dcd2726a09d41ee6f378cd59e69",
       "curated": false
@@ -277,42 +277,42 @@
     },
     {
       "original": "organized/research/ACTUAL_FIBER_ALLOCATION.md",
-      "path": "docs/research/ACTUAL_FIBER_ALLOCATION.md",
+      "path": "Docs/research/ACTUAL_FIBER_ALLOCATION.md",
       "entrypoint": false,
       "source_sha256": "cb928773ac0c8d4e542cb4fd89fe0a0a4f83d31d2a25d9f37d23f889b800f47a",
       "curated": true
     },
     {
       "original": "organized/research/DIAGONAL_COFACTOR_BOUND.md",
-      "path": "docs/research/DIAGONAL_COFACTOR_BOUND.md",
+      "path": "Docs/research/DIAGONAL_COFACTOR_BOUND.md",
       "entrypoint": false,
       "source_sha256": "99f6a4e92f055d0e9af25730e7b425e90986f1905c6ef95b55ddcf1fafd65e3a",
       "curated": true
     },
     {
       "original": "organized/research/REAL_LIFT_MOMENT_STRATA.md",
-      "path": "docs/research/REAL_LIFT_MOMENT_STRATA.md",
+      "path": "Docs/research/REAL_LIFT_MOMENT_STRATA.md",
       "entrypoint": false,
       "source_sha256": "c1955155a3793d8d39db721c6173bcc36c22606c27e7947bfda20289d03f7991",
       "curated": true
     },
     {
       "original": "organized/research/rank_four_budget_oracle.md",
-      "path": "docs/research/rank_four_budget_oracle.md",
+      "path": "Docs/research/rank_four_budget_oracle.md",
       "entrypoint": false,
       "source_sha256": "2d34f713234d7be9f8ac92552122c05998f9063c72a4babcdd49830b75d59b1c",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results.md",
-      "path": "docs/geometry/MOC4_Verified_Results.md",
+      "path": "Docs/geometry/MOC4_Verified_Results.md",
       "entrypoint": false,
       "source_sha256": "700fbbcfc79623e0ff6c4e410c672f3ce53721168d3a042a4276a5fb1b430b35",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/global_six_row_notes.txt",
-      "path": "docs/geometry/global_six_row_notes.txt",
+      "path": "Docs/geometry/global_six_row_notes.txt",
       "entrypoint": false,
       "source_sha256": "c37065e44e29a042d278b8888e7a6e0ca3badfd50a9c92f1d126431bf6a65f20",
       "curated": false
@@ -347,14 +347,14 @@
     },
     {
       "original": "MOC_Research_Bundle/proof_notes/moc4_notes.txt",
-      "path": "docs/early/proof_notes/moc4_notes.txt",
+      "path": "Docs/early/proof_notes/moc4_notes.txt",
       "entrypoint": false,
       "source_sha256": "103dbd29203527b81bf5f35dc16f4d1b348c118619e8d9f411d96855e6467cd0",
       "curated": true
     },
     {
       "original": "organized/research/global_sos_first_attempt.md",
-      "path": "docs/research/global_sos_first_lemmas.md",
+      "path": "Docs/research/global_sos_first_lemmas.md",
       "entrypoint": false,
       "source_sha256": "a3284a696dfe585d760e183661c813c85f7b9d19f6027cd99f6aa50cbe51db83",
       "curated": true
@@ -368,7 +368,7 @@
     },
     {
       "original": "MOC4_Verified_Results/contact_complex_audit.txt",
-      "path": "docs/geometry/contact_complex_audit.txt",
+      "path": "Docs/geometry/contact_complex_audit.txt",
       "entrypoint": false,
       "source_sha256": "f1fe358616b51d184d0f95be5e6d3b1f86392a462eea904c10e3d8bb0d7956ae",
       "curated": true
@@ -389,7 +389,7 @@
     },
     {
       "original": "MOC_number_systems/adeles/finite_adele_range.md",
-      "path": "docs/number_systems/adeles/finite_adele_range.md",
+      "path": "Docs/number_systems/adeles/finite_adele_range.md",
       "entrypoint": false,
       "source_sha256": "1c2ccbadab448e83e14ad4be469d40f6389aef2f7f0cd5772f33d755bdd9aeea",
       "curated": true
@@ -403,28 +403,28 @@
     },
     {
       "original": "organized/research/CORANK_TWO_LIFT_EXACTNESS.md",
-      "path": "docs/research/CORANK_TWO_LIFT_EXACTNESS.md",
+      "path": "Docs/research/CORANK_TWO_LIFT_EXACTNESS.md",
       "entrypoint": false,
       "source_sha256": "7575ccb1adbf4f01d10afe9fff249565acb7806bb71f51014a3f4242fc2bc06d",
       "curated": true
     },
     {
       "original": "organized/research/PARITY_REDUCED_COMPLETION.md",
-      "path": "docs/research/PARITY_REDUCED_COMPLETION.md",
+      "path": "Docs/research/PARITY_REDUCED_COMPLETION.md",
       "entrypoint": false,
       "source_sha256": "9220775b44b12c688d2e567c3636614ecc25ade8024b4440324d5109e90c6762",
       "curated": true
     },
     {
       "original": "organized/research/SINKHORN_GLOBAL_REDUCTION.md",
-      "path": "docs/research/SINKHORN_GLOBAL_REDUCTION.md",
+      "path": "Docs/research/SINKHORN_GLOBAL_REDUCTION.md",
       "entrypoint": false,
       "source_sha256": "14ace1d35df2838de3d2e4e2adacf997e6671688e5f6c445397ef32447818861",
       "curated": true
     },
     {
       "original": "organized/research/hankel_rank_bridge_oracle.md",
-      "path": "docs/research/hankel_rank_bridge_oracle.md",
+      "path": "Docs/research/hankel_rank_bridge_oracle.md",
       "entrypoint": false,
       "source_sha256": "c85d9b61a1e3510852b7181c06d4bd5f6ba32cabf633418cc9074f333cf020cc",
       "curated": true
@@ -445,7 +445,7 @@
     },
     {
       "original": "MOC4_Verified_Results/profile_geometry_audit.txt",
-      "path": "docs/geometry/profile_geometry_audit.txt",
+      "path": "Docs/geometry/profile_geometry_audit.txt",
       "entrypoint": false,
       "source_sha256": "55ff02a48d1f210859fff64b99fd9a1db7ca5063a2e9bf96d4d5dedc914777e0",
       "curated": true
@@ -487,28 +487,28 @@
     },
     {
       "original": "MOC_broader_results/proofs/zero_paired_sum_n4.md",
-      "path": "docs/broader/proofs/zero_paired_sum_n4.md",
+      "path": "Docs/broader/proofs/zero_paired_sum_n4.md",
       "entrypoint": false,
       "source_sha256": "7feb8631aaf74cb5dd336d7a9a954e45bbebe15c11db9e785998a29c1227ffc0",
       "curated": false
     },
     {
       "original": "organized/research/OPTIMIZED_RANK_FOUR_BUDGET.md",
-      "path": "docs/research/OPTIMIZED_RANK_FOUR_BUDGET.md",
+      "path": "Docs/research/OPTIMIZED_RANK_FOUR_BUDGET.md",
       "entrypoint": false,
       "source_sha256": "4060c15ac8f2027d810f16fd15d50f8eb8c41e2468edb2684dafd60f7160d13d",
       "curated": true
     },
     {
       "original": "organized/research/hmsv_original_source_audit.md",
-      "path": "docs/research/hmsv_original_source_audit.md",
+      "path": "Docs/research/hmsv_original_source_audit.md",
       "entrypoint": false,
       "source_sha256": "c1be807969a4721e8fcd4a92e8621f82f2537ebd2266c6b86fd11e283e2f5385",
       "curated": true
     },
     {
       "original": "organized/research/mobius_universal_b_attempt.md",
-      "path": "docs/research/mobius_universal_b_lemmas.md",
+      "path": "Docs/research/mobius_universal_b_lemmas.md",
       "entrypoint": false,
       "source_sha256": "de50785247ed5952e1d74cde3f77208c16f5b513f292ae13e34014d7a605a45e",
       "curated": true
@@ -529,7 +529,7 @@
     },
     {
       "original": "MOC4_Verified_Results/profile_safe_cone_audit.txt",
-      "path": "docs/geometry/profile_safe_cone_audit.txt",
+      "path": "Docs/geometry/profile_safe_cone_audit.txt",
       "entrypoint": false,
       "source_sha256": "e92838fc26ac419d7cf6cad6a760ea395d727caeada5874e543283ff13ff9e32",
       "curated": true
@@ -550,7 +550,7 @@
     },
     {
       "original": "MOC4_Verified_Results/zero_height_type1_notes.txt",
-      "path": "docs/geometry/zero_height_type1_notes.txt",
+      "path": "Docs/geometry/zero_height_type1_notes.txt",
       "entrypoint": false,
       "source_sha256": "3111fa4259edb8ec12e0b44b4db58e3052df6733feb33e98644ad5f4b7af1271",
       "curated": false
@@ -564,7 +564,7 @@
     },
     {
       "original": "MOC_Research_Bundle/latex/quantitative_radius.tex",
-      "path": "docs/early/latex/quantitative_radius.tex",
+      "path": "Docs/early/latex/quantitative_radius.tex",
       "entrypoint": false,
       "source_sha256": "8b4fda9f4abd52c57b3a4cc13e50772be37f64c4f4ed18df274da6fe7c15b26b",
       "curated": false
@@ -578,14 +578,14 @@
     },
     {
       "original": "MOC_number_systems/rings/FIELD_EXTENSION_AUDIT.md",
-      "path": "docs/number_systems/rings/FIELD_EXTENSION_AUDIT.md",
+      "path": "Docs/number_systems/rings/FIELD_EXTENSION_AUDIT.md",
       "entrypoint": false,
       "source_sha256": "50ecb5aead78a25e3c6e016896ea6283f0e17ec56e26622a6bf4606c1d6ac513",
       "curated": true
     },
     {
       "original": "organized/research/branch_A_maximizer_geometry.md",
-      "path": "docs/research/branch_A_maximizer_geometry.md",
+      "path": "Docs/research/branch_A_maximizer_geometry.md",
       "entrypoint": false,
       "source_sha256": "840e4bbbb705671ddb5fd57cade810b0cf288c72d0c33b54527758bb23d64cc2",
       "curated": true
@@ -627,7 +627,7 @@
     },
     {
       "original": "MOC4_Verified_Results/zero_height_type26_notes.txt",
-      "path": "docs/geometry/zero_height_type26_notes.txt",
+      "path": "Docs/geometry/zero_height_type26_notes.txt",
       "entrypoint": false,
       "source_sha256": "0aaacee2bbb299dce8953aa4aa2ec588ae5c71d6bfceabb18e3b92f14e658e7a",
       "curated": false
@@ -641,7 +641,7 @@
     },
     {
       "original": "MOC_Research_Bundle/latex/MOC_Research_Results.tex",
-      "path": "docs/early/latex/MOC_Research_Results.tex",
+      "path": "Docs/early/latex/MOC_Research_Results.tex",
       "entrypoint": false,
       "source_sha256": "84df2f0505bfce96077c16236727b1d486ff942ed0e4536e30c328b1cc0caffa",
       "curated": true
@@ -669,7 +669,7 @@
     },
     {
       "original": "MOC_number_systems/finite/finite_field_theorems.md",
-      "path": "docs/number_systems/finite/finite_field_theorems.md",
+      "path": "Docs/number_systems/finite/finite_field_theorems.md",
       "entrypoint": false,
       "source_sha256": "5047da865ea3d732d6432014af7ce1e87f1c81e8cbd193b17b1c6eafcc667f9a",
       "curated": true
@@ -683,14 +683,14 @@
     },
     {
       "original": "MOC_structural_results/proofs/large_shift_all_U.md",
-      "path": "docs/structural/proofs/large_shift_all_U.md",
+      "path": "Docs/structural/proofs/large_shift_all_U.md",
       "entrypoint": false,
       "source_sha256": "fdb6c417651fc8b326d4470b2b640ec69277593a051c6fd416797274c9f3472f",
       "curated": false
     },
     {
       "original": "organized/research/branch_B_positive_gap_budget.md",
-      "path": "docs/research/branch_B_positive_gap_budget.md",
+      "path": "Docs/research/branch_B_positive_gap_budget.md",
       "entrypoint": false,
       "source_sha256": "9cb37d08654efd743a42c7fe709f971948f20cadf9fe257df714d81d7fe8821f",
       "curated": true
@@ -711,7 +711,7 @@
     },
     {
       "original": "MOC4_Verified_Results/cone82_completeness_notes.txt",
-      "path": "docs/geometry/cone82_completeness_notes.txt",
+      "path": "Docs/geometry/cone82_completeness_notes.txt",
       "entrypoint": false,
       "source_sha256": "b2b35b0947c0c23410493d18ae100c9fe6e984e7d28b96177d963a716d7c1026",
       "curated": false
@@ -753,7 +753,7 @@
     },
     {
       "original": "MOC4_Verified_Results/zero_height_types34_notes.txt",
-      "path": "docs/geometry/zero_height_types34_notes.txt",
+      "path": "Docs/geometry/zero_height_types34_notes.txt",
       "entrypoint": false,
       "source_sha256": "c0472f04b030347b22248c3fa6873aa6ca01e6cce21449e99a46d6bdd7caff9a",
       "curated": false
@@ -767,49 +767,49 @@
     },
     {
       "original": "MOC_Research_Bundle/proof_notes/algebraic_notes.txt",
-      "path": "docs/early/proof_notes/algebraic_notes.txt",
+      "path": "Docs/early/proof_notes/algebraic_notes.txt",
       "entrypoint": false,
       "source_sha256": "e5641f6fe9ef27864b8c90bafafd289f0d9c9cc065085d5d63b5b59ea46e11b3",
       "curated": true
     },
     {
       "original": "MOC_Research_Bundle/proof_notes/metaproof_notes.txt",
-      "path": "docs/early/proof_notes/metaproof_notes.txt",
+      "path": "Docs/early/proof_notes/metaproof_notes.txt",
       "entrypoint": false,
       "source_sha256": "313f71f6bed781749f59ded35b708139b779fb92ad8211130c230e2909bc3ef3",
       "curated": true
     },
     {
       "original": "MOC_broader_results/proofs/positive_law_transfer.md",
-      "path": "docs/broader/proofs/positive_law_transfer.md",
+      "path": "Docs/broader/proofs/positive_law_transfer.md",
       "entrypoint": false,
       "source_sha256": "046193a8d515d65a3c1d6b18ae28da3bcb9b9d1ca08fcf5faa840d90cfa58c66",
       "curated": false
     },
     {
       "original": "MOC_number_systems/rings/RING_AFFINE_IDEAL_AUDIT.md",
-      "path": "docs/number_systems/rings/RING_AFFINE_IDEAL_AUDIT.md",
+      "path": "Docs/number_systems/rings/RING_AFFINE_IDEAL_AUDIT.md",
       "entrypoint": false,
       "source_sha256": "4909f465c3d444b20c1b8983f31435d676e64ce77b2a3c29e6c2c66fd80744ca",
       "curated": true
     },
     {
       "original": "MOC_structural_results/proofs/zero_paired_sum_n4.md",
-      "path": "docs/structural/proofs/zero_paired_sum_n4.md",
+      "path": "Docs/structural/proofs/zero_paired_sum_n4.md",
       "entrypoint": false,
       "source_sha256": "810b3e1460c9df6e0db1e9c146ede7b031c66f3bc06b81f3bd5184b6b890e0b0",
       "curated": false
     },
     {
       "original": "organized/research/joint_certificate_rank_oracle.md",
-      "path": "docs/research/joint_certificate_rank_oracle.md",
+      "path": "Docs/research/joint_certificate_rank_oracle.md",
       "entrypoint": false,
       "source_sha256": "6763dc66d3b45515162b1588bab3e09f241f4cac83ab5dc0373248c989aade15",
       "curated": true
     },
     {
       "original": "organized/research/projector_trace_schur_attempt.md",
-      "path": "docs/research/projector_trace_schur_lemmas.md",
+      "path": "Docs/research/projector_trace_schur_lemmas.md",
       "entrypoint": false,
       "source_sha256": "c05cafdcc51b46af58ea9230c39153bf751aaec46e7aab8f9ce84cbdf7965ecc",
       "curated": true
@@ -844,7 +844,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC_Proof_Attempt_and_Audit.md",
-      "path": "docs/geometry/structural_identities_and_audit.md",
+      "path": "Docs/geometry/structural_identities_and_audit.md",
       "entrypoint": false,
       "source_sha256": "5f4825d668e2a5fcc8bcdd639ec0bb226d303070e45706fbf72079ecc49e9b51",
       "curated": true
@@ -858,7 +858,7 @@
     },
     {
       "original": "MOC4_Verified_Results/profile_cancellation_notes.txt",
-      "path": "docs/geometry/profile_cancellation_notes.txt",
+      "path": "Docs/geometry/profile_cancellation_notes.txt",
       "entrypoint": false,
       "source_sha256": "8f055cf47f41bca3dceb496e2941d9d70e0a687985326b2596bcc9b13c1d3c95",
       "curated": true
@@ -886,7 +886,7 @@
     },
     {
       "original": "MOC4_Verified_Results/zero_height_geometry_notes.txt",
-      "path": "docs/geometry/zero_height_geometry_notes.txt",
+      "path": "Docs/geometry/zero_height_geometry_notes.txt",
       "entrypoint": false,
       "source_sha256": "9ff213229ed6622c4e49884caefeed4ad1383a88b452c015d16e4851a50430c7",
       "curated": true
@@ -900,14 +900,14 @@
     },
     {
       "original": "organized/research/SINKHORN_SOS_CERTIFICATE_ROUTE.md",
-      "path": "docs/research/SINKHORN_SOS_CERTIFICATE_ROUTE.md",
+      "path": "Docs/research/SINKHORN_SOS_CERTIFICATE_ROUTE.md",
       "entrypoint": false,
       "source_sha256": "0efe0d37d9a29d9ede8206de258bb83a210ccf43726dcba4bc2fae8bc8a32ac5",
       "curated": true
     },
     {
       "original": "organized/research/odd_profile_independent_review.md",
-      "path": "docs/research/odd_profile_independent_review.md",
+      "path": "Docs/research/odd_profile_independent_review.md",
       "entrypoint": false,
       "source_sha256": "378757717c9f1f0efa11afd805c85737e16388b1e0762e83bf3691e92bfc853f",
       "curated": true
@@ -921,7 +921,7 @@
     },
     {
       "original": "organized/research/real_cayley_independent_review.md",
-      "path": "docs/research/real_cayley_independent_review.md",
+      "path": "Docs/research/real_cayley_independent_review.md",
       "entrypoint": false,
       "source_sha256": "23913cb5dd47c3f1f57df2b6a983ce81a63bf041968ffeec79bf45fb71a059ca",
       "curated": true
@@ -942,7 +942,7 @@
     },
     {
       "original": "MOC4_Verified_Results/global_moc4_nine_lift_notes.txt",
-      "path": "docs/geometry/global_moc4_nine_lift_notes.txt",
+      "path": "Docs/geometry/global_moc4_nine_lift_notes.txt",
       "entrypoint": false,
       "source_sha256": "34b3a806d78ea0a3a48f844c87985f0d860062cee07690cd8a135c5523ff368c",
       "curated": false
@@ -956,7 +956,7 @@
     },
     {
       "original": "MOC4_Verified_Results/global_weighted_minor_notes.txt",
-      "path": "docs/geometry/global_weighted_minor_notes.txt",
+      "path": "Docs/geometry/global_weighted_minor_notes.txt",
       "entrypoint": false,
       "source_sha256": "d6ecd8fe896657694c478d5983aa5829a37dabe8896ae6f470ad77c6869751f1",
       "curated": false
@@ -1019,7 +1019,7 @@
     },
     {
       "original": "MOC_Research_Bundle/proof_notes/variational_notes.txt",
-      "path": "docs/early/proof_notes/variational_notes.txt",
+      "path": "Docs/early/proof_notes/variational_notes.txt",
       "entrypoint": false,
       "source_sha256": "b46a07bb6c5534544ae5b0504ad4446811875a260f8a20317da4a7fb10fd27e7",
       "curated": true
@@ -1040,14 +1040,14 @@
     },
     {
       "original": "organized/research/universal_sos_mechanism_attempt.md",
-      "path": "docs/research/universal_sos_mechanism_lemmas.md",
+      "path": "Docs/research/universal_sos_mechanism_lemmas.md",
       "entrypoint": false,
       "source_sha256": "5538d5b6e4f533f0e9e8b54c6a89e6746740feefe0f0de49b186ab4823e1ad51",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/full4_bridge_metaproof_audit.txt",
-      "path": "docs/geometry/full4_bridge_metaproof_audit.txt",
+      "path": "Docs/geometry/full4_bridge_metaproof_audit.txt",
       "entrypoint": false,
       "source_sha256": "93ee6c295adf6f594642c8007add49c3bee4aa7599f50e5f2684d1a696f7b57c",
       "curated": true
@@ -1103,7 +1103,7 @@
     },
     {
       "original": "MOC_number_systems/arithmetic/arithmetic_reductions.md",
-      "path": "docs/number_systems/arithmetic/arithmetic_reductions.md",
+      "path": "Docs/number_systems/arithmetic/arithmetic_reductions.md",
       "entrypoint": false,
       "source_sha256": "8f3c8e87233830bce211cd1f2212770d716616bdb7aa1ddfc18c04cf39827f31",
       "curated": false
@@ -1117,28 +1117,28 @@
     },
     {
       "original": "organized/research/GENERIC_STRICT_SUPPORT_REDUCTION.md",
-      "path": "docs/research/GENERIC_STRICT_SUPPORT_REDUCTION.md",
+      "path": "Docs/research/GENERIC_STRICT_SUPPORT_REDUCTION.md",
       "entrypoint": false,
       "source_sha256": "be5391e13fd27c17b79ad097ea9bb53abc3797073c9ad1e53c148f271fc8aa7c",
       "curated": true
     },
     {
       "original": "organized/research/complex_plane_independent_review.md",
-      "path": "docs/research/complex_plane_independent_review.md",
+      "path": "Docs/research/complex_plane_independent_review.md",
       "entrypoint": false,
       "source_sha256": "7383c1ae5a6450937701352489ca675eb3f5f116a1b7392d4192b919e23d870f",
       "curated": true
     },
     {
       "original": "organized/research/corank_two_lift_structure_oracle.md",
-      "path": "docs/research/corank_two_lift_structure_oracle.md",
+      "path": "Docs/research/corank_two_lift_structure_oracle.md",
       "entrypoint": false,
       "source_sha256": "0038fa198d37de269582220788f5bf89d34449616c5a01014158c5769c1db46c",
       "curated": true
     },
     {
       "original": "organized/research/low_rank_joint_positivity_oracle.md",
-      "path": "docs/research/low_rank_joint_positivity_oracle.md",
+      "path": "Docs/research/low_rank_joint_positivity_oracle.md",
       "entrypoint": false,
       "source_sha256": "4ac389abf802852f479a270b6449983a8a808d5dd359f0a736bdabe802144b78",
       "curated": true
@@ -1173,14 +1173,14 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/latex/tensor_family.tex",
-      "path": "docs/categorical/latex/tensor_family.tex",
+      "path": "Docs/categorical/latex/tensor_family.tex",
       "entrypoint": false,
       "source_sha256": "d18a286ff53cfda884a7c2d6ffc480cdfd7326445a991b6d7cd80a0cee9d986b",
       "curated": false
     },
     {
       "original": "MOC_broader_results/proofs/fourier_and_neighborhoods.md",
-      "path": "docs/broader/proofs/fourier_and_neighborhoods.md",
+      "path": "Docs/broader/proofs/fourier_and_neighborhoods.md",
       "entrypoint": false,
       "source_sha256": "8c21a362c82b037919d4e09f8a1f838a565d4fb7269adf8df79f5160d53283c3",
       "curated": false
@@ -1222,28 +1222,28 @@
     },
     {
       "original": "MOC_structural_results/proofs/exact_90_percent_class.md",
-      "path": "docs/structural/proofs/exact_90_percent_class.md",
+      "path": "Docs/structural/proofs/exact_90_percent_class.md",
       "entrypoint": false,
       "source_sha256": "ee4897887e2984d2a3ae2dadc556566ad413f3155344d8dd186cfad0d737ada1",
       "curated": false
     },
     {
       "original": "MOC_structural_results/proofs/haar_coverage_theorems.md",
-      "path": "docs/structural/proofs/haar_coverage_theorems.md",
+      "path": "Docs/structural/proofs/haar_coverage_theorems.md",
       "entrypoint": false,
       "source_sha256": "3254193c6a8fbe2546459a0c628294c5faa43d596204eae1a536ea1ba69a5284",
       "curated": false
     },
     {
       "original": "MOC_structural_results/proofs/independent_haar_audit.md",
-      "path": "docs/structural/proofs/independent_haar_audit.md",
+      "path": "Docs/structural/proofs/independent_haar_audit.md",
       "entrypoint": false,
       "source_sha256": "33fa689ec146d2ccde0837a6a1c06cb95e2f4747aaaf9a3cfa5bfa6bc0bad339",
       "curated": false
     },
     {
       "original": "organized/research/RECTANGULAR_COMPRESSION_REDUCTION.md",
-      "path": "docs/research/RECTANGULAR_COMPRESSION_REDUCTION.md",
+      "path": "Docs/research/RECTANGULAR_COMPRESSION_REDUCTION.md",
       "entrypoint": false,
       "source_sha256": "e47cf16b57d38763f35b906414b2742acc4f8a38a5178e3403eadb604d0aff26",
       "curated": true
@@ -1257,42 +1257,42 @@
     },
     {
       "original": "organized/research/adaptive_allocation_fiber_attempt.md",
-      "path": "docs/research/adaptive_allocation_fiber_lemmas.md",
+      "path": "Docs/research/adaptive_allocation_fiber_lemmas.md",
       "entrypoint": false,
       "source_sha256": "97f36e3b6cb6b3c65cb8ada91d59966f32f099345e62a29179289e1e2c888bb5",
       "curated": true
     },
     {
       "original": "organized/research/global_variational_bridge_attempt.md",
-      "path": "docs/research/global_variational_bridge_lemmas.md",
+      "path": "Docs/research/global_variational_bridge_lemmas.md",
       "entrypoint": false,
       "source_sha256": "fc32d302f0595f5be8bd9e76fb6cf8f8425dddb2d8059feb751e11f544225c09",
       "curated": true
     },
     {
       "original": "organized/research/grace_grassmannian_bridge_attempt.md",
-      "path": "docs/research/grace_grassmannian_bridge_lemmas.md",
+      "path": "Docs/research/grace_grassmannian_bridge_lemmas.md",
       "entrypoint": false,
       "source_sha256": "b31c8dd4fbf8bbb843d6b80e443504845e59d2791ab5d95e8dbf17aded079b8f",
       "curated": true
     },
     {
       "original": "organized/research/optimized_rank_four_budget_oracle.md",
-      "path": "docs/research/optimized_rank_four_budget_oracle.md",
+      "path": "Docs/research/optimized_rank_four_budget_oracle.md",
       "entrypoint": false,
       "source_sha256": "118d8d3fd0ad228994c5206cbf8e8131cd96a18dcb5ca638b3c0a3262e231fe8",
       "curated": true
     },
     {
       "original": "organized/research/schur_weyl_coupled_blocks_attempt.md",
-      "path": "docs/research/schur_weyl_coupled_blocks_lemmas.md",
+      "path": "Docs/research/schur_weyl_coupled_blocks_lemmas.md",
       "entrypoint": false,
       "source_sha256": "b7015948f57e712f6543fa63d0aa2867f8783108f67a91752629a8cf9e9b6bb0",
       "curated": true
     },
     {
       "original": "organized/research/sinkhorn_basis_independent_review.md",
-      "path": "docs/research/sinkhorn_basis_independent_review.md",
+      "path": "Docs/research/sinkhorn_basis_independent_review.md",
       "entrypoint": false,
       "source_sha256": "d71b9a50a222f1195c42a574b8657ac11bc7072ae9edb71462fc4c8a63a8e5f2",
       "curated": true
@@ -1341,7 +1341,7 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/latex/local_coupling.tex",
-      "path": "docs/categorical/latex/local_coupling.tex",
+      "path": "Docs/categorical/latex/local_coupling.tex",
       "entrypoint": false,
       "source_sha256": "dcd9f9b1e115b0f134555aa6ac248335811b645f4299a4c14632a45e6d2dbaaa",
       "curated": false
@@ -1355,7 +1355,7 @@
     },
     {
       "original": "MOC_number_systems/decomposition/nested_decomposition.md",
-      "path": "docs/number_systems/decomposition/nested_decomposition.md",
+      "path": "Docs/number_systems/decomposition/nested_decomposition.md",
       "entrypoint": false,
       "source_sha256": "e4effb402a93df67073b25ff282edc5603fd8cbfb971c994d24f88dd8cb05e69",
       "curated": true
@@ -1369,21 +1369,21 @@
     },
     {
       "original": "organized/research/spectral_family_independent_review.md",
-      "path": "docs/research/spectral_family_independent_review.md",
+      "path": "Docs/research/spectral_family_independent_review.md",
       "entrypoint": false,
       "source_sha256": "8d6d4c69cad6096f9eef4723ca240fff8d00cf6744f555be3551e5cf8db84633",
       "curated": true
     },
     {
       "original": "organized/research/spin4_profile_positive_map_attempt.md",
-      "path": "docs/research/spin4_profile_positive_map_lemmas.md",
+      "path": "Docs/research/spin4_profile_positive_map_lemmas.md",
       "entrypoint": false,
       "source_sha256": "5b690f7e6b3bd6ee0cd1f9c625369af7faa55076931d755c49ffb511f60c7c33",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/closing_high_contact_standalone.txt",
-      "path": "docs/geometry/closing_high_contact_standalone.txt",
+      "path": "Docs/geometry/closing_high_contact_standalone.txt",
       "entrypoint": false,
       "source_sha256": "1fc83f8f22795836a9568de5cde79bd4ffe70ef7a5d4ce487ff9e6101b723878",
       "curated": false
@@ -1397,7 +1397,7 @@
     },
     {
       "original": "MOC4_Verified_Results/source_record_selected_sections.txt",
-      "path": "docs/geometry/source_record_selected_sections.txt",
+      "path": "Docs/geometry/source_record_selected_sections.txt",
       "entrypoint": false,
       "source_sha256": "4883bad7b9f32b11719c3e80ab4573730611cd29bc37d8982b472cad3de5aa2e",
       "curated": true
@@ -1411,7 +1411,7 @@
     },
     {
       "original": "MOC4_Verified_Results/terminal_profile_geometry_notes.txt",
-      "path": "docs/geometry/terminal_profile_geometry_notes.txt",
+      "path": "Docs/geometry/terminal_profile_geometry_notes.txt",
       "entrypoint": false,
       "source_sha256": "c63a5b4c8ef5eb1aefb9079d541da55cd730aac4d42e50d9aaaaee80adc13cff",
       "curated": true
@@ -1439,7 +1439,7 @@
     },
     {
       "original": "MOC_broader_results/historical_facet_certificate/proof.md",
-      "path": "docs/broader/historical_facet_certificate/proof.md",
+      "path": "Docs/broader/historical_facet_certificate/proof.md",
       "entrypoint": false,
       "source_sha256": "0bffbcebd87f2b6eb18b073de9217e826a5fc7ac8b377ebe196006f4bf0c7b16",
       "curated": false
@@ -1453,7 +1453,7 @@
     },
     {
       "original": "MOC_number_systems/quaternions/QUATERNION_DETERMINANTS.md",
-      "path": "docs/number_systems/quaternions/QUATERNION_DETERMINANTS.md",
+      "path": "Docs/number_systems/quaternions/QUATERNION_DETERMINANTS.md",
       "entrypoint": false,
       "source_sha256": "fc3da19173965931e4830f528f580062708c2197b8a514385846431d536b4740",
       "curated": true
@@ -1474,21 +1474,21 @@
     },
     {
       "original": "organized/research/external/m8_hmsv/1103.5255v1/paris.tex",
-      "path": "docs/references/m8_hmsv/1103.5255v1/paris.tex",
+      "path": "Docs/references/m8_hmsv/1103.5255v1/paris.tex",
       "entrypoint": false,
       "source_sha256": "fc9478c25dab960bc864928106458d2e90d40065bc0159bc0e2cc78d3bd903f3",
       "curated": false
     },
     {
       "original": "organized/research/parity_reduction_independent_review.md",
-      "path": "docs/research/parity_reduction_independent_review.md",
+      "path": "Docs/research/parity_reduction_independent_review.md",
       "entrypoint": false,
       "source_sha256": "8ad0fbd92618c5c2c467b1ffbc26bc599bf87efa166d1be1c3484c05354bf16a",
       "curated": true
     },
     {
       "original": "organized/research/rank_four_budget_independent_review.md",
-      "path": "docs/research/rank_four_budget_independent_review.md",
+      "path": "Docs/research/rank_four_budget_independent_review.md",
       "entrypoint": false,
       "source_sha256": "c670f2843366036bcded57d8ea20270dfa567545ee5421a1941143f6f622e829",
       "curated": true
@@ -1516,35 +1516,35 @@
     },
     {
       "original": "MOC4_Verified_Results/plucker_positive_metaproof_audit.txt",
-      "path": "docs/geometry/plucker_positive_metaproof_audit.txt",
+      "path": "Docs/geometry/plucker_positive_metaproof_audit.txt",
       "entrypoint": false,
       "source_sha256": "05609009dcab0b0914a05e343662d492a851bc1961549982ffe500ec08bd0760",
       "curated": false
     },
     {
       "original": "MOC_number_systems/arithmetic/representation_invariance.md",
-      "path": "docs/number_systems/arithmetic/representation_invariance.md",
+      "path": "Docs/number_systems/arithmetic/representation_invariance.md",
       "entrypoint": false,
       "source_sha256": "0793a92ded0b246eea280e003bfe7570c7fff03e7eeb1927800112d474b292da",
       "curated": false
     },
     {
       "original": "MOC_structural_results/proofs/large_shift_distributions.md",
-      "path": "docs/structural/proofs/large_shift_distributions.md",
+      "path": "Docs/structural/proofs/large_shift_distributions.md",
       "entrypoint": false,
       "source_sha256": "f8b5bee32d9fe3199beb760e972fe17b1914576a7836498fa2985fb346b8f291",
       "curated": true
     },
     {
       "original": "organized/research/external/m8_hmsv/1103.5255v1/figsix.tex",
-      "path": "docs/references/m8_hmsv/1103.5255v1/figsix.tex",
+      "path": "Docs/references/m8_hmsv/1103.5255v1/figsix.tex",
       "entrypoint": false,
       "source_sha256": "98a5688aaf2c3499a95ef76f94147c8fe8dc22a420c983f96eb384c858eb963f",
       "curated": false
     },
     {
       "original": "organized/research/u_zero_and_planes_independent_review.md",
-      "path": "docs/research/u_zero_and_planes_independent_review.md",
+      "path": "Docs/research/u_zero_and_planes_independent_review.md",
       "entrypoint": false,
       "source_sha256": "3194c99aad046db0b5e76a17b7a2922aecc884250064b0af72c09eefb66c6a29",
       "curated": true
@@ -1565,14 +1565,14 @@
     },
     {
       "original": "MOC4_Verified_Results/proposal_algebraic_terminal_notes.txt",
-      "path": "docs/geometry/proposal_algebraic_terminal_notes.txt",
+      "path": "Docs/geometry/proposal_algebraic_terminal_notes.txt",
       "entrypoint": false,
       "source_sha256": "26a7e99e5e44fc2a43e93baaaad56b32e676b0671862fc817423e58cec5ef886",
       "curated": false
     },
     {
       "original": "MOC4_Verified_Results/proposal_universal_polytope_audit.txt",
-      "path": "docs/geometry/proposal_universal_polytope_audit.txt",
+      "path": "Docs/geometry/proposal_universal_polytope_audit.txt",
       "entrypoint": false,
       "source_sha256": "e5fd6e83b71f11c0287ed6b2930fd6343d4c5118d1e27f2e4e35dbbbbd2f4a17",
       "curated": true
@@ -1614,35 +1614,35 @@
     },
     {
       "original": "MOC_structural_results/proofs/nonarchimedean_exact_range.md",
-      "path": "docs/structural/proofs/nonarchimedean_exact_range.md",
+      "path": "Docs/structural/proofs/nonarchimedean_exact_range.md",
       "entrypoint": false,
       "source_sha256": "d8433811830a041e86673dab1c00e976804a02dac1422c76304b889842a693f8",
       "curated": true
     },
     {
       "original": "organized/research/hankel_rank_bridge_independent_review.md",
-      "path": "docs/research/hankel_rank_bridge_independent_review.md",
+      "path": "Docs/research/hankel_rank_bridge_independent_review.md",
       "entrypoint": false,
       "source_sha256": "03ffa6a4a13fefab3ecb067d22a316a060053095a2cb3f516359911ef82a6fe4",
       "curated": true
     },
     {
       "original": "organized/research/hmsv_compatibility_independent_review.md",
-      "path": "docs/research/hmsv_compatibility_independent_review.md",
+      "path": "Docs/research/hmsv_compatibility_independent_review.md",
       "entrypoint": false,
       "source_sha256": "060283fdcef8e8cb5d8ad39b5d472539945af38a2f2d6ba430187ace89cad0c6",
       "curated": true
     },
     {
       "original": "organized/research/m8_product_linkage_independent_review.md",
-      "path": "docs/research/m8_product_linkage_independent_review.md",
+      "path": "Docs/research/m8_product_linkage_independent_review.md",
       "entrypoint": false,
       "source_sha256": "0f0afd35f94c4d51993c75d7573c90e139ba97e0b685ce6f1bbf8de85423700c",
       "curated": true
     },
     {
       "original": "organized/research/reflection_average_independent_review.md",
-      "path": "docs/research/reflection_average_independent_review.md",
+      "path": "Docs/research/reflection_average_independent_review.md",
       "entrypoint": false,
       "source_sha256": "a59d5cdd6ddfecd7acd4029f2ce633f1be4d9ba83d4b5b25b9e8bad5fb549640",
       "curated": true
@@ -1670,14 +1670,14 @@
     },
     {
       "original": "organized/research/boundary_completion_independent_review.md",
-      "path": "docs/research/boundary_completion_independent_review.md",
+      "path": "Docs/research/boundary_completion_independent_review.md",
       "entrypoint": false,
       "source_sha256": "a78da1ab65355d7c30562b61315a221177c51b19ae632b6fc917d6f23c582728",
       "curated": true
     },
     {
       "original": "organized/research/external/m8_hmsv/1103.5255v1/fourteen.tex",
-      "path": "docs/references/m8_hmsv/1103.5255v1/fourteen.tex",
+      "path": "Docs/references/m8_hmsv/1103.5255v1/fourteen.tex",
       "entrypoint": false,
       "source_sha256": "960e908a8c82fd28936b9db99337cd9e0aceb8060860aa36f50592012a974ec9",
       "curated": false
@@ -1743,7 +1743,7 @@
     },
     {
       "original": "organized/research/low_rank_dual_targets_independent_review.md",
-      "path": "docs/research/low_rank_dual_targets_independent_review.md",
+      "path": "Docs/research/low_rank_dual_targets_independent_review.md",
       "entrypoint": false,
       "source_sha256": "cd5a83ffea5c057128ae71121229d79921f45e00cd81fbaada79dd6d06213572",
       "curated": true
@@ -1764,42 +1764,42 @@
     },
     {
       "original": "organized/research/external/m8_hmsv/0809.1233v1/8pts-090708.tex",
-      "path": "docs/references/m8_hmsv/0809.1233v1/8pts-090708.tex",
+      "path": "Docs/references/m8_hmsv/0809.1233v1/8pts-090708.tex",
       "entrypoint": false,
       "source_sha256": "3293106971e602acf767faac8e4423f604dedd6e68aa6f585a5e612330a4a6e6",
       "curated": false
     },
     {
       "original": "organized/research/external/m8_hmsv/1103.5255v1/8pts-032711.tex",
-      "path": "docs/references/m8_hmsv/1103.5255v1/8pts-032711.tex",
+      "path": "Docs/references/m8_hmsv/1103.5255v1/8pts-032711.tex",
       "entrypoint": false,
       "source_sha256": "a51371dd27204462e95aeb128029f03d4ba96309160c75e2008fa17af9e28a40",
       "curated": false
     },
     {
       "original": "organized/research/external/m8_hmsv/1103.5255v1/figureeight.tex",
-      "path": "docs/references/m8_hmsv/1103.5255v1/figureeight.tex",
+      "path": "Docs/references/m8_hmsv/1103.5255v1/figureeight.tex",
       "entrypoint": false,
       "source_sha256": "8d4da8af0de071dd3b940cad25fa0aa30dd99de1e2595f96b20b070218aee0d1",
       "curated": false
     },
     {
       "original": "organized/research/joint_certificate_rank_independent_review.md",
-      "path": "docs/research/joint_certificate_rank_independent_review.md",
+      "path": "Docs/research/joint_certificate_rank_independent_review.md",
       "entrypoint": false,
       "source_sha256": "2317e368db403cebabe67763a3df8d90f207722f224700ec8e4af1f870b7cf7e",
       "curated": true
     },
     {
       "original": "organized/research/universal_sos_boundary_completion_attempt.md",
-      "path": "docs/research/universal_sos_boundary_completion_lemmas.md",
+      "path": "Docs/research/universal_sos_boundary_completion_lemmas.md",
       "entrypoint": false,
       "source_sha256": "4f48285556fd4ba89f43c82448657844f2b1cf2682e9a5ebf85e7eb80ad50e2d",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/global_moc4_weighted_propagation_notes.txt",
-      "path": "docs/geometry/global_moc4_weighted_propagation_notes.txt",
+      "path": "Docs/geometry/global_moc4_weighted_propagation_notes.txt",
       "entrypoint": false,
       "source_sha256": "a4d420fbcdf30ca2b081d3dc12cc841f97bc69d459b764343a6005cd125d85b3",
       "curated": true
@@ -1827,28 +1827,28 @@
     },
     {
       "original": "organized/research/actual_fiber_allocation_independent_review.md",
-      "path": "docs/research/actual_fiber_allocation_independent_review.md",
+      "path": "Docs/research/actual_fiber_allocation_independent_review.md",
       "entrypoint": false,
       "source_sha256": "45639a39547be18612cb12c701fca8e53c6c77ac53235459d26541c6b158dd52",
       "curated": true
     },
     {
       "original": "organized/research/real_lift_moment_strata_independent_review.md",
-      "path": "docs/research/real_lift_moment_strata_independent_review.md",
+      "path": "Docs/research/real_lift_moment_strata_independent_review.md",
       "entrypoint": false,
       "source_sha256": "5dedd15265ec13ea5ee18a4e9778278571a5278bea7b2a2fcd214ea89cab2636",
       "curated": true
     },
     {
       "original": "organized/research/rectangular_compression_independent_review.md",
-      "path": "docs/research/rectangular_compression_independent_review.md",
+      "path": "Docs/research/rectangular_compression_independent_review.md",
       "entrypoint": false,
       "source_sha256": "fc61770933b4df16a2de4de02aa2a053afcc28802f656984de85a70fcdf05408",
       "curated": true
     },
     {
       "original": "MOC4_Verified_Results/profile_family_edges_independent_review.txt",
-      "path": "docs/geometry/profile_family_edges_independent_review.txt",
+      "path": "Docs/geometry/profile_family_edges_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "4f3c44c916aaaa38e891045d580848942c6b30ff072a6a3328c78f17d2077b32",
       "curated": false
@@ -1869,63 +1869,63 @@
     },
     {
       "original": "MOC_structural_results/proofs/independent_nonarchimedean_audit.md",
-      "path": "docs/structural/proofs/independent_nonarchimedean_audit.md",
+      "path": "Docs/structural/proofs/independent_nonarchimedean_audit.md",
       "entrypoint": false,
       "source_sha256": "78a3dbd9dcabf1a66abbf018c513d0d6982e123030be6dfb1dfd98b8cfabbb2c",
       "curated": false
     },
     {
       "original": "MOC_Categorical_Research_Bundle/latex/MOC_Categorical_Followup.tex",
-      "path": "docs/categorical/latex/MOC_Categorical_Followup.tex",
+      "path": "Docs/categorical/latex/MOC_Categorical_Followup.tex",
       "entrypoint": false,
       "source_sha256": "33c8e56a9fc0d8f9b54cf57e444d5312fc8dcfee4c938fae832a5f57a840af9d",
       "curated": true
     },
     {
       "original": "MOC_Research_Bundle/proof_notes/variational_independent_review.txt",
-      "path": "docs/early/proof_notes/variational_independent_review.txt",
+      "path": "Docs/early/proof_notes/variational_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "bce5f2c6c50dd8ff1ef2f8473448391f16b830eb74476832739a9173e6079488",
       "curated": false
     },
     {
       "original": "MOC_number_systems/adeles/padic_unitary_ranges_and_obstructions.md",
-      "path": "docs/number_systems/adeles/padic_integral_unitary_ranges.md",
+      "path": "Docs/number_systems/adeles/padic_integral_unitary_ranges.md",
       "entrypoint": false,
       "source_sha256": "98c9e35ccad5f8bb28a3cb14bb776f41eaa214f29c93d1177e6c9c2889ae40a0",
       "curated": true
     },
     {
       "original": "MOC_structural_results/proofs/discrete_coverage_and_information.md",
-      "path": "docs/structural/proofs/discrete_coverage_and_information.md",
+      "path": "Docs/structural/proofs/discrete_coverage_and_information.md",
       "entrypoint": false,
       "source_sha256": "d4e187c11f9ac3878439ac471cddfbff0e2ec4ce00b557588254b97496647595",
       "curated": true
     },
     {
       "original": "organized/research/corank_two_lift_exactness_independent_review.md",
-      "path": "docs/research/corank_two_lift_exactness_independent_review.md",
+      "path": "Docs/research/corank_two_lift_exactness_independent_review.md",
       "entrypoint": false,
       "source_sha256": "9d62af05ea348c8836b76c49da3e5feca1d0d5d58cea80c2784bada7b210b867",
       "curated": true
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_moc4_notes.txt",
-      "path": "docs/categorical/proof_notes/category_moc4_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_moc4_notes.txt",
       "entrypoint": false,
       "source_sha256": "166397b6da1c07dafb2a4ef3f5704f35c526ca09386a62e5d3b9f60ab90cb18b",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/PRIOR_REPORT.md",
-      "path": "docs/theorems/profile_geometry/spectral_model_reductions.md",
+      "path": "Docs/theorems/profile_geometry/spectral_model_reductions.md",
       "entrypoint": false,
       "source_sha256": "b8437cc9ac062a2449b3a2857d0db1945dab02de0135ad5bae844c8d56e21c53",
       "curated": true
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_phase_notes.txt",
-      "path": "docs/categorical/proof_notes/category_phase_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_phase_notes.txt",
       "entrypoint": false,
       "source_sha256": "f7b90c68e92a73d6a69345e6e7b1a49ddfca33a274cbf21fc0d6ec658a7b7808",
       "curated": false
@@ -2443,7 +2443,7 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_coupling_notes.txt",
-      "path": "docs/categorical/proof_notes/category_coupling_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_coupling_notes.txt",
       "entrypoint": false,
       "source_sha256": "b9d899218b91b651c7d5d2f98dcf9897f3a43c3c7d2449e9ab0cbabd0a7b5b13",
       "curated": true
@@ -2464,21 +2464,21 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_algebraic_notes.txt",
-      "path": "docs/categorical/proof_notes/category_algebraic_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_algebraic_notes.txt",
       "entrypoint": false,
       "source_sha256": "ca4ff7d0df960873abfbd2fa7424fb7bd0e2b7597796db9265199316f231c137",
       "curated": true
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_metaproof_notes.txt",
-      "path": "docs/categorical/proof_notes/category_metaproof_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_metaproof_notes.txt",
       "entrypoint": false,
       "source_sha256": "d262697c296491d07481acb4985db1a13ae170b4b403bb0e04bc8a54d953b03b",
       "curated": true
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_literature_notes.txt",
-      "path": "docs/categorical/proof_notes/category_literature_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_literature_notes.txt",
       "entrypoint": false,
       "source_sha256": "14f6c3e725c043a72ad35cb176b78f8e5f384a612bfcd5675ec68b95659a4cb7",
       "curated": true
@@ -2499,7 +2499,7 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_variational_notes.txt",
-      "path": "docs/categorical/proof_notes/category_variational_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_variational_notes.txt",
       "entrypoint": false,
       "source_sha256": "a193ef7e0d4338119f5c37116516664640e146612d000669f1845827122b40c2",
       "curated": true
@@ -2513,7 +2513,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/MOC_RESEARCH_REPORT.md",
-      "path": "docs/theorems/profile_geometry/verified_results.md",
+      "path": "Docs/theorems/profile_geometry/verified_results.md",
       "entrypoint": false,
       "source_sha256": "4a96cf24bcec258cf780911a39d56c48f60e9cb3b4e4f35295a8bd65fcd5d62d",
       "curated": true
@@ -2534,14 +2534,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_defect_one_disk.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_defect_one_disk.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_defect_one_disk.md",
       "entrypoint": false,
       "source_sha256": "2c5f488829f2546fbd18f95a15c1cd1e89474e16ba731d3a5b812d039aff3d05",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rank_one_dual.md",
-      "path": "docs/theorems/profile_geometry/algebra_rank_one_dual.md",
+      "path": "Docs/theorems/profile_geometry/algebra_rank_one_dual.md",
       "entrypoint": false,
       "source_sha256": "b14fdd3109ae4f9c723224acfc953fbb199204915f32a63c32199657d45f6f91",
       "curated": true
@@ -2555,98 +2555,98 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/review_rounds_001_010.md",
-      "path": "docs/theorems/profile_geometry/review_theorem_notes_001_010.md",
+      "path": "Docs/theorems/profile_geometry/review_theorem_notes_001_010.md",
       "entrypoint": false,
       "source_sha256": "a053a58b3c023df159cacad22c4115c5a753d35468bebf4abb59273add5b9fb1",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/review_rounds_021_040.md",
-      "path": "docs/theorems/profile_geometry/review_theorem_notes_021_040.md",
+      "path": "Docs/theorems/profile_geometry/review_theorem_notes_021_040.md",
       "entrypoint": false,
       "source_sha256": "c5d5c1b7796ac5ce823279e67697b897144ebea37a4f04d810d7437e95f27e9c",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/review_rounds_041_060.md",
-      "path": "docs/theorems/profile_geometry/review_theorem_notes_041_060.md",
+      "path": "Docs/theorems/profile_geometry/review_theorem_notes_041_060.md",
       "entrypoint": false,
       "source_sha256": "3c5b84387b00064444f62607c7a91b5b35f24b3e5b0a63f52441ed7872473742",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/COMMON_MINOR_POLYTOPE.md",
-      "path": "docs/theorems/finite_and_spin_geometry/COMMON_MINOR_POLYTOPE.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/COMMON_MINOR_POLYTOPE.md",
       "entrypoint": false,
       "source_sha256": "6db6af1cd266fce65432c926e3a7e4b8697d2e28853c9ad83fcc57e6ca3f3ef1",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_cl2_conic.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_cl2_conic.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_cl2_conic.md",
       "entrypoint": false,
       "source_sha256": "aa106aaa9e83a3a2028d9c02302622655a59994c9d41df8ff04399bb953d0f7f",
       "curated": true
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_cycle_notes.txt",
-      "path": "docs/closing/closing_cycle_notes.txt",
+      "path": "Docs/closing/closing_cycle_notes.txt",
       "entrypoint": false,
       "source_sha256": "5f59f95aab76be300075d6f813b8d935033df8e3ef58a3c01b0e7214d0c7ffc1",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rounds_001_010.md",
-      "path": "docs/theorems/profile_geometry/algebra_theorem_notes_001_010.md",
+      "path": "Docs/theorems/profile_geometry/algebra_theorem_notes_001_010.md",
       "entrypoint": false,
       "source_sha256": "0bac4e3276697ffac32082561f65329f45899786fb7f95cde857bea449019ac9",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rounds_011_020.md",
-      "path": "docs/theorems/profile_geometry/algebra_theorem_notes_011_020.md",
+      "path": "Docs/theorems/profile_geometry/algebra_theorem_notes_011_020.md",
       "entrypoint": false,
       "source_sha256": "17a77aa43bca707ecb0e74f7b2e43f98e7455ed38d9a65da2f1d2f43172dbaba",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rounds_021_040.md",
-      "path": "docs/theorems/profile_geometry/algebra_theorem_notes_021_040.md",
+      "path": "Docs/theorems/profile_geometry/algebra_theorem_notes_021_040.md",
       "entrypoint": false,
       "source_sha256": "6b13f87fa48d96f148eee987f6535614271a1aaf416d92c4d47c2f3abd688d81",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rounds_041_060.md",
-      "path": "docs/theorems/profile_geometry/algebra_theorem_notes_041_060.md",
+      "path": "Docs/theorems/profile_geometry/algebra_theorem_notes_041_060.md",
       "entrypoint": false,
       "source_sha256": "2c0b9a4a4d85452661a3dc8b64382e15c2916ad3ad9579e4fc9d1bfdccdad09e",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rounds_061_080.md",
-      "path": "docs/theorems/profile_geometry/algebra_theorem_notes_061_080.md",
+      "path": "Docs/theorems/profile_geometry/algebra_theorem_notes_061_080.md",
       "entrypoint": false,
       "source_sha256": "215699110318eb7fc3aaa23fd932f91d93e6b3155746ee29a4f7a121ff7cc866",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_rounds_081_100.md",
-      "path": "docs/theorems/profile_geometry/algebra_theorem_notes_081_100.md",
+      "path": "Docs/theorems/profile_geometry/algebra_theorem_notes_081_100.md",
       "entrypoint": false,
       "source_sha256": "5eba3512d80908eee5277063084949091a5f8a12864de932b7acefdba11b3d8e",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/root_jordan_rank_three.md",
-      "path": "docs/theorems/profile_geometry/root_jordan_rank_three.md",
+      "path": "Docs/theorems/profile_geometry/root_jordan_rank_three.md",
       "entrypoint": false,
       "source_sha256": "58ae9cfaec314e3d79c7ce9ac648ef2b4ae6fe74bfbae2118d007d86604ae370",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_pair_fibers.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_pair_fibers.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_pair_fibers.md",
       "entrypoint": false,
       "source_sha256": "c2df1c3da557ed54d24760d97973f87661927d6776987861080aab5474021fca",
       "curated": true
@@ -2660,7 +2660,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_quadratic_cp_cone.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_quadratic_cp_cone.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_quadratic_cp_cone.md",
       "entrypoint": false,
       "source_sha256": "cdb66f8904930a163ddac06891a72db0282e00a1bd2fe31db72caddb47e090b9",
       "curated": true
@@ -2674,84 +2674,84 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_rounds_001_010.md",
-      "path": "docs/theorems/profile_geometry/analysis_theorem_notes_001_010.md",
+      "path": "Docs/theorems/profile_geometry/analysis_theorem_notes_001_010.md",
       "entrypoint": false,
       "source_sha256": "b1b49d2b3d446d8e6244b23673964549493394facf53aa06488ace9a97fd23e3",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_rounds_011_020.md",
-      "path": "docs/theorems/profile_geometry/analysis_theorem_notes_011_020.md",
+      "path": "Docs/theorems/profile_geometry/analysis_theorem_notes_011_020.md",
       "entrypoint": false,
       "source_sha256": "10120596e41e1f7ad033210587d84f22573eba30f602d0cf858023c58e00bfdd",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_rounds_021_040.md",
-      "path": "docs/theorems/profile_geometry/analysis_theorem_notes_021_040.md",
+      "path": "Docs/theorems/profile_geometry/analysis_theorem_notes_021_040.md",
       "entrypoint": false,
       "source_sha256": "46f39c9decd3361faaaea99211a0ad3ef7729cb8f329b18dcefbec37cdff5fc2",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_rounds_041_060.md",
-      "path": "docs/theorems/profile_geometry/analysis_theorem_notes_041_060.md",
+      "path": "Docs/theorems/profile_geometry/analysis_theorem_notes_041_060.md",
       "entrypoint": false,
       "source_sha256": "dca16f6192e35dc01cbd5a567107f7138c3d9d3691b7e3cf0e47117b535ff7ba",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_rounds_001_010.md",
-      "path": "docs/theorems/profile_geometry/geometry_theorem_notes_001_010.md",
+      "path": "Docs/theorems/profile_geometry/geometry_theorem_notes_001_010.md",
       "entrypoint": false,
       "source_sha256": "4ab6cd19d0cdba821b779ac59de89684895946324d57f4d475ecb90814af6755",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_rounds_011_020.md",
-      "path": "docs/theorems/profile_geometry/geometry_theorem_notes_011_020.md",
+      "path": "Docs/theorems/profile_geometry/geometry_theorem_notes_011_020.md",
       "entrypoint": false,
       "source_sha256": "aa03baf977e26b8f23328fb9d42855e5382efa84c0c54036dac4e110c82c79ad",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_rounds_021_040.md",
-      "path": "docs/theorems/profile_geometry/geometry_theorem_notes_021_040.md",
+      "path": "Docs/theorems/profile_geometry/geometry_theorem_notes_021_040.md",
       "entrypoint": false,
       "source_sha256": "8d262df40e076d938f54a46a818830b87c69ff8689ce12fcfeeeb85078c98811",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_rounds_041_060.md",
-      "path": "docs/theorems/profile_geometry/geometry_theorem_notes_041_060.md",
+      "path": "Docs/theorems/profile_geometry/geometry_theorem_notes_041_060.md",
       "entrypoint": false,
       "source_sha256": "c797df5aed58afe10cbdc9307efa8281fdb110e2a7ce846231b3abe92c1a98ad",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_rounds_061_080.md",
-      "path": "docs/theorems/profile_geometry/geometry_theorem_notes_061_080.md",
+      "path": "Docs/theorems/profile_geometry/geometry_theorem_notes_061_080.md",
       "entrypoint": false,
       "source_sha256": "e4c5c3b1085194f47ff8c6684f7829ea751ef330082cef529ba118292c76c146",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_rounds_081_100.md",
-      "path": "docs/theorems/profile_geometry/geometry_theorem_notes_081_100.md",
+      "path": "Docs/theorems/profile_geometry/geometry_theorem_notes_081_100.md",
       "entrypoint": false,
       "source_sha256": "37c42090cc444c644222a3c8d8ab957f7f5e248edbe835b3b0d7b0935cc2266c",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/root_ch_facet_reduction.md",
-      "path": "docs/theorems/profile_geometry/root_ch_facet_reduction.md",
+      "path": "Docs/theorems/profile_geometry/root_ch_facet_reduction.md",
       "entrypoint": false,
       "source_sha256": "6d0c04eb9fdf2146c27792be856598120ac804c978b8ddf6de98a8d6545aba36",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/global_bridge_geometry.md",
-      "path": "docs/theorems/support_certificates/global_bridge_geometry.md",
+      "path": "Docs/theorems/support_certificates/global_bridge_geometry.md",
       "entrypoint": false,
       "source_sha256": "cff52bc62f4b3de82e0a3733321b44a3fdf15c4abf4647f6fa0dc57748103f4d",
       "curated": true
@@ -2772,14 +2772,14 @@
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_contact_audit.txt",
-      "path": "docs/closing/closing_contact_audit.txt",
+      "path": "Docs/closing/closing_contact_audit.txt",
       "entrypoint": false,
       "source_sha256": "8416772c9cb46321f4bb8aa4c296d5ff8243b7d266b66242d5a57b33bc3c451c",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_campaign3_proofs.md",
-      "path": "docs/theorems/support_certificates/restricted_support_proofs_01.md",
+      "path": "Docs/theorems/support_certificates/restricted_support_proofs_01.md",
       "entrypoint": false,
       "source_sha256": "6a571a972d5167a57338ad20fd2c543bdd207b2fed634e1936e08bad33fb9745",
       "curated": true
@@ -2821,7 +2821,7 @@
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_geometry_notes.txt",
-      "path": "docs/closing/closing_geometry_notes.txt",
+      "path": "Docs/closing/closing_geometry_notes.txt",
       "entrypoint": false,
       "source_sha256": "204e92f932c22be974cf61c7bd8cafd073eafa0ef452750dbbb9a90256f00d7f",
       "curated": true
@@ -2849,7 +2849,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/root_saturated_spin_slice.md",
-      "path": "docs/theorems/profile_geometry/root_saturated_spin_slice.md",
+      "path": "Docs/theorems/profile_geometry/root_saturated_spin_slice.md",
       "entrypoint": false,
       "source_sha256": "2dcddbff98d2dfc1901e3cdf03cac0d2244ab5203ce57231350e2f8df32c5c52",
       "curated": true
@@ -2870,28 +2870,28 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_spin_chambers.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_spin_chambers.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_spin_chambers.md",
       "entrypoint": false,
       "source_sha256": "021696dec547eadba4c645cb1aa21ff662f3aceff3779771fc3f79671eec5859",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_finite_witness.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_finite_witness.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_finite_witness.md",
       "entrypoint": false,
       "source_sha256": "2268c4c3feef452250178f930b1526920aac6579fadc7afb5d4ad57c45ff60d5",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_rank_two_torus.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_rank_two_torus.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_rank_two_torus.md",
       "entrypoint": false,
       "source_sha256": "a0f59a61b64ebb2386ccd67a35610d885fb87420ecbe6c793bb67f934e32b32a",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/review_final_batch_proofs.md",
-      "path": "docs/theorems/finite_and_spin_geometry/review_final_batch_proofs.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/review_final_batch_proofs.md",
       "entrypoint": false,
       "source_sha256": "6901833a32e6d1ab559d841c4d0db8270e49abd83173196ca27feacb6460afaa",
       "curated": true
@@ -2912,7 +2912,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/review_third_batch_proofs.md",
-      "path": "docs/theorems/finite_and_spin_geometry/review_third_batch_proofs.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/review_third_batch_proofs.md",
       "entrypoint": false,
       "source_sha256": "bd3fd72e4d50ac1b65bc062e2cd9989a2af02d47378b5c371613df1fa9784b25",
       "curated": true
@@ -2936,14 +2936,14 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_exact_independent_review.txt",
-      "path": "docs/categorical/proof_notes/category_exact_independent_review.txt",
+      "path": "Docs/categorical/proof_notes/category_exact_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "2bfe328329a1738d45675c0f566177f41681f35fa490a1d48bf31146977f5393",
       "curated": true
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_algebraic_notes.txt",
-      "path": "docs/closing/closing_algebraic_notes.txt",
+      "path": "Docs/closing/closing_algebraic_notes.txt",
       "entrypoint": false,
       "source_sha256": "501ca16f88032d15c63511906cdc7d689b6840f0e32b20925f2be95cb1678e80",
       "curated": true
@@ -2978,14 +2978,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/MOC_SECOND_CAMPAIGN_REPORT.md",
-      "path": "docs/theorems/finite_and_spin_geometry/structural_results.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/structural_results.md",
       "entrypoint": false,
       "source_sha256": "62d28889a0a80a084e78b37ba3043ed56b1b311523fee219fc2724e62f4271c3",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_exterior_order.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_exterior_order.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_exterior_order.md",
       "entrypoint": false,
       "source_sha256": "176c4bb70167b7b899bfcb8f5b05f02ab63b3ea515f4715f972c24d7263b26e6",
       "curated": true
@@ -3013,21 +3013,21 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_local_to_open_theorem.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_local_to_open_theorem.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_local_to_open_theorem.md",
       "entrypoint": false,
       "source_sha256": "25ae7bf0e079f8f5f7fb68eda1b9a51e6de8c9bee6019494159e913cd6700704",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/review_fourth_batch_proofs.md",
-      "path": "docs/theorems/finite_and_spin_geometry/review_fourth_batch_proofs.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/review_fourth_batch_proofs.md",
       "entrypoint": false,
       "source_sha256": "dbfd2d9de0d7135a606e1603db011306e69e91d38eb32b6267da2d3db3172b36",
       "curated": true
     },
     {
       "original": "MOC_Categorical_Research_Bundle/proof_notes/category_tensor_independent_review.txt",
-      "path": "docs/categorical/proof_notes/category_tensor_independent_review.txt",
+      "path": "Docs/categorical/proof_notes/category_tensor_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "df2770456e955544f1ed174d935bda54046999243692df30ad8c0f94ae30cf7b",
       "curated": false
@@ -3069,7 +3069,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/QUATERNION_PHASE_COMPLETION.md",
-      "path": "docs/theorems/finite_and_spin_geometry/QUATERNION_PHASE_COMPLETION.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/QUATERNION_PHASE_COMPLETION.md",
       "entrypoint": false,
       "source_sha256": "21a91ecebefd575ab95db7e18fa4def22bebb31d1f642bc7c2fc5bc41fdf0f0d",
       "curated": true
@@ -3083,7 +3083,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_outer_profile_geometry.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_outer_profile_geometry.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_outer_profile_geometry.md",
       "entrypoint": false,
       "source_sha256": "569afa978b7872a6363935572739e86352cb51c9dca548e2f6bcdab07146f2a6",
       "curated": true
@@ -3097,14 +3097,14 @@
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_deformation_notes.txt",
-      "path": "docs/closing/closing_deformation_notes.txt",
+      "path": "Docs/closing/closing_deformation_notes.txt",
       "entrypoint": false,
       "source_sha256": "a7d9aff922eefe4aa8d63a7f5d05d20615e139bf110a7bdf44578c52054c30ac",
       "curated": true
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_variational_notes.txt",
-      "path": "docs/closing/closing_variational_notes.txt",
+      "path": "Docs/closing/closing_variational_notes.txt",
       "entrypoint": false,
       "source_sha256": "ba2733ad0c077081418ef17dcecd12e518dc832f9513f3da2d4a954f8e94d456",
       "curated": true
@@ -3125,28 +3125,28 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_three_color_theorem.md",
-      "path": "docs/theorems/profile_geometry/geometry_three_color_theorem.md",
+      "path": "Docs/theorems/profile_geometry/geometry_three_color_theorem.md",
       "entrypoint": false,
       "source_sha256": "49543d8db2340f09f22240f37e2c5582c31ad005783f312a91babcf45bb75cc6",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/root_compression_equivalence.md",
-      "path": "docs/theorems/profile_geometry/root_compression_equivalence.md",
+      "path": "Docs/theorems/profile_geometry/root_compression_equivalence.md",
       "entrypoint": false,
       "source_sha256": "66b637a36c4dcb366b8e601689a93c5ba4e7693fa5a7f49727259618756a54f1",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_a4_spectral_support.md",
-      "path": "docs/theorems/support_certificates/algebra_a4_spectral_support.md",
+      "path": "Docs/theorems/support_certificates/algebra_a4_spectral_support.md",
       "entrypoint": false,
       "source_sha256": "021782f77cb660c39b5b8914809ce1bb3e453c84c034df2b4d68f25300ceb0d6",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/direct_zero_gap_reflections.md",
-      "path": "docs/theorems/support_certificates/direct_zero_gap_reflections.md",
+      "path": "Docs/theorems/support_certificates/direct_zero_gap_reflections.md",
       "entrypoint": false,
       "source_sha256": "82c0fd9184bf1b96d0369b7dc72526a73063fd146716d585fe92c901a11d5c64",
       "curated": true
@@ -3160,7 +3160,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/ZERO_GAP_REFLECTION_RIGIDITY.md",
-      "path": "docs/theorems/finite_and_spin_geometry/ZERO_GAP_REFLECTION_RIGIDITY.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/ZERO_GAP_REFLECTION_RIGIDITY.md",
       "entrypoint": false,
       "source_sha256": "bc384119dcc71fe64d51b32221a8f358647f40cc11791592022ac48fc6aef828",
       "curated": true
@@ -3181,7 +3181,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_plateau_transport.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_plateau_transport.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_plateau_transport.md",
       "entrypoint": false,
       "source_sha256": "6e2a22e70302310c377fd7d7ae04da191f7995db53d79b03649c0511bbcc5508",
       "curated": true
@@ -3202,14 +3202,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/review_derangement_stability.md",
-      "path": "docs/theorems/finite_and_spin_geometry/review_derangement_stability.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/review_derangement_stability.md",
       "entrypoint": false,
       "source_sha256": "abec33d8e6a4245c8f7546f1dafd877830e2d6c49d92708896057e479fb86892",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/algebra_unitary_realification.md",
-      "path": "docs/theorems/profile_geometry/algebra_unitary_realification.md",
+      "path": "Docs/theorems/profile_geometry/algebra_unitary_realification.md",
       "entrypoint": false,
       "source_sha256": "9ceb7e72e3650c8b5210bb38ea29ce1155a0ed1b2d44d21159b0cfe57c3ab6a0",
       "curated": false
@@ -3230,7 +3230,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/direct_isoclinic_v4_geometry.md",
-      "path": "docs/theorems/support_certificates/direct_isoclinic_v4_geometry.md",
+      "path": "Docs/theorems/support_certificates/direct_isoclinic_v4_geometry.md",
       "entrypoint": false,
       "source_sha256": "78c97f05958be428f7212758422ac1efd464c6a52cf6f3d147fc0f0e0e818e0d",
       "curated": true
@@ -3244,7 +3244,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/direct_sharp_energy_constant.md",
-      "path": "docs/theorems/support_certificates/direct_sharp_energy_constant.md",
+      "path": "Docs/theorems/support_certificates/direct_sharp_energy_constant.md",
       "entrypoint": false,
       "source_sha256": "4f2e2696284e0d2dc8ac5b58b0bba76f24e4d9ee260cfbc16c2c778f956e8bb3",
       "curated": false
@@ -3258,7 +3258,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/learning_inversion_asymmetry.md",
-      "path": "docs/theorems/support_certificates/learning_inversion_asymmetry.md",
+      "path": "Docs/theorems/support_certificates/learning_inversion_asymmetry.md",
       "entrypoint": false,
       "source_sha256": "276d686720d6aec3e8d16a1fbae9f1c939f9e8b5624e269af4163e6e05dfeee7",
       "curated": true
@@ -3286,7 +3286,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/ATTRIBUTION_AND_SOURCE_STATUS.md",
-      "path": "docs/theorems/finite_and_spin_geometry/ATTRIBUTION_AND_SOURCE_STATUS.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/ATTRIBUTION_AND_SOURCE_STATUS.md",
       "entrypoint": false,
       "source_sha256": "f41c73404e8d124d12184e80cd5b6fd8db988c013ef3164f9d43878b88e07cf2",
       "curated": true
@@ -3314,7 +3314,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_common_facet_sharp_bound.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_common_facet_sharp_bound.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_common_facet_sharp_bound.md",
       "entrypoint": false,
       "source_sha256": "c08febb339d32238cde02a0e01cedfd99f535527a59c1132c53905cc1ea1d796",
       "curated": true
@@ -3328,7 +3328,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_mobius_normal_completion.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_mobius_normal_completion.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_mobius_normal_completion.md",
       "entrypoint": false,
       "source_sha256": "e0f18b92673f3fca8a8cfa3f674f1bd1301a0f16c240f1de71a3b72551e58e86",
       "curated": true
@@ -3342,7 +3342,7 @@
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/MOC_Closing_Argument_Attempt.md",
-      "path": "docs/closing/high_contact_reductions.md",
+      "path": "Docs/closing/high_contact_reductions.md",
       "entrypoint": false,
       "source_sha256": "85ee2b776f6810ebdb95e5ecd42c4737d4ef5eaf7babb6937f8d833e7b2a3f5d",
       "curated": true
@@ -3356,14 +3356,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/root_rank_two_finite_reduction.md",
-      "path": "docs/theorems/profile_geometry/root_rank_two_finite_reduction.md",
+      "path": "Docs/theorems/profile_geometry/root_rank_two_finite_reduction.md",
       "entrypoint": false,
       "source_sha256": "3d06fc3333a3f66d0e13f8810764ce5bbf4aa67a201ce057d421c291b6559067",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_campaign3_fifth_proofs.md",
-      "path": "docs/theorems/support_certificates/restricted_support_proofs_05.md",
+      "path": "Docs/theorems/support_certificates/restricted_support_proofs_05.md",
       "entrypoint": false,
       "source_sha256": "ad42e45d470e49bfd03987af9ba09256431a266e31ad45fe5b8105a9559cba0f",
       "curated": true
@@ -3384,14 +3384,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_campaign3_sixth_proofs.md",
-      "path": "docs/theorems/support_certificates/restricted_support_proofs_06.md",
+      "path": "Docs/theorems/support_certificates/restricted_support_proofs_06.md",
       "entrypoint": false,
       "source_sha256": "8ce244e97f85aa866234092791811eb796116de7b30b70e031d153e3570d3ca3",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_campaign3_third_proofs.md",
-      "path": "docs/theorems/support_certificates/restricted_support_proofs_03.md",
+      "path": "Docs/theorems/support_certificates/restricted_support_proofs_03.md",
       "entrypoint": false,
       "source_sha256": "fdc7994a8d229a415ed3cc1ee9222f1965681740b45c3f672cd9d17da8728cc5",
       "curated": true
@@ -3426,7 +3426,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_diagonal_completion.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_diagonal_completion.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_diagonal_completion.md",
       "entrypoint": false,
       "source_sha256": "255e6e7a511f30583018a7a3fade98a7ced7e4326c55e3cd207f4ecc58fbe96a",
       "curated": true
@@ -3475,28 +3475,28 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_campaign3_fourth_proofs.md",
-      "path": "docs/theorems/support_certificates/restricted_support_proofs_04.md",
+      "path": "Docs/theorems/support_certificates/restricted_support_proofs_04.md",
       "entrypoint": false,
       "source_sha256": "5505c6e3a384c63c563241c0f81ffa2b105f7d8c979e6b06f7091decb9f41d37",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_campaign3_second_proofs.md",
-      "path": "docs/theorems/support_certificates/restricted_support_proofs_02.md",
+      "path": "Docs/theorems/support_certificates/restricted_support_proofs_02.md",
       "entrypoint": false,
       "source_sha256": "faf74f0c0f2453b7735773b737fbc9a1db60c493244c4c02787b4d8994bcc4e5",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/EXACT_TRIANGLE_FLOW_OBSTRUCTION.md",
-      "path": "docs/theorems/finite_and_spin_geometry/optimized_triangle_flow_example.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/optimized_triangle_flow_example.md",
       "entrypoint": false,
       "source_sha256": "15d8c474b30f3ceabb61abf370d732d0c6ba297b5294031240b60591da4f451e",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_grace_tangent_trace.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_grace_tangent_trace.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_grace_tangent_trace.md",
       "entrypoint": false,
       "source_sha256": "a53b021a29ee5b4fff7a5c7a310a13ac5401df47d3da75c9aaa3a51a99698287",
       "curated": true
@@ -3517,7 +3517,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_isoclinic_support_geometry.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_isoclinic_support_geometry.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_isoclinic_support_geometry.md",
       "entrypoint": false,
       "source_sha256": "a34ffb8c63f4f0fd3261bf40b72faf3f9bbafb28dbeb3a10f9445d50496812b7",
       "curated": true
@@ -3531,14 +3531,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_a4_full_support_theorem.md",
-      "path": "docs/theorems/support_certificates/algebra_a4_full_support_theorem.md",
+      "path": "Docs/theorems/support_certificates/algebra_a4_full_support_theorem.md",
       "entrypoint": false,
       "source_sha256": "81282ca296c9018c0ebd809c3c45e3c2afedf5c885c6f40cc1f4442b16efeba5",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_direct_schur_inequality.md",
-      "path": "docs/theorems/support_certificates/algebra_direct_schur_inequality.md",
+      "path": "Docs/theorems/support_certificates/algebra_direct_schur_inequality.md",
       "entrypoint": false,
       "source_sha256": "b6f85e49b375ab64c88af3fd9d7caaf52ad787f28e50336929a6f356db64f28a",
       "curated": true
@@ -3573,7 +3573,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_defect_one_induction.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_defect_one_induction.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_defect_one_induction.md",
       "entrypoint": false,
       "source_sha256": "08f3f47ab689699ef00f5ef38dd2ac5c416a8df763afdd4207327904324becf2",
       "curated": true
@@ -3594,7 +3594,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_derangement_secant_rigidity.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_derangement_secant_rigidity.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_derangement_secant_rigidity.md",
       "entrypoint": false,
       "source_sha256": "6b38b8f4dcfe913086fde92ad6634d6f30dd51fc33ff231f45c2f4481fc078b4",
       "curated": true
@@ -3615,7 +3615,7 @@
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_contact_geometry_audit.txt",
-      "path": "docs/closing/closing_contact_geometry_audit.txt",
+      "path": "Docs/closing/closing_contact_geometry_audit.txt",
       "entrypoint": false,
       "source_sha256": "4be3bef580b8474e8d42d38d5f5aa70775f94d75d4462f08b2bc3a3454011644",
       "curated": false
@@ -3629,7 +3629,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_one_weight_source_fibers.md",
-      "path": "docs/theorems/support_certificates/algebra_one_weight_source_fibers.md",
+      "path": "Docs/theorems/support_certificates/algebra_one_weight_source_fibers.md",
       "entrypoint": false,
       "source_sha256": "d3e13d4815bcbe6ddbf501dd5c6a26f05a259c0fbde523afcb7eba6aa97a88be",
       "curated": false
@@ -3643,7 +3643,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_quaternion_cubic_support.md",
-      "path": "docs/theorems/support_certificates/algebra_quaternion_cubic_support.md",
+      "path": "Docs/theorems/support_certificates/algebra_quaternion_cubic_support.md",
       "entrypoint": false,
       "source_sha256": "71f082e61ea284c04b32ffa09222f1883ea617f7e5c46c16e4c1cbe164472a64",
       "curated": true
@@ -3657,7 +3657,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_spectral_moduli_final.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_spectral_moduli_final.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_spectral_moduli_final.md",
       "entrypoint": false,
       "source_sha256": "e843748163f72220fff846cc639368f26e042ca217c89911166ee285c4e6d4d1",
       "curated": true
@@ -3671,21 +3671,21 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_full_rank_two_geometry.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_full_rank_two_geometry.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_full_rank_two_geometry.md",
       "entrypoint": false,
       "source_sha256": "28bc9c14966f2b9c5b74400be0e5a11ab9cb070575f330cd2cae5fd019c9c3a0",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_householder_meta_proof.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_householder_meta_proof.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_householder_meta_proof.md",
       "entrypoint": false,
       "source_sha256": "99b992658d69059a558da254c8bafce2d9923a0a9b5e6f354ca5ae84169e2ba0",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/dual_boolean_facet_rank_one_proof.md",
-      "path": "docs/theorems/finite_and_spin_geometry/dual_boolean_facet_rank_one_proof.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/dual_boolean_facet_rank_one_proof.md",
       "entrypoint": false,
       "source_sha256": "6b3bbccb4a9041381168d5fbfc361641851077231fbd0926624793f1f6c73921",
       "curated": true
@@ -3706,35 +3706,35 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_rank_two_cayley_reduction.md",
-      "path": "docs/theorems/profile_geometry/analysis_rank_two_cayley_reduction.md",
+      "path": "Docs/theorems/profile_geometry/analysis_rank_two_cayley_reduction.md",
       "entrypoint": false,
       "source_sha256": "cf668c8e34700a7012ce8ef31c88a49b19f698c0d9f57226a3de7462ffe69ddf",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_real_gram_support_theorem.md",
-      "path": "docs/theorems/profile_geometry/analysis_real_gram_support_theorem.md",
+      "path": "Docs/theorems/profile_geometry/analysis_real_gram_support_theorem.md",
       "entrypoint": false,
       "source_sha256": "6fa90eab5ebfa96a1d46ec4dd198db513db225fd82b30786a8db5cb58214483f",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_border_simplex_inequality.md",
-      "path": "docs/theorems/support_certificates/algebra_border_simplex_inequality.md",
+      "path": "Docs/theorems/support_certificates/algebra_border_simplex_inequality.md",
       "entrypoint": false,
       "source_sha256": "84ad6ca78ac0045f4b547432ce1c8cdfa4b68140876530c14e545a08ed6408ec",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/polyhedral_certificate_separation.md",
-      "path": "docs/theorems/support_certificates/polyhedral_certificate_separation.md",
+      "path": "Docs/theorems/support_certificates/polyhedral_certificate_separation.md",
       "entrypoint": false,
       "source_sha256": "b88c9475c2f502e45ef3b8f59d238863c826eb909510c76cf83fb01d6a11dc63",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_prescribed_height_torus.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_prescribed_height_torus.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_prescribed_height_torus.md",
       "entrypoint": false,
       "source_sha256": "7b9f050f960cd9f9b9b872432f6084f4d71cae9834cd7a3fcb76244873880d5b",
       "curated": true
@@ -3769,7 +3769,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/geometry_three_value_scalar_theorem.md",
-      "path": "docs/theorems/profile_geometry/geometry_three_value_scalar_theorem.md",
+      "path": "Docs/theorems/profile_geometry/geometry_three_value_scalar_theorem.md",
       "entrypoint": false,
       "source_sha256": "e41eaf043c2aaeaea7754e9c86fe93d78d96a63b9ac46a7689fa248ca7f11405",
       "curated": false
@@ -3783,14 +3783,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_so4_variational_geometry.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_so4_variational_geometry.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_so4_variational_geometry.md",
       "entrypoint": false,
       "source_sha256": "ef0a67a4bc513d410f41727a61cb20c662eafedba6360b61b2a35b744b2f5b43",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_spectral_rank_two_budget.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_spectral_rank_two_budget.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_spectral_rank_two_budget.md",
       "entrypoint": false,
       "source_sha256": "f40f691d377b7a265a9104b631c93fe393cac2dc99fe6b1408314adee54fffb2",
       "curated": true
@@ -3818,7 +3818,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_defect_agler_reciprocity.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_defect_agler_reciprocity.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_defect_agler_reciprocity.md",
       "entrypoint": false,
       "source_sha256": "7676dfe4d7fe769724cc32c74d1c398d68fb7d4c240037bb42888ed642f623a1",
       "curated": true
@@ -3832,7 +3832,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/direct_quantitative_contact_rigidity.md",
-      "path": "docs/theorems/support_certificates/direct_quantitative_contact_rigidity.md",
+      "path": "Docs/theorems/support_certificates/direct_quantitative_contact_rigidity.md",
       "entrypoint": false,
       "source_sha256": "a3e6186affdd06809c0102907af57ad797cc2c83e628443fe0fa434e3c1d5cd7",
       "curated": false
@@ -3853,7 +3853,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_holomorphic_face_reduction.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_holomorphic_face_reduction.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_holomorphic_face_reduction.md",
       "entrypoint": false,
       "source_sha256": "c98acd5a3ddd76cd8214d41dbcd0c2924cafec092b2c62c4628b56220ce75bcb",
       "curated": true
@@ -3867,7 +3867,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/review_direct_isoclinic_slice_theorem.md",
-      "path": "docs/theorems/support_certificates/review_direct_isoclinic_slice_theorem.md",
+      "path": "Docs/theorems/support_certificates/review_direct_isoclinic_slice_theorem.md",
       "entrypoint": false,
       "source_sha256": "ef84b4e74f3f51e0056b3110764224b9b4385a9bcb7e1fabe1e27c997e2cace8",
       "curated": true
@@ -3891,7 +3891,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/review_phase_geometry_and_certificates.md",
-      "path": "docs/theorems/finite_and_spin_geometry/review_phase_geometry_and_certificates.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/review_phase_geometry_and_certificates.md",
       "entrypoint": false,
       "source_sha256": "6f2b16c5ff21ed5f373c2115b7dc3f037c5738c2eb76041a992075c24aeadc1a",
       "curated": true
@@ -3912,7 +3912,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_tetrahedral_simplex_inequality.md",
-      "path": "docs/theorems/support_certificates/algebra_tetrahedral_simplex_inequality.md",
+      "path": "Docs/theorems/support_certificates/algebra_tetrahedral_simplex_inequality.md",
       "entrypoint": false,
       "source_sha256": "38738f3dc7a9c22f406b81a795f88dcd6991811711363ee0714cd8a838e92d58",
       "curated": false
@@ -3926,14 +3926,14 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_global_completion_criterion.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_global_completion_criterion.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_global_completion_criterion.md",
       "entrypoint": false,
       "source_sha256": "9f382913b061e25656055c007c8f8eda2bf81c479907298bf3107bfef515e0cb",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_reflection_quartic_reduction.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_reflection_quartic_reduction.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_reflection_quartic_reduction.md",
       "entrypoint": false,
       "source_sha256": "5282f519163342732bb1c37f1d8b8189fd37070ec38afb0fa72b3e8e2309af1c",
       "curated": true
@@ -3947,7 +3947,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/continuous_reversible_dimension_boundary.md",
-      "path": "docs/theorems/finite_and_spin_geometry/continuous_reversible_dimension_boundary.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/continuous_reversible_dimension_boundary.md",
       "entrypoint": false,
       "source_sha256": "7c9ad58a8aabd8b1be3110954f94fc66df2a3e0727fe0c30b33c8bc8cf66cfd4",
       "curated": true
@@ -3961,28 +3961,28 @@
     },
     {
       "original": "organized/extracted/embedded/record/integrated_edition/content_map/standalone_dependency_note.md",
-      "path": "docs/volume/standalone_dependency_note.md",
+      "path": "Docs/volume/standalone_dependency_note.md",
       "entrypoint": false,
       "source_sha256": "96d67e2612fbc0f7321de1a4dcb5fad55ecbc3c4635ab3c680e4e36f3cb87d7a",
       "curated": false
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/categorical_collision_and_rank_two_bridge.md",
-      "path": "docs/theorems/finite_and_spin_geometry/categorical_collision_and_rank_two_bridge.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/categorical_collision_and_rank_two_bridge.md",
       "entrypoint": false,
       "source_sha256": "421ec948f28614fd9ff8774bc519a54ecb199910072ae031b80423ddeec98896",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc200/review_continuation_and_holomorphic_faces.md",
-      "path": "docs/theorems/finite_and_spin_geometry/review_continuation_and_holomorphic_faces.md",
+      "path": "Docs/theorems/finite_and_spin_geometry/review_continuation_and_holomorphic_faces.md",
       "entrypoint": false,
       "source_sha256": "98e59ce16fe802db0723c903550336060fab376704e93d6b794ef3d8436dfad0",
       "curated": true
     },
     {
       "original": "organized/extracted/embedded/record/research/moc100/analysis_clifford_idempotent_reformulation.md",
-      "path": "docs/theorems/profile_geometry/analysis_clifford_idempotent_reformulation.md",
+      "path": "Docs/theorems/profile_geometry/analysis_clifford_idempotent_reformulation.md",
       "entrypoint": false,
       "source_sha256": "35af06e774dbda552e500af4876be69615d4431dae24ff03b5e5bf726dd2485f",
       "curated": false
@@ -4017,7 +4017,7 @@
     },
     {
       "original": "organized/extracted/embedded/record/research/moc1000/algebra_a4_real_form_and_full_unitary_target.md",
-      "path": "docs/theorems/support_certificates/algebra_a4_real_form_and_full_unitary_target.md",
+      "path": "Docs/theorems/support_certificates/algebra_a4_real_form_and_full_unitary_target.md",
       "entrypoint": false,
       "source_sha256": "eb689c2f53f9be8b5fd6eaed048ebc4cecf3b69b572a9caf5fd23ca36a7490f3",
       "curated": true
@@ -4045,7 +4045,7 @@
     },
     {
       "original": "MOC_broader_results/proofs/large_shift_all_dimensions.md",
-      "path": "docs/structural/proofs/large_shift_all_U.md",
+      "path": "Docs/structural/proofs/large_shift_all_U.md",
       "entrypoint": false,
       "source_sha256": "fdb6c417651fc8b326d4470b2b640ec69277593a051c6fd416797274c9f3472f",
       "curated": false
@@ -4059,28 +4059,28 @@
     },
     {
       "original": "MOC_broader_results/MOC_broader_results/proofs/large_shift_all_dimensions.md",
-      "path": "docs/structural/proofs/large_shift_all_U.md",
+      "path": "Docs/structural/proofs/large_shift_all_U.md",
       "entrypoint": false,
       "source_sha256": "fdb6c417651fc8b326d4470b2b640ec69277593a051c6fd416797274c9f3472f",
       "curated": false
     },
     {
       "original": "MOC_broader_results/MOC_broader_results/proofs/zero_paired_sum_n4.md",
-      "path": "docs/broader/proofs/zero_paired_sum_n4.md",
+      "path": "Docs/broader/proofs/zero_paired_sum_n4.md",
       "entrypoint": false,
       "source_sha256": "7feb8631aaf74cb5dd336d7a9a954e45bbebe15c11db9e785998a29c1227ffc0",
       "curated": false
     },
     {
       "original": "MOC_broader_results/MOC_broader_results/proofs/positive_law_transfer.md",
-      "path": "docs/broader/proofs/positive_law_transfer.md",
+      "path": "Docs/broader/proofs/positive_law_transfer.md",
       "entrypoint": false,
       "source_sha256": "046193a8d515d65a3c1d6b18ae28da3bcb9b9d1ca08fcf5faa840d90cfa58c66",
       "curated": false
     },
     {
       "original": "MOC_broader_results/MOC_broader_results/proofs/fourier_and_neighborhoods.md",
-      "path": "docs/broader/proofs/fourier_and_neighborhoods.md",
+      "path": "Docs/broader/proofs/fourier_and_neighborhoods.md",
       "entrypoint": false,
       "source_sha256": "8c21a362c82b037919d4e09f8a1f838a565d4fb7269adf8df79f5160d53283c3",
       "curated": false
@@ -4101,7 +4101,7 @@
     },
     {
       "original": "MOC_broader_results/MOC_broader_results/historical_facet_certificate/proof.md",
-      "path": "docs/broader/historical_facet_certificate/proof.md",
+      "path": "Docs/broader/historical_facet_certificate/proof.md",
       "entrypoint": false,
       "source_sha256": "0bffbcebd87f2b6eb18b073de9217e826a5fc7ac8b377ebe196006f4bf0c7b16",
       "curated": false
@@ -4234,14 +4234,14 @@
     },
     {
       "original": "MOC_Research_Bundle/MOC_Research_Bundle/proof_notes/variational_independent_review.txt",
-      "path": "docs/early/proof_notes/variational_independent_review.txt",
+      "path": "Docs/early/proof_notes/variational_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "bce5f2c6c50dd8ff1ef2f8473448391f16b830eb74476832739a9173e6079488",
       "curated": false
     },
     {
       "original": "MOC_Research_Bundle/MOC_Research_Bundle/latex/quantitative_radius.tex",
-      "path": "docs/early/latex/quantitative_radius.tex",
+      "path": "Docs/early/latex/quantitative_radius.tex",
       "entrypoint": false,
       "source_sha256": "8b4fda9f4abd52c57b3a4cc13e50772be37f64c4f4ed18df274da6fe7c15b26b",
       "curated": false
@@ -4367,7 +4367,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/terminal_nine_notes.txt",
-      "path": "docs/geometry/terminal_nine_notes.txt",
+      "path": "Docs/geometry/terminal_nine_notes.txt",
       "entrypoint": false,
       "source_sha256": "b73a32c35b260e1865c529676d4c8c0db4830dcd2726a09d41ee6f378cd59e69",
       "curated": false
@@ -4479,7 +4479,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/global_moc4_nine_lift_notes.txt",
-      "path": "docs/geometry/global_moc4_nine_lift_notes.txt",
+      "path": "Docs/geometry/global_moc4_nine_lift_notes.txt",
       "entrypoint": false,
       "source_sha256": "34b3a806d78ea0a3a48f844c87985f0d860062cee07690cd8a135c5523ff368c",
       "curated": false
@@ -4500,7 +4500,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/closing_high_contact_standalone.txt",
-      "path": "docs/geometry/closing_high_contact_standalone.txt",
+      "path": "Docs/geometry/closing_high_contact_standalone.txt",
       "entrypoint": false,
       "source_sha256": "1fc83f8f22795836a9568de5cde79bd4ffe70ef7a5d4ce487ff9e6101b723878",
       "curated": false
@@ -4521,7 +4521,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/global_six_row_notes.txt",
-      "path": "docs/geometry/global_six_row_notes.txt",
+      "path": "Docs/geometry/global_six_row_notes.txt",
       "entrypoint": false,
       "source_sha256": "c37065e44e29a042d278b8888e7a6e0ca3badfd50a9c92f1d126431bf6a65f20",
       "curated": false
@@ -4556,7 +4556,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/zero_height_type1_notes.txt",
-      "path": "docs/geometry/zero_height_type1_notes.txt",
+      "path": "Docs/geometry/zero_height_type1_notes.txt",
       "entrypoint": false,
       "source_sha256": "3111fa4259edb8ec12e0b44b4db58e3052df6733feb33e98644ad5f4b7af1271",
       "curated": false
@@ -4605,7 +4605,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/zero_height_type26_notes.txt",
-      "path": "docs/geometry/zero_height_type26_notes.txt",
+      "path": "Docs/geometry/zero_height_type26_notes.txt",
       "entrypoint": false,
       "source_sha256": "0aaacee2bbb299dce8953aa4aa2ec588ae5c71d6bfceabb18e3b92f14e658e7a",
       "curated": false
@@ -4661,7 +4661,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/terminal_ten_notes.txt",
-      "path": "docs/geometry/terminal_ten_notes.txt",
+      "path": "Docs/geometry/terminal_ten_notes.txt",
       "entrypoint": false,
       "source_sha256": "8537668d16729dbf5acd050a388404d823e40fa1277d52cd0a007f8e41d22e08",
       "curated": false
@@ -4675,14 +4675,14 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/zero_height_types34_notes.txt",
-      "path": "docs/geometry/zero_height_types34_notes.txt",
+      "path": "Docs/geometry/zero_height_types34_notes.txt",
       "entrypoint": false,
       "source_sha256": "c0472f04b030347b22248c3fa6873aa6ca01e6cce21449e99a46d6bdd7caff9a",
       "curated": false
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/profile_family_edges_independent_review.txt",
-      "path": "docs/geometry/profile_family_edges_independent_review.txt",
+      "path": "Docs/geometry/profile_family_edges_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "4f3c44c916aaaa38e891045d580848942c6b30ff072a6a3328c78f17d2077b32",
       "curated": false
@@ -4696,14 +4696,14 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/proposal_algebraic_terminal_notes.txt",
-      "path": "docs/geometry/proposal_algebraic_terminal_notes.txt",
+      "path": "Docs/geometry/proposal_algebraic_terminal_notes.txt",
       "entrypoint": false,
       "source_sha256": "26a7e99e5e44fc2a43e93baaaad56b32e676b0671862fc817423e58cec5ef886",
       "curated": false
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/cone82_completeness_notes.txt",
-      "path": "docs/geometry/cone82_completeness_notes.txt",
+      "path": "Docs/geometry/cone82_completeness_notes.txt",
       "entrypoint": false,
       "source_sha256": "b2b35b0947c0c23410493d18ae100c9fe6e984e7d28b96177d963a716d7c1026",
       "curated": false
@@ -4738,7 +4738,7 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/plucker_positive_metaproof_audit.txt",
-      "path": "docs/geometry/plucker_positive_metaproof_audit.txt",
+      "path": "Docs/geometry/plucker_positive_metaproof_audit.txt",
       "entrypoint": false,
       "source_sha256": "05609009dcab0b0914a05e343662d492a851bc1961549982ffe500ec08bd0760",
       "curated": false
@@ -4794,21 +4794,21 @@
     },
     {
       "original": "MOC4_Verified_Results/MOC4_Verified_Results/global_weighted_minor_notes.txt",
-      "path": "docs/geometry/global_weighted_minor_notes.txt",
+      "path": "Docs/geometry/global_weighted_minor_notes.txt",
       "entrypoint": false,
       "source_sha256": "d6ecd8fe896657694c478d5983aa5829a37dabe8896ae6f470ad77c6869751f1",
       "curated": false
     },
     {
       "original": "MOC_number_systems/MOC_number_systems/arithmetic/representation_invariance.md",
-      "path": "docs/number_systems/arithmetic/representation_invariance.md",
+      "path": "Docs/number_systems/arithmetic/representation_invariance.md",
       "entrypoint": false,
       "source_sha256": "0793a92ded0b246eea280e003bfe7570c7fff03e7eeb1927800112d474b292da",
       "curated": false
     },
     {
       "original": "MOC_number_systems/MOC_number_systems/arithmetic/arithmetic_reductions.md",
-      "path": "docs/number_systems/arithmetic/arithmetic_reductions.md",
+      "path": "Docs/number_systems/arithmetic/arithmetic_reductions.md",
       "entrypoint": false,
       "source_sha256": "8f3c8e87233830bce211cd1f2212770d716616bdb7aa1ddfc18c04cf39827f31",
       "curated": false
@@ -4885,7 +4885,7 @@
     },
     {
       "original": "MOC_Closing_Attempt_Bundle/MOC_Closing_Attempt_Bundle/closing_high_contact_standalone.txt",
-      "path": "docs/geometry/closing_high_contact_standalone.txt",
+      "path": "Docs/geometry/closing_high_contact_standalone.txt",
       "entrypoint": false,
       "source_sha256": "1fc83f8f22795836a9568de5cde79bd4ffe70ef7a5d4ce487ff9e6101b723878",
       "curated": false
@@ -4983,28 +4983,28 @@
     },
     {
       "original": "MOC_Categorical_Research_Bundle/MOC_Categorical_Research_Bundle/proof_notes/category_phase_notes.txt",
-      "path": "docs/categorical/proof_notes/category_phase_notes.txt",
+      "path": "Docs/categorical/proof_notes/category_phase_notes.txt",
       "entrypoint": false,
       "source_sha256": "f7b90c68e92a73d6a69345e6e7b1a49ddfca33a274cbf21fc0d6ec658a7b7808",
       "curated": false
     },
     {
       "original": "MOC_Categorical_Research_Bundle/MOC_Categorical_Research_Bundle/proof_notes/category_tensor_independent_review.txt",
-      "path": "docs/categorical/proof_notes/category_tensor_independent_review.txt",
+      "path": "Docs/categorical/proof_notes/category_tensor_independent_review.txt",
       "entrypoint": false,
       "source_sha256": "df2770456e955544f1ed174d935bda54046999243692df30ad8c0f94ae30cf7b",
       "curated": false
     },
     {
       "original": "MOC_Categorical_Research_Bundle/MOC_Categorical_Research_Bundle/latex/tensor_family.tex",
-      "path": "docs/categorical/latex/tensor_family.tex",
+      "path": "Docs/categorical/latex/tensor_family.tex",
       "entrypoint": false,
       "source_sha256": "d18a286ff53cfda884a7c2d6ffc480cdfd7326445a991b6d7cd80a0cee9d986b",
       "curated": false
     },
     {
       "original": "MOC_Categorical_Research_Bundle/MOC_Categorical_Research_Bundle/latex/local_coupling.tex",
-      "path": "docs/categorical/latex/local_coupling.tex",
+      "path": "Docs/categorical/latex/local_coupling.tex",
       "entrypoint": false,
       "source_sha256": "dcd9f9b1e115b0f134555aa6ac248335811b645f4299a4c14632a45e6d2dbaaa",
       "curated": false
@@ -5018,56 +5018,56 @@
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/independent_nonarchimedean_audit.md",
-      "path": "docs/structural/proofs/independent_nonarchimedean_audit.md",
+      "path": "Docs/structural/proofs/independent_nonarchimedean_audit.md",
       "entrypoint": false,
       "source_sha256": "78a3dbd9dcabf1a66abbf018c513d0d6982e123030be6dfb1dfd98b8cfabbb2c",
       "curated": false
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/independent_haar_audit.md",
-      "path": "docs/structural/proofs/independent_haar_audit.md",
+      "path": "Docs/structural/proofs/independent_haar_audit.md",
       "entrypoint": false,
       "source_sha256": "33fa689ec146d2ccde0837a6a1c06cb95e2f4747aaaf9a3cfa5bfa6bc0bad339",
       "curated": false
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/haar_coverage_theorems.md",
-      "path": "docs/structural/proofs/haar_coverage_theorems.md",
+      "path": "Docs/structural/proofs/haar_coverage_theorems.md",
       "entrypoint": false,
       "source_sha256": "3254193c6a8fbe2546459a0c628294c5faa43d596204eae1a536ea1ba69a5284",
       "curated": false
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/large_shift_all_U.md",
-      "path": "docs/structural/proofs/large_shift_all_U.md",
+      "path": "Docs/structural/proofs/large_shift_all_U.md",
       "entrypoint": false,
       "source_sha256": "fdb6c417651fc8b326d4470b2b640ec69277593a051c6fd416797274c9f3472f",
       "curated": false
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/exact_90_percent_class.md",
-      "path": "docs/structural/proofs/exact_90_percent_class.md",
+      "path": "Docs/structural/proofs/exact_90_percent_class.md",
       "entrypoint": false,
       "source_sha256": "ee4897887e2984d2a3ae2dadc556566ad413f3155344d8dd186cfad0d737ada1",
       "curated": false
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/zero_paired_sum_n4.md",
-      "path": "docs/structural/proofs/zero_paired_sum_n4.md",
+      "path": "Docs/structural/proofs/zero_paired_sum_n4.md",
       "entrypoint": false,
       "source_sha256": "810b3e1460c9df6e0db1e9c146ede7b031c66f3bc06b81f3bd5184b6b890e0b0",
       "curated": false
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/large_shift_distributions.md",
-      "path": "docs/structural/proofs/large_shift_distributions.md",
+      "path": "Docs/structural/proofs/large_shift_distributions.md",
       "entrypoint": false,
       "source_sha256": "f8b5bee32d9fe3199beb760e972fe17b1914576a7836498fa2985fb346b8f291",
       "curated": true
     },
     {
       "original": "MOC_structural_results/MOC_structural_results/proofs/discrete_coverage_and_information.md",
-      "path": "docs/structural/proofs/discrete_coverage_and_information.md",
+      "path": "Docs/structural/proofs/discrete_coverage_and_information.md",
       "entrypoint": false,
       "source_sha256": "d4e187c11f9ac3878439ac471cddfbff0e2ec4ce00b557588254b97496647595",
       "curated": true

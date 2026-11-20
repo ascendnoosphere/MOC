@@ -85,7 +85,7 @@ For $Q(h)\ne0$, any cost $h$ made from a spectral real part and any real constan
 
 The C++ verifier computes all coefficients of $P$ in the degree-nine Bernstein basis on the simplex from Section 1, with one common positive scaling. Of the 497,420 coefficients, 480,297 are positive and 17,123 vanish. The coefficient at the vertex $f$ is positive. All basis functions are nonnegative, and the one corresponding to the vertex $f$ is the ninth power of its barycentric coordinate. Hence $P(h)>0$ whenever the coefficient of $f$ in $h$ is positive. This contradicts the necessary equality $P(h)=0$. It proves the original scalar MOC for the family.
 
-To reproduce, run `python verify_scalar.py` in this folder. It requires SymPy, a C++17 compiler with OpenMP, and GMP. The script constructs the matching tensor, verifies the spin inequalities, compiles the exact arithmetic evaluator, and performs the following steps.
+To reproduce, run `python3 -B Code/spin/verify_scalar.py` from the repository root. It requires SymPy, a C++17 compiler with OpenMP, and GMP. The script constructs the matching tensor, verifies the spin inequalities, compiles the exact arithmetic evaluator, and performs the following steps.
 
 1. For each nonnegative integer vector $\alpha$ in 13 coordinates with $|\alpha|\le9$, put $h=f+11\alpha$, keeping the last coordinate equal to two. Evaluate $-N(h)=-\det(Q(h)H(h)-F(h)H(e))/Q(h)^{12}$ exactly. The code uses fraction-free elimination and checks exact divisibility and a perfect-square remainder.
 2. Choose the square root congruent to $2^{24}$ modulo eleven. Indeed $Q(f)=-8$ is a unit modulo eleven, so the Taylor series of $-N(f+u)$ has coefficients integral at eleven. Its normalized square root has the same property by the recursive coefficient equations, since $2P(f)$ is a unit. Consequently $P(f+11\alpha)\equiv2^{24}\pmod{11}$. This distinguishes both signs at every grid point.
@@ -120,4 +120,4 @@ $$
 (1/3,6,6,3/2,6,1/4,3/2,1/3,1/4,1/3,1/6,1/4,3/2).
 $$
 
-For this simplex every one of the 497,420 Bernstein coefficients is strictly positive. The main verifier checks this sign result, and `python check_coverage.py` checks both the original coverage gap and membership in the second criterion.
+For this simplex every one of the 497,420 Bernstein coefficients is strictly positive. The main verifier checks this sign result, and `python3 -B Code/spin/check_coverage.py` checks both the original coverage gap and membership in the second criterion.

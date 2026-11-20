@@ -1,6 +1,6 @@
 """Verify the supplied integral boundary certificate for the four-letter minor polytope.
 
-Run in any directory with cone82.json next to this script. No external package.
+Reads data/cone82.json relative to the repository. No external package.
 The common sign and zero boundary give nonzero degree on the convex boundary.
 """
 from collections import Counter
@@ -35,7 +35,8 @@ def image(pi, mask):
 
 
 def main():
-    d = json.loads(Path(__file__).with_name('cone82.json').read_text())
+    certificate = Path(__file__).resolve().parents[1] / 'data' / 'cone82.json'
+    d = json.loads(certificate.read_text())
     ps = list(permutations(range(4)))
     vertices = [[1]+[int(image(p, i) == j) for i, j in d['coordinate_pairs']] for p in ps]
     average_times_24 = [sum(c) for c in zip(*vertices)]

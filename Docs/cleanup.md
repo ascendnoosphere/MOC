@@ -1,6 +1,8 @@
-# Folder organization
+# Historical folder organization
 
-The working collection is organized by purpose:
+This record describes the larger source collection before the present checkout. For the current directories and runnable commands see the [repository guide](../README.md) and [reproduction guide](reproduction.md).
+
+The earlier collection was organized by purpose:
 
 | Path | Role |
 | --- | --- |
