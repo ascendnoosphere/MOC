@@ -16,7 +16,7 @@ From the repository root, run `python3 -B Code/verify_cone82.py` to check the 82
 | Three-dimensional intersection with two distinct nonzero eigenvalues on one side, or with reciprocal values on a line and repeated endpoints | [Overlap supplement](Docs/MOC_Overlap_Three_Supplement.md), including its separate comparison hull with zero |
 | Generalized circles on nested reducing subspaces | [Local pole theorem](Docs/local_pole_theorem.md) and [verifier](Code/verify_local_pole.py). The supplement uses the difference convention. |
 
-The [document index](Docs/README.md) covers the larger research collection. [Lean source availability](Lean/README.md) describes the formalization materials in this checkout.
+The [document index](Docs/README.md) covers the larger research collection. [Lean formalization](Lean/README.md) gives the build and literature coverage.
 
 ## Further order-four research
 

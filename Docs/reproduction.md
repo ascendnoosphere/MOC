@@ -65,6 +65,10 @@ pandoc --from=markdown+tex_math_single_backslash --toc --pdf-engine=pdflatex \
   README.md Blocks.md Spectra.md Symplectic.md Regular.md -o "$out/Cases.pdf"
 ```
 
+## Lean proofs
+
+The pinned project under [Lean/](../Lean/README.md) checks the spectral formulation and several literature and repository results. Build it from the repository root with `cd Lean && lake build`.
+
 ## Historical reproduction instructions
 
 Some research notes refer to a larger collection with a `code/run.py` launcher, `code/tests/`, scientific packages, a Lean project and archived build outputs. These paths describe that historical collection. The [layout map](../data/layout.json) records its file provenance. The commands above exercise the standalone sources distributed in this repository.
