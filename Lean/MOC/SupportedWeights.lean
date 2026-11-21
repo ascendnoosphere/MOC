@@ -71,6 +71,45 @@ theorem exists_birkhoff_weight_pos {D : Matrix ι ι ℝ} (hD : D ∈ doublyStoc
     intro τ _
     rw [smul_smul, ← add_smul]
 
+/-- A full-support unitary admits one singleton law assigning positive weight
+to every permutation at once. -/
+theorem exists_pos_singleton_weights (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (hUpos : ∀ i j, U i j ≠ 0) :
+    ∃ w : Equiv.Perm ι → ℝ, (∀ σ, 0 < w σ) ∧ (∑ σ, w σ) = 1 ∧
+      ∀ i j, marginal (fun σ => (w σ : ℂ)) i j = (Complex.normSq (U i j) : ℂ) := by
+  classical
+  let D : Matrix ι ι ℝ := Matrix.of (fun j i => Complex.normSq (U i j))
+  have hD : D ∈ doublyStochastic ℝ ι := normSq_transpose_doublyStochastic U hU
+  have h (σ : Equiv.Perm ι) := exists_birkhoff_weight_pos hD σ
+    (fun j => Complex.normSq_pos.mpr (hUpos (σ j) j))
+  choose f hf using h
+  let N : ℝ := Fintype.card (Equiv.Perm ι)
+  have hN : 0 < N := Nat.cast_pos.mpr Fintype.card_pos
+  let w (τ : Equiv.Perm ι) := (∑ σ, f σ τ) / N
+  have havg (g : Equiv.Perm ι → Equiv.Perm ι → ℝ) (c : ℝ)
+      (hg : ∀ σ, (∑ τ, g σ τ) = c) : ((∑ τ, (∑ σ, g σ τ) / N)) = c := by
+    rw [← Finset.sum_div, Finset.sum_comm]
+    simp only [hg, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+    change N * c / N = c
+    field_simp [hN.ne'] <;> ring
+  refine ⟨w, fun τ => ?_, havg f 1 (fun σ => (hf σ).2.2.1), fun i j => ?_⟩
+  · exact div_pos ((hf τ).2.1.trans_le (Finset.single_le_sum
+      (fun σ _ => (hf σ).1 τ) (Finset.mem_univ τ))) hN
+  · have hfm (σ : Equiv.Perm ι) :
+        (∑ τ, if τ j = i then f σ τ else 0) = Complex.normSq (U i j) := by
+      have he := congrArg (fun M : Matrix ι ι ℝ => M j i) (hf σ).2.2.2
+      simpa [D, Matrix.sum_apply, Matrix.smul_apply, PEquiv.toMatrix_apply,
+        Equiv.toPEquiv_apply, mul_ite, eq_comm] using he.symm
+    have hterm (τ : Equiv.Perm ι) : (if τ j = i then w τ else 0) =
+        (∑ σ, if τ j = i then f σ τ else 0) / N := by
+      split_ifs <;> simp [w]
+    have hwavg : (∑ τ, if τ j = i then w τ else 0) = Complex.normSq (U i j) := by
+      simp only [hterm]
+      exact havg (fun σ τ => if τ j = i then f σ τ else 0) _ hfm
+    unfold marginal
+    simpa only [Complex.ofReal_sum, apply_ite, Complex.ofReal_zero] using
+      congrArg Complex.ofReal hwavg
+
 /-- If a linear functional is minimized over all permutation matrices at
 a doubly stochastic matrix, every supported permutation has the same value. -/
 theorem linearMap_eq_of_birkhoff_min {D : Matrix ι ι ℝ} (hD : D ∈ doublyStochastic ℝ ι)

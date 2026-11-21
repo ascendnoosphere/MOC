@@ -14,7 +14,8 @@ noncomputable section
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-private theorem matchingProduct_subset_marker (I J : Finset ι) (hc : I.card = J.card)
+/-- Complementary zero-one spectra realize the indicator of a subset image. -/
+theorem matchingProduct_subset_marker (I J : Finset ι) (hc : I.card = J.card)
     (σ : Equiv.Perm ι) :
     matchingProduct (fun i => if i ∈ I then 0 else 1) (fun j => if j ∈ J then 1 else 0) σ =
       if J.map σ.toEmbedding = I then 1 else 0 := by
@@ -152,6 +153,22 @@ theorem sum_signedWeight_image_eq_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsU
       exact hc (by rw [← hσ, Finset.card_map])
     simp [he, subsetMinorSq, hc]
 
+/-- A unitary squared minor may be computed in any common finite index type for
+its row and column selections. -/
+theorem subsetMinorSq_eq_normSq_det_submatrix {κ : Type*} [Fintype κ] [DecidableEq κ]
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) (I J : Finset ι) (e : κ ≃ I) (f : κ ≃ J) :
+    subsetMinorSq U I J = Complex.normSq (U.submatrix (Subtype.val ∘ e) (Subtype.val ∘ f)).det := by
+  have h := sum_signedWeight_image_eq_minor U hU I J (e.symm.trans f)
+  rw [sum_signedWeight_image_eq_subsetMinorSq U hU I J] at h
+  let A := U.submatrix (fun i : I => (i : ι)) (fun i : I => (((e.symm.trans f) i : J) : ι))
+  have hdet : A.det = (U.submatrix (Subtype.val ∘ e) (Subtype.val ∘ f)).det := by
+    rw [← Matrix.det_submatrix_equiv_self e A]
+    congr 1
+    ext i j
+    simp [A]
+  apply Complex.ofReal_injective
+  exact h.trans (congrArg (fun z : ℂ => (Complex.normSq z : ℂ)) hdet)
+
 omit [Fintype ι] in
 theorem subsetMinorSq_nonneg (U : Matrix ι ι ℂ) (I J : Finset ι) :
     0 ≤ subsetMinorSq U I J := by
@@ -159,6 +176,51 @@ theorem subsetMinorSq_nonneg (U : Matrix ι ι ℂ) (I J : Finset ι) :
   split_ifs
   · exact Complex.normSq_nonneg _
   · exact le_rfl
+
+/-- An affine decomposition of projected matching gaps into subset-image
+indicators evaluates at a unitary by replacing indicators with squared minors. -/
+theorem gap_eq_minor_decomposition {κ : Type*} [Fintype κ]
+    (a b : ι → ℂ) (η : ℂ) (H : ℝ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (I J : κ → Finset ι) (w : κ → ℝ)
+    (hdecomp : ∀ σ : Equiv.Perm ι, (η * matchingProduct a b σ).re - H =
+      ∑ k, if (J k).map σ.toEmbedding = I k then w k else 0) :
+    (η * determinantValue a b U).re - H = ∑ k, w k * subsetMinorSq U (I k) (J k) := by
+  have hdet : (η * determinantValue a b U).re =
+      ∑ σ, realSignedWeight U σ * (η * matchingProduct a b σ).re := by
+    rw [← real_signed_determinant a b U hU, Finset.mul_sum, Complex.re_sum]
+    apply Finset.sum_congr rfl
+    intro σ _
+    rw [mul_left_comm η, Complex.re_ofReal_mul]
+  have hmass (k : κ) : (∑ σ : Equiv.Perm ι,
+      if (J k).map σ.toEmbedding = I k then realSignedWeight U σ else 0) =
+      subsetMinorSq U (I k) (J k) := by
+    have hs := congrArg Complex.re (sum_signedWeight_image_eq_subsetMinorSq U hU (I k) (J k))
+    simpa only [Finset.sum_filter, Complex.re_sum, apply_ite, Complex.zero_re,
+      Complex.ofReal_re, realSignedWeight] using hs
+  calc
+    _ = ∑ σ, realSignedWeight U σ * ((η * matchingProduct a b σ).re - H) := by
+      simp_rw [mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul, sum_realSignedWeight U hU,
+        one_mul, hdet]
+    _ = _ := by
+      simp_rw [hdecomp, Finset.mul_sum]
+      rw [Finset.sum_comm]
+      apply Finset.sum_congr rfl
+      intro k _
+      rw [← hmass k, Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro σ _
+      split_ifs <;> simp [mul_comm]
+
+/-- Nonnegative subset-image budgets give a support bound in every order. -/
+theorem support_of_minor_gap_decomposition {κ : Type*} [Fintype κ]
+    (a b : ι → ℂ) (η : ℂ) (H : ℝ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (I J : κ → Finset ι) (w : κ → ℝ) (hw : ∀ k, 0 ≤ w k)
+    (hdecomp : ∀ σ : Equiv.Perm ι, (η * matchingProduct a b σ).re - H =
+      ∑ k, if (J k).map σ.toEmbedding = I k then w k else 0) :
+    H ≤ (η * determinantValue a b U).re := by
+  apply sub_nonneg.mp
+  rw [gap_eq_minor_decomposition a b η H U hU I J w hdecomp]
+  exact Finset.sum_nonneg (fun k _ => mul_nonneg (hw k) (subsetMinorSq_nonneg U _ _))
 
 /-- Squared minors over all possible images of a fixed subset have total mass one. -/
 theorem sum_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsUnitary U) (J : Finset ι) :
@@ -168,7 +230,8 @@ theorem sum_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsUnitary U) (J : Finset 
   simp_rw [← sum_signedWeight_image_eq_subsetMinorSq U hU]
   rw [Finset.sum_fiberwise, sum_signedWeight U (det_ne_zero_of_unitary hU)]
 
-private theorem matchingProduct_expand_subsets (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+/-- Expanding each selected second-spectrum factor records its image under the matching. -/
+theorem matchingProduct_expand_subsets (a b : ι → ℂ) (σ : Equiv.Perm ι) :
     matchingProduct a b σ =
       ∑ J : Finset ι, (∏ i ∈ (J.map σ.toEmbedding)ᶜ, a i) * ∏ j ∈ J, b j := by
   calc

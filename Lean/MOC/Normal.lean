@@ -2,6 +2,8 @@ import MOC.Core
 import Mathlib.Analysis.InnerProductSpace.JointEigenspace
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathlib.LinearAlgebra.Matrix.Hermitian
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring
 
 /-! The normal-matrix formulation, with eigenvalues counted with algebraic multiplicity. -/
 
@@ -163,6 +165,92 @@ theorem matchingRange_relabel (a b : ι → ℂ) (e f : Equiv.Perm ι) :
     congr 1
     ext j
     simp
+
+/-- The real and imaginary parts of one normal diagonalization give a common
+unitary eigenbasis for two commuting Hermitian matrices. -/
+theorem exists_joint_hermitian_diagonalization (A B : Matrix ι ι ℂ)
+    (hA : A.IsHermitian) (hB : B.IsHermitian) (hAB : Commute A B) :
+    ∃ (a b : ι → ℂ) (W : Matrix ι ι ℂ), IsUnitary W ∧
+      A = W * diagonal a * Wᴴ ∧ B = W * diagonal b * Wᴴ := by
+  have hstar : (A + Complex.I • B)ᴴ = A - Complex.I • B := by
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, hA.eq, hB.eq,
+      Complex.star_def, Complex.conj_I, neg_smul, sub_eq_add_neg]
+  have hcomm := hAB.smul_right Complex.I
+  have hnormal : IsStarNormal (A + Complex.I • B) := by
+    constructor
+    change Commute (A + Complex.I • B)ᴴ (A + Complex.I • B)
+    rw [hstar]
+    exact ((Commute.refl A).add_right hcomm).sub_left
+      (hcomm.symm.add_right (Commute.refl (Complex.I • B)))
+  obtain ⟨d, W, hW, hd⟩ := exists_unitary_diagonalization _ hnormal
+  have hd' : A - Complex.I • B = W * diagonal (star d) * Wᴴ := by
+    rw [← hstar, hd, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul,
+      Matrix.conjTranspose_conjTranspose, Matrix.diagonal_conjTranspose, Matrix.mul_assoc]
+  let a (i : ι) : ℂ := (d i).re
+  let b (i : ι) : ℂ := (d i).im
+  have hadd : diagonal d + diagonal (star d) = (2 : ℂ) • diagonal a := by
+    rw [Matrix.diagonal_add, ← Matrix.diagonal_smul]
+    apply congrArg Matrix.diagonal
+    funext i
+    apply Complex.ext <;> simp [a, Pi.star_apply, Complex.star_def, Complex.mul_re, Complex.mul_im] <;> ring
+  have hsub : diagonal d - diagonal (star d) = (2 * Complex.I) • diagonal b := by
+    rw [Matrix.diagonal_sub, ← Matrix.diagonal_smul]
+    apply congrArg Matrix.diagonal
+    funext i
+    apply Complex.ext <;> simp [b, Pi.star_apply, Complex.star_def, Complex.mul_re, Complex.mul_im] <;> ring
+  have htwo : (2 : ℂ) ≠ 0 := by norm_num
+  have htwoI : (2 : ℂ) * Complex.I ≠ 0 := mul_ne_zero htwo Complex.I_ne_zero
+  refine ⟨a, b, W, hW, smul_right_injective _ htwo ?_, smul_right_injective _ htwoI ?_⟩
+  · calc
+      (2 : ℂ) • A = (A + Complex.I • B) + (A - Complex.I • B) := by rw [two_smul]; abel
+      _ = W * (diagonal d + diagonal (star d)) * Wᴴ := by
+        rw [hd, hd', Matrix.mul_add, Matrix.add_mul]
+      _ = _ := by rw [hadd, Matrix.mul_smul, Matrix.smul_mul]
+  · calc
+      (2 * Complex.I) • B = (A + Complex.I • B) - (A - Complex.I • B) := by
+        rw [MulAction.mul_smul, two_smul]
+        abel
+      _ = W * (diagonal d - diagonal (star d)) * Wᴴ := by
+        rw [hd, hd', Matrix.mul_sub, Matrix.sub_mul]
+      _ = _ := by rw [hsub, Matrix.mul_smul, Matrix.smul_mul]
+
+/-- Independently chosen eigenbases preserve the hull condition, with eigenvalues
+counted with their multiplicities. -/
+theorem holds_iff_relative_to_diagonalizations (a b a' b' : ι → ℂ)
+    {U V W : Matrix ι ι ℂ} (hU : IsUnitary U) (hV : IsUnitary V) (hW : IsUnitary W)
+    (ha : diagonal a = V * diagonal a' * Vᴴ)
+    (hb : U * diagonal b * Uᴴ = W * diagonal b' * Wᴴ) :
+    Holds a b U ↔ Holds a' b' (Vᴴ * W) := by
+  have hdet : determinantValue a b U = determinantValue a' b' (Vᴴ * W) := by
+    unfold determinantValue at ⊢
+    rw [ha, hb]
+    exact determinantValue_relative a' b' V W hV
+  have h1 : IsUnitary (1 : Matrix ι ι ℂ) := by simp [IsUnitary]
+  have har := roots_unitary_diagonalization a h1
+  simp only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] at har
+  rw [ha, roots_unitary_diagonalization a' hV] at har
+  have hbr := roots_unitary_diagonalization b hU
+  rw [hb, roots_unitary_diagonalization b' hW] at hbr
+  obtain ⟨e, he⟩ := exists_perm_of_equal_multisets a a' har.symm
+  obtain ⟨f, hf⟩ := exists_perm_of_equal_multisets b b' hbr.symm
+  unfold Holds
+  rw [hdet, he, hf, matchingRange_relabel]
+
+/-- A common unitary eigenbasis realizes a permutation vertex, including repeated eigenvalues. -/
+theorem holds_of_joint_unitary_diagonalization (a b a' b' : ι → ℂ) {U W : Matrix ι ι ℂ}
+    (hU : IsUnitary U) (hW : IsUnitary W)
+    (ha : diagonal a = W * diagonal a' * Wᴴ)
+    (hb : U * diagonal b * Uᴴ = W * diagonal b' * Wᴴ) : Holds a b U := by
+  apply (holds_iff_relative_to_diagonalizations a b a' b' hU hW hW ha hb).mpr
+  rw [hW.2]
+  exact holds_identity a' b'
+
+/-- Commuting Hermitian summands give one permutation vertex, including repeated eigenvalues. -/
+theorem holds_of_commuting_hermitian (a b : ι → ℂ) {U : Matrix ι ι ℂ}
+    (hU : IsUnitary U) (hA : (diagonal a).IsHermitian) (hB : (U * diagonal b * Uᴴ).IsHermitian)
+    (hAB : Commute (diagonal a) (U * diagonal b * Uᴴ)) : Holds a b U := by
+  obtain ⟨a', b', W, hW, ha, hb⟩ := exists_joint_hermitian_diagonalization _ _ hA hB hAB
+  exact holds_of_joint_unitary_diagonalization a b a' b' hU hW ha hb
 
 /-- MOC for two arbitrary normal matrices and any enumerations of their characteristic roots. -/
 def NormalConjecture (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=

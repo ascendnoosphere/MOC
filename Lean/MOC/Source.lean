@@ -149,6 +149,39 @@ theorem conjecture_iff_anchored (i₀ j₀ : ι) :
       (h U hU (fun i => (a i - a i₀) / (a i + b j₀)) (fun j => (b j - b j₀) / (a i₀ + b j))
         (by simp) (by simp))
 
+/-- Switching the anchor edge with a second edge removes one factor
+from the corresponding matching in the normalized chart. -/
+theorem anchored_product_swap (x y : ι → ℂ) (σ : Equiv.Perm ι) (j₀ j : ι)
+    (hx : x (σ j₀) = 0) (hy : y j₀ = 0) :
+    (∏ k, (1 - x (σ k) * y k)) = (1 - x (σ j) * y j) *
+      ∏ k, (1 - x (σ (Equiv.swap j₀ j k)) * y k) := by
+  let f : ι → ℂ := fun k => 1 - x (σ k) * y k
+  let g : ι → ℂ := fun k => 1 - x (σ (Equiv.swap j₀ j k)) * y k
+  change (∏ k, f k) = f j * ∏ k, g k
+  have hgj : g j = 1 := by simp [g, hx]
+  have heq : ∏ k ∈ (Finset.univ : Finset ι).erase j, f k =
+      ∏ k ∈ (Finset.univ : Finset ι).erase j, g k := by
+    apply Finset.prod_congr rfl
+    intro k hk
+    by_cases hk₀ : k = j₀
+    · subst k
+      simp [f, g, hy]
+    · have hkj : k ≠ j := (Finset.mem_erase.mp hk).1
+      simp [f, g, Equiv.swap_apply_of_ne_of_ne hk₀ hkj]
+  calc
+    (∏ k, f k) = f j * ∏ k ∈ (Finset.univ : Finset ι).erase j, f k :=
+      (Finset.mul_prod_erase Finset.univ f (Finset.mem_univ j)).symm
+    _ = f j * ∏ k, g k := by
+      rw [heq, ← Finset.mul_prod_erase Finset.univ g (Finset.mem_univ j), hgj, one_mul]
+
+/-- Recover one rank-one entry from the ratios of two matching coordinates. -/
+theorem anchored_entry_of_swap (x y : ι → ℂ) (σ : Equiv.Perm ι) (j₀ j : ι)
+    (hx : x (σ j₀) = 0) (hy : y j₀ = 0)
+    (hnz : (∏ k, (1 - x (σ (Equiv.swap j₀ j k)) * y k)) ≠ 0) :
+    x (σ j) * y j = 1 -
+      (∏ k, (1 - x (σ k) * y k)) / ∏ k, (1 - x (σ (Equiv.swap j₀ j k)) * y k) := by
+  rw [anchored_product_swap x y σ j₀ j hx hy, mul_div_cancel_right₀ _ hnz, sub_sub_cancel]
+
 end
 
 end MOC

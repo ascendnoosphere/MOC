@@ -20,6 +20,11 @@ def schurTransfer (α : ℂ) (r : Matrix (Fin 1) ι ℂ) (c : Matrix ι (Fin 1) 
     (D : Matrix ι ι ℂ) (z : ℂ) : Matrix ι ι ℂ :=
   D + (z / (1 - z * α)) • (c * r)
 
+/-- The transfer family in a parameter that enters affinely. -/
+def affineSchurTransfer (α : ℂ) (r : Matrix (Fin 1) ι ℂ) (c : Matrix ι (Fin 1) ℂ)
+    (D : Matrix ι ι ℂ) (z : ℂ) : Matrix ι ι ℂ :=
+  D + ((z + star α) / (1 - (Complex.normSq α : ℂ))) • (c * r)
+
 variable [Fintype ι] [DecidableEq ι]
 
 /-- A modulus-one feedback phase preserves unitarity wherever the transfer is defined. -/
@@ -110,6 +115,65 @@ theorem schurTransfer_unitary_of_phase (α : ℂ) (r : Matrix (Fin 1) ι ℂ)
     obtain ⟨hr, hc, hD⟩ := schurTransfer_boundary α r c D hU hα
     simpa [schurTransfer, hr, hc] using hD
   · exact schurTransfer_unitary_of_ne α r c D z hU hz hden
+
+private theorem affine_feedback (α z : ℂ) (hα : Complex.normSq α < 1)
+    (hz : Complex.normSq z = 1) :
+    let w := (z + star α) / (1 + α * z)
+    ‖w‖ = 1 ∧ w / (1 - w * α) = (z + star α) / (1 - (Complex.normSq α : ℂ)) := by
+  let p := z + star α
+  let s := 1 + α * z
+  let q := 1 - (Complex.normSq α : ℂ)
+  let w := p / s
+  change ‖w‖ = 1 ∧ w / (1 - w * α) = p / q
+  have hs : s ≠ 0 := by
+    intro h
+    have hm : α * z = -1 := by
+      calc
+        α * z = s - 1 := by dsimp [s]; ring
+        _ = -1 := by rw [h, zero_sub]
+    have hn := congrArg Complex.normSq hm
+    rw [Complex.normSq_mul, hz, mul_one, Complex.normSq_neg, Complex.normSq_one] at hn
+    exact hα.ne hn
+  have hzz : z * star z = (1 : ℂ) := by
+    rw [Complex.star_def, Complex.mul_conj, hz, Complex.ofReal_one]
+  have hp : p = z * star s := by
+    dsimp only [p, s]
+    simp only [star_add, star_one, StarMul.star_mul, mul_add, mul_one, ← mul_assoc, hzz, one_mul]
+  have hp_norm : Complex.normSq p = Complex.normSq s := by
+    simp [hp, Complex.normSq_mul, hz, Complex.star_def]
+  have hw_norm : Complex.normSq w = 1 := by
+    change Complex.normSq (p / s) = 1
+    rw [Complex.normSq_div, hp_norm, div_self (Complex.normSq_pos.mpr hs).ne']
+  refine ⟨(sq_eq_sq₀ (norm_nonneg _) zero_le_one).mp (by
+    simpa [Complex.normSq_eq_norm_sq] using hw_norm), ?_⟩
+  have hden : 1 - w * α = q / s := by
+    apply (eq_div_iff hs).mpr
+    calc
+      (1 - w * α) * s = s - (w * s) * α := by ring
+      _ = s - p * α := by rw [show w * s = p from div_mul_cancel₀ _ hs]
+      _ = q := by
+        dsimp only [s, p, q]
+        rw [Complex.normSq_eq_conj_mul_self, ← Complex.star_def]
+        ring
+  rw [hden]
+  exact div_div_div_cancel_right₀ hs p q
+
+omit [Fintype ι] [DecidableEq ι] in
+/-- The affine and feedback parametrizations agree on the unit circle. -/
+theorem affineSchurTransfer_eq_schurTransfer (α : ℂ) (r : Matrix (Fin 1) ι ℂ)
+    (c : Matrix ι (Fin 1) ℂ) (D : Matrix ι ι ℂ) (z : ℂ)
+    (hα : Complex.normSq α < 1) (hz : Complex.normSq z = 1) :
+    affineSchurTransfer α r c D z = schurTransfer α r c D ((z + star α) / (1 + α * z)) := by
+  simp only [affineSchurTransfer, schurTransfer, (affine_feedback α z hα hz).2]
+
+/-- The affine completion is unitary at every modulus-one parameter. -/
+theorem affineSchurTransfer_unitary (α : ℂ) (r : Matrix (Fin 1) ι ℂ)
+    (c : Matrix ι (Fin 1) ℂ) (D : Matrix ι ι ℂ) (z : ℂ)
+    (hU : IsUnitary (fromBlocks (scalar (Fin 1) α) r c D))
+    (hα : Complex.normSq α < 1) (hz : Complex.normSq z = 1) :
+    IsUnitary (affineSchurTransfer α r c D z) := by
+  rw [affineSchurTransfer_eq_schurTransfer α r c D z hα hz]
+  exact schurTransfer_unitary_of_phase α r c D _ hU (affine_feedback α z hα hz).1
 
 /-- Applying the anchored spectral factors before transfer introduces one outer product.
 Here `x` and `y` omit their zero anchor entries. -/
