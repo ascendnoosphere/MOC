@@ -48,13 +48,21 @@ theorem holds_directSum (a b : ι → ℂ) (c d : κ → ℂ)
 
 theorem unitary_directSum {U : Matrix ι ι ℂ} {V : Matrix κ κ ℂ}
     (hU : IsUnitary U) (hV : IsUnitary V) : IsUnitary (fromBlocks U 0 0 V) := by
-  have hone : fromBlocks (1 : Matrix ι ι ℂ) 0 0 (1 : Matrix κ κ ℂ) = 1 := by
-    rw [← Matrix.diagonal_one, ← Matrix.diagonal_one, Matrix.fromBlocks_diagonal]
-    funext i
-    cases i <;> rfl
   constructor <;>
     simp [Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_multiply,
-      hU.1, hU.2, hV.1, hV.2, hone]
+      hU.1, hU.2, hV.1, hV.2]
+
+theorem unitary_directSum_iff {U : Matrix ι ι ℂ} {V : Matrix κ κ ℂ} :
+    IsUnitary (fromBlocks U 0 0 V) ↔ IsUnitary U ∧ IsUnitary V := by
+  constructor
+  · intro h
+    unfold IsUnitary at h
+    simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,
+      Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add,
+      ← Matrix.fromBlocks_one, Matrix.fromBlocks_inj, and_true, true_and] at h
+    exact ⟨⟨h.1.1, h.2.1⟩, ⟨h.1.2, h.2.2⟩⟩
+  · rintro ⟨hU, hV⟩
+    exact unitary_directSum hU hV
 
 theorem holds_blocks_of_conjectures (hι : Conjecture ι) (hκ : Conjecture κ)
     (a b : ι → ℂ) (c d : κ → ℂ) (U : Matrix ι ι ℂ) (V : Matrix κ κ ℂ)
