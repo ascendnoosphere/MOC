@@ -47,6 +47,46 @@ theorem signed_determinant (a b : ι → ℂ) (U : Matrix ι ι ℂ) (h : IsUnit
   unfold signedWeight
   ring
 
+/-- The unitary signed determinant law can use real weights for all complex spectra. -/
+def realSignedWeight (U : Matrix ι ι ℂ) (σ : Equiv.Perm ι) : ℝ :=
+  (signedWeight U σ).re
+
+theorem sum_realSignedWeight (U : Matrix ι ι ℂ) (h : IsUnitary U) :
+    ∑ σ, realSignedWeight U σ = 1 := by
+  simpa [realSignedWeight, Complex.re_sum] using
+    congrArg Complex.re (sum_signedWeight U (det_ne_zero_of_unitary h))
+
+theorem real_signed_determinant (a b : ι → ℂ) (U : Matrix ι ι ℂ) (h : IsUnitary U) :
+    ∑ σ, (realSignedWeight U σ : ℂ) * matchingProduct a b σ = determinantValue a b U := by
+  have hc : ∑ σ, (starRingEnd ℂ) (signedWeight U σ) * matchingProduct a b σ =
+      determinantValue a b U := by
+    have hconj := congrArg (starRingEnd ℂ)
+      (signed_determinant (fun i => star (a i)) (fun j => star (b j)) U h)
+    have hp (σ : Equiv.Perm ι) :
+        (starRingEnd ℂ) (matchingProduct (fun i => star (a i)) (fun j => star (b j)) σ) =
+          matchingProduct a b σ := by
+      unfold matchingProduct
+      rw [map_prod]
+      apply Finset.prod_congr rfl
+      intro j _
+      simp only [map_add, starRingEnd_apply, star_star]
+    have hd : determinantValue (fun i => star (a i)) (fun j => star (b j)) U =
+        (diagonal a + U * diagonal b * Uᴴ)ᴴ.det := by
+      simp only [determinantValue, Matrix.conjTranspose_add, Matrix.conjTranspose_mul,
+        Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc, Matrix.diagonal_conjTranspose]
+      rfl
+    rw [hd, Matrix.det_conjTranspose] at hconj
+    simpa only [map_sum, map_mul, hp, starRingEnd_apply, star_star, determinantValue] using hconj
+  simp_rw [realSignedWeight, Complex.re_eq_add_conj, add_div, add_mul, div_mul_eq_mul_div]
+  rw [Finset.sum_add_distrib, ← Finset.sum_div, ← Finset.sum_div,
+    signed_determinant a b U h, hc]
+  ring
+
+theorem holds_of_nonneg_realSignedWeight (a b : ι → ℂ) {U : Matrix ι ι ℂ} (h : IsUnitary U)
+    (hw : ∀ σ, 0 ≤ realSignedWeight U σ) : Holds a b U :=
+  holds_of_weights (realSignedWeight U) hw (sum_realSignedWeight U h)
+    (real_signed_determinant a b U h)
+
 def marginal (w : Equiv.Perm ι → ℂ) (i j : ι) : ℂ :=
   ∑ σ, if σ j = i then w σ else 0
 
@@ -95,6 +135,12 @@ theorem marginal_signedWeight (U : Matrix ι ι ℂ) (h : IsUnitary U) (i j : ι
   change U i j * (U.det * star (U i j)) / U.det = star (U i j) * U i j
   field_simp [det_ne_zero_of_unitary h]
   ring
+
+theorem marginal_realSignedWeight (U : Matrix ι ι ℂ) (h : IsUnitary U) (i j : ι) :
+    ∑ σ, (if σ j = i then realSignedWeight U σ else 0) = Complex.normSq (U i j) := by
+  have hr := congrArg Complex.re (marginal_signedWeight U h i j)
+  simpa only [marginal, Complex.re_sum, apply_ite, Complex.zero_re, Complex.ofReal_re,
+    realSignedWeight] using hr
 
 theorem normSq_transpose_doublyStochastic (U : Matrix ι ι ℂ) (h : IsUnitary U) :
     Matrix.of (fun j i => Complex.normSq (U i j)) ∈ doublyStochastic ℝ ι := by

@@ -89,6 +89,25 @@ theorem relative_unitary (V W : Matrix ι ι ℂ) (hV : IsUnitary V) (hW : IsUni
       _ = Wᴴ * (V * Vᴴ) * W := by simp only [Matrix.mul_assoc]
       _ = 1 := by rw [hV.1, Matrix.mul_one, hW.2]
 
+/-- Swapping the summands replaces the relative eigenbasis by its adjoint. -/
+theorem holds_swap_iff (a b : ι → ℂ) {U : Matrix ι ι ℂ} (hU : IsUnitary U) :
+    Holds b a Uᴴ ↔ Holds a b U := by
+  have hd : determinantValue b a Uᴴ = determinantValue a b U := by
+    simpa [determinantValue, add_comm] using
+      (determinantValue_relative b a U (1 : Matrix ι ι ℂ) hU).symm
+  have hp (σ : Equiv.Perm ι) : matchingProduct b a σ = matchingProduct a b σ.symm := by
+    rw [matchingProduct_inverse]
+    simp [matchingProduct, add_comm]
+  have hr : Set.range (matchingProduct b a) = Set.range (matchingProduct a b) := by
+    ext z
+    constructor
+    · rintro ⟨σ, rfl⟩
+      exact ⟨σ.symm, (hp σ).symm⟩
+    · rintro ⟨σ, rfl⟩
+      exact ⟨σ.symm, by simpa using hp σ.symm⟩
+  unfold Holds
+  rw [hd, hr]
+
 theorem holds_of_diagonal_conjugation (a b : ι → ℂ) (U : Matrix ι ι ℂ) (σ : Equiv.Perm ι)
     (h : U * diagonal b * Uᴴ = diagonal (fun i => b (σ.symm i))) : Holds a b U := by
   unfold Holds determinantValue

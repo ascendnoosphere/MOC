@@ -1,6 +1,10 @@
 import MOC.Claim
-import MOC.Geometry
+import MOC.ContactRectangle
+import MOC.MixedBound
 import MOC.Obstruction
+import MOC.PhaseMove
+import MOC.RankSum
+import MOC.Source
 
 open Lean Elab Command in
 run_cmd do
