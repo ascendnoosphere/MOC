@@ -1,8 +1,0 @@
-{"log":
- [{"message":
-   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-lean-4.19.0.rRbRJ1/lean-4.19.0-linux/bin/lean ././././MOC/HouseholderPacking.lean -R ./././. -o ././.lake/build/lib/lean/MOC/HouseholderPacking.olean -i ././.lake/build/lib/lean/MOC/HouseholderPacking.ilean -c ././.lake/build/ir/MOC/HouseholderPacking.c --json",
-   "level": "trace"},
-  {"message":
-   "././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
-   "level": "warning"}],
- "depHash": "6838632641876481752"}

@@ -1,5 +1,0 @@
-{"log":
- [{"message":
-   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/ContactRectangle.lean -R ./././. -o ././.lake/build/lib/lean/MOC/ContactRectangle.olean -i ././.lake/build/lib/lean/MOC/ContactRectangle.ilean -c ././.lake/build/ir/MOC/ContactRectangle.c --json",
-   "level": "trace"}],
- "depHash": "9026952668272060410"}

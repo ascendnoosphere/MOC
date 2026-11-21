@@ -1,2 +1,0 @@
-lean: prove the order-four case with opposite eigenvalues
-Lean/MOC/FourCoincidence.lean

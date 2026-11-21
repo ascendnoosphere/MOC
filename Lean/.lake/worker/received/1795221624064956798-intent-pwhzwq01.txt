@@ -1,2 +1,0 @@
-lean: reduce least counterexamples to strict expansion of unitary support
-Lean/MOC/SupportBlocks.lean

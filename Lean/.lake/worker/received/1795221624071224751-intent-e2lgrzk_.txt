@@ -1,2 +1,0 @@
-lean: reduce two-supported rows and columns to the preceding order
-Lean/MOC/SparseRow.lean

@@ -1,3 +1,0 @@
-lean: prove the Walsh obstruction to paired phase completions
-Lean/MOC/Pencil.lean
-Lean/MOC/AnchorObstruction.lean

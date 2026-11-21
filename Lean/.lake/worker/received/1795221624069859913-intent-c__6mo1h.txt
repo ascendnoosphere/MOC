@@ -1,2 +1,0 @@
-lean: transfer parallel affine spectra to tangent circles
-Lean/MOC/CircleSpectra.lean

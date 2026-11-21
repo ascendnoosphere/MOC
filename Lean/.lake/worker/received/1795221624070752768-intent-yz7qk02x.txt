@@ -1,3 +1,0 @@
-lean: normalize positive support gaps and bound centered fractional-linear changes
-Lean/MOC/SpectralMobius.lean
-Lean/MOC/SpectralGap.lean

@@ -1,1 +1,0 @@
-{"commit": "09e7aeb1e8bf97b079fe6aff70342ca1cf509f35", "log": "/home/dell/Desktop/MOC/Lean/.lake/worker/logs/queue-1795200754050104874-enqueue-9t1im7sy.log", "parent": "cec94f5640e4b59f01a207aad99c3490145330a4", "subject": "workflow: separate checked Lean builds from commit and push workers", "tree": "196859004d5853347e4fd96592f298567be1a2fc", "unrestricted": []}

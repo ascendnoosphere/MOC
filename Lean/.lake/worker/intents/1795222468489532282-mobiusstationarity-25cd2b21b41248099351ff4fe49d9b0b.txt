@@ -1,2 +1,0 @@
-lean: prove Mobius covariance of stationary matrix and support
-Lean/MOC/MobiusStationarity.lean

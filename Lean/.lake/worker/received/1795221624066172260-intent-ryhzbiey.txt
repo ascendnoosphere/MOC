@@ -1,2 +1,0 @@
-lean: interpolate rank-one phase determinants along the Householder segment
-Lean/MOC/Householder.lean

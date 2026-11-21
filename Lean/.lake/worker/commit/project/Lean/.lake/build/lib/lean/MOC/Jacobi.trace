@@ -1,5 +1,0 @@
-{"log":
- [{"message":
-   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Jacobi.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Jacobi.olean -i ././.lake/build/lib/lean/MOC/Jacobi.ilean -c ././.lake/build/ir/MOC/Jacobi.c --json",
-   "level": "trace"}],
- "depHash": "1981700580790098897"}

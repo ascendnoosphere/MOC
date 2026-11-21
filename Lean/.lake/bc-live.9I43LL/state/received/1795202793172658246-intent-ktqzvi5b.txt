@@ -1,2 +1,0 @@
-lean: fixture admitted proof
-Lean/MOC/WorkflowSmoke.lean

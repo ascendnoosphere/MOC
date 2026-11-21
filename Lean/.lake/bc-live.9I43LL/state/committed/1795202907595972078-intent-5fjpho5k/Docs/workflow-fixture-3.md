@@ -1,1 +1,0 @@
-Fixture 3

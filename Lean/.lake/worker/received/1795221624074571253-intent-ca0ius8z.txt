@@ -1,2 +1,0 @@
-lean: combine spectral balance and orbit curvature in the least failing order
-Lean/MOC/Extremal.lean

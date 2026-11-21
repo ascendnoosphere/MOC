@@ -1,2 +1,0 @@
-lean: bound Schur phase derivatives using quadratic support
-Lean/MOC/SchurQuadraticSupport.lean

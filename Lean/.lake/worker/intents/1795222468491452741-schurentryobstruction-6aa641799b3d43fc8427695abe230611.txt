@@ -1,2 +1,0 @@
-lean: exhibit strict rank-one loss at a single-entry support maximum
-Lean/MOC/SchurEntryObstruction.lean

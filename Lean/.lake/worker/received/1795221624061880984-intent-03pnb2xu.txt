@@ -1,2 +1,0 @@
-lean: prove Schur reflection bounds for nonnormal sums
-Lean/MOC/SchurPhase.lean

@@ -1,2 +1,0 @@
-lean: prove singular determinant inclusion and spectral attainability
-Lean/MOC/Singular.lean

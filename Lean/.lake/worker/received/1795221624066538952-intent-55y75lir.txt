@@ -1,2 +1,0 @@
-lean: prove Shitov’s partial matching hull under interlacing
-Lean/MOC/Interlacing.lean

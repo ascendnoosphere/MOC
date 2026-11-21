@@ -1,7 +1,0 @@
-$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.Blocks +MOC.Claim +MOC.Core +MOC.Geometry +MOC.MixedBound +MOC.Obstruction +MOC.PhaseMove +MOC.RankSum +MOC.Small +MOC.Source +MOC.Support +MOC.TwoValues +MOC.Weights
-ℹ [1684/2118] Replayed MOC
-info: ././././MOC.lean:6:0: Checked 116 safe MOC declarations against the standard Lean axioms
-✔ [2355/2355] Built MOC.RankSum
-Build completed successfully.
-$ taskset -c 0,1,2,3 lake env lean -j4 MOCWorkerAudit.lean
-MOC_WORKER_AUDITED 225 safe declarations

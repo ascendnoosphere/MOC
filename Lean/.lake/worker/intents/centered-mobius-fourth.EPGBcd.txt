@@ -1,2 +1,0 @@
-lean: derive the centered fourth-moment bound from local minimality
-Lean/MOC/SpectralSecondVariation.lean

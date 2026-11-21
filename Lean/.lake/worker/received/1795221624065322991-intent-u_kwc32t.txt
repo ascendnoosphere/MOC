@@ -1,2 +1,0 @@
-lean: prove the shifted rank-sum bound through n plus two
-Lean/MOC/RankTwoOverlap.lean

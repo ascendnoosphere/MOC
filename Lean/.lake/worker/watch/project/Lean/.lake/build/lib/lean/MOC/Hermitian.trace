@@ -1,8 +1,0 @@
-{"log":
- [{"message":
-   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-lean-4.19.0.rRbRJ1/lean-4.19.0-linux/bin/lean ././././MOC/Hermitian.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Hermitian.olean -i ././.lake/build/lib/lean/MOC/Hermitian.ilean -c ././.lake/build/ir/MOC/Hermitian.c --json",
-   "level": "trace"},
-  {"message":
-   "././././MOC/Hermitian.lean:46:8: automatically included section variable(s) unused in theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':\n  [Fintype ι]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Fintype ι] in theorem ...\nnote: this linter can be disabled with `set_option linter.unusedSectionVars false`",
-   "level": "warning"}],
- "depHash": "3797783554186352701"}

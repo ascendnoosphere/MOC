@@ -1,2 +1,0 @@
-lean: prove the pole compression determinant formula
-Lean/MOC/PoleCompression.lean

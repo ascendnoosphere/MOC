@@ -1,2 +1,0 @@
-lean: fixture commit 2
-Docs/workflow-fixture-2.md

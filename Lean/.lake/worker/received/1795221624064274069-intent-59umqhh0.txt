@@ -1,2 +1,0 @@
-lean: exclude nonzero common support heights for matching quartets
-Lean/MOC/MatchingQuartet.lean

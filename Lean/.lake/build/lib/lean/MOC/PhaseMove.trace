@@ -1,5 +1,0 @@
-{"log":
- [{"message":
-   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/PhaseMove.lean -R ./././. -o ././.lake/build/lib/lean/MOC/PhaseMove.olean -i ././.lake/build/lib/lean/MOC/PhaseMove.ilean -c ././.lake/build/ir/MOC/PhaseMove.c --json",
-   "level": "trace"}],
- "depHash": "8051800318061220956"}

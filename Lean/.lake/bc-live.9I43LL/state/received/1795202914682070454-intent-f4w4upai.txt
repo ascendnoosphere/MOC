@@ -1,2 +1,0 @@
-lean: fixture commit 6
-Docs/workflow-fixture-6.md

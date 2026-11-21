@@ -1,2 +1,0 @@
-lean: compute determinant and energy along a Schur pivot phase
-Lean/MOC/SchurPivot.lean

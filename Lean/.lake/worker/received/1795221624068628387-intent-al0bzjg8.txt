@@ -1,2 +1,0 @@
-lean: verify algebraic certificates for two order-four contact cases
-Lean/MOC/FourContactCertificate.lean

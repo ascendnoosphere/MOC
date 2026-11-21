@@ -1,1 +1,0 @@
-{"files": {"Code/lean-publish.sh": "100755", "Code/lean_worker.py": "100644", "Code/merge-verified.sh": "100755", "Code/test_lean_workflow.py": "100644"}, "subject": "workflow: merge published Lean proofs into main"}

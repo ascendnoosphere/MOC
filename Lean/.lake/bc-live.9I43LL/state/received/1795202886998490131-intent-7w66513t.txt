@@ -1,2 +1,0 @@
-lean: preserve the fixture proof subject
-Lean/MOC/WorkflowSmoke.lean
