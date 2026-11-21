@@ -1,0 +1,2 @@
+lean: derive the centered fourth-moment constraint
+Lean/MOC/SpectralSecondVariation.lean

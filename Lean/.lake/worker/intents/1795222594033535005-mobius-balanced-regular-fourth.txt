@@ -1,0 +1,2 @@
+lean: reduce regular Möbius representatives by their centered fourth moment
+Lean/MOC/MobiusOrbitMinimum.lean

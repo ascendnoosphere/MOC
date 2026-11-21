@@ -1,0 +1,8 @@
+{"log":
+ [{"message":
+   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-lean-4.19.0.rRbRJ1/lean-4.19.0-linux/bin/lean ././././MOC/SchurPhase.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SchurPhase.olean -i ././.lake/build/lib/lean/MOC/SchurPhase.ilean -c ././.lake/build/ir/MOC/SchurPhase.c --json",
+   "level": "trace"},
+  {"message":
+   "././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"}],
+ "depHash": "5761896003568837089"}

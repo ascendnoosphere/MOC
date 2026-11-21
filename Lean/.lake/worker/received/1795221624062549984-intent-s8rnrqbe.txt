@@ -1,0 +1,2 @@
+lean: prove general inverse commutator stationarity at support maxima
+Lean/MOC/Variational.lean

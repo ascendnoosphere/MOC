@@ -1,0 +1,3 @@
+lean: prove the determinant hull with two exceptional eigenvalues
+Lean/MOC/TwoFrame.lean
+Lean/MOC/TwoExceptions.lean

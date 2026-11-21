@@ -1,0 +1,2 @@
+lean: document the checked spectral cases and counterexample reductions
+Lean/README.md

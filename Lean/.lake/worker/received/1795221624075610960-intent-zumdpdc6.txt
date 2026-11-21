@@ -1,0 +1,2 @@
+lean: obtain a third matching contact by a rational slice
+Lean/MOC/AlgebraicContact.lean

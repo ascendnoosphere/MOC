@@ -1,0 +1,2 @@
+lean: exhibit a balanced nonnormal orbit maximum in order two
+Lean/MOC/NonnormalExtrema.lean

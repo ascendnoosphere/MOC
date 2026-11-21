@@ -1,0 +1,2 @@
+lean: turn strict unitary support expansion into a scalar commutant
+Lean/MOC/CommonCommutant.lean

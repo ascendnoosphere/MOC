@@ -1,0 +1,449 @@
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.AnchorObstruction +MOC.Blocks +MOC.Claim +MOC.Collinear +MOC.ContactCensus +MOC.ContactRectangle +MOC.Core +MOC.Extremal +MOC.FourCoincidence +MOC.FourRealification +MOC.Geometry +MOC.Hermitian +MOC.Jacobi +MOC.MatchingQuartet +MOC.MixedBound +MOC.NestedValues +MOC.Normal +MOC.NormalOrbit +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.RankTwoOverlap +MOC.Realification +MOC.SchurPhase +MOC.Singular +MOC.Small +MOC.Source +MOC.SpectralPerturbation +MOC.SubsetContraction +MOC.Support +MOC.Transfer +MOC.TwoExceptions +MOC.TwoFrame +MOC.TwoValues +MOC.Variational +MOC.WeightedMinor +MOC.Weights +MOC.ZeroHeight
+ℹ [2354/2413] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 240 safe MOC declarations against the standard Lean axioms
+⚠ [2444/2461] Replayed MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2448/2461] Replayed MOC.SpectralPerturbation
+warning: ././././MOC/SpectralPerturbation.lean:23:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.dense_ne_zero_of_polynomial_lines':
+  [Fintype ι]
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:75:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.continuous_matchingProduct_pair':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+✔ [2452/2465] Built MOC.MatchingQuartet
+✖ [2456/2466] Building MOC.FourRealification
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/FourRealification.lean -R ./././. -o ././.lake/build/lib/lean/MOC/FourRealification.olean -i ././.lake/build/lib/lean/MOC/FourRealification.ilean -c ././.lake/build/ir/MOC/FourRealification.c --json
+error: ././././MOC/FourRealification.lean:45:38: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  ?a * ?b / ?c
+case neg
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+U : Matrix ι ι ℂ
+hU : IsUnitary U
+r : ι
+p : ι → ℂ := fun j => if U r j = 0 then 1 else star (U r j) / ↑‖U r j‖
+V : Matrix ι ι ℂ := U * diagonal p
+hp : ∀ (j : ι), Complex.normSq (p j) = 1
+hstar : ∀ (j : ι), p j * star (p j) = 1
+hD : diagonal p * (diagonal p)ᴴ = 1
+j : ι
+h : ¬U r j = 0
+hn : ↑‖U r j‖ ≠ 0
+⊢ U r j * (star (U r j) / ↑‖U r j‖) = ↑‖U r j‖
+error: ././././MOC/FourRealification.lean:114:52: linarith failed to find a contradiction
+case h1.h
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B C : Matrix ι ι ℝ
+hProj : A * A = A
+hB : B.PosSemidef
+hC : C.PosSemidef
+hsum : A + B + C = 1
+hBC : B + C = 1 - A
+x : ι → ℝ
+y : ι → ℝ := A *ᵥ x
+hkill : (B + C) *ᵥ y = 0
+hzero : star y ⬝ᵥ B *ᵥ y + star y ⬝ᵥ C *ᵥ y = 0
+a✝ : star y ⬝ᵥ B *ᵥ y < 0
+⊢ False failed
+error: ././././MOC/FourRealification.lean:115:47: linarith failed to find a contradiction
+case h1.h
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B C : Matrix ι ι ℝ
+hProj : A * A = A
+hB : B.PosSemidef
+hC : C.PosSemidef
+hsum : A + B + C = 1
+hBC : B + C = 1 - A
+x : ι → ℝ
+y : ι → ℝ := A *ᵥ x
+hkill : (B + C) *ᵥ y = 0
+hzero : star y ⬝ᵥ B *ᵥ y + star y ⬝ᵥ C *ᵥ y = 0
+a✝ : star y ⬝ᵥ C *ᵥ y < 0
+⊢ False failed
+error: ././././MOC/FourRealification.lean:183:10: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  (WithLp.equiv 2 (?m.17133 → ?m.17131)) ((toEuclideanLin ?M) ?v)
+case a
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℝ
+hA : A.IsHermitian
+hB : B.IsHermitian
+hAB : Commute A B
+T : EuclideanSpace ℝ ι →ₗ[ℝ] EuclideanSpace ℝ ι := toEuclideanLin A
+S : EuclideanSpace ℝ ι →ₗ[ℝ] EuclideanSpace ℝ ι := toEuclideanLin B
+hT : T.IsSymmetric
+hS : S.IsSymmetric
+hTS : Commute T S
+v₀ : OrthonormalBasis (Fin (Module.finrank ℝ (EuclideanSpace ℝ ι))) ℝ (EuclideanSpace ℝ ι)
+a₀ b₀ : Fin (Module.finrank ℝ (EuclideanSpace ℝ ι)) → ℝ
+heig : ∀ (j : Fin (Module.finrank ℝ (EuclideanSpace ℝ ι))), T (v₀ j) = a₀ j • v₀ j ∧ S (v₀ j) = b₀ j • v₀ j
+e : Fin (Module.finrank ℝ (EuclideanSpace ℝ ι)) ≃ ι := Fintype.equivOfCardEq ⋯
+v : OrthonormalBasis ι ℝ (EuclideanSpace ℝ ι) := v₀.reindex e
+a : ι → ℝ := fun j => a₀ (e.symm j)
+b : ι → ℝ := fun j => b₀ (e.symm j)
+M : Matrix ι ι ℝ := (EuclideanSpace.basisFun ι ℝ).toBasis.toMatrix ⇑v.toBasis
+O : ↥(orthogonalGroup ι ℝ) := ⟨M, ⋯⟩
+hMM : M * Mᴴ = 1
+Q : Matrix ι ι ℝ
+c : ι → ℝ
+hQ : ∀ (j : ι), (toEuclideanLin Q) (v j) = c j • v j
+i j : ι
+h :
+  (fun x => (WithLp.equiv 2 (ι → ℝ)) x i) ((toEuclideanLin Q) (v j)) =
+    (fun x => (WithLp.equiv 2 (ι → ℝ)) x i) (c j • v j)
+⊢ (Q * M) i j = (M * diagonal c) i j
+error: ././././MOC/FourRealification.lean:203:41: type mismatch
+  Pi.single i ?m.7644 j
+has type
+  ?m.7626 j : Type ?u.7623
+but is expected to have type
+  ℝ : Type
+error: Lean exited with code 1
+⚠ [2457/2467] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2459/2467] Built MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2460/2475] Built MOC.Hermitian
+warning: ././././MOC/Hermitian.lean:46:8: automatically included section variable(s) unused in theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+✖ [2475/2482] Building MOC.NormalOrbit
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/NormalOrbit.lean -R ./././. -o ././.lake/build/lib/lean/MOC/NormalOrbit.olean -i ././.lake/build/lib/lean/MOC/NormalOrbit.ilean -c ././.lake/build/ir/MOC/NormalOrbit.c --json
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/NormalOrbit.lean:90:2: type mismatch, term
+  congrArg conjTranspose h
+after simplification has type
+  (((blockDiagonal' W)ᴴ * Mᴴ).blockDiag' x)ᴴ = M.blockDiag' x * W x : Prop
+but is expected to have type
+  (M * blockDiagonal' W).blockDiag' x = M.blockDiag' x * W x : Prop
+error: ././././MOC/NormalOrbit.lean:133:54: invalid field notation, type is not of the form (C ...) where C is a constant
+  x
+has type
+  ?m.20704
+error: ././././MOC/NormalOrbit.lean:133:6: type mismatch
+  congrArg diagonal (funext fun x => ?m.20720)
+has type
+  diagonal ?m.20706 = diagonal ?m.20707 : Prop
+but is expected to have type
+  diagonal (h ∘ ⇑e) = blockDiagonal' fun x => diagonal fun x_1 => ↑x : Prop
+error: ././././MOC/NormalOrbit.lean:140:4: type mismatch, term
+  congrArg (fun M => M.submatrix ⇑e.symm ⇑e.symm) (Commute.eq hPcomm)
+after simplification has type
+  ((diagonal h).submatrix ⇑e ⇑e * P).submatrix ⇑e.symm ⇑e.symm =
+    (P * (diagonal h).submatrix ⇑e ⇑e).submatrix ⇑e.symm ⇑e.symm : Prop
+but is expected to have type
+  Commute (diagonal h) (P.submatrix ⇑e.symm ⇑e.symm) : Prop
+error: ././././MOC/NormalOrbit.lean:154:81: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+h : ι → ℂ
+B : Matrix ι ι ℂ
+hB : B * Bᴴ = Bᴴ * B
+hA : (diagonal h - B) * (diagonal h - B)ᴴ = (diagonal h - B)ᴴ * (diagonal h - B)
+α : Type := ↑(Set.range h)
+this : Fintype α := ⋯.fintype
+κ : α → Type (max 0 u_1) := fun x => { i // h i = ↑x }
+e : Sigma κ ≃ ι := { toFun := fun k => ↑k.snd, invFun := fun i => ⟨⟨h i, ⋯⟩, ⟨i, ⋯⟩⟩, left_inv := ⋯, right_inv := ⋯ }
+C : (x : α) → Matrix (κ x) (κ x) ℂ := fun x => B.submatrix Subtype.val Subtype.val
+hc : ∀ (x : α), IsStarNormal (C x)
+b : (x : α) → κ x → ℂ
+W : (x : α) → Matrix (κ x) (κ x) ℂ
+hw : ∀ (x : α), IsUnitary (W x)
+hdiag : ∀ (x : α), C x = W x * diagonal (b x) * (W x)ᴴ
+P : Matrix ((i : α) × κ i) ((i : α) × κ i) ℂ := blockDiagonal' W
+hp : IsUnitary P
+Q : Matrix ι ι ℂ := P.submatrix ⇑e.symm ⇑e.symm
+i j : ι
+hij : h i = h j
+hne : i ≠ j
+hblock : ∀ (x : α), (Pᴴ * B.submatrix ⇑e ⇑e * P).blockDiag' x = diagonal (b x)
+⊢ Pᴴ.submatrix ⇑e.symm ⇑e.symm * B * P.submatrix ⇑e.symm ⇑e.symm =
+    (Pᴴ * B.submatrix ⇑e ⇑e * P).submatrix ⇑e.symm ⇑e.symm
+error: ././././MOC/NormalOrbit.lean:162:44: tactic 'rewrite' failed, pattern is a metavariable
+  ?M ⟨?k, ?i⟩ ⟨?k, ?j⟩
+from equation
+  ?M ⟨?k, ?i⟩ ⟨?k, ?j⟩ = blockDiag' ?M ?k ?i ?j
+case refine_2
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+h : ι → ℂ
+B : Matrix ι ι ℂ
+hB : B * Bᴴ = Bᴴ * B
+hA : (diagonal h - B) * (diagonal h - B)ᴴ = (diagonal h - B)ᴴ * (diagonal h - B)
+α : Type := ↑(Set.range h)
+this : Fintype α := ⋯.fintype
+κ : α → Type (max 0 u_1) := fun x => { i // h i = ↑x }
+e : Sigma κ ≃ ι := { toFun := fun k => ↑k.snd, invFun := fun i => ⟨⟨h i, ⋯⟩, ⟨i, ⋯⟩⟩, left_inv := ⋯, right_inv := ⋯ }
+C : (x : α) → Matrix (κ x) (κ x) ℂ := fun x => B.submatrix Subtype.val Subtype.val
+hc : ∀ (x : α), IsStarNormal (C x)
+b : (x : α) → κ x → ℂ
+W : (x : α) → Matrix (κ x) (κ x) ℂ
+hw : ∀ (x : α), IsUnitary (W x)
+hdiag : ∀ (x : α), C x = W x * diagonal (b x) * (W x)ᴴ
+P : Matrix ((i : α) × κ i) ((i : α) × κ i) ℂ := blockDiagonal' W
+hp : IsUnitary P
+Q : Matrix ι ι ℂ := P.submatrix ⇑e.symm ⇑e.symm
+i j : ι
+hij : h i = h j
+hne : i ≠ j
+hblock : ∀ (x : α), (Pᴴ * B.submatrix ⇑e ⇑e * P).blockDiag' x = diagonal (b x)
+hq : Qᴴ * B * Q = (Pᴴ * B.submatrix ⇑e ⇑e * P).submatrix ⇑e.symm ⇑e.symm
+x : α := ⟨h i, ⋯⟩
+i' : κ x := ⟨i, ⋯⟩
+j' : κ x := ⟨j, ⋯⟩
+hi : e.symm i = ⟨x, i'⟩
+hj : e.symm j = ⟨x, j'⟩
+⊢ (Pᴴ * B.submatrix ⇑e ⇑e * P) ⟨x, i'⟩ ⟨x, j'⟩ = 0
+error: ././././MOC/NormalOrbit.lean:194:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hA : A * Aᴴ = Aᴴ * A
+hB : B * Bᴴ = Bᴴ * B
+hC : IsStarNormal (A + B)
+hdet : (A + B).det ≠ 0
+hmax : ∀ (R : Matrix ι ι ℂ), IsUnitary R → (η * (A + R * B * Rᴴ).det).re ≤ (η * (A + B).det).re
+htie :
+  ∀ (R : Matrix ι ι ℂ),
+    IsUnitary R →
+      (η * (A + R * B * Rᴴ).det).re = (η * (A + B).det).re → frobeniusSq (A + R * B * Rᴴ) ≤ frobeniusSq (A + B)
+h : ι → ℂ
+V : Matrix ι ι ℂ
+hV : IsUnitary V
+hdiag : A + B = MOC.unitaryConj V (diagonal h)
+B₀ : Matrix ι ι ℂ := MOC.unitaryConj Vᴴ B
+hA₀ : MOC.unitaryConj Vᴴ A = diagonal h - B₀
+Q : Matrix ι ι ℂ
+hQ : IsUnitary Q
+hcQ : Commute (diagonal h) Q
+hcompress : ∀ (i j : ι), h i = h j → i ≠ j → (Qᴴ * B₀ * Q) i j = 0
+hQh : MOC.unitaryConj Q (diagonal h) = diagonal h
+W : Matrix ι ι ℂ := V * Q
+B' : Matrix ι ι ℂ := MOC.unitaryConj Wᴴ B
+hW : IsUnitary W
+⊢ A + B = MOC.unitaryConj W (diagonal h)
+error: ././././MOC/NormalOrbit.lean:205:4: 'change' tactic failed, pattern
+  MOC.unitaryConj (V * Q)ᴴ B = MOC.unitaryConj Qᴴ (MOC.unitaryConj Vᴴ B)
+is not definitionally equal to target
+  B' = Qᴴ * B₀ * Q
+error: Lean exited with code 1
+✖ [2480/2482] Building MOC.RankTwoOverlap
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/RankTwoOverlap.lean -R ./././. -o ././.lake/build/lib/lean/MOC/RankTwoOverlap.olean -i ././.lake/build/lib/lean/MOC/RankTwoOverlap.ilean -c ././.lake/build/ir/MOC/RankTwoOverlap.c --json
+warning: ././././MOC/RankTwoOverlap.lean:56:4: 'congr 1' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/RankTwoOverlap.lean:42:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:85:85: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: ././././MOC/RankTwoOverlap.lean:128:33: function expected at
+  (WithLp.equiv 2 ?m.70020) v
+term has type
+  ?m.70020
+error: ././././MOC/RankTwoOverlap.lean:148:53: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  -?a * -?b
+ι : Type u_1
+κ : Type u_2
+ρ : Type u_3
+σ : Type u_4
+inst✝⁷ : Fintype ι
+inst✝⁶ : DecidableEq ι
+inst✝⁵ : Fintype κ
+inst✝⁴ : DecidableEq κ
+inst✝³ : Fintype ρ
+inst✝² : DecidableEq ρ
+inst✝¹ : Fintype σ
+inst✝ : DecidableEq σ
+e : ι ⊕ κ ≃ ρ ⊕ σ
+X : Matrix ι ρ ℂ
+Y : Matrix ι σ ℂ
+hX : Xᴴ * X = 1
+hY : Yᴴ * Y = 1
+hG : IsUnit (X * Xᴴ + Y * Yᴴ).det
+T : Matrix ι (ρ ⊕ σ) ℂ := X.fromCols Y
+G : Matrix ι ι ℂ := X * Xᴴ + Y * Yᴴ
+hTG : T * Tᴴ = G
+hInv : T * (Tᴴ * G⁻¹) = 1
+L : EuclideanSpace ℂ (ρ ⊕ σ) →ₗ[ℂ] EuclideanSpace ℂ ι := toEuclideanLin T
+hsurj : Function.Surjective ⇑L
+hcard : Fintype.card ι + Fintype.card κ = Fintype.card ρ + Fintype.card σ
+hdim : Fintype.card ι + Module.finrank ℂ ↥(LinearMap.ker L) = Fintype.card ρ + Fintype.card σ
+hdim' : Module.finrank ℂ ↥(LinearMap.ker L) = Fintype.card κ
+b : OrthonormalBasis κ ℂ ↥(LinearMap.ker L) :=
+  (stdOrthonormalBasis ℂ ↥(LinearMap.ker L)).reindex ((finCongr hdim').trans (Fintype.equivFin κ).symm)
+K : Matrix (ρ ⊕ σ) κ ℂ := of fun i j => (WithLp.equiv 2 ((i : ρ ⊕ σ) → (fun x => ℂ) i)) (↑(b j)) i
+hK : Kᴴ * K = 1
+hTK : T * K = 0
+E₀ : Matrix ρ κ ℂ := K.toRows₁
+F₀ : Matrix σ κ ℂ := K.toRows₂
+hK' : E₀.fromRows F₀ = K
+hsum : E₀ᴴ * E₀ + F₀ᴴ * F₀ = 1
+hz : X * E₀ + Y * F₀ = 0
+hneg : X * E₀ = -(Y * F₀)
+h : ∀ (X : Matrix ι ρ ℂ) (E : Matrix ρ κ ℂ), Xᴴ * X = 1 → (X * E)ᴴ * (X * E) = Eᴴ * E
+h' : ∀ (Y : Matrix ι σ ℂ) (F : Matrix σ κ ℂ), Yᴴ * Y = 1 → (Y * F)ᴴ * (Y * F) = Fᴴ * F
+⊢ -(Y * F₀)ᴴ * -(Y * F₀) = F₀ᴴ * F₀
+warning: ././././MOC/RankTwoOverlap.lean:93:0: automatically included section variable(s) unused in theorem 'MOC.exists_overlap_frames':
+  [Fintype κ]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype κ] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/RankTwoOverlap.lean:171:6: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  ((X * diagonal fun i => w ?m.34145) * Xᴴ) ?m.34457 ?m.34458
+case a
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+U : Matrix ι ι ℂ
+a w : ι → ℂ
+hw : ∀ (i : ι), a i = 0 → w i = 0
+X : Matrix ι { i // a i ≠ 0 } ℂ := U.submatrix id Subtype.val
+i j : ι
+⊢ ((X * diagonal fun i => w ↑i) * Xᴴ) i j = (U * diagonal w * Uᴴ) i j
+warning: ././././MOC/RankTwoOverlap.lean:339:4: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/RankTwoOverlap.lean:371:48: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:463:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: Lean exited with code 1
+✖ [2481/2482] Building MOC.AnchorObstruction
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/AnchorObstruction.lean -R ./././. -o ././.lake/build/lib/lean/MOC/AnchorObstruction.olean -i ././.lake/build/lib/lean/MOC/AnchorObstruction.ilean -c ././.lake/build/ir/MOC/AnchorObstruction.c --json
+error: ././././MOC/AnchorObstruction.lean:116:64: unsolved goals
+n : ℕ
+a b : Fin n → GaussianInt
+d : ℕ
+V : Matrix (Fin n) (Fin n) GaussianInt
+k : GaussianInt
+U : Matrix (Fin n) (Fin n) ℂ
+hV : V.map ⇑gauss = ↑d • U
+hstar : Vᴴ.map ⇑gauss = (V.map ⇑gauss)ᴴ
+⊢ ((↑d * ↑d) • diagonal fun m => gauss (a m)) + (↑d * ↑d) • ((U * diagonal fun m => gauss (b m)) * Uᴴ) =
+    (↑d * ↑d) • diagonal (⇑gauss ∘ a) + (↑d * ↑d) • (U * diagonal (⇑gauss ∘ b) * Uᴴ)
+error: Lean exited with code 1
+✖ [2482/2482] Building MOC.TwoExceptions
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/TwoExceptions.lean -R ./././. -o ././.lake/build/lib/lean/MOC/TwoExceptions.olean -i ././.lake/build/lib/lean/MOC/TwoExceptions.ilean -c ././.lake/build/ir/MOC/TwoExceptions.c --json
+error: ././././MOC/TwoExceptions.lean:191:8: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  determinantValue (A t) (B t) U
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b : ι → ℂ
+U : Matrix ι ι ℂ
+hU : IsUnitary U
+e : Fin 2 ↪ ι
+ha : ∀ i ∉ Set.range ⇑e, a i = 0
+P : Matrix ι (Fin 2) ℂ := submatrix 1 id ⇑e
+F : Matrix ι (Fin 2) ℂ := Uᴴ * P
+hP : ∀ (i : ι) (k : Fin 2), P i k = if e k = i then 1 else 0
+hPt : Pᴴ = submatrix 1 (⇑e) id
+hPP : Pᴴ * P = 1
+hF : Fᴴ * F = 1
+s : Finset (TwoEdgeMatching (Fin 2) ι)
+w : TwoEdgeMatching (Fin 2) ι → ℝ
+hw : ∀ m ∈ s, 0 ≤ w m
+hs : ∑ m ∈ s, w m = 1
+hval :
+  ∀ (x : Fin 2 → ℂ) (y : ι → ℂ),
+    ∑ m ∈ s, ↑(w m) * ((x (↑m).1.1 + y (↑m).1.2) * (x (↑m).2.1 + y (↑m).2.2)) =
+      (1ᴴ * diagonal x * 1 + Fᴴ * diagonal y * F).det
+σ : TwoEdgeMatching (Fin 2) ι → Equiv.Perm ι
+hσ : ∀ (m : TwoEdgeMatching (Fin 2) ι), (σ m) (↑m).1.2 = e (↑m).1.1 ∧ (σ m) (↑m).2.2 = e (↑m).2.1
+A : ℂ → ι → ℂ := fun t i => if i ∈ Set.range ⇑e then a i + t else a i
+B : ℂ → ι → ℂ := fun t j => b j + t
+K : Set ℂ := (Set.range fun k => -a (e k)) ∪ Set.range fun j => -b j
+hK : Dense Kᶜ
+t : ℂ
+ht : t ∈ Kᶜ
+haT : ∀ i ∉ Set.range ⇑e, A t i = 0
+hx : ∀ (k : Fin 2), A t (e k) ≠ 0
+hy : ∀ (j : ι), B t j ≠ 0
+x : Fin 2 → ℂ := fun k => A t (e k)
+y : ι → ℂ := B t
+D : Matrix (Fin 2) (Fin 2) ℂ := diagonal x
+E : Matrix ι ι ℂ := U * diagonal y * Uᴴ
+C : Matrix ι ι ℂ := (U * diagonal fun j => (y j)⁻¹) * Uᴴ
+Dinv : Matrix (Fin 2) (Fin 2) ℂ := diagonal fun k => (x k)⁻¹
+Γ : ℂ := (∏ k, x k) * ∏ j, y j
+hD : P * D * Pᴴ = diagonal (A t)
+hEC : E * C = 1
+hDD : D * Dinv = 1
+hC : Pᴴ * C * P = (Fᴴ * diagonal fun j => (y j)⁻¹) * F
+hbig : diagonal (A t) + E = E * (1 + C * P * (D * Pᴴ))
+hsmall : 1 + D * Pᴴ * (C * P) = D * (Dinv + (Fᴴ * diagonal fun j => (y j)⁻¹) * F)
+hE_det : E.det = ∏ j, y j
+hD_det : D.det = ∏ k, x k
+hdet : determinantValue (A t) (B t) U = Γ * (Dinv + (Fᴴ * diagonal fun j => (y j)⁻¹) * F).det
+hweights :
+  ∑ m ∈ s, ↑(w m) * (((x (↑m).1.1)⁻¹ + (y (↑m).1.2)⁻¹) * ((x (↑m).2.1)⁻¹ + (y (↑m).2.2)⁻¹)) =
+    (Dinv + (Fᴴ * diagonal fun j => (y j)⁻¹) * F).det
+⊢ ∑ m ∈ s, ↑(w m) * matchingProduct (A t) (B t) (σ m) = (fun t => determinantValue (A t) (B t) U) t
+error: ././././MOC/TwoExceptions.lean:206:10: invalid field notation, function 'Function.const_mul' does not have argument with type (Function ...) that can be used, it must be explicit or implicit with a unique name
+error: ././././MOC/TwoExceptions.lean:207:4: no goals to be solved
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.FourRealification
+- MOC.NormalOrbit
+- MOC.RankTwoOverlap
+- MOC.AnchorObstruction
+- MOC.TwoExceptions
+error: build failed

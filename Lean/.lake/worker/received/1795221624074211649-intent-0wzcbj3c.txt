@@ -1,0 +1,2 @@
+lean: combine spectral balance with a quadratic support bound
+Lean/MOC/BalancedStrongSupport.lean

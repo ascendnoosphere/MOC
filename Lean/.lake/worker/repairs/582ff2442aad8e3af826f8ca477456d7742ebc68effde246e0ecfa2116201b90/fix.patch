@@ -1,0 +1,21 @@
+diff --git a/before/Lean/MOC/TwoFrame.lean b/after/Lean/MOC/TwoFrame.lean
+index d93f43a..e7d51bb 100644
+--- a/before/Lean/MOC/TwoFrame.lean
++++ b/after/Lean/MOC/TwoFrame.lean
+@@ -396,6 +396,7 @@ theorem exists_flat_diagonal (H : Matrix (Fin 3) (Fin 3) ℝ)
+     (hH : H.IsHermitian) (htrace : H.trace = 0) :
+     ∃ B : Matrix (Fin 3) (Fin 3) ℝ,
+       Bᵀ * B = 1 ∧ ∀ i, (B * H * Bᵀ) i i = 0 := by
++  classical
+   let eig := hH.eigenvalues
+   let U : Matrix (Fin 3) (Fin 3) ℝ := hH.eigenvectorUnitary
+   have hU : Uᵀ * U = 1 := by
+@@ -411,7 +412,7 @@ theorem exists_flat_diagonal (H : Matrix (Fin 3) (Fin 3) ℝ)
+   · refine ⟨1, by simp, ?_⟩
+     intro i
+     have hzero : eig = 0 := funext hz
+-    simp [hHdiag, hzero]
++    simp [hHdiag, hzero, Pi.zero_def]
+   have hplus : ∃ i, 0 < eig i := by
+     by_contra! hh
+     have hsum : ∑ i, -eig i = 0 := by rw [Finset.sum_neg_distrib, heig, neg_zero]

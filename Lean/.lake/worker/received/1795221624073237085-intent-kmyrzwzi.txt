@@ -1,0 +1,2 @@
+lean: derive active matching equations at spectral gap maxima
+Lean/MOC/SpectralKKT.lean

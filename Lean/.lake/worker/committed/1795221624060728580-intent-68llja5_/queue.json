@@ -1,0 +1,1 @@
+{"files": {"Lean/MOC/Blocks.lean": "100644", "Lean/MOC/Claim.lean": "100644", "Lean/MOC/Small.lean": "100644"}, "subject": "lean: exclude paired block splits in a least-order counterexample"}

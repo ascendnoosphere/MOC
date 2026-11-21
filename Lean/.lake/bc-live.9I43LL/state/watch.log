@@ -1,0 +1,21 @@
+Building 62bf4ae6f8c9: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-62bf4ae6f8c9a3f55944c360eaa9db0533ac004408154cdef5d12c3c3d84e1f2.log
+Build passed for 62bf4ae6f8c9: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-62bf4ae6f8c9a3f55944c360eaa9db0533ac004408154cdef5d12c3c3d84e1f2.log
+Captured broken.txt: lean: fixture type error
+Building f686bc0375dc: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-f686bc0375dc1b274420520b4c66fdb7d6028e6c6e38750373e567e366f974b0.log
+Build failed for f686bc0375dc: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-f686bc0375dc1b274420520b4c66fdb7d6028e6c6e38750373e567e366f974b0.log
+Captured admitted.txt: lean: fixture admitted proof
+Building b2f849293f0a: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-b2f849293f0a74c72db00eb2e8bad11a3da5b011b761f2b411a48996fc670ef4.log
+Build failed for b2f849293f0a: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-b2f849293f0a74c72db00eb2e8bad11a3da5b011b761f2b411a48996fc670ef4.log
+Captured axiom.txt: lean: fixture custom axiom
+Building ee024e1499dc: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-ee024e1499dcb27e9d06aebce4fc113db33a6e0293aedb75b62be95339d9e2c9.log
+Build failed for ee024e1499dc: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-ee024e1499dcb27e9d06aebce4fc113db33a6e0293aedb75b62be95339d9e2c9.log
+Captured passing.txt: lean: preserve the fixture proof subject
+Building 2d1682b3c4da: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-2d1682b3c4dad9d0755b63fe19308ca5078d22cc57957327fa1ef030bf7e5095.log
+Build passed for 2d1682b3c4da: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-2d1682b3c4dad9d0755b63fe19308ca5078d22cc57957327fa1ef030bf7e5095.log
+Captured good-2.txt: lean: fixture commit 2
+Building 7b4aa86ba310: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-7b4aa86ba3109a832a9cfc7817bd80c4fc99380c6c0109ec6e6b7a1f0cd0d4c7.log
+Build failed for 7b4aa86ba310: /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-7b4aa86ba3109a832a9cfc7817bd80c4fc99380c6c0109ec6e6b7a1f0cd0d4c7.log
+Captured good-3.txt: lean: fixture commit 3
+Captured good-4.txt: lean: fixture commit 4
+Captured good-5.txt: lean: fixture commit 5
+Captured good-6.txt: lean: fixture commit 6

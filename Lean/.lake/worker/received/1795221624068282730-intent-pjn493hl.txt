@@ -1,0 +1,2 @@
+lean: rule out two distinct endpoint eigenvalues at normal support maxima
+Lean/MOC/StationaryPhaseGraph.lean

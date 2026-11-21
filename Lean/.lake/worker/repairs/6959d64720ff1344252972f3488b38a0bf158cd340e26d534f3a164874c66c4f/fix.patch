@@ -1,0 +1,40 @@
+diff --git a/before/Lean/MOC/NestedValues.lean b/after/Lean/MOC/NestedValues.lean
+index a49446d..e6bd48b 100644
+--- a/before/Lean/MOC/NestedValues.lean
++++ b/after/Lean/MOC/NestedValues.lean
+@@ -156,19 +156,19 @@ theorem holds_update_of_nested_image_coupling (a : ι → ℂ) (J : Finset ι) (
+     rw [haff]
+     dsimp only [b₀, b₁]
+     rw [matchingProduct_two_values, matchingProduct_two_values, hσ, hσ']
+-    rfl
+   have hsum : ∑ q ∈ T, r q = 1 := calc
+     _ = ∑ q, r q := Finset.sum_filter_ne_zero _
+     _ = ∑ I : Finset ι, ∑ I', p I I' := Fintype.sum_prod_type _
+     _ = 1 := by simp_rw [hrow]; exact sum_subsetMinorSq U hU J
+   have hleft : ∑ q : Finset ι × Finset ι, (r q : ℂ) * v q.1 = determinantValue a b₀ U := by
+-    rw [Fintype.sum_prod_type, determinantValue_two_values]
++    rw [Fintype.sum_prod_type, determinantValue_two_values a J c d U hU]
+     apply Finset.sum_congr rfl
+     intro I _
+     change (∑ K, (p I K : ℂ) * v I) = (subsetMinorSq U I J : ℂ) * v I
+     rw [← Finset.sum_mul, ← Complex.ofReal_sum, hrow]
+   have hright : ∑ q : Finset ι × Finset ι, (r q : ℂ) * v q.2 = determinantValue a b₁ U := by
+-    rw [Fintype.sum_prod_type, Finset.sum_comm, determinantValue_two_values]
++    rw [Fintype.sum_prod_type, Finset.sum_comm,
++      determinantValue_two_values a (insert j J) c d U hU]
+     apply Finset.sum_congr rfl
+     intro I' _
+     change (∑ K, (p K I' : ℂ) * v I') = (subsetMinorSq U I' (insert j J) : ℂ) * v I'
+diff --git a/before/Lean/MOC/TwoFrame.lean b/after/Lean/MOC/TwoFrame.lean
+index eb53703..220d4cb 100644
+--- a/before/Lean/MOC/TwoFrame.lean
++++ b/after/Lean/MOC/TwoFrame.lean
+@@ -554,7 +554,7 @@ private theorem isCompact_blochData : IsCompact {x : RawBlochFrame ρ | x.Valid}
+     · have hk := Finset.single_le_sum (f := fun k => x.2 i k ^ 2)
+           (fun k _ => sq_nonneg (x.2 i k)) (mem_univ k)
+       have hs : x.2 i k ^ 2 ≤ 1 := hk.trans_eq (hunit i)
+-      exact abs_le.mp (abs_le_of_sq_le_sq' hs zero_le_one)
++      exact abs_le_of_sq_le_sq' (by simpa only [one_pow] using hs) zero_le_one
+ 
+ /-! The profile includes all within-frame and cross-frame squared wedges. -/
+ 

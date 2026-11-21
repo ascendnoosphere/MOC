@@ -1,0 +1,14 @@
+{"log":
+ [{"message":
+   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-lean-4.19.0.rRbRJ1/lean-4.19.0-linux/bin/lean ././././MOC/SpectralMobius.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SpectralMobius.olean -i ././.lake/build/lib/lean/MOC/SpectralMobius.ilean -c ././.lake/build/ir/MOC/SpectralMobius.c --json",
+   "level": "trace"},
+  {"message":
+   "././././MOC/SpectralMobius.lean:142:0: automatically included section variable(s) unused in theorem 'MOC.spectralEnergy_centering':\n  [DecidableEq ι]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [DecidableEq ι] in theorem ...\nnote: this linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/SpectralMobius.lean:163:18: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/SpectralMobius.lean:228:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralMobius.0.MOC.hasDerivAt_mobius_energy_side':\n  [DecidableEq ι]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [DecidableEq ι] in theorem ...\nnote: this linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"}],
+ "depHash": "10458057754830633304"}

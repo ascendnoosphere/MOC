@@ -149,6 +149,7 @@ theorem conjecture_iff_anchored (i₀ j₀ : ι) :
       (h U hU (fun i => (a i - a i₀) / (a i + b j₀)) (fun j => (b j - b j₀) / (a i₀ + b j))
         (by simp) (by simp))
 
+<<<<<<< HEAD
 /-- Switching the anchor edge with a second edge removes one factor
 from the corresponding matching in the normalized chart. -/
 theorem anchored_product_swap (x y : ι → ℂ) (σ : Equiv.Perm ι) (j₀ j : ι)
@@ -182,6 +183,8 @@ theorem anchored_entry_of_swap (x y : ι → ℂ) (σ : Equiv.Perm ι) (j₀ j :
       (∏ k, (1 - x (σ k) * y k)) / ∏ k, (1 - x (σ (Equiv.swap j₀ j k)) * y k) := by
   rw [anchored_product_swap x y σ j₀ j hx hy, mul_div_cancel_right₀ _ hnz, sub_sub_cancel]
 
+=======
+>>>>>>> origin/main
 end
 
 end MOC

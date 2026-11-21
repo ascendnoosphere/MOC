@@ -1,0 +1,1 @@
+{"diagnostics": ["warning: ././././MOC/WorkflowSmoke.lean:2:8: declaration uses 'sorry'"], "digest": "b2f849293f0a74c72db00eb2e8bad11a3da5b011b761f2b411a48996fc670ef4", "log": "/home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/state/logs/build-7938af7f83ea57cb-b2f849293f0a74c72db00eb2e8bad11a3da5b011b761f2b411a48996fc670ef4.log", "state": "failed", "unrestricted": []}

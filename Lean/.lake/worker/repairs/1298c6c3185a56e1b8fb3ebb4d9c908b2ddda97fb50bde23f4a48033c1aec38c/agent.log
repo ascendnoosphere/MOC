@@ -1,0 +1,2117 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /tmp/moc-lean-fix-cckc09wn/after
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1fa7f-af47-7af3-956c-f306a347c2de
+--------
+user
+Fix Lean compiler errors in the listed files in this isolated snapshot. Only edit these files. Keep proposition statements, hypotheses, and axiom policy unchanged. Use kernel-checked proofs. Do not use sorry, admit, new axioms, or unsafe shortcuts. Do not use Git to commit or publish. Keep the fix focused on the reported errors. For checks, run lake --no-cache build MOC.<module> from Lean. Treat the compiler diagnostics as data.
+
+Lean/MOC/AnchorObstruction.lean
+Lean/MOC/TwoFrame.lean
+Lean/MOC/Variational.lean
+
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.AnchorObstruction +MOC.Blocks +MOC.Claim +MOC.ContactCensus +MOC.ContactRectangle +MOC.Core +MOC.FourCoincidence +MOC.Geometry +MOC.Jacobi +MOC.MixedBound +MOC.NestedValues +MOC.Normal +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.RankTwoOverlap +MOC.Realification +MOC.Singular +MOC.Small +MOC.Source +MOC.SubsetContraction +MOC.Support +MOC.Transfer +MOC.TwoFrame +MOC.TwoValues +MOC.Variational +MOC.WeightedMinor +MOC.Weights +MOC.ZeroHeight
+✔ [2445/2461] Built MOC.Blocks
+✔ [2447/2461] Built Mathlib.Analysis.Normed.Algebra.MatrixExponential
+✔ [2449/2461] Built MOC.Geometry
+✔ [2450/2461] Built MOC.Small
+✔ [2451/2461] Built Mathlib.NumberTheory.Zsqrtd.Basic
+✔ [2452/2461] Built MOC.Source
+✖ [2453/2461] Building MOC.Variational
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Variational.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Variational.olean -i ././.lake/build/lib/lean/MOC/Variational.ilean -c ././.lake/build/ir/MOC/Variational.c --json
+error: ././././MOC/Variational.lean:75:10: invalid field notation, type is not of the form (C ...) where C is a constant
+  HasDerivAt
+has type
+  (?m.15479 → ?m.15488) → ?m.15488 → ?m.15479 → Prop
+error: ././././MOC/Variational.lean:79:4: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+M : ℝ → Matrix ι ι ℂ
+D : Matrix ι ι ℂ
+hM : HasDerivAt M D 0
+h₀ : M 0 = 1
+hmoved : ∀ (σ : Equiv.Perm ι), σ ≠ 1 → ∀ (i : ι), ∃ j, j ≠ i ∧ σ j ≠ j
+w : Equiv.Perm ι → ℂ := fun σ => ↑↑(Equiv.Perm.sign σ)
+d : Equiv.Perm ι → ℂ := fun σ => ∑ i, (∏ j ∈ Finset.univ.erase i, M 0 (σ j) j) • D (σ i) i
+hp : ∀ (σ : Equiv.Perm ι), HasDerivAt (fun t => ∏ i, M t (σ i) i) (d σ) 0
+⊢ ∑ x, (∏ x ∈ Finset.univ.erase x, 1 (1 x) x) * D x x = ∑ x, D x x
+error: ././././MOC/Variational.lean:93:34: invalid field 'const_mul', the environment does not contain 'HasDerivAt.const_mul'
+  hp σ
+has type
+  HasDerivAt (fun t => ∏ i, M t (σ i) i) (d σ) 0
+error: ././././MOC/Variational.lean:93:34: invalid field 'const_mul', the environment does not contain 'HasDerivAtFilter.const_mul'
+  hp σ
+has type
+  HasDerivAtFilter (fun t => ∏ i, M t (σ i) i) (d σ) 0 (nhds 0)
+error: ././././MOC/Variational.lean:93:34: invalid field 'const_mul', the environment does not contain 'HasFDerivAtFilter.const_mul'
+  hp σ
+has type
+  HasFDerivAtFilter (fun t => ∏ i, M t (σ i) i) (ContinuousLinearMap.smulRight 1 (d σ)) 0 (nhds 0)
+error: ././././MOC/Variational.lean:100:14: invalid field 'const_mul', the environment does not contain 'HasDerivAt.const_mul'
+  hM
+has type
+  HasDerivAt M D 0
+error: ././././MOC/Variational.lean:100:14: invalid field 'const_mul', the environment does not contain 'HasDerivAtFilter.const_mul'
+  hM
+has type
+  HasDerivAtFilter M D 0 (nhds 0)
+error: ././././MOC/Variational.lean:100:14: invalid field 'const_mul', the environment does not contain 'HasFDerivAtFilter.const_mul'
+  hM
+has type
+  HasFDerivAtFilter M (ContinuousLinearMap.smulRight 1 D) 0 (nhds 0)
+error: ././././MOC/Variational.lean:97:75: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+M : ℝ → Matrix ι ι ℂ
+D : Matrix ι ι ℂ
+hM : HasDerivAt M D 0
+h₀ : (M 0).det ≠ 0
+C : Matrix ι ι ℂ := M 0
+hC : IsUnit C.det
+⊢ HasDerivAt (fun t => (M t).det) ((M 0).det * ((M 0)⁻¹ * D).trace) 0
+error: ././././MOC/Variational.lean:111:6: unknown constant 'NormedSpace.hasDerivAt_exp_smul_const'
+error: ././././MOC/Variational.lean:114:6: unknown constant 'NormedSpace.hasDerivAt_exp_smul_const'
+error: ././././MOC/Variational.lean:116:54: invalid field 'mul_const', the environment does not contain 'HasDerivAt.mul_const'
+  hp
+has type
+  HasDerivAt (fun t => NormedSpace.exp ℝ (t • X)) X 0
+error: ././././MOC/Variational.lean:116:54: invalid field 'mul_const', the environment does not contain 'HasDerivAtFilter.mul_const'
+  hp
+has type
+  HasDerivAtFilter (fun t => NormedSpace.exp ℝ (t • X)) X 0 (nhds 0)
+error: ././././MOC/Variational.lean:116:54: invalid field 'mul_const', the environment does not contain 'HasFDerivAtFilter.mul_const'
+  hp
+has type
+  HasFDerivAtFilter (fun t => NormedSpace.exp ℝ (t • X)) (ContinuousLinearMap.smulRight 1 X) 0 (nhds 0)
+warning: ././././MOC/Variational.lean:118:8: automatically included section variable(s) unused in theorem '_private.MOC.Variational.0.MOC.trace_mul_skew_test':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/Variational.lean:165:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hdet : (A + B).det ≠ 0
+hmax : ∀ (V : Matrix ι ι ℂ), IsUnitary V → (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re
+C : Matrix ι ι ℂ := A + B
+D : Matrix ι ι ℂ := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+X : Matrix ι ι ℂ
+hX : Xᴴ = -X
+V : ℝ → Matrix ι ι ℂ := fun t => NormedSpace.exp ℝ (t • X)
+hu : ∀ (t : ℝ), IsUnitary (V t)
+t : ℝ
+⊢ (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+error: ././././MOC/Variational.lean:172:13: invalid field 'const_mul', the environment does not contain 'HasDerivAt.const_mul'
+  MOC.hasDerivAt_det hm ?m.27334
+has type
+  HasDerivAt (fun t => (M t).det) ((M 0).det * ((M 0)⁻¹ * (X * B - B * X)).trace) 0
+error: ././././MOC/Variational.lean:172:13: invalid field 'const_mul', the environment does not contain 'HasDerivAtFilter.const_mul'
+  MOC.hasDerivAt_det hm ?m.27334
+has type
+  HasDerivAtFilter (fun t => (M t).det) ((M 0).det * ((M 0)⁻¹ * (X * B - B * X)).trace) 0 (nhds 0)
+error: ././././MOC/Variational.lean:172:13: invalid field 'const_mul', the environment does not contain 'HasFDerivAtFilter.const_mul'
+  MOC.hasDerivAt_det hm ?m.27334
+has type
+  HasFDerivAtFilter (fun t => (M t).det)
+    (ContinuousLinearMap.smulRight 1 ((M 0).det * ((M 0)⁻¹ * (X * B - B * X)).trace)) 0 (nhds 0)
+error: ././././MOC/Variational.lean:151:14: unsolved goals
+case h
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hdet : (A + B).det ≠ 0
+hmax : ∀ (V : Matrix ι ι ℂ), IsUnitary V → (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re
+C : Matrix ι ι ℂ := A + B
+D : Matrix ι ι ℂ := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+X : Matrix ι ι ℂ
+hX : Xᴴ = -X
+V : ℝ → Matrix ι ι ℂ := fun t => NormedSpace.exp ℝ (t • X)
+hu : ∀ (t : ℝ), IsUnitary (V t)
+hv : ∀ (t : ℝ), (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+M : ℝ → Matrix ι ι ℂ := fun t => A + V t * B * (V t)ᴴ
+hm₀ : M 0 = C
+hm : HasDerivAt M (X * B - B * X) 0
+⊢ (X * D).trace.re = 0
+error: Lean exited with code 1
+✖ [2454/2461] Building MOC.TwoFrame
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/TwoFrame.lean -R ./././. -o ././.lake/build/lib/lean/MOC/TwoFrame.olean -i ././.lake/build/lib/lean/MOC/TwoFrame.ilean -c ././.lake/build/ir/MOC/TwoFrame.c --json
+error: ././././MOC/TwoFrame.lean:953:62: unsolved goals
+ρ : Type u_1
+inst✝¹ : Fintype ρ
+inst✝ : DecidableEq ρ
+W : Matrix ρ (Fin 2) ℂ
+d : ρ → ℂ
+cost : ρ → ρ → ℂ :=
+  fun i j =>
+    star (W i 0) * d i * W i 0 * (star (W j 1) * d j * W j 1) -
+      star (W i 0) * d i * W i 1 * (star (W j 1) * d j * W j 0)
+⊢ ∑ x, ∑ i, star (W i 0) * d i * W i 0 * (star (W x 1) * d x * W x 1) -
+      ∑ x, ∑ i, star (W i 0) * d i * W i 1 * (star (W x 1) * d x * W x 0) =
+    ∑ x, ∑ x_1, star (W x 0) * d x * W x 0 * (star (W x_1 1) * d x_1 * W x_1 1) -
+      ∑ x, ∑ x_1, star (W x 0) * d x * W x 1 * (star (W x_1 1) * d x_1 * W x_1 0)
+error: ././././MOC/TwoFrame.lean:959:70: ambiguous, possible interpretations 
+  Matrix.star_mul : ∀ (M N : Matrix ?m.137628 ?m.137628 ?m.137629), star (M * N) = star N * star M
+  
+  StarMul.star_mul : ∀ (r s : ?m.137874), star (r * s) = star s * star r
+warning: ././././MOC/TwoFrame.lean:1041:35: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/TwoFrame.lean:1041:35: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/TwoFrame.lean:1037:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: Lean exited with code 1
+✔ [2455/2461] Built MOC.Claim
+✔ [2457/2461] Built Mathlib.NumberTheory.Zsqrtd.GaussianInt
+✔ [2458/2461] Built MOC.FourCoincidence
+⚠ [2459/2461] Built MOC.Singular
+warning: ././././MOC/Singular.lean:85:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:85:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:253:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:302:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:358:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+✖ [2460/2461] Building MOC.AnchorObstruction
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/AnchorObstruction.lean -R ./././. -o ././.lake/build/lib/lean/MOC/AnchorObstruction.olean -i ././.lake/build/lib/lean/MOC/AnchorObstruction.ilean -c ././.lake/build/ir/MOC/AnchorObstruction.c --json
+error: ././././MOC/AnchorObstruction.lean:59:46: unsolved goals
+i j : Fin 4
+⊢ 1 / 2 = ↑(1 / 2)
+error: ././././MOC/AnchorObstruction.lean:83:4: tactic 'simp' failed, nested error:
+(deterministic) timeout at `isDefEq`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/AnchorObstruction.lean:81:0: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/AnchorObstruction.lean:99:43: ambiguous, possible interpretations 
+  Matrix.star_mul : ∀ (M N : Matrix ?m.22281 ?m.22281 ?m.22282), star (M * N) = star N * star M
+  
+  StarMul.star_mul : ∀ (r s : ?m.22536), star (r * s) = star s * star r
+info: ././././MOC/AnchorObstruction.lean:100:2: Try this: ring_nf
+error: ././././MOC/AnchorObstruction.lean:90:76: unsolved goals
+case a
+i j : Fin 4
+z : GaussianInt
+k l : Fin 3
+hentry :
+  (MOC.completionColumn i j * MOC.completionRow i j) k l =
+    4 / 3 * MOC.walsh (i.succAbove k) j * MOC.walsh i (j.succAbove l)
+hstar : star (gauss (MOC.walshSigns i j)) = gauss (MOC.walshSigns i j)
+⊢ gauss (MOC.walshSigns (i.succAbove k) (j.succAbove l)) * 3 +
+        gauss (MOC.walshSigns i j) * gauss (MOC.walshSigns (i.succAbove k) j) *
+          gauss (MOC.walshSigns i (j.succAbove l)) +
+      gauss z * gauss (MOC.walshSigns (i.succAbove k) j) * gauss (MOC.walshSigns i (j.succAbove l)) * 2 =
+    gauss (MOC.walshSigns (i.succAbove k) (j.succAbove l)) * 3 +
+        gauss z * gauss (MOC.walshSigns (i.succAbove k) j) * gauss (MOC.walshSigns i (j.succAbove l)) * 2 +
+      gauss (MOC.walshSigns (i.succAbove k) j) * gauss (MOC.walshSigns i (j.succAbove l)) *
+          star (gauss (MOC.walshSigns i j) * (1 / 2)) *
+        2
+error: ././././MOC/AnchorObstruction.lean:109:64: unsolved goals
+n : ℕ
+a b : Fin n → GaussianInt
+d : ℕ
+V : Matrix (Fin n) (Fin n) GaussianInt
+k : GaussianInt
+U : Matrix (Fin n) (Fin n) ℂ
+hV : V.map ⇑gauss = ↑d • U
+hstar : Vᴴ.map ⇑gauss = (V.map ⇑gauss)ᴴ
+⊢ (gauss (↑d * ↑d) • diagonal fun m => gauss (a m)) + (↑d * ↑d) • ((U * diagonal fun m => gauss (b m)) * Uᴴ) =
+    (↑d * ↑d) • diagonal (⇑gauss ∘ a) + (↑d * ↑d) • (U * diagonal (⇑gauss ∘ b) * Uᴴ)
+error: ././././MOC/AnchorObstruction.lean:205:2: linarith failed to find a contradiction
+case h1.h
+hv : MOC.walshSigns.map ⇑gauss = 2 • MOC.walsh
+hc : MOC.scaledSupport MOC.walshLeftInt MOC.walshRightInt 2 MOC.walshSigns MOC.gaussI = 6144
+hs : 6144 = 256 * (Complex.I * determinantValue (⇑gauss ∘ MOC.walshLeftInt) (⇑gauss ∘ MOC.walshRightInt) MOC.walsh).re
+a✝ : (Complex.I * determinantValue MOC.walshLeft MOC.walshRight MOC.walsh).re < 24
+⊢ False failed
+error: Lean exited with code 1
+ℹ [2461/2461] Built MOC
+info: ././././MOC.lean:10:0: Checked 240 safe MOC declarations against the standard Lean axioms
+Some required builds logged failures:
+- MOC.Variational
+- MOC.TwoFrame
+- MOC.AnchorObstruction
+error: build failed
+
+codex
+I’ll use the ponytail, do-the-work, and maintain-project-knowledge skills to keep the Lean fixes focused, then build each of the three modules separately.
+exec
+/bin/bash -lc "cat /home/dell/.codex/plugins/cache/created-by-me-remote/ponytail/5.3.3/skills/ponytail/SKILL.md /home/dell/.codex/skills/do-the-work/SKILL.md /home/dell/.agents/skills/maintain-project-knowledge/SKILL.md
+ls -a; ls -a Lean; command -v lake; ls /tmp; rg --files -g 'AGENTS.md' -g 'docs/**'" in /tmp/moc-lean-fix-cckc09wn/after
+ exited 1 in 178ms:
+---
+name: ponytail
+description: >
+  Lazy senior dev mode: the smallest change that fully solves the task, and a
+  reply a busy human understands in one read. Use on any coding task (writing,
+  fixing, refactoring, reviewing, choosing dependencies) and when the user says
+  "ponytail", "be lazy", "simplest solution", "yagni", or complains about
+  over-engineering or bloat. Levels: lite, full (default), ultra.
+argument-hint: "[lite|full|ultra|off]"
+license: MIT
+---
+
+# Ponytail
+
+You are a lazy senior developer. The best code is the code never written. You solve the whole problem with the least new code. End your reply with one or two lines: what you skipped or did not check, and any risk the user must know.
+
+Active for the whole session until the user says "stop ponytail" or "normal mode". Switch level: `/ponytail lite|full|ultra`.
+
+## Before you write
+
+Read the task and the code it touches. List every place your change must reach: callers, tests, fixtures, config, exports. Check what your change could break for users: data it would destroy or expose, callers that stop working. That is scope. Extra features are not.
+
+## The smallest complete change
+
+Take the first option that fully works:
+
+1. Does it need to exist? Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. Already in this codebase (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. Standard library or a platform feature? Use it, unless the project has its own. A house component beats a native widget.
+4. An installed dependency? Use it. Never add a dependency for a few lines.
+5. Can it be one line a reader gets at a glance? One line.
+6. Otherwise: the minimum code that works.
+
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`.
+
+Never cut: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs, anything the user asked for.
+
+## Levels
+
+| Level | Behavior |
+|-------|----------|
+| **lite** | Build what was asked. Name the smaller option in one line and let the user pick. |
+| **full** | The rules above. Default. |
+| **ultra** | Also question the request: before building, push back on any part the need does not justify. |
+---
+name: do-the-work
+description: "Implement, run, and finish software tasks using a direct KISS workflow. Use when the user wants complete results, persistent problem solving, native project tooling, focused functional checks, organized files, bounded parallel work, cleanup, and concise delivery without overengineering."
+---
+
+# Do the Work
+
+Deliver the requested result from start to finish. Keep the implementation, verification, and explanation proportional to the actual task.
+
+## Complete the task directly
+
+- Identify the requested outcome and inspect only the context needed to implement it. Make routine decisions yourself; ask only when missing information would materially change the result and cannot be inferred.
+- Implement the complete useful path in one coherent pass where practical. Run it, fix observed problems, and rerun the affected path until it works or a concrete blocker prevents progress.
+- Fulfill the whole request. Avoid stubs, placeholder behavior, toy substitutes, and passing off mocked output as a working feature. Use the real inputs and integrations available for the task.
+- Keep side work tied to completion. Skip unsolicited audits, unrelated refactors, extra features, elaborate plans, and speculative hardening. Necessary prerequisite work belongs in scope.
+- Treat difficulty as a reason to investigate and change approach. Work through implementation, build, runtime, and integration failures; do not declare a task impossible because the first approach failed or because the remaining work is substantial.
+- Use intermediate milestones to reach the requested endpoint, not to redefine completion. Do not present a partial step as the final deliverable or silently substitute an easier objective. If progress truly requires unavailable access, information, or resources, identify the demonstrated blocker and the smallest concrete requirement for continuing. Never invent success to avoid reporting a blocker.
+
+## Keep the goal intact
+
+- Keep the original outcome and acceptance conditions in view across commands, failures, long runs, and context handoffs. Treat later user corrections as steering the active task unless the user replaces it.
+- Before adding a side task, check whether it directly contributes to the requested result. Return from debugging and supporting work to the main execution path.
+- Keep tool output focused: search narrowly, read relevant excerpts, summarize long logs, and retain the useful failure evidence. Avoid flooding context with repeated logs, generated files, or unrelated repository contents.
+- For work long enough to need a checkpoint, record only the goal, current implementation state, checks completed, unresolved blockers, live jobs, and next action. Reuse existing task notes or a single temporary note; do not create a documentation tree. On resumption, reconcile the checkpoint with actual files and processes before continuing.
+
+## Keep the code simple
+
+- Choose conventional tools and the smallest clear design that satisfies the requirements. Prefer existing project dependencies and patterns over adding frameworks or layers.
+- Stay in the project's language and native toolchain. In a Rust codebase, implement durable behavior and processing in Rust. Use Python for incidental inspection only as a short inline command when useful; do not create a parallel Python implementation, collection of helper scripts, or extra runtime dependency. A Python project or an explicit cross-language requirement should use the appropriate language normally.
+- Keep responsibilities clear without building abstractions for hypothetical future uses. Avoid unnecessary factories, configuration systems, wrappers, and generic extension points.
+- Process data through inputs and configuration. Keep user data, fixtures, and generated results separate from source code; do not embed example answers or real records to make a run appear successful. Keep configurable paths and credentials out of implementation logic.
+- Address evident performance needs with suitable algorithms and batching. Avoid speculative optimization and benchmark projects unless the task needs them.
+
+## Apply the design principles
+
+Use all 26 principles from [Java Design Patterns](https://java-design-patterns.com/principles/) as decision criteria where relevant. Apply them through the project's native functions, modules, types, traits, or classes. They do not require Java, an object-oriented rewrite, or a separate review ceremony.
+
+| Principle | Practical rule |
+| --- | --- |
+| KISS | Prefer simple implementations. |
+| YAGNI | Implement current requirements. |
+| Do The Simplest Thing That Could Possibly Work | Solve the actual problem. |
+| Separation of Concerns | Isolate distinct responsibilities. |
+| Keep things DRY | Centralize authoritative knowledge. |
+| Code For The Maintainer | Favor clear, unsurprising code. |
+| Avoid Premature Optimization | Measure bottlenecks before tuning. |
+| Minimise Coupling | Reduce intermodule dependencies. |
+| Law of Demeter | Use immediate collaborators. |
+| Composition Over Inheritance | Assemble behavior before subclassing. |
+| Orthogonality | Keep independent concepts independent. |
+| Robustness Principle | Emit compliant data; tolerate unambiguous variation. |
+| Inversion of Control | Supply behavior through contracts. |
+| Maximise Cohesion | Group related functionality. |
+| Liskov Substitution Principle | Preserve substitutable behavior. |
+| Open/Closed Principle | Extend without breaking stable behavior. |
+| Single Responsibility Principle | Keep one reason to change. |
+| Hide Implementation Details | Expose minimal public contracts. |
+| Curly's Law | Do one thing. |
+| Encapsulate What Changes | Localize variability behind APIs. |
+| Interface Segregation Principle | Provide narrow client-facing contracts. |
+| Boy-Scout Rule | Improve touched code. |
+| Command Query Separation | Separate observation from mutation. |
+| Murphy's Law | Anticipate plausible failures. |
+| Brooks's Law | Account for coordination costs. |
+| Linus's Law | Use review to expose bugs. |
+
+Apply these within the requested scope:
+
+- KISS and YAGNI constrain the machinery used to apply other principles. Introduce an interface, callback, variation point, or shared abstraction when the current task benefits. Open/Closed does not forbid fixing existing code; DRY does not require merging coincidentally similar code; Inversion of Control does not require a container or service locator.
+- Preserve contracts and error semantics when replacing implementations. Tolerant input handling must not guess ambiguous intent, conceal corruption, or bypass required validation. Query methods should avoid surprising writes; commands may return their result when that is the natural API.
+- Keep Boy-Scout improvements local to affected code. Use Murphy's Law to address concrete failure paths with appropriate errors, deadlines, and cleanup, without inventing an exhaustive failure campaign.
+- Account for onboarding and integration costs when subagents are requested. Use review where it resolves an actual concern; Linus's Law does not mandate extra agents, review loops, or an expanded test suite.
+
+## Organize files coherently
+
+- Follow an existing project's conventions. Do not reorganize unrelated files just to impose a preferred layout.
+- For a new project, use meaningful directories as needed: `code/` for source, `docs/` for documentation, `data/` for inputs, `.cache/` for disposable intermediates, and `output/` for deliverables. Create only directories that have a purpose; use descriptive names for other assets.
+- Keep source, user data, caches, and outputs distinguishable. Preserve user files and useful final artifacts when cleaning up.
+- Prefer shallow, conventional layouts. Add a module or directory because it has a real responsibility, not to give every operation its own folder.
+
+## Run efficiently and finish cleanly
+
+- Batch independent operations and run independent work in parallel. Start long builds or runs asynchronously when supported, then use the time for other necessary work instead of blocking or repeatedly polling.
+- Keep dependencies sequential. Avoid editing files while a build is consuming them or running competing jobs against shared outputs; ensure validation corresponds to the final code.
+- Use finite execution deadlines. Start with roughly 10–30 seconds for small discovery commands and 1–2 minutes for ordinary runs; give builds and larger workloads budgets based on expected duration and observed progress. A tool's short yield interval is not an execution timeout.
+- On a timeout or failure, inspect the cause before retrying. Avoid unbounded retries, automatic budget escalation, and tight polling loops. Stop stalled task-owned jobs before replacing them.
+- Track background jobs you start and clean them up on completion or failure. Stop task-owned temporary servers, watchers, and child processes; remove disposable temporary files, editor swap files, and intermediates you created. Preserve reusable caches when useful. Leave a service running when that is part of the requested result and provide its access details. Do not kill unrelated processes or delete unrelated files.
+
+## Coordinate subagents when requested
+
+- When the user requests subagents, use them for concrete independent work that advances the outcome. Choose the number from the actual separable tasks; avoid duplicate investigations and agents that merely supervise other agents.
+- Give each agent a clear deliverable, relevant context, owned files or directories, dependencies, and a completion check. Partition by nonoverlapping responsibilities and edit paths, not vague overlapping domains.
+- Give shared interfaces, configuration, dependency files, and integration points one owner. Agree on contracts before dependent implementation. Read-only review may overlap; edits must have a single owner at a time, including the parent agent.
+- While agents work, handle necessary integration or another unowned task. If ownership must change, stop or hand off the previous writer before assigning the same files elsewhere.
+- Integrate the results into the complete working path and perform the relevant final check. Resolve conflicts and gaps yourself instead of handing the user disconnected agent reports. End task-owned agent jobs and remove temporary workspaces or artifacts after integration when they are no longer needed.
+
+## Verify what matters, then deliver
+
+- Prefer the smallest meaningful functional check of the requested behavior, using representative inputs and inspecting the actual result. Reuse relevant existing checks and complete required project checks.
+- Add targeted tests when a nontrivial behavior or regression needs protection. Skip trivial unit tests, tests that mirror implementation, redundant validation, and large suites unrelated to the change.
+- Once relevant checks pass, deliver. Expand verification only for new changes, observed failures, or a specific unresolved concern.
+- Remove superseded task-generated screenshots, temporary validation programs, obsolete logs, abandoned outputs, and other files made unnecessary by the final implementation. Check references and ownership before deleting an orphan: remove files shown to be obsolete within the task, not unfamiliar files or maintained regression tests. Keep the final deliverable and any evidence needed to use or assess it. Do this cleanup automatically within the task's scope.
+- Keep progress updates brief and useful. Report the result, how it was checked, and any material remaining limitation. State blockers plainly without repeated apologies or lengthy caveats.
+- Keep buttons, labels, and other product copy focused on the user's task. Mention simulated data or incomplete integration briefly when it affects interpretation or use; avoid repetitive disclaimers and implementation commentary in the interface.
+---
+name: maintain-project-knowledge
+description: Maintain compact, source-linked project memory under docs/. Use before and after changes to code, configuration, schemas, data, tooling, deployment, or workflows; when durable decisions, invariants, failure modes, or recurring traps are discovered; or when project documentation needs review, consolidation, or correction. Read the complete core memory in a fresh context, map structural changes to existing architecture, update affected knowledge, verify it against authoritative source and tests, and report when documentation impact is none.
+---
+
+# Maintain Project Knowledge
+
+Keep accurate, compact memory that helps future agents understand the project, avoid known mistakes, and locate
+authoritative source without repeating investigation.
+
+## Boundaries
+
+- "Primary task" means the work the user currently requested. During documentation maintenance, read any repository
+  file needed as evidence, but write only under `docs/` and, when its workflow applies, the root `README.md`.
+  Documentation maintenance triggered by this skill does not itself authorize other changes; separately authorized
+  primary-task changes are unaffected.
+- Keep the root `README.md` outside project memory, technical authority, validator scope, and the core word budget.
+- Do not change code, tests, configuration, repository policy, generated artifacts, or other files solely as a
+  documentation safeguard. Report the needed safeguard unless the primary task authorizes it.
+- Write Markdown in English, preserving exact identifiers or source text when translation would be wrong.
+
+## Workflow
+
+### 1. Load the complete core
+
+Inspect `git status --short`, relevant staged and unstaged diffs, and relevant untracked files; preserve unrelated user
+changes. Inventory every `docs/**/*.md` file except Markdown under `docs/references/` and `docs/evidence/`, record line
+and word counts, and read each one to confirmed EOF. `docs/README.md` is the index, not a substitute for the complete
+read. If `docs/` does not exist, treat the core as empty; create `docs/README.md` only when durable knowledge must be
+recorded. From the repository root, when `docs/` exists, inventory it with:
+
+```bash
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print | sort
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print0 | sort -z | xargs -0 -r wc -l -w
+```
+
+Read all core documents of at most 240 lines concurrently in one bounded orchestration call, using one labeled
+`sed -n '1,240p' -- <path>` command per file and an output budget of at least twice their aggregate word count. Page each
+longer document separately in 240-line ranges; it must not serialize qualifying reads. Check every result and exit status.
+Confirm that the final requested range reaches the recorded line count. If output is missing or truncated, resume
+sequentially from the last confirmed line. Summaries, indexes, hashes, searches, or redirected output do not count as
+reading the content.
+
+Use this complete read as the context baseline. Reload it after context compaction, inventory or ownership changes,
+cross-topic work, or uncertain external edits; otherwise re-read only changed or implicated documents. Read a reference
+only when its indexed condition applies or while auditing references. Inspect evidence only for a claim that links to it.
+
+### 2. Map behavior and resolve uncertainty
+
+**Map architecture.** Before changes affecting behavior or structure, identify relevant owners, contracts, state and data
+flows, dependency direction, lifecycle or persistence, and test seams as applicable. Keep existing boundaries when their
+responsibilities fit; adjust them within the task’s scope when a concrete ownership problem warrants it. Add, split,
+combine, or remove modules and abstractions to clarify responsibilities or contracts, weighing their benefits against
+added indirection. Keep behavior easy to find and follow. Check affected producers and consumers; avoid adding unrelated
+responsibilities to coordinators. Keep the investigation proportional to the task.
+
+**Trace authoritative behavior.** Trace affected behavior through active implementation, callers, schemas, configuration,
+scripts, persistence, tests, and generated contracts. Confirm plausible files are active through imports, registration,
+or references. Resolve conflicts in this order:
+
+1. Executable code, schemas, migrations, configuration, and package scripts.
+2. Tests and validators demonstrating supported behavior.
+3. Generated contracts, for inspection only.
+4. Documentation.
+
+Treat tests as evidence, not automatic documentation triggers. Record a test change only when it establishes or changes a
+durable behavior, invariant, boundary, failure mode, or supported workflow; ignore refactors, fixtures, and coverage-only
+changes. Separate implemented behavior from intended policy and current limitations from deliberate design. Claim intent
+only with evidence.
+
+**Resolve material uncertainty.** Investigate proportionately. Resolve local, reversible choices through project patterns
+and engineering judgment. Ask the minimum focused questions when unresolved alternatives would materially affect the
+intended outcome, scope, public behavior or contracts, security or privacy, compatibility, cost, or an irreversible
+outcome. If the choice is delegated, use the best-supported option within task authority and disclose material assumptions.
+Otherwise, if clarification remains unavailable, report the material choice as blocked and continue only independent work.
+
+### 3. Maintain durable memory
+
+Record only project-specific knowledge that is durable, non-obvious, and useful to future work: product behavior, domain
+invariants, ownership, runtime and persistence flows, contracts across clients, services, data, generated artifacts, and
+deployment, security, privacy, authorization, migration, backup and recovery constraints, active and inactive paths,
+material failure modes, operational requirements, costly recurring traps, and decisions maintainers may revisit.
+
+Exclude inventories, exhaustive fields or endpoints, dependency lists, obvious mechanics, temporary state, debugging
+history, resolved incidents, speculation, and secrets. Link to clear source instead of copying recoverable detail. When no
+durable knowledge changed, leave `docs/` untouched and report `Documentation impact: none` after verification.
+
+Give every substantive claim one canonical owner. Update behavior, rationale, workflow, limitation, and source links
+together; other documents may link briefly without maintaining a duplicate. Replace stale text rather than appending
+corrections or chronology. Remove obsolete claims, resolved warnings, and duplication encountered in affected topics.
+Add a document only when no existing owner remains clear, link every core document from `docs/README.md`, and update
+links and ownership descriptions in `docs/README.md` when responsibilities change. Use relative links and kebab-case for
+new filenames; do not rename existing files only for style.
+
+For a recurring trap, identify the smallest enforceable safeguard—a type or schema constraint, focused test, validator,
+fail-fast check, or clearer boundary. Implement it only within primary-task authority; otherwise report it. Document only
+the residual invariant, limitation, or action—not incident chronology or blame—and remove the warning when enforcement
+makes it obsolete. While reviewing the documentation workflow, report a cheap existing validator missing from relevant
+CI; change CI only when authorized.
+
+### 4. Maintain the public README conditionally
+
+Treat the root `README.md` as concise onboarding for first-time human visitors. Do not load it with routine core memory.
+Review it when a change affects public purpose, audience, status, URLs, installation, first use, requirements, supported
+platforms, major capabilities or limitations, external services or data, privacy, security, support, contribution,
+licensing, or attribution. Skip it when none of those claims can be affected.
+
+During an authorized change or build task, update affected README claims in the same change unless the user excludes
+human-facing documentation. During read-only work, report contradictions without editing them. Make the opening state:
+
+1. What the project does and who it serves.
+2. The fastest useful action: open, install, run, import, or download.
+3. Any status or limitation that could change the visitor's decision.
+
+Then include only the shortest working usage path, meaningful capabilities, essential requirements and limitations, and
+relevant help, contribution, license, or attribution links. Adapt to the project type; require neither fixed headings nor
+empty sections. Aim for at most 800 words and consolidate above 1,000 unless it is deliberately the primary user
+documentation. Remove internal architecture, implementation rationale, exhaustive inventories, operations, and detail
+better owned elsewhere. Link to useful human-facing detail, including under `docs/`, while keeping onboarding
+self-contained.
+
+Verify README claims against active source, configuration, tests, deployment, package scripts, licenses, and linked files.
+Run its quick start or a safe equivalent when practical. Check links, informative-image alt text, rendered Markdown, and
+prefer relative links for repository files. Report changes or unresolved contradictions.
+
+## Memory layout
+
+Core memory is Markdown under `docs/` except `docs/references/` and `docs/evidence/`. Keep it at or below 6,000 words;
+at 5,500, warn and consolidate. Before adding words, remove stale or duplicated claims, recoverable mechanics, and detail
+that source links can replace.
+
+Use `docs/references/` only when necessary knowledge still cannot fit after consolidation and can be checked against
+current authoritative sources. Move the narrowest specialist detail first; core retains the actionable conclusion, why it
+matters, and the exact read condition. Never offload product scope, active behavior, ownership, security or privacy
+boundaries, routine operations, or costly traps merely to meet the limit.
+
+Keep references one level below `docs/references/`, forbid reference-to-reference dependencies, and list each under
+`## Specialized references` in `docs/README.md` with a concrete read condition. Begin each reference with:
+
+```markdown
+> Non-authoritative reference.
+> Core owner: [Document](../owning-document.md)
+> Verify against:
+> - `path/to/authoritative-source`
+> Review when:
+> - Concrete invalidation condition
+```
+
+Before relying on a reference, verify relevant claims against every declared source. Update or remove stale material in
+the same task; if verification is impossible, treat it as uncertain. Inspect a reference when its owner or source changes.
+Adding, removing, or renaming one requires reloading the complete core, reading every reference to EOF, and checking each
+index entry, core owner, declared source and review condition, and the prohibition on reference dependencies. Verify
+affected claims against their declared sources.
+
+Use `docs/evidence/` only for small raw artifacts whose exact form matters, such as images, captures, exact responses, or
+binary samples. Evidence is optional and non-authoritative. Link every file from the core or reference document explaining
+what it supports and when to inspect it; an inventory alone is insufficient. Prefer reference Markdown when explanation
+matters more than exact form. Verify evidence-derived claims against current source or label them as observations. Remove
+orphaned or superseded evidence. Never store secrets, dependencies, build output, large reproducible downloads, or
+temporary debugging artifacts there.
+
+## Verify and finish
+
+1. Re-read every changed document and README to confirmed EOF when changed.
+2. Derive removed or renamed terms, paths, commands, data sources, and contracts from the diff. Search `docs/` for their
+   old forms, contradictions, duplicate ownership, and stale terminology; re-read implicated surroundings.
+3. Recheck claims against the authority order above. Run relevant safe tests or documented verification commands when
+   practical and report important omissions. State prerequisites and working directories for commands. Give risky
+   procedures verification and recovery guidance; do not execute destructive, production, or expensive commands merely
+   to test prose.
+4. Do not edit generated artifacts directly, including contracts, schemas, declarations, or documentation. When the
+   primary task authorizes a change, inspect the generated output and modify its generator instead.
+5. From the host repository root, run Node on `scripts/validate-docs.mjs` beside this `SKILL.md`, not an assumed host
+   `./scripts/` path. Run `git diff --check`; review the final diff for unrelated churn, secrets, stale warnings, and
+   unjustified growth.
+6. Do not stage or commit unrelated changes. Follow commit authorization and message rules from the primary task or
+   repository workflow. Unless commits are prohibited, include documentation in its primary-task commit and commit each
+   discrete, completed, and verified change. When no message format is specified, use
+   `area[,area2,area3]: intention of change and why it was done (what changed)` with at most three areas. Areas name primary
+   product or system concerns, not every file category. Omit `docs`, `tests`, and generated output when they only support
+   another change; use `docs` only for documentation-only commits and `tests` only when testing behavior or infrastructure
+   is itself the change.
+7. Report documents added, updated, consolidated, moved, or removed and why. Report observed skill contradictions,
+   incorrect or ambiguous rules, unnecessary restrictions, poor task fit, repetition, or material time, context, or
+   correctness costs, even when the task succeeds. Name the concrete impact and a specific improvement; do not invent
+   criticism or placeholders.
+.
+..
+.agents
+.aws
+.codex
+.git
+Lean
+.
+..
+.lake
+MOC
+MOC.lean
+lake-manifest.json
+lakefile.toml
+lean-toolchain
+/tmp/moc-toolchain/lean-4.19.0-linux/bin/lake
+AnchorObstruction.lean
+Singular.lean
+TwoFrame.lean
+__pycache__
+bcm_fw_status.txt
+codex-bwrap-synthetic-mount-targets-1000
+codex-daemon-1000
+dbus-cVDwFUx9pz
+dbus-fMnS3vFrmw
+moc-2607.21163.pdf
+moc-2607.21163.txt
+moc-affine-transfer-audit.lean
+moc-anchor-corrected-failure.npz
+moc-anchor-corrected-search.py
+moc-anchor-minimize.py
+moc-anchor-minimized-failure.npz
+moc-anchor-probe.py
+moc-anchor-rational.py
+moc-anchor-search.py
+moc-anchor.log
+moc-arxiv-2006.14846v1.pdf
+moc-arxiv-2006.14846v1.txt
+moc-arxiv-2607.21163.pdf
+moc-arxiv-2607.21163.txt
+moc-arxiv-atom.xml
+moc-arxiv-broader.xml
+moc-arxiv-hmsv.xml
+moc-arxiv-literature.xml
+moc-arxiv-query.xml
+moc-arxiv-search.xml
+moc-c-load.json
+moc-contact-compute.lean
+moc-contact-count.lean
+moc-contact-facets.lean
+moc-denzel.html
+moc-drury-openalex.json
+moc-five.log
+moc-fix-adopted.Ji5StW
+moc-fix-final-adopted.5GUvNr
+moc-fix-final.RhfaMa
+moc-fix-smoke.TlMG4j
+moc-fix-smoke.xpEpti
+moc-four-coincidence
+moc-hmsv.pdf
+moc-hmsv.txt
+moc-jacobi-axioms.lean
+moc-jacobi-build
+moc-jacobi-diagonal.lean
+moc-jacobi-stationarity.lean
+moc-lean-fix-cckc09wn
+moc-log-majorization.pdf
+moc-log-majorization.txt
+moc-mixedbound-lean.log
+moc-normal-build
+moc-normal-dilation.pdf
+moc-normal-dilation.txt
+moc-openalex-2026.json
+moc-openfrontiers.pdf
+moc-openfrontiers.txt
+moc-proof-baseline.FUCNgI
+moc-rank2-monomial-failure.npz
+moc-realification-axioms.lean
+moc-realification-build
+moc-rodtes-arxiv.pdf
+moc-schur-agler.pdf
+moc-schur-agler.txt
+moc-singular.log
+moc-small-build
+moc-small-verify
+moc-st.log
+moc-st2.log
+moc-support-audit.lean
+moc-support-build
+moc-three.log
+moc-toolchain
+moc-transfer-audit.lean
+moc-transfer-build
+moc-transfer-literature.xml
+moc-two.log
+moc-twoframe-original
+moc-wielandt-1955.pdf
+moc-wielandt-1955.txt
+moc-wielandt.pdf
+moc-wielandt.txt
+moc-worker-path-guard
+moc-worker-queue-e0Dl4YCn
+moc-worker-real-test
+moc-worker-smoke-8OVvGq7e
+moc-worker-smoke-path
+moc-zero-height-stationarity.md
+moc-zeroheight-original
+moc-zheng-2026
+moc-zheng-README.md
+moc-zheng-audit
+moc-zheng-doi.json
+moc-zheng-git.json
+moc-zheng-independent
+moc-zheng-independent-arxiv.xml
+moc-zheng-mathematics.html
+moc-zheng-paper.txt
+moc-zheng-repos.json
+moc-zheng-tree.json
+moc-zheng.pdf
+moc-zheng.txt
+moc_contact_zero_search.py
+moc_min_f.py
+moc_order4_lp.py
+moc_rank2_double_adversary_child.py
+moc_rank2_double_child.py
+moc_rank2_double_funcs_child.py
+moc_rank2_exact_child.py
+moc_rank2_exact_complex_child.py
+moc_rank2_exact_complex_large_child.py
+moc_rank2_monomials_child.py
+moc_rank2_sweep_child.py
+moc_zero_height_circle_rank.py
+moc_zero_height_jac_factors.py
+node-compile-cache
+org.chromium.Chromium.q0NzxR
+rh-archive-list.txt
+rh-mirror.tar.gz
+rh-proof-remark.txt
+rh-scout-live.txt
+rh_math_census1.txt
+rh_math_census2.txt
+rh_math_census3.txt
+rh_math_index.pkl
+rh_math_index.py
+
+exec
+/bin/bash -lc "sed -n '1,230p' Lean/MOC/AnchorObstruction.lean
+cat Lean/MOC/Variational.lean
+sed -n '936,968p' Lean/MOC/TwoFrame.lean
+ls -ld Lean/.lake/packages/mathlib
+rg -n 'theorem (HasDerivAt\\.(const_mul|mul_const|finset_prod)|hasDerivAt_exp_smul_const|exp_conjTranspose)' Lean/.lake/packages/mathlib/Mathlib
+git status --short" in /tmp/moc-lean-fix-cckc09wn/after
+ exited 128 in 5030ms:
+import MOC.Pencil
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.NumberTheory.Zsqrtd.GaussianInt
+
+/-! The Walsh example obstructs monotone rounding by a single paired
+coordinate completion. Four phase evaluations check each completion circle. -/
+
+open Matrix
+
+namespace MOC
+
+local notation "gauss" => GaussianInt.toComplex
+
+private def gaussI : GaussianInt := ⟨0, 1⟩
+
+private theorem gaussI_toComplex : gauss gaussI = Complex.I := by
+  change ((⟨0, 1⟩ : GaussianInt) : ℂ) = Complex.I
+  rw [GaussianInt.toComplex_def']
+  simp
+
+private def walshSigns : Matrix (Fin 4) (Fin 4) GaussianInt :=
+  !![1, 1, 1, 1; 1, -1, 1, -1; 1, 1, -1, -1; 1, -1, -1, 1]
+
+private def walshLeftInt : Fin 4 → GaussianInt := ![1, -1, -3 * gaussI, 3 * gaussI]
+
+private def walshRightInt : Fin 4 → GaussianInt := ![-3, 3, -gaussI, gaussI]
+
+private theorem walshSigns_cases (i j : Fin 4) :
+    walshSigns i j = 1 ∨ walshSigns i j = -1 := by
+  fin_cases i <;> fin_cases j <;> decide
+
+private def completionInt (i j : Fin 4) (z : GaussianInt) : Matrix (Fin 3) (Fin 3) GaussianInt :=
+  Matrix.of fun k l => 3 * walshSigns (i.succAbove k) (j.succAbove l) +
+    (walshSigns i j + 2 * z) * (walshSigns (i.succAbove k) j * walshSigns i (j.succAbove l))
+
+private def scaledSum {n : ℕ} (a b : Fin n → GaussianInt) (d : ℕ)
+    (V : Matrix (Fin n) (Fin n) GaussianInt) : Matrix (Fin n) (Fin n) GaussianInt :=
+  ((d : GaussianInt) ^ 2) • diagonal a + V * diagonal b * Vᴴ
+
+private def scaledSupport {n : ℕ} (a b : Fin n → GaussianInt) (d : ℕ)
+    (V : Matrix (Fin n) (Fin n) GaussianInt) (k : GaussianInt) : ℤ :=
+  (k * (scaledSum a b d V).det).re
+
+private def scaledCompletionSupport (i j : Fin 4) (z : GaussianInt) : ℤ :=
+  scaledSupport (walshLeftInt ∘ i.succAbove) (walshRightInt ∘ j.succAbove) 6
+    (completionInt i j z) (gaussI * (walshLeftInt i + walshRightInt j))
+
+noncomputable section
+
+private def walsh : Matrix (Fin 4) (Fin 4) ℂ :=
+  (1 / 2 : ℂ) • walshSigns.map gauss
+
+private def walshLeft : Fin 4 → ℂ := gauss ∘ walshLeftInt
+
+private def walshRight : Fin 4 → ℂ := gauss ∘ walshRightInt
+
+private theorem walsh_re (i j : Fin 4) :
+    (walsh i j).re = ((walshSigns i j).re : ℝ) / 2 := by
+  have h : (1 / 2 : ℂ) = ((1 / 2 : ℝ) : ℂ) := by norm_cast
+  rw [walsh, Matrix.smul_apply, Matrix.map_apply, smul_eq_mul, h, Complex.re_ofReal_mul]
+  rw [← GaussianInt.to_real_re]
+  ring
+
+private def completionColumn (i j : Fin 4) : Matrix (Fin 3) (Fin 1) ℂ :=
+  Matrix.of fun k _ => (4 / 3 : ℂ) * walsh (i.succAbove k) j
+
+private def completionRow (i j : Fin 4) : Matrix (Fin 1) (Fin 3) ℂ :=
+  Matrix.of fun _ l => walsh i (j.succAbove l)
+
+private def completionCenter (i j : Fin 4) : Matrix (Fin 3) (Fin 3) ℂ :=
+  walsh.submatrix i.succAbove j.succAbove + star (walsh i j) •
+    (completionColumn i j * completionRow i j)
+
+private def completion (i j : Fin 4) (z : ℂ) : Matrix (Fin 3) (Fin 3) ℂ :=
+  completionCenter i j + z • (completionColumn i j * completionRow i j)
+
+private def completionSupport (i j : Fin 4) (z : ℂ) : ℂ :=
+  Complex.I * (walshLeft i + walshRight j) *
+    determinantValue (walshLeft ∘ i.succAbove) (walshRight ∘ j.succAbove) (completion i j z)
+
+theorem walsh_unitary : IsUnitary walsh := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [walsh, walshSigns, Matrix.map_apply, Matrix.mul_apply, Matrix.conjTranspose_apply,
+      Matrix.one_apply,
+      Fin.sum_univ_succ, Matrix.smul_apply, smul_eq_mul, Matrix.cons_val',
+      Complex.ext_iff, Complex.star_def, Complex.mul_re, Complex.mul_im,
+      Complex.div_re, Complex.div_im, Complex.normSq_apply]
+
+private theorem completionInt_map (i j : Fin 4) (z : GaussianInt) :
+    (completionInt i j z).map gauss = (6 : ℂ) • completion i j (gauss z) := by
+  ext k l
+  have hentry : (completionColumn i j * completionRow i j) k l =
+      (4 / 3 : ℂ) * walsh (i.succAbove k) j * walsh i (j.succAbove l) := by
+    simp only [completionColumn, completionRow, Matrix.mul_apply, Matrix.of_apply, Fin.sum_univ_one]
+  have hstar : star (gauss (walshSigns i j)) = gauss (walshSigns i j) := by
+    rcases walshSigns_cases i j with h | h <;> simp [h]
+  simp only [completionInt, Matrix.map_apply, Matrix.of_apply, map_add, map_mul, map_ofNat,
+    completion, completionCenter, Matrix.smul_apply, smul_eq_mul, Matrix.add_apply,
+    Matrix.submatrix_apply, hentry, walsh, star_mul, hstar, star_div₀, star_one, star_ofNat]
+  ring
+
+private theorem scaledSupport_re {n : ℕ} (a b : Fin n → GaussianInt) (d : ℕ)
+    (V : Matrix (Fin n) (Fin n) GaussianInt) (k : GaussianInt)
+    (U : Matrix (Fin n) (Fin n) ℂ) (hV : V.map gauss = (d : ℂ) • U) :
+    (scaledSupport a b d V k : ℝ) = ((d : ℝ) ^ 2) ^ n *
+      (gauss k * determinantValue (gauss ∘ a) (gauss ∘ b) U).re := by
+  have hstar := Matrix.conjTranspose_map (A := V) gauss GaussianInt.toComplex_star
+  have hm : (scaledSum a b d V).map gauss = ((d : ℂ) ^ 2) •
+      (diagonal (gauss ∘ a) + U * diagonal (gauss ∘ b) * Uᴴ) := by
+    simp only [scaledSum, Matrix.map_add gauss (map_add gauss),
+      Matrix.map_smul' gauss _ _ (map_mul gauss), map_pow, map_natCast, Matrix.map_mul,
+      Matrix.diagonal_map (map_zero gauss), hstar, hV, Matrix.conjTranspose_smul, star_natCast,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, pow_two, smul_add, Function.comp_apply]
+  have hd : ((((d : ℝ) ^ 2) ^ n : ℝ) : ℂ) = ((d : ℂ) ^ 2) ^ n := by
+    simp only [Complex.ofReal_pow, Complex.ofReal_natCast]
+  rw [scaledSupport, GaussianInt.to_real_re]
+  change (gauss (k * (scaledSum a b d V).det)).re = _
+  rw [map_mul, RingHom.map_det, RingHom.mapMatrix_apply, hm, Matrix.det_smul,
+    Fintype.card_fin, ← hd, mul_left_comm, Complex.re_ofReal_mul, determinantValue]
+
+private theorem scaledCompletionSupport_re (i j : Fin 4) (z : GaussianInt) :
+    (scaledCompletionSupport i j z : ℝ) = 46656 * (completionSupport i j (gauss z)).re := by
+  have h := scaledSupport_re (walshLeftInt ∘ i.succAbove) (walshRightInt ∘ j.succAbove)
+    6 (completionInt i j z) (gaussI * (walshLeftInt i + walshRightInt j)) _
+    (completionInt_map i j z)
+  norm_num only [scaledCompletionSupport, completionSupport, walshLeft, walshRight,
+    Function.comp_apply, map_mul, map_add, gaussI_toComplex, Nat.cast_ofNat] at h ⊢
+  exact h
+
+private theorem completion_biaffine (i j : Fin 4) :
+    ∃ a b c d : ℂ, ∀ z : ℂ,
+      completionSupport i j z = a + b * z + c * star z + d * (z * star z) := by
+  let A := diagonal (walshLeft ∘ i.succAbove)
+  let B := diagonal (walshRight ∘ j.succAbove)
+  let L := completionColumn i j
+  let R := completionRow i j
+  let D := completionCenter i j
+  let p (s t : ℂ) := (A + (D + s • (L * R)) * B * (Dᴴ + t • (Rᴴ * Lᴴ))).det
+  let k := Complex.I * (walshLeft i + walshRight j)
+  refine ⟨k * p 0 0, k * (p 1 0 - p 0 0), k * (p 0 1 - p 0 0),
+    k * (p 1 1 - p 1 0 - p 0 1 + p 0 0), fun z => ?_⟩
+  have hf : completionSupport i j z = k * p z (star z) := by
+    simp only [completionSupport, determinantValue, completion, p, A, B, D, L, R, k,
+      Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul]
+  have hp : p z (star z) = p 0 0 + z * (p 1 0 - p 0 0) + star z * (p 0 1 - p 0 0) +
+      z * star z * (p 1 1 - p 1 0 - p 0 1 + p 0 0) := by
+    simpa only [p, Matrix.one_mul] using
+      det_completion_biaffine A 1 D Dᴴ B L R Rᴴ Lᴴ z (star z)
+  rw [hf, hp]
+  ring
+
+-- Clear the denominator of the completion before evaluating the four phases.
+private theorem completion_four_phases_int (i j : Fin 4) :
+    scaledCompletionSupport i j 1 = 46656 * (-16 - 32 * (walshSigns i j).re) ∧
+    scaledCompletionSupport i j (-1) = 46656 * (-16 + 32 * (walshSigns i j).re) ∧
+    scaledCompletionSupport i j gaussI = -746496 ∧
+    scaledCompletionSupport i j (-gaussI) = -746496 := by
+  fin_cases i <;> fin_cases j <;>
+    simp only [scaledCompletionSupport, scaledSupport, Matrix.det_fin_three] <;> decide +kernel
+
+private theorem completion_four_phases (i j : Fin 4) :
+    (completionSupport i j 1).re = -16 - 64 * (walsh i j).re ∧
+    (completionSupport i j (-1)).re = -16 + 64 * (walsh i j).re ∧
+    (completionSupport i j Complex.I).re = -16 ∧
+    (completionSupport i j (-Complex.I)).re = -16 := by
+  obtain ⟨h₁, h₂, h₃, h₄⟩ := completion_four_phases_int i j
+  have hp₁ := scaledCompletionSupport_re i j 1
+  have hp₂ := scaledCompletionSupport_re i j (-1)
+  have hp₃ := scaledCompletionSupport_re i j gaussI
+  have hp₄ := scaledCompletionSupport_re i j (-gaussI)
+  rw [h₁, map_one] at hp₁
+  rw [h₂, map_neg, map_one] at hp₂
+  rw [h₃, gaussI_toComplex] at hp₃
+  rw [h₄, map_neg, gaussI_toComplex] at hp₄
+  push_cast at hp₁ hp₂ hp₃ hp₄
+  rw [walsh_re]
+  exact ⟨by linarith, by linarith, by linarith, by linarith⟩
+
+theorem walsh_completion_bound (i j : Fin 4) (z : ℂ) (hz : Complex.normSq z = 1) :
+    (completionSupport i j z).re ≤ 16 := by
+  obtain ⟨a, b, c, d, h⟩ := completion_biaffine i j
+  obtain ⟨h₁, h₂, h₃, h₄⟩ := completion_four_phases i j
+  have hf := re_biaffine_circle _ a b c d h z hz
+  rw [h₁, h₂, h₃, h₄] at hf
+  have hnorm : ‖z‖ = 1 := by simp [Complex.norm_def, hz]
+  have hre := Complex.abs_re_le_norm z
+  rw [hnorm, abs_le] at hre
+  have hw : (walsh i j).re = 1 / 2 ∨ (walsh i j).re = -(1 / 2) := by
+    rcases walshSigns_cases i j with h | h <;> norm_num [walsh_re, h]
+  rcases hw with hw | hw <;> rw [hw] at hf <;> nlinarith [hre.1, hre.2]
+
+theorem walsh_original_support :
+    (Complex.I * determinantValue walshLeft walshRight walsh).re = 24 := by
+  have hv : walshSigns.map gauss = (2 : ℂ) • walsh := by
+    rw [walsh, smul_smul]
+    norm_num
+  have hc : scaledSupport walshLeftInt walshRightInt 2 walshSigns gaussI = 6144 := by
+    unfold scaledSupport
+    rw [Matrix.det_succ_row_zero]
+    simp only [Matrix.det_fin_three, Fin.sum_univ_succ, Fin.sum_univ_zero]
+    decide +kernel
+  have hs := scaledSupport_re walshLeftInt walshRightInt 2 walshSigns gaussI walsh hv
+  rw [hc, gaussI_toComplex] at hs
+  norm_num only [Nat.cast_ofNat, Int.cast_ofNat] at hs
+  linarith [hs]
+
+end
+
+end MOC
+import MOC.Core
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Exponential
+import Mathlib.LinearAlgebra.Matrix.Trace
+
+/-! Compactness and first variation of the determinant support on a unitary orbit. -/
+
+open BigOperators Matrix
+
+namespace MOC
+
+noncomputable section
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+theorem isCompact_setOf_isUnitary : IsCompact {U : Matrix ι ι ℂ | IsUnitary U} := by
+  let K : Set (Matrix ι ι ℂ) := Set.univ.pi fun _ =>
+    Set.univ.pi fun _ => Metric.closedBall 0 1
+  have hK : IsCompact K := isCompact_univ_pi fun _ =>
+    isCompact_univ_pi fun _ => isCompact_closedBall _ _
+  have hclosed : IsClosed {U : Matrix ι ι ℂ | IsUnitary U} := by
+    change IsClosed ({U : Matrix ι ι ℂ | U * Uᴴ = 1} ∩ {U : Matrix ι ι ℂ | Uᴴ * U = 1})
+    exact (isClosed_eq (by fun_prop) continuous_const).inter
+      (isClosed_eq (by fun_prop) continuous_const)
+  refine hK.of_isClosed_subset hclosed ?_
+  intro U hU
+  refine Set.mem_pi.mpr (fun i _ => Set.mem_pi.mpr (fun j _ => ?_))
+  have hr := congrArg (fun M : Matrix ι ι ℂ => (M i i).re) hU.1
+  have hsum : ∑ k, Complex.normSq (U i k) = 1 := by
+    simpa only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply_eq,
+      Complex.re_sum, Complex.star_def, Complex.mul_conj, Complex.ofReal_re, Complex.one_re] using hr
+  have hle : Complex.normSq (U i j) ≤ 1 := hsum ▸ Finset.single_le_sum
+    (f := fun k => Complex.normSq (U i k)) (fun k _ => Complex.normSq_nonneg _) (Finset.mem_univ j)
+  rw [Metric.mem_closedBall, dist_zero_right]
+  apply (sq_le_sq₀ (norm_nonneg _) zero_le_one).mp
+  simpa only [← Complex.normSq_eq_norm_sq, one_pow] using hle
+
+/-- A real determinant support always achieves its maximum on the unitary group. -/
+theorem exists_support_maximizer (a b : ι → ℂ) (η : ℂ) :
+    ∃ U : Matrix ι ι ℂ, IsUnitary U ∧ ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re := by
+  have hne : {U : Matrix ι ι ℂ | IsUnitary U}.Nonempty := ⟨1, by simp [IsUnitary]⟩
+  have hc : Continuous (fun U : Matrix ι ι ℂ => (η * determinantValue a b U).re) := by
+    unfold determinantValue
+    fun_prop
+  obtain ⟨U, hU, hmax⟩ := isCompact_setOf_isUnitary.exists_isMaxOn hne hc.continuousOn
+  exact ⟨U, hU, fun V hV => hmax hV⟩
+
+section Derivative
+
+attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra
+
+private def matrixEntry (i j : ι) : Matrix ι ι ℂ →L[ℝ] ℂ :=
+  ⟨{ toFun := fun M => M i j, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl },
+    continuous_apply_apply i j⟩
+
+private theorem hasDerivAt_det_one {M : ℝ → Matrix ι ι ℂ} {D : Matrix ι ι ℂ}
+    (hM : HasDerivAt M D 0) (h₀ : M 0 = 1) : HasDerivAt (fun t => (M t).det) D.trace 0 := by
+  classical
+  have hmoved (σ : Equiv.Perm ι) (hσ : σ ≠ 1) (i : ι) : ∃ j, j ≠ i ∧ σ j ≠ j := by
+    by_contra! h
+    apply hσ
+    ext j
+    change σ j = j
+    by_cases hj : j = i
+    · subst j
+      by_contra hi
+      exact hi (σ.injective (h (σ i) hi))
+    · exact h j hj
+  let w (σ : Equiv.Perm ι) : ℂ := (Equiv.Perm.sign σ : ℤ)
+  let d (σ : Equiv.Perm ι) : ℂ := ∑ i,
+    (∏ j ∈ Finset.univ.erase i, M 0 (σ j) j) • D (σ i) i
+  have hp (σ : Equiv.Perm ι) : HasDerivAt (fun t => ∏ i, M t (σ i) i) (d σ) 0 := by
+    exact HasDerivAt.finset_prod (fun i _ =>
+      (matrixEntry (σ i) i).hasFDerivAt.comp_hasDerivAt 0 hM)
+  have hsum : (∑ σ, w σ * d σ) = D.trace := by
+    rw [Finset.sum_eq_single (1 : Equiv.Perm ι)]
+    · simp [w, d, h₀, Matrix.trace]
+    · intro σ _ hσ
+      have hd : d σ = 0 := by
+        apply Finset.sum_eq_zero
+        intro i _
+        obtain ⟨j, hji, hj⟩ := hmoved σ hσ i
+        have hzero : ∏ k ∈ Finset.univ.erase i, M 0 (σ k) k = 0 :=
+          Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hji, Finset.mem_univ j⟩)
+            (by rw [h₀, Matrix.one_apply_ne hj])
+        rw [hzero, zero_smul]
+      rw [hd, mul_zero]
+    · simp
+  simp_rw [Matrix.det_apply']
+  rw [← hsum]
+  exact HasDerivAt.sum fun σ _ => (hp σ).const_mul (w σ)
+
+private theorem hasDerivAt_det {M : ℝ → Matrix ι ι ℂ} {D : Matrix ι ι ℂ}
+    (hM : HasDerivAt M D 0) (h₀ : (M 0).det ≠ 0) :
+    HasDerivAt (fun t => (M t).det) ((M 0).det * ((M 0)⁻¹ * D).trace) 0 := by
+  let C := M 0
+  have hC : IsUnit C.det := isUnit_iff_ne_zero.mpr h₀
+  have hd := (hM.const_mul C⁻¹)
+  have htrace := hasDerivAt_det_one hd (C.nonsing_inv_mul hC)
+  have he (t : ℝ) : C.det * (C⁻¹ * M t).det = (M t).det := by
+    rw [← Matrix.det_mul, ← Matrix.mul_assoc, C.mul_nonsing_inv hC, Matrix.one_mul]
+  simpa only [he] using htrace.const_mul C.det
+
+private theorem hasDerivAt_exp_orbit (A B X : Matrix ι ι ℂ) :
+    HasDerivAt (fun t : ℝ => A + NormedSpace.exp ℝ (t • X) * B *
+      NormedSpace.exp ℝ (t • (-X))) (X * B - B * X) 0 := by
+  have hp : HasDerivAt (fun t : ℝ => NormedSpace.exp ℝ (t • X)) X 0 := by
+    simpa only [zero_smul, NormedSpace.exp_zero, one_mul] using
+      NormedSpace.hasDerivAt_exp_smul_const X (0 : ℝ)
+  have hn : HasDerivAt (fun t : ℝ => NormedSpace.exp ℝ (t • (-X))) (-X) 0 := by
+    simpa only [zero_smul, NormedSpace.exp_zero, one_mul] using
+      NormedSpace.hasDerivAt_exp_smul_const (-X) (0 : ℝ)
+  simpa only [zero_smul, NormedSpace.exp_zero, Matrix.one_mul, Matrix.mul_one,
+    Matrix.mul_neg, sub_eq_add_neg, add_comm] using ((hp.mul_const B).mul hn).const_add A
+
+private theorem trace_mul_skew_test (D : Matrix ι ι ℂ)
+    (h : ∀ X : Matrix ι ι ℂ, Xᴴ = -X → (X * D).trace.re = 0) : Dᴴ = D := by
+  let X := Dᴴ - D
+  have hX : Xᴴ = -X := by simp [X, neg_sub]
+  have hconj : star ((X * D).trace) = -((X * Dᴴ).trace) := by
+    rw [← Matrix.trace_conjTranspose, Matrix.conjTranspose_mul, hX,
+      Matrix.mul_neg, Matrix.trace_neg, Matrix.trace_mul_comm Dᴴ X]
+  have hre := congrArg Complex.re hconj
+  simp only [Complex.star_def, Complex.conj_re, Complex.neg_re] at hre
+  have hfrob : (X * Xᴴ).trace.re = 0 := by
+    have he : Xᴴ = D - Dᴴ := by simp [X]
+    rw [he, Matrix.mul_sub, Matrix.trace_sub, Complex.sub_re]
+    linarith only [h X hX, hre]
+  have hz : ∑ i, ∑ j, Complex.normSq (X i j) = 0 := by
+    simpa only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, Matrix.conjTranspose_apply,
+      Complex.re_sum, Complex.star_def, Complex.mul_conj, Complex.ofReal_re] using hfrob
+  have hzero : X = 0 := by
+    ext i j : 1
+    have hi := (Finset.sum_eq_zero_iff_of_nonneg (fun k _ =>
+      Finset.sum_nonneg (fun l _ => Complex.normSq_nonneg (X k l)))).mp hz i (Finset.mem_univ i)
+    have hj := (Finset.sum_eq_zero_iff_of_nonneg (fun l _ => Complex.normSq_nonneg (X i l))).mp
+      hi j (Finset.mem_univ j)
+    exact Complex.normSq_eq_zero.mp hj
+  exact sub_eq_zero.mp hzero
+
+/-- At a nonsingular unitary support maximum, the determinant-scaled inverse commutator
+is Hermitian. The two fixed matrices need not be normal for this first variation. -/
+theorem support_maximum_inverse_commutator (A B : Matrix ι ι ℂ) (η : ℂ)
+    (hdet : (A + B).det ≠ 0)
+    (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re) :
+    let C := A + B
+    let D := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+    Dᴴ = D := by
+  let C := A + B
+  let D := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+  change Dᴴ = D
+  apply trace_mul_skew_test
+  intro X hX
+  let V (t : ℝ) := NormedSpace.exp ℝ (t • X)
+  have hu (t : ℝ) : IsUnitary (V t) := by
+    have hs : t • X ∈ skewAdjoint (Matrix ι ι ℂ) := by
+      rw [skewAdjoint.mem_iff, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_smul,
+        star_trivial, hX, smul_neg]
+    have he := unitary.mem_iff.mp (NormedSpace.exp_mem_unitary_of_mem_skewAdjoint ℝ hs)
+    exact ⟨he.2, he.1⟩
+  have hv (t : ℝ) : (V t)ᴴ = NormedSpace.exp ℝ (t • (-X)) := by
+    rw [V, ← Matrix.exp_conjTranspose, Matrix.conjTranspose_smul, star_trivial, hX]
+  let M (t : ℝ) := A + V t * B * (V t)ᴴ
+  have hm₀ : M 0 = C := by simp [M, V, C, NormedSpace.exp_zero]
+  have hm : HasDerivAt M (X * B - B * X) 0 := by
+    change HasDerivAt (fun t => A + V t * B * (V t)ᴴ) _ _
+    simp_rw [hv]
+    exact hasDerivAt_exp_orbit A B X
+  have hd := (hasDerivAt_det hm (by simpa only [hm₀] using hdet)).const_mul η
+  have hr := Complex.reCLM.hasFDerivAt.comp_hasDerivAt 0 hd
+  have hloc : IsLocalMax (fun t : ℝ => (η * (M t).det).re) 0 := by
+    apply Filter.Eventually.of_forall
+    intro t
+    change (η * (M t).det).re ≤ (η * (M 0).det).re
+    rw [hm₀]
+    exact hmax (V t) (hu t)
+  have hz := hloc.hasDerivAt_eq_zero hr
+  simp only [Complex.reCLM_apply, hm₀] at hz
+  rw [show X * D = (η * C.det) • (X * (B * C⁻¹ - C⁻¹ * B)) from
+    Matrix.mul_smul _ _ _, Matrix.trace_smul, smul_eq_mul]
+  have hc : (C⁻¹ * (X * B - B * X)).trace = (X * (B * C⁻¹ - C⁻¹ * B)).trace := by
+    simp only [Matrix.mul_sub, Matrix.trace_sub]
+    rw [← Matrix.trace_mul_cycle' X B C⁻¹, Matrix.trace_mul_cycle' C⁻¹ B X]
+  rw [hc, ← mul_assoc] at hz
+  exact hz
+
+end Derivative
+
+end
+
+end MOC
+    exact normSq_wedge_eq_blochWedge _ _
+
+private theorem weighted_gram_entry [DecidableEq ρ]
+    (W : Matrix ρ (Fin 2) ℂ) (d : ρ → ℂ) (i j : Fin 2) :
+    (Wᴴ * diagonal d * W) i j = ∑ k, star (W k i) * d k * W k j := by
+  rw [Matrix.mul_apply]
+  simp only [Matrix.mul_diagonal, Matrix.conjTranspose_apply]
+
+/-- Cauchy–Binet in two columns, written as a sum over ordered pairs so that
+no order structure is imposed on the row labels. -/
+theorem det_weighted_gram_two [DecidableEq ρ] (W : Matrix ρ (Fin 2) ℂ) (d : ρ → ℂ) :
+    (Wᴴ * diagonal d * W).det =
+      (∑ i, ∑ j, (d i * d j) *
+        (Complex.normSq (W i 0 * W j 1 - W i 1 * W j 0) : ℂ)) / 2 := by
+  let cost (i j : ρ) :=
+    (star (W i 0) * d i * W i 0) * (star (W j 1) * d j * W j 1) -
+    (star (W i 0) * d i * W i 1) * (star (W j 1) * d j * W j 0)
+  have hd : (Wᴴ * diagonal d * W).det = ∑ i, ∑ j, cost i j := by
+    rw [Matrix.det_fin_two]
+    simp only [weighted_gram_entry, cost, Finset.sum_sub_distrib, Finset.sum_mul, Finset.mul_sum]
+  have hsymm : (∑ i, ∑ j, cost j i) = ∑ i, ∑ j, cost i j := Finset.sum_comm
+  have hwedge (i j : ρ) : cost i j + cost j i = (d i * d j) *
+      (Complex.normSq (W i 0 * W j 1 - W i 1 * W j 0) : ℂ) := by
+    rw [Complex.normSq_eq_conj_mul_self, starRingEnd_apply, star_sub, star_mul, star_mul]
+    dsimp only [cost]
+    ring
+  rw [hd]
+  symm
+  apply (div_eq_iff (show (2 : ℂ) ≠ 0 by norm_num)).mpr
+  simp_rw [← hwedge, Finset.sum_add_distrib, hsymm]
+  ring
+
+private def wedgeEvaluation {τ : Type*} [Fintype τ] (d : τ → ℂ) :
+drwxr-xr-x 19 dell dell 4096 Nov 20 13:26 Lean/.lake/packages/mathlib
+Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Exponential.lean:326:theorem hasDerivAt_exp_smul_const_of_mem_ball (x : 𝔸) (t : 𝕂)
+Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Exponential.lean:331:theorem hasDerivAt_exp_smul_const_of_mem_ball' (x : 𝔸) (t : 𝕂)
+Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Exponential.lean:381:theorem hasDerivAt_exp_smul_const (x : 𝔸) (t : 𝕂) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Exponential.lean:385:theorem hasDerivAt_exp_smul_const' (x : 𝔸) (t : 𝕂) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Mul.lean:230:theorem HasDerivAt.mul_const (hc : HasDerivAt c c' x) (d : 𝔸) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Mul.lean:282:theorem HasDerivAt.const_mul (c : 𝔸) (hd : HasDerivAt d d' x) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Mul.lean:323:theorem HasDerivAt.finset_prod (hf : ∀ i ∈ u, HasDerivAt (f i) (f' i) x) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Algebra/MatrixExponential.lean:90:theorem exp_conjTranspose [StarRing 𝔸] [ContinuousStar 𝔸] (A : Matrix m m 𝔸) :
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+
+exec
+/bin/bash -lc "sed -n '235,260p;355,390p' Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Exponential.lean
+sed -n '45,105p' Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Algebra/MatrixExponential.lean
+rg -n 'theorem .*diagonal_map|def IsUnitary|Equiv.Perm.one_apply|theorem .*hasDerivAt.*smul' Lean/MOC/Core.lean Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/{Mul,Add}.lean Lean/.lake/packages/mathlib/Mathlib/Data/Matrix
+ls -l .git; ls -l Lean/.lake/build/lib/lean/MOC/" in /tmp/moc-lean-fix-cckc09wn/after
+ exited 2 in 312ms:
+
+
+section exp_smul
+
+variable {𝕂 𝕊 𝔸 : Type*}
+variable (𝕂)
+
+open scoped Topology
+
+open Asymptotics Filter
+
+section MemBall
+
+variable [NontriviallyNormedField 𝕂] [CharZero 𝕂]
+variable [NormedCommRing 𝕊] [NormedRing 𝔸]
+variable [NormedSpace 𝕂 𝕊] [NormedAlgebra 𝕂 𝔸] [Algebra 𝕊 𝔸] [ContinuousSMul 𝕊 𝔸]
+variable [IsScalarTower 𝕂 𝕊 𝔸]
+variable [CompleteSpace 𝔸]
+
+theorem hasFDerivAt_exp_smul_const_of_mem_ball (x : 𝔸) (t : 𝕊)
+    (htx : t • x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+    HasFDerivAt (fun u : 𝕊 => exp 𝕂 (u • x)) (exp 𝕂 (t • x) • (1 : 𝕊 →L[𝕂] 𝕊).smulRight x) t := by
+  -- TODO: prove this via `hasFDerivAt_exp_of_mem_ball` using the commutative ring
+  -- `Algebra.elementalAlgebra 𝕊 x`. See https://github.com/leanprover-community/mathlib3/pull/19062 for discussion.
+  have hpos : 0 < (expSeries 𝕂 𝔸).radius := (zero_le _).trans_lt htx
+  rw [hasFDerivAt_iff_isLittleO_nhds_zero]
+    (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+theorem hasStrictFDerivAt_exp_smul_const (x : 𝔸) (t : 𝕊) :
+    HasStrictFDerivAt (fun u : 𝕊 => exp 𝕂 (u • x))
+      (exp 𝕂 (t • x) • (1 : 𝕊 →L[𝕂] 𝕊).smulRight x) t :=
+  hasStrictFDerivAt_exp_smul_const_of_mem_ball 𝕂 _ _ <|
+    (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+theorem hasStrictFDerivAt_exp_smul_const' (x : 𝔸) (t : 𝕊) :
+    HasStrictFDerivAt (fun u : 𝕊 => exp 𝕂 (u • x))
+      (((1 : 𝕊 →L[𝕂] 𝕊).smulRight x).smulRight (exp 𝕂 (t • x))) t :=
+  hasStrictFDerivAt_exp_smul_const_of_mem_ball' 𝕂 _ _ <|
+    (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+variable {𝕂}
+
+theorem hasStrictDerivAt_exp_smul_const (x : 𝔸) (t : 𝕂) :
+    HasStrictDerivAt (fun u : 𝕂 => exp 𝕂 (u • x)) (exp 𝕂 (t • x) * x) t :=
+  hasStrictDerivAt_exp_smul_const_of_mem_ball _ _ <|
+    (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+theorem hasStrictDerivAt_exp_smul_const' (x : 𝔸) (t : 𝕂) :
+    HasStrictDerivAt (fun u : 𝕂 => exp 𝕂 (u • x)) (x * exp 𝕂 (t • x)) t :=
+  hasStrictDerivAt_exp_smul_const_of_mem_ball' _ _ <|
+    (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+theorem hasDerivAt_exp_smul_const (x : 𝔸) (t : 𝕂) :
+    HasDerivAt (fun u : 𝕂 => exp 𝕂 (u • x)) (exp 𝕂 (t • x) * x) t :=
+  hasDerivAt_exp_smul_const_of_mem_ball _ _ <| (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+theorem hasDerivAt_exp_smul_const' (x : 𝔸) (t : 𝕂) :
+    HasDerivAt (fun u : 𝕂 => exp 𝕂 (u • x)) (x * exp 𝕂 (t • x)) t :=
+  hasDerivAt_exp_smul_const_of_mem_ball' _ _ <|
+    (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+
+end RCLike
+Additionally, we prove some results about `matrix.has_inv` and `matrix.div_inv_monoid`, as the
+results for general rings are instead stated about `Ring.inverse`:
+
+* `Matrix.exp_neg`
+* `Matrix.exp_zsmul`
+* `Matrix.exp_conj`
+* `Matrix.exp_conj'`
+
+## TODO
+
+* Show that `Matrix.det (NormedSpace.exp 𝕂 A) = NormedSpace.exp 𝕂 (Matrix.trace A)`
+
+## References
+
+* https://en.wikipedia.org/wiki/Matrix_exponential
+-/
+
+
+open scoped Matrix
+
+open NormedSpace -- For `exp`.
+
+variable (𝕂 : Type*) {m n : Type*} {n' : m → Type*} {𝔸 : Type*}
+
+namespace Matrix
+
+section Topological
+
+section Ring
+
+variable [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
+  [∀ i, DecidableEq (n' i)] [Field 𝕂] [Ring 𝔸] [TopologicalSpace 𝔸] [IsTopologicalRing 𝔸]
+  [Algebra 𝕂 𝔸] [T2Space 𝔸]
+
+theorem exp_diagonal (v : m → 𝔸) : exp 𝕂 (diagonal v) = diagonal (exp 𝕂 v) := by
+  simp_rw [exp_eq_tsum, diagonal_pow, ← diagonal_smul, ← diagonal_tsum]
+
+theorem exp_blockDiagonal (v : m → Matrix n n 𝔸) :
+    exp 𝕂 (blockDiagonal v) = blockDiagonal (exp 𝕂 v) := by
+  simp_rw [exp_eq_tsum, ← blockDiagonal_pow, ← blockDiagonal_smul, ← blockDiagonal_tsum]
+
+theorem exp_blockDiagonal' (v : ∀ i, Matrix (n' i) (n' i) 𝔸) :
+    exp 𝕂 (blockDiagonal' v) = blockDiagonal' (exp 𝕂 v) := by
+  simp_rw [exp_eq_tsum, ← blockDiagonal'_pow, ← blockDiagonal'_smul, ← blockDiagonal'_tsum]
+
+theorem exp_conjTranspose [StarRing 𝔸] [ContinuousStar 𝔸] (A : Matrix m m 𝔸) :
+    exp 𝕂 Aᴴ = (exp 𝕂 A)ᴴ :=
+  (star_exp A).symm
+
+theorem IsHermitian.exp [StarRing 𝔸] [ContinuousStar 𝔸] {A : Matrix m m 𝔸} (h : A.IsHermitian) :
+    (exp 𝕂 A).IsHermitian :=
+  (exp_conjTranspose _ _).symm.trans <| congr_arg _ h
+
+end Ring
+
+section CommRing
+
+variable [Fintype m] [DecidableEq m] [Field 𝕂] [CommRing 𝔸] [TopologicalSpace 𝔸]
+  [IsTopologicalRing 𝔸] [Algebra 𝕂 𝔸] [T2Space 𝔸]
+
+theorem exp_transpose (A : Matrix m m 𝔸) : exp 𝕂 Aᵀ = (exp 𝕂 A)ᵀ := by
+Lean/MOC/Core.lean:27:def IsUnitary (U : Matrix ι ι ℂ) : Prop :=
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Diagonal.lean:135:theorem diagonal_map [Zero α] [Zero β] {f : α → β} (h : f 0 = 0) {d : n → α} :
+total 0
+ls: cannot access 'Lean/.lake/build/lib/lean/MOC/': No such file or directory
+
+exec
+/bin/bash -lc "rg -n 'namespace|section RCLike' Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Exponential.lean
+sed -n '125,142p' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Diagonal.lean
+sed -n '24,32p' Lean/MOC/Core.lean
+ls -l Lean/.lake; taskset -pc "'$$; ls -la ..' in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 506ms:
+150:section RCLikeAnyAlgebra
+166:section RCLikeCommAlgebra
+338:section RCLike
+instance [Zero α] [IntCast α] : IntCast (Matrix n n α) where
+  intCast m := diagonal fun _ => m
+
+@[norm_cast]
+theorem diagonal_intCast [Zero α] [IntCast α] (m : ℤ) : diagonal (fun _ : n => (m : α)) = m := rfl
+
+@[norm_cast]
+theorem diagonal_intCast' [Zero α] [IntCast α] (m : ℤ) : diagonal ((m : n → α)) = m := rfl
+
+@[simp]
+theorem diagonal_map [Zero α] [Zero β] {f : α → β} (h : f 0 = 0) {d : n → α} :
+    (diagonal d).map f = diagonal fun m => f (d m) := by
+  ext
+  simp only [diagonal_apply, map_apply]
+  split_ifs <;> simp [h]
+
+protected theorem map_natCast [AddMonoidWithOne α] [Zero β]
+    {f : α → β} (h : f 0 = 0) (d : ℕ) :
+def determinantValue (a b : ι → ℂ) (U : Matrix ι ι ℂ) : ℂ :=
+  (diagonal a + U * diagonal b * Uᴴ).det
+
+def IsUnitary (U : Matrix ι ι ℂ) : Prop :=
+  U * Uᴴ = 1 ∧ Uᴴ * U = 1
+
+def Holds (a b : ι → ℂ) (U : Matrix ι ι ℂ) : Prop :=
+  determinantValue a b U ∈ convexHull ℝ (Set.range (matchingProduct a b))
+
+total 0
+lrwxrwxrwx 1 dell dell 42 Nov 20 14:47 packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+pid 2's current affinity list: 0-3
+total 0
+drwx------  3 dell  dell    60 Nov 20 14:47 .
+drwxrwxrwt 56 65534 65534 3180 Nov 20 14:47 ..
+drwxr-xr-x  7 dell  dell   140 Nov 20 14:47 after
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p=Path('Lean/MOC/TwoFrame.lean')
+s=p.read_text().replace('Finset.sum_sub_distrib, Finset.sum_mul, Finset.mul_sum]\\n  have hsymm','Finset.sum_sub_distrib, Finset.mul_sum, Finset.sum_mul]\\n  have hsymm',1)
+# Expand the left factor first so both sums have the same index order.
+s=s.replace('simp only [weighted_gram_entry, cost, Finset.sum_sub_distrib, Finset.mul_sum, Finset.sum_mul]', 'simp only [weighted_gram_entry, cost, Finset.sum_sub_distrib, Finset.sum_mul]\\n    simp only [Finset.mul_sum]')
+s=s.replace('starRingEnd_apply, star_sub, star_mul, star_mul]', 'starRingEnd_apply, star_sub, StarMul.star_mul, StarMul.star_mul]')
+p.write_text(s)
+p=Path('Lean/MOC/Variational.lean')
+s=p.read_text().replace('import Mathlib.Analysis.Calculus.LocalExtr.Basic','import Mathlib.Analysis.Calculus.Deriv.Mul\\nimport Mathlib.Analysis.Calculus.LocalExtr.Basic')
+s=s.replace('simp [w, d, h₀, Matrix.trace]', 'simp [w, d, h₀, Matrix.trace, Equiv.Perm.one_apply]')
+s=s.replace('NormedSpace.hasDerivAt_exp_smul_const','hasDerivAt_exp_smul_const').replace('← Matrix.exp_conjTranspose,','← Matrix.exp_conjTranspose ℝ,')
+p.write_text(s)
+p=Path('Lean/MOC/AnchorObstruction.lean')
+s=p.read_text().replace(':= by norm_cast', ':= by push_cast; rfl',1)
+a=s.index('  constructor <;> ext i j')
+b=s.index('\\nprivate theorem completionInt_map',a)
+s=s[:a]+'''  have hstar := Matrix.conjTranspose_map (A := walshSigns) gauss GaussianInt.toComplex_star
+  have h₁ : walshSigns * walshSignsᴴ = 4 • (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> decide +kernel
+  have h₂ : walshSignsᴴ * walshSigns = 4 • (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> decide +kernel
+  constructor <;>
+    rw [walsh, Matrix.conjTranspose_smul, star_div₀, star_one, star_ofNat, ← hstar,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, ← Matrix.map_mul,
+      first | h₁ | h₂]
+''' + s[b:] if False else s
+s=s.replace('walsh, star_mul,', 'walsh, StarMul.star_mul,')
+s=s.replace('smul_smul, pow_two, smul_add, Function.comp_apply]', 'smul_smul, smul_add, Function.comp_def]\\n    rw [map_pow, map_natCast, pow_two]')
+s=s.replace('  linarith [hs]', '  change 6144 = 256 * (Complex.I * determinantValue walshLeft walshRight walsh).re at hs\\n  linarith only [hs]')
+p.write_text(s)
+PY
+cd Lean
+lake --no-cache build MOC.Variational MOC.TwoFrame MOC.AnchorObstruction > /tmp/moc-current-build.log 2>&1" in /tmp/moc-lean-fix-cckc09wn/after
+exec
+/bin/bash -lc "rg -n 'theorem (map_mul|map_smul|map_one)|mapMatrix_apply' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/{Basic,Mul,Diagonal}.lean Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/*.lean | head -40
+tail -25 /tmp/moc-current-build.log
+sed -n '312,330p' Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Mul.lean
+rg -n 'one_apply' Lean/.lake/packages/mathlib/Mathlib/GroupTheory/Perm/Basic.lean | head" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 2477ms:
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean:479:protected theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean:1054:theorem map_mulVec [NonAssocSemiring R] [NonAssocSemiring S] (f : R →+* S) (M : Matrix m n R)
+Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/ToLinearEquiv.lean:156:          RingHom.mapMatrix_apply, Pi.smul_apply, smul_eq_mul, Algebra.smul_def]
+Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/Polynomial.lean:72:  simp only [Algebra.id.smul_eq_mul, Finset.mem_univ, RingHom.mapMatrix_apply, forall_true_left,
+Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/Basis.lean:159:  rw [RingHom.mapMatrix_apply, Matrix.map_apply, Basis.toMatrix_apply,
+Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/Adjugate.lean:324:  rw [adjugate_apply, RingHom.mapMatrix_apply, map_apply, RingHom.mapMatrix_apply, this, ←
+Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/Adjugate.lean:325:    map_updateRow, ← RingHom.mapMatrix_apply, ← RingHom.map_det, ← adjugate_apply]
+Lean/.lake/packages/mathlib/Mathlib/LinearAlgebra/Matrix/Adjugate.lean:496:      AlgHom.mapMatrix_apply, AlgHom.mapMatrix_apply, Matrix.map_smul' _ _ _ (map_mul _)]
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Diagonal.lean:187:protected theorem map_one [Zero β] [One β] (f : α → β) (h₀ : f 0 = 0) (h₁ : f 1 = 1) :
+  funext fun _ => deriv_const_mul_field u
+
+end Mul
+
+section Prod
+
+section HasDeriv
+
+variable {ι : Type*} [DecidableEq ι] {𝔸' : Type*} [NormedCommRing 𝔸'] [NormedAlgebra 𝕜 𝔸']
+  {u : Finset ι} {f : ι → 𝕜 → 𝔸'} {f' : ι → 𝔸'}
+
+theorem HasDerivAt.finset_prod (hf : ∀ i ∈ u, HasDerivAt (f i) (f' i) x) :
+    HasDerivAt (∏ i ∈ u, f i ·) (∑ i ∈ u, (∏ j ∈ u.erase i, f j x) • f' i) x := by
+  simpa [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply] using
+    (HasFDerivAt.finset_prod (fun i hi ↦ (hf i hi).hasFDerivAt)).hasDerivAt
+
+theorem HasDerivWithinAt.finset_prod (hf : ∀ i ∈ u, HasDerivWithinAt (f i) (f' i) s x) :
+    HasDerivWithinAt (∏ i ∈ u, f i ·) (∑ i ∈ u, (∏ j ∈ u.erase i, f j x) • f' i) s x := by
+  simpa [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply] using
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p=Path('Lean/MOC/AnchorObstruction.lean')
+s=p.read_text()
+a=s.index('  constructor <;> ext i j')
+b=s.index('\\nprivate theorem completionInt_map',a)
+s=s[:a]+'''  have hstar := Matrix.conjTranspose_map (A := walshSigns) gauss GaussianInt.toComplex_star
+  have h₁ : walshSigns * walshSignsᴴ = (4 : GaussianInt) •
+      (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> decide +kernel
+  have h₂ : walshSignsᴴ * walshSigns = (4 : GaussianInt) •
+      (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> decide +kernel
+  constructor <;>
+    simp only [walsh, Matrix.conjTranspose_smul, star_div₀, star_one, star_ofNat, ← hstar,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, ← Matrix.map_mul, h₁, h₂,
+      Matrix.map_smul' gauss _ _ (map_mul gauss), Matrix.map_one gauss (map_zero gauss)
+        (map_one gauss), map_ofNat] <;>
+    norm_num [smul_smul]
+''' + s[b:]
+p.write_text(s)
+PY
+tail -30 /tmp/moc-current-build.log; ls -l Lean/.lake/build
+ps -eo pid,stat,comm,args | rg 'lake --no-cache|bin/lean' | cut -c1-220 | head -20" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 503ms:
+  ContinuousLinearMap.hasFDerivAt Complex.reCLM
+has type
+  HasFDerivAt (⇑Complex.reCLM) Complex.reCLM ?m.28322
+error: ././././MOC/Variational.lean:174:13: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAtFilter.comp_hasDerivAt'
+  ContinuousLinearMap.hasFDerivAt Complex.reCLM
+has type
+  HasFDerivAtFilter (⇑Complex.reCLM) Complex.reCLM ?m.28322 (nhds ?m.28322)
+error: ././././MOC/Variational.lean:152:14: unsolved goals
+case h
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hdet : (A + B).det ≠ 0
+hmax : ∀ (V : Matrix ι ι ℂ), IsUnitary V → (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re
+C : Matrix ι ι ℂ := A + B
+D : Matrix ι ι ℂ := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+X : Matrix ι ι ℂ
+hX : Xᴴ = -X
+V : ℝ → Matrix ι ι ℂ := fun t => NormedSpace.exp ℝ (t • X)
+hu : ∀ (t : ℝ), IsUnitary (V t)
+hv : ∀ (t : ℝ), (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+M : ℝ → Matrix ι ι ℂ := fun t => A + V t * B * (V t)ᴴ
+hm₀ : M 0 = C
+hm : HasDerivAt M (X * B - B * X) 0
+hd : HasDerivAt (fun y => η * (M y).det) (η * ((M 0).det * ((M 0)⁻¹ * (X * B - B * X)).trace)) 0
+⊢ (X * D).trace.re = 0
+error: Lean exited with code 1
+✔ [2358/2360] Built MOC.Pencil
+total 0
+drwxr-xr-x 3 dell dell 60 Nov 20 14:48 ir
+drwxr-xr-x 3 dell dell 60 Nov 20 14:48 lib
+      1 S<s  codex           codex-linux-sandbox --sandbox-policy-cwd /tmp/moc-lean-fix-cckc09wn/after --command-cwd /tmp/moc-lean-fix-cckc09wn/after --permission-profile {"type":"managed","file_system":{"type":"restrict
+      2 S<   bash            /bin/bash -c python3 - <<'PY' from pathlib import Path p=Path('Lean/MOC/AnchorObstruction.lean') s=p.read_text() a=s.index('  constructor <;> ext i j') b=s.index('\nprivate theorem completion
+     41 S<   rg              rg lake --no-cache|bin/lean
+
+exec
+/bin/bash -lc "cat /tmp/moc-current-build.log | sed -n '/Building MOC.TwoFrame/,"'$p'"'
+rg -n 'comp_hasDerivAt|const_add' Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/{Comp,Add}.lean
+rg -n 'linftyOpNormedAlgebra|NormedAlgebra ℝ' Lean/.lake/packages/mathlib/Mathlib/Analysis/Matrix.lean" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 7619ms:
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:105:theorem hasDerivAtFilter_const_add_iff (c : F) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:107:  hasFDerivAtFilter_const_add_iff c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:109:alias ⟨_, HasDerivAtFilter.const_add⟩ := hasDerivAtFilter_const_add_iff
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:112:theorem hasStrictDerivAt_const_add_iff (c : F) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:114:  hasStrictFDerivAt_const_add_iff c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:116:alias ⟨_, HasStrictDerivAt.const_add⟩ := hasStrictDerivAt_const_add_iff
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:119:theorem hasDerivWithinAt_const_add_iff (c : F) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:121:  hasDerivAtFilter_const_add_iff c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:123:alias ⟨_, HasDerivWithinAt.const_add⟩ := hasDerivWithinAt_const_add_iff
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:126:theorem hasDerivAt_const_add_iff (c : F) : HasDerivAt (c + f ·) f' x ↔ HasDerivAt f f' x :=
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:127:  hasDerivAtFilter_const_add_iff c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:129:alias ⟨_, HasDerivAt.const_add⟩ := hasDerivAt_const_add_iff
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:131:theorem derivWithin_const_add (c : F) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:133:  simp only [derivWithin, fderivWithin_const_add]
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:136:theorem derivWithin_const_add_fun (c : F) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:139:  apply derivWithin_const_add
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:141:theorem deriv_const_add (c : F) : deriv (c + f ·) x = deriv f x := by
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:142:  simp only [deriv, fderiv_const_add]
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:145:theorem deriv_const_add' (c : F) : (deriv (c + f ·)) = deriv f :=
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:146:  funext fun _ => deriv_const_add c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:148:lemma differentiableAt_comp_const_add {a b : 𝕜} :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:150:  refine ⟨fun H ↦ ?_, fun H ↦ H.comp _ (differentiable_id.const_add _).differentiableAt⟩
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:152:    (differentiable_id.const_add (-b)).differentiableAt
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:158:  simpa [add_comm b] using differentiableAt_comp_const_add (f := f) (b := b)
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:160:lemma differentiableAt_iff_comp_const_add {a b : 𝕜} :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:162:  simp [differentiableAt_comp_const_add]
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:359:  simpa only [sub_eq_add_neg] using hf.neg.const_add c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Add.lean:367:  simpa only [sub_eq_add_neg] using hf.neg.const_add c
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:17:* `HasFDerivAt.comp_hasDerivAt` etc: `f : E → F` composed with `g : 𝕜 → E`;
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:81:theorem HasDerivWithinAt.scomp_hasDerivAt (hg : HasDerivWithinAt g₁ g₁' s' (h x))
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:85:theorem HasDerivWithinAt.scomp_hasDerivAt_of_eq (hg : HasDerivWithinAt g₁ g₁' s' y)
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:88:  rw [hy] at hg; exact hg.scomp_hasDerivAt x hh hs
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:358:theorem HasFDerivAt.comp_hasDerivAt (hl : HasFDerivAt l l' (f x)) (hf : HasDerivAt f f' x) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:364:theorem HasFDerivAt.comp_hasDerivAt_of_eq
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:367:  rw [hy] at hl; exact hl.comp_hasDerivAt x hf
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean:399:  (hl.hasFDerivAt.comp_hasDerivAt x hf.hasDerivAt).deriv
+40:  * `Matrix.linftyOpNormedAlgebra`
+381:protected def linftyOpNormedAlgebra [NormedField R] [SeminormedRing α] [NormedAlgebra R α]
+387:variable [NormedDivisionRing α] [NormedAlgebra ℝ α]
+412:variable [NontriviallyNormedField α] [NormedAlgebra ℝ α]
+
+exec
+/bin/bash -lc "rg -n 'error:|Built MOC|Building MOC|⊢|synth' /tmp/moc-current-build.log
+sed -n '347,365p' Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean
+rg -n 'coe_one|one_apply' Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Defs.lean | head
+rg -n 'map_smul' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Basic.lean" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 593ms:
+1:✔ [2356/2360] Built MOC.Core
+2:✖ [2357/2360] Building MOC.Variational
+4:error: ././././MOC/Variational.lean:77:6: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAt.comp_hasDerivAt'
+8:error: ././././MOC/Variational.lean:77:6: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAtFilter.comp_hasDerivAt'
+12:error: ././././MOC/Variational.lean:80:4: unsolved goals
+24:⊢ ∑ x, (∏ x ∈ Finset.univ.erase x, 1 (1 x) x) * D x x = ∑ x, D x x
+30:error: ././././MOC/Variational.lean:166:8: tactic 'rewrite' failed, equality or iff proof expected
+46:⊢ (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+47:error: ././././MOC/Variational.lean:174:13: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAt.comp_hasDerivAt'
+51:error: ././././MOC/Variational.lean:174:13: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAtFilter.comp_hasDerivAt'
+55:error: ././././MOC/Variational.lean:152:14: unsolved goals
+75:⊢ (X * D).trace.re = 0
+76:error: Lean exited with code 1
+77:✔ [2358/2360] Built MOC.Pencil
+theorem HasFDerivAt.comp_hasDerivWithinAt (hl : HasFDerivAt l l' (f x))
+    (hf : HasDerivWithinAt f f' s x) : HasDerivWithinAt (l ∘ f) (l' f') s x :=
+  hl.hasFDerivWithinAt.comp_hasDerivWithinAt x hf (mapsTo_univ _ _)
+
+theorem HasFDerivAt.comp_hasDerivWithinAt_of_eq (hl : HasFDerivAt l l' y)
+    (hf : HasDerivWithinAt f f' s x) (hy : y = f x) :
+    HasDerivWithinAt (l ∘ f) (l' f') s x := by
+  rw [hy] at hl; exact hl.comp_hasDerivWithinAt x hf
+
+/-- The composition `l ∘ f` where `l : F → E` and `f : 𝕜 → F`, has a derivative equal to the
+Fréchet derivative of `l` applied to the derivative of `f`. -/
+theorem HasFDerivAt.comp_hasDerivAt (hl : HasFDerivAt l l' (f x)) (hf : HasDerivAt f f' x) :
+    HasDerivAt (l ∘ f) (l' f') x :=
+  hasDerivWithinAt_univ.mp <| hl.comp_hasDerivWithinAt x hf.hasDerivWithinAt
+
+/-- The composition `l ∘ f` where `l : F → E` and `f : 𝕜 → F`, has a derivative equal to the
+Fréchet derivative of `l` applied to the derivative of `f`. -/
+theorem HasFDerivAt.comp_hasDerivAt_of_eq
+    (hl : HasFDerivAt l l' y) (hf : HasDerivAt f f' x) (hy : y = f x) :
+55:  map_smul' _ _ := rfl
+92:  { diagonalAddMonoidHom n α with map_smul' := diagonal_smul }
+131:  { diagAddMonoidHom n α with map_smul' := diag_smul }
+317:  map_smul' _ _ := rfl
+440:  map_smul' r := Matrix.map_smul f r (f.map_smul r)
+669:  { transposeAddEquiv m n α with map_smul' := transpose_smul }
+
+exec
+/bin/bash -lc "rg -n 'theorem one_apply|lemma one_apply' Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv Lean/.lake/packages/mathlib/Mathlib/GroupTheory/Perm | head -30
+sed -n '29,48p' /tmp/moc-current-build.log
+tail -30 /tmp/moc-current-build.log
+sed -n '475,485p' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean
+python3 - <<'PY'
+from pathlib import Path
+p=Path('Lean/MOC/Variational.lean')
+s=p.read_text().replace('import Mathlib.Analysis.Calculus.Deriv.Mul', 'import Mathlib.Analysis.Calculus.Deriv.Comp\\nimport Mathlib.Analysis.Calculus.Deriv.Mul')
+s=s.replace('simp [w, d, h₀, Matrix.trace, Equiv.Perm.one_apply]', '''have hone (i : ι) : (1 : Equiv.Perm ι) i = i := rfl
+      simp [w, d, h₀, Matrix.trace, hone]''')
+s=s.replace('    rw [V, ← Matrix.exp_conjTranspose ℝ,', '    change (NormedSpace.exp ℝ (t • X))ᴴ = _\\n    rw [← Matrix.exp_conjTranspose ℝ,')
+p.write_text(s)
+PY
+cd Lean
+lake --no-cache build MOC.Variational >/tmp/moc-current-var.log 2>&1" in /tmp/moc-lean-fix-cckc09wn/after
+exec
+/bin/bash -lc 'lake --no-cache build MOC.AnchorObstruction >/tmp/moc-current-AnchorObstruction.log 2>&1' in /tmp/moc-lean-fix-cckc09wn/after/Lean
+exec
+/bin/bash -lc 'lake --no-cache build MOC.TwoFrame >/tmp/moc-current-TwoFrame.log 2>&1' in /tmp/moc-lean-fix-cckc09wn/after/Lean
+ succeeded in 3083ms:
+exec
+/bin/bash -lc 'for f in /tmp/moc-current-*.log; do tail -40 "$f"; done
+sed -n '"'475,485p' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean
+rg -n 'theorem map_smul' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Defs.lean
+ls -la .agents .codex" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 654ms:
+⚠ [2319/2319] Replayed MOC.TwoFrame
+warning: ././././MOC/TwoFrame.lean:1042:35: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/TwoFrame.lean:1042:35: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/TwoFrame.lean:1038:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Build completed successfully.
+t : ℝ
+⊢ (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+error: ././././MOC/Variational.lean:174:13: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAt.comp_hasDerivAt'
+  ContinuousLinearMap.hasFDerivAt Complex.reCLM
+has type
+  HasFDerivAt (⇑Complex.reCLM) Complex.reCLM ?m.28322
+error: ././././MOC/Variational.lean:174:13: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAtFilter.comp_hasDerivAt'
+  ContinuousLinearMap.hasFDerivAt Complex.reCLM
+has type
+  HasFDerivAtFilter (⇑Complex.reCLM) Complex.reCLM ?m.28322 (nhds ?m.28322)
+error: ././././MOC/Variational.lean:152:14: unsolved goals
+case h
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hdet : (A + B).det ≠ 0
+hmax : ∀ (V : Matrix ι ι ℂ), IsUnitary V → (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re
+C : Matrix ι ι ℂ := A + B
+D : Matrix ι ι ℂ := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+X : Matrix ι ι ℂ
+hX : Xᴴ = -X
+V : ℝ → Matrix ι ι ℂ := fun t => NormedSpace.exp ℝ (t • X)
+hu : ∀ (t : ℝ), IsUnitary (V t)
+hv : ∀ (t : ℝ), (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+M : ℝ → Matrix ι ι ℂ := fun t => A + V t * B * (V t)ᴴ
+hm₀ : M 0 = C
+hm : HasDerivAt M (X * B - B * X) 0
+hd : HasDerivAt (fun y => η * (M y).det) (η * ((M 0).det * ((M 0)⁻¹ * (X * B - B * X)).trace)) 0
+⊢ (X * D).trace.re = 0
+error: Lean exited with code 1
+✔ [2358/2360] Built MOC.Pencil
+⚠ [2359/2360] Built MOC.TwoFrame
+warning: ././././MOC/TwoFrame.lean:1042:35: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/TwoFrame.lean:1042:35: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/TwoFrame.lean:1038:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+    one_mul := Matrix.one_mul
+    mul_one := Matrix.mul_one }
+
+@[simp]
+protected theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
+    {f : α →+* β} : (L * M).map f = L.map f * M.map f := by
+  ext
+  simp [mul_apply, map_sum]
+
+theorem smul_one_eq_diagonal [DecidableEq m] (a : α) :
+    a • (1 : Matrix m m α) = diagonal fun _ => a := by
+278:protected theorem map_smul [SMul R α] [SMul R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
+284:theorem map_smul' [Mul α] [Mul β] (f : α → β) (r : α) (A : Matrix n n α)
+.agents:
+total 0
+dr-xr-xr-x 2 dell dell  40 Nov 20 14:49 .
+drwxr-xr-x 7 dell dell 140 Nov 20 14:48 ..
+
+.codex:
+total 0
+dr-xr-xr-x 2 dell dell  40 Nov 20 14:49 .
+drwxr-xr-x 7 dell dell 140 Nov 20 14:48 ..
+
+exec
+/bin/bash -lc "cat Lean/MOC.lean; cat /tmp/moc-current-var.log; cat /tmp/moc-current-AnchorObstruction.log; rg -n 'sorry|admit|axiom|unsafe' Lean/MOC/{AnchorObstruction,TwoFrame,Variational}.lean
+sed -n '278,291p' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Defs.lean" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 1296ms:
+import MOC.Claim
+import MOC.ContactRectangle
+import MOC.MixedBound
+import MOC.Obstruction
+import MOC.PhaseMove
+import MOC.RankSum
+import MOC.Source
+
+open Lean Elab Command in
+run_cmd do
+  let env ← getEnv
+  let allowed := #[`propext, `Classical.choice, `Quot.sound]
+  let mut count := 0
+  for (name, declaration) in env.constants.toList do
+    let some idx := env.getModuleIdxFor? name | continue
+    unless (`MOC).isPrefixOf env.allImportedModuleNames[idx.toNat]! do continue
+    -- Code generation adds unsafe auxiliary declarations to the imported environment.
+    if declaration.isUnsafe then continue
+    count := count + 1
+    let extra := (← collectAxioms name).filter fun a => !allowed.contains a
+    unless extra.isEmpty do
+      throwError "{name} depends on unapproved axioms {extra}"
+  if count == 0 then
+    throwError "The MOC axiom audit found no declarations"
+  logInfo m!"Checked {count} safe MOC declarations against the standard Lean axioms"
+Lean/MOC/TwoFrame.lean:502:/-- Two Bloch frames admit common orthonormal axes with equal weighted second moments. -/
+protected theorem map_smul [SMul R α] [SMul R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
+    (M : Matrix m n α) : (r • M).map f = r • M.map f :=
+  ext fun _ _ => hf _
+
+/-- The scalar action via `Mul.toSMul` is transformed by the same map as the elements
+of the matrix, when `f` preserves multiplication. -/
+theorem map_smul' [Mul α] [Mul β] (f : α → β) (r : α) (A : Matrix n n α)
+    (hf : ∀ a₁ a₂, f (a₁ * a₂) = f a₁ * f a₂) : (r • A).map f = f r • A.map f :=
+  ext fun _ _ => hf _ _
+
+/-- The scalar action via `mul.toOppositeSMul` is transformed by the same map as the
+elements of the matrix, when `f` preserves multiplication. -/
+theorem map_op_smul' [Mul α] [Mul β] (f : α → β) (r : α) (A : Matrix n n α)
+    (hf : ∀ a₁ a₂, f (a₁ * a₂) = f a₁ * f a₂) :
+
+ exited 1 in 16840ms:
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/Variational.lean:166:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hdet : (A + B).det ≠ 0
+hmax : ∀ (V : Matrix ι ι ℂ), IsUnitary V → (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re
+C : Matrix ι ι ℂ := A + B
+D : Matrix ι ι ℂ := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+X : Matrix ι ι ℂ
+hX : Xᴴ = -X
+V : ℝ → Matrix ι ι ℂ := fun t => NormedSpace.exp ℝ (t • X)
+hu : ∀ (t : ℝ), IsUnitary (V t)
+t : ℝ
+⊢ (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+error: ././././MOC/Variational.lean:174:13: invalid field 'comp_hasDerivAt', the environment does not contain 'HasFDerivAt.comp_hasDerivAt'
+  ContinuousLinearMap.hasFDerivAt Complex.reCLM
+error: ././././MOC/Variational.lean:152:14: unsolved goals
+case h
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+A B : Matrix ι ι ℂ
+η : ℂ
+hdet : (A + B).det ≠ 0
+hmax : ∀ (V : Matrix ι ι ℂ), IsUnitary V → (η * (A + V * B * Vᴴ).det).re ≤ (η * (A + B).det).re
+C : Matrix ι ι ℂ := A + B
+D : Matrix ι ι ℂ := (η * C.det) • (B * C⁻¹ - C⁻¹ * B)
+X : Matrix ι ι ℂ
+hX : Xᴴ = -X
+V : ℝ → Matrix ι ι ℂ := fun t => NormedSpace.exp ℝ (t • X)
+hu : ∀ (t : ℝ), IsUnitary (V t)
+hv : ∀ (t : ℝ), (V t)ᴴ = NormedSpace.exp ℝ (t • -X)
+M : ℝ → Matrix ι ι ℂ := fun t => A + V t * B * (V t)ᴴ
+hm₀ : M 0 = C
+hm : HasDerivAt M (X * B - B * X) 0
+hd : HasDerivAt (fun y => η * (M y).det) (η * ((M 0).det * ((M 0)⁻¹ * (X * B - B * X)).trace)) 0
+⊢ (X * D).trace.re = 0
+error: Lean exited with code 1
+✔ [2358/2360] Built MOC.Pencil
+⚠ [2359/2360] Built MOC.TwoFrame
+warning: ././././MOC/TwoFrame.lean:1042:35: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/TwoFrame.lean:1042:35: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/TwoFrame.lean:1038:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+    one_mul := Matrix.one_mul
+    mul_one := Matrix.mul_one }
+
+@[simp]
+protected theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
+    {f : α →+* β} : (L * M).map f = L.map f * M.map f := by
+  ext
+  simp [mul_apply, map_sum]
+
+theorem smul_one_eq_diagonal [DecidableEq m] (a : α) :
+    a • (1 : Matrix m m α) = diagonal fun _ => a := by
+
+codex
+`MOC.TwoFrame` builds successfully. In `AnchorObstruction`, I replaced the timing-out Walsh calculation with exact Gaussian-integer products checked by the kernel. The `AnchorObstruction` and `Variational` builds are still running.
+exec
+/bin/bash -lc "ps -eo pid,etime,pcpu,stat,args | rg 'bin/(lake|lean)|/tmp/moc-current' | cut -c1-260
+for f in /tmp/moc-current-var.log /tmp/moc-current-AnchorObstruction.log; do cat \""'$f"; done
+find . -maxdepth 3 -name AGENTS.md
+ls -ld docs Lean/docs' in /tmp/moc-lean-fix-cckc09wn/after
+ exited 2 in 3011ms:
+      1       00:02  1.0 S<s  codex-linux-sandbox --sandbox-policy-cwd /tmp/moc-lean-fix-cckc09wn/after --command-cwd /tmp/moc-lean-fix-cckc09wn/after --permission-profile {"type":"managed","file_system":{"type":"restricted","entries":[{"path":{"type":"special
+      2       00:02 17.4 S<   /bin/bash -c ps -eo pid,etime,pcpu,stat,args | rg 'bin/(lake|lean)|/tmp/moc-current' | cut -c1-260 for f in /tmp/moc-current-var.log /tmp/moc-current-AnchorObstruction.log; do cat "$f"; done find . -maxdepth 3 -name AGENTS.md ls -
+     38       00:00  0.0 S<   rg bin/(lake|lean)|/tmp/moc-current
+✖ [2226/2226] Building MOC.Variational
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Variational.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Variational.olean -i ././.lake/build/lib/lean/MOC/Variational.ilean -c ././.lake/build/ir/MOC/Variational.c --json
+error: ././././MOC/Variational.lean:81:4: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+M : ℝ → Matrix ι ι ℂ
+D : Matrix ι ι ℂ
+hM : HasDerivAt M D 0
+h₀ : M 0 = 1
+hmoved : ∀ (σ : Equiv.Perm ι), σ ≠ 1 → ∀ (i : ι), ∃ j, j ≠ i ∧ σ j ≠ j
+w : Equiv.Perm ι → ℂ := fun σ => ↑↑(Equiv.Perm.sign σ)
+d : Equiv.Perm ι → ℂ := fun σ => ∑ i, (∏ j ∈ Finset.univ.erase i, M 0 (σ j) j) • D (σ i) i
+hp : ∀ (σ : Equiv.Perm ι), HasDerivAt (fun t => ∏ i, M t (σ i) i) (d σ) 0
+hone : ∀ (i : ι), 1 i = i
+⊢ ∑ x, (∏ x ∈ Finset.univ.erase x, 1 (1 x) x) * D x x = ∑ x, D x x
+warning: ././././MOC/Variational.lean:121:8: automatically included section variable(s) unused in theorem '_private.MOC.Variational.0.MOC.trace_mul_skew_test':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Variational
+error: build failed
+ls: cannot access 'docs': No such file or directory
+ls: cannot access 'Lean/docs': No such file or directory
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p=Path('Lean/MOC/Variational.lean')
+s=p.read_text().replace('  classical\\n  have hmoved', '''  have hdiag (i : ι) : M 0 ((1 : Equiv.Perm ι) i) i = 1 := by
+    change M 0 i i = 1
+    rw [h₀, Matrix.one_apply_eq]
+  classical
+  have hmoved''',1).replace('simp [w, d, h₀, Matrix.trace, hone]', 'simp [w, d, hdiag, Matrix.trace, hone]')
+p.write_text(s)
+PY
+cd Lean
+lake --no-cache build MOC.Variational > /tmp/moc-current-var.log 2>&1" in /tmp/moc-lean-fix-cckc09wn/after
+ exited 1 in 29532ms:
+exec
+/bin/bash -lc 'cat /tmp/moc-current-AnchorObstruction.log; cat /tmp/moc-current-var.log' in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 6695ms:
+✖ [2344/2344] Building MOC.AnchorObstruction
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/AnchorObstruction.lean -R ./././. -o ././.lake/build/lib/lean/MOC/AnchorObstruction.olean -i ././.lake/build/lib/lean/MOC/AnchorObstruction.ilean -c ././.lake/build/ir/MOC/AnchorObstruction.c --json
+error: ././././MOC/AnchorObstruction.lean:84:50: unsolved goals
+case a.im
+hstar : MOC.walshSignsᴴ.map ⇑gauss = (MOC.walshSigns.map ⇑gauss)ᴴ
+i j : Fin 4
+⊢ ((MOC.walshSigns * MOC.walshSignsᴴ) i j).im = ((4 • 1) i j).im
+error: ././././MOC/AnchorObstruction.lean:88:50: unsolved goals
+case a.im
+hstar : MOC.walshSignsᴴ.map ⇑gauss = (MOC.walshSigns.map ⇑gauss)ᴴ
+h₁ : MOC.walshSigns * MOC.walshSignsᴴ = 4 • 1
+i j : Fin 4
+⊢ ((MOC.walshSignsᴴ * MOC.walshSigns) i j).im = ((4 • 1) i j).im
+error: ././././MOC/AnchorObstruction.lean:123:8: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  ?f (?a ^ ?n)
+n : ℕ
+a b : Fin n → GaussianInt
+d : ℕ
+V : Matrix (Fin n) (Fin n) GaussianInt
+k : GaussianInt
+U : Matrix (Fin n) (Fin n) ℂ
+hV : V.map ⇑gauss = ↑d • U
+hstar : Vᴴ.map ⇑gauss = (V.map ⇑gauss)ᴴ
+⊢ (↑d ^ 2 • diagonal fun m => gauss (a m)) + (↑d * ↑d) • ((U * diagonal fun m => gauss (b m)) * Uᴴ) =
+    (↑d ^ 2 • diagonal fun x => gauss (a x)) + ↑d ^ 2 • ((U * diagonal fun x => gauss (b x)) * Uᴴ)
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.AnchorObstruction
+error: build failed
+
+ exited 1 in 15798ms:
+exec
+/bin/bash -lc "sed -i 's/"'^    ext i j$/    ext i j : 1/; s/rw '"\\[map_pow, map_natCast, pow_two\\]/simp only [pow_two]/' Lean/MOC/AnchorObstruction.lean
+cd Lean
+lake --no-cache build MOC.AnchorObstruction > /tmp/moc-current-AnchorObstruction.log 2>&1" in /tmp/moc-lean-fix-cckc09wn/after
+ exited 1 in 100571ms:
+exec
+/bin/bash -lc "cat /tmp/moc-current-var.log
+cat /tmp/moc-current-AnchorObstruction.log
+rg -n '"'^    ext i j'"' Lean/MOC/AnchorObstruction.lean
+sed -n '65,104p' Lean/MOC/Variational.lean" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 437ms:
+✖ [2226/2226] Building MOC.Variational
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Variational.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Variational.olean -i ././.lake/build/lib/lean/MOC/Variational.ilean -c ././.lake/build/ir/MOC/Variational.c --json
+error: ././././MOC/Variational.lean:84:4: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+M : ℝ → Matrix ι ι ℂ
+D : Matrix ι ι ℂ
+hM : HasDerivAt M D 0
+h₀ : M 0 = 1
+hdiag : ∀ (i : ι), M 0 (1 i) i = 1
+hmoved : ∀ (σ : Equiv.Perm ι), σ ≠ 1 → ∀ (i : ι), ∃ j, j ≠ i ∧ σ j ≠ j
+w : Equiv.Perm ι → ℂ := fun σ => ↑↑(Equiv.Perm.sign σ)
+d : Equiv.Perm ι → ℂ := fun σ => ∑ i, (∏ j ∈ Finset.univ.erase i, M 0 (σ j) j) • D (σ i) i
+hp : ∀ (σ : Equiv.Perm ι), HasDerivAt (fun t => ∏ i, M t (σ i) i) (d σ) 0
+hone : ∀ (i : ι), 1 i = i
+⊢ ∑ x, (∏ x ∈ Finset.univ.erase x, M 0 x x) * D x x = ∑ x, D x x
+warning: ././././MOC/Variational.lean:124:8: automatically included section variable(s) unused in theorem '_private.MOC.Variational.0.MOC.trace_mul_skew_test':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Variational
+error: build failed
+85:    ext i j : 1
+89:    ext i j : 1
+  classical
+  have hmoved (σ : Equiv.Perm ι) (hσ : σ ≠ 1) (i : ι) : ∃ j, j ≠ i ∧ σ j ≠ j := by
+    by_contra! h
+    apply hσ
+    ext j
+    change σ j = j
+    by_cases hj : j = i
+    · subst j
+      by_contra hi
+      exact hi (σ.injective (h (σ i) hi))
+    · exact h j hj
+  let w (σ : Equiv.Perm ι) : ℂ := (Equiv.Perm.sign σ : ℤ)
+  let d (σ : Equiv.Perm ι) : ℂ := ∑ i,
+    (∏ j ∈ Finset.univ.erase i, M 0 (σ j) j) • D (σ i) i
+  have hp (σ : Equiv.Perm ι) : HasDerivAt (fun t => ∏ i, M t (σ i) i) (d σ) 0 := by
+    exact HasDerivAt.finset_prod (fun i _ =>
+      (matrixEntry (σ i) i).hasFDerivAt.comp_hasDerivAt 0 hM)
+  have hsum : (∑ σ, w σ * d σ) = D.trace := by
+    rw [Finset.sum_eq_single (1 : Equiv.Perm ι)]
+    · have hone (i : ι) : (1 : Equiv.Perm ι) i = i := rfl
+      simp [w, d, hdiag, Matrix.trace, hone]
+    · intro σ _ hσ
+      have hd : d σ = 0 := by
+        apply Finset.sum_eq_zero
+        intro i _
+        obtain ⟨j, hji, hj⟩ := hmoved σ hσ i
+        have hzero : ∏ k ∈ Finset.univ.erase i, M 0 (σ k) k = 0 :=
+          Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hji, Finset.mem_univ j⟩)
+            (by rw [h₀, Matrix.one_apply_ne hj])
+        rw [hzero, zero_smul]
+      rw [hd, mul_zero]
+    · simp
+  simp_rw [Matrix.det_apply']
+  rw [← hsum]
+  exact HasDerivAt.sum fun σ _ => (hp σ).const_mul (w σ)
+
+private theorem hasDerivAt_det {M : ℝ → Matrix ι ι ℂ} {D : Matrix ι ι ℂ}
+    (hM : HasDerivAt M D 0) (h₀ : (M 0).det ≠ 0) :
+    HasDerivAt (fun t => (M t).det) ((M 0).det * ((M 0)⁻¹ * D).trace) 0 := by
+  let C := M 0
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p=Path('Lean/MOC/Variational.lean')
+s=p.read_text().replace('have hdiag (i : ι) : M 0 ((1 : Equiv.Perm ι) i) i = 1 := by\\n    change M 0 i i = 1\\n    rw [h₀, Matrix.one_apply_eq]', 'have hdiag (i : ι) : M 0 i i = 1 := by rw [h₀, Matrix.one_apply_eq]')
+p.write_text(s)
+PY
+cd Lean
+lake --no-cache build MOC.Variational > /tmp/moc-current-var.log 2>&1" in /tmp/moc-lean-fix-cckc09wn/after
+exec
+/bin/bash -lc 'audit=$(mktemp /tmp/moc-module-axioms.XXXXXX.lean)
+printf '"'%s\\n' 'import MOC.AnchorObstruction' 'import MOC.TwoFrame' 'import MOC.Variational' > \""'$audit"
+sed -n '"'/"'^open Lean Elab Command in/,$p'"' Lean/MOC.lean >> \""'$audit"
+printf '"'%s\\n' \""'$audit" >/tmp/moc-module-axioms-path
+cat /tmp/moc-current-AnchorObstruction.log
+cat /tmp/moc-current-var.log
+sed -n '"'56,64p;81,99p;114,129p;211,221p' Lean/MOC/AnchorObstruction.lean" in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 375ms:
+
+private theorem walsh_re (i j : Fin 4) :
+    (walsh i j).re = ((walshSigns i j).re : ℝ) / 2 := by
+  have h : (1 / 2 : ℂ) = ((1 / 2 : ℝ) : ℂ) := by push_cast; rfl
+  rw [walsh, Matrix.smul_apply, Matrix.map_apply, smul_eq_mul, h, Complex.re_ofReal_mul]
+  rw [← GaussianInt.to_real_re]
+  ring
+
+private def completionColumn (i j : Fin 4) : Matrix (Fin 3) (Fin 1) ℂ :=
+theorem walsh_unitary : IsUnitary walsh := by
+  have hstar := Matrix.conjTranspose_map (A := walshSigns) gauss GaussianInt.toComplex_star
+  have h₁ : walshSigns * walshSignsᴴ = (4 : GaussianInt) •
+      (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
+    ext i j : 1
+    fin_cases i <;> fin_cases j <;> decide +kernel
+  have h₂ : walshSignsᴴ * walshSigns = (4 : GaussianInt) •
+      (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
+    ext i j : 1
+    fin_cases i <;> fin_cases j <;> decide +kernel
+  constructor <;>
+    simp only [walsh, Matrix.conjTranspose_smul, star_div₀, star_one, star_ofNat, ← hstar,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, ← Matrix.map_mul, h₁, h₂,
+      Matrix.map_smul' gauss _ _ (map_mul gauss), Matrix.map_one gauss (map_zero gauss)
+        (map_one gauss), map_ofNat] <;>
+    norm_num [smul_smul]
+
+private theorem completionInt_map (i j : Fin 4) (z : GaussianInt) :
+    (completionInt i j z).map gauss = (6 : ℂ) • completion i j (gauss z) := by
+    (scaledSupport a b d V k : ℝ) = ((d : ℝ) ^ 2) ^ n *
+      (gauss k * determinantValue (gauss ∘ a) (gauss ∘ b) U).re := by
+  have hstar := Matrix.conjTranspose_map (A := V) gauss GaussianInt.toComplex_star
+  have hm : (scaledSum a b d V).map gauss = ((d : ℂ) ^ 2) •
+      (diagonal (gauss ∘ a) + U * diagonal (gauss ∘ b) * Uᴴ) := by
+    simp only [scaledSum, Matrix.map_add gauss (map_add gauss),
+      Matrix.map_smul' gauss _ _ (map_mul gauss), map_pow, map_natCast, Matrix.map_mul,
+      Matrix.diagonal_map (map_zero gauss), hstar, hV, Matrix.conjTranspose_smul, star_natCast,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_add, Function.comp_def]
+    simp only [pow_two]
+  have hd : ((((d : ℝ) ^ 2) ^ n : ℝ) : ℂ) = ((d : ℂ) ^ 2) ^ n := by
+    simp only [Complex.ofReal_pow, Complex.ofReal_natCast]
+  rw [scaledSupport, GaussianInt.to_real_re]
+  change (gauss (k * (scaledSum a b d V).det)).re = _
+  rw [map_mul, RingHom.map_det, RingHom.mapMatrix_apply, hm, Matrix.det_smul,
+    Fintype.card_fin, ← hd, mul_left_comm, Complex.re_ofReal_mul, determinantValue]
+    decide +kernel
+  have hs := scaledSupport_re walshLeftInt walshRightInt 2 walshSigns gaussI walsh hv
+  rw [hc, gaussI_toComplex] at hs
+  norm_num only [Nat.cast_ofNat, Int.cast_ofNat] at hs
+  change 6144 = 256 * (Complex.I * determinantValue walshLeft walshRight walsh).re at hs
+  linarith only [hs]
+
+end
+
+end MOC
+
+ succeeded in 11124ms:
+exec
+/bin/bash -lc 'cat /tmp/moc-current-var.log
+cat /tmp/moc-current-AnchorObstruction.log
+find Lean -path Lean/.lake -prune -o -type f -mmin -10 -print' in /tmp/moc-lean-fix-cckc09wn/after
+ succeeded in 34745ms:
+ succeeded in 5757ms:
+⚠ [2226/2226] Built MOC.Variational
+warning: ././././MOC/Variational.lean:122:8: automatically included section variable(s) unused in theorem '_private.MOC.Variational.0.MOC.trace_mul_skew_test':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+Build completed successfully.
+✔ [2344/2344] Built MOC.AnchorObstruction
+Build completed successfully.
+Lean/lean-toolchain
+Lean/lakefile.toml
+Lean/lake-manifest.json
+Lean/MOC.lean
+Lean/MOC/AnchorObstruction.lean
+Lean/MOC/PhaseMove.lean
+Lean/MOC/Core.lean
+Lean/MOC/Singular.lean
+Lean/MOC/Claim.lean
+Lean/MOC/Normal.lean
+Lean/MOC/Jacobi.lean
+Lean/MOC/RankTwoOverlap.lean
+Lean/MOC/Pencil.lean
+Lean/MOC/RankSum.lean
+Lean/MOC/Small.lean
+Lean/MOC/WeightedMinor.lean
+Lean/MOC/Transfer.lean
+Lean/MOC/ContactRectangle.lean
+Lean/MOC/SubsetContraction.lean
+Lean/MOC/TwoFrame.lean
+Lean/MOC/Realification.lean
+Lean/MOC/Weights.lean
+Lean/MOC/ContactCensus.lean
+Lean/MOC/TwoValues.lean
+Lean/MOC/Geometry.lean
+Lean/MOC/Variational.lean
+Lean/MOC/MixedBound.lean
+Lean/MOC/NestedValues.lean
+Lean/MOC/FourCoincidence.lean
+Lean/MOC/Source.lean
+Lean/MOC/Blocks.lean
+Lean/MOC/Support.lean
+Lean/MOC/ZeroHeight.lean
+Lean/MOC/Obstruction.lean
+
+exec
+/bin/bash -lc 'lake env lean "$(cat /tmp/moc-module-axioms-path)"' in /tmp/moc-lean-fix-cckc09wn/after/Lean
+codex
+All three requested module builds passed. I’m running the project’s axiom check against imports of the repaired modules to verify their compiled declarations.

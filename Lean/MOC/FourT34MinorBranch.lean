@@ -162,6 +162,35 @@ theorem fourT34_zero_height_support (α β : Fin 4 → ℂ) (η : ℂ)
   · exact fourT34_support_of_contact_eleven α β η 0 hn hc
       (fourT34_contact_eleven_of_zero_height α β η hη hm hc) U hU
 
+/-- When both donor gaps of T34 vanish, a second rectangle forces zero
+height. Consequently their sum is positive on the regular mixed branch. -/
+theorem fourT34_donor_sum_pos_of_mixed (α β : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
+    (ha : Function.Injective α) (hb : Function.Injective β)
+    (hnz : ∀ i j, α i + β j ≠ 0) (hη : η ≠ 0)
+    (hn : ∀ i, H ≤ (η * matchingProduct α β (fourPerm i).symm).re)
+    (hc : ∀ i ∈ fourT34ContactIndices, (η * matchingProduct α β (fourPerm i).symm).re = H)
+    (hd : H < (η * matchingProduct α β (fourPerm 11).symm).re) :
+    0 < ((η * matchingProduct α β (fourPerm 4).symm).re - H) +
+      ((η * matchingProduct α β (fourPerm 8).symm).re - H) := by
+  by_contra! hsum
+  have he4 : (η * matchingProduct α β (fourPerm 4).symm).re = H := by
+    linarith only [hsum, hn 4, hn 8]
+  have he8 : (η * matchingProduct α β (fourPerm 8).symm).re = H := by
+    linarith only [hsum, hn 4, hn 8]
+  let σ := (fourPerm 2).symm
+  have h4 : (fourPerm 2).symm * Equiv.swap 2 3 = (fourPerm 4).symm := by decide +kernel
+  have h8 : (fourPerm 2).symm * Equiv.swap 0 1 = (fourPerm 8).symm := by decide +kernel
+  have h10 : (fourPerm 2).symm * Equiv.swap 2 3 * Equiv.swap 0 1 =
+      (fourPerm 10).symm := by decide +kernel
+  have hH : H = 0 := matchingProduct_disjoint_swaps_common_height_eq_zero α β σ 2 3 0 1
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) ha hb hnz hη
+    (hc 2 (by decide)) (by simpa only [σ, h4] using he4) (by simpa only [σ, h8] using he8)
+    (by simpa only [σ, h10] using hc 10 (by decide))
+  subst H
+  have hm : matchingProduct α β (fourPerm 3).symm ≠ 0 :=
+    Finset.prod_ne_zero_iff.mpr (fun j _ => hnz _ j)
+  exact (ne_of_gt hd) (fourT34_contact_eleven_of_zero_height α β η hη hm hc)
+
 end
 
 end MOC

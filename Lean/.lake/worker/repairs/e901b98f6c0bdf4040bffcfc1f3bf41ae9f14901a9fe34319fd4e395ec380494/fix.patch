@@ -1,0 +1,40 @@
+diff --git a/before/Lean/MOC/TwoFrame.lean b/after/Lean/MOC/TwoFrame.lean
+index 34e7770..d804b50 100644
+--- a/before/Lean/MOC/TwoFrame.lean
++++ b/after/Lean/MOC/TwoFrame.lean
+@@ -318,6 +318,7 @@ theorem blochWedge_eq_average_axes {σ : Type*} [Fintype σ]
+       BlochFrame.project_wedge, hscale, ← mul_sub, mul_pow]
+     rw [BlochFrame.axisScale, Real.sq_sqrt (div_nonneg (by norm_num) hv.le)]
+     field_simp [hv.ne']
++    ring
+   · have hz : E.axisVariance B k = 0 :=
+       le_antisymm (le_of_not_gt hv) (E.axisVariance_nonneg B k)
+     rw [hz, zero_div, zero_mul]
+diff --git a/before/Lean/MOC/ZeroHeight.lean b/after/Lean/MOC/ZeroHeight.lean
+index a8bfc75..5555737 100644
+--- a/before/Lean/MOC/ZeroHeight.lean
++++ b/after/Lean/MOC/ZeroHeight.lean
+@@ -55,7 +55,8 @@ theorem zero_height_type44_donor_budget {c p q α β : ℝ}
+       nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β))]
+   refine ⟨hp', hq', (mul_le_mul_left (mul_pos hp' hq')).mp ?_⟩
+   have hcancel : p * q * ((α + β) ^ 2 / p) = q * (α + β) ^ 2 := by
+-    field_simp
++    field_simp [hp'.ne']
++    ring
+   nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β)), hcancel]
+ 
+ /-- A shared pair of squared minors compensates two mixed rays if each
+@@ -74,10 +75,11 @@ theorem two_mixed_rays_nonneg_of_donor_budget
+   have hroot : √(p * Q₀) * √(L ^ 2 / p * Q₁) = L * √(Q₀ * Q₁) := by
+     rw [← Real.sqrt_mul hA]
+     have hprod : (p * Q₀) * (L ^ 2 / p * Q₁) = L ^ 2 * (Q₀ * Q₁) := by
+-      field_simp
++      field_simp [hp.ne']
++      ring
+     rw [hprod, Real.sqrt_mul (sq_nonneg L), Real.sqrt_sq hL]
+   have hsq := sq_nonneg (√(p * Q₀) - √(L ^ 2 / p * Q₁))
+-  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, ← mul_assoc, hroot] at hsq
++  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, mul_assoc, hroot] at hsq
+   have hcomp := add_nonneg (mul_nonneg hα hf₁) (mul_nonneg hβ hf₂)
+   have hbudget' : L + L ^ 2 / p ≤ c := hbudget
+   change 0 ≤ α * f₁ + β * f₂ + p * Q₀ + c * Q₁

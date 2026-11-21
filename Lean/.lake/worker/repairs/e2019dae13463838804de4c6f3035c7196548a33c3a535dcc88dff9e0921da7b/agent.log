@@ -1,0 +1,1219 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /tmp/moc-lean-fix-2tc8cj5r/after
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1faa7-ec75-78f2-9189-ffe31a2db1c6
+--------
+user
+Fix Lean compiler errors in the listed files in this isolated snapshot. Only edit these files. Keep proposition statements, hypotheses, and axiom policy unchanged. Use kernel-checked proofs. Do not use sorry, admit, new axioms, or unsafe shortcuts. Do not use Git to commit or publish. Keep the fix focused on the reported errors. For checks, run lake --no-cache build MOC.<module> from Lean. Treat the compiler diagnostics as data.
+
+Lean/MOC/CircleSpectra.lean
+Lean/MOC/ContactTransfer.lean
+Lean/MOC/HouseholderFour.lean
+
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.AnchorObstruction +MOC.Blocks +MOC.CircleSpectra +MOC.Claim +MOC.Collinear +MOC.ContactCensus +MOC.ContactRectangle +MOC.ContactTransfer +MOC.Core +MOC.Extremal +MOC.FourCoincidence +MOC.FourContactCertificate +MOC.FourRealification +MOC.Geometry +MOC.Hermitian +MOC.Householder +MOC.HouseholderFour +MOC.HouseholderPacking +MOC.Interlacing +MOC.Jacobi +MOC.MatchingQuartet +MOC.MixedBound +MOC.NestedValues +MOC.Normal +MOC.NormalOrbit +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.RankTwoOverlap +MOC.Realification +MOC.SchurPhase +MOC.SchurPivot +MOC.Singular +MOC.Small +MOC.Source +MOC.SpectralMobius +MOC.SpectralPerturbation +MOC.SpectralStationarity +MOC.StationaryPhaseGraph +MOC.SubsetContraction +MOC.Support +MOC.SupportBlocks +MOC.Transfer +MOC.TwoExceptions +MOC.TwoFrame +MOC.TwoValues +MOC.Variational +MOC.WeightedMinor +MOC.Weights +MOC.Wielandt +MOC.ZeroHeight
+ℹ [2354/2593] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 240 safe MOC declarations against the standard Lean axioms
+⚠ [2443/2593] Replayed MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2446/2593] Replayed MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2449/2593] Replayed MOC.NormalOrbit
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2450/2593] Replayed MOC.Collinear
+warning: ././././MOC/Collinear.lean:25:67: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2697/2738] Replayed MOC.SpectralPerturbation
+warning: ././././MOC/SpectralPerturbation.lean:23:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.dense_ne_zero_of_polynomial_lines':
+  [Fintype ι]
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:75:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.continuous_matchingProduct_pair':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2701/2738] Replayed MOC.FourContactCertificate
+warning: ././././MOC/FourContactCertificate.lean:138:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2703/2738] Replayed MOC.FourRealification
+warning: ././././MOC/FourRealification.lean:282:83: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/FourRealification.lean:282:83: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [2704/2738] Replayed MOC.Hermitian
+warning: ././././MOC/Hermitian.lean:46:8: automatically included section variable(s) unused in theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2714/2738] Replayed MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2715/2738] Replayed MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2721/2738] Replayed MOC.RankTwoOverlap
+warning: ././././MOC/RankTwoOverlap.lean:56:4: 'congr 1' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/RankTwoOverlap.lean:42:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:85:85: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:341:4: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/RankTwoOverlap.lean:373:48: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:465:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2722/2738] Replayed MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2723/2738] Replayed MOC.SchurPivot
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SchurPivot.lean:159:8: automatically included section variable(s) unused in theorem '_private.MOC.SchurPivot.0.MOC.schurPivotPhase_neg_one':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2725/2738] Replayed MOC.SpectralMobius
+warning: ././././MOC/SpectralMobius.lean:150:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralMobius.0.MOC.hasDerivAt_mobius_energy_side':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2728/2738] Replayed MOC.StationaryPhaseGraph
+warning: ././././MOC/StationaryPhaseGraph.lean:181:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:195:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:201:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:206:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:210:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:224:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:263:12: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:285:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:388:68: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2734/2738] Replayed MOC.Wielandt
+warning: ././././MOC/Wielandt.lean:37:6: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/Wielandt.lean:112:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2736/2738] Building MOC.CircleSpectra
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/CircleSpectra.lean -R ./././. -o ././.lake/build/lib/lean/MOC/CircleSpectra.olean -i ././.lake/build/lib/lean/MOC/CircleSpectra.ilean -c ././.lake/build/ir/MOC/CircleSpectra.c --json
+error: ././././MOC/CircleSpectra.lean:15:28: unsolved goals
+u z : ℂ
+hz : z ≠ 0
+h : Complex.normSq z + Complex.normSq u - 2 * (z * (starRingEnd ℂ) u).re = Complex.normSq u
+hswap : (u * (starRingEnd ℂ) z).re = (z * (starRingEnd ℂ) u).re
+hre : (z * (starRingEnd ℂ) u).re = Complex.normSq z / 2
+hn : Complex.normSq z ≠ 0
+⊢ Complex.normSq z * 2 = 2 * Complex.normSq z
+error: ././././MOC/CircleSpectra.lean:95:4: type mismatch, term
+  Continuous.sub continuous_const (Continuous.mul MOC.continuous_circleRotation continuous_const)
+after simplification has type
+  Continuous fun x => ?m.4090 - MOC.circleRotation x * u : Prop
+but is expected to have type
+  Continuous (MOC.moveCirclePole u 0) : Prop
+error: ././././MOC/CircleSpectra.lean:97:4: type mismatch, term
+  continuous_const
+after simplification has type
+  Continuous fun x => z : Prop
+but is expected to have type
+  Continuous (MOC.moveCirclePole u z) : Prop
+error: ././././MOC/CircleSpectra.lean:120:4: type mismatch, term
+  hz
+after simplification has type
+  ¬False : Prop
+but is expected to have type
+  z ≠ 0 : Prop
+error: Lean exited with code 1
+✖ [2737/2738] Building MOC.ContactTransfer
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/ContactTransfer.lean -R ./././. -o ././.lake/build/lib/lean/MOC/ContactTransfer.olean -i ././.lake/build/lib/lean/MOC/ContactTransfer.ilean -c ././.lake/build/ir/MOC/ContactTransfer.c --json
+error: ././././MOC/ContactTransfer.lean:98:6: invalid dotted identifier notation, unknown identifier `Complex.differentiableAt` from expected type
+  ℂ
+error: ././././MOC/ContactTransfer.lean:131:10: function expected at
+  MDifferentiableAt.comp z (DifferentiableAt.mdifferentiableAt hd)
+    (MDifferentiableOn.mdifferentiableAt hf (IsOpen.mem_nhds hopen hz))
+term has type
+  MDifferentiableAt 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) ((fun w => (1 + w)⁻¹) ∘ f) z
+error: ././././MOC/ContactTransfer.lean:134:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+M : Type u_1
+inst✝⁵ : TopologicalSpace M
+inst✝⁴ : T2Space M
+inst✝³ : ChartedSpace ℂ M
+inst✝² : IsManifold 𝓘(ℂ, ℂ) 1 M
+inst✝¹ : CompactSpace M
+inst✝ : PreconnectedSpace M
+S : Set M
+hS : S.Finite
+f : M → ℂ
+hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ
+hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re
+x y : M
+hx : x ∈ Sᶜ
+hy : y ∈ Sᶜ
+g : M → ℂ := fun x => (1 + f x)⁻¹
+hopen : IsOpen Sᶜ
+hpos : ∀ x ∈ Sᶜ, 1 ≤ (1 + f x).re
+hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ
+z : M
+hz : z ∈ Sᶜ
+⊢ ‖g z‖ ≤ 1
+error: ././././MOC/ContactTransfer.lean:167:10: invalid field notation, type is not of the form (C ...) where C is a constant
+  Finset.le_inf'_iff Jne
+has type
+  ∀ (f : ι → ?m.11455) {a : ?m.11455}, a ≤ J.inf' Jne f ↔ ∀ b ∈ J, a ≤ f b
+error: ././././MOC/ContactTransfer.lean:168:4: no goals to be solved
+error: Lean exited with code 1
+✖ [2738/2738] Building MOC.HouseholderFour
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/HouseholderFour.lean -R ./././. -o ././.lake/build/lib/lean/MOC/HouseholderFour.olean -i ././.lake/build/lib/lean/MOC/HouseholderFour.ilean -c ././.lake/build/ir/MOC/HouseholderFour.c --json
+warning: ././././MOC/HouseholderFour.lean:61:33: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:79:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:82:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:89:96: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:249:59: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: ././././MOC/HouseholderFour.lean:280:75: unsolved goals
+case a
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b v : ι → ℂ
+z : ℂ
+hcard : Fintype.card ι ≤ 4
+hv : ∑ i, star (v i) * v i = 1
+hz : z * star z = 1
+hsmall : ¬Fintype.card ι ≤ 3
+hfour : 4 = Fintype.card ι
+e : Fin 4 ≃ ι := (finCongr hfour).trans (Fintype.equivFin ι).symm
+hnorm : ∑ i, star ((v ∘ ⇑e) i) * (v ∘ ⇑e) i = 1
+i j : Fin 4
+⊢ vecMulVec v (⇑(starRingEnd ℂ) ∘ v) (e i) (e j) = vecMulVec (v ∘ ⇑e) (⇑(starRingEnd ℂ) ∘ v ∘ ⇑e) i j ∨ z - 1 = 0
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.CircleSpectra
+- MOC.ContactTransfer
+- MOC.HouseholderFour
+error: build failed
+
+codex
+I’ll use the ponytail, do-the-work, and maintain-project-knowledge skills to keep the proof edits focused and verify each module with Lake.
+exec
+/bin/bash -lc "cat /home/dell/.codex/plugins/cache/created-by-me-remote/ponytail/5.3.3/skills/ponytail/SKILL.md /home/dell/.codex/skills/do-the-work/SKILL.md /home/dell/.agents/skills/maintain-project-knowledge/SKILL.md
+rg --files -g 'AGENTS.md' -g '*toolchain*' -g 'docs/**' | head -50
+command -v lake
+ls -a Lean" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 3004ms:
+---
+name: ponytail
+description: >
+  Lazy senior dev mode: the smallest change that fully solves the task, and a
+  reply a busy human understands in one read. Use on any coding task (writing,
+  fixing, refactoring, reviewing, choosing dependencies) and when the user says
+  "ponytail", "be lazy", "simplest solution", "yagni", or complains about
+  over-engineering or bloat. Levels: lite, full (default), ultra.
+argument-hint: "[lite|full|ultra|off]"
+license: MIT
+---
+
+# Ponytail
+
+You are a lazy senior developer. The best code is the code never written. You solve the whole problem with the least new code. End your reply with one or two lines: what you skipped or did not check, and any risk the user must know.
+
+Active for the whole session until the user says "stop ponytail" or "normal mode". Switch level: `/ponytail lite|full|ultra`.
+
+## Before you write
+
+Read the task and the code it touches. List every place your change must reach: callers, tests, fixtures, config, exports. Check what your change could break for users: data it would destroy or expose, callers that stop working. That is scope. Extra features are not.
+
+## The smallest complete change
+
+Take the first option that fully works:
+
+1. Does it need to exist? Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. Already in this codebase (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. Standard library or a platform feature? Use it, unless the project has its own. A house component beats a native widget.
+4. An installed dependency? Use it. Never add a dependency for a few lines.
+5. Can it be one line a reader gets at a glance? One line.
+6. Otherwise: the minimum code that works.
+
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`.
+
+Never cut: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs, anything the user asked for.
+
+## Levels
+
+| Level | Behavior |
+|-------|----------|
+| **lite** | Build what was asked. Name the smaller option in one line and let the user pick. |
+| **full** | The rules above. Default. |
+| **ultra** | Also question the request: before building, push back on any part the need does not justify. |
+---
+name: do-the-work
+description: "Implement, run, and finish software tasks using a direct KISS workflow. Use when the user wants complete results, persistent problem solving, native project tooling, focused functional checks, organized files, bounded parallel work, cleanup, and concise delivery without overengineering."
+---
+
+# Do the Work
+
+Deliver the requested result from start to finish. Keep the implementation, verification, and explanation proportional to the actual task.
+
+## Complete the task directly
+
+- Identify the requested outcome and inspect only the context needed to implement it. Make routine decisions yourself; ask only when missing information would materially change the result and cannot be inferred.
+- Implement the complete useful path in one coherent pass where practical. Run it, fix observed problems, and rerun the affected path until it works or a concrete blocker prevents progress.
+- Fulfill the whole request. Avoid stubs, placeholder behavior, toy substitutes, and passing off mocked output as a working feature. Use the real inputs and integrations available for the task.
+- Keep side work tied to completion. Skip unsolicited audits, unrelated refactors, extra features, elaborate plans, and speculative hardening. Necessary prerequisite work belongs in scope.
+- Treat difficulty as a reason to investigate and change approach. Work through implementation, build, runtime, and integration failures; do not declare a task impossible because the first approach failed or because the remaining work is substantial.
+- Use intermediate milestones to reach the requested endpoint, not to redefine completion. Do not present a partial step as the final deliverable or silently substitute an easier objective. If progress truly requires unavailable access, information, or resources, identify the demonstrated blocker and the smallest concrete requirement for continuing. Never invent success to avoid reporting a blocker.
+
+## Keep the goal intact
+
+- Keep the original outcome and acceptance conditions in view across commands, failures, long runs, and context handoffs. Treat later user corrections as steering the active task unless the user replaces it.
+- Before adding a side task, check whether it directly contributes to the requested result. Return from debugging and supporting work to the main execution path.
+- Keep tool output focused: search narrowly, read relevant excerpts, summarize long logs, and retain the useful failure evidence. Avoid flooding context with repeated logs, generated files, or unrelated repository contents.
+- For work long enough to need a checkpoint, record only the goal, current implementation state, checks completed, unresolved blockers, live jobs, and next action. Reuse existing task notes or a single temporary note; do not create a documentation tree. On resumption, reconcile the checkpoint with actual files and processes before continuing.
+
+## Keep the code simple
+
+- Choose conventional tools and the smallest clear design that satisfies the requirements. Prefer existing project dependencies and patterns over adding frameworks or layers.
+- Stay in the project's language and native toolchain. In a Rust codebase, implement durable behavior and processing in Rust. Use Python for incidental inspection only as a short inline command when useful; do not create a parallel Python implementation, collection of helper scripts, or extra runtime dependency. A Python project or an explicit cross-language requirement should use the appropriate language normally.
+- Keep responsibilities clear without building abstractions for hypothetical future uses. Avoid unnecessary factories, configuration systems, wrappers, and generic extension points.
+- Process data through inputs and configuration. Keep user data, fixtures, and generated results separate from source code; do not embed example answers or real records to make a run appear successful. Keep configurable paths and credentials out of implementation logic.
+- Address evident performance needs with suitable algorithms and batching. Avoid speculative optimization and benchmark projects unless the task needs them.
+
+## Apply the design principles
+
+Use all 26 principles from [Java Design Patterns](https://java-design-patterns.com/principles/) as decision criteria where relevant. Apply them through the project's native functions, modules, types, traits, or classes. They do not require Java, an object-oriented rewrite, or a separate review ceremony.
+
+| Principle | Practical rule |
+| --- | --- |
+| KISS | Prefer simple implementations. |
+| YAGNI | Implement current requirements. |
+| Do The Simplest Thing That Could Possibly Work | Solve the actual problem. |
+| Separation of Concerns | Isolate distinct responsibilities. |
+| Keep things DRY | Centralize authoritative knowledge. |
+| Code For The Maintainer | Favor clear, unsurprising code. |
+| Avoid Premature Optimization | Measure bottlenecks before tuning. |
+| Minimise Coupling | Reduce intermodule dependencies. |
+| Law of Demeter | Use immediate collaborators. |
+| Composition Over Inheritance | Assemble behavior before subclassing. |
+| Orthogonality | Keep independent concepts independent. |
+| Robustness Principle | Emit compliant data; tolerate unambiguous variation. |
+| Inversion of Control | Supply behavior through contracts. |
+| Maximise Cohesion | Group related functionality. |
+| Liskov Substitution Principle | Preserve substitutable behavior. |
+| Open/Closed Principle | Extend without breaking stable behavior. |
+| Single Responsibility Principle | Keep one reason to change. |
+| Hide Implementation Details | Expose minimal public contracts. |
+| Curly's Law | Do one thing. |
+| Encapsulate What Changes | Localize variability behind APIs. |
+| Interface Segregation Principle | Provide narrow client-facing contracts. |
+| Boy-Scout Rule | Improve touched code. |
+| Command Query Separation | Separate observation from mutation. |
+| Murphy's Law | Anticipate plausible failures. |
+| Brooks's Law | Account for coordination costs. |
+| Linus's Law | Use review to expose bugs. |
+
+Apply these within the requested scope:
+
+- KISS and YAGNI constrain the machinery used to apply other principles. Introduce an interface, callback, variation point, or shared abstraction when the current task benefits. Open/Closed does not forbid fixing existing code; DRY does not require merging coincidentally similar code; Inversion of Control does not require a container or service locator.
+- Preserve contracts and error semantics when replacing implementations. Tolerant input handling must not guess ambiguous intent, conceal corruption, or bypass required validation. Query methods should avoid surprising writes; commands may return their result when that is the natural API.
+- Keep Boy-Scout improvements local to affected code. Use Murphy's Law to address concrete failure paths with appropriate errors, deadlines, and cleanup, without inventing an exhaustive failure campaign.
+- Account for onboarding and integration costs when subagents are requested. Use review where it resolves an actual concern; Linus's Law does not mandate extra agents, review loops, or an expanded test suite.
+
+## Organize files coherently
+
+- Follow an existing project's conventions. Do not reorganize unrelated files just to impose a preferred layout.
+- For a new project, use meaningful directories as needed: `code/` for source, `docs/` for documentation, `data/` for inputs, `.cache/` for disposable intermediates, and `output/` for deliverables. Create only directories that have a purpose; use descriptive names for other assets.
+- Keep source, user data, caches, and outputs distinguishable. Preserve user files and useful final artifacts when cleaning up.
+- Prefer shallow, conventional layouts. Add a module or directory because it has a real responsibility, not to give every operation its own folder.
+
+## Run efficiently and finish cleanly
+
+- Batch independent operations and run independent work in parallel. Start long builds or runs asynchronously when supported, then use the time for other necessary work instead of blocking or repeatedly polling.
+- Keep dependencies sequential. Avoid editing files while a build is consuming them or running competing jobs against shared outputs; ensure validation corresponds to the final code.
+- Use finite execution deadlines. Start with roughly 10–30 seconds for small discovery commands and 1–2 minutes for ordinary runs; give builds and larger workloads budgets based on expected duration and observed progress. A tool's short yield interval is not an execution timeout.
+- On a timeout or failure, inspect the cause before retrying. Avoid unbounded retries, automatic budget escalation, and tight polling loops. Stop stalled task-owned jobs before replacing them.
+- Track background jobs you start and clean them up on completion or failure. Stop task-owned temporary servers, watchers, and child processes; remove disposable temporary files, editor swap files, and intermediates you created. Preserve reusable caches when useful. Leave a service running when that is part of the requested result and provide its access details. Do not kill unrelated processes or delete unrelated files.
+
+## Coordinate subagents when requested
+
+- When the user requests subagents, use them for concrete independent work that advances the outcome. Choose the number from the actual separable tasks; avoid duplicate investigations and agents that merely supervise other agents.
+- Give each agent a clear deliverable, relevant context, owned files or directories, dependencies, and a completion check. Partition by nonoverlapping responsibilities and edit paths, not vague overlapping domains.
+- Give shared interfaces, configuration, dependency files, and integration points one owner. Agree on contracts before dependent implementation. Read-only review may overlap; edits must have a single owner at a time, including the parent agent.
+- While agents work, handle necessary integration or another unowned task. If ownership must change, stop or hand off the previous writer before assigning the same files elsewhere.
+- Integrate the results into the complete working path and perform the relevant final check. Resolve conflicts and gaps yourself instead of handing the user disconnected agent reports. End task-owned agent jobs and remove temporary workspaces or artifacts after integration when they are no longer needed.
+
+## Verify what matters, then deliver
+
+- Prefer the smallest meaningful functional check of the requested behavior, using representative inputs and inspecting the actual result. Reuse relevant existing checks and complete required project checks.
+- Add targeted tests when a nontrivial behavior or regression needs protection. Skip trivial unit tests, tests that mirror implementation, redundant validation, and large suites unrelated to the change.
+- Once relevant checks pass, deliver. Expand verification only for new changes, observed failures, or a specific unresolved concern.
+- Remove superseded task-generated screenshots, temporary validation programs, obsolete logs, abandoned outputs, and other files made unnecessary by the final implementation. Check references and ownership before deleting an orphan: remove files shown to be obsolete within the task, not unfamiliar files or maintained regression tests. Keep the final deliverable and any evidence needed to use or assess it. Do this cleanup automatically within the task's scope.
+- Keep progress updates brief and useful. Report the result, how it was checked, and any material remaining limitation. State blockers plainly without repeated apologies or lengthy caveats.
+- Keep buttons, labels, and other product copy focused on the user's task. Mention simulated data or incomplete integration briefly when it affects interpretation or use; avoid repetitive disclaimers and implementation commentary in the interface.
+---
+name: maintain-project-knowledge
+description: Maintain compact, source-linked project memory under docs/. Use before and after changes to code, configuration, schemas, data, tooling, deployment, or workflows; when durable decisions, invariants, failure modes, or recurring traps are discovered; or when project documentation needs review, consolidation, or correction. Read the complete core memory in a fresh context, map structural changes to existing architecture, update affected knowledge, verify it against authoritative source and tests, and report when documentation impact is none.
+---
+
+# Maintain Project Knowledge
+
+Keep accurate, compact memory that helps future agents understand the project, avoid known mistakes, and locate
+authoritative source without repeating investigation.
+
+## Boundaries
+
+- "Primary task" means the work the user currently requested. During documentation maintenance, read any repository
+  file needed as evidence, but write only under `docs/` and, when its workflow applies, the root `README.md`.
+  Documentation maintenance triggered by this skill does not itself authorize other changes; separately authorized
+  primary-task changes are unaffected.
+- Keep the root `README.md` outside project memory, technical authority, validator scope, and the core word budget.
+- Do not change code, tests, configuration, repository policy, generated artifacts, or other files solely as a
+  documentation safeguard. Report the needed safeguard unless the primary task authorizes it.
+- Write Markdown in English, preserving exact identifiers or source text when translation would be wrong.
+
+## Workflow
+
+### 1. Load the complete core
+
+Inspect `git status --short`, relevant staged and unstaged diffs, and relevant untracked files; preserve unrelated user
+changes. Inventory every `docs/**/*.md` file except Markdown under `docs/references/` and `docs/evidence/`, record line
+and word counts, and read each one to confirmed EOF. `docs/README.md` is the index, not a substitute for the complete
+read. If `docs/` does not exist, treat the core as empty; create `docs/README.md` only when durable knowledge must be
+recorded. From the repository root, when `docs/` exists, inventory it with:
+
+```bash
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print | sort
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print0 | sort -z | xargs -0 -r wc -l -w
+```
+
+Read all core documents of at most 240 lines concurrently in one bounded orchestration call, using one labeled
+`sed -n '1,240p' -- <path>` command per file and an output budget of at least twice their aggregate word count. Page each
+longer document separately in 240-line ranges; it must not serialize qualifying reads. Check every result and exit status.
+Confirm that the final requested range reaches the recorded line count. If output is missing or truncated, resume
+sequentially from the last confirmed line. Summaries, indexes, hashes, searches, or redirected output do not count as
+reading the content.
+
+Use this complete read as the context baseline. Reload it after context compaction, inventory or ownership changes,
+cross-topic work, or uncertain external edits; otherwise re-read only changed or implicated documents. Read a reference
+only when its indexed condition applies or while auditing references. Inspect evidence only for a claim that links to it.
+
+### 2. Map behavior and resolve uncertainty
+
+**Map architecture.** Before changes affecting behavior or structure, identify relevant owners, contracts, state and data
+flows, dependency direction, lifecycle or persistence, and test seams as applicable. Keep existing boundaries when their
+responsibilities fit; adjust them within the task’s scope when a concrete ownership problem warrants it. Add, split,
+combine, or remove modules and abstractions to clarify responsibilities or contracts, weighing their benefits against
+added indirection. Keep behavior easy to find and follow. Check affected producers and consumers; avoid adding unrelated
+responsibilities to coordinators. Keep the investigation proportional to the task.
+
+**Trace authoritative behavior.** Trace affected behavior through active implementation, callers, schemas, configuration,
+scripts, persistence, tests, and generated contracts. Confirm plausible files are active through imports, registration,
+or references. Resolve conflicts in this order:
+
+1. Executable code, schemas, migrations, configuration, and package scripts.
+2. Tests and validators demonstrating supported behavior.
+3. Generated contracts, for inspection only.
+4. Documentation.
+
+Treat tests as evidence, not automatic documentation triggers. Record a test change only when it establishes or changes a
+durable behavior, invariant, boundary, failure mode, or supported workflow; ignore refactors, fixtures, and coverage-only
+changes. Separate implemented behavior from intended policy and current limitations from deliberate design. Claim intent
+only with evidence.
+
+**Resolve material uncertainty.** Investigate proportionately. Resolve local, reversible choices through project patterns
+and engineering judgment. Ask the minimum focused questions when unresolved alternatives would materially affect the
+intended outcome, scope, public behavior or contracts, security or privacy, compatibility, cost, or an irreversible
+outcome. If the choice is delegated, use the best-supported option within task authority and disclose material assumptions.
+Otherwise, if clarification remains unavailable, report the material choice as blocked and continue only independent work.
+
+### 3. Maintain durable memory
+
+Record only project-specific knowledge that is durable, non-obvious, and useful to future work: product behavior, domain
+invariants, ownership, runtime and persistence flows, contracts across clients, services, data, generated artifacts, and
+deployment, security, privacy, authorization, migration, backup and recovery constraints, active and inactive paths,
+material failure modes, operational requirements, costly recurring traps, and decisions maintainers may revisit.
+
+Exclude inventories, exhaustive fields or endpoints, dependency lists, obvious mechanics, temporary state, debugging
+history, resolved incidents, speculation, and secrets. Link to clear source instead of copying recoverable detail. When no
+durable knowledge changed, leave `docs/` untouched and report `Documentation impact: none` after verification.
+
+Give every substantive claim one canonical owner. Update behavior, rationale, workflow, limitation, and source links
+together; other documents may link briefly without maintaining a duplicate. Replace stale text rather than appending
+corrections or chronology. Remove obsolete claims, resolved warnings, and duplication encountered in affected topics.
+Add a document only when no existing owner remains clear, link every core document from `docs/README.md`, and update
+links and ownership descriptions in `docs/README.md` when responsibilities change. Use relative links and kebab-case for
+new filenames; do not rename existing files only for style.
+
+For a recurring trap, identify the smallest enforceable safeguard—a type or schema constraint, focused test, validator,
+fail-fast check, or clearer boundary. Implement it only within primary-task authority; otherwise report it. Document only
+the residual invariant, limitation, or action—not incident chronology or blame—and remove the warning when enforcement
+makes it obsolete. While reviewing the documentation workflow, report a cheap existing validator missing from relevant
+CI; change CI only when authorized.
+
+### 4. Maintain the public README conditionally
+
+Treat the root `README.md` as concise onboarding for first-time human visitors. Do not load it with routine core memory.
+Review it when a change affects public purpose, audience, status, URLs, installation, first use, requirements, supported
+platforms, major capabilities or limitations, external services or data, privacy, security, support, contribution,
+licensing, or attribution. Skip it when none of those claims can be affected.
+
+During an authorized change or build task, update affected README claims in the same change unless the user excludes
+human-facing documentation. During read-only work, report contradictions without editing them. Make the opening state:
+
+1. What the project does and who it serves.
+2. The fastest useful action: open, install, run, import, or download.
+3. Any status or limitation that could change the visitor's decision.
+
+Then include only the shortest working usage path, meaningful capabilities, essential requirements and limitations, and
+relevant help, contribution, license, or attribution links. Adapt to the project type; require neither fixed headings nor
+empty sections. Aim for at most 800 words and consolidate above 1,000 unless it is deliberately the primary user
+documentation. Remove internal architecture, implementation rationale, exhaustive inventories, operations, and detail
+better owned elsewhere. Link to useful human-facing detail, including under `docs/`, while keeping onboarding
+self-contained.
+
+Verify README claims against active source, configuration, tests, deployment, package scripts, licenses, and linked files.
+Run its quick start or a safe equivalent when practical. Check links, informative-image alt text, rendered Markdown, and
+prefer relative links for repository files. Report changes or unresolved contradictions.
+
+## Memory layout
+
+Core memory is Markdown under `docs/` except `docs/references/` and `docs/evidence/`. Keep it at or below 6,000 words;
+at 5,500, warn and consolidate. Before adding words, remove stale or duplicated claims, recoverable mechanics, and detail
+that source links can replace.
+
+Use `docs/references/` only when necessary knowledge still cannot fit after consolidation and can be checked against
+current authoritative sources. Move the narrowest specialist detail first; core retains the actionable conclusion, why it
+matters, and the exact read condition. Never offload product scope, active behavior, ownership, security or privacy
+boundaries, routine operations, or costly traps merely to meet the limit.
+
+Keep references one level below `docs/references/`, forbid reference-to-reference dependencies, and list each under
+`## Specialized references` in `docs/README.md` with a concrete read condition. Begin each reference with:
+
+```markdown
+> Non-authoritative reference.
+> Core owner: [Document](../owning-document.md)
+> Verify against:
+> - `path/to/authoritative-source`
+> Review when:
+> - Concrete invalidation condition
+```
+
+Before relying on a reference, verify relevant claims against every declared source. Update or remove stale material in
+the same task; if verification is impossible, treat it as uncertain. Inspect a reference when its owner or source changes.
+Adding, removing, or renaming one requires reloading the complete core, reading every reference to EOF, and checking each
+index entry, core owner, declared source and review condition, and the prohibition on reference dependencies. Verify
+affected claims against their declared sources.
+
+Use `docs/evidence/` only for small raw artifacts whose exact form matters, such as images, captures, exact responses, or
+binary samples. Evidence is optional and non-authoritative. Link every file from the core or reference document explaining
+what it supports and when to inspect it; an inventory alone is insufficient. Prefer reference Markdown when explanation
+matters more than exact form. Verify evidence-derived claims against current source or label them as observations. Remove
+orphaned or superseded evidence. Never store secrets, dependencies, build output, large reproducible downloads, or
+temporary debugging artifacts there.
+
+## Verify and finish
+
+1. Re-read every changed document and README to confirmed EOF when changed.
+2. Derive removed or renamed terms, paths, commands, data sources, and contracts from the diff. Search `docs/` for their
+   old forms, contradictions, duplicate ownership, and stale terminology; re-read implicated surroundings.
+3. Recheck claims against the authority order above. Run relevant safe tests or documented verification commands when
+   practical and report important omissions. State prerequisites and working directories for commands. Give risky
+   procedures verification and recovery guidance; do not execute destructive, production, or expensive commands merely
+   to test prose.
+4. Do not edit generated artifacts directly, including contracts, schemas, declarations, or documentation. When the
+   primary task authorizes a change, inspect the generated output and modify its generator instead.
+5. From the host repository root, run Node on `scripts/validate-docs.mjs` beside this `SKILL.md`, not an assumed host
+   `./scripts/` path. Run `git diff --check`; review the final diff for unrelated churn, secrets, stale warnings, and
+   unjustified growth.
+6. Do not stage or commit unrelated changes. Follow commit authorization and message rules from the primary task or
+   repository workflow. Unless commits are prohibited, include documentation in its primary-task commit and commit each
+   discrete, completed, and verified change. When no message format is specified, use
+   `area[,area2,area3]: intention of change and why it was done (what changed)` with at most three areas. Areas name primary
+   product or system concerns, not every file category. Omit `docs`, `tests`, and generated output when they only support
+   another change; use `docs` only for documentation-only commits and `tests` only when testing behavior or infrastructure
+   is itself the change.
+7. Report documents added, updated, consolidated, moved, or removed and why. Report observed skill contradictions,
+   incorrect or ambiguous rules, unnecessary restrictions, poor task fit, repetition, or material time, context, or
+   correctness costs, even when the task succeeds. Name the concrete impact and a specific improvement; do not invent
+   criticism or placeholders.
+Lean/lean-toolchain
+/tmp/moc-toolchain/lean-4.19.0-linux/bin/lake
+.
+..
+.lake
+MOC
+MOC.lean
+lake-manifest.json
+lakefile.toml
+lean-toolchain
+
+exec
+/bin/bash -lc "git status --short
+ls -d docs 2>/dev/null
+ls AGENTS.md Lean/AGENTS.md Lean/MOC/AGENTS.md 2>/dev/null
+sed -n '1,145p' Lean/MOC/CircleSpectra.lean
+sed -n '75,180p' Lean/MOC/ContactTransfer.lean
+sed -n '260,307p' Lean/MOC/HouseholderFour.lean
+rg -n 'norm_inv|differentiableAt_inv|def vecMulVec' Lean/MOC | head -25" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 257ms:
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+import MOC.Collinear
+import Mathlib.Tactic.Linarith
+
+/-! Common inversion at tangency takes two signed spectral circles to parallel
+lines. Circle-preserving perturbations handle eigenvalues at the inversion pole. -/
+
+open scoped ComplexConjugate Topology
+
+namespace MOC
+
+noncomputable section
+
+private theorem re_mul_inv_of_circle (u z : ℂ) (hz : z ≠ 0)
+    (h : Complex.normSq (z - u) = Complex.normSq u) :
+    (u * z⁻¹).re = 1 / 2 := by
+  rw [Complex.normSq_sub] at h
+  have hswap : (u * conj z).re = (z * conj u).re := by
+    simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im]
+    ring
+  have hre : (z * conj u).re = Complex.normSq z / 2 := by linarith
+  have hn : Complex.normSq z ≠ 0 := mt Complex.normSq_eq_zero.mp hz
+  rw [Complex.inv_def, ← mul_assoc, Complex.re_mul_ofReal, hswap, hre]
+  field_simp [hn]
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+private theorem holds_of_constant_real_parts (a b : ι → ℂ) (u : ℂ) (hu : u ≠ 0)
+    (s t : ℝ) (ha : ∀ i, (u * a i).re = s) (hb : ∀ i, (u * b i).re = t)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a b U := by
+  have hline (z : ℂ) (r : ℝ) (hr : (u * z).re = r) :
+      u⁻¹ * Complex.I * ((u * z).im : ℂ) + u⁻¹ * (r : ℂ) = z := by
+    calc
+      _ = u⁻¹ * ((r : ℂ) + (u * z).im * Complex.I) := by ring
+      _ = _ := by
+        rw [← hr, Complex.re_add_im, ← mul_assoc, inv_mul_cancel₀ hu, one_mul]
+  have hleft : (fun i => u⁻¹ * Complex.I * ((u * a i).im : ℂ) + u⁻¹ * (s : ℂ)) = a :=
+    funext fun i => hline (a i) s (ha i)
+  have hright : (fun i => u⁻¹ * Complex.I * ((u * b i).im : ℂ) + u⁻¹ * (t : ℂ)) = b :=
+    funext fun i => hline (b i) t (hb i)
+  simpa only [hleft, hright] using
+    holds_of_parallel_affine_lines (fun i => (u * a i).im) (fun i => (u * b i).im)
+      (u⁻¹ * Complex.I) (u⁻¹ * (s : ℂ)) (u⁻¹ * (t : ℂ)) U hU
+
+private theorem holds_of_tangent_circles_at_zero_of_nonzero (a c : ι → ℂ)
+    (u : ℂ) (r : ℝ) (hu : u ≠ 0) (hr : r ≠ 0)
+    (ha : ∀ i, Complex.normSq (a i - u) = Complex.normSq u)
+    (hc : ∀ i, Complex.normSq (c i - (r : ℂ) * u) = Complex.normSq ((r : ℂ) * u))
+    (han : ∀ i, a i ≠ 0) (hcn : ∀ i, c i ≠ 0)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a (fun i => -c i) U := by
+  apply (holds_inv_iff a c U hU han hcn).mp
+  apply holds_of_constant_real_parts _ _ u hu (1 / 2) (-(1 / 2) / r) _ _ U hU
+  · exact fun i => re_mul_inv_of_circle u (a i) (han i) (ha i)
+  · intro i
+    have h := re_mul_inv_of_circle ((r : ℂ) * u) (c i) (hcn i) (hc i)
+    rw [mul_assoc, Complex.re_ofReal_mul] at h
+    rw [mul_neg, Complex.neg_re]
+    apply (eq_div_iff hr).mpr
+    rw [neg_mul, mul_comm _ r, h]
+
+private def circleRotation (t : ℝ) : ℂ :=
+  (1 + (t : ℂ) * Complex.I) / (1 - (t : ℂ) * Complex.I)
+
+private theorem circleRotation_denominator_ne (t : ℝ) :
+    1 - (t : ℂ) * Complex.I ≠ 0 := by
+  intro h
+  simpa [Complex.mul_re] using congrArg Complex.re h
+
+private theorem continuous_circleRotation : Continuous circleRotation := by
+  unfold circleRotation
+  have h : Continuous (fun t : ℝ => (t : ℂ) * Complex.I) :=
+    Complex.continuous_ofReal.mul continuous_const
+  exact (continuous_const.add h).div (continuous_const.sub h) circleRotation_denominator_ne
+
+private theorem circleRotation_normSq (t : ℝ) : Complex.normSq (circleRotation t) = 1 := by
+  have h : Complex.normSq (1 + (t : ℂ) * Complex.I) =
+      Complex.normSq (1 - (t : ℂ) * Complex.I) := by
+    simp [Complex.normSq, Complex.mul_re, Complex.mul_im]
+  rw [circleRotation, Complex.normSq_div, h]
+  exact div_self (mt Complex.normSq_eq_zero.mp (circleRotation_denominator_ne t))
+
+private theorem circleRotation_ne_one {t : ℝ} (ht : t ≠ 0) : circleRotation t ≠ 1 := by
+  intro h
+  have he : 1 + (t : ℂ) * Complex.I = 1 - (t : ℂ) * Complex.I := by
+    simpa only [one_mul] using (div_eq_iff (circleRotation_denominator_ne t)).mp h
+  apply ht
+  have hi := congrArg Complex.im he
+  simp [Complex.mul_im] at hi
+  linarith
+
+private def moveCirclePole (u z : ℂ) (t : ℝ) : ℂ :=
+  if z = 0 then u - circleRotation t * u else z
+
+private theorem continuous_moveCirclePole (u z : ℂ) : Continuous (moveCirclePole u z) := by
+  by_cases hz : z = 0
+  · simpa only [moveCirclePole, hz, if_true] using
+      continuous_const.sub (continuous_circleRotation.mul (continuous_const : Continuous fun _ : ℝ => u))
+  · simpa only [moveCirclePole, hz, if_false] using (continuous_const : Continuous fun _ : ℝ => z)
+
+private theorem moveCirclePole_zero (u z : ℂ) : moveCirclePole u z 0 = z := by
+  by_cases hz : z = 0 <;> simp [moveCirclePole, circleRotation, hz]
+
+private theorem moveCirclePole_normSq (u z : ℂ) (t : ℝ)
+    (h : Complex.normSq (z - u) = Complex.normSq u) :
+    Complex.normSq (moveCirclePole u z t - u) = Complex.normSq u := by
+  by_cases hz : z = 0
+  · have he : moveCirclePole u z t - u = -(circleRotation t * u) := by
+      simp only [moveCirclePole, hz, if_true]
+      ring
+    rw [he, Complex.normSq_neg, Complex.normSq_mul, circleRotation_normSq, one_mul]
+  · simpa only [moveCirclePole, hz, if_false] using h
+
+private theorem moveCirclePole_ne_zero (u z : ℂ) (hu : u ≠ 0) {t : ℝ} (ht : t ≠ 0) :
+    moveCirclePole u z t ≠ 0 := by
+  by_cases hz : z = 0
+  · simp only [moveCirclePole, hz, if_true]
+    intro he
+    apply circleRotation_ne_one ht
+    apply mul_right_cancel₀ hu
+    simpa only [one_mul] using (sub_eq_zero.mp he).symm
+  · simpa only [moveCirclePole, hz, if_false] using hz
+
+private theorem holds_of_tangent_circles_at_zero (a c : ι → ℂ)
+    (u : ℂ) (r : ℝ) (hu : u ≠ 0) (hr : r ≠ 0)
+    (ha : ∀ i, Complex.normSq (a i - u) = Complex.normSq u)
+    (hc : ∀ i, Complex.normSq (c i - (r : ℂ) * u) = Complex.normSq ((r : ℂ) * u))
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a (fun i => -c i) U := by
+  by_contra hfail
+  rw [holds_iff_directional, not_forall] at hfail
+  obtain ⟨k, hk⟩ := hfail
+  push_neg at hk
+  let a' (t : ℝ) (i : ι) := moveCirclePole u (a i) t
+  let c' (t : ℝ) (i : ι) := moveCirclePole ((r : ℂ) * u) (c i) t
+  have ha₀ : a' 0 = a := funext fun i => moveCirclePole_zero u (a i)
+  have hc₀ : c' 0 = c := funext fun i => moveCirclePole_zero ((r : ℂ) * u) (c i)
+  have hca : Continuous a' := continuous_pi fun i => continuous_moveCirclePole u (a i)
+  have hcc : Continuous c' := continuous_pi fun i => continuous_moveCirclePole ((r : ℂ) * u) (c i)
+  have hd : Continuous (fun t => (k * determinantValue (a' t) (fun i => -c' t i) U).re) := by
+    unfold determinantValue
+    fun_prop
+  have hm (σ : Equiv.Perm ι) :
+      Continuous (fun t => (k * matchingProduct (a' t) (fun i => -c' t i) σ).re) := by
+    have hp : Continuous (fun t => matchingProduct (a' t) (fun i => -c' t i) σ) := by
+      unfold matchingProduct
+      apply continuous_finset_prod
+      intro j _
+    have hbound : BddAbove (norm ∘ (f ∘ e.symm) '' (T \ {c})) := by
+      refine ⟨R, ?_⟩
+      rintro _ ⟨z, hz, rfl⟩
+      exact hb _ ((hlocal z hz.1).2 (by simpa only [mem_singleton_iff] using hz.2))
+    have hnhds : 𝓝[e.symm ⁻¹' Sᶜ] c = 𝓝[≠] c := by
+      apply nhdsWithin_eq_iff_eventuallyEq.mpr
+      filter_upwards [hT] with z hz
+      apply propext
+      simpa only [mem_preimage, mem_compl_iff, mem_singleton_iff] using hlocal z hz
+    have hmap : map e.symm (𝓝[≠] c) = 𝓝[Sᶜ] x := by
+      have h := map_extChartAt_symm_nhdsWithin (I := 𝓘(ℂ, ℂ)) (s := Sᶜ) x
+      rw [hrange, inter_univ] at h
+      change map e.symm (𝓝[e.symm ⁻¹' Sᶜ] c) = 𝓝[Sᶜ] x at h
+      rwa [hnhds] at h
+    have hlim :
+        limUnder (𝓝[≠] c) (f ∘ e.symm) = limUnder (𝓝[Sᶜ] x) f := by
+      unfold limUnder
+      rw [← Filter.map_map, hmap]
+    apply (mdifferentiableAt_iff_source_of_mem_source (I := 𝓘(ℂ, ℂ))
+      (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+    rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+    change DifferentiableAt ℂ (F ∘ e.symm) c
+    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)
+      .differentiableAt hT).congr_of_eventuallyEq
+    filter_upwards [hT] with z hz
+    by_cases hzc : z = c
+    · subst z
+      simp only [Function.comp_apply, hcenter, F, if_pos hx, update_self, hlim]
+    · have hzS : e.symm z ∉ S := (hlocal z hz).2 hzc
+      simp only [Function.comp_apply, F, if_neg hzS, update_of_ne hzc]
+  · apply (hf.mdifferentiableAt (hopen.mem_nhds (show x ∈ Sᶜ from hx))).congr_of_eventuallyEq
+    filter_upwards [hopen.mem_nhds (show x ∈ Sᶜ from hx)] with y hy
+    exact if_neg (show y ∉ S from hy)
+
+variable [CompactSpace M] [PreconnectedSpace M]
+
+/-- A holomorphic function on the complement of a finite set in a compact
+connected complex surface cannot be nonconstant and take all its values
+in the closed right half-plane. -/
+theorem eqOn_of_re_nonneg_off_finite {S : Set M} (hS : S.Finite)
+    {f : M → ℂ} (hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ)
+    (hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re) {x y : M} (hx : x ∈ Sᶜ) (hy : y ∈ Sᶜ) :
+    f x = f y := by
+  let g (x : M) := (1 + f x)⁻¹
+  have hopen : IsOpen Sᶜ := hS.isClosed.isOpen_compl
+  have hpos (x : M) (hx : x ∈ Sᶜ) : 1 ≤ (1 + f x).re := by
+    simpa only [Complex.add_re, Complex.one_re, add_zero] using add_le_add_left (hre x hx) 1
+  have hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ := by
+    intro z hz
+    have hn : (1 + f z : ℂ) ≠ 0 := by
+      intro h
+      have h' := hpos z hz
+      rw [h, Complex.zero_re] at h'
+      exact (not_le_of_gt zero_lt_one) h'
+    have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+      (differentiableAt_id.const_add (1 : ℂ)).inv hn
+    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+      .mdifferentiableWithinAt
+  have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+    rw [g, norm_inv]
+    exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+  obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+  have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+  have he' : 1 + f x = 1 + f y := by
+    simpa only [g, inv_inv] using congrArg (fun z : ℂ => z⁻¹) he
+  exact add_left_cancel he'
+
+/-- On a supplied compactified curve, a finite family of initially positive
+gaps acquires a zero while the other gaps stay nonnegative, provided one
+gap function varies on the connected punctured curve. -/
+theorem exists_new_contact_on_curve {ι : Type*} (J : Finset ι) {S : Set M} (hS : S.Finite)
+    (hconn : IsPreconnected Sᶜ) (H : ι → M → ℂ)
+    (hhol : ∀ i ∈ J, MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (H i) Sᶜ)
+    {x₀ : M} (hx₀ : x₀ ∈ Sᶜ) (hstart : ∀ i ∈ J, 0 < (H i x₀).re)
+    (hvar : ∃ i ∈ J, ∃ x ∈ Sᶜ, ∃ y ∈ Sᶜ, H i x ≠ H i y) :
+    ∃ z ∈ Sᶜ, (∀ i ∈ J, 0 ≤ (H i z).re) ∧ ∃ i ∈ J, (H i z).re = 0 := by
+  obtain ⟨i, hi, x, hx, y, hy, hxy⟩ := hvar
+  have hnegative : ∃ w ∈ Sᶜ, (H i w).re < 0 := by
+    by_contra! h
+    exact hxy (eqOn_of_re_nonneg_off_finite hS (hhol i hi) h hx hy)
+  obtain ⟨w, hw, hwi⟩ := hnegative
+  let Jne : J.Nonempty := ⟨i, hi⟩
+  let m (z : M) : ℝ := J.inf' Jne (fun j => (H j z).re)
+  have hm : ContinuousOn m Sᶜ :=
+    ContinuousOn.finset_inf'_apply (f := fun j z => (H j z).re) Jne
+      (fun j hj => Complex.continuous_re.comp_continuousOn (hhol j hj).continuousOn)
+  have hmw : m w < 0 := (Finset.inf'_lt_iff Jne).2 ⟨i, hi, hwi⟩
+  have hm₀ : 0 < m x₀ := (Finset.lt_inf'_iff Jne).2 hstart
+  have hz : (0 : ℝ) ∈ m '' Sᶜ :=
+    (hconn.image _ hm).Icc_subset ⟨w, hw, rfl⟩ ⟨x₀, hx₀, rfl⟩ ⟨hmw.le, hm₀.le⟩
+  obtain ⟨z, hzS, hmz⟩ := hz
+  have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by
+    apply (Finset.le_inf'_iff Jne).1
+    change 0 ≤ m z
+    exact hmz.ge
+  obtain ⟨j, hj, he⟩ := Finset.exists_mem_eq_inf' Jne (fun k => (H k z).re)
+  exact ⟨z, hzS, hzle, j, hj, he.symm.trans hmz⟩
+
+open scoped BigOperators
+
+/-- The spectral contact step preserves every old contact and the strict
+determinant support gap on a supplied compactified deformation curve. -/
+theorem exists_new_matching_contact_on_curve {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {S : Set M} (hS : S.Finite) (hconn : IsPreconnected Sᶜ)
+    (a b : M → ι → ℂ) (U : Matrix ι ι ℂ) (η : ℂ) (r : Equiv.Perm ι)
+    (J : Finset (Equiv.Perm ι))
+    linear_combination h₀ + h₁ + h₂ + h₃
+
+/-- Every rank-one unitary phase change in order four satisfies the determinant
+hull inclusion. -/
+theorem holds_rankOnePhase_four (a b v : Fin 4 → ℂ) (z : ℂ)
+    (hv : ∑ i, star (v i) * v i = 1) (hz : z * star z = 1) :
+    Holds a b (rankOnePhase v z) :=
+  holds_rankOnePhase_of_householder a b v z hv hz (holds_householder_four a b v hv)
+
+/-- The rank-one phase inclusion for any label set of size at most four. -/
+theorem holds_rankOnePhase_of_card_le_four {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (a b v : ι → ℂ) (z : ℂ) (hcard : Fintype.card ι ≤ 4)
+    (hv : ∑ i, star (v i) * v i = 1) (hz : z * star z = 1) :
+    Holds a b (rankOnePhase v z) := by
+  by_cases hsmall : Fintype.card ι ≤ 3
+  · exact conjecture_of_card_le_three hsmall a b (rankOnePhase v z) (rankOnePhase_unitary v z hv hz)
+  have hfour : 4 = Fintype.card ι := by omega
+  let e := (finCongr hfour).trans (Fintype.equivFin ι).symm
+  have hnorm : ∑ i, star ((v ∘ e) i) * (v ∘ e) i = 1 :=
+    (Equiv.sum_comp e (fun i => star (v i) * v i)).trans hv
+  have hsub : (rankOnePhase v z).submatrix e e = rankOnePhase (v ∘ e) z := by
+    ext i j
+    simp [rankOnePhase, Matrix.submatrix_apply, Matrix.one_apply, e.injective.eq_iff]
+  apply (holds_reindex_iff e e a b (rankOnePhase v z)).mp
+  rw [hsub]
+  exact holds_rankOnePhase_four _ _ _ _ hnorm hz
+
+end
+
+end MOC
+Lean/MOC/ContactTransfer.lean:134:    rw [g, norm_inv]
+
+exec
+/bin/bash -lc "rg -n 'theorem MDifferentiableAt.mdifferentiableWithinAt|theorem .*norm_inv|def vecMulVec|theorem le_inf.\\?_iff' Lean/.lake/packages/mathlib/Mathlib/{Geometry,Analysis,Data,Order} | head -30
+ls -ld /tmp/moc-lean-fix-2tc8cj5r/* Lean/.lake Lean/.lake/packages
+rg -n 'def rankOnePhase' Lean/MOC
+ls /home/dell/.agents/skills/maintain-project-knowledge/scripts" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 184ms:
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:131:theorem MDifferentiableAt.mdifferentiableWithinAt (h : MDifferentiableAt I I' f x) :
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean:591:def vecMulVec [Mul α] (w : m → α) (v : n → α) : Matrix m n α :=
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Group/Basic.lean:421:theorem norm_inv' (a : E) : ‖a⁻¹‖ = ‖a‖ := by simpa using norm_div_rev 1 a
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Group/Basic.lean:755:theorem nnnorm_inv' (a : E) : ‖a⁻¹‖₊ = ‖a‖₊ :=
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Field/Basic.lean:70:theorem norm_inv (a : α) : ‖a⁻¹‖ = ‖a‖⁻¹ :=
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Field/Basic.lean:74:theorem nnnorm_inv (a : α) : ‖a⁻¹‖₊ = ‖a‖₊⁻¹ :=
+drwxr-xr-x 7 dell dell 140 Nov 20 15:31 /tmp/moc-lean-fix-2tc8cj5r/after
+drwxr-xr-x 2 dell dell  60 Nov 20 15:31 Lean/.lake
+lrwxrwxrwx 1 dell dell  42 Nov 20 15:31 Lean/.lake/packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+Lean/MOC/Householder.lean:20:def rankOnePhase (v : ι → ℂ) (z : ℂ) : Matrix ι ι ℂ :=
+validate-docs.mjs
+validate-docs.test.mjs
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p = Path('Lean/MOC/CircleSpectra.lean')
+s = p.read_text().replace('  field_simp [hn]\\n', '  field_simp [hn]\\n  ring\\n', 1)
+a = s.index('  by_cases hz : z = 0', s.index('private theorem continuous_moveCirclePole'))
+b = s.index('\\nprivate theorem moveCirclePole_zero', a)
+s = s[:a] + '''  unfold moveCirclePole
+  by_cases hz : z = 0
+  · simp only [if_pos hz]
+    exact continuous_const.sub (continuous_circleRotation.mul continuous_const)
+  · simp only [if_neg hz]
+    exact continuous_const
+''' + s[b:]
+s = s.replace('  · simpa only [moveCirclePole, hz, if_false] using hz', '  · simpa only [moveCirclePole, if_neg hz] using hz')
+p.write_text(s)
+p = Path('Lean/MOC/ContactTransfer.lean')
+s = p.read_text().replace('hT hd hbound)\\n      .differentiableAt hT)', 'hT hd hbound).differentiableAt hT)').replace(')))\\n      .mdifferentiableWithinAt', '))).mdifferentiableWithinAt').replace('    rw [g, norm_inv]', '    change ‖(1 + f z)⁻¹‖ ≤ 1\\n    rw [norm_inv]').replace(\"  have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by\\n    apply (Finset.le_inf'_iff Jne).1\\n    change 0 ≤ m z\\n    exact hmz.ge\", \"  have hzle : ∀ j ∈ J, 0 ≤ (H j z).re :=\\n    (Finset.le_inf'_iff Jne (fun j => (H j z).re)).1 hmz.ge\")
+p.write_text(s)
+p = Path('Lean/MOC/HouseholderFour.lean')
+s = p.read_text().replace('Matrix.one_apply, e.injective.eq_iff]', 'Matrix.one_apply, e.injective.eq_iff, Matrix.vecMulVec, Function.comp_apply]')
+p.write_text(s)
+PY
+cd Lean
+lake --no-cache build MOC.CircleSpectra MOC.ContactTransfer MOC.HouseholderFour > /tmp/moc-lean-build.log 2>&1" in /tmp/moc-lean-fix-2tc8cj5r/after
+exec
+/bin/bash -lc "tail -25 /tmp/moc-lean-build.log
+ls -la Lean/.lake
+ls -a
+sed -n '94,102p;126,138p' Lean/MOC/ContactTransfer.lean
+node /home/dell/.agents/skills/maintain-project-knowledge/scripts/validate-docs.mjs" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 1873ms:
+✔ [2681/2698] Built MOC.Core
+total 0
+drwxr-xr-x 3 dell dell  80 Nov 20 15:31 .
+drwxr-xr-x 4 dell dell 160 Nov 20 15:31 ..
+drwxr-xr-x 4 dell dell  80 Nov 20 15:31 build
+lrwxrwxrwx 1 dell dell  42 Nov 20 15:31 packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+.
+..
+.agents
+.aws
+.codex
+.git
+Lean
+      (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+    rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+    change DifferentiableAt ℂ (F ∘ e.symm) c
+    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound).differentiableAt hT).congr_of_eventuallyEq
+    filter_upwards [hT] with z hz
+    by_cases hzc : z = c
+    · subst z
+      simp only [Function.comp_apply, hcenter, F, if_pos hx, update_self, hlim]
+    · have hzS : e.symm z ∉ S := (hlocal z hz).2 hzc
+      rw [h, Complex.zero_re] at h'
+      exact (not_le_of_gt zero_lt_one) h'
+    have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+      (differentiableAt_id.const_add (1 : ℂ)).inv hn
+    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz))).mdifferentiableWithinAt
+  have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+    change ‖(1 + f z)⁻¹‖ ≤ 1
+    rw [norm_inv]
+    exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+  obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+  have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+  have he' : 1 + f x = 1 + f y := by
+    simpa only [g, inv_inv] using congrArg (fun z : ℂ => z⁻¹) he
+Validated core documents: 0 (0 words); references: 0; evidence files: 0.
+Index coverage, internal links, core limits, reference contracts, and evidence ownership are valid.
+
+exec
+/bin/bash -lc 'tail -30 /tmp/moc-lean-build.log
+ls -la .git
+ls -la /tmp/moc-lean-fix-2tc8cj5r' in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 8240ms:
+✔ [2681/2698] Built MOC.Core
+✔ [2682/2698] Built MOC.Weights
+total 0
+dr-xr-xr-x 2 dell dell  40 Nov 20 15:32 .
+drwxr-xr-x 7 dell dell 140 Nov 20 15:31 ..
+total 0
+drwx------  3 dell  dell    60 Nov 20 15:31 .
+drwxrwxrwt 70 65534 65534 4980 Nov 20 15:32 ..
+drwxr-xr-x  7 dell  dell   140 Nov 20 15:31 after
+
+exec
+/bin/bash -lc "rg -n 'differentiableOn_update_limUnder_of_bddAbove|le_inf.\\x27?_iff|inv_le_one_of_one_le₀' Lean/.lake/packages/mathlib/Mathlib/{Analysis,Data,Algebra} | head -25
+tail -25 /tmp/moc-lean-build.log
+rg -n '"'^(private )?(theorem|lemma)|''^import'"' Lean/MOC/{CircleSpectra,ContactTransfer,HouseholderFour}.lean" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 1506ms:
+Lean/.lake/packages/mathlib/Mathlib/Data/Int/Log.lean:204:    · rw [clog_of_right_le_one _ (inv_le_one_of_one_le₀ hr), log_of_one_le_right _ hr, inv_inv]
+Lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Stirling.lean:110:    exact inv_le_one_of_one_le₀ (le_add_of_nonneg_left <| by positivity)
+Lean/.lake/packages/mathlib/Mathlib/Data/Nat/Cast/Order/Field.lean:25:  | n + 1 => inv_le_one_of_one_le₀ <| by simp [Nat.cast_nonneg]
+Lean/.lake/packages/mathlib/Mathlib/Analysis/LocallyConvex/BalancedCoreHull.lean:188:  exact inv_le_one_of_one_le₀ hr
+Lean/.lake/packages/mathlib/Mathlib/Analysis/LocallyConvex/BalancedCoreHull.lean:206:  exact inv_le_one_of_one_le₀ ha
+Lean/.lake/packages/mathlib/Mathlib/Data/Finset/NAry.lean:551:  rw [le_inf'_iff, forall_mem_image₂]
+Lean/.lake/packages/mathlib/Mathlib/Data/Finset/Lattice/Fold.lean:861:theorem le_inf'_iff {a : α} : a ≤ s.inf' H f ↔ ∀ b ∈ s, a ≤ f b :=
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Complex/RemovableSingularity.lean:97:theorem differentiableOn_update_limUnder_of_bddAbove {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Convex/Basic.lean:525:    ⟨inv_nonneg.2 (zero_le_one.trans ht), inv_le_one_of_one_le₀ ht⟩
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Convex/Between.lean:633:      refine ⟨r⁻¹, ⟨inv_nonneg.2 (zero_le_one.trans hr), inv_le_one_of_one_le₀ hr⟩, ?_⟩
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Calculus/ContDiff/Bounds.lean:452:      apply inv_le_one_of_one_le₀
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Convex/Star.lean:409:  exact hs.smul_mem hx (by positivity) (inv_le_one_of_one_le₀ ht)
+Lean/.lake/packages/mathlib/Mathlib/Algebra/Order/Archimedean/Basic.lean:339:          exists_pow_btwn_of_lt_mul this (inv_pos_of_pos ha) (inv_le_one_of_one_le₀ ha₁) hc₀ hc₁
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Complex/Periodic.lean:192:  have := differentiableOn_update_limUnder_of_bddAbove (IsOpen.mem_nhds hS2 hS3) h_diff hF_bd
+Lean/.lake/packages/mathlib/Mathlib/Algebra/Order/GroupWithZero/Unbundled/Basic.lean:898:lemma inv_le_one_of_one_le₀ (ha : 1 ≤ a) : a⁻¹ ≤ 1 :=
+✔ [2681/2698] Built MOC.Core
+✔ [2682/2698] Built MOC.Weights
+✔ [2683/2698] Built MOC.PhaseMove
+✔ [2684/2698] Built MOC.Blocks
+✔ [2685/2698] Built MOC.Support
+⚠ [2686/2698] Built MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2687/2698] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2688/2698] Built MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Lean/MOC/HouseholderFour.lean:1:import MOC.Householder
+Lean/MOC/HouseholderFour.lean:2:import MOC.HouseholderPacking
+Lean/MOC/HouseholderFour.lean:3:import MOC.Small
+Lean/MOC/HouseholderFour.lean:4:import Mathlib.Tactic.FinCases
+Lean/MOC/HouseholderFour.lean:28:private theorem prod_pair_complement (i j : Fin 4) (hij : i ≠ j) (f : Fin 4 → ℂ) :
+Lean/MOC/HouseholderFour.lean:34:private theorem det_four_rank_one_sum (A B C D : Matrix (Fin 2) (Fin 2) ℂ)
+Lean/MOC/HouseholderFour.lean:45:private theorem determinantValue_householder_four_regular (a b v : Fin 4 → ℂ)
+Lean/MOC/HouseholderFour.lean:104:private theorem determinantValue_householder_four (a b v : Fin 4 → ℂ)
+Lean/MOC/HouseholderFour.lean:144:private theorem matchingProduct_threeCycle_sum
+Lean/MOC/HouseholderFour.lean:189:private theorem matchingProduct_fourCycle_sum (a b : Fin 4 → ℂ) (i : Fin 4) :
+Lean/MOC/HouseholderFour.lean:202:theorem holds_householder_four (a b v : Fin 4 → ℂ) (hv : ∑ i, star (v i) * v i = 1) :
+Lean/MOC/HouseholderFour.lean:264:theorem holds_rankOnePhase_four (a b v : Fin 4 → ℂ) (z : ℂ)
+Lean/MOC/HouseholderFour.lean:270:theorem holds_rankOnePhase_of_card_le_four {ι : Type*} [Fintype ι] [DecidableEq ι]
+Lean/MOC/CircleSpectra.lean:1:import MOC.Collinear
+Lean/MOC/CircleSpectra.lean:2:import Mathlib.Tactic.Linarith
+Lean/MOC/CircleSpectra.lean:13:private theorem re_mul_inv_of_circle (u z : ℂ) (hz : z ≠ 0)
+Lean/MOC/CircleSpectra.lean:28:private theorem holds_of_constant_real_parts (a b : ι → ℂ) (u : ℂ) (hu : u ≠ 0)
+Lean/MOC/CircleSpectra.lean:45:private theorem holds_of_tangent_circles_at_zero_of_nonzero (a c : ι → ℂ)
+Lean/MOC/CircleSpectra.lean:64:private theorem circleRotation_denominator_ne (t : ℝ) :
+Lean/MOC/CircleSpectra.lean:69:private theorem continuous_circleRotation : Continuous circleRotation := by
+Lean/MOC/CircleSpectra.lean:75:private theorem circleRotation_normSq (t : ℝ) : Complex.normSq (circleRotation t) = 1 := by
+Lean/MOC/CircleSpectra.lean:82:private theorem circleRotation_ne_one {t : ℝ} (ht : t ≠ 0) : circleRotation t ≠ 1 := by
+Lean/MOC/CircleSpectra.lean:94:private theorem continuous_moveCirclePole (u z : ℂ) : Continuous (moveCirclePole u z) := by
+Lean/MOC/CircleSpectra.lean:102:private theorem moveCirclePole_zero (u z : ℂ) : moveCirclePole u z 0 = z := by
+Lean/MOC/CircleSpectra.lean:105:private theorem moveCirclePole_normSq (u z : ℂ) (t : ℝ)
+Lean/MOC/CircleSpectra.lean:115:private theorem moveCirclePole_ne_zero (u z : ℂ) (hu : u ≠ 0) {t : ℝ} (ht : t ≠ 0) :
+Lean/MOC/CircleSpectra.lean:125:private theorem holds_of_tangent_circles_at_zero (a c : ι → ℂ)
+Lean/MOC/CircleSpectra.lean:172:theorem holds_of_tangent_circles (a b : ι → ℂ) (p u : ℂ) (r : ℝ)
+Lean/MOC/ContactTransfer.lean:1:import MOC.Support
+Lean/MOC/ContactTransfer.lean:2:import Mathlib.Analysis.Complex.RemovableSingularity
+Lean/MOC/ContactTransfer.lean:3:import Mathlib.Geometry.Manifold.Complex
+Lean/MOC/ContactTransfer.lean:4:import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
+Lean/MOC/ContactTransfer.lean:5:import Mathlib.Topology.Order.IntermediateValue
+Lean/MOC/ContactTransfer.lean:6:import Mathlib.Topology.Order.Lattice
+Lean/MOC/ContactTransfer.lean:24:theorem exists_holomorphic_extension_off_finite {S : Set M} (hS : S.Finite)
+Lean/MOC/ContactTransfer.lean:113:theorem eqOn_of_re_nonneg_off_finite {S : Set M} (hS : S.Finite)
+Lean/MOC/ContactTransfer.lean:144:theorem exists_new_contact_on_curve {ι : Type*} (J : Finset ι) {S : Set M} (hS : S.Finite)
+Lean/MOC/ContactTransfer.lean:174:theorem exists_new_matching_contact_on_curve {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+exec
+/bin/bash -lc "rg 'error:|Built MOC\\.(CircleSpectra|ContactTransfer|HouseholderFour)|Build completed' /tmp/moc-lean-build.log
+tail -8 /tmp/moc-lean-build.log" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 2432ms:
+✔ [2692/2698] Built MOC.ContactTransfer
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2689/2698] Built MOC.Small
+✔ [2690/2698] Built MOC.Jacobi
+✔ [2691/2698] Built MOC.Geometry
+✔ [2692/2698] Built MOC.ContactTransfer
+
+codex
+`MOC.ContactTransfer` has built successfully. Lake is still checking the other two modules and their dependencies.
+exec
+/bin/bash -lc "tail -24 /tmp/moc-lean-build.log
+rg -n 'sorry|admit|"'^axiom |''^unsafe '"' Lean/MOC/{CircleSpectra,ContactTransfer,HouseholderFour}.lean" in /tmp/moc-lean-fix-2tc8cj5r/after
+ exited 1 in 291ms:
+✔ [2682/2698] Built MOC.Weights
+✔ [2683/2698] Built MOC.PhaseMove
+✔ [2684/2698] Built MOC.Blocks
+✔ [2685/2698] Built MOC.Support
+⚠ [2686/2698] Built MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2687/2698] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2688/2698] Built MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2689/2698] Built MOC.Small
+✔ [2690/2698] Built MOC.Jacobi
+✔ [2691/2698] Built MOC.Geometry
+✔ [2692/2698] Built MOC.ContactTransfer
+✔ [2693/2698] Built MOC.Variational
+
+exec
+/bin/bash -lc "cat Lean/MOC.lean
+rg -n 'Checked .*safe|propext|sorryAx' Lean/MOC --glob '*.lean' | head -25
+tail -10 /tmp/moc-lean-build.log" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 857ms:
+import MOC.Claim
+import MOC.ContactRectangle
+import MOC.MixedBound
+import MOC.Obstruction
+import MOC.PhaseMove
+import MOC.RankSum
+import MOC.Source
+
+open Lean Elab Command in
+run_cmd do
+  let env ← getEnv
+  let allowed := #[`propext, `Classical.choice, `Quot.sound]
+  let mut count := 0
+  for (name, declaration) in env.constants.toList do
+    let some idx := env.getModuleIdxFor? name | continue
+    unless (`MOC).isPrefixOf env.allImportedModuleNames[idx.toNat]! do continue
+    -- Code generation adds unsafe auxiliary declarations to the imported environment.
+    if declaration.isUnsafe then continue
+    count := count + 1
+    let extra := (← collectAxioms name).filter fun a => !allowed.contains a
+    unless extra.isEmpty do
+      throwError "{name} depends on unapproved axioms {extra}"
+  if count == 0 then
+    throwError "The MOC axiom audit found no declarations"
+  logInfo m!"Checked {count} safe MOC declarations against the standard Lean axioms"
+Lean/MOC/ContactTransfer.lean:82:      apply propext
+warning: ././././MOC/HouseholderFour.lean:61:33: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:79:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:82:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:89:96: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:249:59: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+
+ succeeded in 71479ms:
+exec
+/bin/bash -lc "rg 'error:|Built MOC\\.(CircleSpectra|ContactTransfer|HouseholderFour)|Build completed' /tmp/moc-lean-build.log" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 128ms:
+✔ [2692/2698] Built MOC.ContactTransfer
+⚠ [2695/2698] Built MOC.HouseholderFour
+✔ [2698/2698] Built MOC.CircleSpectra
+Build completed successfully.
+
+2026-11-20T20:33:07.728571Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`/bin/bash -lc 'audit_file=$(mktemp /tmp/moc-axiom-audit-XXXXXX.lean)\\ntrap '\\\"'rm -f \\\\\\\"\\\"'$audit_file\\\"'\\\"' EXIT\\n{\\n  printf '%s\\\\\\\\n' 'import MOC.CircleSpectra' 'import MOC.ContactTransfer' 'import MOC.HouseholderFour'\\n  sed -n '/\\\"'^open Lean Elab Command in/,$p'\\\"' MOC.lean\\n} > \\\\\\\"\\\"'$audit_file\\\"\\nlake env lean \\\"$audit_file\\\"'` rejected: rm -f style commands are not permitted. Use a safer approach\")" }
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+import subprocess
+import tempfile
+policy = Path('MOC.lean').read_text().split('open Lean Elab Command in', 1)[1]
+with tempfile.TemporaryDirectory(prefix='moc-axiom-audit-') as folder:
+    audit = Path(folder) / 'Audit.lean'
+    audit.write_text('import MOC.CircleSpectra\\nimport MOC.ContactTransfer\\nimport MOC.HouseholderFour\\n\\nopen Lean Elab Command in' + policy)
+    subprocess.run(['lake', 'env', 'lean', str(audit)], check=True)
+PY" in /tmp/moc-lean-fix-2tc8cj5r/after/Lean
+codex
+All three modules built successfully. I’m running the project’s existing axiom audit with the repaired modules imported.
+exec
+/bin/bash -lc "ps -eo pid,etimes,time,stat,args | rg 'Audit\\.lean|moc-axiom'" in /tmp/moc-lean-fix-2tc8cj5r/after
+ succeeded in 149ms:
+      1       0 00:00:00 S<s  codex-linux-sandbox --sandbox-policy-cwd /tmp/moc-lean-fix-2tc8cj5r/after --command-cwd /tmp/moc-lean-fix-2tc8cj5r/after --permission-profile {"type":"managed","file_system":{"type":"restricted","entries":[{"path":{"type":"special","value":{"kind":"root"}},"access":"read"},{"path":{"type":"path","path":"/tmp/moc-lean-fix-2tc8cj5r/after"},"access":"write"},{"path":{"type":"special","value":{"kind":"slash_tmp"}},"access":"write"},{"path":{"type":"special","value":{"kind":"tmpdir"}},"access":"write"},{"path":{"type":"path","path":"/tmp/moc-lean-fix-2tc8cj5r/after/.git"},"access":"read","missing_path_behavior":"skip"},{"path":{"type":"path","path":"/tmp/moc-lean-fix-2tc8cj5r/after/.agents"},"access":"read","missing_path_behavior":"skip"},{"path":{"type":"path","path":"/tmp/moc-lean-fix-2tc8cj5r/after/.codex"},"access":"read","missing_path_behavior":"skip"},{"path":{"type":"path","path":"/tmp/moc-lean-fix-2tc8cj5r/after/.aws"},"access":"read","missing_path_behavior":"skip"}]},"network":"restricted"} --apply-seccomp-then-exec -- /bin/bash -c __CODEX_SNAPSHOT_OVERRIDE_SET_0="${CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS+x}" __CODEX_SNAPSHOT_OVERRIDE_0="${CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS-}" __CODEX_SNAPSHOT_OVERRIDE_SET_1="${CODEX_PERMISSION_PROFILE+x}" __CODEX_SNAPSHOT_OVERRIDE_1="${CODEX_PERMISSION_PROFILE-}" __CODEX_SNAPSHOT_OVERRIDE_SET_2="${CODEX_PLUGIN_METRICS_OUTPUT+x}" __CODEX_SNAPSHOT_OVERRIDE_2="${CODEX_PLUGIN_METRICS_OUTPUT-}" __CODEX_SNAPSHOT_OVERRIDE_SET_3="${CODEX_SESSION_ID+x}" __CODEX_SNAPSHOT_OVERRIDE_3="${CODEX_SESSION_ID-}" __CODEX_SNAPSHOT_OVERRIDE_SET_4="${CODEX_THREAD_ID+x}" __CODEX_SNAPSHOT_OVERRIDE_4="${CODEX_THREAD_ID-}" __CODEX_SNAPSHOT_OVERRIDE_SET_5="${CODEX_TOOL_CALL_ID+x}" __CODEX_SNAPSHOT_OVERRIDE_5="${CODEX_TOOL_CALL_ID-}" __CODEX_SNAPSHOT_OVERRIDE_SET_6="${CODEX_VERSION+x}" __CODEX_SNAPSHOT_OVERRIDE_6="${CODEX_VERSION-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_0="${ALL_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_0="${ALL_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_1="${BUNDLE_HTTPS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_1="${BUNDLE_HTTPS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_2="${BUNDLE_HTTP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_2="${BUNDLE_HTTP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_3="${BUNDLE_NO_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_3="${BUNDLE_NO_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_4="${BUNDLE_SSL_CA_CERT+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_4="${BUNDLE_SSL_CA_CERT-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_5="${CARGO_HTTP_CAINFO+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_5="${CARGO_HTTP_CAINFO-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_6="${CODEX_CA_CERTIFICATE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_6="${CODEX_CA_CERTIFICATE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_7="${CODEX_NETWORK_ALLOW_LOCAL_BINDING+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_7="${CODEX_NETWORK_ALLOW_LOCAL_BINDING-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_8="${CODEX_NETWORK_PROXY_ACTIVE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_8="${CODEX_NETWORK_PROXY_ACTIVE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_9="${CODEX_NETWORK_PROXY_ATTRIBUTION+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_9="${CODEX_NETWORK_PROXY_ATTRIBUTION-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_10="${CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_10="${CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_11="${CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_11="${CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_12="${CURL_CA_BUNDLE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_12="${CURL_CA_BUNDLE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_13="${DOCKER_HTTPS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_13="${DOCKER_HTTPS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_14="${DOCKER_HTTP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_14="${DOCKER_HTTP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_15="${ELECTRON_GET_USE_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_15="${ELECTRON_GET_USE_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_16="${FTP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_16="${FTP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_17="${GIT_SSL_CAINFO+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_17="${GIT_SSL_CAINFO-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_18="${HTTPS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_18="${HTTPS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_19="${HTTP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_19="${HTTP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_20="${NODE_EXTRA_CA_CERTS+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_20="${NODE_EXTRA_CA_CERTS-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_21="${NODE_USE_ENV_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_21="${NODE_USE_ENV_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_22="${NO_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_22="${NO_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_23="${NPM_CONFIG_CAFILE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_23="${NPM_CONFIG_CAFILE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_24="${NPM_CONFIG_HTTPS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_24="${NPM_CONFIG_HTTPS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_25="${NPM_CONFIG_HTTP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_25="${NPM_CONFIG_HTTP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_26="${NPM_CONFIG_NOPROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_26="${NPM_CONFIG_NOPROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_27="${NPM_CONFIG_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_27="${NPM_CONFIG_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_28="${PIP_CERT+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_28="${PIP_CERT-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_29="${PIP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_29="${PIP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_30="${REQUESTS_CA_BUNDLE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_30="${REQUESTS_CA_BUNDLE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_31="${SSL_CERT_FILE+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_31="${SSL_CERT_FILE-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_32="${WSS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_32="${WSS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_33="${WS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_33="${WS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_34="${YARN_HTTPS_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_34="${YARN_HTTPS_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_35="${YARN_HTTP_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_35="${YARN_HTTP_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_36="${YARN_NO_PROXY+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_36="${YARN_NO_PROXY-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_37="${all_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_37="${all_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_38="${ftp_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_38="${ftp_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_39="${http_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_39="${http_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_40="${https_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_40="${https_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_41="${no_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_41="${no_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_42="${npm_config_cafile+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_42="${npm_config_cafile-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_43="${npm_config_http_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_43="${npm_config_http_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_44="${npm_config_https_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_44="${npm_config_https_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_45="${npm_config_noproxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_45="${npm_config_noproxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_46="${npm_config_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_46="${npm_config_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_47="${ws_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_47="${ws_proxy-}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_48="${wss_proxy+x}" __CODEX_SNAPSHOT_PROXY_OVERRIDE_48="${wss_proxy-}" __CODEX_SNAPSHOT_PROXY_ENV_SET="${CODEX_NETWORK_PROXY_ACTIVE+x}"  if . '/home/dell/.codex/shell_snapshots/01a1faa7-ec75-78f2-9189-ffe31a2db1c6.1795206671972461508.sh' >/dev/null 2>&1; then :; fi  if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_0}" ]; then   if [ -z "${CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS+x}" ] || [ "${CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS-}" != "${__CODEX_SNAPSHOT_OVERRIDE_0}" ]; then export CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS="${__CODEX_SNAPSHOT_OVERRIDE_0}"; else export CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS; fi else builtin unset CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS 2>/dev/null || command unset CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_0 __CODEX_SNAPSHOT_OVERRIDE_0 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_0 __CODEX_SNAPSHOT_OVERRIDE_0 if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_1}" ]; then   if [ -z "${CODEX_PERMISSION_PROFILE+x}" ] || [ "${CODEX_PERMISSION_PROFILE-}" != "${__CODEX_SNAPSHOT_OVERRIDE_1}" ]; then export CODEX_PERMISSION_PROFILE="${__CODEX_SNAPSHOT_OVERRIDE_1}"; else export CODEX_PERMISSION_PROFILE; fi else builtin unset CODEX_PERMISSION_PROFILE 2>/dev/null || command unset CODEX_PERMISSION_PROFILE; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_1 __CODEX_SNAPSHOT_OVERRIDE_1 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_1 __CODEX_SNAPSHOT_OVERRIDE_1 if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_2}" ]; then   if [ -z "${CODEX_PLUGIN_METRICS_OUTPUT+x}" ] || [ "${CODEX_PLUGIN_METRICS_OUTPUT-}" != "${__CODEX_SNAPSHOT_OVERRIDE_2}" ]; then export CODEX_PLUGIN_METRICS_OUTPUT="${__CODEX_SNAPSHOT_OVERRIDE_2}"; else export CODEX_PLUGIN_METRICS_OUTPUT; fi else builtin unset CODEX_PLUGIN_METRICS_OUTPUT 2>/dev/null || command unset CODEX_PLUGIN_METRICS_OUTPUT; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_2 __CODEX_SNAPSHOT_OVERRIDE_2 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_2 __CODEX_SNAPSHOT_OVERRIDE_2 if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_3}" ]; then   if [ -z "${CODEX_SESSION_ID+x}" ] || [ "${CODEX_SESSION_ID-}" != "${__CODEX_SNAPSHOT_OVERRIDE_3}" ]; then export CODEX_SESSION_ID="${__CODEX_SNAPSHOT_OVERRIDE_3}"; else export CODEX_SESSION_ID; fi else builtin unset CODEX_SESSION_ID 2>/dev/null || command unset CODEX_SESSION_ID; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_3 __CODEX_SNAPSHOT_OVERRIDE_3 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_3 __CODEX_SNAPSHOT_OVERRIDE_3 if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_4}" ]; then   if [ -z "${CODEX_THREAD_ID+x}" ] || [ "${CODEX_THREAD_ID-}" != "${__CODEX_SNAPSHOT_OVERRIDE_4}" ]; then export CODEX_THREAD_ID="${__CODEX_SNAPSHOT_OVERRIDE_4}"; else export CODEX_THREAD_ID; fi else builtin unset CODEX_THREAD_ID 2>/dev/null || command unset CODEX_THREAD_ID; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_4 __CODEX_SNAPSHOT_OVERRIDE_4 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_4 __CODEX_SNAPSHOT_OVERRIDE_4 if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_5}" ]; then   if [ -z "${CODEX_TOOL_CALL_ID+x}" ] || [ "${CODEX_TOOL_CALL_ID-}" != "${__CODEX_SNAPSHOT_OVERRIDE_5}" ]; then export CODEX_TOOL_CALL_ID="${__CODEX_SNAPSHOT_OVERRIDE_5}"; else export CODEX_TOOL_CALL_ID; fi else builtin unset CODEX_TOOL_CALL_ID 2>/dev/null || command unset CODEX_TOOL_CALL_ID; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_5 __CODEX_SNAPSHOT_OVERRIDE_5 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_5 __CODEX_SNAPSHOT_OVERRIDE_5 if [ -n "${__CODEX_SNAPSHOT_OVERRIDE_SET_6}" ]; then   if [ -z "${CODEX_VERSION+x}" ] || [ "${CODEX_VERSION-}" != "${__CODEX_SNAPSHOT_OVERRIDE_6}" ]; then export CODEX_VERSION="${__CODEX_SNAPSHOT_OVERRIDE_6}"; else export CODEX_VERSION; fi else builtin unset CODEX_VERSION 2>/dev/null || command unset CODEX_VERSION; fi builtin unset __CODEX_SNAPSHOT_OVERRIDE_SET_6 __CODEX_SNAPSHOT_OVERRIDE_6 2>/dev/null || command unset __CODEX_SNAPSHOT_OVERRIDE_SET_6 __CODEX_SNAPSHOT_OVERRIDE_6 if [ -n "$__CODEX_SNAPSHOT_PROXY_ENV_SET" ] || [ -n "${CODEX_NETWORK_PROXY_ACTIVE+x}" ]; then if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_0}" ]; then   if [ -z "${ALL_PROXY+x}" ] || [ "${ALL_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_0}" ]; then export ALL_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_0}"; else export ALL_PROXY; fi else builtin unset ALL_PROXY 2>/dev/null || command unset ALL_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_0 __CODEX_SNAPSHOT_PROXY_OVERRIDE_0 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_0 __CODEX_SNAPSHOT_PROXY_OVERRIDE_0 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_1}" ]; then   if [ -z "${BUNDLE_HTTPS_PROXY+x}" ] || [ "${BUNDLE_HTTPS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_1}" ]; then export BUNDLE_HTTPS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_1}"; else export BUNDLE_HTTPS_PROXY; fi else builtin unset BUNDLE_HTTPS_PROXY 2>/dev/null || command unset BUNDLE_HTTPS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_1 __CODEX_SNAPSHOT_PROXY_OVERRIDE_1 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_1 __CODEX_SNAPSHOT_PROXY_OVERRIDE_1 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_2}" ]; then   if [ -z "${BUNDLE_HTTP_PROXY+x}" ] || [ "${BUNDLE_HTTP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_2}" ]; then export BUNDLE_HTTP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_2}"; else export BUNDLE_HTTP_PROXY; fi else builtin unset BUNDLE_HTTP_PROXY 2>/dev/null || command unset BUNDLE_HTTP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_2 __CODEX_SNAPSHOT_PROXY_OVERRIDE_2 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_2 __CODEX_SNAPSHOT_PROXY_OVERRIDE_2 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_3}" ]; then   if [ -z "${BUNDLE_NO_PROXY+x}" ] || [ "${BUNDLE_NO_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_3}" ]; then export BUNDLE_NO_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_3}"; else export BUNDLE_NO_PROXY; fi else builtin unset BUNDLE_NO_PROXY 2>/dev/null || command unset BUNDLE_NO_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_3 __CODEX_SNAPSHOT_PROXY_OVERRIDE_3 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_3 __CODEX_SNAPSHOT_PROXY_OVERRIDE_3 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_4}" ]; then   if [ -z "${BUNDLE_SSL_CA_CERT+x}" ] || [ "${BUNDLE_SSL_CA_CERT-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_4}" ]; then export BUNDLE_SSL_CA_CERT="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_4}"; else export BUNDLE_SSL_CA_CERT; fi else builtin unset BUNDLE_SSL_CA_CERT 2>/dev/null || command unset BUNDLE_SSL_CA_CERT; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_4 __CODEX_SNAPSHOT_PROXY_OVERRIDE_4 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_4 __CODEX_SNAPSHOT_PROXY_OVERRIDE_4 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_5}" ]; then   if [ -z "${CARGO_HTTP_CAINFO+x}" ] || [ "${CARGO_HTTP_CAINFO-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_5}" ]; then export CARGO_HTTP_CAINFO="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_5}"; else export CARGO_HTTP_CAINFO; fi else builtin unset CARGO_HTTP_CAINFO 2>/dev/null || command unset CARGO_HTTP_CAINFO; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_5 __CODEX_SNAPSHOT_PROXY_OVERRIDE_5 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_5 __CODEX_SNAPSHOT_PROXY_OVERRIDE_5 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_6}" ]; then   if [ -z "${CODEX_CA_CERTIFICATE+x}" ] || [ "${CODEX_CA_CERTIFICATE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_6}" ]; then export CODEX_CA_CERTIFICATE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_6}"; else export CODEX_CA_CERTIFICATE; fi else builtin unset CODEX_CA_CERTIFICATE 2>/dev/null || command unset CODEX_CA_CERTIFICATE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_6 __CODEX_SNAPSHOT_PROXY_OVERRIDE_6 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_6 __CODEX_SNAPSHOT_PROXY_OVERRIDE_6 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_7}" ]; then   if [ -z "${CODEX_NETWORK_ALLOW_LOCAL_BINDING+x}" ] || [ "${CODEX_NETWORK_ALLOW_LOCAL_BINDING-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_7}" ]; then export CODEX_NETWORK_ALLOW_LOCAL_BINDING="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_7}"; else export CODEX_NETWORK_ALLOW_LOCAL_BINDING; fi else builtin unset CODEX_NETWORK_ALLOW_LOCAL_BINDING 2>/dev/null || command unset CODEX_NETWORK_ALLOW_LOCAL_BINDING; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_7 __CODEX_SNAPSHOT_PROXY_OVERRIDE_7 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_7 __CODEX_SNAPSHOT_PROXY_OVERRIDE_7 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_8}" ]; then   if [ -z "${CODEX_NETWORK_PROXY_ACTIVE+x}" ] || [ "${CODEX_NETWORK_PROXY_ACTIVE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_8}" ]; then export CODEX_NETWORK_PROXY_ACTIVE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_8}"; else export CODEX_NETWORK_PROXY_ACTIVE; fi else builtin unset CODEX_NETWORK_PROXY_ACTIVE 2>/dev/null || command unset CODEX_NETWORK_PROXY_ACTIVE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_8 __CODEX_SNAPSHOT_PROXY_OVERRIDE_8 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_8 __CODEX_SNAPSHOT_PROXY_OVERRIDE_8 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_9}" ]; then   if [ -z "${CODEX_NETWORK_PROXY_ATTRIBUTION+x}" ] || [ "${CODEX_NETWORK_PROXY_ATTRIBUTION-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_9}" ]; then export CODEX_NETWORK_PROXY_ATTRIBUTION="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_9}"; else export CODEX_NETWORK_PROXY_ATTRIBUTION; fi else builtin unset CODEX_NETWORK_PROXY_ATTRIBUTION 2>/dev/null || command unset CODEX_NETWORK_PROXY_ATTRIBUTION; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_9 __CODEX_SNAPSHOT_PROXY_OVERRIDE_9 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_9 __CODEX_SNAPSHOT_PROXY_OVERRIDE_9 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_10}" ]; then   if [ -z "${CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS+x}" ] || [ "${CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_10}" ]; then export CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_10}"; else export CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS; fi else builtin unset CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS 2>/dev/null || command unset CODEX_NETWORK_PROXY_BROKERED_CREDENTIALS; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_10 __CODEX_SNAPSHOT_PROXY_OVERRIDE_10 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_10 __CODEX_SNAPSHOT_PROXY_OVERRIDE_10 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_11}" ]; then   if [ -z "${CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE+x}" ] || [ "${CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_11}" ]; then export CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_11}"; else export CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE; fi else builtin unset CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE 2>/dev/null || command unset CODEX_NETWORK_PROXY_CREDENTIAL_BROKER_ACTIVE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_11 __CODEX_SNAPSHOT_PROXY_OVERRIDE_11 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_11 __CODEX_SNAPSHOT_PROXY_OVERRIDE_11 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_12}" ]; then   if [ -z "${CURL_CA_BUNDLE+x}" ] || [ "${CURL_CA_BUNDLE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_12}" ]; then export CURL_CA_BUNDLE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_12}"; else export CURL_CA_BUNDLE; fi else builtin unset CURL_CA_BUNDLE 2>/dev/null || command unset CURL_CA_BUNDLE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_12 __CODEX_SNAPSHOT_PROXY_OVERRIDE_12 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_12 __CODEX_SNAPSHOT_PROXY_OVERRIDE_12 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_13}" ]; then   if [ -z "${DOCKER_HTTPS_PROXY+x}" ] || [ "${DOCKER_HTTPS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_13}" ]; then export DOCKER_HTTPS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_13}"; else export DOCKER_HTTPS_PROXY; fi else builtin unset DOCKER_HTTPS_PROXY 2>/dev/null || command unset DOCKER_HTTPS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_13 __CODEX_SNAPSHOT_PROXY_OVERRIDE_13 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_13 __CODEX_SNAPSHOT_PROXY_OVERRIDE_13 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_14}" ]; then   if [ -z "${DOCKER_HTTP_PROXY+x}" ] || [ "${DOCKER_HTTP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_14}" ]; then export DOCKER_HTTP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_14}"; else export DOCKER_HTTP_PROXY; fi else builtin unset DOCKER_HTTP_PROXY 2>/dev/null || command unset DOCKER_HTTP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_14 __CODEX_SNAPSHOT_PROXY_OVERRIDE_14 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_14 __CODEX_SNAPSHOT_PROXY_OVERRIDE_14 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_15}" ]; then   if [ -z "${ELECTRON_GET_USE_PROXY+x}" ] || [ "${ELECTRON_GET_USE_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_15}" ]; then export ELECTRON_GET_USE_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_15}"; else export ELECTRON_GET_USE_PROXY; fi else builtin unset ELECTRON_GET_USE_PROXY 2>/dev/null || command unset ELECTRON_GET_USE_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_15 __CODEX_SNAPSHOT_PROXY_OVERRIDE_15 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_15 __CODEX_SNAPSHOT_PROXY_OVERRIDE_15 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_16}" ]; then   if [ -z "${FTP_PROXY+x}" ] || [ "${FTP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_16}" ]; then export FTP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_16}"; else export FTP_PROXY; fi else builtin unset FTP_PROXY 2>/dev/null || command unset FTP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_16 __CODEX_SNAPSHOT_PROXY_OVERRIDE_16 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_16 __CODEX_SNAPSHOT_PROXY_OVERRIDE_16 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_17}" ]; then   if [ -z "${GIT_SSL_CAINFO+x}" ] || [ "${GIT_SSL_CAINFO-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_17}" ]; then export GIT_SSL_CAINFO="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_17}"; else export GIT_SSL_CAINFO; fi else builtin unset GIT_SSL_CAINFO 2>/dev/null || command unset GIT_SSL_CAINFO; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_17 __CODEX_SNAPSHOT_PROXY_OVERRIDE_17 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_17 __CODEX_SNAPSHOT_PROXY_OVERRIDE_17 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_18}" ]; then   if [ -z "${HTTPS_PROXY+x}" ] || [ "${HTTPS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_18}" ]; then export HTTPS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_18}"; else export HTTPS_PROXY; fi else builtin unset HTTPS_PROXY 2>/dev/null || command unset HTTPS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_18 __CODEX_SNAPSHOT_PROXY_OVERRIDE_18 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_18 __CODEX_SNAPSHOT_PROXY_OVERRIDE_18 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_19}" ]; then   if [ -z "${HTTP_PROXY+x}" ] || [ "${HTTP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_19}" ]; then export HTTP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_19}"; else export HTTP_PROXY; fi else builtin unset HTTP_PROXY 2>/dev/null || command unset HTTP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_19 __CODEX_SNAPSHOT_PROXY_OVERRIDE_19 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_19 __CODEX_SNAPSHOT_PROXY_OVERRIDE_19 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_20}" ]; then   if [ -z "${NODE_EXTRA_CA_CERTS+x}" ] || [ "${NODE_EXTRA_CA_CERTS-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_20}" ]; then export NODE_EXTRA_CA_CERTS="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_20}"; else export NODE_EXTRA_CA_CERTS; fi else builtin unset NODE_EXTRA_CA_CERTS 2>/dev/null || command unset NODE_EXTRA_CA_CERTS; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_20 __CODEX_SNAPSHOT_PROXY_OVERRIDE_20 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_20 __CODEX_SNAPSHOT_PROXY_OVERRIDE_20 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_21}" ]; then   if [ -z "${NODE_USE_ENV_PROXY+x}" ] || [ "${NODE_USE_ENV_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_21}" ]; then export NODE_USE_ENV_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_21}"; else export NODE_USE_ENV_PROXY; fi else builtin unset NODE_USE_ENV_PROXY 2>/dev/null || command unset NODE_USE_ENV_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_21 __CODEX_SNAPSHOT_PROXY_OVERRIDE_21 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_21 __CODEX_SNAPSHOT_PROXY_OVERRIDE_21 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_22}" ]; then   if [ -z "${NO_PROXY+x}" ] || [ "${NO_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_22}" ]; then export NO_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_22}"; else export NO_PROXY; fi else builtin unset NO_PROXY 2>/dev/null || command unset NO_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_22 __CODEX_SNAPSHOT_PROXY_OVERRIDE_22 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_22 __CODEX_SNAPSHOT_PROXY_OVERRIDE_22 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_23}" ]; then   if [ -z "${NPM_CONFIG_CAFILE+x}" ] || [ "${NPM_CONFIG_CAFILE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_23}" ]; then export NPM_CONFIG_CAFILE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_23}"; else export NPM_CONFIG_CAFILE; fi else builtin unset NPM_CONFIG_CAFILE 2>/dev/null || command unset NPM_CONFIG_CAFILE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_23 __CODEX_SNAPSHOT_PROXY_OVERRIDE_23 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_23 __CODEX_SNAPSHOT_PROXY_OVERRIDE_23 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_24}" ]; then   if [ -z "${NPM_CONFIG_HTTPS_PROXY+x}" ] || [ "${NPM_CONFIG_HTTPS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_24}" ]; then export NPM_CONFIG_HTTPS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_24}"; else export NPM_CONFIG_HTTPS_PROXY; fi else builtin unset NPM_CONFIG_HTTPS_PROXY 2>/dev/null || command unset NPM_CONFIG_HTTPS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_24 __CODEX_SNAPSHOT_PROXY_OVERRIDE_24 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_24 __CODEX_SNAPSHOT_PROXY_OVERRIDE_24 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_25}" ]; then   if [ -z "${NPM_CONFIG_HTTP_PROXY+x}" ] || [ "${NPM_CONFIG_HTTP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_25}" ]; then export NPM_CONFIG_HTTP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_25}"; else export NPM_CONFIG_HTTP_PROXY; fi else builtin unset NPM_CONFIG_HTTP_PROXY 2>/dev/null || command unset NPM_CONFIG_HTTP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_25 __CODEX_SNAPSHOT_PROXY_OVERRIDE_25 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_25 __CODEX_SNAPSHOT_PROXY_OVERRIDE_25 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_26}" ]; then   if [ -z "${NPM_CONFIG_NOPROXY+x}" ] || [ "${NPM_CONFIG_NOPROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_26}" ]; then export NPM_CONFIG_NOPROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_26}"; else export NPM_CONFIG_NOPROXY; fi else builtin unset NPM_CONFIG_NOPROXY 2>/dev/null || command unset NPM_CONFIG_NOPROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_26 __CODEX_SNAPSHOT_PROXY_OVERRIDE_26 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_26 __CODEX_SNAPSHOT_PROXY_OVERRIDE_26 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_27}" ]; then   if [ -z "${NPM_CONFIG_PROXY+x}" ] || [ "${NPM_CONFIG_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_27}" ]; then export NPM_CONFIG_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_27}"; else export NPM_CONFIG_PROXY; fi else builtin unset NPM_CONFIG_PROXY 2>/dev/null || command unset NPM_CONFIG_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_27 __CODEX_SNAPSHOT_PROXY_OVERRIDE_27 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_27 __CODEX_SNAPSHOT_PROXY_OVERRIDE_27 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_28}" ]; then   if [ -z "${PIP_CERT+x}" ] || [ "${PIP_CERT-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_28}" ]; then export PIP_CERT="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_28}"; else export PIP_CERT; fi else builtin unset PIP_CERT 2>/dev/null || command unset PIP_CERT; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_28 __CODEX_SNAPSHOT_PROXY_OVERRIDE_28 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_28 __CODEX_SNAPSHOT_PROXY_OVERRIDE_28 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_29}" ]; then   if [ -z "${PIP_PROXY+x}" ] || [ "${PIP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_29}" ]; then export PIP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_29}"; else export PIP_PROXY; fi else builtin unset PIP_PROXY 2>/dev/null || command unset PIP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_29 __CODEX_SNAPSHOT_PROXY_OVERRIDE_29 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_29 __CODEX_SNAPSHOT_PROXY_OVERRIDE_29 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_30}" ]; then   if [ -z "${REQUESTS_CA_BUNDLE+x}" ] || [ "${REQUESTS_CA_BUNDLE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_30}" ]; then export REQUESTS_CA_BUNDLE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_30}"; else export REQUESTS_CA_BUNDLE; fi else builtin unset REQUESTS_CA_BUNDLE 2>/dev/null || command unset REQUESTS_CA_BUNDLE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_30 __CODEX_SNAPSHOT_PROXY_OVERRIDE_30 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_30 __CODEX_SNAPSHOT_PROXY_OVERRIDE_30 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_31}" ]; then   if [ -z "${SSL_CERT_FILE+x}" ] || [ "${SSL_CERT_FILE-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_31}" ]; then export SSL_CERT_FILE="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_31}"; else export SSL_CERT_FILE; fi else builtin unset SSL_CERT_FILE 2>/dev/null || command unset SSL_CERT_FILE; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_31 __CODEX_SNAPSHOT_PROXY_OVERRIDE_31 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_31 __CODEX_SNAPSHOT_PROXY_OVERRIDE_31 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_32}" ]; then   if [ -z "${WSS_PROXY+x}" ] || [ "${WSS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_32}" ]; then export WSS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_32}"; else export WSS_PROXY; fi else builtin unset WSS_PROXY 2>/dev/null || command unset WSS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_32 __CODEX_SNAPSHOT_PROXY_OVERRIDE_32 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_32 __CODEX_SNAPSHOT_PROXY_OVERRIDE_32 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_33}" ]; then   if [ -z "${WS_PROXY+x}" ] || [ "${WS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_33}" ]; then export WS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_33}"; else export WS_PROXY; fi else builtin unset WS_PROXY 2>/dev/null || command unset WS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_33 __CODEX_SNAPSHOT_PROXY_OVERRIDE_33 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_33 __CODEX_SNAPSHOT_PROXY_OVERRIDE_33 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_34}" ]; then   if [ -z "${YARN_HTTPS_PROXY+x}" ] || [ "${YARN_HTTPS_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_34}" ]; then export YARN_HTTPS_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_34}"; else export YARN_HTTPS_PROXY; fi else builtin unset YARN_HTTPS_PROXY 2>/dev/null || command unset YARN_HTTPS_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_34 __CODEX_SNAPSHOT_PROXY_OVERRIDE_34 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_34 __CODEX_SNAPSHOT_PROXY_OVERRIDE_34 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_35}" ]; then   if [ -z "${YARN_HTTP_PROXY+x}" ] || [ "${YARN_HTTP_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_35}" ]; then export YARN_HTTP_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_35}"; else export YARN_HTTP_PROXY; fi else builtin unset YARN_HTTP_PROXY 2>/dev/null || command unset YARN_HTTP_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_35 __CODEX_SNAPSHOT_PROXY_OVERRIDE_35 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_35 __CODEX_SNAPSHOT_PROXY_OVERRIDE_35 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_36}" ]; then   if [ -z "${YARN_NO_PROXY+x}" ] || [ "${YARN_NO_PROXY-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_36}" ]; then export YARN_NO_PROXY="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_36}"; else export YARN_NO_PROXY; fi else builtin unset YARN_NO_PROXY 2>/dev/null || command unset YARN_NO_PROXY; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_36 __CODEX_SNAPSHOT_PROXY_OVERRIDE_36 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_36 __CODEX_SNAPSHOT_PROXY_OVERRIDE_36 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_37}" ]; then   if [ -z "${all_proxy+x}" ] || [ "${all_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_37}" ]; then export all_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_37}"; else export all_proxy; fi else builtin unset all_proxy 2>/dev/null || command unset all_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_37 __CODEX_SNAPSHOT_PROXY_OVERRIDE_37 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_37 __CODEX_SNAPSHOT_PROXY_OVERRIDE_37 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_38}" ]; then   if [ -z "${ftp_proxy+x}" ] || [ "${ftp_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_38}" ]; then export ftp_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_38}"; else export ftp_proxy; fi else builtin unset ftp_proxy 2>/dev/null || command unset ftp_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_38 __CODEX_SNAPSHOT_PROXY_OVERRIDE_38 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_38 __CODEX_SNAPSHOT_PROXY_OVERRIDE_38 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_39}" ]; then   if [ -z "${http_proxy+x}" ] || [ "${http_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_39}" ]; then export http_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_39}"; else export http_proxy; fi else builtin unset http_proxy 2>/dev/null || command unset http_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_39 __CODEX_SNAPSHOT_PROXY_OVERRIDE_39 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_39 __CODEX_SNAPSHOT_PROXY_OVERRIDE_39 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_40}" ]; then   if [ -z "${https_proxy+x}" ] || [ "${https_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_40}" ]; then export https_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_40}"; else export https_proxy; fi else builtin unset https_proxy 2>/dev/null || command unset https_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_40 __CODEX_SNAPSHOT_PROXY_OVERRIDE_40 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_40 __CODEX_SNAPSHOT_PROXY_OVERRIDE_40 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_41}" ]; then   if [ -z "${no_proxy+x}" ] || [ "${no_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_41}" ]; then export no_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_41}"; else export no_proxy; fi else builtin unset no_proxy 2>/dev/null || command unset no_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_41 __CODEX_SNAPSHOT_PROXY_OVERRIDE_41 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_41 __CODEX_SNAPSHOT_PROXY_OVERRIDE_41 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_42}" ]; then   if [ -z "${npm_config_cafile+x}" ] || [ "${npm_config_cafile-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_42}" ]; then export npm_config_cafile="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_42}"; else export npm_config_cafile; fi else builtin unset npm_config_cafile 2>/dev/null || command unset npm_config_cafile; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_42 __CODEX_SNAPSHOT_PROXY_OVERRIDE_42 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_42 __CODEX_SNAPSHOT_PROXY_OVERRIDE_42 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_43}" ]; then   if [ -z "${npm_config_http_proxy+x}" ] || [ "${npm_config_http_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_43}" ]; then export npm_config_http_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_43}"; else export npm_config_http_proxy; fi else builtin unset npm_config_http_proxy 2>/dev/null || command unset npm_config_http_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_43 __CODEX_SNAPSHOT_PROXY_OVERRIDE_43 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_43 __CODEX_SNAPSHOT_PROXY_OVERRIDE_43 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_44}" ]; then   if [ -z "${npm_config_https_proxy+x}" ] || [ "${npm_config_https_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_44}" ]; then export npm_config_https_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_44}"; else export npm_config_https_proxy; fi else builtin unset npm_config_https_proxy 2>/dev/null || command unset npm_config_https_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_44 __CODEX_SNAPSHOT_PROXY_OVERRIDE_44 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_44 __CODEX_SNAPSHOT_PROXY_OVERRIDE_44 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_45}" ]; then   if [ -z "${npm_config_noproxy+x}" ] || [ "${npm_config_noproxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_45}" ]; then export npm_config_noproxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_45}"; else export npm_config_noproxy; fi else builtin unset npm_config_noproxy 2>/dev/null || command unset npm_config_noproxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_45 __CODEX_SNAPSHOT_PROXY_OVERRIDE_45 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_45 __CODEX_SNAPSHOT_PROXY_OVERRIDE_45 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_46}" ]; then   if [ -z "${npm_config_proxy+x}" ] || [ "${npm_config_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_46}" ]; then export npm_config_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_46}"; else export npm_config_proxy; fi else builtin unset npm_config_proxy 2>/dev/null || command unset npm_config_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_46 __CODEX_SNAPSHOT_PROXY_OVERRIDE_46 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_46 __CODEX_SNAPSHOT_PROXY_OVERRIDE_46 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_47}" ]; then   if [ -z "${ws_proxy+x}" ] || [ "${ws_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_47}" ]; then export ws_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_47}"; else export ws_proxy; fi else builtin unset ws_proxy 2>/dev/null || command unset ws_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_47 __CODEX_SNAPSHOT_PROXY_OVERRIDE_47 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_47 __CODEX_SNAPSHOT_PROXY_OVERRIDE_47 if [ -n "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_48}" ]; then   if [ -z "${wss_proxy+x}" ] || [ "${wss_proxy-}" != "${__CODEX_SNAPSHOT_PROXY_OVERRIDE_48}" ]; then export wss_proxy="${__CODEX_SNAPSHOT_PROXY_OVERRIDE_48}"; else export wss_proxy; fi else builtin unset wss_proxy 2>/dev/null || command unset wss_proxy; fi builtin unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_48 __CODEX_SNAPSHOT_PROXY_OVERRIDE_48 2>/dev/null || command unset __CODEX_SNAPSHOT_PROXY_OVERRIDE_SET_48 __CODEX_SNAPSHOT_PROXY_OVERRIDE_48 fi if [ -n "${PATH:-}" ]; then export PATH='/usr/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path':"$PATH"; else export PATH='/usr/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path'; fi  exec '/bin/bash' -c 'ps -eo pid,etimes,time,stat,args | rg '"'"'Audit\.lean|moc-axiom'"'"''
+      2       0 00:00:00 S<   /bin/bash -c ps -eo pid,etimes,time,stat,args | rg 'Audit\.lean|moc-axiom'
+     38       0 00:00:00 S<   rg Audit\.lean|moc-axiom
+

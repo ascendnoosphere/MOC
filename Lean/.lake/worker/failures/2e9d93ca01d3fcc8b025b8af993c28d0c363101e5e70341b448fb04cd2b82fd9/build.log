@@ -1,0 +1,87 @@
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.Blocks +MOC.Claim +MOC.ContactRectangle +MOC.Core +MOC.Geometry +MOC.Jacobi +MOC.MixedBound +MOC.Normal +MOC.Obstruction +MOC.PhaseMove +MOC.RankSum +MOC.Small +MOC.Source +MOC.Support +MOC.TwoValues +MOC.Weights
+✔ [2414/2430] Built MOC.Core
+✖ [2415/2430] Building MOC.Jacobi
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Jacobi.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Jacobi.olean -i ././.lake/build/lib/lean/MOC/Jacobi.ilean -c ././.lake/build/ir/MOC/Jacobi.c --json
+error: ././././MOC/Jacobi.lean:17:21: failed to synthesize
+  TopologicalSpace ℂ
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Jacobi.lean:18:4: failed to synthesize
+  TopologicalSpace ℂ
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Jacobi.lean:23:31: failed to synthesize
+  TopologicalSpace ℂ
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Jacobi.lean:31:18: unknown identifier 'hh'
+error: ././././MOC/Jacobi.lean:19:59: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+M : ℝ → Matrix ι ι ℂ
+V : Matrix ι ι ℂ
+t : ℝ
+h : ι → ℂ
+hvalue : M t = diagonal h
+hderiv : ι → ι → sorry
+f : Equiv.Perm ι → ℝ → ℂ := fun σ s => ∏ i, M s (σ i) i
+df : Equiv.Perm ι → ℂ := fun σ => ∑ i, (∏ j ∈ Finset.univ.erase i, M t (σ j) j) * V (σ i) i
+c : Equiv.Perm ι → ℂ := fun σ => ↑↑(Equiv.Perm.sign σ)
+hσ : Equiv.Perm ι → sorry
+hz : ∀ (σ : Equiv.Perm ι), σ ≠ 1 → df σ = 0
+⊢ sorry
+error: ././././MOC/Jacobi.lean:59:21: failed to synthesize
+  TopologicalSpace ℂ
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Jacobi.lean:60:4: failed to synthesize
+  TopologicalSpace ℂ
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Jacobi.lean:62:6: no goals to be solved
+error: Lean exited with code 1
+✔ [2416/2430] Built MOC.PhaseMove
+✔ [2417/2430] Built MOC.MixedBound
+✔ [2418/2430] Built MOC.ContactRectangle
+✔ [2419/2430] Built MOC.Weights
+✔ [2420/2430] Built MOC.TwoValues
+✔ [2421/2430] Built MOC.Support
+✔ [2422/2430] Built MOC.Blocks
+✖ [2423/2430] Building MOC.RankSum
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/RankSum.lean -R ./././. -o ././.lake/build/lib/lean/MOC/RankSum.olean -i ././.lake/build/lib/lean/MOC/RankSum.ilean -c ././.lake/build/ir/MOC/RankSum.c --json
+warning: ././././MOC/RankSum.lean:402:8: automatically included section variable(s) unused in theorem '_private.MOC.RankSum.0.MOC.matchingProduct_eq_zero_of_not_covers':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/RankSum.lean:428:6: type mismatch, term
+  h ((Equiv.symm σ) i)
+after simplification has type
+  ¬Function.update a i 0 (σ ((Equiv.symm σ) i)) = 0 ∨ ¬b ((Equiv.symm σ) i) = 0 : Prop
+but is expected to have type
+  ¬b ((Equiv.symm σ) i) = 0 : Prop
+warning: ././././MOC/RankSum.lean:435:8: automatically included section variable(s) unused in theorem '_private.MOC.RankSum.0.MOC.covers_update_right_iff':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: Lean exited with code 1
+✔ [2424/2430] Built MOC.Small
+✔ [2425/2430] Built MOC.Geometry
+✔ [2426/2430] Built MOC.Claim
+✔ [2427/2430] Built MOC.Source
+✔ [2428/2430] Built MOC.Obstruction
+✖ [2430/2430] Building MOC.Normal
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Normal.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Normal.olean -i ././.lake/build/lib/lean/MOC/Normal.ilean -c ././.lake/build/ir/MOC/Normal.c --json
+error: ././././MOC/Normal.lean:18:0: (deterministic) timeout at `whnf`, maximum number of heartbeats (1200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Normal.lean:169:8: (kernel) unknown constant 'MOC.exists_unitary_diagonalization'
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Jacobi
+- MOC.RankSum
+- MOC.Normal
+error: build failed

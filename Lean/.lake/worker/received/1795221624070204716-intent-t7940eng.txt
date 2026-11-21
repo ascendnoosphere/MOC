@@ -1,0 +1,2 @@
+lean: prove support contact crossing on a supplied compact curve
+Lean/MOC/ContactTransfer.lean

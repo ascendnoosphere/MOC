@@ -1,0 +1,2 @@
+lean: fixture custom axiom
+Lean/MOC/WorkflowSmoke.lean

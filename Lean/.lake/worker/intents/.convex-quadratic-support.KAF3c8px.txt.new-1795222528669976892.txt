@@ -1,0 +1,2 @@
+lean: extend the quadratic support bound to the matching hull
+Lean/MOC/StrongSupport.lean

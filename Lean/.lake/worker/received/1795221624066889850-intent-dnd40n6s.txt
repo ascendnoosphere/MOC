@@ -1,0 +1,2 @@
+lean: derive active-gradient and equal-trace constraints on spectral maxima
+Lean/MOC/SpectralStationarity.lean

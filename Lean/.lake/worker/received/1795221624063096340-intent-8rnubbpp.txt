@@ -1,0 +1,4 @@
+lean: cover parallel affine spectra via normal support maximizers
+Lean/MOC/Normal.lean
+Lean/MOC/NormalOrbit.lean
+Lean/MOC/Collinear.lean

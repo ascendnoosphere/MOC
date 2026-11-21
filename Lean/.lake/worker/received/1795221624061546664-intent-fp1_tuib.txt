@@ -1,0 +1,2 @@
+lean: reduce to nonzero distinct matching products
+Lean/MOC/SpectralPerturbation.lean

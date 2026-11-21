@@ -1,0 +1,2 @@
+lean: preserve the inverse commutator under fractional-linear changes
+Lean/MOC/MobiusStationarity.lean

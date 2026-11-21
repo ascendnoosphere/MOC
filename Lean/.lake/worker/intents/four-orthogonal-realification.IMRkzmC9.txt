@@ -1,0 +1,4 @@
+lean: reduce order-four MOC to real orthogonal mixers
+Lean/MOC/FourRealification.lean
+Lean/MOC/FourEffectDecomposition.lean
+Lean/MOC/FourMinorTransport.lean

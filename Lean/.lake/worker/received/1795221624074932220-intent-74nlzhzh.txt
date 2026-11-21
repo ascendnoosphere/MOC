@@ -1,0 +1,2 @@
+lean: balance regular violations within their Möbius orbit
+Lean/MOC/MobiusOrbitMinimum.lean

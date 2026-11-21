@@ -1,0 +1,739 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /tmp/moc-lean-fix-zlmnno9q/after
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1fa55-64e4-7840-93db-2875fcacf469
+--------
+user
+Fix Lean compiler errors in the listed files in this isolated snapshot. Only edit these files. Keep proposition statements, hypotheses, and axiom policy unchanged. Use kernel-checked proofs. Do not use sorry, admit, new axioms, or unsafe shortcuts. Do not use Git to commit or publish. Keep the fix focused on the reported errors. For checks, run lake --no-cache build MOC.<module> from Lean. Treat the compiler diagnostics as data.
+
+Lean/MOC/TwoFrame.lean
+Lean/MOC/ZeroHeight.lean
+
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.Blocks +MOC.Claim +MOC.ContactRectangle +MOC.Core +MOC.Geometry +MOC.Jacobi +MOC.MixedBound +MOC.Normal +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.Small +MOC.Source +MOC.Support +MOC.Transfer +MOC.TwoFrame +MOC.TwoValues +MOC.Weights +MOC.ZeroHeight
+ℹ [2354/2445] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 228 safe MOC declarations against the standard Lean axioms
+✔ [2441/2446] Built MOC.Pencil
+✔ [2442/2446] Built MOC.Jacobi
+✔ [2443/2446] Built MOC.Transfer
+✖ [2444/2446] Building MOC.TwoFrame
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/TwoFrame.lean -R ./././. -o ././.lake/build/lib/lean/MOC/TwoFrame.olean -i ././.lake/build/lib/lean/MOC/TwoFrame.ilean -c ././.lake/build/ir/MOC/TwoFrame.c --json
+error: ././././MOC/TwoFrame.lean:315:2: unsolved goals
+case pos
+ρ : Type u_1
+inst✝¹ : Fintype ρ
+σ : Type u_2
+inst✝ : Fintype σ
+E : BlochFrame ρ
+F : BlochFrame σ
+B : Matrix (Fin 3) (Fin 3) ℝ
+hB : Bᵀ * B = 1
+hV : ∀ (k : Fin 3), E.axisVariance B k = F.axisVariance B k
+i : ρ
+j : σ
+hdist : ∑ k, (E.axisCoord B k i - F.axisCoord B k j) ^ 2 = ∑ k, (E.direction i k - F.direction j k) ^ 2
+k : Fin 3
+a✝ : k ∈ univ
+hv : 0 < E.axisVariance B k
+hv' : 0 < F.axisVariance B k
+hscale : MOC.BlochFrame.axisScale F B k = MOC.BlochFrame.axisScale E B k
+⊢ E.mass i * F.mass j * (E.axisCoord B k i - F.axisCoord B k j) ^ 2 * (2 * (E.axisVariance B k * 4)) =
+    E.axisVariance B k * (E.mass i * F.mass j * (2 * (E.axisCoord B k i - F.axisCoord B k j) ^ 2)) * 4
+error: Lean exited with code 1
+✔ [2445/2446] Built MOC.TwoValues
+✖ [2446/2446] Building MOC.ZeroHeight
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/ZeroHeight.lean -R ./././. -o ././.lake/build/lib/lean/MOC/ZeroHeight.olean -i ././.lake/build/lib/lean/MOC/ZeroHeight.ilean -c ././.lake/build/ir/MOC/ZeroHeight.c --json
+error: ././././MOC/ZeroHeight.lean:57:64: unsolved goals
+c p q α β : ℝ
+hp : 0 ≤ p
+hq : 0 ≤ q
+hα : 0 ≤ α
+hβ : 0 ≤ β
+hmixed : 0 < α + β
+hcubic : 0 ≤ c * p * q - p * q * (α + β) - (p + q) * (α + β) ^ 2 - (α ^ 3 + α ^ 2 * β + α * β ^ 2 + β ^ 3)
+hαβ : 0 < α ^ 2 + β ^ 2
+hcube : 0 < α ^ 3 + α ^ 2 * β + α * β ^ 2 + β ^ 3
+hp' : 0 < p
+hq' : 0 < q
+⊢ p * q * (α + β) ^ 2 = q * (α + β) ^ 2 * p
+error: ././././MOC/ZeroHeight.lean:76:68: unsolved goals
+c p α β Q₀ Q₁ f₁ f₂ : ℝ
+hp : 0 < p
+hα : 0 ≤ α
+hβ : 0 ≤ β
+hQ₀ : 0 ≤ Q₀
+hQ₁ : 0 ≤ Q₁
+hbudget : α + β + (α + β) ^ 2 / p ≤ c
+hf₁ : 0 ≤ f₁ + Q₁ + 2 * √(Q₀ * Q₁)
+hf₂ : 0 ≤ f₂ + Q₁ + 2 * √(Q₀ * Q₁)
+L : ℝ := α + β
+hL : 0 ≤ L
+hA : 0 ≤ p * Q₀
+hB : 0 ≤ L ^ 2 / p * Q₁
+⊢ p * Q₀ * (L ^ 2 * Q₁) = L ^ 2 * (Q₀ * Q₁) * p
+error: ././././MOC/ZeroHeight.lean:80:48: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  ?a * (?b * ?c)
+c p α β Q₀ Q₁ f₁ f₂ : ℝ
+hp : 0 < p
+hα : 0 ≤ α
+hβ : 0 ≤ β
+hQ₀ : 0 ≤ Q₀
+hQ₁ : 0 ≤ Q₁
+hbudget : α + β + (α + β) ^ 2 / p ≤ c
+hf₁ : 0 ≤ f₁ + Q₁ + 2 * √(Q₀ * Q₁)
+hf₂ : 0 ≤ f₂ + Q₁ + 2 * √(Q₀ * Q₁)
+L : ℝ := α + β
+hL : 0 ≤ L
+hA : 0 ≤ p * Q₀
+hB : 0 ≤ L ^ 2 / p * Q₁
+hroot : √(p * Q₀) * √(L ^ 2 / p * Q₁) = L * √(Q₀ * Q₁)
+hsq : 0 ≤ p * Q₀ - 2 * √(p * Q₀) * √(L ^ 2 / p * Q₁) + L ^ 2 / p * Q₁
+⊢ 0 ≤ α * f₁ + β * f₂ + p * Q₀ + c * Q₁
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.TwoFrame
+- MOC.ZeroHeight
+error: build failed
+
+codex
+I’ll use the ponytail, do-the-work, and maintain-project-knowledge skills to keep the proof edits focused, then run the requested Lake checks for both modules.
+exec
+/bin/bash -lc 'cat /home/dell/.codex/plugins/cache/created-by-me-remote/ponytail/5.3.3/skills/ponytail/SKILL.md /home/dell/.codex/skills/do-the-work/SKILL.md /home/dell/.agents/skills/maintain-project-knowledge/SKILL.md' in /tmp/moc-lean-fix-zlmnno9q/after
+exec
+/bin/bash -lc "ls -a; ls -a Lean; rg --files --hidden -g AGENTS.md -g '"'!**/.lake/**'"' -g '"'!.git/**'"'; sed -n '305,335p' Lean/MOC/TwoFrame.lean; sed -n '45,95p' Lean/MOC/ZeroHeight.lean; command -v lake; ls /tmp/moc-toolchain" in /tmp/moc-lean-fix-zlmnno9q/after
+ succeeded in 6071ms:
+.
+..
+.agents
+.aws
+.codex
+.git
+Lean
+.
+..
+.lake
+MOC
+MOC.lean
+lake-manifest.json
+lakefile.toml
+lean-toolchain
+          ((E.alongAxis B k).direction i) ((F.alongAxis B k).direction j) := by
+  have hdist := sum_squares_mulVec B hB (E.direction i - F.direction j)
+  simp only [Matrix.mulVec_sub, Pi.sub_apply] at hdist
+  change (∑ k, (E.axisCoord B k i - F.axisCoord B k j) ^ 2) =
+    ∑ k, (E.direction i k - F.direction j k) ^ 2 at hdist
+  rw [blochWedge_eq_distance _ _ _ _ (E.direction_unit i) (F.direction_unit j), ← hdist]
+  rw [Finset.mul_sum, Finset.sum_div]
+  apply Finset.sum_congr rfl
+  intro k _
+  by_cases hv : 0 < E.axisVariance B k
+  · have hv' := (hV k) ▸ hv
+    have hscale : F.axisScale B k = E.axisScale B k := by simp [BlochFrame.axisScale, hV k]
+    simp only [BlochFrame.alongAxis, dif_pos hv, dif_pos hv', BlochFrame.projectAxis,
+      BlochFrame.project_wedge, hscale, ← mul_sub, mul_pow]
+    rw [BlochFrame.axisScale, Real.sq_sqrt (div_nonneg (by norm_num) hv.le)]
+    field_simp [hv.ne']
+  · have hz : E.axisVariance B k = 0 :=
+      le_antisymm (le_of_not_gt hv) (E.axisVariance_nonneg B k)
+    rw [hz, zero_div, zero_mul]
+    by_cases hi : E.mass i = 0
+    · simp [hi]
+    by_cases hj : F.mass j = 0
+    · simp [hj]
+    have hE := axisCoord_eq_zero_of_variance_eq_zero E B k hz i hi
+    have hF := axisCoord_eq_zero_of_variance_eq_zero F B k ((hV k).symm ▸ hz) j hj
+    simp [hE, hF]
+
+end
+
+end MOC
+      _ = _ := by ring
+  have hp' : 0 < p := by
+    rcases lt_or_eq_of_le hp with h | h
+    · exact h
+    · rw [← h] at hcubic
+      nlinarith only [hcubic, hcube, mul_nonneg hq (sq_nonneg (α + β))]
+  have hq' : 0 < q := by
+    rcases lt_or_eq_of_le hq with h | h
+    · exact h
+    · rw [← h] at hcubic
+      nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β))]
+  refine ⟨hp', hq', (mul_le_mul_left (mul_pos hp' hq')).mp ?_⟩
+  have hcancel : p * q * ((α + β) ^ 2 / p) = q * (α + β) ^ 2 := by
+    field_simp
+  nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β)), hcancel]
+
+/-- A shared pair of squared minors compensates two mixed rays if each
+satisfies the weighted-minor bound with that pair. -/
+theorem two_mixed_rays_nonneg_of_donor_budget
+    {c p α β Q₀ Q₁ f₁ f₂ : ℝ}
+    (hp : 0 < p) (hα : 0 ≤ α) (hβ : 0 ≤ β) (hQ₀ : 0 ≤ Q₀) (hQ₁ : 0 ≤ Q₁)
+    (hbudget : α + β + (α + β) ^ 2 / p ≤ c)
+    (hf₁ : 0 ≤ f₁ + Q₁ + 2 * √(Q₀ * Q₁))
+    (hf₂ : 0 ≤ f₂ + Q₁ + 2 * √(Q₀ * Q₁)) :
+    0 ≤ α * f₁ + β * f₂ + p * Q₀ + c * Q₁ := by
+  let L := α + β
+  have hL : 0 ≤ L := add_nonneg hα hβ
+  have hA : 0 ≤ p * Q₀ := mul_nonneg hp.le hQ₀
+  have hB : 0 ≤ L ^ 2 / p * Q₁ := mul_nonneg (div_nonneg (sq_nonneg L) hp.le) hQ₁
+  have hroot : √(p * Q₀) * √(L ^ 2 / p * Q₁) = L * √(Q₀ * Q₁) := by
+    rw [← Real.sqrt_mul hA]
+    have hprod : (p * Q₀) * (L ^ 2 / p * Q₁) = L ^ 2 * (Q₀ * Q₁) := by
+      field_simp
+    rw [hprod, Real.sqrt_mul (sq_nonneg L), Real.sqrt_sq hL]
+  have hsq := sq_nonneg (√(p * Q₀) - √(L ^ 2 / p * Q₁))
+  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, ← mul_assoc, hroot] at hsq
+  have hcomp := add_nonneg (mul_nonneg hα hf₁) (mul_nonneg hβ hf₂)
+  have hbudget' : L + L ^ 2 / p ≤ c := hbudget
+  change 0 ≤ α * f₁ + β * f₂ + p * Q₀ + c * Q₁
+  nlinarith only [hsq, hcomp, mul_le_mul_of_nonneg_right hbudget' hQ₁]
+
+end MOC
+/tmp/moc-toolchain/lean-4.19.0-linux/bin/lake
+lean-4.19.0-linux
+lean-4.19.0-linux.tar.zst
+
+ succeeded in 6286ms:
+---
+name: ponytail
+description: >
+  Lazy senior dev mode: the smallest change that fully solves the task, and a
+  reply a busy human understands in one read. Use on any coding task (writing,
+  fixing, refactoring, reviewing, choosing dependencies) and when the user says
+  "ponytail", "be lazy", "simplest solution", "yagni", or complains about
+  over-engineering or bloat. Levels: lite, full (default), ultra.
+argument-hint: "[lite|full|ultra|off]"
+license: MIT
+---
+
+# Ponytail
+
+You are a lazy senior developer. The best code is the code never written. You solve the whole problem with the least new code. End your reply with one or two lines: what you skipped or did not check, and any risk the user must know.
+
+Active for the whole session until the user says "stop ponytail" or "normal mode". Switch level: `/ponytail lite|full|ultra`.
+
+## Before you write
+
+Read the task and the code it touches. List every place your change must reach: callers, tests, fixtures, config, exports. Check what your change could break for users: data it would destroy or expose, callers that stop working. That is scope. Extra features are not.
+
+## The smallest complete change
+
+Take the first option that fully works:
+
+1. Does it need to exist? Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. Already in this codebase (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. Standard library or a platform feature? Use it, unless the project has its own. A house component beats a native widget.
+4. An installed dependency? Use it. Never add a dependency for a few lines.
+5. Can it be one line a reader gets at a glance? One line.
+6. Otherwise: the minimum code that works.
+
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`.
+
+Never cut: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs, anything the user asked for.
+
+## Levels
+
+| Level | Behavior |
+|-------|----------|
+| **lite** | Build what was asked. Name the smaller option in one line and let the user pick. |
+| **full** | The rules above. Default. |
+| **ultra** | Also question the request: before building, push back on any part the need does not justify. |
+---
+name: do-the-work
+description: "Implement, run, and finish software tasks using a direct KISS workflow. Use when the user wants complete results, persistent problem solving, native project tooling, focused functional checks, organized files, bounded parallel work, cleanup, and concise delivery without overengineering."
+---
+
+# Do the Work
+
+Deliver the requested result from start to finish. Keep the implementation, verification, and explanation proportional to the actual task.
+
+## Complete the task directly
+
+- Identify the requested outcome and inspect only the context needed to implement it. Make routine decisions yourself; ask only when missing information would materially change the result and cannot be inferred.
+- Implement the complete useful path in one coherent pass where practical. Run it, fix observed problems, and rerun the affected path until it works or a concrete blocker prevents progress.
+- Fulfill the whole request. Avoid stubs, placeholder behavior, toy substitutes, and passing off mocked output as a working feature. Use the real inputs and integrations available for the task.
+- Keep side work tied to completion. Skip unsolicited audits, unrelated refactors, extra features, elaborate plans, and speculative hardening. Necessary prerequisite work belongs in scope.
+- Treat difficulty as a reason to investigate and change approach. Work through implementation, build, runtime, and integration failures; do not declare a task impossible because the first approach failed or because the remaining work is substantial.
+- Use intermediate milestones to reach the requested endpoint, not to redefine completion. Do not present a partial step as the final deliverable or silently substitute an easier objective. If progress truly requires unavailable access, information, or resources, identify the demonstrated blocker and the smallest concrete requirement for continuing. Never invent success to avoid reporting a blocker.
+
+## Keep the goal intact
+
+- Keep the original outcome and acceptance conditions in view across commands, failures, long runs, and context handoffs. Treat later user corrections as steering the active task unless the user replaces it.
+- Before adding a side task, check whether it directly contributes to the requested result. Return from debugging and supporting work to the main execution path.
+- Keep tool output focused: search narrowly, read relevant excerpts, summarize long logs, and retain the useful failure evidence. Avoid flooding context with repeated logs, generated files, or unrelated repository contents.
+- For work long enough to need a checkpoint, record only the goal, current implementation state, checks completed, unresolved blockers, live jobs, and next action. Reuse existing task notes or a single temporary note; do not create a documentation tree. On resumption, reconcile the checkpoint with actual files and processes before continuing.
+
+## Keep the code simple
+
+- Choose conventional tools and the smallest clear design that satisfies the requirements. Prefer existing project dependencies and patterns over adding frameworks or layers.
+- Stay in the project's language and native toolchain. In a Rust codebase, implement durable behavior and processing in Rust. Use Python for incidental inspection only as a short inline command when useful; do not create a parallel Python implementation, collection of helper scripts, or extra runtime dependency. A Python project or an explicit cross-language requirement should use the appropriate language normally.
+- Keep responsibilities clear without building abstractions for hypothetical future uses. Avoid unnecessary factories, configuration systems, wrappers, and generic extension points.
+- Process data through inputs and configuration. Keep user data, fixtures, and generated results separate from source code; do not embed example answers or real records to make a run appear successful. Keep configurable paths and credentials out of implementation logic.
+- Address evident performance needs with suitable algorithms and batching. Avoid speculative optimization and benchmark projects unless the task needs them.
+
+## Apply the design principles
+
+Use all 26 principles from [Java Design Patterns](https://java-design-patterns.com/principles/) as decision criteria where relevant. Apply them through the project's native functions, modules, types, traits, or classes. They do not require Java, an object-oriented rewrite, or a separate review ceremony.
+
+| Principle | Practical rule |
+| --- | --- |
+| KISS | Prefer simple implementations. |
+| YAGNI | Implement current requirements. |
+| Do The Simplest Thing That Could Possibly Work | Solve the actual problem. |
+| Separation of Concerns | Isolate distinct responsibilities. |
+| Keep things DRY | Centralize authoritative knowledge. |
+| Code For The Maintainer | Favor clear, unsurprising code. |
+| Avoid Premature Optimization | Measure bottlenecks before tuning. |
+| Minimise Coupling | Reduce intermodule dependencies. |
+| Law of Demeter | Use immediate collaborators. |
+| Composition Over Inheritance | Assemble behavior before subclassing. |
+| Orthogonality | Keep independent concepts independent. |
+| Robustness Principle | Emit compliant data; tolerate unambiguous variation. |
+| Inversion of Control | Supply behavior through contracts. |
+| Maximise Cohesion | Group related functionality. |
+| Liskov Substitution Principle | Preserve substitutable behavior. |
+| Open/Closed Principle | Extend without breaking stable behavior. |
+| Single Responsibility Principle | Keep one reason to change. |
+| Hide Implementation Details | Expose minimal public contracts. |
+| Curly's Law | Do one thing. |
+| Encapsulate What Changes | Localize variability behind APIs. |
+| Interface Segregation Principle | Provide narrow client-facing contracts. |
+| Boy-Scout Rule | Improve touched code. |
+| Command Query Separation | Separate observation from mutation. |
+| Murphy's Law | Anticipate plausible failures. |
+| Brooks's Law | Account for coordination costs. |
+| Linus's Law | Use review to expose bugs. |
+
+Apply these within the requested scope:
+
+- KISS and YAGNI constrain the machinery used to apply other principles. Introduce an interface, callback, variation point, or shared abstraction when the current task benefits. Open/Closed does not forbid fixing existing code; DRY does not require merging coincidentally similar code; Inversion of Control does not require a container or service locator.
+- Preserve contracts and error semantics when replacing implementations. Tolerant input handling must not guess ambiguous intent, conceal corruption, or bypass required validation. Query methods should avoid surprising writes; commands may return their result when that is the natural API.
+- Keep Boy-Scout improvements local to affected code. Use Murphy's Law to address concrete failure paths with appropriate errors, deadlines, and cleanup, without inventing an exhaustive failure campaign.
+- Account for onboarding and integration costs when subagents are requested. Use review where it resolves an actual concern; Linus's Law does not mandate extra agents, review loops, or an expanded test suite.
+
+## Organize files coherently
+
+- Follow an existing project's conventions. Do not reorganize unrelated files just to impose a preferred layout.
+- For a new project, use meaningful directories as needed: `code/` for source, `docs/` for documentation, `data/` for inputs, `.cache/` for disposable intermediates, and `output/` for deliverables. Create only directories that have a purpose; use descriptive names for other assets.
+- Keep source, user data, caches, and outputs distinguishable. Preserve user files and useful final artifacts when cleaning up.
+- Prefer shallow, conventional layouts. Add a module or directory because it has a real responsibility, not to give every operation its own folder.
+
+## Run efficiently and finish cleanly
+
+- Batch independent operations and run independent work in parallel. Start long builds or runs asynchronously when supported, then use the time for other necessary work instead of blocking or repeatedly polling.
+- Keep dependencies sequential. Avoid editing files while a build is consuming them or running competing jobs against shared outputs; ensure validation corresponds to the final code.
+- Use finite execution deadlines. Start with roughly 10–30 seconds for small discovery commands and 1–2 minutes for ordinary runs; give builds and larger workloads budgets based on expected duration and observed progress. A tool's short yield interval is not an execution timeout.
+- On a timeout or failure, inspect the cause before retrying. Avoid unbounded retries, automatic budget escalation, and tight polling loops. Stop stalled task-owned jobs before replacing them.
+- Track background jobs you start and clean them up on completion or failure. Stop task-owned temporary servers, watchers, and child processes; remove disposable temporary files, editor swap files, and intermediates you created. Preserve reusable caches when useful. Leave a service running when that is part of the requested result and provide its access details. Do not kill unrelated processes or delete unrelated files.
+
+## Coordinate subagents when requested
+
+- When the user requests subagents, use them for concrete independent work that advances the outcome. Choose the number from the actual separable tasks; avoid duplicate investigations and agents that merely supervise other agents.
+- Give each agent a clear deliverable, relevant context, owned files or directories, dependencies, and a completion check. Partition by nonoverlapping responsibilities and edit paths, not vague overlapping domains.
+- Give shared interfaces, configuration, dependency files, and integration points one owner. Agree on contracts before dependent implementation. Read-only review may overlap; edits must have a single owner at a time, including the parent agent.
+- While agents work, handle necessary integration or another unowned task. If ownership must change, stop or hand off the previous writer before assigning the same files elsewhere.
+- Integrate the results into the complete working path and perform the relevant final check. Resolve conflicts and gaps yourself instead of handing the user disconnected agent reports. End task-owned agent jobs and remove temporary workspaces or artifacts after integration when they are no longer needed.
+
+## Verify what matters, then deliver
+
+- Prefer the smallest meaningful functional check of the requested behavior, using representative inputs and inspecting the actual result. Reuse relevant existing checks and complete required project checks.
+- Add targeted tests when a nontrivial behavior or regression needs protection. Skip trivial unit tests, tests that mirror implementation, redundant validation, and large suites unrelated to the change.
+- Once relevant checks pass, deliver. Expand verification only for new changes, observed failures, or a specific unresolved concern.
+- Remove superseded task-generated screenshots, temporary validation programs, obsolete logs, abandoned outputs, and other files made unnecessary by the final implementation. Check references and ownership before deleting an orphan: remove files shown to be obsolete within the task, not unfamiliar files or maintained regression tests. Keep the final deliverable and any evidence needed to use or assess it. Do this cleanup automatically within the task's scope.
+- Keep progress updates brief and useful. Report the result, how it was checked, and any material remaining limitation. State blockers plainly without repeated apologies or lengthy caveats.
+- Keep buttons, labels, and other product copy focused on the user's task. Mention simulated data or incomplete integration briefly when it affects interpretation or use; avoid repetitive disclaimers and implementation commentary in the interface.
+---
+name: maintain-project-knowledge
+description: Maintain compact, source-linked project memory under docs/. Use before and after changes to code, configuration, schemas, data, tooling, deployment, or workflows; when durable decisions, invariants, failure modes, or recurring traps are discovered; or when project documentation needs review, consolidation, or correction. Read the complete core memory in a fresh context, map structural changes to existing architecture, update affected knowledge, verify it against authoritative source and tests, and report when documentation impact is none.
+---
+
+# Maintain Project Knowledge
+
+Keep accurate, compact memory that helps future agents understand the project, avoid known mistakes, and locate
+authoritative source without repeating investigation.
+
+## Boundaries
+
+- "Primary task" means the work the user currently requested. During documentation maintenance, read any repository
+  file needed as evidence, but write only under `docs/` and, when its workflow applies, the root `README.md`.
+  Documentation maintenance triggered by this skill does not itself authorize other changes; separately authorized
+  primary-task changes are unaffected.
+- Keep the root `README.md` outside project memory, technical authority, validator scope, and the core word budget.
+- Do not change code, tests, configuration, repository policy, generated artifacts, or other files solely as a
+  documentation safeguard. Report the needed safeguard unless the primary task authorizes it.
+- Write Markdown in English, preserving exact identifiers or source text when translation would be wrong.
+
+## Workflow
+
+### 1. Load the complete core
+
+Inspect `git status --short`, relevant staged and unstaged diffs, and relevant untracked files; preserve unrelated user
+changes. Inventory every `docs/**/*.md` file except Markdown under `docs/references/` and `docs/evidence/`, record line
+and word counts, and read each one to confirmed EOF. `docs/README.md` is the index, not a substitute for the complete
+read. If `docs/` does not exist, treat the core as empty; create `docs/README.md` only when durable knowledge must be
+recorded. From the repository root, when `docs/` exists, inventory it with:
+
+```bash
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print | sort
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print0 | sort -z | xargs -0 -r wc -l -w
+```
+
+Read all core documents of at most 240 lines concurrently in one bounded orchestration call, using one labeled
+`sed -n '1,240p' -- <path>` command per file and an output budget of at least twice their aggregate word count. Page each
+longer document separately in 240-line ranges; it must not serialize qualifying reads. Check every result and exit status.
+Confirm that the final requested range reaches the recorded line count. If output is missing or truncated, resume
+sequentially from the last confirmed line. Summaries, indexes, hashes, searches, or redirected output do not count as
+reading the content.
+
+Use this complete read as the context baseline. Reload it after context compaction, inventory or ownership changes,
+cross-topic work, or uncertain external edits; otherwise re-read only changed or implicated documents. Read a reference
+only when its indexed condition applies or while auditing references. Inspect evidence only for a claim that links to it.
+
+### 2. Map behavior and resolve uncertainty
+
+**Map architecture.** Before changes affecting behavior or structure, identify relevant owners, contracts, state and data
+flows, dependency direction, lifecycle or persistence, and test seams as applicable. Keep existing boundaries when their
+responsibilities fit; adjust them within the task’s scope when a concrete ownership problem warrants it. Add, split,
+combine, or remove modules and abstractions to clarify responsibilities or contracts, weighing their benefits against
+added indirection. Keep behavior easy to find and follow. Check affected producers and consumers; avoid adding unrelated
+responsibilities to coordinators. Keep the investigation proportional to the task.
+
+**Trace authoritative behavior.** Trace affected behavior through active implementation, callers, schemas, configuration,
+scripts, persistence, tests, and generated contracts. Confirm plausible files are active through imports, registration,
+or references. Resolve conflicts in this order:
+
+1. Executable code, schemas, migrations, configuration, and package scripts.
+2. Tests and validators demonstrating supported behavior.
+3. Generated contracts, for inspection only.
+4. Documentation.
+
+Treat tests as evidence, not automatic documentation triggers. Record a test change only when it establishes or changes a
+durable behavior, invariant, boundary, failure mode, or supported workflow; ignore refactors, fixtures, and coverage-only
+changes. Separate implemented behavior from intended policy and current limitations from deliberate design. Claim intent
+only with evidence.
+
+**Resolve material uncertainty.** Investigate proportionately. Resolve local, reversible choices through project patterns
+and engineering judgment. Ask the minimum focused questions when unresolved alternatives would materially affect the
+intended outcome, scope, public behavior or contracts, security or privacy, compatibility, cost, or an irreversible
+outcome. If the choice is delegated, use the best-supported option within task authority and disclose material assumptions.
+Otherwise, if clarification remains unavailable, report the material choice as blocked and continue only independent work.
+
+### 3. Maintain durable memory
+
+Record only project-specific knowledge that is durable, non-obvious, and useful to future work: product behavior, domain
+invariants, ownership, runtime and persistence flows, contracts across clients, services, data, generated artifacts, and
+deployment, security, privacy, authorization, migration, backup and recovery constraints, active and inactive paths,
+material failure modes, operational requirements, costly recurring traps, and decisions maintainers may revisit.
+
+Exclude inventories, exhaustive fields or endpoints, dependency lists, obvious mechanics, temporary state, debugging
+history, resolved incidents, speculation, and secrets. Link to clear source instead of copying recoverable detail. When no
+durable knowledge changed, leave `docs/` untouched and report `Documentation impact: none` after verification.
+
+Give every substantive claim one canonical owner. Update behavior, rationale, workflow, limitation, and source links
+together; other documents may link briefly without maintaining a duplicate. Replace stale text rather than appending
+corrections or chronology. Remove obsolete claims, resolved warnings, and duplication encountered in affected topics.
+Add a document only when no existing owner remains clear, link every core document from `docs/README.md`, and update
+links and ownership descriptions in `docs/README.md` when responsibilities change. Use relative links and kebab-case for
+new filenames; do not rename existing files only for style.
+
+For a recurring trap, identify the smallest enforceable safeguard—a type or schema constraint, focused test, validator,
+fail-fast check, or clearer boundary. Implement it only within primary-task authority; otherwise report it. Document only
+the residual invariant, limitation, or action—not incident chronology or blame—and remove the warning when enforcement
+makes it obsolete. While reviewing the documentation workflow, report a cheap existing validator missing from relevant
+CI; change CI only when authorized.
+
+### 4. Maintain the public README conditionally
+
+Treat the root `README.md` as concise onboarding for first-time human visitors. Do not load it with routine core memory.
+Review it when a change affects public purpose, audience, status, URLs, installation, first use, requirements, supported
+platforms, major capabilities or limitations, external services or data, privacy, security, support, contribution,
+licensing, or attribution. Skip it when none of those claims can be affected.
+
+During an authorized change or build task, update affected README claims in the same change unless the user excludes
+human-facing documentation. During read-only work, report contradictions without editing them. Make the opening state:
+
+1. What the project does and who it serves.
+2. The fastest useful action: open, install, run, import, or download.
+3. Any status or limitation that could change the visitor's decision.
+
+Then include only the shortest working usage path, meaningful capabilities, essential requirements and limitations, and
+relevant help, contribution, license, or attribution links. Adapt to the project type; require neither fixed headings nor
+empty sections. Aim for at most 800 words and consolidate above 1,000 unless it is deliberately the primary user
+documentation. Remove internal architecture, implementation rationale, exhaustive inventories, operations, and detail
+better owned elsewhere. Link to useful human-facing detail, including under `docs/`, while keeping onboarding
+self-contained.
+
+Verify README claims against active source, configuration, tests, deployment, package scripts, licenses, and linked files.
+Run its quick start or a safe equivalent when practical. Check links, informative-image alt text, rendered Markdown, and
+prefer relative links for repository files. Report changes or unresolved contradictions.
+
+## Memory layout
+
+Core memory is Markdown under `docs/` except `docs/references/` and `docs/evidence/`. Keep it at or below 6,000 words;
+at 5,500, warn and consolidate. Before adding words, remove stale or duplicated claims, recoverable mechanics, and detail
+that source links can replace.
+
+Use `docs/references/` only when necessary knowledge still cannot fit after consolidation and can be checked against
+current authoritative sources. Move the narrowest specialist detail first; core retains the actionable conclusion, why it
+matters, and the exact read condition. Never offload product scope, active behavior, ownership, security or privacy
+boundaries, routine operations, or costly traps merely to meet the limit.
+
+Keep references one level below `docs/references/`, forbid reference-to-reference dependencies, and list each under
+`## Specialized references` in `docs/README.md` with a concrete read condition. Begin each reference with:
+
+```markdown
+> Non-authoritative reference.
+> Core owner: [Document](../owning-document.md)
+> Verify against:
+> - `path/to/authoritative-source`
+> Review when:
+> - Concrete invalidation condition
+```
+
+Before relying on a reference, verify relevant claims against every declared source. Update or remove stale material in
+the same task; if verification is impossible, treat it as uncertain. Inspect a reference when its owner or source changes.
+Adding, removing, or renaming one requires reloading the complete core, reading every reference to EOF, and checking each
+index entry, core owner, declared source and review condition, and the prohibition on reference dependencies. Verify
+affected claims against their declared sources.
+
+Use `docs/evidence/` only for small raw artifacts whose exact form matters, such as images, captures, exact responses, or
+binary samples. Evidence is optional and non-authoritative. Link every file from the core or reference document explaining
+what it supports and when to inspect it; an inventory alone is insufficient. Prefer reference Markdown when explanation
+matters more than exact form. Verify evidence-derived claims against current source or label them as observations. Remove
+orphaned or superseded evidence. Never store secrets, dependencies, build output, large reproducible downloads, or
+temporary debugging artifacts there.
+
+## Verify and finish
+
+1. Re-read every changed document and README to confirmed EOF when changed.
+2. Derive removed or renamed terms, paths, commands, data sources, and contracts from the diff. Search `docs/` for their
+   old forms, contradictions, duplicate ownership, and stale terminology; re-read implicated surroundings.
+3. Recheck claims against the authority order above. Run relevant safe tests or documented verification commands when
+   practical and report important omissions. State prerequisites and working directories for commands. Give risky
+   procedures verification and recovery guidance; do not execute destructive, production, or expensive commands merely
+   to test prose.
+4. Do not edit generated artifacts directly, including contracts, schemas, declarations, or documentation. When the
+   primary task authorizes a change, inspect the generated output and modify its generator instead.
+5. From the host repository root, run Node on `scripts/validate-docs.mjs` beside this `SKILL.md`, not an assumed host
+   `./scripts/` path. Run `git diff --check`; review the final diff for unrelated churn, secrets, stale warnings, and
+   unjustified growth.
+6. Do not stage or commit unrelated changes. Follow commit authorization and message rules from the primary task or
+   repository workflow. Unless commits are prohibited, include documentation in its primary-task commit and commit each
+   discrete, completed, and verified change. When no message format is specified, use
+   `area[,area2,area3]: intention of change and why it was done (what changed)` with at most three areas. Areas name primary
+   product or system concerns, not every file category. Omit `docs`, `tests`, and generated output when they only support
+   another change; use `docs` only for documentation-only commits and `tests` only when testing behavior or infrastructure
+   is itself the change.
+7. Report documents added, updated, consolidated, moved, or removed and why. Report observed skill contradictions,
+   incorrect or ambiguous rules, unnecessary restrictions, poor task fit, repetition, or material time, context, or
+   correctness costs, even when the task succeeds. Name the concrete impact and a specific improvement; do not invent
+   criticism or placeholders.
+
+exec
+/bin/bash -lc "git status --short; rg -n 'sub_sq, Real.sq_sqrt|two_mixed_rays_nonneg_of_donor_budget|"'^(theorem|private theorem)'"' Lean/MOC/{ZeroHeight,TwoFrame}.lean | tail -24; taskset -pc "'$$; ls -l Lean/.lake' in /tmp/moc-lean-fix-zlmnno9q/after
+ succeeded in 395ms:
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+Lean/MOC/TwoFrame.lean:34:theorem BlochFrame.sum_blochWedge (E : BlochFrame ρ) (p : ℝ) (u : Fin 3 → ℝ) :
+Lean/MOC/TwoFrame.lean:49:theorem blochWedge_eq_distance (p q : ℝ) (u v : Fin 3 → ℝ)
+Lean/MOC/TwoFrame.lean:70:theorem rowBloch_norm_sq (v : Fin 2 → ℂ) :
+Lean/MOC/TwoFrame.lean:76:theorem rowMass_nonneg (v : Fin 2 → ℂ) : 0 ≤ rowMass v :=
+Lean/MOC/TwoFrame.lean:79:theorem rowMass_eq_zero_iff (v : Fin 2 → ℂ) : rowMass v = 0 ↔ v = 0 := by
+Lean/MOC/TwoFrame.lean:94:theorem rowDirection_norm_sq (v : Fin 2 → ℂ) :
+Lean/MOC/TwoFrame.lean:102:theorem rowMass_mul_direction (v : Fin 2 → ℂ) (k : Fin 3) :
+Lean/MOC/TwoFrame.lean:110:theorem normSq_wedge_eq_bloch (v w : Fin 2 → ℂ) :
+Lean/MOC/TwoFrame.lean:117:theorem normSq_wedge_eq_blochWedge (v w : Fin 2 → ℂ) :
+Lean/MOC/TwoFrame.lean:131:private theorem sum_normSq_column_eq_one (E : Matrix ρ (Fin 2) ℂ) (hE : Eᴴ * E = 1)
+Lean/MOC/TwoFrame.lean:202:theorem BlochFrame.project_wedge {σ : Type*} [Fintype σ]
+Lean/MOC/TwoFrame.lean:218:theorem BlochFrame.project_eq_opposite_of_mass_eq (E : BlochFrame ρ) (x : ρ → ℝ)
+Lean/MOC/TwoFrame.lean:245:theorem BlochFrame.axisCoord_mean (E : BlochFrame ρ) (B : Matrix (Fin 3) (Fin 3) ℝ)
+Lean/MOC/TwoFrame.lean:251:theorem BlochFrame.axisVariance_nonneg (E : BlochFrame ρ) (B : Matrix (Fin 3) (Fin 3) ℝ)
+Lean/MOC/TwoFrame.lean:255:private theorem sum_squares_mulVec (B : Matrix (Fin 3) (Fin 3) ℝ) (hB : Bᵀ * B = 1)
+Lean/MOC/TwoFrame.lean:262:theorem BlochFrame.sum_axisVariance (E : BlochFrame ρ) (B : Matrix (Fin 3) (Fin 3) ℝ)
+Lean/MOC/TwoFrame.lean:287:private theorem axisCoord_eq_zero_of_variance_eq_zero
+Lean/MOC/TwoFrame.lean:298:theorem blochWedge_eq_average_axes {σ : Type*} [Fintype σ]
+Lean/MOC/ZeroHeight.lean:14:theorem zero_height_type37_mixed_zero {a α β : ℝ}
+Lean/MOC/ZeroHeight.lean:31:theorem zero_height_type44_donor_budget {c p q α β : ℝ}
+Lean/MOC/ZeroHeight.lean:63:theorem two_mixed_rays_nonneg_of_donor_budget
+Lean/MOC/ZeroHeight.lean:80:  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, ← mul_assoc, hroot] at hsq
+pid 2's current affinity list: 0-3
+total 0
+lrwxrwxrwx 1 dell dell 42 Nov 20 14:01 packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+
+exec
+/bin/bash -lc "cp Lean/MOC/TwoFrame.lean /tmp/moc-twoframe-original
+cp Lean/MOC/ZeroHeight.lean /tmp/moc-zeroheight-original
+python3 - <<'PY'
+from pathlib import Path
+p = Path('Lean/MOC/TwoFrame.lean')
+s = p.read_text().replace(\"    field_simp [hv.ne']\\n\", \"    field_simp [hv.ne'] <;> ring\\n\")
+p.write_text(s)
+p = Path('Lean/MOC/ZeroHeight.lean')
+s = p.read_text().replace(\"    field_simp\\n  nlinarith\", \"    field_simp [hp'.ne'] <;> ring\\n  nlinarith\").replace(\"      field_simp\\n\", \"      field_simp [hp.ne'] <;> ring\\n\").replace(\"← mul_assoc, hroot\", \"mul_assoc, hroot\")
+p.write_text(s)
+PY
+cd Lean && lake --no-cache build MOC.TwoFrame" in /tmp/moc-lean-fix-zlmnno9q/after
+exec
+/bin/bash -lc 'diff -u /tmp/moc-twoframe-original Lean/MOC/TwoFrame.lean; diff -u /tmp/moc-zeroheight-original Lean/MOC/ZeroHeight.lean; ls -ld .git Lean/.lake/packages/; ls Lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib | head' in /tmp/moc-lean-fix-zlmnno9q/after
+ succeeded in 6202ms:
+--- /tmp/moc-twoframe-original	2026-11-20 14:01:30.627419531 -0500
++++ Lean/MOC/TwoFrame.lean	2026-11-20 14:01:30.675950298 -0500
+@@ -317,7 +317,7 @@
+     simp only [BlochFrame.alongAxis, dif_pos hv, dif_pos hv', BlochFrame.projectAxis,
+       BlochFrame.project_wedge, hscale, ← mul_sub, mul_pow]
+     rw [BlochFrame.axisScale, Real.sq_sqrt (div_nonneg (by norm_num) hv.le)]
+-    field_simp [hv.ne']
++    field_simp [hv.ne'] <;> ring
+   · have hz : E.axisVariance B k = 0 :=
+       le_antisymm (le_of_not_gt hv) (E.axisVariance_nonneg B k)
+     rw [hz, zero_div, zero_mul]
+--- /tmp/moc-zeroheight-original	2026-11-20 14:01:30.630154529 -0500
++++ Lean/MOC/ZeroHeight.lean	2026-11-20 14:01:30.676119940 -0500
+@@ -55,7 +55,7 @@
+       nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β))]
+   refine ⟨hp', hq', (mul_le_mul_left (mul_pos hp' hq')).mp ?_⟩
+   have hcancel : p * q * ((α + β) ^ 2 / p) = q * (α + β) ^ 2 := by
+-    field_simp
++    field_simp [hp'.ne'] <;> ring
+   nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β)), hcancel]
+ 
+ /-- A shared pair of squared minors compensates two mixed rays if each
+@@ -74,10 +74,10 @@
+   have hroot : √(p * Q₀) * √(L ^ 2 / p * Q₁) = L * √(Q₀ * Q₁) := by
+     rw [← Real.sqrt_mul hA]
+     have hprod : (p * Q₀) * (L ^ 2 / p * Q₁) = L ^ 2 * (Q₀ * Q₁) := by
+-      field_simp
++      field_simp [hp.ne'] <;> ring
+     rw [hprod, Real.sqrt_mul (sq_nonneg L), Real.sqrt_sq hL]
+   have hsq := sq_nonneg (√(p * Q₀) - √(L ^ 2 / p * Q₁))
+-  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, ← mul_assoc, hroot] at hsq
++  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, mul_assoc, hroot] at hsq
+   have hcomp := add_nonneg (mul_nonneg hα hf₁) (mul_nonneg hβ hf₂)
+   have hbudget' : L + L ^ 2 / p ≤ c := hbudget
+   change 0 ≤ α * f₁ + β * f₂ + p * Q₀ + c * Q₁
+dr-xr-xr-x  2 dell dell   40 Nov 20 14:01 .git
+drwxr-xr-x 11 dell dell 4096 Nov 20 13:25 Lean/.lake/packages/
+Algebra
+Analysis
+CategoryTheory
+Combinatorics
+Control
+Data
+Dynamics
+FieldTheory
+GroupTheory
+Init.ilean
+
+exec
+/bin/bash -lc 'head -12 MOC/ZeroHeight.lean; lake --no-cache build MOC.ZeroHeight' in /tmp/moc-lean-fix-zlmnno9q/after/Lean
+ succeeded in 36084ms:
+✔ [1816/1817] Built MOC.Core
+⚠ [1817/1817] Built MOC.TwoFrame
+warning: ././././MOC/TwoFrame.lean:320:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Build completed successfully.
+
+ succeeded in 8496ms:
+import Mathlib.Data.Real.Sqrt
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+
+/-! Scalar certificates for two rectangle-free zero-height contact types
+in the order-four census. The case numbers refer to the zero-based
+representatives in `data/certificates/geometry/zero_height_faces.json`. -/
+
+namespace MOC
+
+/-- In type 37 the sole positive monomial completes a negative square.
+⚠ [1344/1344] Built MOC.ZeroHeight
+warning: ././././MOC/ZeroHeight.lean:32:44: unused variable `hβ`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././MOC/ZeroHeight.lean:58:25: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/ZeroHeight.lean:77:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Build completed successfully.
+
+codex
+Both modules build with the proof fixes. I’ll remove the three tactic-style warnings introduced by the patch and rerun the checks.
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+for name, fact, indent in [('TwoFrame', \"hv.ne'\", 4), ('ZeroHeight', \"hp'.ne'\", 4), ('ZeroHeight', \"hp.ne'\", 6)]:
+    path = Path('Lean/MOC') / f'{name}.lean'
+    path.write_text(path.read_text().replace(f'field_simp [{fact}] <;> ring', f'field_simp [{fact}]\\n' + ' ' * indent + 'ring'))
+PY
+cd Lean && lake --no-cache build MOC.TwoFrame MOC.ZeroHeight" in /tmp/moc-lean-fix-zlmnno9q/after
+exec
+/bin/bash -lc 'diff -u /tmp/moc-twoframe-original Lean/MOC/TwoFrame.lean
+diff -u /tmp/moc-zeroheight-original Lean/MOC/ZeroHeight.lean
+git diff --no-index --check /tmp/moc-twoframe-original Lean/MOC/TwoFrame.lean
+git diff --no-index --check /tmp/moc-zeroheight-original Lean/MOC/ZeroHeight.lean' in /tmp/moc-lean-fix-zlmnno9q/after
+ exited 1 in 5133ms:
+--- /tmp/moc-twoframe-original	2026-11-20 14:01:30.627419531 -0500
++++ Lean/MOC/TwoFrame.lean	2026-11-20 14:02:18.263490537 -0500
+@@ -318,6 +318,7 @@
+       BlochFrame.project_wedge, hscale, ← mul_sub, mul_pow]
+     rw [BlochFrame.axisScale, Real.sq_sqrt (div_nonneg (by norm_num) hv.le)]
+     field_simp [hv.ne']
++    ring
+   · have hz : E.axisVariance B k = 0 :=
+       le_antisymm (le_of_not_gt hv) (E.axisVariance_nonneg B k)
+     rw [hz, zero_div, zero_mul]
+--- /tmp/moc-zeroheight-original	2026-11-20 14:01:30.630154529 -0500
++++ Lean/MOC/ZeroHeight.lean	2026-11-20 14:02:18.266056621 -0500
+@@ -55,7 +55,8 @@
+       nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β))]
+   refine ⟨hp', hq', (mul_le_mul_left (mul_pos hp' hq')).mp ?_⟩
+   have hcancel : p * q * ((α + β) ^ 2 / p) = q * (α + β) ^ 2 := by
+-    field_simp
++    field_simp [hp'.ne']
++    ring
+   nlinarith only [hcubic, hcube, mul_nonneg hp (sq_nonneg (α + β)), hcancel]
+ 
+ /-- A shared pair of squared minors compensates two mixed rays if each
+@@ -74,10 +75,11 @@
+   have hroot : √(p * Q₀) * √(L ^ 2 / p * Q₁) = L * √(Q₀ * Q₁) := by
+     rw [← Real.sqrt_mul hA]
+     have hprod : (p * Q₀) * (L ^ 2 / p * Q₁) = L ^ 2 * (Q₀ * Q₁) := by
+-      field_simp
++      field_simp [hp.ne']
++      ring
+     rw [hprod, Real.sqrt_mul (sq_nonneg L), Real.sqrt_sq hL]
+   have hsq := sq_nonneg (√(p * Q₀) - √(L ^ 2 / p * Q₁))
+-  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, ← mul_assoc, hroot] at hsq
++  rw [sub_sq, Real.sq_sqrt hA, Real.sq_sqrt hB, mul_assoc, hroot] at hsq
+   have hcomp := add_nonneg (mul_nonneg hα hf₁) (mul_nonneg hβ hf₂)
+   have hbudget' : L + L ^ 2 / p ≤ c := hbudget
+   change 0 ≤ α * f₁ + β * f₂ + p * Q₀ + c * Q₁
+
+ succeeded in 32349ms:
+⚠ [1817/1818] Built MOC.ZeroHeight
+warning: ././././MOC/ZeroHeight.lean:32:44: unused variable `hβ`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+✔ [1818/1818] Built MOC.TwoFrame
+Build completed successfully.
+
+codex
+Fixed all reported Lean errors in [TwoFrame.lean](/tmp/moc-lean-fix-zlmnno9q/after/Lean/MOC/TwoFrame.lean:320) and [ZeroHeight.lean](/tmp/moc-lean-fix-zlmnno9q/after/Lean/MOC/ZeroHeight.lean:57). Only the proof bodies changed. The fixes preserve all statements, hypotheses, and the axiom policy.
+
+Both modules passed `lake --no-cache build MOC.TwoFrame MOC.ZeroHeight` from `Lean/`. The existing unused-hypothesis warning for `hβ` remains.
+tokens used
+45,604
+Fixed all reported Lean errors in [TwoFrame.lean](/tmp/moc-lean-fix-zlmnno9q/after/Lean/MOC/TwoFrame.lean:320) and [ZeroHeight.lean](/tmp/moc-lean-fix-zlmnno9q/after/Lean/MOC/ZeroHeight.lean:57). Only the proof bodies changed. The fixes preserve all statements, hypotheses, and the axiom policy.
+
+Both modules passed `lake --no-cache build MOC.TwoFrame MOC.ZeroHeight` from `Lean/`. The existing unused-hypothesis warning for `hβ` remains.

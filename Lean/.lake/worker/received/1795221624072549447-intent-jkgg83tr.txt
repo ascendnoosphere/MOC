@@ -1,0 +1,2 @@
+lean: derive Drury’s quadratic from the Hermitian inverse commutator
+Lean/MOC/DruryResolvent.lean

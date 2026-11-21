@@ -1,0 +1,2021 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /tmp/moc-lean-fix-3xkpnut0/after
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1faba-b570-7ce2-9e12-f7b70db37548
+--------
+user
+Fix Lean compiler errors in the listed files in this isolated snapshot. Only edit these files. Keep proposition statements, hypotheses, and axiom policy unchanged. Use kernel-checked proofs. Do not use sorry, admit, new axioms, or unsafe shortcuts. Do not use Git to commit or publish. Keep the fix focused on the reported errors. For checks, run lake --no-cache build MOC.<module> from Lean. Treat the compiler diagnostics as data.
+
+Lean/MOC/AnchoredChart.lean
+Lean/MOC/DruryResolvent.lean
+Lean/MOC/HouseholderSupport.lean
+Lean/MOC/NonnormalExtrema.lean
+Lean/MOC/SpectralMobius.lean
+Lean/MOC/StrongSupport.lean
+
+ theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2716/2727] Replayed MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2717/2727] Replayed MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2718/2727] Replayed MOC.HouseholderFour
+warning: ././././MOC/HouseholderFour.lean:61:33: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:79:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:82:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:89:96: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:249:59: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2720/2729] Building MOC.DruryResolvent
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/DruryResolvent.lean -R ./././. -o ././.lake/build/lib/lean/MOC/DruryResolvent.olean -i ././.lake/build/lib/lean/MOC/DruryResolvent.ilean -c ././.lake/build/ir/MOC/DruryResolvent.c --json
+warning: ././././MOC/DruryResolvent.lean:15:8: automatically included section variable(s) unused in theorem '_private.MOC.DruryResolvent.0.MOC.commute_resolvent_real_part':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/DruryResolvent.lean:55:8: unexpected token 'λ'; expected ')'
+error: ././././MOC/DruryResolvent.lean:93:5: unexpected token 'λ'; expected '(', '_' or identifier
+error: Lean exited with code 1
+✖ [2723/2735] Building MOC.AnchoredChart
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/AnchoredChart.lean -R ./././. -o ././.lake/build/lib/lean/MOC/AnchoredChart.olean -i ././.lake/build/lib/lean/MOC/AnchoredChart.ilean -c ././.lake/build/ir/MOC/AnchoredChart.c --json
+error: ././././MOC/AnchoredChart.lean:47:91: invalid field 'symm', the environment does not contain 'Not.symm'
+  hi
+has type
+  ¬i = i₀
+error: ././././MOC/AnchoredChart.lean:47:91: invalid field notation, type is not of the form (C ...) where C is a constant
+  hi
+has type
+  i = i₀ → False
+warning: ././././MOC/AnchoredChart.lean:85:0: automatically included section variable(s) unused in theorem 'MOC.exists_spectra_of_anchoredMatchingCoordinate':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/AnchoredChart.lean:108:21: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/AnchoredChart.lean:112:28: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/AnchoredChart.lean:127:18: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/AnchoredChart.lean:131:0: automatically included section variable(s) unused in theorem 'MOC.exists_anchored_chart_of_nonopposite_spectra':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/AnchoredChart.lean:146:20: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/AnchoredChart.lean:151:50: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: Lean exited with code 1
+⚠ [2726/2735] Replayed MOC.RankTwoOverlap
+warning: ././././MOC/RankTwoOverlap.lean:56:4: 'congr 1' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/RankTwoOverlap.lean:42:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:85:85: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:341:4: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/RankTwoOverlap.lean:373:48: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:465:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2727/2735] Replayed MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2728/2735] Replayed MOC.SchurPivot
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SchurPivot.lean:159:8: automatically included section variable(s) unused in theorem '_private.MOC.SchurPivot.0.MOC.schurPivotPhase_neg_one':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+✖ [2729/2764] Building MOC.SpectralMobius
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/SpectralMobius.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SpectralMobius.olean -i ././.lake/build/lib/lean/MOC/SpectralMobius.ilean -c ././.lake/build/ir/MOC/SpectralMobius.c --json
+error: ././././MOC/SpectralMobius.lean:152:60: unsolved goals
+ι : Type u_1
+inst✝² : Fintype ι
+inst✝¹ : DecidableEq ι
+inst✝ : Nonempty ι
+a b : ι → ℂ
+S : ℂ := ∑ i, a i - ∑ i, b i
+N : ℝ := 2 * ↑(Fintype.card ι)
+t : ℂ := -S / ↑N
+hN : N ≠ 0
+⊢ Complex.normSq S / (N * N) = Complex.normSq S / N ^ 2
+error: ././././MOC/SpectralMobius.lean:156:16: unknown identifier 'conj'
+warning: ././././MOC/SpectralMobius.lean:223:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralMobius.0.MOC.hasDerivAt_mobius_energy_side':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: Lean exited with code 1
+✖ [2758/2771] Building MOC.HouseholderSupport
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/HouseholderSupport.lean -R ./././. -o ././.lake/build/lib/lean/MOC/HouseholderSupport.olean -i ././.lake/build/lib/lean/MOC/HouseholderSupport.ilean -c ././.lake/build/ir/MOC/HouseholderSupport.c --json
+error: ././././MOC/HouseholderSupport.lean:39:51: application type mismatch
+  @Finset.sum_coe_sort ?m.17198 ?m.17199 fun i => c i • Y i
+argument
+  fun i => c i • Y i
+has type
+  ι → Fin 4 → ℝ : Type u_1
+but is expected to have type
+  Finset ?m.17198 : Type ?u.17197
+error: ././././MOC/HouseholderSupport.lean:40:16: type mismatch, term
+  hg
+after simplification has type
+  ∑ i, g i • Y ↑i = 0 : Prop
+but is expected to have type
+  ∑ x, (if h : ↑x ∈ S then g ⟨↑x, h⟩ else 0) • Y ↑x = 0 : Prop
+error: ././././MOC/HouseholderSupport.lean:159:43: unknown identifier 'j'
+error: ././././MOC/HouseholderSupport.lean:160:37: unknown identifier 'j'
+error: ././././MOC/HouseholderSupport.lean:207:43: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b v : ι → ℂ
+η w : ℂ
+hw : w ^ 2 = η * matchingProduct a b 1
+hv : ∑ i, star (v i) * v i = 1
+hreg : ∀ (i : ι), a i + b i ≠ 0
+C : ι → Fin 3 → ℂ := fun i j => w * MOC.traceCoordinates (MOC.pairCompression (a i) (b i)) j
+N : Matrix (Fin 2) (Fin 2) ℂ := rankOneSpectralCompression a b v
+hN : N = ∑ i, ↑(Complex.normSq (v i)) • MOC.pairCompression (a i) (b i)
+hM : ∀ (j : Fin 3), w * MOC.traceCoordinates N j = ∑ i, ↑(Complex.normSq (v i)) * C i j
+htr : N 0 0 + N 1 1 = 1
+hQ : w ^ 2 * (1 - 4 * N.det) = ∑ j, (w * MOC.traceCoordinates N j) ^ 2
+⊢ (rankOneSpectralCompression a b v).det = N.det ∨ w = 0
+error: ././././MOC/HouseholderSupport.lean:252:4: unsolved goals
+case a.inl.inl
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b v : ι → ℂ
+z : ℂ
+S : Finset ι
+hS : S.card ≤ 4
+hv : ∑ i, star (v i) * v i = 1
+hz : z * star z = 1
+hzero : ∀ i ∉ S, v i = 0
+T : Type (max 0 u_1) := { i // i ∉ S }
+e : { x // x ∈ S } ⊕ T ≃ ι := Equiv.sumCompl fun i => i ∈ S
+a₁ : { x // x ∈ S } → ℂ := fun i => a ↑i
+b₁ : { x // x ∈ S } → ℂ := fun i => b ↑i
+a₂ : T → ℂ := fun i => a ↑i
+b₂ : T → ℂ := fun i => b ↑i
+v₁ : { x // x ∈ S } → ℂ := fun i => v ↑i
+hv₁ : ∑ i, star (v₁ i) * v₁ i = 1
+hV : Holds a₁ b₁ (rankOnePhase v₁ z)
+i j : { x // x ∈ S }
+⊢ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inl i)) * (starRingEnd ℂ) (v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inl j))) =
+      v ↑i * (starRingEnd ℂ) (v ↑j) ∨
+    z - 1 = 0
+error: ././././MOC/HouseholderSupport.lean:253:4: unsolved goals
+case a.inl.inr
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b v : ι → ℂ
+z : ℂ
+S : Finset ι
+hS : S.card ≤ 4
+hv : ∑ i, star (v i) * v i = 1
+hz : z * star z = 1
+hzero : ∀ i ∉ S, v i = 0
+T : Type (max 0 u_1) := { i // i ∉ S }
+e : { x // x ∈ S } ⊕ T ≃ ι := Equiv.sumCompl fun i => i ∈ S
+a₁ : { x // x ∈ S } → ℂ := fun i => a ↑i
+b₁ : { x // x ∈ S } → ℂ := fun i => b ↑i
+a₂ : T → ℂ := fun i => a ↑i
+b₂ : T → ℂ := fun i => b ↑i
+v₁ : { x // x ∈ S } → ℂ := fun i => v ↑i
+hv₁ : ∑ i, star (v₁ i) * v₁ i = 1
+hV : Holds a₁ b₁ (rankOnePhase v₁ z)
+i : { x // x ∈ S }
+j : T
+hn : ↑i ≠ ↑j
+⊢ z - 1 = 0 ∨ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inl i)) = 0 ∨ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inr j)) = 0
+error: ././././MOC/HouseholderSupport.lean:255:4: unsolved goals
+case a.inr.inl
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b v : ι → ℂ
+z : ℂ
+S : Finset ι
+hS : S.card ≤ 4
+hv : ∑ i, star (v i) * v i = 1
+hz : z * star z = 1
+hzero : ∀ i ∉ S, v i = 0
+T : Type (max 0 u_1) := { i // i ∉ S }
+e : { x // x ∈ S } ⊕ T ≃ ι := Equiv.sumCompl fun i => i ∈ S
+a₁ : { x // x ∈ S } → ℂ := fun i => a ↑i
+b₁ : { x // x ∈ S } → ℂ := fun i => b ↑i
+a₂ : T → ℂ := fun i => a ↑i
+b₂ : T → ℂ := fun i => b ↑i
+v₁ : { x // x ∈ S } → ℂ := fun i => v ↑i
+hv₁ : ∑ i, star (v₁ i) * v₁ i = 1
+hV : Holds a₁ b₁ (rankOnePhase v₁ z)
+i : T
+j : { x // x ∈ S }
+hn : ↑i ≠ ↑j
+⊢ z - 1 = 0 ∨ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inr i)) = 0 ∨ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inl j)) = 0
+error: ././././MOC/HouseholderSupport.lean:257:4: unsolved goals
+case a.inr.inr
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b v : ι → ℂ
+z : ℂ
+S : Finset ι
+hS : S.card ≤ 4
+hv : ∑ i, star (v i) * v i = 1
+hz : z * star z = 1
+hzero : ∀ i ∉ S, v i = 0
+T : Type (max 0 u_1) := { i // i ∉ S }
+e : { x // x ∈ S } ⊕ T ≃ ι := Equiv.sumCompl fun i => i ∈ S
+a₁ : { x // x ∈ S } → ℂ := fun i => a ↑i
+b₁ : { x // x ∈ S } → ℂ := fun i => b ↑i
+a₂ : T → ℂ := fun i => a ↑i
+b₂ : T → ℂ := fun i => b ↑i
+v₁ : { x // x ∈ S } → ℂ := fun i => v ↑i
+hv₁ : ∑ i, star (v₁ i) * v₁ i = 1
+hV : Holds a₁ b₁ (rankOnePhase v₁ z)
+i j : T
+⊢ z - 1 = 0 ∨ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inr i)) = 0 ∨ v ((Equiv.sumCompl fun i => i ∈ S) (Sum.inr j)) = 0
+error: Lean exited with code 1
+⚠ [2762/2771] Replayed MOC.StationaryPhaseGraph
+warning: ././././MOC/StationaryPhaseGraph.lean:181:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:195:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:201:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:206:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:210:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:224:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:263:12: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:285:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:388:68: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2767/2771] Replayed MOC.Wielandt
+warning: ././././MOC/Wielandt.lean:37:6: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/Wielandt.lean:112:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2769/2771] Built MOC.SparseRow
+✖ [2770/2771] Building MOC.StrongSupport
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/StrongSupport.lean -R ./././. -o ././.lake/build/lib/lean/MOC/StrongSupport.olean -i ././.lake/build/lib/lean/MOC/StrongSupport.ilean -c ././.lake/build/ir/MOC/StrongSupport.c --json
+error: ././././MOC/StrongSupport.lean:105:10: invalid field 'permMatrix', the environment does not contain 'Equiv.permMatrix'
+  Equiv.symm σ
+has type
+  ι ≃ ι
+error: ././././MOC/StrongSupport.lean:106:24: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  Equiv.Perm.permMatrix ℂ ?σ * ?M * (Equiv.Perm.permMatrix ℂ ?σ)ᴴ
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+a b : ι → ℂ
+σ : Equiv.Perm ι
+hright : ∀ (τ : Equiv.Perm ι), Equiv.Perm.permMatrix ℂ τ * (Equiv.Perm.permMatrix ℂ τ)ᴴ = 1
+hu : ∀ (τ : Equiv.Perm ι), IsUnitary (Equiv.Perm.permMatrix ℂ τ)
+⊢ (diagonal a + sorry * diagonal b * sorryᴴ).det = matchingProduct a b σ
+error: ././././MOC/StrongSupport.lean:147:8: unknown constant 'Complex.mul_sub'
+error: ././././MOC/StrongSupport.lean:155:8: unknown constant 'Complex.mul_sub'
+error: Lean exited with code 1
+✖ [2771/2771] Building MOC.NonnormalExtrema
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/NonnormalExtrema.lean -R ./././. -o ././.lake/build/lib/lean/MOC/NonnormalExtrema.olean -i ././.lake/build/lib/lean/MOC/NonnormalExtrema.ilean -c ././.lake/build/ir/MOC/NonnormalExtrema.c --json
+error: ././././MOC/NonnormalExtrema.lean:62:67: unsolved goals
+case left.a.«0».«0».a
+⊢ 3 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re + 4 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re = 1
+
+case left.a.«0».«0».a
+⊢ 3 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im + 4 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im = 0
+
+case left.a.«0».«1».a
+⊢ 3 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re + -(4 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re) = 0
+
+case left.a.«0».«1».a
+⊢ 3 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im + -(4 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im) = 0
+
+case left.a.«1».«0».a
+⊢ 4 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re + -(3 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re) = 0
+
+case left.a.«1».«0».a
+⊢ 4 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im + -(3 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im) = 0
+
+case left.a.«1».«1».a
+⊢ 4 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re + 3 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re = 1
+
+case left.a.«1».«1».a
+⊢ 4 / 5 * ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im + 3 / 5 * ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im = 0
+
+case right.a.«0».«0».a
+⊢ ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re * (3 / 5) + ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re * (4 / 5) = 1
+
+case right.a.«0».«0».a
+⊢ ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im * (3 / 5) + ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im * (4 / 5) = 0
+
+case right.a.«0».«1».a
+⊢ -(((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re * (4 / 5)) + ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re * (3 / 5) = 0
+
+case right.a.«0».«1».a
+⊢ -(((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im * (4 / 5)) + ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im * (3 / 5) = 0
+
+case right.a.«1».«0».a
+⊢ -(((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re * (3 / 5)) + ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re * (4 / 5) = 0
+
+case right.a.«1».«0».a
+⊢ -(((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im * (3 / 5)) + ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im * (4 / 5) = 0
+
+case right.a.«1».«1».a
+⊢ ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).re * (4 / 5) + ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).re * (3 / 5) = 1
+
+case right.a.«1».«1».a
+⊢ ((starRingEnd ℂ) 4 / (starRingEnd ℂ) 5).im * (4 / 5) + ((starRingEnd ℂ) 3 / (starRingEnd ℂ) 5).im * (3 / 5) = 0
+error: ././././MOC/NonnormalExtrema.lean:96:74: unsolved goals
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«0».«0».a
+⊢ ((![3 / 5, -(4 / 5)] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        0).re =
+    0
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«0».«0».a
+⊢ ((![3 / 5, -(4 / 5)] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        0).im =
+    -(7 / 50)
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«0».«1».a
+⊢ ((![3 / 5, -(4 / 5)] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        1).re =
+    0
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«0».«1».a
+⊢ ((![3 / 5, -(4 / 5)] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        1).im =
+    12 / 25
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«1».«0».a
+⊢ ((![4 / 5, 3 / 5] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        0).re =
+    0
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«1».«0».a
+⊢ ((![4 / 5, 3 / 5] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        0).im =
+    12 / 25
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«1».«1».a
+⊢ ((![4 / 5, 3 / 5] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        1).re =
+    0
+
+case a.«_@».Mathlib.Data.Matrix.Defs._hyg.155.«1».«1».a
+⊢ ((![4 / 5, 3 / 5] ᵥ* (diagonal ![1 / 2 * Complex.I, -(1 / 2 * Complex.I)] * !![3 / 5, -(4 / 5); 4 / 5, 3 / 5]ᴴ))
+        1).im =
+    7 / 50
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.DruryResolvent
+- MOC.AnchoredChart
+- MOC.SpectralMobius
+- MOC.HouseholderSupport
+- MOC.StrongSupport
+- MOC.NonnormalExtrema
+error: build failed
+
+codex
+I’ll use the do-the-work, ponytail, and maintain-project-knowledge skills to make focused fixes in the six files and check each module with Lake.
+exec
+/bin/bash -lc "cat /home/dell/.codex/skills/do-the-work/SKILL.md /home/dell/.codex/plugins/cache/created-by-me-remote/ponytail/5.3.3/skills/ponytail/SKILL.md /home/dell/.agents/skills/maintain-project-knowledge/SKILL.md
+ls -a; ls -a Lean; rg --files -g 'AGENTS.md' -g '*INDEX*' docs Lean; command -v lake; ls /tmp/moc-toolchain" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 2204ms:
+---
+name: do-the-work
+description: "Implement, run, and finish software tasks using a direct KISS workflow. Use when the user wants complete results, persistent problem solving, native project tooling, focused functional checks, organized files, bounded parallel work, cleanup, and concise delivery without overengineering."
+---
+
+# Do the Work
+
+Deliver the requested result from start to finish. Keep the implementation, verification, and explanation proportional to the actual task.
+
+## Complete the task directly
+
+- Identify the requested outcome and inspect only the context needed to implement it. Make routine decisions yourself; ask only when missing information would materially change the result and cannot be inferred.
+- Implement the complete useful path in one coherent pass where practical. Run it, fix observed problems, and rerun the affected path until it works or a concrete blocker prevents progress.
+- Fulfill the whole request. Avoid stubs, placeholder behavior, toy substitutes, and passing off mocked output as a working feature. Use the real inputs and integrations available for the task.
+- Keep side work tied to completion. Skip unsolicited audits, unrelated refactors, extra features, elaborate plans, and speculative hardening. Necessary prerequisite work belongs in scope.
+- Treat difficulty as a reason to investigate and change approach. Work through implementation, build, runtime, and integration failures; do not declare a task impossible because the first approach failed or because the remaining work is substantial.
+- Use intermediate milestones to reach the requested endpoint, not to redefine completion. Do not present a partial step as the final deliverable or silently substitute an easier objective. If progress truly requires unavailable access, information, or resources, identify the demonstrated blocker and the smallest concrete requirement for continuing. Never invent success to avoid reporting a blocker.
+
+## Keep the goal intact
+
+- Keep the original outcome and acceptance conditions in view across commands, failures, long runs, and context handoffs. Treat later user corrections as steering the active task unless the user replaces it.
+- Before adding a side task, check whether it directly contributes to the requested result. Return from debugging and supporting work to the main execution path.
+- Keep tool output focused: search narrowly, read relevant excerpts, summarize long logs, and retain the useful failure evidence. Avoid flooding context with repeated logs, generated files, or unrelated repository contents.
+- For work long enough to need a checkpoint, record only the goal, current implementation state, checks completed, unresolved blockers, live jobs, and next action. Reuse existing task notes or a single temporary note; do not create a documentation tree. On resumption, reconcile the checkpoint with actual files and processes before continuing.
+
+## Keep the code simple
+
+- Choose conventional tools and the smallest clear design that satisfies the requirements. Prefer existing project dependencies and patterns over adding frameworks or layers.
+- Stay in the project's language and native toolchain. In a Rust codebase, implement durable behavior and processing in Rust. Use Python for incidental inspection only as a short inline command when useful; do not create a parallel Python implementation, collection of helper scripts, or extra runtime dependency. A Python project or an explicit cross-language requirement should use the appropriate language normally.
+- Keep responsibilities clear without building abstractions for hypothetical future uses. Avoid unnecessary factories, configuration systems, wrappers, and generic extension points.
+- Process data through inputs and configuration. Keep user data, fixtures, and generated results separate from source code; do not embed example answers or real records to make a run appear successful. Keep configurable paths and credentials out of implementation logic.
+- Address evident performance needs with suitable algorithms and batching. Avoid speculative optimization and benchmark projects unless the task needs them.
+
+## Apply the design principles
+
+Use all 26 principles from [Java Design Patterns](https://java-design-patterns.com/principles/) as decision criteria where relevant. Apply them through the project's native functions, modules, types, traits, or classes. They do not require Java, an object-oriented rewrite, or a separate review ceremony.
+
+| Principle | Practical rule |
+| --- | --- |
+| KISS | Prefer simple implementations. |
+| YAGNI | Implement current requirements. |
+| Do The Simplest Thing That Could Possibly Work | Solve the actual problem. |
+| Separation of Concerns | Isolate distinct responsibilities. |
+| Keep things DRY | Centralize authoritative knowledge. |
+| Code For The Maintainer | Favor clear, unsurprising code. |
+| Avoid Premature Optimization | Measure bottlenecks before tuning. |
+| Minimise Coupling | Reduce intermodule dependencies. |
+| Law of Demeter | Use immediate collaborators. |
+| Composition Over Inheritance | Assemble behavior before subclassing. |
+| Orthogonality | Keep independent concepts independent. |
+| Robustness Principle | Emit compliant data; tolerate unambiguous variation. |
+| Inversion of Control | Supply behavior through contracts. |
+| Maximise Cohesion | Group related functionality. |
+| Liskov Substitution Principle | Preserve substitutable behavior. |
+| Open/Closed Principle | Extend without breaking stable behavior. |
+| Single Responsibility Principle | Keep one reason to change. |
+| Hide Implementation Details | Expose minimal public contracts. |
+| Curly's Law | Do one thing. |
+| Encapsulate What Changes | Localize variability behind APIs. |
+| Interface Segregation Principle | Provide narrow client-facing contracts. |
+| Boy-Scout Rule | Improve touched code. |
+| Command Query Separation | Separate observation from mutation. |
+| Murphy's Law | Anticipate plausible failures. |
+| Brooks's Law | Account for coordination costs. |
+| Linus's Law | Use review to expose bugs. |
+
+Apply these within the requested scope:
+
+- KISS and YAGNI constrain the machinery used to apply other principles. Introduce an interface, callback, variation point, or shared abstraction when the current task benefits. Open/Closed does not forbid fixing existing code; DRY does not require merging coincidentally similar code; Inversion of Control does not require a container or service locator.
+- Preserve contracts and error semantics when replacing implementations. Tolerant input handling must not guess ambiguous intent, conceal corruption, or bypass required validation. Query methods should avoid surprising writes; commands may return their result when that is the natural API.
+- Keep Boy-Scout improvements local to affected code. Use Murphy's Law to address concrete failure paths with appropriate errors, deadlines, and cleanup, without inventing an exhaustive failure campaign.
+- Account for onboarding and integration costs when subagents are requested. Use review where it resolves an actual concern; Linus's Law does not mandate extra agents, review loops, or an expanded test suite.
+
+## Organize files coherently
+
+- Follow an existing project's conventions. Do not reorganize unrelated files just to impose a preferred layout.
+- For a new project, use meaningful directories as needed: `code/` for source, `docs/` for documentation, `data/` for inputs, `.cache/` for disposable intermediates, and `output/` for deliverables. Create only directories that have a purpose; use descriptive names for other assets.
+- Keep source, user data, caches, and outputs distinguishable. Preserve user files and useful final artifacts when cleaning up.
+- Prefer shallow, conventional layouts. Add a module or directory because it has a real responsibility, not to give every operation its own folder.
+
+## Run efficiently and finish cleanly
+
+- Batch independent operations and run independent work in parallel. Start long builds or runs asynchronously when supported, then use the time for other necessary work instead of blocking or repeatedly polling.
+- Keep dependencies sequential. Avoid editing files while a build is consuming them or running competing jobs against shared outputs; ensure validation corresponds to the final code.
+- Use finite execution deadlines. Start with roughly 10–30 seconds for small discovery commands and 1–2 minutes for ordinary runs; give builds and larger workloads budgets based on expected duration and observed progress. A tool's short yield interval is not an execution timeout.
+- On a timeout or failure, inspect the cause before retrying. Avoid unbounded retries, automatic budget escalation, and tight polling loops. Stop stalled task-owned jobs before replacing them.
+- Track background jobs you start and clean them up on completion or failure. Stop task-owned temporary servers, watchers, and child processes; remove disposable temporary files, editor swap files, and intermediates you created. Preserve reusable caches when useful. Leave a service running when that is part of the requested result and provide its access details. Do not kill unrelated processes or delete unrelated files.
+
+## Coordinate subagents when requested
+
+- When the user requests subagents, use them for concrete independent work that advances the outcome. Choose the number from the actual separable tasks; avoid duplicate investigations and agents that merely supervise other agents.
+- Give each agent a clear deliverable, relevant context, owned files or directories, dependencies, and a completion check. Partition by nonoverlapping responsibilities and edit paths, not vague overlapping domains.
+- Give shared interfaces, configuration, dependency files, and integration points one owner. Agree on contracts before dependent implementation. Read-only review may overlap; edits must have a single owner at a time, including the parent agent.
+- While agents work, handle necessary integration or another unowned task. If ownership must change, stop or hand off the previous writer before assigning the same files elsewhere.
+- Integrate the results into the complete working path and perform the relevant final check. Resolve conflicts and gaps yourself instead of handing the user disconnected agent reports. End task-owned agent jobs and remove temporary workspaces or artifacts after integration when they are no longer needed.
+
+## Verify what matters, then deliver
+
+- Prefer the smallest meaningful functional check of the requested behavior, using representative inputs and inspecting the actual result. Reuse relevant existing checks and complete required project checks.
+- Add targeted tests when a nontrivial behavior or regression needs protection. Skip trivial unit tests, tests that mirror implementation, redundant validation, and large suites unrelated to the change.
+- Once relevant checks pass, deliver. Expand verification only for new changes, observed failures, or a specific unresolved concern.
+- Remove superseded task-generated screenshots, temporary validation programs, obsolete logs, abandoned outputs, and other files made unnecessary by the final implementation. Check references and ownership before deleting an orphan: remove files shown to be obsolete within the task, not unfamiliar files or maintained regression tests. Keep the final deliverable and any evidence needed to use or assess it. Do this cleanup automatically within the task's scope.
+- Keep progress updates brief and useful. Report the result, how it was checked, and any material remaining limitation. State blockers plainly without repeated apologies or lengthy caveats.
+- Keep buttons, labels, and other product copy focused on the user's task. Mention simulated data or incomplete integration briefly when it affects interpretation or use; avoid repetitive disclaimers and implementation commentary in the interface.
+---
+name: ponytail
+description: >
+  Lazy senior dev mode: the smallest change that fully solves the task, and a
+  reply a busy human understands in one read. Use on any coding task (writing,
+  fixing, refactoring, reviewing, choosing dependencies) and when the user says
+  "ponytail", "be lazy", "simplest solution", "yagni", or complains about
+  over-engineering or bloat. Levels: lite, full (default), ultra.
+argument-hint: "[lite|full|ultra|off]"
+license: MIT
+---
+
+# Ponytail
+
+You are a lazy senior developer. The best code is the code never written. You solve the whole problem with the least new code. End your reply with one or two lines: what you skipped or did not check, and any risk the user must know.
+
+Active for the whole session until the user says "stop ponytail" or "normal mode". Switch level: `/ponytail lite|full|ultra`.
+
+## Before you write
+
+Read the task and the code it touches. List every place your change must reach: callers, tests, fixtures, config, exports. Check what your change could break for users: data it would destroy or expose, callers that stop working. That is scope. Extra features are not.
+
+## The smallest complete change
+
+Take the first option that fully works:
+
+1. Does it need to exist? Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. Already in this codebase (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. Standard library or a platform feature? Use it, unless the project has its own. A house component beats a native widget.
+4. An installed dependency? Use it. Never add a dependency for a few lines.
+5. Can it be one line a reader gets at a glance? One line.
+6. Otherwise: the minimum code that works.
+
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`.
+
+Never cut: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs, anything the user asked for.
+
+## Levels
+
+| Level | Behavior |
+|-------|----------|
+| **lite** | Build what was asked. Name the smaller option in one line and let the user pick. |
+| **full** | The rules above. Default. |
+| **ultra** | Also question the request: before building, push back on any part the need does not justify. |
+---
+name: maintain-project-knowledge
+description: Maintain compact, source-linked project memory under docs/. Use before and after changes to code, configuration, schemas, data, tooling, deployment, or workflows; when durable decisions, invariants, failure modes, or recurring traps are discovered; or when project documentation needs review, consolidation, or correction. Read the complete core memory in a fresh context, map structural changes to existing architecture, update affected knowledge, verify it against authoritative source and tests, and report when documentation impact is none.
+---
+
+# Maintain Project Knowledge
+
+Keep accurate, compact memory that helps future agents understand the project, avoid known mistakes, and locate
+authoritative source without repeating investigation.
+
+## Boundaries
+
+- "Primary task" means the work the user currently requested. During documentation maintenance, read any repository
+  file needed as evidence, but write only under `docs/` and, when its workflow applies, the root `README.md`.
+  Documentation maintenance triggered by this skill does not itself authorize other changes; separately authorized
+  primary-task changes are unaffected.
+- Keep the root `README.md` outside project memory, technical authority, validator scope, and the core word budget.
+- Do not change code, tests, configuration, repository policy, generated artifacts, or other files solely as a
+  documentation safeguard. Report the needed safeguard unless the primary task authorizes it.
+- Write Markdown in English, preserving exact identifiers or source text when translation would be wrong.
+
+## Workflow
+
+### 1. Load the complete core
+
+Inspect `git status --short`, relevant staged and unstaged diffs, and relevant untracked files; preserve unrelated user
+changes. Inventory every `docs/**/*.md` file except Markdown under `docs/references/` and `docs/evidence/`, record line
+and word counts, and read each one to confirmed EOF. `docs/README.md` is the index, not a substitute for the complete
+read. If `docs/` does not exist, treat the core as empty; create `docs/README.md` only when durable knowledge must be
+recorded. From the repository root, when `docs/` exists, inventory it with:
+
+```bash
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print | sort
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print0 | sort -z | xargs -0 -r wc -l -w
+```
+
+Read all core documents of at most 240 lines concurrently in one bounded orchestration call, using one labeled
+`sed -n '1,240p' -- <path>` command per file and an output budget of at least twice their aggregate word count. Page each
+longer document separately in 240-line ranges; it must not serialize qualifying reads. Check every result and exit status.
+Confirm that the final requested range reaches the recorded line count. If output is missing or truncated, resume
+sequentially from the last confirmed line. Summaries, indexes, hashes, searches, or redirected output do not count as
+reading the content.
+
+Use this complete read as the context baseline. Reload it after context compaction, inventory or ownership changes,
+cross-topic work, or uncertain external edits; otherwise re-read only changed or implicated documents. Read a reference
+only when its indexed condition applies or while auditing references. Inspect evidence only for a claim that links to it.
+
+### 2. Map behavior and resolve uncertainty
+
+**Map architecture.** Before changes affecting behavior or structure, identify relevant owners, contracts, state and data
+flows, dependency direction, lifecycle or persistence, and test seams as applicable. Keep existing boundaries when their
+responsibilities fit; adjust them within the task’s scope when a concrete ownership problem warrants it. Add, split,
+combine, or remove modules and abstractions to clarify responsibilities or contracts, weighing their benefits against
+added indirection. Keep behavior easy to find and follow. Check affected producers and consumers; avoid adding unrelated
+responsibilities to coordinators. Keep the investigation proportional to the task.
+
+**Trace authoritative behavior.** Trace affected behavior through active implementation, callers, schemas, configuration,
+scripts, persistence, tests, and generated contracts. Confirm plausible files are active through imports, registration,
+or references. Resolve conflicts in this order:
+
+1. Executable code, schemas, migrations, configuration, and package scripts.
+2. Tests and validators demonstrating supported behavior.
+3. Generated contracts, for inspection only.
+4. Documentation.
+
+Treat tests as evidence, not automatic documentation triggers. Record a test change only when it establishes or changes a
+durable behavior, invariant, boundary, failure mode, or supported workflow; ignore refactors, fixtures, and coverage-only
+changes. Separate implemented behavior from intended policy and current limitations from deliberate design. Claim intent
+only with evidence.
+
+**Resolve material uncertainty.** Investigate proportionately. Resolve local, reversible choices through project patterns
+and engineering judgment. Ask the minimum focused questions when unresolved alternatives would materially affect the
+intended outcome, scope, public behavior or contracts, security or privacy, compatibility, cost, or an irreversible
+outcome. If the choice is delegated, use the best-supported option within task authority and disclose material assumptions.
+Otherwise, if clarification remains unavailable, report the material choice as blocked and continue only independent work.
+
+### 3. Maintain durable memory
+
+Record only project-specific knowledge that is durable, non-obvious, and useful to future work: product behavior, domain
+invariants, ownership, runtime and persistence flows, contracts across clients, services, data, generated artifacts, and
+deployment, security, privacy, authorization, migration, backup and recovery constraints, active and inactive paths,
+material failure modes, operational requirements, costly recurring traps, and decisions maintainers may revisit.
+
+Exclude inventories, exhaustive fields or endpoints, dependency lists, obvious mechanics, temporary state, debugging
+history, resolved incidents, speculation, and secrets. Link to clear source instead of copying recoverable detail. When no
+durable knowledge changed, leave `docs/` untouched and report `Documentation impact: none` after verification.
+
+Give every substantive claim one canonical owner. Update behavior, rationale, workflow, limitation, and source links
+together; other documents may link briefly without maintaining a duplicate. Replace stale text rather than appending
+corrections or chronology. Remove obsolete claims, resolved warnings, and duplication encountered in affected topics.
+Add a document only when no existing owner remains clear, link every core document from `docs/README.md`, and update
+links and ownership descriptions in `docs/README.md` when responsibilities change. Use relative links and kebab-case for
+new filenames; do not rename existing files only for style.
+
+For a recurring trap, identify the smallest enforceable safeguard—a type or schema constraint, focused test, validator,
+fail-fast check, or clearer boundary. Implement it only within primary-task authority; otherwise report it. Document only
+the residual invariant, limitation, or action—not incident chronology or blame—and remove the warning when enforcement
+makes it obsolete. While reviewing the documentation workflow, report a cheap existing validator missing from relevant
+CI; change CI only when authorized.
+
+### 4. Maintain the public README conditionally
+
+Treat the root `README.md` as concise onboarding for first-time human visitors. Do not load it with routine core memory.
+Review it when a change affects public purpose, audience, status, URLs, installation, first use, requirements, supported
+platforms, major capabilities or limitations, external services or data, privacy, security, support, contribution,
+licensing, or attribution. Skip it when none of those claims can be affected.
+
+During an authorized change or build task, update affected README claims in the same change unless the user excludes
+human-facing documentation. During read-only work, report contradictions without editing them. Make the opening state:
+
+1. What the project does and who it serves.
+2. The fastest useful action: open, install, run, import, or download.
+3. Any status or limitation that could change the visitor's decision.
+
+Then include only the shortest working usage path, meaningful capabilities, essential requirements and limitations, and
+relevant help, contribution, license, or attribution links. Adapt to the project type; require neither fixed headings nor
+empty sections. Aim for at most 800 words and consolidate above 1,000 unless it is deliberately the primary user
+documentation. Remove internal architecture, implementation rationale, exhaustive inventories, operations, and detail
+better owned elsewhere. Link to useful human-facing detail, including under `docs/`, while keeping onboarding
+self-contained.
+
+Verify README claims against active source, configuration, tests, deployment, package scripts, licenses, and linked files.
+Run its quick start or a safe equivalent when practical. Check links, informative-image alt text, rendered Markdown, and
+prefer relative links for repository files. Report changes or unresolved contradictions.
+
+## Memory layout
+
+Core memory is Markdown under `docs/` except `docs/references/` and `docs/evidence/`. Keep it at or below 6,000 words;
+at 5,500, warn and consolidate. Before adding words, remove stale or duplicated claims, recoverable mechanics, and detail
+that source links can replace.
+
+Use `docs/references/` only when necessary knowledge still cannot fit after consolidation and can be checked against
+current authoritative sources. Move the narrowest specialist detail first; core retains the actionable conclusion, why it
+matters, and the exact read condition. Never offload product scope, active behavior, ownership, security or privacy
+boundaries, routine operations, or costly traps merely to meet the limit.
+
+Keep references one level below `docs/references/`, forbid reference-to-reference dependencies, and list each under
+`## Specialized references` in `docs/README.md` with a concrete read condition. Begin each reference with:
+
+```markdown
+> Non-authoritative reference.
+> Core owner: [Document](../owning-document.md)
+> Verify against:
+> - `path/to/authoritative-source`
+> Review when:
+> - Concrete invalidation condition
+```
+
+Before relying on a reference, verify relevant claims against every declared source. Update or remove stale material in
+the same task; if verification is impossible, treat it as uncertain. Inspect a reference when its owner or source changes.
+Adding, removing, or renaming one requires reloading the complete core, reading every reference to EOF, and checking each
+index entry, core owner, declared source and review condition, and the prohibition on reference dependencies. Verify
+affected claims against their declared sources.
+
+Use `docs/evidence/` only for small raw artifacts whose exact form matters, such as images, captures, exact responses, or
+binary samples. Evidence is optional and non-authoritative. Link every file from the core or reference document explaining
+what it supports and when to inspect it; an inventory alone is insufficient. Prefer reference Markdown when explanation
+matters more than exact form. Verify evidence-derived claims against current source or label them as observations. Remove
+orphaned or superseded evidence. Never store secrets, dependencies, build output, large reproducible downloads, or
+temporary debugging artifacts there.
+
+## Verify and finish
+
+1. Re-read every changed document and README to confirmed EOF when changed.
+2. Derive removed or renamed terms, paths, commands, data sources, and contracts from the diff. Search `docs/` for their
+   old forms, contradictions, duplicate ownership, and stale terminology; re-read implicated surroundings.
+3. Recheck claims against the authority order above. Run relevant safe tests or documented verification commands when
+   practical and report important omissions. State prerequisites and working directories for commands. Give risky
+   procedures verification and recovery guidance; do not execute destructive, production, or expensive commands merely
+   to test prose.
+4. Do not edit generated artifacts directly, including contracts, schemas, declarations, or documentation. When the
+   primary task authorizes a change, inspect the generated output and modify its generator instead.
+5. From the host repository root, run Node on `scripts/validate-docs.mjs` beside this `SKILL.md`, not an assumed host
+   `./scripts/` path. Run `git diff --check`; review the final diff for unrelated churn, secrets, stale warnings, and
+   unjustified growth.
+6. Do not stage or commit unrelated changes. Follow commit authorization and message rules from the primary task or
+   repository workflow. Unless commits are prohibited, include documentation in its primary-task commit and commit each
+   discrete, completed, and verified change. When no message format is specified, use
+   `area[,area2,area3]: intention of change and why it was done (what changed)` with at most three areas. Areas name primary
+   product or system concerns, not every file category. Omit `docs`, `tests`, and generated output when they only support
+   another change; use `docs` only for documentation-only commits and `tests` only when testing behavior or infrastructure
+   is itself the change.
+7. Report documents added, updated, consolidated, moved, or removed and why. Report observed skill contradictions,
+   incorrect or ambiguous rules, unnecessary restrictions, poor task fit, repetition, or material time, context, or
+   correctness costs, even when the task succeeds. Name the concrete impact and a specific improvement; do not invent
+   criticism or placeholders.
+.
+..
+.agents
+.aws
+.codex
+.git
+Lean
+.
+..
+.lake
+MOC
+MOC.lean
+lake-manifest.json
+lakefile.toml
+lean-toolchain
+rg: docs: No such file or directory (os error 2)
+/tmp/moc-toolchain/lean-4.19.0-linux/bin/lake
+lean-4.19.0-linux
+lean-4.19.0-linux.tar.zst
+
+exec
+/bin/bash -lc "git status --short
+ls -ld Lean/.lake Lean/.lake/{build,packages}
+cd Lean
+sed -n '33,54p' MOC/AnchoredChart.lean
+cat MOC/DruryResolvent.lean
+sed -n '145,178p' MOC/SpectralMobius.lean
+sed -n '1,62p;138,166p;196,214p;230,263p' MOC/HouseholderSupport.lean
+sed -n '95,160p' MOC/StrongSupport.lean
+sed -n '45,115p' MOC/NonnormalExtrema.lean" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 247ms:
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+ls: cannot access 'Lean/.lake/build': No such file or directory
+drwxr-xr-x 2 dell dell 60 Nov 20 15:51 Lean/.lake
+lrwxrwxrwx 1 dell dell 42 Nov 20 15:51 Lean/.lake/packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+    ∀ i j, x i * y j = x' i * y' j := by
+  intro i j
+  by_cases hi : i = i₀
+  · subst i
+    simp only [hx, hx', zero_mul]
+  by_cases hj : j = j₀
+  · subst j
+    simp only [hy, hy', mul_zero]
+  let p := Equiv.swap j₀ i₀
+  let σ := p.trans (Equiv.swap (p j) i)
+  have hp₀ : p j₀ = i₀ := Equiv.swap_apply_left _ _
+  have hσ₀ : σ j₀ = i₀ := by
+    change Equiv.swap (p j) i (p j₀) = i₀
+    rw [hp₀]
+    exact Equiv.swap_apply_of_ne_of_ne (fun h => hj (p.injective (h.symm.trans hp₀.symm))) hi.symm
+  have hσj : σ j = i := Equiv.swap_apply_left _ _
+  let τ := (Equiv.swap j₀ j).trans σ
+  have hnz' : anchoredMatchingCoordinate c' x' y' τ ≠ 0 :=
+    fun h => hnz τ ((he τ).trans h)
+  have hl := anchored_edge_eq_one_sub_ratio c x y σ j₀ j (by rw [hσ₀, hx]) hy (hnz τ)
+  have hr := anchored_edge_eq_one_sub_ratio c' x' y' σ j₀ j (by rw [hσ₀, hx']) hy' hnz'
+  calc
+import MOC.Variational
+import Mathlib.Tactic.LinearCombination
+
+/-! The resolvent quadratic at a stationary pair from Drury, Essentially
+Hermitian matrices revisited, Proposition 2.1. -/
+
+open Matrix
+
+namespace MOC
+
+noncomputable section
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+private theorem commute_resolvent_real_part (A W : Matrix ι ι ℂ) (ω : ℂ)
+    (hA : A.IsHermitian) (h : (ω • (W * A - A * W)).IsHermitian) :
+    Commute A (ω • W + star ω • Wᴴ) := by
+  have he := h.eq
+  simp only [Matrix.conjTranspose_smul, Matrix.conjTranspose_sub,
+    Matrix.conjTranspose_mul, hA.eq] at he
+  change A * (ω • W + star ω • Wᴴ) = (ω • W + star ω • Wᴴ) * A
+  simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul]
+  ext i j
+  have hij := congrArg (fun M : Matrix ι ι ℂ => M i j) he
+  simp only [Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul] at hij ⊢
+  linear_combination hij
+
+private theorem resolvent_inverse_of_factor (A P T W : Matrix ι ι ℂ)
+    (hA : A * A⁻¹ = 1) (hP : P * A = T) (hTW : T * W = 1) (hWT : W * T = 1) :
+    P * (A * W) = 1 ∧ (A * W) * P = 1 := by
+  have hPT : P = T * A⁻¹ := by
+    rw [← hP, Matrix.mul_assoc, hA, Matrix.mul_one]
+  constructor
+  · rw [← Matrix.mul_assoc, hP, hTW]
+  · calc
+      (A * W) * P = A * (W * T) * A⁻¹ := by rw [hPT]; simp only [Matrix.mul_assoc]
+      _ = 1 := by rw [hWT, Matrix.mul_one, hA]
+
+private theorem commute_resolvent_of_inverse (X R : Matrix ι ι ℂ) (κ : ℂ)
+    (h₁ : (1 - κ • X) * R = 1) (h₂ : R * (1 - κ • X) = 1) : Commute X R := by
+  let P : Matrix ι ι ℂ := 1 - κ • X
+  have hPR : P * R = 1 := h₁
+  have hRP : R * P = 1 := h₂
+  have hXP : X * P = P * X := by
+    simp only [P, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, Matrix.one_mul,
+      Matrix.mul_smul, Matrix.smul_mul]
+  change X * R = R * X
+  calc
+    X * R = (R * P) * (X * R) := by rw [hRP, Matrix.one_mul]
+    _ = R * ((P * X) * R) := by simp only [Matrix.mul_assoc]
+    _ = R * (X * (P * R)) := by rw [← hXP, Matrix.mul_assoc X P R]
+    _ = R * X := by rw [hPR, Matrix.mul_one]
+
+private theorem drury_quadratic_of_resolvent_sum (X R S : Matrix ι ι ℂ)
+    (κ ω λ : ℂ) (hκ : κ * star κ = 1)
+    (hR : (1 - κ • X) * R = 1) (hS : S * (1 - star κ • X) = 1)
+    (h : ω • R + star ω • S = λ • (1 : Matrix ι ι ℂ)) :
+    λ • (X * X) +
+        (ω * star κ + star ω * κ - λ * (κ + star κ)) • X +
+        (λ - ω - star ω) • (1 : Matrix ι ι ℂ) = 0 := by
+  let P : Matrix ι ι ℂ := 1 - κ • X
+  let Q : Matrix ι ι ℂ := 1 - star κ • X
+  have hPR : P * R = 1 := hR
+  have hSQ : S * Q = 1 := hS
+  have he : ω • Q + star ω • P = λ • (P * Q) := by
+    calc
+      _ = P * (ω • R + star ω • S) * Q := by
+        rw [Matrix.mul_add, Matrix.add_mul]
+        simp only [Matrix.mul_smul, Matrix.smul_mul, hPR, Matrix.one_mul,
+          Matrix.mul_assoc, hSQ, Matrix.mul_one]
+      _ = _ := by rw [h, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one]
+  have hκ' : star κ * κ = 1 := (mul_comm _ _).trans hκ
+  have hPQ : P * Q = 1 - κ • X - star κ • X + X * X := by
+    simp only [P, Q, Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one,
+      Matrix.mul_smul, Matrix.smul_mul, smul_smul, hκ, hκ', one_smul] <;> abel
+  rw [hPQ] at he
+  ext i j
+  have hij := congrArg (fun M : Matrix ι ι ℂ => M i j) he
+  simp only [P, Q, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul,
+    Matrix.zero_apply] at hij ⊢
+  linear_combination -hij
+
+/-- The Hermitian inverse commutator condition forces a real quadratic for
+`X = C * A⁻¹` when the common commutant of `A` and `X` consists of scalars.
+At a support maximum the multiplier `ω` is the support direction times the determinant. -/
+theorem exists_drury_quadratic_of_stationarity [Nonempty ι] (A C : Matrix ι ι ℂ)
+    (κ ω : ℂ) (hκ : κ * star κ = 1) (hA : A.IsHermitian) (hC : C.IsHermitian)
+    (hinv : IsUnit A.det) (hdet : IsUnit (A - κ • C).det)
+    (hcrit : (ω • ((A - κ • C)⁻¹ * A - A * (A - κ • C)⁻¹)).IsHermitian)
+    (hcentral : ∀ Y : Matrix ι ι ℂ, Commute A Y → Commute (C * A⁻¹) Y →
+      ∃ μ : ℂ, Y = μ • (1 : Matrix ι ι ℂ)) :
+    let X := C * A⁻¹
+    ∃ λ : ℝ, (λ : ℂ) • (X * X) +
+        (ω * star κ + star ω * κ - (λ : ℂ) * (κ + star κ)) • X +
+        ((λ : ℂ) - ω - star ω) • (1 : Matrix ι ι ℂ) = 0 := by
+  classical
+  let X := C * A⁻¹
+  let T := A - κ • C
+  let R := A * T⁻¹
+  let S := A * (T⁻¹)ᴴ
+  let Y := A * (ω • T⁻¹ + star ω • (T⁻¹)ᴴ)
+  have hAAi := A.mul_nonsing_inv hinv
+  have hTi := T.nonsing_inv_mul hdet
+  have hT := T.mul_nonsing_inv hdet
+  have hfactor (ζ : ℂ) : (1 - ζ • X) * A = A - ζ • C := by
+    simp only [X, Matrix.sub_mul, Matrix.one_mul, Matrix.smul_mul, Matrix.mul_assoc,
+      A.nonsing_inv_mul hinv, Matrix.mul_one]
+  have hfactorStar : (1 - star κ • X) * A = Tᴴ := by
+    rw [hfactor]
+    simp only [T, Matrix.conjTranspose_sub, Matrix.conjTranspose_smul, hA.eq, hC.eq]
+  have hTStar : Tᴴ * (T⁻¹)ᴴ = 1 := by
+    simpa only [Matrix.conjTranspose_mul, Matrix.conjTranspose_one] using
+      congrArg Matrix.conjTranspose hTi
+  have hTiStar : (T⁻¹)ᴴ * Tᴴ = 1 := by
+    simpa only [Matrix.conjTranspose_mul, Matrix.conjTranspose_one] using
+      congrArg Matrix.conjTranspose hT
+  obtain ⟨hR₁, hR₂⟩ := resolvent_inverse_of_factor A (1 - κ • X) T T⁻¹
+    hAAi (hfactor κ) hT hTi
+  obtain ⟨hS₁, hS₂⟩ := resolvent_inverse_of_factor A (1 - star κ • X) Tᴴ (T⁻¹)ᴴ
+    hAAi hfactorStar hTStar hTiStar
+  have hY : Y = ω • R + star ω • S := by
+    simp only [Y, R, S, Matrix.mul_add, Matrix.mul_smul]
+  have hcomm := commute_resolvent_real_part A T⁻¹ ω hA hcrit
+  have hAY : Commute A Y := (Commute.refl A).mul_right hcomm
+  have hXY : Commute X Y := by
+    rw [hY]
+    exact ((commute_resolvent_of_inverse X R κ hR₁ hR₂).smul_right ω).add_right
+      ((commute_resolvent_of_inverse X S (star κ) hS₁ hS₂).smul_right (star ω))
+  obtain ⟨μ, hμ⟩ := hcentral Y hAY hXY
+  have hYStar : Yᴴ = Y := by
+    simp only [Y, Matrix.conjTranspose_mul, Matrix.conjTranspose_add,
+      Matrix.conjTranspose_smul, Matrix.conjTranspose_conjTranspose, star_star, hA.eq]
+    rw [add_comm]
+    exact hcomm.eq.symm
+  have hμStar : star μ = μ := by
+    let i : ι := Classical.choice ‹Nonempty ι›
+    have hi := congrArg (fun M : Matrix ι ι ℂ => M i i) hYStar
+    simpa only [hμ, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
+      Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one] using hi
+  have hμReal : (μ.re : ℂ) = μ := by
+    apply Complex.ext
+    · exact Complex.ofReal_re _
+    · have hi := congrArg Complex.im hμStar
+      simp only [Complex.star_def, Complex.conj_im] at hi
+      simp only [Complex.ofReal_im]
+      linarith
+  refine ⟨μ.re, ?_⟩
+  exact drury_quadratic_of_resolvent_sum X R S κ ω (μ.re : ℂ) hκ hR₁ hS₂
+    (hY.symm.trans (hμ.trans (congrArg (fun ζ : ℂ => ζ • (1 : Matrix ι ι ℂ)) hμReal.symm)))
+
+end
+
+end MOC
+    let t : ℂ := -S / (N : ℂ)
+    spectralEnergy (fun i => a i + t) (fun j => b j - t) =
+      spectralEnergy a b - Complex.normSq S / N := by
+  intro S N t
+  have hN : N ≠ 0 := by
+    dsimp only [N]
+    exact mul_ne_zero two_ne_zero (Nat.cast_ne_zero.mpr Fintype.card_ne_zero)
+  have hsq : Complex.normSq t = Complex.normSq S / N ^ 2 := by
+    dsimp only [t]
+    rw [map_div₀, Complex.normSq_neg, Complex.normSq_ofReal]
+  have hprod : (S * star t).re = -Complex.normSq S / N := by
+    change (S * conj (-S / (N : ℂ))).re = _
+    rw [map_div₀, map_neg, Complex.conj_ofReal, ← mul_div_assoc, mul_neg,
+      Complex.mul_conj, ← Complex.ofReal_neg, ← Complex.ofReal_div, Complex.ofReal_re]
+  rw [spectralEnergy_shift]
+  change spectralEnergy a b + N * Complex.normSq t + 2 * (S * star t).re =
+    spectralEnergy a b - Complex.normSq S / N
+  rw [hsq, hprod]
+  field_simp [hN] <;> ring
+
+/-- Centered fractional-linear changes give a stronger energy-denominator
+test at a positive gap maximum than uncentered changes. -/
+theorem spectralEnergy_centered_mobius_bound [Nonempty ι]
+    (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (η : ℂ) (hη : Complex.normSq η = 1) {g : ℝ} (hg : 0 < g)
+    (hgap : ∀ σ : Equiv.Perm ι,
+      g ≤ (η * (determinantValue a b U - matchingProduct a b σ)).re)
+    (hmax : ∀ (c d : ι → ℂ) (k : ℂ), spectralEnergy c d ≤ 1 → Complex.normSq k = 1 →
+      ∃ σ : Equiv.Perm ι, (k * (determinantValue c d U - matchingProduct c d σ)).re ≤ g)
+    (t : ℂ) (ha : ∀ i, 1 - t * a i ≠ 0) (hb : ∀ j, 1 + t * b j ≠ 0) :
+    let c := mobiusSpectrum t a
+    let d := mobiusSpectrum (-t) b
+    let E := spectralEnergy c d -
+      Complex.normSq ((∑ i, c i) - ∑ j, d j) / (2 * (Fintype.card ι : ℝ))
+import MOC.HouseholderFour
+import MOC.Support
+import Mathlib.Data.Real.Sqrt
+import Mathlib.LinearAlgebra.Dimension.Constructions
+
+/-! A four-label support reduction for the rank-one phase determinant. -/
+
+open BigOperators Matrix
+
+namespace MOC
+
+noncomputable section
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+private theorem simplex_step (y : ι → Fin 3 → ℝ) (score p : ι → ℝ)
+    (hp : ∀ i, 0 ≤ p i) (hmass : ∑ i, p i = 1)
+    (hlarge : 4 < (Finset.univ.filter fun i => p i ≠ 0).card) :
+    ∃ q : ι → ℝ, (∀ i, 0 ≤ q i) ∧ (∑ i, q i) = 1 ∧
+      (∀ j, (∑ i, q i * y i j) = ∑ i, p i * y i j) ∧
+      (∑ i, p i * score i) ≤ (∑ i, q i * score i) ∧
+      (Finset.univ.filter fun i => q i ≠ 0).card <
+        (Finset.univ.filter fun i => p i ≠ 0).card := by
+  classical
+  let S := Finset.univ.filter fun i => p i ≠ 0
+  let Y (i : ι) : Fin 4 → ℝ := Fin.cons 1 (y i)
+  have hdep : ¬LinearIndependent ℝ (fun i : S => Y i) := by
+    intro h
+    have hc : S.card ≤ 4 := by
+      simpa [Module.finrank_fin_fun] using h.fintype_card_le_finrank
+    exact (not_le_of_gt hlarge) hc
+  obtain ⟨g, hg, k, hk⟩ := Fintype.not_linearIndependent_iff.mp hdep
+  let c (i : ι) := if h : i ∈ S then g ⟨i, h⟩ else 0
+  have hcz (i : ι) (hi : i ∉ S) : c i = 0 := dif_neg hi
+  have hcS : (∑ i, c i • Y i) = 0 := calc
+    _ = ∑ i ∈ S, c i • Y i :=
+      (Finset.sum_subset (Finset.subset_univ S)
+        (fun i _ hi => by rw [hcz i hi, zero_smul])).symm
+    _ = ∑ i : S, c i • Y i := (Finset.sum_coe_sort (fun i => c i • Y i) S).symm
+    _ = 0 := by simpa only [c, dif_pos Subtype.property] using hg
+  have hcs : (∑ i, c i) = 0 := by
+    simpa only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Y, Fin.cons_zero, mul_one,
+      Pi.zero_apply] using congrFun hcS 0
+  have hcy (j : Fin 3) : (∑ i, c i * y i j) = 0 := by
+    simpa only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Y, Fin.cons_succ, Pi.zero_apply]
+      using congrFun hcS j.succ
+  let T : ℝ := ∑ i, c i * score i
+  let r : ℝ := if 0 ≤ T then 1 else -1
+  let d (i : ι) := r * c i
+  have hr : r ≠ 0 := by dsimp [r]; split_ifs <;> norm_num
+  have hds (f : ι → ℝ) : (∑ i, d i * f i) = r * ∑ i, c i * f i := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_congr rfl fun i _ => mul_assoc r (c i) (f i)
+  have hd0 : (∑ i, d i) = 0 := by
+    simpa only [mul_one, hcs, mul_zero] using hds (fun _ => 1)
+  have hdy (j : Fin 3) : (∑ i, d i * y i j) = 0 := by rw [hds, hcy, mul_zero]
+  have hdscore : 0 ≤ ∑ i, d i * score i := by
+    rw [hds]
+    change 0 ≤ r * T
+    dsimp only [r]
+    split_ifs with h
+    · simpa using h
+    (hp : ∀ i, 0 ≤ p i) (hmass : ∑ i, p i = 1) :
+    ∃ q : ι → ℝ, (∀ i, 0 ≤ q i) ∧ (∑ i, q i) = 1 ∧
+      signed_mean_square x y p ≤ signed_mean_square x y q ∧
+      (Finset.univ.filter fun i => q i ≠ 0).card ≤ 4 := by
+  let X (w : ι → ℝ) (j : Fin 3) := ∑ i, w i * x i j
+  let score (i : ι) := ∑ j, X p j * x i j
+  have hpair (w : ι → ℝ) :
+      (∑ i, w i * score i) = ∑ j, X p j * X w j := by
+    simp only [score, X, Finset.mul_sum]
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro j _
+    apply Finset.sum_congr rfl
+    intro i _
+    ring
+  obtain ⟨q, hq, hqm, hqy, hscore, hqcard⟩ := exists_four_label_weights y score p hp hmass
+  refine ⟨q, hq, hqm, ?_, hqcard⟩
+  rw [hpair p, hpair q] at hscore
+  have hs : 0 ≤ ∑ j, (X q j - X p j)^2 := Finset.sum_nonneg (fun _ _ => sq_nonneg _)
+  unfold signed_mean_square
+  simp only [hqy]
+  change (∑ j, (X p j)^2 - (∑ i, p i * y i j)^2) ≤
+    ∑ j, (X q j)^2 - (∑ i, p i * y i j)^2
+  simp only [Fin.sum_univ_three] at hs hscore ⊢
+  nlinarith
+
+private def pairCompression (a b : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  Matrix.of fun i j => (if i = 0 then 1 else b) * (a + b)⁻¹ * (if j = 0 then a else 1)
+
+    apply Finset.sum_congr rfl
+    intro i _
+    ring
+  have htr : N 0 0 + N 1 1 = 1 := rankOneSpectralCompression_diagonal_sum a b v hv hreg
+  have hQ : w^2 * (1 - 4 * N.det) = ∑ j, (w * traceCoordinates N j)^2 := by
+    rw [Matrix.det_fin_two, Fin.sum_univ_three]
+    change _ = (w * (N 0 0 - N 1 1))^2 + (w * (N 0 1 + N 1 0))^2 +
+      (w * (Complex.I * (N 0 1 - N 1 0)))^2
+    linear_combination -(w^2 * (N 0 0 + N 1 1 + 1)) * htr -
+      (w^2 * (N 0 1 - N 1 0)^2) * Complex.I_sq
+  have hdet : η * determinantValue a b (rankOnePhase v (-1)) =
+      ∑ j, (w * traceCoordinates N j)^2 := by
+    rw [determinantValue_rankOnePhase a b v (-1) hv (by simp) hreg, ← mul_assoc]
+    change (η * matchingProduct a b 1) * _ = _
+    rw [← hw, ← hQ]
+    norm_num [star_neg, star_one]
+  have hRe (j : Fin 3) :
+      (w * traceCoordinates N j).re = ∑ i, Complex.normSq (v i) * (C i j).re := by
+    rw [hM j]
+private theorem holds_rankOnePhase_of_support (a b v : ι → ℂ) (z : ℂ) (S : Finset ι)
+    (hS : S.card ≤ 4) (hv : ∑ i, star (v i) * v i = 1) (hz : z * star z = 1)
+    (hzero : ∀ i ∉ S, v i = 0) : Holds a b (rankOnePhase v z) := by
+  classical
+  let T := {i : ι // i ∉ S}
+  let e : S ⊕ T ≃ ι := Equiv.sumCompl (fun i => i ∈ S)
+  let a₁ (i : S) := a i
+  let b₁ (i : S) := b i
+  let a₂ (i : T) := a i
+  let b₂ (i : T) := b i
+  let v₁ (i : S) := v i
+  have hv₁ : ∑ i, star (v₁ i) * v₁ i = 1 := calc
+    _ = ∑ i ∈ S, star (v i) * v i := Finset.sum_coe_sort _ _
+    _ = ∑ i, star (v i) * v i := Finset.sum_subset (Finset.subset_univ S)
+      (fun i _ hi => by simp [hzero i hi])
+    _ = 1 := hv
+  have hV : Holds a₁ b₁ (rankOnePhase v₁ z) :=
+    holds_rankOnePhase_of_card_le_four _ _ _ _ (by simpa using hS) hv₁ hz
+  have hblock : (rankOnePhase v z).submatrix e e =
+      fromBlocks (rankOnePhase v₁ z) 0 0 (1 : Matrix T T ℂ) := by
+    ext i j : 1
+    rcases i with i | i <;> rcases j with j | j
+    · simp [e, v₁, rankOnePhase, Matrix.one_apply, Matrix.vecMulVec_apply, Subtype.ext_iff]
+    · have hn : (i : ι) ≠ j := fun h => j.property (h ▸ i.property)
+      simp [e, rankOnePhase, Matrix.one_apply_ne hn, Matrix.vecMulVec_apply, hzero j j.property]
+    · have hn : (i : ι) ≠ j := fun h => i.property (h.symm ▸ j.property)
+      simp [e, rankOnePhase, Matrix.one_apply_ne hn, Matrix.vecMulVec_apply, hzero i i.property]
+    · simp [e, rankOnePhase, Matrix.one_apply, Matrix.vecMulVec_apply, Subtype.ext_iff,
+        hzero i i.property]
+  have ha : a ∘ e = Sum.elim a₁ a₂ := by funext j; cases j <;> rfl
+  have hb : b ∘ e = Sum.elim b₁ b₂ := by funext j; cases j <;> rfl
+  apply (holds_reindex_iff e e a b (rankOnePhase v z)).mp
+  rw [ha, hb, hblock]
+  exact holds_directSum _ _ _ _ _ _ hV (holds_identity a₂ b₂)
+private theorem matchingProduct_mem_determinantRange (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+    matchingProduct a b σ ∈ determinantRange a b := by
+  have hright (τ : Equiv.Perm ι) :
+      τ.permMatrix ℂ * (τ.permMatrix ℂ)ᴴ = 1 := by
+    simpa only [Matrix.mul_one, Matrix.submatrix_one_equiv] using
+      permMatrix_conjugates τ (1 : Matrix ι ι ℂ)
+  have hu (τ : Equiv.Perm ι) : IsUnitary (τ.permMatrix ℂ) := by
+    refine ⟨hright τ, ?_⟩
+    rw [Matrix.conjTranspose_permMatrix]
+    simpa only [Matrix.conjTranspose_permMatrix, inv_inv] using hright τ⁻¹
+  refine ⟨σ.symm.permMatrix ℂ, hu σ.symm, ?_⟩
+  rw [determinantValue, permMatrix_conjugates, Matrix.submatrix_diagonal_equiv,
+    Matrix.diagonal_add, Matrix.det_diagonal]
+  simpa only [Function.comp_apply, Equiv.symm_symm] using (matchingProduct_inverse a b σ.symm).symm
+
+/-- A determinant support violation has a unitary witness with a quadratic
+support penalty. A Frobenius maximizer among its support ties retains that penalty. -/
+theorem exists_quadratic_support_frobenius_maximizer (a b : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) (η : ℂ)
+    (hsep : ∀ σ : Equiv.Perm ι,
+      (η * matchingProduct a b σ).re < (η * determinantValue a b U).re) :
+    ∃ V : Matrix ι ι ℂ, ∃ ξ : ℂ, IsUnitary V ∧
+      (∀ σ : Equiv.Perm ι,
+        (ξ * matchingProduct a b σ).re < (ξ * determinantValue a b V).re) ∧
+      (∀ W : Matrix ι ι ℂ, IsUnitary W →
+        (ξ * (determinantValue a b W - determinantValue a b V)).re ≤
+        -Complex.normSq (determinantValue a b W - determinantValue a b V) / 2) ∧
+      ∀ W : Matrix ι ι ℂ, IsUnitary W →
+        (ξ * determinantValue a b W).re = (ξ * determinantValue a b V).re →
+        frobeniusSq (diagonal a + W * diagonal b * Wᴴ) ≤
+          frobeniusSq (diagonal a + V * diagonal b * Vᴴ) := by
+  classical
+  have hc : Continuous (determinantValue a b) := by unfold determinantValue; fun_prop
+  have hK : IsCompact (determinantRange a b) :=
+    isCompact_setOf_isUnitary.image hc
+  have hP : Set.range (matchingProduct a b) ⊆ determinantRange a b := by
+    rintro _ ⟨σ, rfl⟩
+    exact matchingProduct_mem_determinantRange a b σ
+  obtain ⟨σ₀, _, hσ₀⟩ := Finset.exists_max_image Finset.univ
+    (fun σ : Equiv.Perm ι => (η * matchingProduct a b σ).re)
+    ⟨Equiv.refl ι, Finset.mem_univ _⟩
+  let z₀ := determinantValue a b U
+  let g := (η * z₀).re - (η * matchingProduct a b σ₀).re
+  have hg : 0 < g := sub_pos.mpr (hsep σ₀)
+  have hgap : ∀ w ∈ Set.range (matchingProduct a b), g ≤ (η * z₀).re - (η * w).re := by
+    rintro _ ⟨σ, rfl⟩
+    exact sub_le_sub_left (hσ₀ σ (Finset.mem_univ _)) _
+  obtain ⟨z, ⟨Z, hZ, rfl⟩, ξ, _, hstrict, hpenalty⟩ :=
+    exists_quadratic_support hK hP ⟨U, hU, rfl⟩ η g hg hgap
+  obtain ⟨V, hV, hmax, htie⟩ := exists_support_frobenius_maximizer a b ξ
+  have heq : determinantValue a b V = determinantValue a b Z := by
+    have hle := hpenalty _ ⟨V, hV, rfl⟩
+    rw [Complex.mul_sub, Complex.sub_re] at hle
+    have hz : Complex.normSq (determinantValue a b V - determinantValue a b Z) = 0 :=
+      le_antisymm (by linarith only [hle, hmax Z hZ]) (Complex.normSq_nonneg _)
+    exact sub_eq_zero.mp (Complex.normSq_eq_zero.mp hz)
+  refine ⟨V, ξ, hV, ?_, ?_, htie⟩
+  · intro σ
+    rw [heq]
+    have hs := hstrict (matchingProduct a b σ) ⟨σ, rfl⟩
+    rw [Complex.mul_sub, Complex.sub_re] at hs
+    exact sub_neg.mp hs
+  · intro W hW
+    rw [heq]
+    exact hpenalty _ ⟨W, hW, rfl⟩
+
+
+private def balancedMixer : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![((3 / 5 : ℝ) : ℂ), ((-4 / 5 : ℝ) : ℂ);
+     ((4 / 5 : ℝ) : ℂ), ((3 / 5 : ℝ) : ℂ)]
+
+private theorem balancedLeft_hermitian : (diagonal balancedLeft).IsHermitian := by
+  apply Matrix.isHermitian_diagonal_iff.mpr
+  intro i
+  fin_cases i <;> simp [balancedLeft, isSelfAdjoint_iff, Complex.star_def]
+
+private theorem balancedRight_skew : (diagonal balancedRight)ᴴ = -diagonal balancedRight := by
+  rw [Matrix.diagonal_conjTranspose, Matrix.diagonal_neg]
+  apply congrArg (fun d : Fin 2 → ℂ => diagonal d)
+  funext i
+  change star (balancedRight i) = -balancedRight i
+  fin_cases i <;> simp [balancedRight, Complex.star_def, map_mul]
+
+private theorem balancedMixer_unitary : IsUnitary balancedMixer := by
+  constructor <;> apply Matrix.ext <;> intro i j <;> fin_cases i <;> fin_cases j <;>
+    apply Complex.ext <;>
+    norm_num [balancedMixer, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply,
+      Matrix.conjTranspose_apply, Complex.star_def, Complex.add_re, Complex.add_im,
+      Complex.mul_re, Complex.mul_im]
+
+private theorem balanced_support_zero (V : Matrix (Fin 2) (Fin 2) ℂ) (hV : IsUnitary V) :
+    (determinantValue balancedLeft balancedRight V).re = 0 := by
+  let A := diagonal balancedLeft
+  let D := diagonal balancedRight
+  let B := V * D * Vᴴ
+  have hA : Aᴴ = A := balancedLeft_hermitian.eq
+  have hB : Bᴴ = -B := skew_adjoint_conjugate D V balancedRight_skew
+  have hd : A.det + D.det = 0 := by
+    simp only [A, D, Matrix.det_diagonal, Fin.prod_univ_two, balancedLeft, balancedRight,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    rw [show (((1 / 2 : ℝ) : ℂ) * Complex.I) * -(((1 / 2 : ℝ) : ℂ) * Complex.I) =
+      -(((1 / 2 : ℝ) : ℂ) * ((1 / 2 : ℝ) : ℂ)) * (Complex.I * Complex.I) by ring,
+      Complex.I_mul_I]
+    ring
+  have he : (A + B).det + (A - B).det = 2 * (A.det + B.det) := by
+    simp only [Matrix.det_fin_two, Matrix.add_apply, Matrix.sub_apply]
+    ring
+  have hs : (A - B).det = star ((A + B).det) := by
+    rw [← Matrix.det_conjTranspose, Matrix.conjTranspose_add, hA, hB, sub_eq_add_neg]
+  rw [hs, show B.det = D.det from det_unitary_conjugation V D hV, hd, mul_zero] at he
+  have hre := congrArg Complex.re he
+  simp only [Complex.add_re, Complex.star_def, Complex.conj_re, Complex.zero_re] at hre
+  change (A + B).det.re = 0
+  linarith only [hre]
+
+private theorem balanced_sum_explicit :
+    diagonal balancedLeft + balancedMixer * diagonal balancedRight * balancedMixerᴴ =
+    !![⟨1 / 2, -7 / 50⟩, ⟨0, 12 / 25⟩; ⟨0, 12 / 25⟩, ⟨-1 / 2, 7 / 50⟩] := by
+  apply Matrix.ext
+  intro i j
+  fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+    norm_num [balancedLeft, balancedRight, balancedMixer, Matrix.diagonal_apply,
+      Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
+      Complex.star_def, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im]
+
+/-- Equal traces, equal cubic moments, unit spectral energy, and both orbit
+maximality conditions allow a nonsingular nonnormal sum in order two.
+The determinant is in the matching hull and the real support gap is zero. -/
+theorem exists_balanced_nonnormal_orbit_maximum :
+    ∃ (a b : Fin 2 → ℂ) (U : Matrix (Fin 2) (Fin 2) ℂ),
+      IsUnitary U ∧ spectralEnergy a b = 1 ∧
+      (∑ i, a i) = (∑ i, b i) ∧
+      (∑ i, (Complex.normSq (a i) : ℂ) * a i) =
+        (∑ i, (Complex.normSq (b i) : ℂ) * b i) ∧
+      determinantValue a b U ≠ 0 ∧ ¬ IsStarNormal (diagonal a + U * diagonal b * Uᴴ) ∧
+      Holds a b U ∧
+      (∀ V : Matrix (Fin 2) (Fin 2) ℂ, IsUnitary V →
+
+exec
+/bin/bash -lc "ls -la .git Lean/.lake/ /home/dell/Desktop/MOC/Lean/.lake/ /tmp
+rg -n 'theorem (sum_coe_sort|sumCompl_apply|determinantValue_rankOnePhase)|def vecMul|theorem permMatrix_conjugates' Lean/MOC Lean/.lake/packages/mathlib/Mathlib | head -35
+rg --files --hidden -g AGENTS.md -g '"'!Lean/.lake/**'"'" in /tmp/moc-lean-fix-3xkpnut0/after
+ exited 1 in 222ms:
+.git:
+total 0
+dr-xr-xr-x 2 dell dell  40 Nov 20 15:52 .
+drwxr-xr-x 7 dell dell 140 Nov 20 15:52 ..
+
+/home/dell/Desktop/MOC/Lean/.lake/:
+total 2788
+drwxr-xr-x  7 dell dell    4096 Nov 20 14:24 .
+drwxr-xr-x  4 dell dell    4096 Nov 20 13:25 ..
+drwx------  5 dell dell    4096 Nov 20 14:24 bc-live.9I43LL
+drwxr-xr-x  4 dell dell    4096 Nov 20 13:34 build
+drwxr-xr-x  2 dell dell 2826240 Nov 20 13:33 mathlib-cache
+drwxr-xr-x 11 dell dell    4096 Nov 20 13:25 packages
+drwxr-xr-x 11 dell dell    4096 Nov 20 15:51 worker
+
+/tmp:
+total 159252
+drwxrwxrwt 77 65534 65534      5200 Nov 20 15:51 .
+drwxr-xr-x 18 65534 65534      4096 Oct 26 10:07 ..
+drwxrwxrwt  2 65534 65534        60 Nov 20 12:01 .ICE-unix
+-r--r--r--  1 65534 65534        11 Nov 20 12:01 .X0-lock
+drwxrwxrwt  2 65534 65534        60 Nov 20 12:01 .X11-unix
+dr-xr-xr-x  2 dell  dell         40 Nov 20 15:52 .agents
+dr-xr-xr-x  2 dell  dell         40 Nov 20 15:52 .aws
+dr-xr-xr-x  2 dell  dell         40 Nov 20 15:52 .codex
+dr-xr-xr-x  2 dell  dell         40 Nov 20 15:52 .git
+drwxr-xr-x  4 65534 65534         0 Oct 16 11:46 .mount_heliumPeONiN
+-rw-------  1 dell  dell      14146 Nov 20 12:57 .org.chromium.Chromium.9m25jC
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:35 .tmp05ZVY9
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:05 .tmp2M3ZhV
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:30 .tmp2hMNub
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:34 .tmp3DSAKE
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:30 .tmp3iamMS
+drwxr-xr-x  2 dell  dell        240 Nov 20 15:07 .tmp4n6CDt
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:04 .tmp6Z7PXx
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:29 .tmp6gjuoq
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:20 .tmp7uoy6p
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:00 .tmp9uOwL5
+drwxr-xr-x  2 dell  dell        240 Nov 20 14:35 .tmpBAClUp
+drwxr-xr-x  2 dell  dell         40 Nov 20 12:38 .tmpCaB6iL
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:44 .tmpGeNgZJ
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:39 .tmpIafXvt
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:22 .tmpIqrpsO
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:51 .tmpMCJeoX
+drwxr-xr-x  2 dell  dell        240 Nov 20 12:39 .tmpMErsnJ
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:50 .tmpORZr5I
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:38 .tmpOxfjl1
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:48 .tmpVCgOVV
+drwxr-xr-x  2 dell  dell        240 Nov 20 14:46 .tmpWAoq2r
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:03 .tmpXPhDHk
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:53 .tmpY3DYA3
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:24 .tmpYkv7iX
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:22 .tmpZbKRR8
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:54 .tmpbstZfk
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:04 .tmpfyyLSH
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:04 .tmpg7jyzA
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:33 .tmphueiS6
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:27 .tmpjwd9wk
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:19 .tmpldLeA4
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:32 .tmplo7Zdu
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:48 .tmpoUEid6
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:52 .tmprmFaPs
+drwxr-xr-x  2 dell  dell         40 Nov 20 15:49 .tmpthePBk
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:33 .tmpxRXx4f
+drwxr-xr-x  2 dell  dell         40 Nov 20 14:32 .tmpxoamOJ
+-rw-------  1 dell  dell        398 Nov 20 12:01 .xfsm-ICE-1CGAZ3
+-rw-r--r--  1 dell  dell      10922 Nov 20 15:02 AnchorObstruction.lean
+-rw-r--r--  1 dell  dell       8240 Nov 20 15:02 FourRealification.lean
+-rw-r--r--  1 dell  dell      15631 Nov 20 15:02 Normal.lean
+-rw-r--r--  1 dell  dell      24981 Nov 20 15:02 RankTwoOverlap.lean
+-rw-r--r--  1 dell  dell       8534 Nov 20 15:02 SchurPhase.lean
+-rw-r--r--  1 dell  dell      24701 Nov 20 14:24 Singular.lean
+-rw-r--r--  1 dell  dell       7552 Nov 20 15:02 SpectralPerturbation.lean
+-rw-r--r--  1 dell  dell      13658 Nov 20 15:02 TwoExceptions.lean
+-rw-r--r--  1 dell  dell      50048 Nov 20 14:24 TwoFrame.lean
+drwxr-xr-x  2 dell  dell         80 Nov 20 14:09 __pycache__
+-rw-r--r--  1 65534 65534         0 Nov 20 12:01 bcm_fw_status.txt
+drwxr-xr-x 12 dell  dell        260 Nov 20 15:52 codex-bwrap-synthetic-mount-targets-1000
+d---------  2 dell  dell         40 Nov 20 15:52 codex-daemon-1000
+-rw-r--r--  1 dell  dell        171 Nov 20 15:41 contact-transfer-build-d4utmpc5.log
+-rw-r--r--  1 dell  dell      11180 Nov 20 15:41 contact-transfer-original-d4utmpc5.lean
+srwxrwxrwx  1 dell  dell          0 Nov 20 12:01 dbus-cVDwFUx9pz
+srwxrwxrwx  1 dell  dell          0 Nov 20 12:01 dbus-fMnS3vFrmw
+-rw-r--r--  1 dell  dell     243377 Nov 20 13:24 moc-2607.21163.pdf
+-rw-r--r--  1 dell  dell      54602 Nov 20 13:24 moc-2607.21163.txt
+-rw-r--r--  1 dell  dell       4043 Nov 20 15:29 moc-CircleSpectra.log
+-rw-r--r--  1 dell  dell         72 Nov 20 15:29 moc-ContactTransfer.log
+-rw-r--r--  1 dell  dell       9896 Nov 20 15:30 moc-HouseholderFour.log
+-rw-r--r--  1 dell  dell        551 Nov 20 15:30 moc-SpectralMobius.log
+-rw-r--r--  1 dell  dell        121 Nov 20 14:09 moc-affine-transfer-audit.lean
+-rw-r--r--  1 dell  dell       4927 Nov 20 15:06 moc-agent-t21.txt
+-rw-r--r--  1 dell  dell       9903 Nov 20 15:06 moc-agent-t34.txt
+-rw-r--r--  1 dell  dell      29015 Nov 20 15:14 moc-all
+-rw-r--r--  1 dell  dell        980 Nov 20 13:57 moc-anchor-corrected-failure.npz
+-rw-r--r--  1 dell  dell       2734 Nov 20 13:57 moc-anchor-corrected-search.py
+-rw-r--r--  1 dell  dell       2645 Nov 20 13:57 moc-anchor-minimize.py
+-rw-r--r--  1 dell  dell        980 Nov 20 13:57 moc-anchor-minimized-failure.npz
+-rw-r--r--  1 dell  dell       1843 Nov 20 13:45 moc-anchor-probe.py
+-rw-r--r--  1 dell  dell       1566 Nov 20 13:58 moc-anchor-rational.py
+-rw-r--r--  1 dell  dell       2622 Nov 20 13:57 moc-anchor-search.py
+-rw-r--r--  1 dell  dell         33 Nov 20 14:26 moc-anchor.log
+-rw-r--r--  1 dell  dell      86295 Nov 20 14:36 moc-arxiv-2006.14846v1.pdf
+-rw-r--r--  1 dell  dell      12133 Nov 20 14:36 moc-arxiv-2006.14846v1.txt
+-rw-r--r--  1 dell  dell     243377 Nov 20 14:36 moc-arxiv-2607.21163.pdf
+-rw-r--r--  1 dell  dell      54602 Nov 20 14:36 moc-arxiv-2607.21163.txt
+-rw-r--r--  1 dell  dell       4635 Nov 20 14:32 moc-arxiv-atom.xml
+-rw-r--r--  1 dell  dell      75262 Nov 20 13:25 moc-arxiv-broader.xml
+-rw-r--r--  1 dell  dell        801 Nov 20 13:30 moc-arxiv-hmsv.xml
+-rw-r--r--  1 dell  dell       4635 Nov 20 13:24 moc-arxiv-literature.xml
+-rw-r--r--  1 dell  dell       4635 Nov 20 13:25 moc-arxiv-query.xml
+-rw-r--r--  1 dell  dell       3159 Nov 20 15:47 moc-arxiv-resume.xml
+-rw-r--r--  1 dell  dell       4635 Nov 20 14:35 moc-arxiv-search.xml
+-rw-r--r--  1 dell  dell         33 Nov 20 15:04 moc-audit-path
+-rw-------  1 dell  dell        941 Nov 20 15:21 moc-axiom-audit-MCkfIR.lean
+drwx------  2 dell  dell         60 Nov 20 15:33 moc-axiom-audit-eonegrrp
+-rw-r--r--  1 dell  dell      19688 Nov 20 15:13 moc-build
+-rw-r--r--  1 dell  dell       5838 Nov 20 15:05 moc-build.log
+-rw-r--r--  1 dell  dell       4409 Nov 20 13:26 moc-c-load.json
+-rw-r--r--  1 dell  dell      11964 Nov 20 14:10 moc-contact-compute.lean
+-rw-r--r--  1 dell  dell      10295 Nov 20 14:13 moc-contact-count.lean
+-rw-r--r--  1 dell  dell      12262 Nov 20 14:13 moc-contact-facets.lean
+-rw-r--r--  1 dell  dell         74 Nov 20 14:50 moc-current-AnchorObstruction.log
+-rw-r--r--  1 dell  dell        558 Nov 20 14:49 moc-current-TwoFrame.log
+-rw-r--r--  1 dell  dell       7173 Nov 20 14:49 moc-current-build.log
+-rw-r--r--  1 dell  dell        485 Nov 20 14:50 moc-current-var.log
+-rw-r--r--  1 dell  dell      86178 Nov 20 13:24 moc-denzel.html
+-rw-r--r--  1 dell  dell     157475 Nov 20 15:02 moc-drury-essentially-hermitian.pdf
+-rw-r--r--  1 dell  dell      42085 Nov 20 15:02 moc-drury-essentially-hermitian.txt
+-rw-r--r--  1 dell  dell       3726 Nov 20 15:44 moc-drury-mcgill.html
+-rw-r--r--  1 dell  dell       9953 Nov 20 13:42 moc-drury-openalex.json
+-rw-r--r--  1 dell  dell      13100 Nov 20 15:05 moc-drury-unitaries-openalex.json
+-rw-r--r--  1 dell  dell       3577 Nov 20 15:05 moc-drury-units-arxiv.xml
+-rw-r--r--  1 dell  dell          0 Nov 20 15:05 moc-final-AnchorObstruction.log
+-rw-r--r--  1 dell  dell      10704 Nov 20 14:18 moc-five.log
+drwxr-xr-x  3 dell  dell         60 Nov 20 13:40 moc-fix-adopted.Ji5StW
+-rw-r--r--  1 dell  dell       8015 Nov 20 15:09 moc-fix-build.log
+-rw-r--r--  1 dell  dell       3060 Nov 20 15:09 moc-fix-build2.log
+drwxr-xr-x  3 dell  dell         60 Nov 20 13:40 moc-fix-final-adopted.5GUvNr
+drwx------  4 dell  dell        120 Nov 20 13:45 moc-fix-final.RhfaMa
+-rw-r--r--  1 dell  dell       3845 Nov 20 14:55 moc-fix-next.log
+-rw-r--r--  1 dell  dell        429 Nov 20 14:54 moc-fix-norm.log
+drwxr-xr-x  2 dell  dell        180 Nov 20 15:06 moc-fix-original
+drwx------  4 dell  dell        100 Nov 20 13:41 moc-fix-smoke.TlMG4j
+drwx------  4 dell  dell        100 Nov 20 13:40 moc-fix-smoke.xpEpti
+-rw-r--r--  1 dell  dell       1565 Nov 20 14:54 moc-fix-var.log
+-rw-r--r--  1 dell  dell         68 Nov 20 14:54 moc-fix-var2.log
+drwxr-xr-x  3 dell  dell         60 Nov 20 14:12 moc-four-coincidence
+-rw-r--r--  1 dell  dell         74 Nov 20 15:05 moc-four.log
+-rw-r--r--  1 dell  dell     427725 Nov 20 13:34 moc-hmsv.pdf
+-rw-r--r--  1 dell  dell     147929 Nov 20 13:34 moc-hmsv.txt
+-rw-r--r--  1 dell  dell       2371 Nov 20 15:00 moc-householder-crossref.json
+-rw-r--r--  1 dell  dell      15962 Nov 20 14:02 moc-jacobi-axioms.lean
+drwxr-xr-x  3 dell  dell         60 Nov 20 13:46 moc-jacobi-build
+-rw-r--r--  1 dell  dell      16012 Nov 20 13:56 moc-jacobi-diagonal.lean
+-rw-r--r--  1 dell  dell       9657 Nov 20 13:49 moc-jacobi-stationarity.lean
+-rw-r--r--  1 dell  dell       5913 Nov 20 15:33 moc-lean-build.log
+drwx------  3 dell  dell         60 Nov 20 15:51 moc-lean-fix-3xkpnut0
+-rw-r--r--  1 dell  dell     243377 Nov 20 13:25 moc-log-majorization.pdf
+-rw-r--r--  1 dell  dell      54602 Nov 20 13:25 moc-log-majorization.txt
+-rw-r--r--  1 dell  dell          0 Nov 20 13:40 moc-mixedbound-lean.log
+-rw-r--r--  1 dell  dell         35 Nov 20 14:50 moc-module-axioms-path
+-rw-------  1 dell  dell        888 Nov 20 14:50 moc-module-axioms.rHTGFI.lean
+-rw-r--r--  1 dell  dell       9772 Nov 20 15:13 moc-normal
+drwxr-xr-x  3 dell  dell        180 Nov 20 13:54 moc-normal-build
+-rw-r--r--  1 dell  dell      86295 Nov 20 13:25 moc-normal-dilation.pdf
+-rw-r--r--  1 dell  dell      12133 Nov 20 13:25 moc-normal-dilation.txt
+-rw-r--r--  1 dell  dell     331492 Nov 20 13:42 moc-openalex-2026.json
+-rw-r--r--  1 dell  dell     413749 Nov 20 13:50 moc-openfrontiers.pdf
+-rw-r--r--  1 dell  dell     156964 Nov 20 13:50 moc-openfrontiers.txt
+-rw-------  1 dell  dell        997 Nov 20 15:04 moc-proof-audit-6PvJKm.lean
+drwx------  2 dell  dell         80 Nov 20 14:41 moc-proof-baseline.FUCNgI
+-rw-r--r--  1 dell  dell       3709 Nov 20 15:26 moc-q65-CircleSpectra.log
+-rw-r--r--  1 dell  dell         30 Nov 20 15:26 moc-q65-ContactTransfer.log
+-rw-r--r--  1 dell  dell        270 Nov 20 15:26 moc-q65-HouseholderPacking.log
+-rw-r--r--  1 dell  dell         30 Nov 20 15:26 moc-q65-Interlacing.log
+-rw-r--r--  1 dell  dell       1449 Nov 20 15:26 moc-q65-StationaryPhaseGraph.log
+-rw-r--r--  1 dell  dell       6766 Nov 20 15:25 moc-q65-build.log
+-rw-r--r--  1 dell  dell       1234 Nov 20 14:04 moc-rank2-monomial-failure.npz
+-rw-r--r--  1 dell  dell       4240 Nov 20 14:02 moc-realification-axioms.lean
+drwxr-xr-x  3 dell  dell         60 Nov 20 14:00 moc-realification-build
+drwxr-xr-x  2 dell  dell        140 Nov 20 15:19 moc-repair-baseline
+-rw-r--r--  1 dell  dell       6674 Nov 20 15:20 moc-repair-build.log
+-rw-r--r--  1 dell  dell       5378 Nov 20 15:21 moc-repair-final.log
+-rw-r--r--  1 dell  dell       1169 Nov 20 15:20 moc-repair-interlacing.log
+-rw-r--r--  1 dell  dell      86295 Nov 20 14:32 moc-rodtes-arxiv.pdf
+-rw-r--r--  1 dell  dell     162867 Nov 20 13:47 moc-schur-agler.pdf
+-rw-r--r--  1 dell  dell      33897 Nov 20 13:47 moc-schur-agler.txt
+-rw-r--r--  1 dell  dell       1549 Nov 20 15:00 moc-shitov-arxiv.xml
+-rw-r--r--  1 dell  dell       4670 Nov 20 15:00 moc-shitov-crossref.json
+-rw-r--r--  1 dell  dell       5479 Nov 20 15:01 moc-shitov-iop.pdf
+-rw-r--r--  1 dell  dell        318 Nov 20 15:01 moc-shitov-links.html
+-rw-r--r--  1 dell  dell      11357 Nov 20 15:01 moc-shitov-mathnet-en.pdf
+-rw-r--r--  1 dell  dell      11315 Nov 20 15:00 moc-shitov-mathnet-pdf
+-rw-r--r--  1 dell  dell        318 Nov 20 15:01 moc-shitov-mathnet-record.html
+-rw-r--r--  1 dell  dell      11227 Nov 20 15:00 moc-shitov-mathnet-ru.html
+-rw-r--r--  1 dell  dell      11227 Nov 20 15:00 moc-shitov-mathnet.html
+-rw-r--r--  1 dell  dell     453297 Nov 20 15:01 moc-shitov-mobile-en.pdf
+-rw-r--r--  1 dell  dell      22332 Nov 20 15:01 moc-shitov-mobile-en.txt
+-rw-r--r--  1 dell  dell     524250 Nov 20 15:01 moc-shitov-mobile-ru.pdf
+-rw-r--r--  1 dell  dell      22611 Nov 20 15:01 moc-shitov-mobile-ru.txt
+-rw-r--r--  1 dell  dell      10138 Nov 20 15:01 moc-shitov-mobile.html
+-rw-r--r--  1 dell  dell      12140 Nov 20 15:01 moc-shitov-openalex-en.json
+-rw-r--r--  1 dell  dell      12140 Nov 20 15:01 moc-shitov-openalex-ru.json
+-rw-r--r--  1 dell  dell      92508 Nov 20 15:01 moc-shitov-search.html
+-rw-r--r--  1 dell  dell          0 Nov 20 14:20 moc-singular.log
+drwxr-xr-x  3 dell  dell        100 Nov 20 13:33 moc-small-build
+drwxr-xr-x  3 dell  dell         60 Nov 20 13:35 moc-small-verify
+-rw-r--r--  1 dell  dell      15554 Nov 20 14:59 moc-snapshot-check.log
+-rw-r--r--  1 dell  dell          0 Nov 20 15:00 moc-snapshot-four.log
+-rw-r--r--  1 dell  dell          0 Nov 20 14:59 moc-snapshot-rank.log
+-rw-r--r--  1 dell  dell       1911 Nov 20 14:59 moc-snapshot-two.log
+-rw-r--r--  1 dell  dell       1325 Nov 20 15:04 moc-spectral.log
+-rw-r--r--  1 dell  dell       5406 Nov 20 14:27 moc-st.log
+-rw-r--r--  1 dell  dell          0 Nov 20 14:26 moc-st2.log
+-rw-r--r--  1 dell  dell        220 Nov 20 13:44 moc-support-audit.lean
+drwxr-xr-x  3 dell  dell         60 Nov 20 13:28 moc-support-build
+-rw-r--r--  1 dell  dell       6542 Nov 20 14:19 moc-three.log
+drwxr-xr-x  3 dell  dell         80 Nov 20 13:25 moc-toolchain
+-rw-r--r--  1 dell  dell        208 Nov 20 13:59 moc-transfer-audit.lean
+drwxr-xr-x  3 dell  dell         60 Nov 20 13:48 moc-transfer-build
+-rw-r--r--  1 dell  dell      23750 Nov 20 13:46 moc-transfer-literature.xml
+-rw-r--r--  1 dell  dell        532 Nov 20 14:20 moc-two.log
+-rw-r--r--  1 dell  dell      14714 Nov 20 14:01 moc-twoframe-original
+-rw-r--r--  1 dell  dell     753076 Nov 20 14:45 moc-wielandt-1955.pdf
+-rw-r--r--  1 dell  dell      17421 Nov 20 14:45 moc-wielandt-1955.txt
+-rw-r--r--  1 dell  dell     753076 Nov 20 13:26 moc-wielandt.pdf
+-rw-r--r--  1 dell  dell      17421 Nov 20 13:26 moc-wielandt.txt
+drwxr-xr-x  2 dell  dell         40 Nov 20 13:51 moc-worker-path-guard
+drwx------  5 dell  dell        100 Nov 20 13:49 moc-worker-queue-e0Dl4YCn
+drwxr-xr-x  5 dell  dell        160 Nov 20 13:49 moc-worker-real-test
+drwx------  4 dell  dell         80 Nov 20 13:42 moc-worker-smoke-8OVvGq7e
+-rw-r--r--  1 dell  dell         31 Nov 20 13:42 moc-worker-smoke-path
+-rw-r--r--  1 dell  dell       6088 Nov 20 14:04 moc-zero-height-stationarity.md
+-rw-r--r--  1 dell  dell       4023 Nov 20 14:01 moc-zeroheight-original
+drwxr-xr-x 11 dell  dell        320 Nov 20 13:56 moc-zheng-2026
+-rw-r--r--  1 dell  dell       4895 Nov 20 13:55 moc-zheng-README.md
+drwxr-xr-x  5 dell  dell        500 Nov 20 14:12 moc-zheng-audit
+-rw-r--r--  1 dell  dell       2642 Nov 20 13:26 moc-zheng-doi.json
+-rw-r--r--  1 dell  dell      13198 Nov 20 13:55 moc-zheng-git.json
+drwxr-xr-x 11 dell  dell        320 Nov 20 13:56 moc-zheng-independent
+-rw-r--r--  1 dell  dell      35035 Nov 20 13:56 moc-zheng-independent-arxiv.xml
+-rw-r--r--  1 dell  dell      86178 Nov 20 14:45 moc-zheng-mathematics.html
+-rw-r--r--  1 dell  dell     217137 Nov 20 13:57 moc-zheng-paper.txt
+-rw-r--r--  1 dell  dell      64126 Nov 20 13:54 moc-zheng-repos.json
+-rw-r--r--  1 dell  dell     567034 Nov 20 13:55 moc-zheng-tree.json
+-rw-r--r--  1 dell  dell     393630 Nov 20 13:56 moc-zheng.pdf
+-rw-r--r--  1 dell  dell     217137 Nov 20 13:56 moc-zheng.txt
+-rw-------  1 dell  dell        975 Nov 20 15:16 moc-zzoja-axioms.XuTmXv.lean
+-rw-r--r--  1 dell  dell      11131 Nov 20 15:16 moc-zzoja-build.log
+-rw-r--r--  1 dell  dell       8512 Nov 20 15:16 moc-zzoja-build2.log
+-rw-r--r--  1 dell  dell       7208 Nov 20 15:17 moc-zzoja-build3.log
+-rw-r--r--  1 dell  dell       7488 Nov 20 15:17 moc-zzoja-build4.log
+-rw-r--r--  1 dell  dell       6087 Nov 20 15:18 moc-zzoja-build5.log
+-rw-r--r--  1 dell  dell        733 Nov 20 13:37 moc_contact_zero_search.py
+-rw-r--r--  1 dell  dell        637 Nov 20 13:26 moc_min_f.py
+-rw-r--r--  1 dell  dell       2953 Nov 20 13:31 moc_order4_lp.py
+-rw-r--r--  1 dell  dell       2772 Nov 20 14:09 moc_rank2_double_adversary_child.py
+-rw-r--r--  1 dell  dell       3184 Nov 20 14:06 moc_rank2_double_child.py
+-rw-r--r--  1 dell  dell       2161 Nov 20 14:09 moc_rank2_double_funcs_child.py
+-rw-r--r--  1 dell  dell       2163 Nov 20 14:07 moc_rank2_exact_child.py
+-rw-r--r--  1 dell  dell       2349 Nov 20 14:09 moc_rank2_exact_complex_child.py
+-rw-r--r--  1 dell  dell       2415 Nov 20 14:10 moc_rank2_exact_complex_large_child.py
+-rw-r--r--  1 dell  dell       1733 Nov 20 14:04 moc_rank2_monomials_child.py
+-rw-r--r--  1 dell  dell       4795 Nov 20 14:03 moc_rank2_sweep_child.py
+-rw-r--r--  1 dell  dell       2060 Nov 20 13:49 moc_zero_height_circle_rank.py
+-rw-r--r--  1 dell  dell        601 Nov 20 13:47 moc_zero_height_jac_factors.py
+drwxr-xr-x  3 dell  dell         60 Nov 20 12:03 node-compile-cache
+drwx------  2 dell  dell         80 Nov 20 13:13 org.chromium.Chromium.q0NzxR
+-rw-r--r--  1 dell  dell   18354538 Nov 20 12:47 rh-archive-list.txt
+-rw-r--r--  1 dell  dell          0 Nov 20 12:40 rh-mirror.tar.gz
+-rw-r--r--  1 dell  dell      13273 Nov 20 12:56 rh-proof-remark.txt
+-rw-r--r--  1 dell  dell   15901856 Nov 20 12:57 rh-scout-live.txt
+-rw-r--r--  1 dell  dell        284 Nov 20 12:58 rh_math_census1.txt
+-rw-r--r--  1 dell  dell      14404 Nov 20 12:58 rh_math_census2.txt
+-rw-r--r--  1 dell  dell     180292 Nov 20 12:58 rh_math_census3.txt
+-rw-r--r--  1 dell  dell  119961663 Nov 20 12:58 rh_math_index.pkl
+-rw-r--r--  1 dell  dell       1702 Nov 20 12:57 rh_math_index.py
+
+Lean/.lake/:
+total 0
+drwxr-xr-x 2 dell dell  60 Nov 20 15:51 .
+drwxr-xr-x 4 dell dell 160 Nov 20 15:51 ..
+lrwxrwxrwx 1 dell dell  42 Nov 20 15:51 packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+Lean/MOC/Householder.lean:93:theorem determinantValue_rankOnePhase (a b v : ι → ℂ) (z : ℂ)
+Lean/MOC/Householder.lean:173:theorem determinantValue_rankOnePhase_interpolate (a b v : ι → ℂ) (z : ℂ)
+Lean/MOC/Householder.lean:226:theorem determinantValue_rankOnePhase_mem_segment (a b v : ι → ℂ) (z : ℂ)
+Lean/MOC/StrongSupport.lean:87:private theorem permMatrix_conjugates (σ : Equiv.Perm ι) (M : Matrix ι ι ℂ) :
+Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Sum.lean:271:theorem sumCompl_apply_inl {α} (p : α → Prop) [DecidablePred p] (x : { a // p a }) :
+Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Sum.lean:276:theorem sumCompl_apply_inr {α} (p : α → Prop) [DecidablePred p] (x : { a // ¬p a }) :
+Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Sum.lean:281:theorem sumCompl_apply_symm_of_pos {α} (p : α → Prop) [DecidablePred p] (a : α) (h : p a) :
+Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Sum.lean:286:theorem sumCompl_apply_symm_of_neg {α} (p : α → Prop) [DecidablePred p] (a : α) (h : ¬p a) :
+Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Set.lean:284:theorem sumCompl_apply_inl {α : Type u} (s : Set α) [DecidablePred (· ∈ s)] (x : s) :
+Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Set.lean:289:theorem sumCompl_apply_inr {α : Type u} (s : Set α) [DecidablePred (· ∈ s)] (x : (sᶜ : Set α)) :
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Reflection.lean:181:def vecMulᵣ [Mul α] [Add α] [Zero α] (v : Fin l → α) (A : Matrix (Fin l) (Fin m) α) : Fin m → α :=
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean:591:def vecMulVec [Mul α] (w : m → α) (v : n → α) : Matrix m n α :=
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean:624:def vecMul [Fintype m] (v : m → α) (M : Matrix m n α) : n → α
+
+exec
+/bin/bash -lc "sed -n '93,101p' Lean/MOC/Householder.lean; sed -n '87,95p' Lean/MOC/StrongSupport.lean
+rg -n 'sum_coe_sort|mul_fin_two|vecMul_diagonal' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/{Mul,Reflection}.lean
+cd Lean
+temp_backup="'$(mktemp -d)
+cp MOC/{AnchoredChart,DruryResolvent,HouseholderSupport,NonnormalExtrema,SpectralMobius,StrongSupport}.lean "$temp_backup"
+echo "$temp_backup"
+python - <<'"'PY'
+from pathlib import Path
+def edit(name, pairs):
+ p=Path('MOC')/(name+'.lean')
+ s=p.read_text()
+ for a,b in pairs:
+  assert a in s,a
+  s=s.replace(a,b)
+ p.write_text(s)
+edit('AnchoredChart',[('hi.symm','(Ne.symm hi)')])
+edit('DruryResolvent',[('λ','«λ»')])
+edit('SpectralMobius',[('Complex.normSq_ofReal]','Complex.normSq_ofReal, pow_two]'),('S * conj (','S * (starRingEnd ℂ) (')])
+edit('StrongSupport',[('σ.symm.permMatrix ℂ','Equiv.Perm.permMatrix ℂ σ.symm'),('Complex.mul_sub','mul_sub')])
+edit('HouseholderSupport',[
+ ('Finset.sum_coe_sort (fun i => c i • Y i) S','Finset.sum_coe_sort S (fun i => c i • Y i)'),
+ ('_ = 0 := by simpa only [c, dif_pos Subtype.property] using hg','''_ = 0 := by
+      rw [← hg]
+      exact Finset.sum_congr rfl fun i _ => by rw [c, dif_pos i.property]'''),
+ ('''change (∑ j, (X p j)"'^2 - (∑ i, p i * y i j)''^2) ≤
+    ∑ j, (X q j)''^2 - (∑ i, p i * y i j)''^2'"''','''change (∑ j, ((X p j)"'^2 - (∑ i, p i * y i j)''^2)) ≤
+    ∑ j, ((X q j)''^2 - (∑ i, p i * y i j)''^2)'"'''),
+ ('rw [← hw, ← hQ]','rw [← hw, ← hQ]\\n    fold N'),
+ ('simp [e,','simp [e, Equiv.sumCompl_apply_inl, Equiv.sumCompl_apply_inr,')])
+edit('NonnormalExtrema',[
+ ('Complex.star_def, Complex.add_re','map_ofNat, Complex.star_def, Complex.add_re'),
+ ('Matrix.add_apply, Matrix.mul_apply,','Matrix.add_apply, Matrix.mul_apply, Matrix.vecMul, dotProduct,')])
+PY
+lake --no-cache build MOC.AnchoredChart MOC.DruryResolvent MOC.HouseholderSupport MOC.NonnormalExtrema MOC.SpectralMobius MOC.StrongSupport > /tmp/moc-six-build-first.log 2>&1" in /tmp/moc-lean-fix-3xkpnut0/after
+exec
+/bin/bash -lc "tail -15 /tmp/moc-six-build-first.log
+ls -ld Lean/.lake/build
+sed -n '93,102p' Lean/MOC/Householder.lean
+sed -n '87,95p' Lean/MOC/StrongSupport.lean
+ls -td /tmp/tmp.* | head -2
+rg -n 'map_ofNat|vecMul, dotProduct' Lean/MOC/NonnormalExtrema.lean
+rg -n 'def mul|theorem mul_apply' Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Mul.lean | head" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 14463ms:
+drwxr-xr-x 4 dell dell 80 Nov 20 15:52 Lean/.lake/build
+theorem determinantValue_rankOnePhase (a b v : ι → ℂ) (z : ℂ)
+    (hv : ∑ i, star (v i) * v i = 1) (hz : z * star z = 1)
+    (hreg : ∀ i, a i + b i ≠ 0) :
+    determinantValue a b (rankOnePhase v z) =
+      (∏ i, (a i + b i)) *
+        (1 - (2 - z - star z) * (rankOneSpectralCompression a b v).det) := by
+  let U := rankOnePhase v z
+  let N := rankOneSpectralCompression a b v
+  let X : Matrix ι (Fin 2) ℂ := Matrix.of fun i j =>
+    (v i / (a i + b i)) * (if j = 0 then a i else 1)
+private theorem permMatrix_conjugates (σ : Equiv.Perm ι) (M : Matrix ι ι ℂ) :
+    σ.permMatrix ℂ * M * (σ.permMatrix ℂ)ᴴ = M.submatrix σ σ := by
+  rw [Matrix.conjTranspose_permMatrix]
+  change (σ.toPEquiv.toMatrix : Matrix ι ι ℂ) * M * (σ⁻¹).toPEquiv.toMatrix = _
+  simp only [PEquiv.toMatrix_toPEquiv_mul, PEquiv.mul_toMatrix_toPEquiv,
+    Matrix.submatrix_submatrix, Function.comp_id, Function.id_comp,
+    Equiv.Perm.inv_def, Equiv.symm_symm]
+
+private theorem matchingProduct_mem_determinantRange (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+/tmp/tmp.S03V6UyWvd
+66:      Matrix.conjTranspose_apply, map_ofNat, Complex.star_def, Complex.add_re, Complex.add_im,
+101:      Matrix.add_apply, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two, Matrix.conjTranspose_apply,
+102:      map_ofNat, Complex.star_def, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im]
+322:theorem mul_apply [Fintype m] [Mul α] [AddCommMonoid α] {M : Matrix l m α} {N : Matrix m n α}
+328:theorem mul_apply' [Fintype m] [Mul α] [AddCommMonoid α] {M : Matrix l m α} {N : Matrix m n α}
+610:def mulVec [Fintype n] (M : Matrix m n α) (v : n → α) : m → α
+632:def mulVec.addMonoidHomLeft [Fintype n] (v : n → α) : Matrix m n α →+ m → α where
+642:theorem mul_apply_eq_vecMul [Fintype n] (A : Matrix m n α) (B : Matrix n o α) (i : m) :
+
+exec
+/bin/bash -lc "tail -12 /tmp/moc-six-build-first.log
+du -sh Lean/.lake/build /home/dell/Desktop/MOC/Lean/.lake/build
+diff -u /tmp/tmp.S03V6UyWvd/AnchoredChart.lean Lean/MOC/AnchoredChart.lean
+diff -u /tmp/tmp.S03V6UyWvd/SpectralMobius.lean Lean/MOC/SpectralMobius.lean
+rg -n 'theorem sum_coe_sort|lemma sum_coe_sort|theorem conj_ofReal|lemma conj_ofReal' Lean/.lake/packages/mathlib/Mathlib | head -15" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 9485ms:
+✔ [2445/2467] Built MOC.Core
+540K	Lean/.lake/build
+11M	/home/dell/Desktop/MOC/Lean/.lake/build
+--- /tmp/tmp.S03V6UyWvd/AnchoredChart.lean	2026-11-20 15:52:23.022962137 -0500
++++ Lean/MOC/AnchoredChart.lean	2026-11-20 15:52:23.175658478 -0500
+@@ -44,7 +44,7 @@
+   have hσ₀ : σ j₀ = i₀ := by
+     change Equiv.swap (p j) i (p j₀) = i₀
+     rw [hp₀]
+-    exact Equiv.swap_apply_of_ne_of_ne (fun h => hj (p.injective (h.symm.trans hp₀.symm))) hi.symm
++    exact Equiv.swap_apply_of_ne_of_ne (fun h => hj (p.injective (h.symm.trans hp₀.symm))) (Ne.symm hi)
+   have hσj : σ j = i := Equiv.swap_apply_left _ _
+   let τ := (Equiv.swap j₀ j).trans σ
+   have hnz' : anchoredMatchingCoordinate c' x' y' τ ≠ 0 :=
+--- /tmp/tmp.S03V6UyWvd/SpectralMobius.lean	2026-11-20 15:52:23.023122009 -0500
++++ Lean/MOC/SpectralMobius.lean	2026-11-20 15:52:23.176275862 -0500
+@@ -151,9 +151,9 @@
+     exact mul_ne_zero two_ne_zero (Nat.cast_ne_zero.mpr Fintype.card_ne_zero)
+   have hsq : Complex.normSq t = Complex.normSq S / N ^ 2 := by
+     dsimp only [t]
+-    rw [map_div₀, Complex.normSq_neg, Complex.normSq_ofReal]
++    rw [map_div₀, Complex.normSq_neg, Complex.normSq_ofReal, pow_two]
+   have hprod : (S * star t).re = -Complex.normSq S / N := by
+-    change (S * conj (-S / (N : ℂ))).re = _
++    change (S * (starRingEnd ℂ) (-S / (N : ℂ))).re = _
+     rw [map_div₀, map_neg, Complex.conj_ofReal, ← mul_div_assoc, mul_neg,
+       Complex.mul_conj, ← Complex.ofReal_neg, ← Complex.ofReal_div, Complex.ofReal_re]
+   rw [spectralEnergy_shift]
+Lean/.lake/packages/mathlib/Mathlib/Analysis/RCLike/Basic.lean:294:theorem conj_ofReal (r : ℝ) : conj (r : K) = (r : K) := by
+Lean/.lake/packages/mathlib/Mathlib/Data/Complex/Basic.lean:457:theorem conj_ofReal (r : ℝ) : conj (r : ℂ) = r :=
+
+exec
+/bin/bash -lc "tail -20 /tmp/moc-six-build-first.log
+rg -n 'def signed_mean_square|def matchingProduct|theorem matchingProduct_inverse|conj_ofReal|lemma sum_coe_sort' Lean/MOC/{Core,HouseholderSupport}.lean Lean/.lake/packages/mathlib/Mathlib/{Data/Complex/Basic.lean,Algebra/BigOperators/Group/Finset/Basic.lean}
+diff -U2 /tmp/tmp.S03V6UyWvd/HouseholderSupport.lean Lean/MOC/HouseholderSupport.lean" in /tmp/moc-lean-fix-3xkpnut0/after
+ exited 1 in 11455ms:
+✔ [2445/2467] Built MOC.Core
+Lean/.lake/packages/mathlib/Mathlib/Data/Complex/Basic.lean:457:theorem conj_ofReal (r : ℝ) : conj (r : ℂ) = r :=
+Lean/.lake/packages/mathlib/Mathlib/Data/Complex/Basic.lean:473:    rw [e, conj_ofReal]⟩
+Lean/MOC/Core.lean:21:def matchingProduct (a b : ι → ℂ) (σ : Equiv.Perm ι) : ℂ :=
+Lean/MOC/Core.lean:37:theorem matchingProduct_inverse (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+Lean/MOC/HouseholderSupport.lean:134:private def signed_mean_square (x y : ι → Fin 3 → ℝ) (p : ι → ℝ) : ℝ :=
+Lean/MOC/HouseholderSupport.lean:290:    rw [Complex.star_def, Complex.conj_ofReal, ← Complex.ofReal_mul, Real.mul_self_sqrt (hq i)]
+--- /tmp/tmp.S03V6UyWvd/HouseholderSupport.lean	2026-11-20 15:52:23.023046539 -0500
++++ Lean/MOC/HouseholderSupport.lean	2026-11-20 15:52:23.179466212 -0500
+@@ -37,6 +37,8 @@
+       (Finset.sum_subset (Finset.subset_univ S)
+         (fun i _ hi => by rw [hcz i hi, zero_smul])).symm
+-    _ = ∑ i : S, c i • Y i := (Finset.sum_coe_sort (fun i => c i • Y i) S).symm
+-    _ = 0 := by simpa only [c, dif_pos Subtype.property] using hg
++    _ = ∑ i : S, c i • Y i := (Finset.sum_coe_sort S (fun i => c i • Y i)).symm
++    _ = 0 := by
++      rw [← hg]
++      exact Finset.sum_congr rfl fun i _ => by rw [c, dif_pos i.property]
+   have hcs : (∑ i, c i) = 0 := by
+     simpa only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Y, Fin.cons_zero, mul_one,
+@@ -157,6 +159,6 @@
+   unfold signed_mean_square
+   simp only [hqy]
+-  change (∑ j, (X p j)^2 - (∑ i, p i * y i j)^2) ≤
+-    ∑ j, (X q j)^2 - (∑ i, p i * y i j)^2
++  change (∑ j, ((X p j)^2 - (∑ i, p i * y i j)^2)) ≤
++    ∑ j, ((X q j)^2 - (∑ i, p i * y i j)^2)
+   simp only [Fin.sum_univ_three] at hs hscore ⊢
+   nlinarith
+@@ -209,4 +211,5 @@
+     change (η * matchingProduct a b 1) * _ = _
+     rw [← hw, ← hQ]
++    fold N
+     norm_num [star_neg, star_one]
+   have hRe (j : Fin 3) :
+@@ -250,10 +253,10 @@
+     ext i j : 1
+     rcases i with i | i <;> rcases j with j | j
+-    · simp [e, v₁, rankOnePhase, Matrix.one_apply, Matrix.vecMulVec_apply, Subtype.ext_iff]
++    · simp [e, Equiv.sumCompl_apply_inl, Equiv.sumCompl_apply_inr, v₁, rankOnePhase, Matrix.one_apply, Matrix.vecMulVec_apply, Subtype.ext_iff]
+     · have hn : (i : ι) ≠ j := fun h => j.property (h ▸ i.property)
+-      simp [e, rankOnePhase, Matrix.one_apply_ne hn, Matrix.vecMulVec_apply, hzero j j.property]
++      simp [e, Equiv.sumCompl_apply_inl, Equiv.sumCompl_apply_inr, rankOnePhase, Matrix.one_apply_ne hn, Matrix.vecMulVec_apply, hzero j j.property]
+     · have hn : (i : ι) ≠ j := fun h => i.property (h.symm ▸ j.property)
+-      simp [e, rankOnePhase, Matrix.one_apply_ne hn, Matrix.vecMulVec_apply, hzero i i.property]
+-    · simp [e, rankOnePhase, Matrix.one_apply, Matrix.vecMulVec_apply, Subtype.ext_iff,
++      simp [e, Equiv.sumCompl_apply_inl, Equiv.sumCompl_apply_inr, rankOnePhase, Matrix.one_apply_ne hn, Matrix.vecMulVec_apply, hzero i i.property]
++    · simp [e, Equiv.sumCompl_apply_inl, Equiv.sumCompl_apply_inr, rankOnePhase, Matrix.one_apply, Matrix.vecMulVec_apply, Subtype.ext_iff,
+         hzero i i.property]
+   have ha : a ∘ e = Sum.elim a₁ a₂ := by funext j; cases j <;> rfl
+
+exec
+/bin/bash -lc 'tail -18 /tmp/moc-six-build-first.log; free -m; ps -C lean -o pid,etime,pcpu,comm | head -25' in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 2322ms:
+✔ [2445/2467] Built MOC.Core
+✔ [2446/2467] Built MOC.Weights
+               total        used        free      shared  buff/cache   available
+Mem:           15719        8266        2414        2874        8092        7452
+Swap:           9049           0        9049
+    PID     ELAPSED %CPU COMMAND
+
+exec
+/bin/bash -lc "sed -n '18,44p' Lean/MOC/Core.lean; sed -n '132,139p' Lean/MOC/HouseholderSupport.lean; tail -10 /tmp/moc-six-build-first.log
+ls -l /home/dell/.agents/skills/maintain-project-knowledge/scripts" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 4181ms:
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+def matchingProduct (a b : ι → ℂ) (σ : Equiv.Perm ι) : ℂ :=
+  ∏ j, (a (σ j) + b j)
+
+def determinantValue (a b : ι → ℂ) (U : Matrix ι ι ℂ) : ℂ :=
+  (diagonal a + U * diagonal b * Uᴴ).det
+
+def IsUnitary (U : Matrix ι ι ℂ) : Prop :=
+  U * Uᴴ = 1 ∧ Uᴴ * U = 1
+
+def Holds (a b : ι → ℂ) (U : Matrix ι ι ℂ) : Prop :=
+  determinantValue a b U ∈ convexHull ℝ (Set.range (matchingProduct a b))
+
+def Conjecture (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
+  ∀ (a b : ι → ℂ) (U : Matrix ι ι ℂ), IsUnitary U → Holds a b U
+
+omit [DecidableEq ι] in
+theorem matchingProduct_inverse (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+    matchingProduct a b σ.symm = ∏ i, (a i + b (σ i)) := by
+  unfold matchingProduct
+  rw [← Equiv.prod_comp σ (fun j => a (σ.symm j) + b j)]
+  simp
+
+omit [DecidableEq ι] in
+theorem matchingProduct_mem_hull (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+      exact ⟨w, hw, hwmass, fun j => (hwy j).trans (hqy j), hqscore.trans hwscore, hwcard⟩
+
+private def signed_mean_square (x y : ι → Fin 3 → ℝ) (p : ι → ℝ) : ℝ :=
+  ∑ j, ((∑ i, p i * x i j)^2 - (∑ i, p i * y i j)^2)
+
+/-- The support quadratic can be improved on a face supported on at most
+four labels by fixing its three negative square coordinates. -/
+private theorem exists_four_label_quadratic_weights (x y : ι → Fin 3 → ℝ) (p : ι → ℝ)
+✔ [2445/2467] Built MOC.Core
+✔ [2446/2467] Built MOC.Weights
+✔ [2447/2467] Built MOC.PhaseMove
+total 20
+-rw-r--r-- 1 dell dell 9002 Nov 14 23:10 validate-docs.mjs
+-rw-r--r-- 1 dell dell 5513 Nov 14 23:10 validate-docs.test.mjs
+
+exec
+/bin/bash -lc "tail -25 /tmp/moc-six-build-first.log
+ls -l /tmp/moc-lean-fix-3xkpnut0
+rg -n '"'^((private )?theorem|axiom|unsafe)'"' Lean/MOC/{AnchoredChart,DruryResolvent,HouseholderSupport,NonnormalExtrema,SpectralMobius,StrongSupport}.lean
+node /home/dell/.agents/skills/maintain-project-knowledge/scripts/validate-docs.mjs" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 10527ms:
+✔ [2445/2467] Built MOC.Core
+✔ [2446/2467] Built MOC.Weights
+✔ [2447/2467] Built MOC.PhaseMove
+✔ [2448/2467] Built MOC.Blocks
+total 0
+drwxr-xr-x 7 dell dell 140 Nov 20 15:52 after
+Lean/MOC/DruryResolvent.lean:15:private theorem commute_resolvent_real_part (A W : Matrix ι ι ℂ) (ω : ℂ)
+Lean/MOC/DruryResolvent.lean:28:private theorem resolvent_inverse_of_factor (A P T W : Matrix ι ι ℂ)
+Lean/MOC/DruryResolvent.lean:39:private theorem commute_resolvent_of_inverse (X R : Matrix ι ι ℂ) (κ : ℂ)
+Lean/MOC/DruryResolvent.lean:54:private theorem drury_quadratic_of_resolvent_sum (X R S : Matrix ι ι ℂ)
+Lean/MOC/DruryResolvent.lean:86:theorem exists_drury_quadratic_of_stationarity [Nonempty ι] (A C : Matrix ι ι ℂ)
+Lean/MOC/StrongSupport.lean:15:theorem exists_quadratic_support {K P : Set ℂ} (hK : IsCompact K) (hP : P ⊆ K)
+Lean/MOC/StrongSupport.lean:65:theorem second_order_le_of_quadratic_support (f : ℝ → ℂ) (z ξ d : ℂ) (q : ℝ)
+Lean/MOC/StrongSupport.lean:87:private theorem permMatrix_conjugates (σ : Equiv.Perm ι) (M : Matrix ι ι ℂ) :
+Lean/MOC/StrongSupport.lean:95:private theorem matchingProduct_mem_determinantRange (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+Lean/MOC/StrongSupport.lean:112:theorem exists_quadratic_support_frobenius_maximizer (a b : ι → ℂ)
+Lean/MOC/SpectralMobius.lean:36:theorem matchingProduct_mobius (a b : ι → ℂ) (t : ℂ) (σ : Equiv.Perm ι)
+Lean/MOC/SpectralMobius.lean:49:theorem determinantValue_mobius (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+Lean/MOC/SpectralMobius.lean:61:theorem spectralEnergy_shifted_mobius_bound
+Lean/MOC/SpectralMobius.lean:126:theorem spectralEnergy_mobius_bound (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+Lean/MOC/SpectralMobius.lean:142:theorem spectralEnergy_centering [Nonempty ι] (a b : ι → ℂ) :
+Lean/MOC/SpectralMobius.lean:167:theorem spectralEnergy_centered_mobius_bound [Nonempty ι]
+Lean/MOC/SpectralMobius.lean:193:private theorem hasDerivAt_complexPath (p x : ℂ) :
+Lean/MOC/SpectralMobius.lean:200:private theorem hasDerivAt_normSq_path {f : ℝ → ℂ} {v : ℂ} {r : ℝ}
+Lean/MOC/SpectralMobius.lean:212:private theorem hasDerivAt_mobius_line (p x : ℂ) :
+Lean/MOC/SpectralMobius.lean:223:private theorem hasDerivAt_mobius_energy_side (a : ι → ℂ) (p : ℂ) :
+Lean/MOC/SpectralMobius.lean:237:private theorem hasDerivAt_mobius_energy (a b : ι → ℂ) (p : ℂ) :
+Lean/MOC/SpectralMobius.lean:248:private theorem hasDerivAt_mobius_denominator (a b : ι → ℂ) (p : ℂ)
+Lean/MOC/SpectralMobius.lean:262:theorem equal_cubic_moments_of_positive_gap_maximizer [Nonempty ι]
+Lean/MOC/NonnormalExtrema.lean:13:private theorem skew_adjoint_conjugate {ι : Type*} [Fintype ι]
+Lean/MOC/NonnormalExtrema.lean:20:theorem frobeniusSq_hermitian_add_unitary_skew {ι : Type*} [Fintype ι] [DecidableEq ι]
+Lean/MOC/NonnormalExtrema.lean:50:private theorem balancedLeft_hermitian : (diagonal balancedLeft).IsHermitian := by
+Lean/MOC/NonnormalExtrema.lean:55:private theorem balancedRight_skew : (diagonal balancedRight)ᴴ = -diagonal balancedRight := by
+Lean/MOC/NonnormalExtrema.lean:62:private theorem balancedMixer_unitary : IsUnitary balancedMixer := by
+Lean/MOC/NonnormalExtrema.lean:69:private theorem balanced_support_zero (V : Matrix (Fin 2) (Fin 2) ℂ) (hV : IsUnitary V) :
+Lean/MOC/NonnormalExtrema.lean:94:private theorem balanced_sum_explicit :
+Lean/MOC/NonnormalExtrema.lean:107:theorem exists_balanced_nonnormal_orbit_maximum :
+Lean/MOC/HouseholderSupport.lean:16:private theorem simplex_step (y : ι → Fin 3 → ℝ) (score p : ι → ℝ)
+Lean/MOC/HouseholderSupport.lean:115:theorem exists_four_label_weights (y : ι → Fin 3 → ℝ) (score p : ι → ℝ)
+Lean/MOC/HouseholderSupport.lean:139:private theorem exists_four_label_quadratic_weights (x y : ι → Fin 3 → ℝ) (p : ι → ℝ)
+Lean/MOC/HouseholderSupport.lean:178:private theorem householder_support_squares (a b v : ι → ℂ) (η w : ℂ)
+Lean/MOC/HouseholderSupport.lean:233:private theorem holds_rankOnePhase_of_support (a b v : ι → ℂ) (z : ℂ) (S : Finset ι)
+Lean/MOC/HouseholderSupport.lean:268:private theorem holds_householder_regular (a b v : ι → ℂ)
+Lean/MOC/HouseholderSupport.lean:312:theorem holds_householder (a b v : ι → ℂ) (hv : ∑ i, star (v i) * v i = 1) :
+Lean/MOC/HouseholderSupport.lean:352:theorem holds_rankOnePhase (a b v : ι → ℂ) (z : ℂ)
+Lean/MOC/AnchoredChart.lean:17:private theorem anchored_edge_eq_one_sub_ratio (c : ℂ) (x y : ι → ℂ)
+Lean/MOC/AnchoredChart.lean:29:theorem anchored_outerProduct_eq_of_matchingCoordinates_eq (c c' : ℂ) (x y x' y' : ι → ℂ)
+Lean/MOC/AnchoredChart.lean:63:theorem anchored_chart_eq_of_matchingCoordinates_eq (c c' : ℂ) (x y x' y' : ι → ℂ)
+Lean/MOC/AnchoredChart.lean:85:theorem exists_spectra_of_anchoredMatchingCoordinate [Nonempty ι] (c : ℂ) (x y : ι → ℂ) :
+Lean/MOC/AnchoredChart.lean:131:theorem exists_anchored_chart_of_nonopposite_spectra
+Validated core documents: 0 (0 words); references: 0; evidence files: 0.
+Index coverage, internal links, core limits, reference contracts, and evidence ownership are valid.
+
+codex
+The first build is compiling the snapshot’s local dependencies. It will also check the resolvent proofs, which the original parser errors prevented Lean from reaching.
+exec
+/bin/bash -lc "tail -25 /tmp/moc-six-build-first.log
+rg -n 'sum_coe_sort' Lean/.lake/packages/mathlib/Mathlib/Algebra/BigOperators | head -15
+sed -n '267,280p' Lean/.lake/packages/mathlib/Mathlib/Logic/Equiv/Sum.lean" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 10042ms:
+✔ [2445/2467] Built MOC.Core
+✔ [2446/2467] Built MOC.Weights
+✔ [2447/2467] Built MOC.PhaseMove
+✔ [2448/2467] Built MOC.Blocks
+✔ [2449/2467] Built MOC.Support
+⚠ [2450/2467] Built MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2451/2467] Built MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2452/2467] Built MOC.Small
+⚠ [2453/2467] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+    dsimp
+    split_ifs <;> rfl
+
+@[simp]
+theorem sumCompl_apply_inl {α} (p : α → Prop) [DecidablePred p] (x : { a // p a }) :
+    sumCompl p (Sum.inl x) = x :=
+  rfl
+
+@[simp]
+theorem sumCompl_apply_inr {α} (p : α → Prop) [DecidablePred p] (x : { a // ¬p a }) :
+    sumCompl p (Sum.inr x) = x :=
+  rfl
+
+@[simp]
+
+exec
+/bin/bash -lc "rg 'Built MOC|error:|✖' /tmp/moc-six-build-first.log | tail -25
+ps -eo etime,pcpu,args | awk '/\\/bin\\/lean .*\\/MOC\\// && "'!/awk/ {print substr($0,1,200)}'"'" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 2946ms:
+✔ [2445/2467] Built MOC.Core
+✔ [2446/2467] Built MOC.Weights
+✔ [2447/2467] Built MOC.PhaseMove
+✔ [2448/2467] Built MOC.Blocks
+✔ [2449/2467] Built MOC.Support
+⚠ [2450/2467] Built MOC.HouseholderPacking
+⚠ [2451/2467] Built MOC.Householder
+✔ [2452/2467] Built MOC.Small
+⚠ [2453/2467] Built MOC.Normal
+✔ [2454/2467] Built MOC.Geometry
+✔ [2455/2467] Built MOC.Jacobi
+
+exec
+/bin/bash -lc "rg -n 'map_ofNat|starRingEnd.*ofNat' Lean/.lake/packages/mathlib/Mathlib/Algebra/GroupWithZero/Basic.lean Lean/.lake/packages/mathlib/Mathlib/Algebra/Ring | head -20
+rg -n 'error:|✖|Built MOC' /tmp/moc-six-build-first.log | tail -20
+ls -ld /home/dell/Desktop/MOC/Lean/.lake/build/lib/lean/MOC" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 8058ms:
+1:✔ [2445/2467] Built MOC.Core
+2:✔ [2446/2467] Built MOC.Weights
+3:✔ [2447/2467] Built MOC.PhaseMove
+4:✔ [2448/2467] Built MOC.Blocks
+5:✔ [2449/2467] Built MOC.Support
+6:⚠ [2450/2467] Built MOC.HouseholderPacking
+9:⚠ [2451/2467] Built MOC.Householder
+16:✔ [2452/2467] Built MOC.Small
+17:⚠ [2453/2467] Built MOC.Normal
+22:✔ [2454/2467] Built MOC.Geometry
+23:✔ [2455/2467] Built MOC.Jacobi
+24:✔ [2456/2467] Built MOC.SpectralStationarity
+drwxr-xr-x 2 dell dell 4096 Nov 20 14:09 /home/dell/Desktop/MOC/Lean/.lake/build/lib/lean/MOC
+
+exec
+/bin/bash -lc "rg -n 'theorem map_ofNat|lemma map_ofNat' Lean/.lake/packages/{mathlib,batteries}/ /tmp/moc-toolchain/lean-4.19.0-linux/src/lean -g '*.lean' | head -20
+tail -20 /tmp/moc-six-build-first.log" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 13949ms:
+Lean/.lake/packages/mathlib/Mathlib/Data/ENat/Basic.lean:458:theorem map_ofNat (f : ℕ → α) (n : ℕ) [n.AtLeastTwo] : map f ofNat(n) = f n := rfl
+Lean/.lake/packages/mathlib/Mathlib/Data/Nat/Cast/Basic.lean:103:theorem map_ofNat' {A} [AddMonoidWithOne A] [FunLike F A B] [AddMonoidHomClass F A B]
+Lean/.lake/packages/mathlib/Mathlib/Data/Nat/Cast/Basic.lean:144:theorem map_ofNat [FunLike F R S] [RingHomClass F R S] (f : F) (n : ℕ) [Nat.AtLeastTwo n] :
+Lean/.lake/packages/mathlib/Mathlib/Data/Matrix/Diagonal.lean:146:protected theorem map_ofNat [AddMonoidWithOne α] [Zero β]
+Lean/.lake/packages/mathlib/Mathlib/Algebra/AddConstMap/Basic.lean:118:theorem map_ofNat' [AddMonoidWithOne G] [AddMonoid H] [AddConstMapClass F G H 1 b]
+Lean/.lake/packages/mathlib/Mathlib/Algebra/AddConstMap/Basic.lean:126:theorem map_ofNat [AddMonoidWithOne G] [AddMonoidWithOne H] [AddConstMapClass F G H 1 1]
+Lean/.lake/packages/mathlib/Mathlib/Algebra/AddConstMap/Basic.lean:148:theorem map_ofNat_add' [AddCommMonoidWithOne G] [AddMonoid H] [AddConstMapClass F G H 1 b]
+Lean/.lake/packages/mathlib/Mathlib/Algebra/AddConstMap/Basic.lean:156:theorem map_ofNat_add [AddCommMonoidWithOne G] [AddMonoidWithOne H] [AddConstMapClass F G H 1 1]
+Lean/.lake/packages/mathlib/Mathlib/Algebra/Polynomial/Eval/Defs.lean:521:protected theorem map_ofNat (n : ℕ) [n.AtLeastTwo] :
+Lean/.lake/packages/mathlib/Mathlib/Algebra/MvPolynomial/Eval.lean:320:@[simp] protected theorem map_ofNat (n : Nat) [n.AtLeastTwo] :
+Lean/.lake/packages/mathlib/Mathlib/Algebra/Order/Monoid/Unbundled/WithTop.lean:290:@[simp] lemma map_ofNat {f : α → β} (n : ℕ) [n.AtLeastTwo] :
+Lean/.lake/packages/mathlib/Mathlib/Algebra/Order/Monoid/Unbundled/WithTop.lean:622:@[simp] lemma map_ofNat {f : α → β} (n : ℕ) [n.AtLeastTwo] :
+⚠ [2450/2467] Built MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2451/2467] Built MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2452/2467] Built MOC.Small
+⚠ [2453/2467] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2454/2467] Built MOC.Geometry
+✔ [2455/2467] Built MOC.Jacobi
+✔ [2456/2467] Built MOC.SpectralStationarity
+✔ [2457/2467] Built MOC.Source
+
+exec
+/bin/bash -lc "rg 'Built MOC|error:|✖' /tmp/moc-six-build-first.log | tail -22
+df -h /tmp
+find Lean/.lake/build/lib/lean/MOC -name '*.olean' | wc -l" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 4977ms:
+✔ [2445/2467] Built MOC.Core
+✔ [2446/2467] Built MOC.Weights
+✔ [2447/2467] Built MOC.PhaseMove
+✔ [2448/2467] Built MOC.Blocks
+✔ [2449/2467] Built MOC.Support
+⚠ [2450/2467] Built MOC.HouseholderPacking
+⚠ [2451/2467] Built MOC.Householder
+✔ [2452/2467] Built MOC.Small
+⚠ [2453/2467] Built MOC.Normal
+✔ [2454/2467] Built MOC.Geometry
+✔ [2455/2467] Built MOC.Jacobi
+✔ [2456/2467] Built MOC.SpectralStationarity
+✔ [2457/2467] Built MOC.Source
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           7.7G  2.6G  5.2G  34% /tmp
+13
+
+exec
+/bin/bash -lc "pgrep -af 'lake --no-cache|bin/lean' | cut -c1-190
+tail -8 /tmp/moc-six-build-first.log" in /tmp/moc-lean-fix-3xkpnut0/after
+ succeeded in 10184ms:
+1 codex-linux-sandbox --sandbox-policy-cwd /tmp/moc-lean-fix-3xkpnut0/after --command-cwd /tmp/moc-lean-fix-3xkpnut0/after --permission-profile {"type":"managed","file_system":{"type":"restr
+2 /bin/bash -c pgrep -af 'lake --no-cache|bin/lean' | cut -c1-190 tail -8 /tmp/moc-six-build-first.log
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2454/2467] Built MOC.Geometry
+✔ [2455/2467] Built MOC.Jacobi
+✔ [2456/2467] Built MOC.SpectralStationarity
+✔ [2457/2467] Built MOC.Source
+✔ [2458/2467] Built MOC.Variational
+

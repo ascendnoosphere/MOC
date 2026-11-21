@@ -1,0 +1,50 @@
+{"log":
+ [{"message":
+   ".> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-lean-4.19.0.rRbRJ1/lean-4.19.0-linux/bin/lean ././././MOC/MobiusOrbitMinimum.lean -R ./././. -o ././.lake/build/lib/lean/MOC/MobiusOrbitMinimum.olean -i ././.lake/build/lib/lean/MOC/MobiusOrbitMinimum.ilean -c ././.lake/build/ir/MOC/MobiusOrbitMinimum.c --json",
+   "level": "trace"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:48:18: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:69:18: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:125:27: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:182:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:201:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:303:8: automatically included section variable(s) unused in theorem '_private.MOC.MobiusOrbitMinimum.0.MOC.continuousAt_mobiusOrbitFunctional':\n  [DecidableEq κ]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [DecidableEq κ] in theorem ...\nnote: this linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:379:20: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:396:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:418:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:422:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:426:0: automatically included section variable(s) unused in theorem 'MOC.mobiusOrbitFunctional_rebase':\n  [DecidableEq κ]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [DecidableEq κ] in theorem ...\nnote: this linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:521:8: automatically included section variable(s) unused in theorem '_private.MOC.MobiusOrbitMinimum.0.MOC.centeredEnergy_mobius_on_real_line_hasDerivAt':\n  [DecidableEq κ]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [DecidableEq κ] in theorem ...\nnote: this linter can be disabled with `set_option linter.unusedSectionVars false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:633:24: this tactic is never executed\nnote: this linter can be disabled with `set_option linter.unreachableTactic false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:633:24: 'ring' tactic does nothing\nnote: this linter can be disabled with `set_option linter.unusedTactic false`",
+   "level": "warning"},
+  {"message":
+   "././././MOC/MobiusOrbitMinimum.lean:718:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\nnote: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+   "level": "warning"}],
+ "depHash": "8654522741178317881"}

@@ -1,0 +1,301 @@
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.AnchorObstruction +MOC.Blocks +MOC.CircleSpectra +MOC.Claim +MOC.Collinear +MOC.ContactCensus +MOC.ContactRectangle +MOC.ContactTransfer +MOC.Core +MOC.Extremal +MOC.FourCoincidence +MOC.FourContactCertificate +MOC.FourRealification +MOC.Geometry +MOC.Hermitian +MOC.Householder +MOC.Interlacing +MOC.Jacobi +MOC.MatchingQuartet +MOC.MixedBound +MOC.NestedValues +MOC.Normal +MOC.NormalOrbit +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.RankTwoOverlap +MOC.Realification +MOC.SchurPhase +MOC.SchurPivot +MOC.Singular +MOC.Small +MOC.Source +MOC.SpectralPerturbation +MOC.SpectralStationarity +MOC.StationaryPhaseGraph +MOC.SubsetContraction +MOC.Support +MOC.SupportBlocks +MOC.Transfer +MOC.TwoExceptions +MOC.TwoFrame +MOC.TwoValues +MOC.Variational +MOC.WeightedMinor +MOC.Weights +MOC.Wielandt +MOC.ZeroHeight
+ℹ [2354/2383] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 240 safe MOC declarations against the standard Lean axioms
+⚠ [2445/2467] Replayed MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2447/2467] Replayed MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2694/2708] Replayed MOC.SpectralPerturbation
+warning: ././././MOC/SpectralPerturbation.lean:23:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.dense_ne_zero_of_polynomial_lines':
+  [Fintype ι]
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:75:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.continuous_matchingProduct_pair':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2697/2708] Replayed MOC.FourContactCertificate
+warning: ././././MOC/FourContactCertificate.lean:70:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2699/2708] Replayed MOC.FourRealification
+warning: ././././MOC/FourRealification.lean:282:83: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/FourRealification.lean:282:83: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [2700/2708] Replayed MOC.Hermitian
+warning: ././././MOC/Hermitian.lean:46:8: automatically included section variable(s) unused in theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2710/2727] Replayed MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2715/2727] Replayed MOC.RankTwoOverlap
+warning: ././././MOC/RankTwoOverlap.lean:56:4: 'congr 1' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/RankTwoOverlap.lean:42:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:85:85: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:341:4: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/RankTwoOverlap.lean:373:48: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:465:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2716/2727] Replayed MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2717/2728] Building MOC.ContactTransfer
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/ContactTransfer.lean -R ./././. -o ././.lake/build/lib/lean/MOC/ContactTransfer.olean -i ././.lake/build/lib/lean/MOC/ContactTransfer.ilean -c ././.lake/build/ir/MOC/ContactTransfer.c --json
+error: ././././MOC/ContactTransfer.lean:98:6: invalid dotted identifier notation, unknown identifier `Complex.differentiableAt` from expected type
+  ℂ
+error: ././././MOC/ContactTransfer.lean:131:10: function expected at
+  MDifferentiableAt.comp z (DifferentiableAt.mdifferentiableAt hd)
+    (MDifferentiableOn.mdifferentiableAt hf (IsOpen.mem_nhds hopen hz))
+term has type
+  MDifferentiableAt 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) ((fun w => (1 + w)⁻¹) ∘ f) z
+error: ././././MOC/ContactTransfer.lean:134:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+M : Type u_1
+inst✝⁵ : TopologicalSpace M
+inst✝⁴ : T2Space M
+inst✝³ : ChartedSpace ℂ M
+inst✝² : IsManifold 𝓘(ℂ, ℂ) 1 M
+inst✝¹ : CompactSpace M
+inst✝ : PreconnectedSpace M
+S : Set M
+hS : S.Finite
+f : M → ℂ
+hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ
+hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re
+x y : M
+hx : x ∈ Sᶜ
+hy : y ∈ Sᶜ
+g : M → ℂ := fun x => (1 + f x)⁻¹
+hopen : IsOpen Sᶜ
+hpos : ∀ x ∈ Sᶜ, 1 ≤ (1 + f x).re
+hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ
+z : M
+hz : z ∈ Sᶜ
+⊢ ‖g z‖ ≤ 1
+error: ././././MOC/ContactTransfer.lean:167:10: invalid field notation, type is not of the form (C ...) where C is a constant
+  Finset.le_inf'_iff Jne
+has type
+  ∀ (f : ι → ?m.11455) {a : ?m.11455}, a ≤ J.inf' Jne f ↔ ∀ b ∈ J, a ≤ f b
+error: ././././MOC/ContactTransfer.lean:168:4: no goals to be solved
+error: Lean exited with code 1
+✖ [2718/2728] Building MOC.Interlacing
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Interlacing.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Interlacing.olean -i ././.lake/build/lib/lean/MOC/Interlacing.ilean -c ././.lake/build/ir/MOC/Interlacing.c --json
+error: ././././MOC/Interlacing.lean:68:10: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  ∏ i, ?f i
+case intro.a
+n : ℕ
+ih :
+  ∀ (a : Fin (n + 1) → ℝ) (α : Fin n → ℝ) (b : Fin n → ℂ),
+    (∀ (i : Fin n), a i.castSucc ≤ α i) →
+      (∀ (i : Fin n), α i ≤ a i.succ) → ∏ i, (↑(α i) + b i) ∈ partialMatchingHull (fun i => ↑(a i)) b
+a : Fin (n + 1 + 1) → ℝ
+α : Fin (n + 1) → ℝ
+b : Fin (n + 1) → ℂ
+hl : ∀ (i : Fin (n + 1)), a i.castSucc ≤ α i
+hu : ∀ (i : Fin (n + 1)), α i ≤ a i.succ
+K : Set ℂ := partialMatchingHull (fun i => ↑(a i)) b
+z : ℂ := ∏ i, (↑(α i.castSucc) + b i.castSucc)
+hK : Convex ℝ K
+ha : Monotone a
+q : Fin (n + 2)
+hq : (Fin.last n).castSucc ≤ q
+hl' : ∀ (i : Fin n), a (q.succAbove i.castSucc) ≤ α i.castSucc
+hu' : ∀ (i : Fin n), α i.castSucc ≤ a (q.succAbove i.succ)
+hz :
+  ∏ i, (↑((fun i => α i.castSucc) i) + (fun i => b i.castSucc) i) ∈
+    partialMatchingHull (fun i => ↑((fun j => a (q.succAbove j)) i)) fun i => b i.castSucc
+L : ℂ →ₗ[ℝ] ℂ := LinearMap.mulRight ℝ (↑(a q) + b (Fin.last n))
+f : Fin n ↪ Fin (n + 1)
+g : Fin (n + 1) ↪ Fin (n + 2) :=
+  finSuccEquivLast.toEmbedding.trans (f.optionMap.trans (finSuccEquiv' q).symm.toEmbedding)
+hcast : ∀ (i : Fin n), g i.castSucc = q.succAbove (f i)
+hlast : g (Fin.last n) = q
+⊢ (fun f => ∏ i, ((fun i => ↑(a i)) (f i) + b i)) g =
+    (∏ i, (↑(a (q.succAbove (f i))) + b i.castSucc)) * (↑(a q) + b (Fin.last n))
+error: ././././MOC/Interlacing.lean:134:4: type mismatch, term
+  hq i
+after simplification has type
+  f (q i) < f y : Prop
+but is expected to have type
+  False : Prop
+error: Lean exited with code 1
+✖ [2720/2733] Building MOC.SpectralStationarity
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/SpectralStationarity.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SpectralStationarity.olean -i ././.lake/build/lib/lean/MOC/SpectralStationarity.ilean -c ././.lake/build/ir/MOC/SpectralStationarity.c --json
+error: ././././MOC/SpectralStationarity.lean:49:38: invalid field 'symm', the environment does not contain 'Not.symm'
+  hj
+has type
+  ¬value j = g
+error: ././././MOC/SpectralStationarity.lean:49:38: invalid field notation, type is not of the form (C ...) where C is a constant
+  hj
+has type
+  value j = g → False
+error: ././././MOC/SpectralStationarity.lean:53:8: invalid field 'not_gt', the environment does not contain 'LE.le.not_gt'
+  hle
+has type
+  curveValues j v t ≤ g
+error: ././././MOC/SpectralStationarity.lean:53:8: invalid field 'not_gt', the environment does not contain '_private.Mathlib.Data.Real.Basic.0.Real.le.not_gt'
+  hle
+has type
+  Real.le✝ (curveValues j v t) g
+warning: ././././MOC/SpectralStationarity.lean:72:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+error: Lean exited with code 1
+⚠ [2726/2733] Replayed MOC.Wielandt
+warning: ././././MOC/Wielandt.lean:37:6: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/Wielandt.lean:112:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2728/2733] Building MOC.NormalOrbit
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/NormalOrbit.lean -R ./././. -o ././.lake/build/lib/lean/MOC/NormalOrbit.olean -i ././.lake/build/lib/lean/MOC/NormalOrbit.ilean -c ././.lake/build/ir/MOC/NormalOrbit.c --json
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/NormalOrbit.lean:145:8: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  (?m.24577 * ?m.24578).submatrix ⇑e.symm ⇑e.symm
+case refine_1
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+h : ι → ℂ
+B : Matrix ι ι ℂ
+hB : B * Bᴴ = Bᴴ * B
+hA : (diagonal h - B) * (diagonal h - B)ᴴ = (diagonal h - B)ᴴ * (diagonal h - B)
+α : Type := ↑(Set.range h)
+this : Fintype α := ⋯.fintype
+κ : α → Type (max 0 u_1) := fun x => { i // h i = ↑x }
+e : Sigma κ ≃ ι := { toFun := fun k => ↑k.snd, invFun := fun i => ⟨⟨h i, ⋯⟩, ⟨i, ⋯⟩⟩, left_inv := ⋯, right_inv := ⋯ }
+C : (x : α) → Matrix (κ x) (κ x) ℂ := fun x => B.submatrix Subtype.val Subtype.val
+hc : ∀ (x : α), IsStarNormal (C x)
+b : (x : α) → κ x → ℂ
+W : (x : α) → Matrix (κ x) (κ x) ℂ
+hw : ∀ (x : α), IsUnitary (W x)
+hdiag : ∀ (x : α), C x = W x * diagonal (b x) * (W x)ᴴ
+P : Matrix ((i : α) × κ i) ((i : α) × κ i) ℂ := blockDiagonal' W
+hp : IsUnitary P
+Q : Matrix ι ι ℂ := P.submatrix ⇑e.symm ⇑e.symm
+hD : (diagonal h).submatrix ⇑e ⇑e = blockDiagonal' fun x => (scalar (κ x)) ↑x
+hPcomm : Commute ((diagonal h).submatrix ⇑e ⇑e) P
+he :
+  (fun M => M.submatrix ⇑e.symm ⇑e.symm) ((diagonal h).submatrix ⇑e ⇑e * P) =
+    (fun M => M.submatrix ⇑e.symm ⇑e.symm) (P * (diagonal h).submatrix ⇑e ⇑e)
+⊢ Commute (diagonal h) Q
+error: Lean exited with code 1
+✖ [2732/2733] Building MOC.SchurPivot
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/SchurPivot.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SchurPivot.olean -i ././.lake/build/lib/lean/MOC/SchurPivot.ilean -c ././.lake/build/ir/MOC/SchurPivot.c --json
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: ././././MOC/SchurPivot.lean:170:24: application type mismatch
+  add_left_cancel h
+argument
+  h
+has type
+  (M (Sum.inl ()) (Sum.inl default) * star (M (Sum.inl ()) (Sum.inl default)) +
+        ∑ a₂, M (Sum.inl ()) (Sum.inr a₂) * star (M (Sum.inl ()) (Sum.inr a₂))).re =
+    (star (M (Sum.inl default) (Sum.inl ())) * M (Sum.inl default) (Sum.inl ()) +
+        ∑ a₂, star (M (Sum.inr a₂) (Sum.inl ())) * M (Sum.inr a₂) (Sum.inl ())).re : Prop
+but is expected to have type
+  ?m.20611 + ∑ j, Complex.normSq (M (Sum.inl ()) (Sum.inr j)) =
+    ?m.20611 + ∑ i, Complex.normSq (M (Sum.inr i) (Sum.inl ())) : Prop
+warning: ././././MOC/SchurPivot.lean:212:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: Lean exited with code 1
+✖ [2733/2733] Building MOC.StationaryPhaseGraph
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/StationaryPhaseGraph.lean -R ./././. -o ././.lake/build/lib/lean/MOC/StationaryPhaseGraph.olean -i ././.lake/build/lib/lean/MOC/StationaryPhaseGraph.ilean -c ././.lake/build/ir/MOC/StationaryPhaseGraph.c --json
+info: ././././MOC/StationaryPhaseGraph.lean:115:33: Try this: ring_nf
+error: ././././MOC/StationaryPhaseGraph.lean:114:2: unsolved goals
+case refine_1
+x z u v : ℂ
+hxz : x ≠ z
+hrel : star v * (x - z) = star (x - z) * u
+hdiff : x - z ≠ 0
+hden : star (x - z) ≠ 0
+⊢ x * (starRingEnd ℂ) x *
+          (x * (starRingEnd ℂ) x + (-(x * (starRingEnd ℂ) z) - z * (starRingEnd ℂ) x) + z * (starRingEnd ℂ) z)⁻¹ +
+        (-(x * (starRingEnd ℂ) z *
+              (x * (starRingEnd ℂ) x + (-(x * (starRingEnd ℂ) z) - z * (starRingEnd ℂ) x) + z * (starRingEnd ℂ) z)⁻¹) -
+          z * (starRingEnd ℂ) x *
+            (x * (starRingEnd ℂ) x + (-(x * (starRingEnd ℂ) z) - z * (starRingEnd ℂ) x) + z * (starRingEnd ℂ) z)⁻¹) +
+      z * (starRingEnd ℂ) z *
+        (x * (starRingEnd ℂ) x + (-(x * (starRingEnd ℂ) z) - z * (starRingEnd ℂ) x) + z * (starRingEnd ℂ) z)⁻¹ =
+    1
+warning: ././././MOC/StationaryPhaseGraph.lean:178:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:192:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:198:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:203:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:207:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:221:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.ContactTransfer
+- MOC.Interlacing
+- MOC.SpectralStationarity
+- MOC.NormalOrbit
+- MOC.SchurPivot
+- MOC.StationaryPhaseGraph
+error: build failed

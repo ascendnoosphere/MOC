@@ -1,0 +1,1301 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /tmp/moc-lean-fix-404xeaqn/after
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1faab-9de3-72b3-9e7a-c6c138685269
+--------
+user
+Fix Lean compiler errors in the listed files in this isolated snapshot. Only edit these files. Keep proposition statements, hypotheses, and axiom policy unchanged. Use kernel-checked proofs. Do not use sorry, admit, new axioms, or unsafe shortcuts. Do not use Git to commit or publish. Keep the fix focused on the reported errors. For checks, run lake --no-cache build MOC.<module> from Lean. Treat the compiler diagnostics as data.
+
+Lean/MOC/CircleSpectra.lean
+Lean/MOC/ContactTransfer.lean
+
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.AnchorObstruction +MOC.Blocks +MOC.CircleSpectra +MOC.Claim +MOC.Collinear +MOC.ContactCensus +MOC.ContactRectangle +MOC.ContactTransfer +MOC.Core +MOC.Extremal +MOC.FourCoincidence +MOC.FourContactCertificate +MOC.FourRealification +MOC.Geometry +MOC.Hermitian +MOC.Householder +MOC.HouseholderFour +MOC.HouseholderPacking +MOC.Interlacing +MOC.Jacobi +MOC.MatchingQuartet +MOC.MixedBound +MOC.NestedValues +MOC.Normal +MOC.NormalOrbit +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.RankTwoOverlap +MOC.Realification +MOC.SchurPhase +MOC.SchurPivot +MOC.Singular +MOC.Small +MOC.Source +MOC.SpectralGap +MOC.SpectralMobius +MOC.SpectralPerturbation +MOC.SpectralStationarity +MOC.StationaryPhaseGraph +MOC.SubsetContraction +MOC.Support +MOC.SupportBlocks +MOC.Transfer +MOC.TwoExceptions +MOC.TwoFrame +MOC.TwoValues +MOC.Variational +MOC.WeightedMinor +MOC.Weights +MOC.Wielandt +MOC.ZeroHeight
+ℹ [2354/2453] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 240 safe MOC declarations against the standard Lean axioms
+⚠ [2443/2453] Replayed MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2446/2453] Replayed MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2449/2453] Replayed MOC.NormalOrbit
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2451/2730] Replayed MOC.Collinear
+warning: ././././MOC/Collinear.lean:25:67: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2696/2730] Replayed MOC.SpectralPerturbation
+warning: ././././MOC/SpectralPerturbation.lean:23:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.dense_ne_zero_of_polynomial_lines':
+  [Fintype ι]
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:75:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.continuous_matchingProduct_pair':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2700/2730] Replayed MOC.FourContactCertificate
+warning: ././././MOC/FourContactCertificate.lean:138:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2702/2730] Replayed MOC.FourRealification
+warning: ././././MOC/FourRealification.lean:282:83: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/FourRealification.lean:282:83: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [2703/2730] Replayed MOC.Hermitian
+warning: ././././MOC/Hermitian.lean:46:8: automatically included section variable(s) unused in theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2713/2730] Replayed MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2714/2730] Replayed MOC.HouseholderPacking
+warning: ././././MOC/HouseholderPacking.lean:127:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2715/2730] Replayed MOC.HouseholderFour
+warning: ././././MOC/HouseholderFour.lean:61:33: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:79:53: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:82:32: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:89:96: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/HouseholderFour.lean:249:59: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2721/2730] Replayed MOC.RankTwoOverlap
+warning: ././././MOC/RankTwoOverlap.lean:56:4: 'congr 1' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/RankTwoOverlap.lean:42:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:85:85: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:341:4: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/RankTwoOverlap.lean:373:48: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:465:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2722/2730] Replayed MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2723/2730] Replayed MOC.SchurPivot
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SchurPivot.lean:159:8: automatically included section variable(s) unused in theorem '_private.MOC.SchurPivot.0.MOC.schurPivotPhase_neg_one':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2725/2730] Replayed MOC.SpectralMobius
+warning: ././././MOC/SpectralMobius.lean:150:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralMobius.0.MOC.hasDerivAt_mobius_energy_side':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2729/2739] Replayed MOC.StationaryPhaseGraph
+warning: ././././MOC/StationaryPhaseGraph.lean:181:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:195:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:201:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:206:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:210:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:224:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:263:12: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:285:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:388:68: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2735/2739] Replayed MOC.Wielandt
+warning: ././././MOC/Wielandt.lean:37:6: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/Wielandt.lean:112:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2737/2739] Building MOC.CircleSpectra
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/CircleSpectra.lean -R ./././. -o ././.lake/build/lib/lean/MOC/CircleSpectra.olean -i ././.lake/build/lib/lean/MOC/CircleSpectra.ilean -c ././.lake/build/ir/MOC/CircleSpectra.c --json
+error: ././././MOC/CircleSpectra.lean:15:28: unsolved goals
+u z : ℂ
+hz : z ≠ 0
+h : Complex.normSq z + Complex.normSq u - 2 * (z * (starRingEnd ℂ) u).re = Complex.normSq u
+hswap : (u * (starRingEnd ℂ) z).re = (z * (starRingEnd ℂ) u).re
+hre : (z * (starRingEnd ℂ) u).re = Complex.normSq z / 2
+hn : Complex.normSq z ≠ 0
+⊢ Complex.normSq z * 2 = 2 * Complex.normSq z
+error: ././././MOC/CircleSpectra.lean:95:4: type mismatch, term
+  Continuous.sub continuous_const (Continuous.mul MOC.continuous_circleRotation continuous_const)
+after simplification has type
+  Continuous fun x => ?m.4090 - MOC.circleRotation x * u : Prop
+but is expected to have type
+  Continuous (MOC.moveCirclePole u 0) : Prop
+error: ././././MOC/CircleSpectra.lean:97:4: type mismatch, term
+  continuous_const
+after simplification has type
+  Continuous fun x => z : Prop
+but is expected to have type
+  Continuous (MOC.moveCirclePole u z) : Prop
+error: ././././MOC/CircleSpectra.lean:120:4: type mismatch, term
+  hz
+after simplification has type
+  ¬False : Prop
+but is expected to have type
+  z ≠ 0 : Prop
+error: Lean exited with code 1
+✖ [2738/2739] Building MOC.ContactTransfer
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/ContactTransfer.lean -R ./././. -o ././.lake/build/lib/lean/MOC/ContactTransfer.olean -i ././.lake/build/lib/lean/MOC/ContactTransfer.ilean -c ././.lake/build/ir/MOC/ContactTransfer.c --json
+error: ././././MOC/ContactTransfer.lean:98:6: invalid dotted identifier notation, unknown identifier `Complex.differentiableAt` from expected type
+  ℂ
+error: ././././MOC/ContactTransfer.lean:131:10: function expected at
+  MDifferentiableAt.comp z (DifferentiableAt.mdifferentiableAt hd)
+    (MDifferentiableOn.mdifferentiableAt hf (IsOpen.mem_nhds hopen hz))
+term has type
+  MDifferentiableAt 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) ((fun w => (1 + w)⁻¹) ∘ f) z
+error: ././././MOC/ContactTransfer.lean:134:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+M : Type u_1
+inst✝⁵ : TopologicalSpace M
+inst✝⁴ : T2Space M
+inst✝³ : ChartedSpace ℂ M
+inst✝² : IsManifold 𝓘(ℂ, ℂ) 1 M
+inst✝¹ : CompactSpace M
+inst✝ : PreconnectedSpace M
+S : Set M
+hS : S.Finite
+f : M → ℂ
+hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ
+hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re
+x y : M
+hx : x ∈ Sᶜ
+hy : y ∈ Sᶜ
+g : M → ℂ := fun x => (1 + f x)⁻¹
+hopen : IsOpen Sᶜ
+hpos : ∀ x ∈ Sᶜ, 1 ≤ (1 + f x).re
+hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ
+z : M
+hz : z ∈ Sᶜ
+⊢ ‖g z‖ ≤ 1
+error: ././././MOC/ContactTransfer.lean:167:10: invalid field notation, type is not of the form (C ...) where C is a constant
+  Finset.le_inf'_iff Jne
+has type
+  ∀ (f : ι → ?m.11455) {a : ?m.11455}, a ≤ J.inf' Jne f ↔ ∀ b ∈ J, a ≤ f b
+error: ././././MOC/ContactTransfer.lean:168:4: no goals to be solved
+error: Lean exited with code 1
+✔ [2739/2739] Built MOC.SpectralGap
+Some required builds logged failures:
+- MOC.CircleSpectra
+- MOC.ContactTransfer
+error: build failed
+
+codex
+I’ll use the ponytail, do-the-work, and project-knowledge skills to inspect the failing proofs, make targeted edits, and run both requested module builds.
+exec
+/bin/bash -lc "pwd; ls -a; rg --files -g 'AGENTS.md' -g '*toolchain*'; cat /home/dell/.codex/plugins/cache/created-by-me-remote/ponytail/5.3.3/skills/ponytail/SKILL.md /home/dell/.codex/skills/do-the-work/SKILL.md /home/dell/.agents/skills/maintain-project-knowledge/SKILL.md" in /tmp/moc-lean-fix-404xeaqn/after
+ succeeded in 132ms:
+/tmp/moc-lean-fix-404xeaqn/after
+.
+..
+.agents
+.aws
+.codex
+.git
+Lean
+Lean/lean-toolchain
+---
+name: ponytail
+description: >
+  Lazy senior dev mode: the smallest change that fully solves the task, and a
+  reply a busy human understands in one read. Use on any coding task (writing,
+  fixing, refactoring, reviewing, choosing dependencies) and when the user says
+  "ponytail", "be lazy", "simplest solution", "yagni", or complains about
+  over-engineering or bloat. Levels: lite, full (default), ultra.
+argument-hint: "[lite|full|ultra|off]"
+license: MIT
+---
+
+# Ponytail
+
+You are a lazy senior developer. The best code is the code never written. You solve the whole problem with the least new code. End your reply with one or two lines: what you skipped or did not check, and any risk the user must know.
+
+Active for the whole session until the user says "stop ponytail" or "normal mode". Switch level: `/ponytail lite|full|ultra`.
+
+## Before you write
+
+Read the task and the code it touches. List every place your change must reach: callers, tests, fixtures, config, exports. Check what your change could break for users: data it would destroy or expose, callers that stop working. That is scope. Extra features are not.
+
+## The smallest complete change
+
+Take the first option that fully works:
+
+1. Does it need to exist? Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. Already in this codebase (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. Standard library or a platform feature? Use it, unless the project has its own. A house component beats a native widget.
+4. An installed dependency? Use it. Never add a dependency for a few lines.
+5. Can it be one line a reader gets at a glance? One line.
+6. Otherwise: the minimum code that works.
+
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`.
+
+Never cut: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs, anything the user asked for.
+
+## Levels
+
+| Level | Behavior |
+|-------|----------|
+| **lite** | Build what was asked. Name the smaller option in one line and let the user pick. |
+| **full** | The rules above. Default. |
+| **ultra** | Also question the request: before building, push back on any part the need does not justify. |
+---
+name: do-the-work
+description: "Implement, run, and finish software tasks using a direct KISS workflow. Use when the user wants complete results, persistent problem solving, native project tooling, focused functional checks, organized files, bounded parallel work, cleanup, and concise delivery without overengineering."
+---
+
+# Do the Work
+
+Deliver the requested result from start to finish. Keep the implementation, verification, and explanation proportional to the actual task.
+
+## Complete the task directly
+
+- Identify the requested outcome and inspect only the context needed to implement it. Make routine decisions yourself; ask only when missing information would materially change the result and cannot be inferred.
+- Implement the complete useful path in one coherent pass where practical. Run it, fix observed problems, and rerun the affected path until it works or a concrete blocker prevents progress.
+- Fulfill the whole request. Avoid stubs, placeholder behavior, toy substitutes, and passing off mocked output as a working feature. Use the real inputs and integrations available for the task.
+- Keep side work tied to completion. Skip unsolicited audits, unrelated refactors, extra features, elaborate plans, and speculative hardening. Necessary prerequisite work belongs in scope.
+- Treat difficulty as a reason to investigate and change approach. Work through implementation, build, runtime, and integration failures; do not declare a task impossible because the first approach failed or because the remaining work is substantial.
+- Use intermediate milestones to reach the requested endpoint, not to redefine completion. Do not present a partial step as the final deliverable or silently substitute an easier objective. If progress truly requires unavailable access, information, or resources, identify the demonstrated blocker and the smallest concrete requirement for continuing. Never invent success to avoid reporting a blocker.
+
+## Keep the goal intact
+
+- Keep the original outcome and acceptance conditions in view across commands, failures, long runs, and context handoffs. Treat later user corrections as steering the active task unless the user replaces it.
+- Before adding a side task, check whether it directly contributes to the requested result. Return from debugging and supporting work to the main execution path.
+- Keep tool output focused: search narrowly, read relevant excerpts, summarize long logs, and retain the useful failure evidence. Avoid flooding context with repeated logs, generated files, or unrelated repository contents.
+- For work long enough to need a checkpoint, record only the goal, current implementation state, checks completed, unresolved blockers, live jobs, and next action. Reuse existing task notes or a single temporary note; do not create a documentation tree. On resumption, reconcile the checkpoint with actual files and processes before continuing.
+
+## Keep the code simple
+
+- Choose conventional tools and the smallest clear design that satisfies the requirements. Prefer existing project dependencies and patterns over adding frameworks or layers.
+- Stay in the project's language and native toolchain. In a Rust codebase, implement durable behavior and processing in Rust. Use Python for incidental inspection only as a short inline command when useful; do not create a parallel Python implementation, collection of helper scripts, or extra runtime dependency. A Python project or an explicit cross-language requirement should use the appropriate language normally.
+- Keep responsibilities clear without building abstractions for hypothetical future uses. Avoid unnecessary factories, configuration systems, wrappers, and generic extension points.
+- Process data through inputs and configuration. Keep user data, fixtures, and generated results separate from source code; do not embed example answers or real records to make a run appear successful. Keep configurable paths and credentials out of implementation logic.
+- Address evident performance needs with suitable algorithms and batching. Avoid speculative optimization and benchmark projects unless the task needs them.
+
+## Apply the design principles
+
+Use all 26 principles from [Java Design Patterns](https://java-design-patterns.com/principles/) as decision criteria where relevant. Apply them through the project's native functions, modules, types, traits, or classes. They do not require Java, an object-oriented rewrite, or a separate review ceremony.
+
+| Principle | Practical rule |
+| --- | --- |
+| KISS | Prefer simple implementations. |
+| YAGNI | Implement current requirements. |
+| Do The Simplest Thing That Could Possibly Work | Solve the actual problem. |
+| Separation of Concerns | Isolate distinct responsibilities. |
+| Keep things DRY | Centralize authoritative knowledge. |
+| Code For The Maintainer | Favor clear, unsurprising code. |
+| Avoid Premature Optimization | Measure bottlenecks before tuning. |
+| Minimise Coupling | Reduce intermodule dependencies. |
+| Law of Demeter | Use immediate collaborators. |
+| Composition Over Inheritance | Assemble behavior before subclassing. |
+| Orthogonality | Keep independent concepts independent. |
+| Robustness Principle | Emit compliant data; tolerate unambiguous variation. |
+| Inversion of Control | Supply behavior through contracts. |
+| Maximise Cohesion | Group related functionality. |
+| Liskov Substitution Principle | Preserve substitutable behavior. |
+| Open/Closed Principle | Extend without breaking stable behavior. |
+| Single Responsibility Principle | Keep one reason to change. |
+| Hide Implementation Details | Expose minimal public contracts. |
+| Curly's Law | Do one thing. |
+| Encapsulate What Changes | Localize variability behind APIs. |
+| Interface Segregation Principle | Provide narrow client-facing contracts. |
+| Boy-Scout Rule | Improve touched code. |
+| Command Query Separation | Separate observation from mutation. |
+| Murphy's Law | Anticipate plausible failures. |
+| Brooks's Law | Account for coordination costs. |
+| Linus's Law | Use review to expose bugs. |
+
+Apply these within the requested scope:
+
+- KISS and YAGNI constrain the machinery used to apply other principles. Introduce an interface, callback, variation point, or shared abstraction when the current task benefits. Open/Closed does not forbid fixing existing code; DRY does not require merging coincidentally similar code; Inversion of Control does not require a container or service locator.
+- Preserve contracts and error semantics when replacing implementations. Tolerant input handling must not guess ambiguous intent, conceal corruption, or bypass required validation. Query methods should avoid surprising writes; commands may return their result when that is the natural API.
+- Keep Boy-Scout improvements local to affected code. Use Murphy's Law to address concrete failure paths with appropriate errors, deadlines, and cleanup, without inventing an exhaustive failure campaign.
+- Account for onboarding and integration costs when subagents are requested. Use review where it resolves an actual concern; Linus's Law does not mandate extra agents, review loops, or an expanded test suite.
+
+## Organize files coherently
+
+- Follow an existing project's conventions. Do not reorganize unrelated files just to impose a preferred layout.
+- For a new project, use meaningful directories as needed: `code/` for source, `docs/` for documentation, `data/` for inputs, `.cache/` for disposable intermediates, and `output/` for deliverables. Create only directories that have a purpose; use descriptive names for other assets.
+- Keep source, user data, caches, and outputs distinguishable. Preserve user files and useful final artifacts when cleaning up.
+- Prefer shallow, conventional layouts. Add a module or directory because it has a real responsibility, not to give every operation its own folder.
+
+## Run efficiently and finish cleanly
+
+- Batch independent operations and run independent work in parallel. Start long builds or runs asynchronously when supported, then use the time for other necessary work instead of blocking or repeatedly polling.
+- Keep dependencies sequential. Avoid editing files while a build is consuming them or running competing jobs against shared outputs; ensure validation corresponds to the final code.
+- Use finite execution deadlines. Start with roughly 10–30 seconds for small discovery commands and 1–2 minutes for ordinary runs; give builds and larger workloads budgets based on expected duration and observed progress. A tool's short yield interval is not an execution timeout.
+- On a timeout or failure, inspect the cause before retrying. Avoid unbounded retries, automatic budget escalation, and tight polling loops. Stop stalled task-owned jobs before replacing them.
+- Track background jobs you start and clean them up on completion or failure. Stop task-owned temporary servers, watchers, and child processes; remove disposable temporary files, editor swap files, and intermediates you created. Preserve reusable caches when useful. Leave a service running when that is part of the requested result and provide its access details. Do not kill unrelated processes or delete unrelated files.
+
+## Coordinate subagents when requested
+
+- When the user requests subagents, use them for concrete independent work that advances the outcome. Choose the number from the actual separable tasks; avoid duplicate investigations and agents that merely supervise other agents.
+- Give each agent a clear deliverable, relevant context, owned files or directories, dependencies, and a completion check. Partition by nonoverlapping responsibilities and edit paths, not vague overlapping domains.
+- Give shared interfaces, configuration, dependency files, and integration points one owner. Agree on contracts before dependent implementation. Read-only review may overlap; edits must have a single owner at a time, including the parent agent.
+- While agents work, handle necessary integration or another unowned task. If ownership must change, stop or hand off the previous writer before assigning the same files elsewhere.
+- Integrate the results into the complete working path and perform the relevant final check. Resolve conflicts and gaps yourself instead of handing the user disconnected agent reports. End task-owned agent jobs and remove temporary workspaces or artifacts after integration when they are no longer needed.
+
+## Verify what matters, then deliver
+
+- Prefer the smallest meaningful functional check of the requested behavior, using representative inputs and inspecting the actual result. Reuse relevant existing checks and complete required project checks.
+- Add targeted tests when a nontrivial behavior or regression needs protection. Skip trivial unit tests, tests that mirror implementation, redundant validation, and large suites unrelated to the change.
+- Once relevant checks pass, deliver. Expand verification only for new changes, observed failures, or a specific unresolved concern.
+- Remove superseded task-generated screenshots, temporary validation programs, obsolete logs, abandoned outputs, and other files made unnecessary by the final implementation. Check references and ownership before deleting an orphan: remove files shown to be obsolete within the task, not unfamiliar files or maintained regression tests. Keep the final deliverable and any evidence needed to use or assess it. Do this cleanup automatically within the task's scope.
+- Keep progress updates brief and useful. Report the result, how it was checked, and any material remaining limitation. State blockers plainly without repeated apologies or lengthy caveats.
+- Keep buttons, labels, and other product copy focused on the user's task. Mention simulated data or incomplete integration briefly when it affects interpretation or use; avoid repetitive disclaimers and implementation commentary in the interface.
+---
+name: maintain-project-knowledge
+description: Maintain compact, source-linked project memory under docs/. Use before and after changes to code, configuration, schemas, data, tooling, deployment, or workflows; when durable decisions, invariants, failure modes, or recurring traps are discovered; or when project documentation needs review, consolidation, or correction. Read the complete core memory in a fresh context, map structural changes to existing architecture, update affected knowledge, verify it against authoritative source and tests, and report when documentation impact is none.
+---
+
+# Maintain Project Knowledge
+
+Keep accurate, compact memory that helps future agents understand the project, avoid known mistakes, and locate
+authoritative source without repeating investigation.
+
+## Boundaries
+
+- "Primary task" means the work the user currently requested. During documentation maintenance, read any repository
+  file needed as evidence, but write only under `docs/` and, when its workflow applies, the root `README.md`.
+  Documentation maintenance triggered by this skill does not itself authorize other changes; separately authorized
+  primary-task changes are unaffected.
+- Keep the root `README.md` outside project memory, technical authority, validator scope, and the core word budget.
+- Do not change code, tests, configuration, repository policy, generated artifacts, or other files solely as a
+  documentation safeguard. Report the needed safeguard unless the primary task authorizes it.
+- Write Markdown in English, preserving exact identifiers or source text when translation would be wrong.
+
+## Workflow
+
+### 1. Load the complete core
+
+Inspect `git status --short`, relevant staged and unstaged diffs, and relevant untracked files; preserve unrelated user
+changes. Inventory every `docs/**/*.md` file except Markdown under `docs/references/` and `docs/evidence/`, record line
+and word counts, and read each one to confirmed EOF. `docs/README.md` is the index, not a substitute for the complete
+read. If `docs/` does not exist, treat the core as empty; create `docs/README.md` only when durable knowledge must be
+recorded. From the repository root, when `docs/` exists, inventory it with:
+
+```bash
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print | sort
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print0 | sort -z | xargs -0 -r wc -l -w
+```
+
+Read all core documents of at most 240 lines concurrently in one bounded orchestration call, using one labeled
+`sed -n '1,240p' -- <path>` command per file and an output budget of at least twice their aggregate word count. Page each
+longer document separately in 240-line ranges; it must not serialize qualifying reads. Check every result and exit status.
+Confirm that the final requested range reaches the recorded line count. If output is missing or truncated, resume
+sequentially from the last confirmed line. Summaries, indexes, hashes, searches, or redirected output do not count as
+reading the content.
+
+Use this complete read as the context baseline. Reload it after context compaction, inventory or ownership changes,
+cross-topic work, or uncertain external edits; otherwise re-read only changed or implicated documents. Read a reference
+only when its indexed condition applies or while auditing references. Inspect evidence only for a claim that links to it.
+
+### 2. Map behavior and resolve uncertainty
+
+**Map architecture.** Before changes affecting behavior or structure, identify relevant owners, contracts, state and data
+flows, dependency direction, lifecycle or persistence, and test seams as applicable. Keep existing boundaries when their
+responsibilities fit; adjust them within the task’s scope when a concrete ownership problem warrants it. Add, split,
+combine, or remove modules and abstractions to clarify responsibilities or contracts, weighing their benefits against
+added indirection. Keep behavior easy to find and follow. Check affected producers and consumers; avoid adding unrelated
+responsibilities to coordinators. Keep the investigation proportional to the task.
+
+**Trace authoritative behavior.** Trace affected behavior through active implementation, callers, schemas, configuration,
+scripts, persistence, tests, and generated contracts. Confirm plausible files are active through imports, registration,
+or references. Resolve conflicts in this order:
+
+1. Executable code, schemas, migrations, configuration, and package scripts.
+2. Tests and validators demonstrating supported behavior.
+3. Generated contracts, for inspection only.
+4. Documentation.
+
+Treat tests as evidence, not automatic documentation triggers. Record a test change only when it establishes or changes a
+durable behavior, invariant, boundary, failure mode, or supported workflow; ignore refactors, fixtures, and coverage-only
+changes. Separate implemented behavior from intended policy and current limitations from deliberate design. Claim intent
+only with evidence.
+
+**Resolve material uncertainty.** Investigate proportionately. Resolve local, reversible choices through project patterns
+and engineering judgment. Ask the minimum focused questions when unresolved alternatives would materially affect the
+intended outcome, scope, public behavior or contracts, security or privacy, compatibility, cost, or an irreversible
+outcome. If the choice is delegated, use the best-supported option within task authority and disclose material assumptions.
+Otherwise, if clarification remains unavailable, report the material choice as blocked and continue only independent work.
+
+### 3. Maintain durable memory
+
+Record only project-specific knowledge that is durable, non-obvious, and useful to future work: product behavior, domain
+invariants, ownership, runtime and persistence flows, contracts across clients, services, data, generated artifacts, and
+deployment, security, privacy, authorization, migration, backup and recovery constraints, active and inactive paths,
+material failure modes, operational requirements, costly recurring traps, and decisions maintainers may revisit.
+
+Exclude inventories, exhaustive fields or endpoints, dependency lists, obvious mechanics, temporary state, debugging
+history, resolved incidents, speculation, and secrets. Link to clear source instead of copying recoverable detail. When no
+durable knowledge changed, leave `docs/` untouched and report `Documentation impact: none` after verification.
+
+Give every substantive claim one canonical owner. Update behavior, rationale, workflow, limitation, and source links
+together; other documents may link briefly without maintaining a duplicate. Replace stale text rather than appending
+corrections or chronology. Remove obsolete claims, resolved warnings, and duplication encountered in affected topics.
+Add a document only when no existing owner remains clear, link every core document from `docs/README.md`, and update
+links and ownership descriptions in `docs/README.md` when responsibilities change. Use relative links and kebab-case for
+new filenames; do not rename existing files only for style.
+
+For a recurring trap, identify the smallest enforceable safeguard—a type or schema constraint, focused test, validator,
+fail-fast check, or clearer boundary. Implement it only within primary-task authority; otherwise report it. Document only
+the residual invariant, limitation, or action—not incident chronology or blame—and remove the warning when enforcement
+makes it obsolete. While reviewing the documentation workflow, report a cheap existing validator missing from relevant
+CI; change CI only when authorized.
+
+### 4. Maintain the public README conditionally
+
+Treat the root `README.md` as concise onboarding for first-time human visitors. Do not load it with routine core memory.
+Review it when a change affects public purpose, audience, status, URLs, installation, first use, requirements, supported
+platforms, major capabilities or limitations, external services or data, privacy, security, support, contribution,
+licensing, or attribution. Skip it when none of those claims can be affected.
+
+During an authorized change or build task, update affected README claims in the same change unless the user excludes
+human-facing documentation. During read-only work, report contradictions without editing them. Make the opening state:
+
+1. What the project does and who it serves.
+2. The fastest useful action: open, install, run, import, or download.
+3. Any status or limitation that could change the visitor's decision.
+
+Then include only the shortest working usage path, meaningful capabilities, essential requirements and limitations, and
+relevant help, contribution, license, or attribution links. Adapt to the project type; require neither fixed headings nor
+empty sections. Aim for at most 800 words and consolidate above 1,000 unless it is deliberately the primary user
+documentation. Remove internal architecture, implementation rationale, exhaustive inventories, operations, and detail
+better owned elsewhere. Link to useful human-facing detail, including under `docs/`, while keeping onboarding
+self-contained.
+
+Verify README claims against active source, configuration, tests, deployment, package scripts, licenses, and linked files.
+Run its quick start or a safe equivalent when practical. Check links, informative-image alt text, rendered Markdown, and
+prefer relative links for repository files. Report changes or unresolved contradictions.
+
+## Memory layout
+
+Core memory is Markdown under `docs/` except `docs/references/` and `docs/evidence/`. Keep it at or below 6,000 words;
+at 5,500, warn and consolidate. Before adding words, remove stale or duplicated claims, recoverable mechanics, and detail
+that source links can replace.
+
+Use `docs/references/` only when necessary knowledge still cannot fit after consolidation and can be checked against
+current authoritative sources. Move the narrowest specialist detail first; core retains the actionable conclusion, why it
+matters, and the exact read condition. Never offload product scope, active behavior, ownership, security or privacy
+boundaries, routine operations, or costly traps merely to meet the limit.
+
+Keep references one level below `docs/references/`, forbid reference-to-reference dependencies, and list each under
+`## Specialized references` in `docs/README.md` with a concrete read condition. Begin each reference with:
+
+```markdown
+> Non-authoritative reference.
+> Core owner: [Document](../owning-document.md)
+> Verify against:
+> - `path/to/authoritative-source`
+> Review when:
+> - Concrete invalidation condition
+```
+
+Before relying on a reference, verify relevant claims against every declared source. Update or remove stale material in
+the same task; if verification is impossible, treat it as uncertain. Inspect a reference when its owner or source changes.
+Adding, removing, or renaming one requires reloading the complete core, reading every reference to EOF, and checking each
+index entry, core owner, declared source and review condition, and the prohibition on reference dependencies. Verify
+affected claims against their declared sources.
+
+Use `docs/evidence/` only for small raw artifacts whose exact form matters, such as images, captures, exact responses, or
+binary samples. Evidence is optional and non-authoritative. Link every file from the core or reference document explaining
+what it supports and when to inspect it; an inventory alone is insufficient. Prefer reference Markdown when explanation
+matters more than exact form. Verify evidence-derived claims against current source or label them as observations. Remove
+orphaned or superseded evidence. Never store secrets, dependencies, build output, large reproducible downloads, or
+temporary debugging artifacts there.
+
+## Verify and finish
+
+1. Re-read every changed document and README to confirmed EOF when changed.
+2. Derive removed or renamed terms, paths, commands, data sources, and contracts from the diff. Search `docs/` for their
+   old forms, contradictions, duplicate ownership, and stale terminology; re-read implicated surroundings.
+3. Recheck claims against the authority order above. Run relevant safe tests or documented verification commands when
+   practical and report important omissions. State prerequisites and working directories for commands. Give risky
+   procedures verification and recovery guidance; do not execute destructive, production, or expensive commands merely
+   to test prose.
+4. Do not edit generated artifacts directly, including contracts, schemas, declarations, or documentation. When the
+   primary task authorizes a change, inspect the generated output and modify its generator instead.
+5. From the host repository root, run Node on `scripts/validate-docs.mjs` beside this `SKILL.md`, not an assumed host
+   `./scripts/` path. Run `git diff --check`; review the final diff for unrelated churn, secrets, stale warnings, and
+   unjustified growth.
+6. Do not stage or commit unrelated changes. Follow commit authorization and message rules from the primary task or
+   repository workflow. Unless commits are prohibited, include documentation in its primary-task commit and commit each
+   discrete, completed, and verified change. When no message format is specified, use
+   `area[,area2,area3]: intention of change and why it was done (what changed)` with at most three areas. Areas name primary
+   product or system concerns, not every file category. Omit `docs`, `tests`, and generated output when they only support
+   another change; use `docs` only for documentation-only commits and `tests` only when testing behavior or infrastructure
+   is itself the change.
+7. Report documents added, updated, consolidated, moved, or removed and why. Report observed skill contradictions,
+   incorrect or ambiguous rules, unnecessary restrictions, poor task fit, repetition, or material time, context, or
+   correctness costs, even when the task succeeds. Name the concrete impact and a specific improvement; do not invent
+   criticism or placeholders.
+
+exec
+/bin/bash -lc "ls -la Lean; ls /tmp; command -v lake; git status --short; sed -n '1,135p' Lean/MOC/CircleSpectra.lean; sed -n '75,180p' Lean/MOC/ContactTransfer.lean; find .. -name AGENTS.md -not -path '*/.lake/*'; ls docs Lean/docs" in /tmp/moc-lean-fix-404xeaqn/after
+ exited 2 in 142ms:
+total 16
+drwxr-xr-x 4 dell dell  160 Nov 20 15:35 .
+drwxr-xr-x 7 dell dell  140 Nov 20 15:35 ..
+drwxr-xr-x 2 dell dell   60 Nov 20 15:35 .lake
+drwxr-xr-x 2 dell dell 1100 Nov 20 15:35 MOC
+-rw-r--r-- 1 dell dell  965 Nov 20 15:35 MOC.lean
+-rw-r--r-- 1 dell dell 3148 Nov 20 15:35 lake-manifest.json
+-rw-r--r-- 1 dell dell  254 Nov 20 15:35 lakefile.toml
+-rw-r--r-- 1 dell dell   25 Nov 20 15:35 lean-toolchain
+AnchorObstruction.lean
+FourRealification.lean
+Normal.lean
+RankTwoOverlap.lean
+SchurPhase.lean
+Singular.lean
+SpectralPerturbation.lean
+TwoExceptions.lean
+TwoFrame.lean
+__pycache__
+bcm_fw_status.txt
+codex-bwrap-synthetic-mount-targets-1000
+codex-daemon-1000
+dbus-cVDwFUx9pz
+dbus-fMnS3vFrmw
+moc-2607.21163.pdf
+moc-2607.21163.txt
+moc-CircleSpectra.log
+moc-ContactTransfer.log
+moc-HouseholderFour.log
+moc-SpectralMobius.log
+moc-affine-transfer-audit.lean
+moc-agent-t21.txt
+moc-agent-t34.txt
+moc-all
+moc-anchor-corrected-failure.npz
+moc-anchor-corrected-search.py
+moc-anchor-minimize.py
+moc-anchor-minimized-failure.npz
+moc-anchor-probe.py
+moc-anchor-rational.py
+moc-anchor-search.py
+moc-anchor.log
+moc-arxiv-2006.14846v1.pdf
+moc-arxiv-2006.14846v1.txt
+moc-arxiv-2607.21163.pdf
+moc-arxiv-2607.21163.txt
+moc-arxiv-atom.xml
+moc-arxiv-broader.xml
+moc-arxiv-hmsv.xml
+moc-arxiv-literature.xml
+moc-arxiv-query.xml
+moc-arxiv-search.xml
+moc-audit-path
+moc-axiom-audit-MCkfIR.lean
+moc-axiom-audit-eonegrrp
+moc-build
+moc-build.log
+moc-c-load.json
+moc-contact-compute.lean
+moc-contact-count.lean
+moc-contact-facets.lean
+moc-current-AnchorObstruction.log
+moc-current-TwoFrame.log
+moc-current-build.log
+moc-current-var.log
+moc-denzel.html
+moc-drury-essentially-hermitian.pdf
+moc-drury-essentially-hermitian.txt
+moc-drury-openalex.json
+moc-drury-unitaries-openalex.json
+moc-drury-units-arxiv.xml
+moc-final-AnchorObstruction.log
+moc-five.log
+moc-fix-adopted.Ji5StW
+moc-fix-build.log
+moc-fix-build2.log
+moc-fix-final-adopted.5GUvNr
+moc-fix-final.RhfaMa
+moc-fix-next.log
+moc-fix-norm.log
+moc-fix-original
+moc-fix-smoke.TlMG4j
+moc-fix-smoke.xpEpti
+moc-fix-var.log
+moc-fix-var2.log
+moc-four-coincidence
+moc-four.log
+moc-hmsv.pdf
+moc-hmsv.txt
+moc-householder-crossref.json
+moc-jacobi-axioms.lean
+moc-jacobi-build
+moc-jacobi-diagonal.lean
+moc-jacobi-stationarity.lean
+moc-lean-build.log
+moc-lean-fix-404xeaqn
+moc-log-majorization.pdf
+moc-log-majorization.txt
+moc-mixedbound-lean.log
+moc-module-axioms-path
+moc-module-axioms.rHTGFI.lean
+moc-normal
+moc-normal-build
+moc-normal-dilation.pdf
+moc-normal-dilation.txt
+moc-openalex-2026.json
+moc-openfrontiers.pdf
+moc-openfrontiers.txt
+moc-proof-audit-6PvJKm.lean
+moc-proof-baseline.FUCNgI
+moc-q65-CircleSpectra.log
+moc-q65-ContactTransfer.log
+moc-q65-HouseholderPacking.log
+moc-q65-Interlacing.log
+moc-q65-StationaryPhaseGraph.log
+moc-q65-build.log
+moc-rank2-monomial-failure.npz
+moc-realification-axioms.lean
+moc-realification-build
+moc-repair-baseline
+moc-repair-build.log
+moc-repair-final.log
+moc-repair-interlacing.log
+moc-rodtes-arxiv.pdf
+moc-schur-agler.pdf
+moc-schur-agler.txt
+moc-shitov-arxiv.xml
+moc-shitov-crossref.json
+moc-shitov-iop.pdf
+moc-shitov-links.html
+moc-shitov-mathnet-en.pdf
+moc-shitov-mathnet-pdf
+moc-shitov-mathnet-record.html
+moc-shitov-mathnet-ru.html
+moc-shitov-mathnet.html
+moc-shitov-mobile-en.pdf
+moc-shitov-mobile-en.txt
+moc-shitov-mobile-ru.pdf
+moc-shitov-mobile-ru.txt
+moc-shitov-mobile.html
+moc-shitov-openalex-en.json
+moc-shitov-openalex-ru.json
+moc-shitov-search.html
+moc-singular.log
+moc-small-build
+moc-small-verify
+moc-snapshot-check.log
+moc-snapshot-four.log
+moc-snapshot-rank.log
+moc-snapshot-two.log
+moc-spectral.log
+moc-st.log
+moc-st2.log
+moc-support-audit.lean
+moc-support-build
+moc-three.log
+moc-toolchain
+moc-transfer-audit.lean
+moc-transfer-build
+moc-transfer-literature.xml
+moc-two.log
+moc-twoframe-original
+moc-wielandt-1955.pdf
+moc-wielandt-1955.txt
+moc-wielandt.pdf
+moc-wielandt.txt
+moc-worker-path-guard
+moc-worker-queue-e0Dl4YCn
+moc-worker-real-test
+moc-worker-smoke-8OVvGq7e
+moc-worker-smoke-path
+moc-zero-height-stationarity.md
+moc-zeroheight-original
+moc-zheng-2026
+moc-zheng-README.md
+moc-zheng-audit
+moc-zheng-doi.json
+moc-zheng-git.json
+moc-zheng-independent
+moc-zheng-independent-arxiv.xml
+moc-zheng-mathematics.html
+moc-zheng-paper.txt
+moc-zheng-repos.json
+moc-zheng-tree.json
+moc-zheng.pdf
+moc-zheng.txt
+moc-zzoja-axioms.XuTmXv.lean
+moc-zzoja-build.log
+moc-zzoja-build2.log
+moc-zzoja-build3.log
+moc-zzoja-build4.log
+moc-zzoja-build5.log
+moc_contact_zero_search.py
+moc_min_f.py
+moc_order4_lp.py
+moc_rank2_double_adversary_child.py
+moc_rank2_double_child.py
+moc_rank2_double_funcs_child.py
+moc_rank2_exact_child.py
+moc_rank2_exact_complex_child.py
+moc_rank2_exact_complex_large_child.py
+moc_rank2_monomials_child.py
+moc_rank2_sweep_child.py
+moc_zero_height_circle_rank.py
+moc_zero_height_jac_factors.py
+node-compile-cache
+org.chromium.Chromium.q0NzxR
+rh-archive-list.txt
+rh-mirror.tar.gz
+rh-proof-remark.txt
+rh-scout-live.txt
+rh_math_census1.txt
+rh_math_census2.txt
+rh_math_census3.txt
+rh_math_index.pkl
+rh_math_index.py
+/tmp/moc-toolchain/lean-4.19.0-linux/bin/lake
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+import MOC.Collinear
+import Mathlib.Tactic.Linarith
+
+/-! Common inversion at tangency takes two signed spectral circles to parallel
+lines. Circle-preserving perturbations handle eigenvalues at the inversion pole. -/
+
+open scoped ComplexConjugate Topology
+
+namespace MOC
+
+noncomputable section
+
+private theorem re_mul_inv_of_circle (u z : ℂ) (hz : z ≠ 0)
+    (h : Complex.normSq (z - u) = Complex.normSq u) :
+    (u * z⁻¹).re = 1 / 2 := by
+  rw [Complex.normSq_sub] at h
+  have hswap : (u * conj z).re = (z * conj u).re := by
+    simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im]
+    ring
+  have hre : (z * conj u).re = Complex.normSq z / 2 := by linarith
+  have hn : Complex.normSq z ≠ 0 := mt Complex.normSq_eq_zero.mp hz
+  rw [Complex.inv_def, ← mul_assoc, Complex.re_mul_ofReal, hswap, hre]
+  field_simp [hn]
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+private theorem holds_of_constant_real_parts (a b : ι → ℂ) (u : ℂ) (hu : u ≠ 0)
+    (s t : ℝ) (ha : ∀ i, (u * a i).re = s) (hb : ∀ i, (u * b i).re = t)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a b U := by
+  have hline (z : ℂ) (r : ℝ) (hr : (u * z).re = r) :
+      u⁻¹ * Complex.I * ((u * z).im : ℂ) + u⁻¹ * (r : ℂ) = z := by
+    calc
+      _ = u⁻¹ * ((r : ℂ) + (u * z).im * Complex.I) := by ring
+      _ = _ := by
+        rw [← hr, Complex.re_add_im, ← mul_assoc, inv_mul_cancel₀ hu, one_mul]
+  have hleft : (fun i => u⁻¹ * Complex.I * ((u * a i).im : ℂ) + u⁻¹ * (s : ℂ)) = a :=
+    funext fun i => hline (a i) s (ha i)
+  have hright : (fun i => u⁻¹ * Complex.I * ((u * b i).im : ℂ) + u⁻¹ * (t : ℂ)) = b :=
+    funext fun i => hline (b i) t (hb i)
+  simpa only [hleft, hright] using
+    holds_of_parallel_affine_lines (fun i => (u * a i).im) (fun i => (u * b i).im)
+      (u⁻¹ * Complex.I) (u⁻¹ * (s : ℂ)) (u⁻¹ * (t : ℂ)) U hU
+
+private theorem holds_of_tangent_circles_at_zero_of_nonzero (a c : ι → ℂ)
+    (u : ℂ) (r : ℝ) (hu : u ≠ 0) (hr : r ≠ 0)
+    (ha : ∀ i, Complex.normSq (a i - u) = Complex.normSq u)
+    (hc : ∀ i, Complex.normSq (c i - (r : ℂ) * u) = Complex.normSq ((r : ℂ) * u))
+    (han : ∀ i, a i ≠ 0) (hcn : ∀ i, c i ≠ 0)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a (fun i => -c i) U := by
+  apply (holds_inv_iff a c U hU han hcn).mp
+  apply holds_of_constant_real_parts _ _ u hu (1 / 2) (-(1 / 2) / r) _ _ U hU
+  · exact fun i => re_mul_inv_of_circle u (a i) (han i) (ha i)
+  · intro i
+    have h := re_mul_inv_of_circle ((r : ℂ) * u) (c i) (hcn i) (hc i)
+    rw [mul_assoc, Complex.re_ofReal_mul] at h
+    rw [mul_neg, Complex.neg_re]
+    apply (eq_div_iff hr).mpr
+    rw [neg_mul, mul_comm _ r, h]
+
+private def circleRotation (t : ℝ) : ℂ :=
+  (1 + (t : ℂ) * Complex.I) / (1 - (t : ℂ) * Complex.I)
+
+private theorem circleRotation_denominator_ne (t : ℝ) :
+    1 - (t : ℂ) * Complex.I ≠ 0 := by
+  intro h
+  simpa [Complex.mul_re] using congrArg Complex.re h
+
+private theorem continuous_circleRotation : Continuous circleRotation := by
+  unfold circleRotation
+  have h : Continuous (fun t : ℝ => (t : ℂ) * Complex.I) :=
+    Complex.continuous_ofReal.mul continuous_const
+  exact (continuous_const.add h).div (continuous_const.sub h) circleRotation_denominator_ne
+
+private theorem circleRotation_normSq (t : ℝ) : Complex.normSq (circleRotation t) = 1 := by
+  have h : Complex.normSq (1 + (t : ℂ) * Complex.I) =
+      Complex.normSq (1 - (t : ℂ) * Complex.I) := by
+    simp [Complex.normSq, Complex.mul_re, Complex.mul_im]
+  rw [circleRotation, Complex.normSq_div, h]
+  exact div_self (mt Complex.normSq_eq_zero.mp (circleRotation_denominator_ne t))
+
+private theorem circleRotation_ne_one {t : ℝ} (ht : t ≠ 0) : circleRotation t ≠ 1 := by
+  intro h
+  have he : 1 + (t : ℂ) * Complex.I = 1 - (t : ℂ) * Complex.I := by
+    simpa only [one_mul] using (div_eq_iff (circleRotation_denominator_ne t)).mp h
+  apply ht
+  have hi := congrArg Complex.im he
+  simp [Complex.mul_im] at hi
+  linarith
+
+private def moveCirclePole (u z : ℂ) (t : ℝ) : ℂ :=
+  if z = 0 then u - circleRotation t * u else z
+
+private theorem continuous_moveCirclePole (u z : ℂ) : Continuous (moveCirclePole u z) := by
+  by_cases hz : z = 0
+  · simpa only [moveCirclePole, hz, if_true] using
+      continuous_const.sub (continuous_circleRotation.mul (continuous_const : Continuous fun _ : ℝ => u))
+  · simpa only [moveCirclePole, hz, if_false] using (continuous_const : Continuous fun _ : ℝ => z)
+
+private theorem moveCirclePole_zero (u z : ℂ) : moveCirclePole u z 0 = z := by
+  by_cases hz : z = 0 <;> simp [moveCirclePole, circleRotation, hz]
+
+private theorem moveCirclePole_normSq (u z : ℂ) (t : ℝ)
+    (h : Complex.normSq (z - u) = Complex.normSq u) :
+    Complex.normSq (moveCirclePole u z t - u) = Complex.normSq u := by
+  by_cases hz : z = 0
+  · have he : moveCirclePole u z t - u = -(circleRotation t * u) := by
+      simp only [moveCirclePole, hz, if_true]
+      ring
+    rw [he, Complex.normSq_neg, Complex.normSq_mul, circleRotation_normSq, one_mul]
+  · simpa only [moveCirclePole, hz, if_false] using h
+
+private theorem moveCirclePole_ne_zero (u z : ℂ) (hu : u ≠ 0) {t : ℝ} (ht : t ≠ 0) :
+    moveCirclePole u z t ≠ 0 := by
+  by_cases hz : z = 0
+  · simp only [moveCirclePole, hz, if_true]
+    intro he
+    apply circleRotation_ne_one ht
+    apply mul_right_cancel₀ hu
+    simpa only [one_mul] using (sub_eq_zero.mp he).symm
+  · simpa only [moveCirclePole, hz, if_false] using hz
+
+private theorem holds_of_tangent_circles_at_zero (a c : ι → ℂ)
+    (u : ℂ) (r : ℝ) (hu : u ≠ 0) (hr : r ≠ 0)
+    (ha : ∀ i, Complex.normSq (a i - u) = Complex.normSq u)
+    (hc : ∀ i, Complex.normSq (c i - (r : ℂ) * u) = Complex.normSq ((r : ℂ) * u))
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a (fun i => -c i) U := by
+  by_contra hfail
+  rw [holds_iff_directional, not_forall] at hfail
+  obtain ⟨k, hk⟩ := hfail
+  push_neg at hk
+  let a' (t : ℝ) (i : ι) := moveCirclePole u (a i) t
+  let c' (t : ℝ) (i : ι) := moveCirclePole ((r : ℂ) * u) (c i) t
+  have ha₀ : a' 0 = a := funext fun i => moveCirclePole_zero u (a i)
+  have hc₀ : c' 0 = c := funext fun i => moveCirclePole_zero ((r : ℂ) * u) (c i)
+  have hca : Continuous a' := continuous_pi fun i => continuous_moveCirclePole u (a i)
+    have hbound : BddAbove (norm ∘ (f ∘ e.symm) '' (T \ {c})) := by
+      refine ⟨R, ?_⟩
+      rintro _ ⟨z, hz, rfl⟩
+      exact hb _ ((hlocal z hz.1).2 (by simpa only [mem_singleton_iff] using hz.2))
+    have hnhds : 𝓝[e.symm ⁻¹' Sᶜ] c = 𝓝[≠] c := by
+      apply nhdsWithin_eq_iff_eventuallyEq.mpr
+      filter_upwards [hT] with z hz
+      apply propext
+      simpa only [mem_preimage, mem_compl_iff, mem_singleton_iff] using hlocal z hz
+    have hmap : map e.symm (𝓝[≠] c) = 𝓝[Sᶜ] x := by
+      have h := map_extChartAt_symm_nhdsWithin (I := 𝓘(ℂ, ℂ)) (s := Sᶜ) x
+      rw [hrange, inter_univ] at h
+      change map e.symm (𝓝[e.symm ⁻¹' Sᶜ] c) = 𝓝[Sᶜ] x at h
+      rwa [hnhds] at h
+    have hlim :
+        limUnder (𝓝[≠] c) (f ∘ e.symm) = limUnder (𝓝[Sᶜ] x) f := by
+      unfold limUnder
+      rw [← Filter.map_map, hmap]
+    apply (mdifferentiableAt_iff_source_of_mem_source (I := 𝓘(ℂ, ℂ))
+      (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+    rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+    change DifferentiableAt ℂ (F ∘ e.symm) c
+    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)
+      .differentiableAt hT).congr_of_eventuallyEq
+    filter_upwards [hT] with z hz
+    by_cases hzc : z = c
+    · subst z
+      simp only [Function.comp_apply, hcenter, F, if_pos hx, update_self, hlim]
+    · have hzS : e.symm z ∉ S := (hlocal z hz).2 hzc
+      simp only [Function.comp_apply, F, if_neg hzS, update_of_ne hzc]
+  · apply (hf.mdifferentiableAt (hopen.mem_nhds (show x ∈ Sᶜ from hx))).congr_of_eventuallyEq
+    filter_upwards [hopen.mem_nhds (show x ∈ Sᶜ from hx)] with y hy
+    exact if_neg (show y ∉ S from hy)
+
+variable [CompactSpace M] [PreconnectedSpace M]
+
+/-- A holomorphic function on the complement of a finite set in a compact
+connected complex surface cannot be nonconstant and take all its values
+in the closed right half-plane. -/
+theorem eqOn_of_re_nonneg_off_finite {S : Set M} (hS : S.Finite)
+    {f : M → ℂ} (hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ)
+    (hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re) {x y : M} (hx : x ∈ Sᶜ) (hy : y ∈ Sᶜ) :
+    f x = f y := by
+  let g (x : M) := (1 + f x)⁻¹
+  have hopen : IsOpen Sᶜ := hS.isClosed.isOpen_compl
+  have hpos (x : M) (hx : x ∈ Sᶜ) : 1 ≤ (1 + f x).re := by
+    simpa only [Complex.add_re, Complex.one_re, add_zero] using add_le_add_left (hre x hx) 1
+  have hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ := by
+    intro z hz
+    have hn : (1 + f z : ℂ) ≠ 0 := by
+      intro h
+      have h' := hpos z hz
+      rw [h, Complex.zero_re] at h'
+      exact (not_le_of_gt zero_lt_one) h'
+    have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+      (differentiableAt_id.const_add (1 : ℂ)).inv hn
+    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+      .mdifferentiableWithinAt
+  have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+    rw [g, norm_inv]
+    exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+  obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+  have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+  have he' : 1 + f x = 1 + f y := by
+    simpa only [g, inv_inv] using congrArg (fun z : ℂ => z⁻¹) he
+  exact add_left_cancel he'
+
+/-- On a supplied compactified curve, a finite family of initially positive
+gaps acquires a zero while the other gaps stay nonnegative, provided one
+gap function varies on the connected punctured curve. -/
+theorem exists_new_contact_on_curve {ι : Type*} (J : Finset ι) {S : Set M} (hS : S.Finite)
+    (hconn : IsPreconnected Sᶜ) (H : ι → M → ℂ)
+    (hhol : ∀ i ∈ J, MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (H i) Sᶜ)
+    {x₀ : M} (hx₀ : x₀ ∈ Sᶜ) (hstart : ∀ i ∈ J, 0 < (H i x₀).re)
+    (hvar : ∃ i ∈ J, ∃ x ∈ Sᶜ, ∃ y ∈ Sᶜ, H i x ≠ H i y) :
+    ∃ z ∈ Sᶜ, (∀ i ∈ J, 0 ≤ (H i z).re) ∧ ∃ i ∈ J, (H i z).re = 0 := by
+  obtain ⟨i, hi, x, hx, y, hy, hxy⟩ := hvar
+  have hnegative : ∃ w ∈ Sᶜ, (H i w).re < 0 := by
+    by_contra! h
+    exact hxy (eqOn_of_re_nonneg_off_finite hS (hhol i hi) h hx hy)
+  obtain ⟨w, hw, hwi⟩ := hnegative
+  let Jne : J.Nonempty := ⟨i, hi⟩
+  let m (z : M) : ℝ := J.inf' Jne (fun j => (H j z).re)
+  have hm : ContinuousOn m Sᶜ :=
+    ContinuousOn.finset_inf'_apply (f := fun j z => (H j z).re) Jne
+      (fun j hj => Complex.continuous_re.comp_continuousOn (hhol j hj).continuousOn)
+  have hmw : m w < 0 := (Finset.inf'_lt_iff Jne).2 ⟨i, hi, hwi⟩
+  have hm₀ : 0 < m x₀ := (Finset.lt_inf'_iff Jne).2 hstart
+  have hz : (0 : ℝ) ∈ m '' Sᶜ :=
+    (hconn.image _ hm).Icc_subset ⟨w, hw, rfl⟩ ⟨x₀, hx₀, rfl⟩ ⟨hmw.le, hm₀.le⟩
+  obtain ⟨z, hzS, hmz⟩ := hz
+  have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by
+    apply (Finset.le_inf'_iff Jne).1
+    change 0 ≤ m z
+    exact hmz.ge
+  obtain ⟨j, hj, he⟩ := Finset.exists_mem_eq_inf' Jne (fun k => (H k z).re)
+  exact ⟨z, hzS, hzle, j, hj, he.symm.trans hmz⟩
+
+open scoped BigOperators
+
+/-- The spectral contact step preserves every old contact and the strict
+determinant support gap on a supplied compactified deformation curve. -/
+theorem exists_new_matching_contact_on_curve {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {S : Set M} (hS : S.Finite) (hconn : IsPreconnected Sᶜ)
+    (a b : M → ι → ℂ) (U : Matrix ι ι ℂ) (η : ℂ) (r : Equiv.Perm ι)
+    (J : Finset (Equiv.Perm ι))
+ls: cannot access 'docs': No such file or directory
+ls: cannot access 'Lean/docs': No such file or directory
+
+exec
+/bin/bash -lc "ls -l Lean/.lake; ls -la .git; rg -n 'theorem le_inf\\x27_iff|theorem differentiableOn_update_limUnder_of_bddAbove|theorem mdifferentiableWithinAt' Lean/.lake/packages/mathlib/Mathlib/{Data/Finset,Analysis/Complex,Geometry/Manifold} | head -25; sed -n '1,76p' Lean/MOC/ContactTransfer.lean; ls -l /tmp/moc-lean-fix-404xeaqn" in /tmp/moc-lean-fix-404xeaqn/after
+ succeeded in 139ms:
+total 0
+lrwxrwxrwx 1 dell dell 42 Nov 20 15:35 packages -> /home/dell/Desktop/MOC/Lean/.lake/packages
+total 0
+dr-xr-xr-x 2 dell dell  40 Nov 20 15:35 .
+drwxr-xr-x 7 dell dell 140 Nov 20 15:35 ..
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Complex/RemovableSingularity.lean:97:theorem differentiableOn_update_limUnder_of_bddAbove {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+Lean/.lake/packages/mathlib/Mathlib/Data/Finset/Lattice/Fold.lean:861:theorem le_inf'_iff {a : α} : a ≤ s.inf' H f ↔ ∀ b ∈ s, a ≤ f b :=
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/VectorBundle/MDifferentiable.lean:37:theorem mdifferentiableWithinAt_totalSpace (f : M → TotalSpace F E) {s : Set M} {x₀ : M} :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:117:theorem mdifferentiableWithinAt_univ :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:121:theorem mdifferentiableWithinAt_inter (ht : t ∈ 𝓝 x) :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:126:theorem mdifferentiableWithinAt_inter' (ht : t ∈ 𝓝[s] x) :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:171:theorem mdifferentiableWithinAt_iff_target_inter {f : M → M'} {s : Set M} {x : M} :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:183:theorem mdifferentiableWithinAt_iff :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:198:theorem mdifferentiableWithinAt_iff_target_inter' :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:211:theorem mdifferentiableWithinAt_iff_target :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:238:theorem mdifferentiableWithinAt_iff_source_of_mem_maximalAtlas
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:251:theorem mdifferentiableWithinAt_iff_source_of_mem_source
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:266:theorem mdifferentiableWithinAt_iff_target_of_mem_source
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:290:theorem mdifferentiableWithinAt_iff_of_mem_maximalAtlas {x : M} (he : e ∈ maximalAtlas I 1 M)
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:300:theorem mdifferentiableWithinAt_iff_image {x : M} (he : e ∈ maximalAtlas I 1 M)
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:313:theorem mdifferentiableWithinAt_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (chartAt H x).source)
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:325:theorem mdifferentiableWithinAt_iff_of_mem_source' {x' : M} {y : M'}
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:630:theorem mdifferentiableWithinAt_of_isInvertible_mfderivWithin
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:709:theorem mdifferentiableWithinAt_iff_exists_hasMFDerivWithinAt :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:724:theorem mdifferentiableWithinAt_congr_nhds {t : Set M} (hst : 𝓝[s] x = 𝓝[t] x) :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:819:theorem mdifferentiableWithinAt_insert_self :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:823:theorem mdifferentiableWithinAt_insert {y : M} :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:917:theorem mdifferentiableWithinAt_congr_set' (y : M) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:922:theorem mdifferentiableWithinAt_congr_set (h : s =ᶠ[𝓝 x] t) :
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/SpecificFunctions.lean:65:protected theorem mdifferentiableWithinAt : MDifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x :=
+import MOC.Support
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Geometry.Manifold.Complex
+import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
+import Mathlib.Topology.Order.IntermediateValue
+import Mathlib.Topology.Order.Lattice
+
+/-! The analytic contact step for a supplied compactified curve. A holomorphic
+gap function with nonnegative real part on the entire punctured curve would
+have a bounded reciprocal transform and hence be constant. -/
+
+open Filter Function Set
+open scoped Manifold Topology
+
+namespace MOC
+
+noncomputable section
+
+variable {M : Type*} [TopologicalSpace M] [T2Space M] [ChartedSpace ℂ M]
+  [IsManifold 𝓘(ℂ, ℂ) 1 M]
+
+/-- A bounded holomorphic function off finitely many points extends
+holomorphically to the surface. -/
+theorem exists_holomorphic_extension_off_finite {S : Set M} (hS : S.Finite)
+    {f : M → ℂ} (hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ)
+    (R : ℝ) (hb : ∀ x ∈ Sᶜ, ‖f x‖ ≤ R) :
+    ∃ F : M → ℂ, MDifferentiable 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) F ∧ EqOn F f Sᶜ := by
+  classical
+  let F (x : M) : ℂ := if x ∈ S then limUnder (𝓝[Sᶜ] x) f else f x
+  have hopen : IsOpen Sᶜ := hS.isClosed.isOpen_compl
+  refine ⟨F, ?_, fun x hx => if_neg (show x ∉ S from hx)⟩
+  intro x
+  by_cases hx : x ∈ S
+  · let e := extChartAt 𝓘(ℂ, ℂ) x
+    let c := e x
+    let T : Set ℂ := e.target ∩ e.symm ⁻¹' (S \ {x})ᶜ
+    have hrange : range 𝓘(ℂ, ℂ) = univ :=
+      ModelWithCorners.Boundaryless.range_eq_univ
+    have hcenter : e.symm c = x := e.left_inv (mem_extChartAt_source x)
+    have hT : T ∈ 𝓝 c := by
+      have htarget : e.target ∈ 𝓝 c := by
+        have h := extChartAt_target_mem_nhdsWithin (I := 𝓘(ℂ, ℂ)) x
+        rw [hrange, nhdsWithin_univ] at h
+        exact h
+      have hothers : IsOpen ((S \ {x})ᶜ) := hS.diff.isClosed.isOpen_compl
+      have hxothers : e.symm c ∈ (S \ {x})ᶜ := by simp [hcenter]
+      exact inter_mem htarget
+        ((continuousAt_extChartAt_symm (I := 𝓘(ℂ, ℂ)) x).preimage_mem_nhds
+          (hothers.mem_nhds hxothers))
+    have hlocal (z : ℂ) (hz : z ∈ T) : e.symm z ∈ Sᶜ ↔ z ≠ c := by
+      constructor
+      · intro hn he
+        exact hn (by rw [he, hcenter]; exact hx)
+      · intro hn hzS
+        have hne : e.symm z ≠ x := by
+          intro he
+          apply hn
+          calc
+            z = e (e.symm z) := (e.right_inv hz.1).symm
+            _ = c := congrArg e he
+        exact hz.2 ⟨hzS, by simpa only [mem_singleton_iff] using hne⟩
+    have hd : DifferentiableOn ℂ (f ∘ e.symm) (T \ {c}) := by
+      intro z hz
+      have hzS := (hlocal z hz.1).2 (by simpa only [mem_singleton_iff] using hz.2)
+      have hsource : e.symm z ∈ (chartAt ℂ x).source := by
+        rw [← extChartAt_source 𝓘(ℂ, ℂ) x]
+        exact e.map_target hz.1.1
+      have h := (mdifferentiableAt_iff_source_of_mem_source
+        (I := 𝓘(ℂ, ℂ)) (I' := 𝓘(ℂ, ℂ)) hsource).1
+        (hf.mdifferentiableAt (hopen.mem_nhds hzS))
+      change MDifferentiableWithinAt 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (f ∘ e.symm)
+        (range 𝓘(ℂ, ℂ)) (e (e.symm z)) at h
+      rw [hrange, mdifferentiableWithinAt_univ, e.right_inv hz.1.1] at h
+      exact h.differentiableAt.differentiableWithinAt
+    have hbound : BddAbove (norm ∘ (f ∘ e.symm) '' (T \ {c})) := by
+      refine ⟨R, ?_⟩
+total 0
+drwxr-xr-x 7 dell dell 140 Nov 20 15:35 after
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p=Path('Lean/MOC/CircleSpectra.lean')
+s=p.read_text().replace('  field_simp [hn]','  field_simp [hn]\\n  ring',1)
+a=s.index('  by_cases hz : z = 0',s.index('private theorem continuous_moveCirclePole'))
+b=s.index('\\nprivate theorem',a)
+s=s[:a]+'''  change Continuous (fun t => if z = 0 then u - circleRotation t * u else z)
+  by_cases hz : z = 0
+  · simp only [if_pos hz]
+    exact continuous_const.sub (continuous_circleRotation.mul continuous_const)
+  · simp only [if_neg hz]
+    exact continuous_const
+'''+s[b:]
+s=s.replace('  · simpa only [moveCirclePole, hz, if_false] using hz','  · simpa only [moveCirclePole, if_neg hz] using hz')
+p.write_text(s)
+p=Path('Lean/MOC/ContactTransfer.lean')
+s=p.read_text().replace('    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)\\n      .differentiableAt hT).congr_of_eventuallyEq','    apply (DifferentiableOn.differentiableAt\\n      (Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound) hT).congr_of_eventuallyEq').replace('    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))\\n      .mdifferentiableWithinAt','    exact MDifferentiableAt.mdifferentiableWithinAt\\n      (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))').replace('    rw [g, norm_inv]','    change ‖(1 + f z)⁻¹‖ ≤ 1\\n    rw [norm_inv]').replace(\"(Finset.le_inf'_iff Jne).1\",\"(Finset.le_inf'_iff Jne (fun j => (H j z).re)).1\")
+p.write_text(s)
+PY
+cd Lean && lake --no-cache build MOC.CircleSpectra MOC.ContactTransfer" in /tmp/moc-lean-fix-404xeaqn/after
+exec
+/bin/bash -lc "sed -n '92,110p' Lean/.lake/packages/mathlib/Mathlib/Analysis/Complex/RemovableSingularity.lean; rg -n 'theorem MDifferentiableAt.mdifferentiableWithinAt' Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold; ls -a .agents .codex; rg -n '\\b(sorry|admit|axiom|unsafe)\\b' Lean/MOC/{CircleSpectra,ContactTransfer}.lean" in /tmp/moc-lean-fix-404xeaqn/after
+ exited 1 in 1387ms:
+    (hd.mono fun _ hz => hz.1.resolve_left hz.2) ho
+
+/-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
+is complex differentiable and is bounded on `s \ {c}`, then `f` redefined to be equal to
+`limUnder (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
+theorem differentiableOn_update_limUnder_of_bddAbove {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+    (hd : DifferentiableOn ℂ f (s \ {c})) (hb : BddAbove (norm ∘ f '' (s \ {c}))) :
+    DifferentiableOn ℂ (update f c (limUnder (𝓝[≠] c) f)) s :=
+  differentiableOn_update_limUnder_of_isLittleO hc hd <| IsBoundedUnder.isLittleO_sub_self_inv <|
+    let ⟨C, hC⟩ := hb
+    ⟨C + ‖f c‖, eventually_map.2 <| mem_nhdsWithin_iff_exists_mem_nhds_inter.2
+      ⟨s, hc, fun _ hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rfl⟩⟩
+
+/-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
+punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/
+theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO {f : ℂ → E} {c : ℂ}
+    (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z)
+    (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
+    Tendsto f (𝓝[≠] c) (𝓝 <| limUnder (𝓝[≠] c) f) := by
+Lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:131:theorem MDifferentiableAt.mdifferentiableWithinAt (h : MDifferentiableAt I I' f x) :
+.agents:
+.
+..
+
+.codex:
+.
+..
+
+ succeeded in 39954ms:
+✔ [2658/2672] Built MOC.Core
+✔ [2659/2672] Built MOC.Weights
+✔ [2660/2672] Built MOC.PhaseMove
+✔ [2661/2672] Built MOC.Blocks
+✔ [2662/2672] Built MOC.Support
+⚠ [2663/2672] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2664/2672] Built MOC.Small
+✔ [2665/2672] Built MOC.Geometry
+✔ [2666/2672] Built MOC.Jacobi
+✔ [2667/2672] Built MOC.ContactTransfer
+✔ [2668/2672] Built MOC.Variational
+⚠ [2669/2672] Built MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2670/2672] Built MOC.NormalOrbit
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2671/2672] Built MOC.Collinear
+warning: ././././MOC/Collinear.lean:25:67: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2672/2672] Built MOC.CircleSpectra
+Build completed successfully.
+
+codex
+Fixed the reported compiler errors in [CircleSpectra.lean](/tmp/moc-lean-fix-404xeaqn/after/Lean/MOC/CircleSpectra.lean) and [ContactTransfer.lean](/tmp/moc-lean-fix-404xeaqn/after/Lean/MOC/ContactTransfer.lean). Only proof bodies changed. All proposition statements, hypotheses, and the axiom policy were preserved.
+
+Both modules passed `lake --no-cache build MOC.CircleSpectra MOC.ContactTransfer` from `Lean`. The build reported existing linter warnings in dependencies.
+tokens used
+32,380
+Fixed the reported compiler errors in [CircleSpectra.lean](/tmp/moc-lean-fix-404xeaqn/after/Lean/MOC/CircleSpectra.lean) and [ContactTransfer.lean](/tmp/moc-lean-fix-404xeaqn/after/Lean/MOC/ContactTransfer.lean). Only proof bodies changed. All proposition statements, hypotheses, and the axiom policy were preserved.
+
+Both modules passed `lake --no-cache build MOC.CircleSpectra MOC.ContactTransfer` from `Lean`. The build reported existing linter warnings in dependencies.

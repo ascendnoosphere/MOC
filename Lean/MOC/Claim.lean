@@ -1,6 +1,9 @@
 import MOC.Small
+<<<<<<< HEAD
 
 open Matrix
+=======
+>>>>>>> origin/main
 
 namespace MOC
 
@@ -33,6 +36,7 @@ theorem exists_least_bad_order (h : ¬ MOCIsTrue) :
   · intro m hm
     exact not_not.mp (Nat.find_min hex hm)
 
+<<<<<<< HEAD
 /-- Independent row and column relabelings exhibit two nonempty square blocks. -/
 def HasProperPairedBlocks {n : ℕ} (U : Matrix (Fin n) (Fin n) ℂ) : Prop :=
   ∃ (m k : ℕ) (eRow eCol : Fin m ⊕ Fin k ≃ Fin n)
@@ -69,4 +73,6 @@ theorem mocIsTrue_iff_no_proper_paired_blocks :
     obtain ⟨n, hn, _, a, b, U, hU, hfail, hblocks⟩ := exists_least_bad_instance hbad
     exact hfail (h n hn a b U hU hblocks)
 
+=======
+>>>>>>> origin/main
 end MOC

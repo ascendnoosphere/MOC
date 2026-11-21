@@ -20,11 +20,14 @@ def schurTransfer (α : ℂ) (r : Matrix (Fin 1) ι ℂ) (c : Matrix ι (Fin 1) 
     (D : Matrix ι ι ℂ) (z : ℂ) : Matrix ι ι ℂ :=
   D + (z / (1 - z * α)) • (c * r)
 
+<<<<<<< HEAD
 /-- The transfer family in a parameter that enters affinely. -/
 def affineSchurTransfer (α : ℂ) (r : Matrix (Fin 1) ι ℂ) (c : Matrix ι (Fin 1) ℂ)
     (D : Matrix ι ι ℂ) (z : ℂ) : Matrix ι ι ℂ :=
   D + ((z + star α) / (1 - (Complex.normSq α : ℂ))) • (c * r)
 
+=======
+>>>>>>> origin/main
 variable [Fintype ι] [DecidableEq ι]
 
 /-- A modulus-one feedback phase preserves unitarity wherever the transfer is defined. -/
@@ -116,6 +119,7 @@ theorem schurTransfer_unitary_of_phase (α : ℂ) (r : Matrix (Fin 1) ι ℂ)
     simpa [schurTransfer, hr, hc] using hD
   · exact schurTransfer_unitary_of_ne α r c D z hU hz hden
 
+<<<<<<< HEAD
 private theorem affine_feedback (α z : ℂ) (hα : Complex.normSq α < 1)
     (hz : Complex.normSq z = 1) :
     let w := (z + star α) / (1 + α * z)
@@ -175,6 +179,8 @@ theorem affineSchurTransfer_unitary (α : ℂ) (r : Matrix (Fin 1) ι ℂ)
   rw [affineSchurTransfer_eq_schurTransfer α r c D z hα hz]
   exact schurTransfer_unitary_of_phase α r c D _ hU (affine_feedback α z hα hz).1
 
+=======
+>>>>>>> origin/main
 /-- Applying the anchored spectral factors before transfer introduces one outer product.
 Here `x` and `y` omit their zero anchor entries. -/
 theorem schurTransfer_anchored_factor (α : ℂ) (r : Matrix (Fin 1) ι ℂ)

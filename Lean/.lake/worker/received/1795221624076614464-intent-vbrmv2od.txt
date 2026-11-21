@@ -1,0 +1,2 @@
+lean: give an exact nonnormal support example with strict phase loss
+Lean/MOC/SchurEntryObstruction.lean

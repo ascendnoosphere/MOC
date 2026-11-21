@@ -1,0 +1,2 @@
+lean: reduce the Householder determinant hull proof to four labels
+Lean/MOC/HouseholderSupport.lean

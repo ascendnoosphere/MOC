@@ -2,8 +2,11 @@ import MOC.Core
 import Mathlib.Analysis.InnerProductSpace.JointEigenspace
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathlib.LinearAlgebra.Matrix.Hermitian
+<<<<<<< HEAD
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
+=======
+>>>>>>> origin/main
 
 /-! The normal-matrix formulation, with eigenvalues counted with algebraic multiplicity. -/
 
@@ -166,6 +169,7 @@ theorem matchingRange_relabel (a b : ι → ℂ) (e f : Equiv.Perm ι) :
     ext j
     simp
 
+<<<<<<< HEAD
 /-- The real and imaginary parts of one normal diagonalization give a common
 unitary eigenbasis for two commuting Hermitian matrices. -/
 theorem exists_joint_hermitian_diagonalization (A B : Matrix ι ι ℂ)
@@ -242,6 +246,8 @@ theorem holds_of_commuting_hermitian (a b : ι → ℂ) {U : Matrix ι ι ℂ}
   obtain ⟨a', b', W, hW, ha, hb⟩ := exists_joint_hermitian_diagonalization _ _ hA hB hAB
   exact holds_of_joint_unitary_diagonalization a b a' b' hU hW ha hb
 
+=======
+>>>>>>> origin/main
 /-- MOC for two arbitrary normal matrices and any enumerations of their characteristic roots. -/
 def NormalConjecture (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
   ∀ (A B : Matrix ι ι ℂ) (a b : ι → ℂ), IsStarNormal A → IsStarNormal B →

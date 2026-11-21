@@ -1,0 +1,16 @@
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.Blocks +MOC.Claim +MOC.ContactRectangle +MOC.Core +MOC.Geometry +MOC.Jacobi +MOC.MixedBound +MOC.Normal +MOC.Obstruction +MOC.PhaseMove +MOC.RankSum +MOC.Small +MOC.Source +MOC.Support +MOC.Transfer +MOC.TwoValues +MOC.Weights
+✔ [2353/2362] Built MOC.ContactRectangle
+✔ [2361/2418] Built Mathlib.Topology.UniformSpace.Matrix
+✔ [2434/2443] Built MOC.RankSum
+✔ [2435/2443] Built Mathlib.Analysis.Calculus.LocalExtr.Basic
+✔ [2436/2443] Built MOC.Normal
+✔ [2437/2443] Built Mathlib.Analysis.Matrix
+✔ [2438/2443] Built Mathlib.Data.Matrix.ColumnRowPartitioned
+✔ [2439/2443] Built MOC.TwoValues
+✔ [2440/2443] Built MOC.Jacobi
+✔ [2441/2443] Built Mathlib.LinearAlgebra.Matrix.SchurComplement
+✔ [2442/2443] Built MOC.Transfer
+ℹ [2443/2443] Built MOC
+info: ././././MOC.lean:10:0: Checked 228 safe MOC declarations against the standard Lean axioms
+Build completed successfully.
+$ taskset -c 0,1,2,3 lake env lean -j4 MOCWorkerAudit.lean

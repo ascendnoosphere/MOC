@@ -1,0 +1,2 @@
+lean: bound the determinant Schur phases at a quadratic support maximum
+Lean/MOC/SchurQuadraticSupport.lean

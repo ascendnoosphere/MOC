@@ -1,0 +1,2 @@
+lean: select strict violations with a quadratic support bound
+Lean/MOC/StrongSupport.lean

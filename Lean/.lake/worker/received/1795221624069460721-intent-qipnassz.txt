@@ -1,0 +1,3 @@
+lean: verify Householder determinant hull inclusion through order four
+Lean/MOC/HouseholderPacking.lean
+Lean/MOC/HouseholderFour.lean

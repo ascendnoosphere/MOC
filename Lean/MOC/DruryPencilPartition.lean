@@ -1,6 +1,7 @@
 import Mathlib.Algebra.MvPolynomial.Funext
 import Mathlib.Algebra.Polynomial.Div
 import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
@@ -27,8 +28,8 @@ private theorem eval_pair_eq_zero_of_real_line (p : MvPolynomial (Fin 2) ℂ)
     dsimp only [q]
     rw [MvPolynomial.polynomial_eval_eval₂, hcomp, MvPolynomial.eval₂_id]
     have hvec : (fun i : Fin 2 =>
-        Polynomial.eval x ![Polynomial.C a * X + Polynomial.C b,
-          Polynomial.C c * X + Polynomial.C d] i) = ![a * x + b, c * x + d] := by
+        Polynomial.eval x (![Polynomial.C a * X + Polynomial.C b,
+          Polynomial.C c * X + Polynomial.C d] i)) = ![a * x + b, c * x + d] := by
       funext i
       fin_cases i <;> simp
     rw [hvec]
@@ -71,7 +72,7 @@ theorem mvPolynomial_eq_zero_of_eval_conj (p : MvPolynomial (Fin 2) ℂ)
   let y := (f 0 - f 1) / (2 * Complex.I)
   have hy : y * Complex.I = (f 0 - f 1) / 2 := by
     dsimp only [y]
-    field_simp [Complex.I_ne_zero]
+    field_simp [Complex.I_ne_zero] <;> ring
   have hf : ![x + y * Complex.I, x - y * Complex.I] = f := by
     funext i
     fin_cases i <;> simp [x, hy] <;> ring
@@ -95,7 +96,7 @@ theorem polynomial_dvd_of_conjugate_specializations
     (h : ∀ z : ℂ, z ≠ 0 →
       p.map (MvPolynomial.eval ![z, star z]) ∣ q.map (MvPolynomial.eval ![z, star z])) : p ∣ q := by
   apply (Polynomial.modByMonic_eq_zero_iff_dvd hp).mp
-  ext k
+  ext k : 1
   rw [Polynomial.coeff_zero]
   apply mvPolynomial_eq_zero_of_eval_conj_nonzero
   intro z hz

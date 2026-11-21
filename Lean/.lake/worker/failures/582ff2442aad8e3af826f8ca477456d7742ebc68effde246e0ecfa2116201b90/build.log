@@ -1,0 +1,45 @@
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.Blocks +MOC.Claim +MOC.ContactRectangle +MOC.Core +MOC.Geometry +MOC.Jacobi +MOC.MixedBound +MOC.Normal +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.Realification +MOC.Small +MOC.Source +MOC.Support +MOC.Transfer +MOC.TwoFrame +MOC.TwoValues +MOC.Weights +MOC.ZeroHeight
+ℹ [2354/2398] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 228 safe MOC declarations against the standard Lean axioms
+✔ [2445/2447] Built MOC.Realification
+⚠ [2446/2447] Built MOC.ZeroHeight
+warning: ././././MOC/ZeroHeight.lean:32:44: unused variable `hβ`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././MOC/ZeroHeight.lean:58:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/ZeroHeight.lean:77:17: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2447/2447] Building MOC.TwoFrame
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/TwoFrame.lean -R ./././. -o ././.lake/build/lib/lean/MOC/TwoFrame.olean -i ././.lake/build/lib/lean/MOC/TwoFrame.ilean -c ././.lake/build/ir/MOC/TwoFrame.c --json
+error: ././././MOC/TwoFrame.lean:411:2: unsolved goals
+case pos
+H : Matrix (Fin 3) (Fin 3) ℝ
+hH : H.IsHermitian
+htrace : H.trace = 0
+eig : Fin 3 → ℝ := hH.eigenvalues
+U : Matrix (Fin 3) (Fin 3) ℝ := ↑hH.eigenvectorUnitary
+hU : Uᵀ * U = 1
+hHdiag : H = U * diagonal eig * Uᵀ
+heig : ∑ i, eig i = 0
+hz : ∀ (i : Fin 3), eig i = 0
+i : Fin 3
+hzero : eig = 0
+⊢ (U * diagonal 0 * Uᵀ) i i = 0
+error: ././././MOC/TwoFrame.lean:418:80: unknown identifier 'hh'
+error: ././././MOC/TwoFrame.lean:419:4: type mismatch
+  hz fun i => neg_eq_zero.mp (hzero i (mem_univ i))
+has type
+  False : Prop
+but is expected to have type
+  Decidable (∃ i, 0 < eig i) : Type
+error: ././././MOC/TwoFrame.lean:422:64: unknown identifier 'hh'
+error: ././././MOC/TwoFrame.lean:423:4: type mismatch
+  hz fun i => hzero i (mem_univ i)
+has type
+  False : Prop
+but is expected to have type
+  Decidable (∃ i, eig i < 0) : Type
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.TwoFrame
+error: build failed

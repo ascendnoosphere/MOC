@@ -1,0 +1,4 @@
+lean: exclude paired block splits in a least-order counterexample
+Lean/MOC/Blocks.lean
+Lean/MOC/Small.lean
+Lean/MOC/Claim.lean

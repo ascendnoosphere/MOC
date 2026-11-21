@@ -1,0 +1,5 @@
+lean: certify the T21 contact cone and derive the T34 radial Hessian condition
+Lean/MOC/FourContactCertificate.lean
+Lean/MOC/FourMatchingRelations.lean
+Lean/MOC/FourMatchingHessian.lean
+Lean/MOC/FourContactCones.lean

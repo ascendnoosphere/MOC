@@ -1,0 +1,76 @@
+diff --git a/before/Lean/MOC/CircleSpectra.lean b/after/Lean/MOC/CircleSpectra.lean
+index 5767de8..38d69ab 100644
+--- a/before/Lean/MOC/CircleSpectra.lean
++++ b/after/Lean/MOC/CircleSpectra.lean
+@@ -21,6 +21,7 @@ private theorem re_mul_inv_of_circle (u z : ℂ) (hz : z ≠ 0)
+   have hn : Complex.normSq z ≠ 0 := mt Complex.normSq_eq_zero.mp hz
+   rw [Complex.inv_def, ← mul_assoc, Complex.re_mul_ofReal, hswap, hre]
+   field_simp [hn]
++  ring
+ 
+ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+ 
+@@ -91,10 +92,12 @@ private def moveCirclePole (u z : ℂ) (t : ℝ) : ℂ :=
+   if z = 0 then u - circleRotation t * u else z
+ 
+ private theorem continuous_moveCirclePole (u z : ℂ) : Continuous (moveCirclePole u z) := by
++  change Continuous (fun t => if z = 0 then u - circleRotation t * u else z)
+   by_cases hz : z = 0
+-  · simpa only [moveCirclePole, hz, if_true] using
+-      continuous_const.sub (continuous_circleRotation.mul (continuous_const : Continuous fun _ : ℝ => u))
+-  · simpa only [moveCirclePole, hz, if_false] using (continuous_const : Continuous fun _ : ℝ => z)
++  · simp only [if_pos hz]
++    exact continuous_const.sub (continuous_circleRotation.mul continuous_const)
++  · simp only [if_neg hz]
++    exact continuous_const
+ 
+ private theorem moveCirclePole_zero (u z : ℂ) : moveCirclePole u z 0 = z := by
+   by_cases hz : z = 0 <;> simp [moveCirclePole, circleRotation, hz]
+@@ -117,7 +120,7 @@ private theorem moveCirclePole_ne_zero (u z : ℂ) (hu : u ≠ 0) {t : ℝ} (ht
+     apply circleRotation_ne_one ht
+     apply mul_right_cancel₀ hu
+     simpa only [one_mul] using (sub_eq_zero.mp he).symm
+-  · simpa only [moveCirclePole, hz, if_false] using hz
++  · simpa only [moveCirclePole, if_neg hz] using hz
+ 
+ private theorem holds_of_tangent_circles_at_zero (a c : ι → ℂ)
+     (u : ℂ) (r : ℝ) (hu : u ≠ 0) (hr : r ≠ 0)
+diff --git a/before/Lean/MOC/ContactTransfer.lean b/after/Lean/MOC/ContactTransfer.lean
+index 43832c1..df14fb8 100644
+--- a/before/Lean/MOC/ContactTransfer.lean
++++ b/after/Lean/MOC/ContactTransfer.lean
+@@ -94,8 +94,8 @@ theorem exists_holomorphic_extension_off_finite {S : Set M} (hS : S.Finite)
+       (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+     rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+     change DifferentiableAt ℂ (F ∘ e.symm) c
+-    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)
+-      .differentiableAt hT).congr_of_eventuallyEq
++    apply (DifferentiableOn.differentiableAt
++      (Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound) hT).congr_of_eventuallyEq
+     filter_upwards [hT] with z hz
+     by_cases hzc : z = c
+     · subst z
+@@ -128,10 +128,11 @@ theorem eqOn_of_re_nonneg_off_finite {S : Set M} (hS : S.Finite)
+       exact (not_le_of_gt zero_lt_one) h'
+     have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+       (differentiableAt_id.const_add (1 : ℂ)).inv hn
+-    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+-      .mdifferentiableWithinAt
++    exact MDifferentiableAt.mdifferentiableWithinAt
++      (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+   have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+-    rw [g, norm_inv]
++    change ‖(1 + f z)⁻¹‖ ≤ 1
++    rw [norm_inv]
+     exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+   obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+   have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+@@ -164,7 +165,7 @@ theorem exists_new_contact_on_curve {ι : Type*} (J : Finset ι) {S : Set M} (hS
+     (hconn.image _ hm).Icc_subset ⟨w, hw, rfl⟩ ⟨x₀, hx₀, rfl⟩ ⟨hmw.le, hm₀.le⟩
+   obtain ⟨z, hzS, hmz⟩ := hz
+   have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by
+-    apply (Finset.le_inf'_iff Jne).1
++    apply (Finset.le_inf'_iff Jne (fun j => (H j z).re)).1
+     change 0 ≤ m z
+     exact hmz.ge
+   obtain ⟨j, hj, he⟩ := Finset.exists_mem_eq_inf' Jne (fun k => (H k z).re)

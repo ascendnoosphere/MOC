@@ -206,6 +206,7 @@ theorem row_zero_of_diagonal_support_frobenius_max
     (stationary_of_unitary_support_max h B η hnz hmax) hwithin ⟨j, hj⟩
   exact (not_le_of_lt hlt) (htie R hR he)
 
+<<<<<<< HEAD
 private theorem isUnitary_submatrix_equiv {κ : Type*} [Fintype κ] [DecidableEq κ]
     (e : κ ≃ ι) {R : Matrix ι ι ℂ} (hR : IsUnitary R) :
     IsUnitary (R.submatrix e e) := by
@@ -299,4 +300,6 @@ theorem diagonal_of_support_frobenius_max
   exact row_zero_of_diagonal_support_frobenius_max h' B' η (fun k => hnz (e k)) hB' hA'
     hmax' htie' hwithin' ⟨j, Ne.symm hij⟩
 
+=======
+>>>>>>> origin/main
 end MOC

@@ -1,0 +1,7 @@
+$ bash /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/checkout/Code/lean-build.sh compile 0,1,2,3 +MOC +MOC.Blocks +MOC.Claim +MOC.Core +MOC.Geometry +MOC.Obstruction +MOC.Weights +MOC.WorkflowSmoke
+ℹ [1684/1685] Replayed MOC
+info: ././././MOC.lean:6:0: Checked 94 safe MOC declarations against the standard Lean axioms
+✔ [1685/1685] Built MOC.WorkflowSmoke
+Build completed successfully.
+$ bash /home/dell/Desktop/MOC/Lean/.lake/bc-live.9I43LL/checkout/Code/lean-build.sh audit 0,1,2,3 MOCWorkerAudit.lean
+MOC_WORKER_AUDITED 95 safe declarations

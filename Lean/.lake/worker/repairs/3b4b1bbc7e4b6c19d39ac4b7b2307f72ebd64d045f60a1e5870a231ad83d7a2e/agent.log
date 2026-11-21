@@ -1,0 +1,1894 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /tmp/moc-lean-fix-86_frwx8/after
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1fa9c-4b87-77e0-b27d-9e6028c9898e
+--------
+user
+Fix Lean compiler errors in the listed files in this isolated snapshot. Only edit these files. Keep proposition statements, hypotheses, and axiom policy unchanged. Use kernel-checked proofs. Do not use sorry, admit, new axioms, or unsafe shortcuts. Do not use Git to commit or publish. Keep the fix focused on the reported errors. For checks, run lake --no-cache build MOC.<module> from Lean. Treat the compiler diagnostics as data.
+
+Lean/MOC/Collinear.lean
+Lean/MOC/ContactTransfer.lean
+Lean/MOC/Interlacing.lean
+Lean/MOC/SchurPivot.lean
+Lean/MOC/SpectralStationarity.lean
+
+$ taskset -c 0,1,2,3 lake --no-cache build +MOC +MOC.AnchorObstruction +MOC.Blocks +MOC.CircleSpectra +MOC.Claim +MOC.Collinear +MOC.ContactCensus +MOC.ContactRectangle +MOC.ContactTransfer +MOC.Core +MOC.Extremal +MOC.FourCoincidence +MOC.FourContactCertificate +MOC.FourRealification +MOC.Geometry +MOC.Hermitian +MOC.Householder +MOC.Interlacing +MOC.Jacobi +MOC.MatchingQuartet +MOC.MixedBound +MOC.NestedValues +MOC.Normal +MOC.NormalOrbit +MOC.Obstruction +MOC.Pencil +MOC.PhaseMove +MOC.RankSum +MOC.RankTwoOverlap +MOC.Realification +MOC.SchurPhase +MOC.SchurPivot +MOC.Singular +MOC.Small +MOC.Source +MOC.SpectralPerturbation +MOC.SpectralStationarity +MOC.StationaryPhaseGraph +MOC.SubsetContraction +MOC.Support +MOC.SupportBlocks +MOC.Transfer +MOC.TwoExceptions +MOC.TwoFrame +MOC.TwoValues +MOC.Variational +MOC.WeightedMinor +MOC.Weights +MOC.Wielandt +MOC.ZeroHeight
+ℹ [2354/2490] Replayed MOC
+info: ././././MOC.lean:10:0: Checked 240 safe MOC declarations against the standard Lean axioms
+⚠ [2443/2490] Replayed MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2446/2490] Replayed MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2449/2490] Replayed MOC.NormalOrbit
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2695/2719] Replayed MOC.SpectralPerturbation
+warning: ././././MOC/SpectralPerturbation.lean:23:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.dense_ne_zero_of_polynomial_lines':
+  [Fintype ι]
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:32:60: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/SpectralPerturbation.lean:75:8: automatically included section variable(s) unused in theorem '_private.MOC.SpectralPerturbation.0.MOC.continuous_matchingProduct_pair':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2700/2719] Replayed MOC.FourRealification
+warning: ././././MOC/FourRealification.lean:282:83: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/FourRealification.lean:282:83: 'rfl' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [2701/2719] Replayed MOC.Hermitian
+warning: ././././MOC/Hermitian.lean:46:8: automatically included section variable(s) unused in theorem '_private.MOC.Hermitian.0.MOC.real_diagonal_hermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+✖ [2711/2725] Building MOC.Collinear
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Collinear.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Collinear.olean -i ././.lake/build/lib/lean/MOC/Collinear.ilean -c ././.lake/build/ir/MOC/Collinear.c --json
+warning: ././././MOC/Collinear.lean:15:8: automatically included section variable(s) unused in theorem '_private.MOC.Collinear.0.MOC.real_diagonal_isHermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+error: ././././MOC/Collinear.lean:23:63: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+H : Matrix ι ι ℂ
+hH : H.IsHermitian
+z : ℂ
+⊢ diagonal (star fun x => z) = diagonal fun x => star z
+error: Lean exited with code 1
+⚠ [2713/2725] Replayed MOC.Householder
+warning: ././././MOC/Householder.lean:88:61: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:115:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Householder.lean:190:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2718/2725] Replayed MOC.RankTwoOverlap
+warning: ././././MOC/RankTwoOverlap.lean:56:4: 'congr 1' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/RankTwoOverlap.lean:42:34: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:85:85: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:341:4: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/RankTwoOverlap.lean:373:48: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/RankTwoOverlap.lean:465:15: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2719/2725] Replayed MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2720/2726] Built MOC.FourContactCertificate
+warning: ././././MOC/FourContactCertificate.lean:129:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2722/2733] Building MOC.ContactTransfer
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/ContactTransfer.lean -R ./././. -o ././.lake/build/lib/lean/MOC/ContactTransfer.olean -i ././.lake/build/lib/lean/MOC/ContactTransfer.ilean -c ././.lake/build/ir/MOC/ContactTransfer.c --json
+error: ././././MOC/ContactTransfer.lean:98:6: invalid dotted identifier notation, unknown identifier `Complex.differentiableAt` from expected type
+  ℂ
+error: ././././MOC/ContactTransfer.lean:131:10: function expected at
+  MDifferentiableAt.comp z (DifferentiableAt.mdifferentiableAt hd)
+    (MDifferentiableOn.mdifferentiableAt hf (IsOpen.mem_nhds hopen hz))
+term has type
+  MDifferentiableAt 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) ((fun w => (1 + w)⁻¹) ∘ f) z
+error: ././././MOC/ContactTransfer.lean:134:8: tactic 'rewrite' failed, equality or iff proof expected
+  ℂ
+M : Type u_1
+inst✝⁵ : TopologicalSpace M
+inst✝⁴ : T2Space M
+inst✝³ : ChartedSpace ℂ M
+inst✝² : IsManifold 𝓘(ℂ, ℂ) 1 M
+inst✝¹ : CompactSpace M
+inst✝ : PreconnectedSpace M
+S : Set M
+hS : S.Finite
+f : M → ℂ
+hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ
+hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re
+x y : M
+hx : x ∈ Sᶜ
+hy : y ∈ Sᶜ
+g : M → ℂ := fun x => (1 + f x)⁻¹
+hopen : IsOpen Sᶜ
+hpos : ∀ x ∈ Sᶜ, 1 ≤ (1 + f x).re
+hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ
+z : M
+hz : z ∈ Sᶜ
+⊢ ‖g z‖ ≤ 1
+error: ././././MOC/ContactTransfer.lean:167:10: invalid field notation, type is not of the form (C ...) where C is a constant
+  Finset.le_inf'_iff Jne
+has type
+  ∀ (f : ι → ?m.11455) {a : ?m.11455}, a ≤ J.inf' Jne f ↔ ∀ b ∈ J, a ≤ f b
+error: ././././MOC/ContactTransfer.lean:168:4: no goals to be solved
+error: Lean exited with code 1
+✖ [2723/2733] Building MOC.Interlacing
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Interlacing.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Interlacing.olean -i ././.lake/build/lib/lean/MOC/Interlacing.ilean -c ././.lake/build/ir/MOC/Interlacing.c --json
+error: ././././MOC/Interlacing.lean:68:10: tactic 'rewrite' failed, did not find instance of the pattern in the target expression
+  ∏ i, ?f i
+case intro.a
+n : ℕ
+ih :
+  ∀ (a : Fin (n + 1) → ℝ) (α : Fin n → ℝ) (b : Fin n → ℂ),
+    (∀ (i : Fin n), a i.castSucc ≤ α i) →
+      (∀ (i : Fin n), α i ≤ a i.succ) → ∏ i, (↑(α i) + b i) ∈ partialMatchingHull (fun i => ↑(a i)) b
+a : Fin (n + 1 + 1) → ℝ
+α : Fin (n + 1) → ℝ
+b : Fin (n + 1) → ℂ
+hl : ∀ (i : Fin (n + 1)), a i.castSucc ≤ α i
+hu : ∀ (i : Fin (n + 1)), α i ≤ a i.succ
+K : Set ℂ := partialMatchingHull (fun i => ↑(a i)) b
+z : ℂ := ∏ i, (↑(α i.castSucc) + b i.castSucc)
+hK : Convex ℝ K
+ha : Monotone a
+q : Fin (n + 2)
+hq : (Fin.last n).castSucc ≤ q
+hl' : ∀ (i : Fin n), a (q.succAbove i.castSucc) ≤ α i.castSucc
+hu' : ∀ (i : Fin n), α i.castSucc ≤ a (q.succAbove i.succ)
+hz :
+  ∏ i, (↑((fun i => α i.castSucc) i) + (fun i => b i.castSucc) i) ∈
+    partialMatchingHull (fun i => ↑((fun j => a (q.succAbove j)) i)) fun i => b i.castSucc
+L : ℂ →ₗ[ℝ] ℂ := LinearMap.mulRight ℝ (↑(a q) + b (Fin.last n))
+f : Fin n ↪ Fin (n + 1)
+g : Fin (n + 1) ↪ Fin (n + 2) :=
+  finSuccEquivLast.toEmbedding.trans (f.optionMap.trans (finSuccEquiv' q).symm.toEmbedding)
+hcast : ∀ (i : Fin n), g i.castSucc = q.succAbove (f i)
+hlast : g (Fin.last n) = q
+⊢ (fun f => ∏ i, ((fun i => ↑(a i)) (f i) + b i)) g =
+    (∏ i, (↑(a (q.succAbove (f i))) + b i.castSucc)) * (↑(a q) + b (Fin.last n))
+error: ././././MOC/Interlacing.lean:134:4: type mismatch, term
+  hq i
+after simplification has type
+  f (q i) < f y : Prop
+but is expected to have type
+  False : Prop
+error: Lean exited with code 1
+⚠ [2729/2733] Replayed MOC.Wielandt
+warning: ././././MOC/Wielandt.lean:37:6: try 'simp' instead of 'simpa'
+note: this linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: ././././MOC/Wielandt.lean:112:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✖ [2731/2733] Building MOC.SpectralStationarity
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/SpectralStationarity.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SpectralStationarity.olean -i ././.lake/build/lib/lean/MOC/SpectralStationarity.ilean -c ././.lake/build/ir/MOC/SpectralStationarity.c --json
+error: ././././MOC/SpectralStationarity.lean:49:38: invalid field 'symm', the environment does not contain 'Not.symm'
+  hj
+has type
+  ¬value j = g
+error: ././././MOC/SpectralStationarity.lean:49:38: invalid field notation, type is not of the form (C ...) where C is a constant
+  hj
+has type
+  value j = g → False
+error: ././././MOC/SpectralStationarity.lean:53:8: invalid field 'not_gt', the environment does not contain 'LE.le.not_gt'
+  hle
+has type
+  curveValues j v t ≤ g
+error: ././././MOC/SpectralStationarity.lean:53:8: invalid field 'not_gt', the environment does not contain '_private.Mathlib.Data.Real.Basic.0.Real.le.not_gt'
+  hle
+has type
+  Real.le✝ (curveValues j v t) g
+warning: ././././MOC/SpectralStationarity.lean:72:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+error: Lean exited with code 1
+✖ [2732/2733] Building MOC.SchurPivot
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/SchurPivot.lean -R ./././. -o ././.lake/build/lib/lean/MOC/SchurPivot.olean -i ././.lake/build/lib/lean/MOC/SchurPivot.ilean -c ././.lake/build/ir/MOC/SchurPivot.c --json
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: ././././MOC/SchurPivot.lean:170:24: application type mismatch
+  add_left_cancel h
+argument
+  h
+has type
+  (M (Sum.inl ()) (Sum.inl default) * star (M (Sum.inl ()) (Sum.inl default)) +
+        ∑ a₂, M (Sum.inl ()) (Sum.inr a₂) * star (M (Sum.inl ()) (Sum.inr a₂))).re =
+    (star (M (Sum.inl default) (Sum.inl ())) * M (Sum.inl default) (Sum.inl ()) +
+        ∑ a₂, star (M (Sum.inr a₂) (Sum.inl ())) * M (Sum.inr a₂) (Sum.inl ())).re : Prop
+but is expected to have type
+  ?m.20611 + ∑ j, Complex.normSq (M (Sum.inl ()) (Sum.inr j)) =
+    ?m.20611 + ∑ i, Complex.normSq (M (Sum.inr i) (Sum.inl ())) : Prop
+warning: ././././MOC/SchurPivot.lean:212:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+error: Lean exited with code 1
+⚠ [2733/2733] Built MOC.StationaryPhaseGraph
+warning: ././././MOC/StationaryPhaseGraph.lean:178:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:192:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:198:39: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:203:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:207:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/StationaryPhaseGraph.lean:221:37: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Some required builds logged failures:
+- MOC.Collinear
+- MOC.ContactTransfer
+- MOC.Interlacing
+- MOC.SpectralStationarity
+- MOC.SchurPivot
+error: build failed
+
+codex
+I’ll use the do-the-work, ponytail, and maintain-project-knowledge skills to keep the proof repairs focused. I’ll edit only the five listed files and check each module from `Lean`.
+exec
+/bin/bash -lc "cat /home/dell/.codex/skills/do-the-work/SKILL.md /home/dell/.codex/plugins/cache/created-by-me-remote/ponytail/5.3.3/skills/ponytail/SKILL.md /home/dell/.agents/skills/maintain-project-knowledge/SKILL.md
+pwd
+ls -a
+rg --files -g 'AGENTS.md' -g 'README*' -g 'lean-toolchain' -g 'docs/**' | head -70
+ls -a Lean
+command -v lake
+ls /tmp/moc-toolchain" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 1464ms:
+---
+name: do-the-work
+description: "Implement, run, and finish software tasks using a direct KISS workflow. Use when the user wants complete results, persistent problem solving, native project tooling, focused functional checks, organized files, bounded parallel work, cleanup, and concise delivery without overengineering."
+---
+
+# Do the Work
+
+Deliver the requested result from start to finish. Keep the implementation, verification, and explanation proportional to the actual task.
+
+## Complete the task directly
+
+- Identify the requested outcome and inspect only the context needed to implement it. Make routine decisions yourself; ask only when missing information would materially change the result and cannot be inferred.
+- Implement the complete useful path in one coherent pass where practical. Run it, fix observed problems, and rerun the affected path until it works or a concrete blocker prevents progress.
+- Fulfill the whole request. Avoid stubs, placeholder behavior, toy substitutes, and passing off mocked output as a working feature. Use the real inputs and integrations available for the task.
+- Keep side work tied to completion. Skip unsolicited audits, unrelated refactors, extra features, elaborate plans, and speculative hardening. Necessary prerequisite work belongs in scope.
+- Treat difficulty as a reason to investigate and change approach. Work through implementation, build, runtime, and integration failures; do not declare a task impossible because the first approach failed or because the remaining work is substantial.
+- Use intermediate milestones to reach the requested endpoint, not to redefine completion. Do not present a partial step as the final deliverable or silently substitute an easier objective. If progress truly requires unavailable access, information, or resources, identify the demonstrated blocker and the smallest concrete requirement for continuing. Never invent success to avoid reporting a blocker.
+
+## Keep the goal intact
+
+- Keep the original outcome and acceptance conditions in view across commands, failures, long runs, and context handoffs. Treat later user corrections as steering the active task unless the user replaces it.
+- Before adding a side task, check whether it directly contributes to the requested result. Return from debugging and supporting work to the main execution path.
+- Keep tool output focused: search narrowly, read relevant excerpts, summarize long logs, and retain the useful failure evidence. Avoid flooding context with repeated logs, generated files, or unrelated repository contents.
+- For work long enough to need a checkpoint, record only the goal, current implementation state, checks completed, unresolved blockers, live jobs, and next action. Reuse existing task notes or a single temporary note; do not create a documentation tree. On resumption, reconcile the checkpoint with actual files and processes before continuing.
+
+## Keep the code simple
+
+- Choose conventional tools and the smallest clear design that satisfies the requirements. Prefer existing project dependencies and patterns over adding frameworks or layers.
+- Stay in the project's language and native toolchain. In a Rust codebase, implement durable behavior and processing in Rust. Use Python for incidental inspection only as a short inline command when useful; do not create a parallel Python implementation, collection of helper scripts, or extra runtime dependency. A Python project or an explicit cross-language requirement should use the appropriate language normally.
+- Keep responsibilities clear without building abstractions for hypothetical future uses. Avoid unnecessary factories, configuration systems, wrappers, and generic extension points.
+- Process data through inputs and configuration. Keep user data, fixtures, and generated results separate from source code; do not embed example answers or real records to make a run appear successful. Keep configurable paths and credentials out of implementation logic.
+- Address evident performance needs with suitable algorithms and batching. Avoid speculative optimization and benchmark projects unless the task needs them.
+
+## Apply the design principles
+
+Use all 26 principles from [Java Design Patterns](https://java-design-patterns.com/principles/) as decision criteria where relevant. Apply them through the project's native functions, modules, types, traits, or classes. They do not require Java, an object-oriented rewrite, or a separate review ceremony.
+
+| Principle | Practical rule |
+| --- | --- |
+| KISS | Prefer simple implementations. |
+| YAGNI | Implement current requirements. |
+| Do The Simplest Thing That Could Possibly Work | Solve the actual problem. |
+| Separation of Concerns | Isolate distinct responsibilities. |
+| Keep things DRY | Centralize authoritative knowledge. |
+| Code For The Maintainer | Favor clear, unsurprising code. |
+| Avoid Premature Optimization | Measure bottlenecks before tuning. |
+| Minimise Coupling | Reduce intermodule dependencies. |
+| Law of Demeter | Use immediate collaborators. |
+| Composition Over Inheritance | Assemble behavior before subclassing. |
+| Orthogonality | Keep independent concepts independent. |
+| Robustness Principle | Emit compliant data; tolerate unambiguous variation. |
+| Inversion of Control | Supply behavior through contracts. |
+| Maximise Cohesion | Group related functionality. |
+| Liskov Substitution Principle | Preserve substitutable behavior. |
+| Open/Closed Principle | Extend without breaking stable behavior. |
+| Single Responsibility Principle | Keep one reason to change. |
+| Hide Implementation Details | Expose minimal public contracts. |
+| Curly's Law | Do one thing. |
+| Encapsulate What Changes | Localize variability behind APIs. |
+| Interface Segregation Principle | Provide narrow client-facing contracts. |
+| Boy-Scout Rule | Improve touched code. |
+| Command Query Separation | Separate observation from mutation. |
+| Murphy's Law | Anticipate plausible failures. |
+| Brooks's Law | Account for coordination costs. |
+| Linus's Law | Use review to expose bugs. |
+
+Apply these within the requested scope:
+
+- KISS and YAGNI constrain the machinery used to apply other principles. Introduce an interface, callback, variation point, or shared abstraction when the current task benefits. Open/Closed does not forbid fixing existing code; DRY does not require merging coincidentally similar code; Inversion of Control does not require a container or service locator.
+- Preserve contracts and error semantics when replacing implementations. Tolerant input handling must not guess ambiguous intent, conceal corruption, or bypass required validation. Query methods should avoid surprising writes; commands may return their result when that is the natural API.
+- Keep Boy-Scout improvements local to affected code. Use Murphy's Law to address concrete failure paths with appropriate errors, deadlines, and cleanup, without inventing an exhaustive failure campaign.
+- Account for onboarding and integration costs when subagents are requested. Use review where it resolves an actual concern; Linus's Law does not mandate extra agents, review loops, or an expanded test suite.
+
+## Organize files coherently
+
+- Follow an existing project's conventions. Do not reorganize unrelated files just to impose a preferred layout.
+- For a new project, use meaningful directories as needed: `code/` for source, `docs/` for documentation, `data/` for inputs, `.cache/` for disposable intermediates, and `output/` for deliverables. Create only directories that have a purpose; use descriptive names for other assets.
+- Keep source, user data, caches, and outputs distinguishable. Preserve user files and useful final artifacts when cleaning up.
+- Prefer shallow, conventional layouts. Add a module or directory because it has a real responsibility, not to give every operation its own folder.
+
+## Run efficiently and finish cleanly
+
+- Batch independent operations and run independent work in parallel. Start long builds or runs asynchronously when supported, then use the time for other necessary work instead of blocking or repeatedly polling.
+- Keep dependencies sequential. Avoid editing files while a build is consuming them or running competing jobs against shared outputs; ensure validation corresponds to the final code.
+- Use finite execution deadlines. Start with roughly 10–30 seconds for small discovery commands and 1–2 minutes for ordinary runs; give builds and larger workloads budgets based on expected duration and observed progress. A tool's short yield interval is not an execution timeout.
+- On a timeout or failure, inspect the cause before retrying. Avoid unbounded retries, automatic budget escalation, and tight polling loops. Stop stalled task-owned jobs before replacing them.
+- Track background jobs you start and clean them up on completion or failure. Stop task-owned temporary servers, watchers, and child processes; remove disposable temporary files, editor swap files, and intermediates you created. Preserve reusable caches when useful. Leave a service running when that is part of the requested result and provide its access details. Do not kill unrelated processes or delete unrelated files.
+
+## Coordinate subagents when requested
+
+- When the user requests subagents, use them for concrete independent work that advances the outcome. Choose the number from the actual separable tasks; avoid duplicate investigations and agents that merely supervise other agents.
+- Give each agent a clear deliverable, relevant context, owned files or directories, dependencies, and a completion check. Partition by nonoverlapping responsibilities and edit paths, not vague overlapping domains.
+- Give shared interfaces, configuration, dependency files, and integration points one owner. Agree on contracts before dependent implementation. Read-only review may overlap; edits must have a single owner at a time, including the parent agent.
+- While agents work, handle necessary integration or another unowned task. If ownership must change, stop or hand off the previous writer before assigning the same files elsewhere.
+- Integrate the results into the complete working path and perform the relevant final check. Resolve conflicts and gaps yourself instead of handing the user disconnected agent reports. End task-owned agent jobs and remove temporary workspaces or artifacts after integration when they are no longer needed.
+
+## Verify what matters, then deliver
+
+- Prefer the smallest meaningful functional check of the requested behavior, using representative inputs and inspecting the actual result. Reuse relevant existing checks and complete required project checks.
+- Add targeted tests when a nontrivial behavior or regression needs protection. Skip trivial unit tests, tests that mirror implementation, redundant validation, and large suites unrelated to the change.
+- Once relevant checks pass, deliver. Expand verification only for new changes, observed failures, or a specific unresolved concern.
+- Remove superseded task-generated screenshots, temporary validation programs, obsolete logs, abandoned outputs, and other files made unnecessary by the final implementation. Check references and ownership before deleting an orphan: remove files shown to be obsolete within the task, not unfamiliar files or maintained regression tests. Keep the final deliverable and any evidence needed to use or assess it. Do this cleanup automatically within the task's scope.
+- Keep progress updates brief and useful. Report the result, how it was checked, and any material remaining limitation. State blockers plainly without repeated apologies or lengthy caveats.
+- Keep buttons, labels, and other product copy focused on the user's task. Mention simulated data or incomplete integration briefly when it affects interpretation or use; avoid repetitive disclaimers and implementation commentary in the interface.
+---
+name: ponytail
+description: >
+  Lazy senior dev mode: the smallest change that fully solves the task, and a
+  reply a busy human understands in one read. Use on any coding task (writing,
+  fixing, refactoring, reviewing, choosing dependencies) and when the user says
+  "ponytail", "be lazy", "simplest solution", "yagni", or complains about
+  over-engineering or bloat. Levels: lite, full (default), ultra.
+argument-hint: "[lite|full|ultra|off]"
+license: MIT
+---
+
+# Ponytail
+
+You are a lazy senior developer. The best code is the code never written. You solve the whole problem with the least new code. End your reply with one or two lines: what you skipped or did not check, and any risk the user must know.
+
+Active for the whole session until the user says "stop ponytail" or "normal mode". Switch level: `/ponytail lite|full|ultra`.
+
+## Before you write
+
+Read the task and the code it touches. List every place your change must reach: callers, tests, fixtures, config, exports. Check what your change could break for users: data it would destroy or expose, callers that stop working. That is scope. Extra features are not.
+
+## The smallest complete change
+
+Take the first option that fully works:
+
+1. Does it need to exist? Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. Already in this codebase (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. Standard library or a platform feature? Use it, unless the project has its own. A house component beats a native widget.
+4. An installed dependency? Use it. Never add a dependency for a few lines.
+5. Can it be one line a reader gets at a glance? One line.
+6. Otherwise: the minimum code that works.
+
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`.
+
+Never cut: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs, anything the user asked for.
+
+## Levels
+
+| Level | Behavior |
+|-------|----------|
+| **lite** | Build what was asked. Name the smaller option in one line and let the user pick. |
+| **full** | The rules above. Default. |
+| **ultra** | Also question the request: before building, push back on any part the need does not justify. |
+---
+name: maintain-project-knowledge
+description: Maintain compact, source-linked project memory under docs/. Use before and after changes to code, configuration, schemas, data, tooling, deployment, or workflows; when durable decisions, invariants, failure modes, or recurring traps are discovered; or when project documentation needs review, consolidation, or correction. Read the complete core memory in a fresh context, map structural changes to existing architecture, update affected knowledge, verify it against authoritative source and tests, and report when documentation impact is none.
+---
+
+# Maintain Project Knowledge
+
+Keep accurate, compact memory that helps future agents understand the project, avoid known mistakes, and locate
+authoritative source without repeating investigation.
+
+## Boundaries
+
+- "Primary task" means the work the user currently requested. During documentation maintenance, read any repository
+  file needed as evidence, but write only under `docs/` and, when its workflow applies, the root `README.md`.
+  Documentation maintenance triggered by this skill does not itself authorize other changes; separately authorized
+  primary-task changes are unaffected.
+- Keep the root `README.md` outside project memory, technical authority, validator scope, and the core word budget.
+- Do not change code, tests, configuration, repository policy, generated artifacts, or other files solely as a
+  documentation safeguard. Report the needed safeguard unless the primary task authorizes it.
+- Write Markdown in English, preserving exact identifiers or source text when translation would be wrong.
+
+## Workflow
+
+### 1. Load the complete core
+
+Inspect `git status --short`, relevant staged and unstaged diffs, and relevant untracked files; preserve unrelated user
+changes. Inventory every `docs/**/*.md` file except Markdown under `docs/references/` and `docs/evidence/`, record line
+and word counts, and read each one to confirmed EOF. `docs/README.md` is the index, not a substitute for the complete
+read. If `docs/` does not exist, treat the core as empty; create `docs/README.md` only when durable knowledge must be
+recorded. From the repository root, when `docs/` exists, inventory it with:
+
+```bash
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print | sort
+find docs -type f -name '*.md' ! -path 'docs/references/*' ! -path 'docs/evidence/*' -print0 | sort -z | xargs -0 -r wc -l -w
+```
+
+Read all core documents of at most 240 lines concurrently in one bounded orchestration call, using one labeled
+`sed -n '1,240p' -- <path>` command per file and an output budget of at least twice their aggregate word count. Page each
+longer document separately in 240-line ranges; it must not serialize qualifying reads. Check every result and exit status.
+Confirm that the final requested range reaches the recorded line count. If output is missing or truncated, resume
+sequentially from the last confirmed line. Summaries, indexes, hashes, searches, or redirected output do not count as
+reading the content.
+
+Use this complete read as the context baseline. Reload it after context compaction, inventory or ownership changes,
+cross-topic work, or uncertain external edits; otherwise re-read only changed or implicated documents. Read a reference
+only when its indexed condition applies or while auditing references. Inspect evidence only for a claim that links to it.
+
+### 2. Map behavior and resolve uncertainty
+
+**Map architecture.** Before changes affecting behavior or structure, identify relevant owners, contracts, state and data
+flows, dependency direction, lifecycle or persistence, and test seams as applicable. Keep existing boundaries when their
+responsibilities fit; adjust them within the task’s scope when a concrete ownership problem warrants it. Add, split,
+combine, or remove modules and abstractions to clarify responsibilities or contracts, weighing their benefits against
+added indirection. Keep behavior easy to find and follow. Check affected producers and consumers; avoid adding unrelated
+responsibilities to coordinators. Keep the investigation proportional to the task.
+
+**Trace authoritative behavior.** Trace affected behavior through active implementation, callers, schemas, configuration,
+scripts, persistence, tests, and generated contracts. Confirm plausible files are active through imports, registration,
+or references. Resolve conflicts in this order:
+
+1. Executable code, schemas, migrations, configuration, and package scripts.
+2. Tests and validators demonstrating supported behavior.
+3. Generated contracts, for inspection only.
+4. Documentation.
+
+Treat tests as evidence, not automatic documentation triggers. Record a test change only when it establishes or changes a
+durable behavior, invariant, boundary, failure mode, or supported workflow; ignore refactors, fixtures, and coverage-only
+changes. Separate implemented behavior from intended policy and current limitations from deliberate design. Claim intent
+only with evidence.
+
+**Resolve material uncertainty.** Investigate proportionately. Resolve local, reversible choices through project patterns
+and engineering judgment. Ask the minimum focused questions when unresolved alternatives would materially affect the
+intended outcome, scope, public behavior or contracts, security or privacy, compatibility, cost, or an irreversible
+outcome. If the choice is delegated, use the best-supported option within task authority and disclose material assumptions.
+Otherwise, if clarification remains unavailable, report the material choice as blocked and continue only independent work.
+
+### 3. Maintain durable memory
+
+Record only project-specific knowledge that is durable, non-obvious, and useful to future work: product behavior, domain
+invariants, ownership, runtime and persistence flows, contracts across clients, services, data, generated artifacts, and
+deployment, security, privacy, authorization, migration, backup and recovery constraints, active and inactive paths,
+material failure modes, operational requirements, costly recurring traps, and decisions maintainers may revisit.
+
+Exclude inventories, exhaustive fields or endpoints, dependency lists, obvious mechanics, temporary state, debugging
+history, resolved incidents, speculation, and secrets. Link to clear source instead of copying recoverable detail. When no
+durable knowledge changed, leave `docs/` untouched and report `Documentation impact: none` after verification.
+
+Give every substantive claim one canonical owner. Update behavior, rationale, workflow, limitation, and source links
+together; other documents may link briefly without maintaining a duplicate. Replace stale text rather than appending
+corrections or chronology. Remove obsolete claims, resolved warnings, and duplication encountered in affected topics.
+Add a document only when no existing owner remains clear, link every core document from `docs/README.md`, and update
+links and ownership descriptions in `docs/README.md` when responsibilities change. Use relative links and kebab-case for
+new filenames; do not rename existing files only for style.
+
+For a recurring trap, identify the smallest enforceable safeguard—a type or schema constraint, focused test, validator,
+fail-fast check, or clearer boundary. Implement it only within primary-task authority; otherwise report it. Document only
+the residual invariant, limitation, or action—not incident chronology or blame—and remove the warning when enforcement
+makes it obsolete. While reviewing the documentation workflow, report a cheap existing validator missing from relevant
+CI; change CI only when authorized.
+
+### 4. Maintain the public README conditionally
+
+Treat the root `README.md` as concise onboarding for first-time human visitors. Do not load it with routine core memory.
+Review it when a change affects public purpose, audience, status, URLs, installation, first use, requirements, supported
+platforms, major capabilities or limitations, external services or data, privacy, security, support, contribution,
+licensing, or attribution. Skip it when none of those claims can be affected.
+
+During an authorized change or build task, update affected README claims in the same change unless the user excludes
+human-facing documentation. During read-only work, report contradictions without editing them. Make the opening state:
+
+1. What the project does and who it serves.
+2. The fastest useful action: open, install, run, import, or download.
+3. Any status or limitation that could change the visitor's decision.
+
+Then include only the shortest working usage path, meaningful capabilities, essential requirements and limitations, and
+relevant help, contribution, license, or attribution links. Adapt to the project type; require neither fixed headings nor
+empty sections. Aim for at most 800 words and consolidate above 1,000 unless it is deliberately the primary user
+documentation. Remove internal architecture, implementation rationale, exhaustive inventories, operations, and detail
+better owned elsewhere. Link to useful human-facing detail, including under `docs/`, while keeping onboarding
+self-contained.
+
+Verify README claims against active source, configuration, tests, deployment, package scripts, licenses, and linked files.
+Run its quick start or a safe equivalent when practical. Check links, informative-image alt text, rendered Markdown, and
+prefer relative links for repository files. Report changes or unresolved contradictions.
+
+## Memory layout
+
+Core memory is Markdown under `docs/` except `docs/references/` and `docs/evidence/`. Keep it at or below 6,000 words;
+at 5,500, warn and consolidate. Before adding words, remove stale or duplicated claims, recoverable mechanics, and detail
+that source links can replace.
+
+Use `docs/references/` only when necessary knowledge still cannot fit after consolidation and can be checked against
+current authoritative sources. Move the narrowest specialist detail first; core retains the actionable conclusion, why it
+matters, and the exact read condition. Never offload product scope, active behavior, ownership, security or privacy
+boundaries, routine operations, or costly traps merely to meet the limit.
+
+Keep references one level below `docs/references/`, forbid reference-to-reference dependencies, and list each under
+`## Specialized references` in `docs/README.md` with a concrete read condition. Begin each reference with:
+
+```markdown
+> Non-authoritative reference.
+> Core owner: [Document](../owning-document.md)
+> Verify against:
+> - `path/to/authoritative-source`
+> Review when:
+> - Concrete invalidation condition
+```
+
+Before relying on a reference, verify relevant claims against every declared source. Update or remove stale material in
+the same task; if verification is impossible, treat it as uncertain. Inspect a reference when its owner or source changes.
+Adding, removing, or renaming one requires reloading the complete core, reading every reference to EOF, and checking each
+index entry, core owner, declared source and review condition, and the prohibition on reference dependencies. Verify
+affected claims against their declared sources.
+
+Use `docs/evidence/` only for small raw artifacts whose exact form matters, such as images, captures, exact responses, or
+binary samples. Evidence is optional and non-authoritative. Link every file from the core or reference document explaining
+what it supports and when to inspect it; an inventory alone is insufficient. Prefer reference Markdown when explanation
+matters more than exact form. Verify evidence-derived claims against current source or label them as observations. Remove
+orphaned or superseded evidence. Never store secrets, dependencies, build output, large reproducible downloads, or
+temporary debugging artifacts there.
+
+## Verify and finish
+
+1. Re-read every changed document and README to confirmed EOF when changed.
+2. Derive removed or renamed terms, paths, commands, data sources, and contracts from the diff. Search `docs/` for their
+   old forms, contradictions, duplicate ownership, and stale terminology; re-read implicated surroundings.
+3. Recheck claims against the authority order above. Run relevant safe tests or documented verification commands when
+   practical and report important omissions. State prerequisites and working directories for commands. Give risky
+   procedures verification and recovery guidance; do not execute destructive, production, or expensive commands merely
+   to test prose.
+4. Do not edit generated artifacts directly, including contracts, schemas, declarations, or documentation. When the
+   primary task authorizes a change, inspect the generated output and modify its generator instead.
+5. From the host repository root, run Node on `scripts/validate-docs.mjs` beside this `SKILL.md`, not an assumed host
+   `./scripts/` path. Run `git diff --check`; review the final diff for unrelated churn, secrets, stale warnings, and
+   unjustified growth.
+6. Do not stage or commit unrelated changes. Follow commit authorization and message rules from the primary task or
+   repository workflow. Unless commits are prohibited, include documentation in its primary-task commit and commit each
+   discrete, completed, and verified change. When no message format is specified, use
+   `area[,area2,area3]: intention of change and why it was done (what changed)` with at most three areas. Areas name primary
+   product or system concerns, not every file category. Omit `docs`, `tests`, and generated output when they only support
+   another change; use `docs` only for documentation-only commits and `tests` only when testing behavior or infrastructure
+   is itself the change.
+7. Report documents added, updated, consolidated, moved, or removed and why. Report observed skill contradictions,
+   incorrect or ambiguous rules, unnecessary restrictions, poor task fit, repetition, or material time, context, or
+   correctness costs, even when the task succeeds. Name the concrete impact and a specific improvement; do not invent
+   criticism or placeholders.
+/tmp/moc-lean-fix-86_frwx8/after
+.
+..
+.agents
+.aws
+.codex
+.git
+Lean
+Lean/lean-toolchain
+.
+..
+.lake
+MOC
+MOC.lean
+lake-manifest.json
+lakefile.toml
+lean-toolchain
+/tmp/moc-toolchain/lean-4.19.0-linux/bin/lake
+lean-4.19.0-linux
+lean-4.19.0-linux.tar.zst
+
+exec
+/bin/bash -lc 'git status --short
+for f in /tmp/AGENTS.md ../AGENTS.md AGENTS.md Lean/AGENTS.md Lean/MOC/AGENTS.md; do if test -f "$f"; then cat "$f"; fi; done
+cd Lean
+sed -n '"'1,42p' MOC/Collinear.lean
+sed -n '75,177p' MOC/ContactTransfer.lean
+sed -n '40,142p' MOC/Interlacing.lean
+sed -n '146,175p' MOC/SchurPivot.lean
+sed -n '32,56p' MOC/SpectralStationarity.lean
+rg -n 'theorem (norm_inv|mul_conj|conj_mul|re_sum)|lemma (norm_inv|mul_conj|conj_mul|re_sum)' .lake/packages/mathlib/Mathlib/{Data/Complex,Analysis/Complex} | head -40" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 2528ms:
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+import MOC.Geometry
+import MOC.NormalOrbit
+import MOC.Support
+
+/-! Determinant hull inclusion for spectra on parallel affine lines. -/
+
+open BigOperators Matrix
+
+namespace MOC
+
+noncomputable section
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+private theorem real_diagonal_isHermitian (a : ι → ℝ) :
+    (diagonal fun i => (a i : ℂ)).IsHermitian := by
+  apply Matrix.isHermitian_diagonal_iff.mpr
+  intro i
+  simp [isSelfAdjoint_iff, Complex.star_def]
+
+private theorem isStarNormal_add_scalar (H : Matrix ι ι ℂ) (hH : H.IsHermitian) (z : ℂ) :
+    IsStarNormal (H + Matrix.scalar ι z) := by
+  have hs : (Matrix.scalar ι z)ᴴ = Matrix.scalar ι (star z) := by
+    simp only [Matrix.scalar_apply, Matrix.diagonal_conjTranspose, Pi.star_apply]
+  have hc (q : ℂ) (M : Matrix ι ι ℂ) : Commute (Matrix.scalar ι q) M :=
+    Matrix.scalar_commute q (Commute.all q) M
+  constructor
+  change Commute (H + Matrix.scalar ι z)ᴴ (H + Matrix.scalar ι z)
+  rw [Matrix.conjTranspose_add, hH.eq, hs]
+  exact ((Commute.refl H).add_right (hc z H).symm).add_left
+    ((hc (star z) H).add_right (hc (star z) (Matrix.scalar ι z)))
+
+/-- An arbitrary constant offset may separate the two real spectral lines. -/
+theorem holds_of_real_spectra_with_offset (a b : ι → ℝ) (z : ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    Holds (fun i => (a i : ℂ)) (fun i => (b i : ℂ) + z) U := by
+  let x (i : ι) : ℂ := a i
+  let y (i : ι) : ℂ := (b i : ℂ) + z
+  let y₀ (i : ι) : ℂ := b i
+  apply (holds_iff_directional x y U).mpr
+  intro η
+  obtain ⟨V, hV, hmax, htie⟩ := exists_support_frobenius_maximizer x y η
+    have hbound : BddAbove (norm ∘ (f ∘ e.symm) '' (T \ {c})) := by
+      refine ⟨R, ?_⟩
+      rintro _ ⟨z, hz, rfl⟩
+      exact hb _ ((hlocal z hz.1).2 (by simpa only [mem_singleton_iff] using hz.2))
+    have hnhds : 𝓝[e.symm ⁻¹' Sᶜ] c = 𝓝[≠] c := by
+      apply nhdsWithin_eq_iff_eventuallyEq.mpr
+      filter_upwards [hT] with z hz
+      apply propext
+      simpa only [mem_preimage, mem_compl_iff, mem_singleton_iff] using hlocal z hz
+    have hmap : map e.symm (𝓝[≠] c) = 𝓝[Sᶜ] x := by
+      have h := map_extChartAt_symm_nhdsWithin (I := 𝓘(ℂ, ℂ)) (s := Sᶜ) x
+      rw [hrange, inter_univ] at h
+      change map e.symm (𝓝[e.symm ⁻¹' Sᶜ] c) = 𝓝[Sᶜ] x at h
+      rwa [hnhds] at h
+    have hlim :
+        limUnder (𝓝[≠] c) (f ∘ e.symm) = limUnder (𝓝[Sᶜ] x) f := by
+      unfold limUnder
+      rw [← Filter.map_map, hmap]
+    apply (mdifferentiableAt_iff_source_of_mem_source (I := 𝓘(ℂ, ℂ))
+      (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+    rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+    change DifferentiableAt ℂ (F ∘ e.symm) c
+    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)
+      .differentiableAt hT).congr_of_eventuallyEq
+    filter_upwards [hT] with z hz
+    by_cases hzc : z = c
+    · subst z
+      simp only [Function.comp_apply, hcenter, F, if_pos hx, update_self, hlim]
+    · have hzS : e.symm z ∉ S := (hlocal z hz).2 hzc
+      simp only [Function.comp_apply, F, if_neg hzS, update_of_ne hzc]
+  · apply (hf.mdifferentiableAt (hopen.mem_nhds (show x ∈ Sᶜ from hx))).congr_of_eventuallyEq
+    filter_upwards [hopen.mem_nhds (show x ∈ Sᶜ from hx)] with y hy
+    exact if_neg (show y ∉ S from hy)
+
+variable [CompactSpace M] [PreconnectedSpace M]
+
+/-- A holomorphic function on the complement of a finite set in a compact
+connected complex surface cannot be nonconstant and take all its values
+in the closed right half-plane. -/
+theorem eqOn_of_re_nonneg_off_finite {S : Set M} (hS : S.Finite)
+    {f : M → ℂ} (hf : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) f Sᶜ)
+    (hre : ∀ x ∈ Sᶜ, 0 ≤ (f x).re) {x y : M} (hx : x ∈ Sᶜ) (hy : y ∈ Sᶜ) :
+    f x = f y := by
+  let g (x : M) := (1 + f x)⁻¹
+  have hopen : IsOpen Sᶜ := hS.isClosed.isOpen_compl
+  have hpos (x : M) (hx : x ∈ Sᶜ) : 1 ≤ (1 + f x).re := by
+    simpa only [Complex.add_re, Complex.one_re, add_zero] using add_le_add_left (hre x hx) 1
+  have hg : MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) g Sᶜ := by
+    intro z hz
+    have hn : (1 + f z : ℂ) ≠ 0 := by
+      intro h
+      have h' := hpos z hz
+      rw [h, Complex.zero_re] at h'
+      exact (not_le_of_gt zero_lt_one) h'
+    have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+      (differentiableAt_id.const_add (1 : ℂ)).inv hn
+    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+      .mdifferentiableWithinAt
+  have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+    rw [g, norm_inv]
+    exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+  obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+  have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+  have he' : 1 + f x = 1 + f y := by
+    simpa only [g, inv_inv] using congrArg (fun z : ℂ => z⁻¹) he
+  exact add_left_cancel he'
+
+/-- On a supplied compactified curve, a finite family of initially positive
+gaps acquires a zero while the other gaps stay nonnegative, provided one
+gap function varies on the connected punctured curve. -/
+theorem exists_new_contact_on_curve {ι : Type*} (J : Finset ι) {S : Set M} (hS : S.Finite)
+    (hconn : IsPreconnected Sᶜ) (H : ι → M → ℂ)
+    (hhol : ∀ i ∈ J, MDifferentiableOn 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (H i) Sᶜ)
+    {x₀ : M} (hx₀ : x₀ ∈ Sᶜ) (hstart : ∀ i ∈ J, 0 < (H i x₀).re)
+    (hvar : ∃ i ∈ J, ∃ x ∈ Sᶜ, ∃ y ∈ Sᶜ, H i x ≠ H i y) :
+    ∃ z ∈ Sᶜ, (∀ i ∈ J, 0 ≤ (H i z).re) ∧ ∃ i ∈ J, (H i z).re = 0 := by
+  obtain ⟨i, hi, x, hx, y, hy, hxy⟩ := hvar
+  have hnegative : ∃ w ∈ Sᶜ, (H i w).re < 0 := by
+    by_contra! h
+    exact hxy (eqOn_of_re_nonneg_off_finite hS (hhol i hi) h hx hy)
+  obtain ⟨w, hw, hwi⟩ := hnegative
+  let Jne : J.Nonempty := ⟨i, hi⟩
+  let m (z : M) : ℝ := J.inf' Jne (fun j => (H j z).re)
+  have hm : ContinuousOn m Sᶜ :=
+    ContinuousOn.finset_inf'_apply (f := fun j z => (H j z).re) Jne
+      (fun j hj => Complex.continuous_re.comp_continuousOn (hhol j hj).continuousOn)
+  have hmw : m w < 0 := (Finset.inf'_lt_iff Jne).2 ⟨i, hi, hwi⟩
+  have hm₀ : 0 < m x₀ := (Finset.lt_inf'_iff Jne).2 hstart
+  have hz : (0 : ℝ) ∈ m '' Sᶜ :=
+    (hconn.image _ hm).Icc_subset ⟨w, hw, rfl⟩ ⟨x₀, hx₀, rfl⟩ ⟨hmw.le, hm₀.le⟩
+  obtain ⟨z, hzS, hmz⟩ := hz
+  have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by
+    apply (Finset.le_inf'_iff Jne).1
+    change 0 ≤ m z
+    exact hmz.ge
+  obtain ⟨j, hj, he⟩ := Finset.exists_mem_eq_inf' Jne (fun k => (H k z).re)
+  exact ⟨z, hzS, hzle, j, hj, he.symm.trans hmz⟩
+
+open scoped BigOperators
+
+/-- The spectral contact step preserves every old contact and the strict
+determinant support gap on a supplied compactified deformation curve. -/
+theorem exists_new_matching_contact_on_curve {ι : Type*} [Fintype ι] [DecidableEq ι]
+          (Fin.castSucc_lt_castSucc_iff.mpr (Fin.castSucc_lt_last i)).trans_le hq
+        simpa only [Fin.succAbove_of_castSucc_lt q i.castSucc hi] using hl i.castSucc
+      have hu' (i : Fin n) : α i.castSucc ≤ a (q.succAbove i.succ) := by
+        apply (hu i.castSucc).trans
+        apply ha
+        rw [Fin.succ_castSucc]
+        by_cases hi : i.succ.castSucc < q
+        · rw [Fin.succAbove_of_castSucc_lt q i.succ hi]
+        · rw [Fin.succAbove_of_le_castSucc q i.succ (le_of_not_gt hi)]
+          exact Fin.castSucc_le_succ _
+      have hz := ih (fun j => a (q.succAbove j)) (fun i => α i.castSucc)
+        (fun i => b i.castSucc) hl' hu'
+      let L := LinearMap.mulRight ℝ ((a q : ℂ) + b (Fin.last n))
+      change z ∈ L ⁻¹' K
+      apply convexHull_min _ (hK.linear_preimage L) hz
+      rintro _ ⟨f, rfl⟩
+      change (∏ i : Fin n, ((a (q.succAbove (f i)) : ℂ) + b i.castSucc)) *
+        ((a q : ℂ) + b (Fin.last n)) ∈ K
+      apply subset_convexHull ℝ _
+      let g : Fin (n + 1) ↪ Fin (n + 2) :=
+        finSuccEquivLast.toEmbedding.trans (f.optionMap.trans (finSuccEquiv' q).symm.toEmbedding)
+      have hcast (i : Fin n) : g i.castSucc = q.succAbove (f i) := by
+        change (finSuccEquiv' q).symm (Option.map f (finSuccEquivLast i.castSucc)) = _
+        simp
+      have hlast : g (Fin.last n) = q := by
+        change (finSuccEquiv' q).symm (Option.map f (finSuccEquivLast (Fin.last n))) = _
+        simp
+      refine ⟨g, ?_⟩
+      rw [Fin.prod_univ_castSucc, hlast]
+      simp_rw [hcast]
+    have hleft := hend (Fin.last n).castSucc le_rfl
+    have hright := hend (Fin.last (n + 1)) (Fin.le_last _)
+    have hsegment : α (Fin.last n) ∈
+        segment ℝ (a (Fin.last n).castSucc) (a (Fin.last (n + 1))) := by
+      apply Icc_subset_segment
+      exact ⟨hl (Fin.last n), by simpa only [Fin.succ_last] using hu (Fin.last n)⟩
+    obtain ⟨r, s, hr, hs, hrs, hval⟩ := hsegment
+    simp only [smul_eq_mul] at hval
+    have hval' := congrArg Complex.ofReal hval
+    have hrs' := congrArg Complex.ofReal hrs
+    simp only [Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_one] at hval' hrs'
+    have hmem := hK hleft hright hr hs hrs
+    have he :
+        r • (z * ((a (Fin.last n).castSucc : ℂ) + b (Fin.last n))) +
+          s • (z * ((a (Fin.last (n + 1)) : ℂ) + b (Fin.last n))) =
+        z * ((α (Fin.last n) : ℂ) + b (Fin.last n)) := by
+      calc
+        _ = z * (((r : ℂ) * (a (Fin.last n).castSucc : ℂ) +
+            (s : ℂ) * (a (Fin.last (n + 1)) : ℂ)) + ((r : ℂ) + (s : ℂ)) * b (Fin.last n)) := by
+          simp only [Complex.real_smul]
+          ring
+        _ = _ := by rw [hval', hrs', one_mul]
+    rw [he] at hmem
+    rw [Fin.prod_univ_castSucc]
+    exact hmem
+
+/-- The full matching hull of the interlaced list is contained in the partial
+matching hull of the original list. -/
+theorem matchingHull_subset_partialMatchingHull_of_interlacing {n : ℕ}
+    (a : Fin (n + 1) → ℝ) (α : Fin n → ℝ) (b : Fin n → ℂ)
+    (hl : ∀ i, a i.castSucc ≤ α i) (hu : ∀ i, α i ≤ a i.succ) :
+    convexHull ℝ (Set.range (matchingProduct (fun i => (α i : ℂ)) b)) ⊆
+      partialMatchingHull (fun i => (a i : ℂ)) b := by
+  apply convexHull_min _ (convex_convexHull ℝ _)
+  rintro _ ⟨σ, rfl⟩
+  have h := interlacing_prod_mem_partialMatchingHull a α (b ∘ σ.symm) hl hu
+  unfold matchingProduct
+  rw [← Equiv.prod_comp σ.symm (fun j => (α (σ j) : ℂ) + b j)]
+  simp only [Equiv.apply_symm_apply]
+  apply convexHull_mono _ h
+  rintro _ ⟨f, rfl⟩
+  refine ⟨σ.toEmbedding.trans f, ?_⟩
+  change (∏ j, ((a (f (σ j)) : ℂ) + b j)) = ∏ j, ((a (f j) : ℂ) + b (σ.symm j))
+  rw [← Equiv.prod_comp σ.symm (fun j => (a (f (σ j)) : ℂ) + b j)]
+  simp only [Equiv.apply_symm_apply]
+
+/-- An interior ball absorbs simultaneous perturbations of the vertices and
+the tested point. The sum of the two error bounds must be less than the radius. -/
+theorem mem_convexHull_range_of_close_vertices
+    {E ι : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [Finite ι] [Nonempty ι]
+    {p q : ι → E} {x y : E} {r ε : ℝ}
+    (hball : Metric.closedBall x r ⊆ convexHull ℝ (Set.range p))
+    (hε : 0 ≤ ε) (hrε : 2 * ε < r)
+    (hvertices : ∀ i, dist (p i) (q i) ≤ ε) (hpoint : dist y x ≤ ε) :
+    y ∈ convexHull ℝ (Set.range q) := by
+  classical
+  by_contra hy
+  have hclosed := (Set.finite_range q).isClosed_convexHull
+  obtain ⟨f, d, hd, hdy⟩ :=
+    geometric_hahn_banach_closed_point (convex_convexHull ℝ _) hclosed hy
+  have hq (i : ι) : f (q i) < f y :=
+    (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+  have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
+    obtain ⟨i⟩ := ‹Nonempty ι›
+    simpa [hzero] using hq i
+  have hr : 0 < r := by linarith
+  have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+    (le_abs_self _).trans (by
+      simpa only [Real.dist_eq] using
+        (f.dist_le_opNorm u v).trans (mul_le_mul_of_nonneg_left h (norm_nonneg f)))
+  have hbound : ∀ z ∈ convexHull ℝ (Set.range p), f z ≤ f x + 2 * ε * ‖f‖ := by
+    apply convexHull_min _ (convex_halfSpace_le f.isLinear _)
+    rintro _ ⟨i, rfl⟩
+  have hbase := support_schurPhaseSum x p v w T hT η 1 Complex.normSq_one
+  simp only [Complex.one_re, Complex.one_im, sub_self, zero_mul, add_zero, sub_zero] at hbase
+  have h (z : ℂ) (hz : Complex.normSq z = 1) :
+      (P.re - 2 * Q.re) * (1 - z.re) + (-P.im) * z.im ≤ 0 := by
+    have hle := hmax z hz
+    have hform := support_schurPhaseSum x p v w T hT η z hz
+    change (η * (schurPhaseSum x p v w T z).det).re =
+      (η * (T.det * x)).re + (1 - z.re) * (P.re - 2 * Q.re) - z.im * P.im at hform
+    rw [hform, hbase] at hle
+    linarith only [hle]
+  obtain ⟨ha, hb⟩ := phase_support_coefficients h
+  exact ⟨ha, neg_eq_zero.mp hb⟩
+
+omit [DecidableEq ι] in
+private theorem pivot_normSq_balance (M : Matrix (Unit ⊕ ι) (Unit ⊕ ι) ℂ)
+    (hM : M * Mᴴ = Mᴴ * M) :
+    (∑ j, Complex.normSq (M (Sum.inl ()) (Sum.inr j))) =
+      ∑ i, Complex.normSq (M (Sum.inr i) (Sum.inl ())) := by
+  have hleft (z : ℂ) : (z * star z).re = Complex.normSq z :=
+    congrArg Complex.re (Complex.mul_conj z)
+  have hright (z : ℂ) : (star z * z).re = Complex.normSq z := by rw [mul_comm, hleft]
+  have h := congrArg (fun X : Matrix (Unit ⊕ ι) (Unit ⊕ ι) ℂ => (X (Sum.inl ()) (Sum.inl ())).re) hM
+  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Complex.re_sum, hleft, hright,
+    Fintype.sum_sum_type, Fintype.sum_unique] at h
+  exact add_left_cancel h
+
+omit [DecidableEq ι] in
+private theorem sum_normSq_fromBlocks (x : ℂ) (p : Matrix Unit ι ℂ)
+    (w : Matrix ι Unit ℂ) (T : Matrix ι ι ℂ) :
+    (∑ i, ∑ j, Complex.normSq (fromBlocks (fun _ _ => x) p w T i j)) =
+  let v := (InnerProductSpace.toDual ℝ E).symm L
+  have hgradient (j : J) (hj : value j = g) : 0 < ⟪gradient j, v⟫_ℝ := by
+    rw [real_inner_comm v (gradient j)]
+    change 0 < ⟪(InnerProductSpace.toDual ℝ E).symm L, gradient j⟫_ℝ
+    rw [InnerProductSpace.toDual_symm_apply]
+    have hr : 0 < r := by simpa only [map_zero] using h0
+    exact hr.trans (hsep _ (subset_convexHull ℝ S ⟨⟨j, hj⟩, rfl⟩))
+  have hstrict (j : J) : ∀ᶠ t in 𝓝[>] (0 : ℝ), g < curveValues j v t := by
+    by_cases hj : value j = g
+    · have hslope := (hderiv j v).tendsto_slope_zero_right (Ioi_mem_nhds (hgradient j hj))
+      filter_upwards [hslope, self_mem_nhdsWithin] with t ht htpos
+      change 0 < t at htpos
+      change 0 < t⁻¹ • (curveValues j v (0 + t) - curveValues j v 0) at ht
+      rw [zero_add, smul_eq_mul, hvalue j v, hj] at ht
+      exact sub_pos.mp ((mul_pos_iff_of_pos_left (inv_pos.mpr htpos)).mp ht)
+    · have hgt : g < curveValues j v 0 := by
+        rw [hvalue]
+        exact lt_of_le_of_ne (hmin j) hj.symm
+      exact ((hderiv j v).continuousAt.eventually_mem (Ioi_mem_nhds hgt)).filter_mono
+        nhdsWithin_le_nhds
+  obtain ⟨t, hgt, j, hle⟩ := ((Filter.eventually_all.mpr hstrict).and (hmax v)).exists
+  exact hle.not_gt (hgt j)
+
+variable {ι : Type*} [Fintype ι]
+
+.lake/packages/mathlib/Mathlib/Analysis/Complex/Basic.lean:325:lemma mul_conj' (z : ℂ) : z * conj z = ‖z‖ ^ 2 := RCLike.mul_conj z
+.lake/packages/mathlib/Mathlib/Analysis/Complex/Basic.lean:326:lemma conj_mul' (z : ℂ) : conj z * z = ‖z‖ ^ 2 := RCLike.conj_mul z
+.lake/packages/mathlib/Mathlib/Analysis/Complex/UnitDisc/Basic.lean:204:theorem conj_mul (z w : 𝔻) : (z * w).conj = z.conj * w.conj :=
+.lake/packages/mathlib/Mathlib/Analysis/Complex/Hadamard.lean:107:lemma norm_invInterpStrip {ε : ℝ} (hε : ε > 0) :
+.lake/packages/mathlib/Mathlib/Data/Complex/BigOperators.lean:40:theorem re_sum (f : α → ℂ) : (∑ i ∈ s, f i).re = ∑ i ∈ s, (f i).re :=
+.lake/packages/mathlib/Mathlib/Data/Complex/Basic.lean:568:theorem mul_conj (z : ℂ) : z * conj z = normSq z :=
+
+exec
+/bin/bash -lc "mkdir -p /tmp/moc-repair-baseline
+cp Lean/MOC/{Collinear,ContactTransfer,Interlacing,SchurPivot,SpectralStationarity}.lean /tmp/moc-repair-baseline/
+python3 - <<'PY'
+from pathlib import Path
+root = Path('Lean/MOC')
+edits = {
+ 'Collinear': [('Matrix.diagonal_conjTranspose, Pi.star_apply]', 'Matrix.diagonal_conjTranspose]\\n    rfl')],
+ 'ContactTransfer': [
+  ('hT hd hbound)\\n      .differentiableAt hT).congr_of_eventuallyEq', 'hT hd hbound).differentiableAt\\n      hT).congr_of_eventuallyEq'),
+  ('exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))\\n      .mdifferentiableWithinAt', 'exact (hd.mdifferentiableAt.comp z\\n      (hf.mdifferentiableAt (hopen.mem_nhds hz))).mdifferentiableWithinAt'),
+  ('rw [g, norm_inv]', 'change ‖(1 + f z)⁻¹‖ ≤ 1\\n    rw [norm_inv]'),
+  (\"(Finset.le_inf'_iff Jne).1\", \"(Finset.le_inf'_iff Jne (fun j => (H j z).re)).1\")],
+ 'Interlacing': [
+  ('refine ⟨g, ?_⟩\\n      rw', 'refine ⟨g, ?_⟩\\n      change (∏ i, ((a (g i) : ℂ) + b i)) = _\\n      rw'),
+  ('simpa [hzero] using hq i', 'exact (lt_irrefl (0 : ℝ)) (by simpa only [hzero, ContinuousLinearMap.zero_apply] using hq i)')],
+ 'SchurPivot': [('Complex.re_sum, hleft, hright,\\n    Fintype.sum_sum_type, Fintype.sum_unique', 'Fintype.sum_sum_type,\\n    Fintype.sum_unique, Complex.add_re, Complex.re_sum, hleft, hright')],
+ 'SpectralStationarity': [('(hmin j) hj.symm', '(hmin j) (Ne.symm hj)'), ('hle.not_gt (hgt j)', 'not_lt_of_ge hle (hgt j)')],
+}
+for name, replacements in edits.items():
+    p = root / (name + '.lean')
+    s = p.read_text()
+    for before, after in replacements:
+        assert s.count(before) == 1, (name, before)
+        s = s.replace(before, after)
+    p.write_text(s)
+PY
+cd Lean
+lake --no-cache build MOC.Collinear MOC.ContactTransfer MOC.Interlacing MOC.SchurPivot MOC.SpectralStationarity > /tmp/moc-repair-build.log 2>&1" in /tmp/moc-lean-fix-86_frwx8/after
+exec
+/bin/bash -lc "tail -25 /tmp/moc-repair-build.log
+ls -ld .git
+ls -a .git
+cd Lean
+head -25 MOC.lean
+rg -n 'axiom|assert_no' MOC.lean MOC/Source.lean
+diff -u /tmp/moc-repair-baseline/ContactTransfer.lean MOC/ContactTransfer.lean" in /tmp/moc-lean-fix-86_frwx8/after
+ exited 1 in 593ms:
+dr-xr-xr-x 2 dell dell 40 Nov 20 15:19 .git
+.
+..
+import MOC.Claim
+import MOC.ContactRectangle
+import MOC.MixedBound
+import MOC.Obstruction
+import MOC.PhaseMove
+import MOC.RankSum
+import MOC.Source
+
+open Lean Elab Command in
+run_cmd do
+  let env ← getEnv
+  let allowed := #[`propext, `Classical.choice, `Quot.sound]
+  let mut count := 0
+  for (name, declaration) in env.constants.toList do
+    let some idx := env.getModuleIdxFor? name | continue
+    unless (`MOC).isPrefixOf env.allImportedModuleNames[idx.toNat]! do continue
+    -- Code generation adds unsafe auxiliary declarations to the imported environment.
+    if declaration.isUnsafe then continue
+    count := count + 1
+    let extra := (← collectAxioms name).filter fun a => !allowed.contains a
+    unless extra.isEmpty do
+      throwError "{name} depends on unapproved axioms {extra}"
+  if count == 0 then
+    throwError "The MOC axiom audit found no declarations"
+  logInfo m!"Checked {count} safe MOC declarations against the standard Lean axioms"
+MOC.lean:22:      throwError "{name} depends on unapproved axioms {extra}"
+MOC.lean:24:    throwError "The MOC axiom audit found no declarations"
+MOC.lean:25:  logInfo m!"Checked {count} safe MOC declarations against the standard Lean axioms"
+--- /tmp/moc-repair-baseline/ContactTransfer.lean	2026-11-20 15:19:05.786988963 -0500
++++ MOC/ContactTransfer.lean	2026-11-20 15:19:05.880087841 -0500
+@@ -94,8 +94,8 @@
+       (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+     rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+     change DifferentiableAt ℂ (F ∘ e.symm) c
+-    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)
+-      .differentiableAt hT).congr_of_eventuallyEq
++    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound).differentiableAt
++      hT).congr_of_eventuallyEq
+     filter_upwards [hT] with z hz
+     by_cases hzc : z = c
+     · subst z
+@@ -128,10 +128,11 @@
+       exact (not_le_of_gt zero_lt_one) h'
+     have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+       (differentiableAt_id.const_add (1 : ℂ)).inv hn
+-    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+-      .mdifferentiableWithinAt
++    exact (hd.mdifferentiableAt.comp z
++      (hf.mdifferentiableAt (hopen.mem_nhds hz))).mdifferentiableWithinAt
+   have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+-    rw [g, norm_inv]
++    change ‖(1 + f z)⁻¹‖ ≤ 1
++    rw [norm_inv]
+     exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+   obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+   have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+@@ -164,7 +165,7 @@
+     (hconn.image _ hm).Icc_subset ⟨w, hw, rfl⟩ ⟨x₀, hx₀, rfl⟩ ⟨hmw.le, hm₀.le⟩
+   obtain ⟨z, hzS, hmz⟩ := hz
+   have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by
+-    apply (Finset.le_inf'_iff Jne).1
++    apply (Finset.le_inf'_iff Jne (fun j => (H j z).re)).1
+     change 0 ≤ m z
+     exact hmz.ge
+   obtain ⟨j, hj, he⟩ := Finset.exists_mem_eq_inf' Jne (fun k => (H k z).re)
+
+exec
+/bin/bash -lc 'tail -45 /tmp/moc-repair-build.log' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 5518ms:
+✔ [2672/2689] Built MOC.Core
+✔ [2673/2689] Built MOC.Weights
+
+exec
+/bin/bash -lc 'tail -35 /tmp/moc-repair-build.log
+for f in /tmp/moc-repair-baseline/*.lean; do diff -u "$f" "Lean/MOC/${f##*/}"; done
+cat /proc/self/status | rg Cpus_allowed_list' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 1721ms:
+✔ [2672/2689] Built MOC.Core
+✔ [2673/2689] Built MOC.Weights
+⚠ [2674/2689] Built MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2675/2689] Built MOC.PhaseMove
+✔ [2676/2689] Built MOC.Blocks
+--- /tmp/moc-repair-baseline/Collinear.lean	2026-11-20 15:19:05.786939654 -0500
++++ Lean/MOC/Collinear.lean	2026-11-20 15:19:05.879931064 -0500
+@@ -21,7 +21,8 @@
+ private theorem isStarNormal_add_scalar (H : Matrix ι ι ℂ) (hH : H.IsHermitian) (z : ℂ) :
+     IsStarNormal (H + Matrix.scalar ι z) := by
+   have hs : (Matrix.scalar ι z)ᴴ = Matrix.scalar ι (star z) := by
+-    simp only [Matrix.scalar_apply, Matrix.diagonal_conjTranspose, Pi.star_apply]
++    simp only [Matrix.scalar_apply, Matrix.diagonal_conjTranspose]
++    rfl
+   have hc (q : ℂ) (M : Matrix ι ι ℂ) : Commute (Matrix.scalar ι q) M :=
+     Matrix.scalar_commute q (Commute.all q) M
+   constructor
+--- /tmp/moc-repair-baseline/ContactTransfer.lean	2026-11-20 15:19:05.786988963 -0500
++++ Lean/MOC/ContactTransfer.lean	2026-11-20 15:19:05.880087841 -0500
+@@ -94,8 +94,8 @@
+       (I' := 𝓘(ℂ, ℂ)) (mem_chart_source ℂ x)).2
+     rw [hrange, mdifferentiableWithinAt_univ, mdifferentiableAt_iff_differentiableAt]
+     change DifferentiableAt ℂ (F ∘ e.symm) c
+-    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound)
+-      .differentiableAt hT).congr_of_eventuallyEq
++    apply ((Complex.differentiableOn_update_limUnder_of_bddAbove hT hd hbound).differentiableAt
++      hT).congr_of_eventuallyEq
+     filter_upwards [hT] with z hz
+     by_cases hzc : z = c
+     · subst z
+@@ -128,10 +128,11 @@
+       exact (not_le_of_gt zero_lt_one) h'
+     have hd : DifferentiableAt ℂ (fun w : ℂ => (1 + w)⁻¹) (f z) :=
+       (differentiableAt_id.const_add (1 : ℂ)).inv hn
+-    exact (hd.mdifferentiableAt.comp z (hf.mdifferentiableAt (hopen.mem_nhds hz)))
+-      .mdifferentiableWithinAt
++    exact (hd.mdifferentiableAt.comp z
++      (hf.mdifferentiableAt (hopen.mem_nhds hz))).mdifferentiableWithinAt
+   have hbounded (z : M) (hz : z ∈ Sᶜ) : ‖g z‖ ≤ 1 := by
+-    rw [g, norm_inv]
++    change ‖(1 + f z)⁻¹‖ ≤ 1
++    rw [norm_inv]
+     exact inv_le_one_of_one_le₀ ((hpos z hz).trans (Complex.re_le_norm _))
+   obtain ⟨G, hG, hEq⟩ := exists_holomorphic_extension_off_finite hS hg 1 hbounded
+   have he : g x = g y := (hEq hx).symm.trans ((hG.apply_eq_of_compactSpace x y).trans (hEq hy))
+@@ -164,7 +165,7 @@
+     (hconn.image _ hm).Icc_subset ⟨w, hw, rfl⟩ ⟨x₀, hx₀, rfl⟩ ⟨hmw.le, hm₀.le⟩
+   obtain ⟨z, hzS, hmz⟩ := hz
+   have hzle : ∀ j ∈ J, 0 ≤ (H j z).re := by
+-    apply (Finset.le_inf'_iff Jne).1
++    apply (Finset.le_inf'_iff Jne (fun j => (H j z).re)).1
+     change 0 ≤ m z
+     exact hmz.ge
+   obtain ⟨j, hj, he⟩ := Finset.exists_mem_eq_inf' Jne (fun k => (H k z).re)
+--- /tmp/moc-repair-baseline/Interlacing.lean	2026-11-20 15:19:05.787030094 -0500
++++ Lean/MOC/Interlacing.lean	2026-11-20 15:19:05.881331356 -0500
+@@ -65,6 +65,7 @@
+         change (finSuccEquiv' q).symm (Option.map f (finSuccEquivLast (Fin.last n))) = _
+         simp
+       refine ⟨g, ?_⟩
++      change (∏ i, ((a (g i) : ℂ) + b i)) = _
+       rw [Fin.prod_univ_castSucc, hlast]
+       simp_rw [hcast]
+     have hleft := hend (Fin.last n).castSucc le_rfl
+@@ -131,7 +132,7 @@
+     (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+   have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
+     obtain ⟨i⟩ := ‹Nonempty ι›
+-    simpa [hzero] using hq i
++    exact (lt_irrefl (0 : ℝ)) (by simpa only [hzero, ContinuousLinearMap.zero_apply] using hq i)
+   have hr : 0 < r := by linarith
+   have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+     (le_abs_self _).trans (by
+--- /tmp/moc-repair-baseline/SchurPivot.lean	2026-11-20 15:19:05.787068410 -0500
++++ Lean/MOC/SchurPivot.lean	2026-11-20 15:19:05.881713219 -0500
+@@ -165,8 +165,8 @@
+     congrArg Complex.re (Complex.mul_conj z)
+   have hright (z : ℂ) : (star z * z).re = Complex.normSq z := by rw [mul_comm, hleft]
+   have h := congrArg (fun X : Matrix (Unit ⊕ ι) (Unit ⊕ ι) ℂ => (X (Sum.inl ()) (Sum.inl ())).re) hM
+-  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Complex.re_sum, hleft, hright,
+-    Fintype.sum_sum_type, Fintype.sum_unique] at h
++  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Fintype.sum_sum_type,
++    Fintype.sum_unique, Complex.add_re, Complex.re_sum, hleft, hright] at h
+   exact add_left_cancel h
+ 
+ omit [DecidableEq ι] in
+--- /tmp/moc-repair-baseline/SpectralStationarity.lean	2026-11-20 15:19:05.787109184 -0500
++++ Lean/MOC/SpectralStationarity.lean	2026-11-20 15:19:05.882104013 -0500
+@@ -46,11 +46,11 @@
+       exact sub_pos.mp ((mul_pos_iff_of_pos_left (inv_pos.mpr htpos)).mp ht)
+     · have hgt : g < curveValues j v 0 := by
+         rw [hvalue]
+-        exact lt_of_le_of_ne (hmin j) hj.symm
++        exact lt_of_le_of_ne (hmin j) (Ne.symm hj)
+       exact ((hderiv j v).continuousAt.eventually_mem (Ioi_mem_nhds hgt)).filter_mono
+         nhdsWithin_le_nhds
+   obtain ⟨t, hgt, j, hle⟩ := ((Filter.eventually_all.mpr hstrict).and (hmax v)).exists
+-  exact hle.not_gt (hgt j)
++  exact not_lt_of_ge hle (hgt j)
+ 
+ variable {ι : Type*} [Fintype ι]
+ 
+Cpus_allowed_list:	0-3
+
+exec
+/bin/bash -lc "tail -45 /tmp/moc-repair-build.log
+cd Lean
+rg -n '"'^theorem norm_inv|''^lemma norm_inv|mdifferentiableWithinAt .*MDifferentiableAt|theorem MDifferentiableAt.mdifferentiableWithinAt|theorem le_inf.*iff'"' .lake/packages/mathlib/Mathlib/{Analysis,Geometry,Data/Finset} | head -24" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 9606ms:
+✔ [2672/2689] Built MOC.Core
+✔ [2673/2689] Built MOC.Weights
+⚠ [2674/2689] Built MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2675/2689] Built MOC.PhaseMove
+✔ [2676/2689] Built MOC.Blocks
+✔ [2677/2689] Built MOC.Support
+⚠ [2678/2689] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2679/2689] Built MOC.Small
+.lake/packages/mathlib/Mathlib/Data/Finset/Lattice/Fold.lean:343:@[simp] protected theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀ b ∈ s, a ≤ f b :=
+.lake/packages/mathlib/Mathlib/Data/Finset/Lattice/Fold.lean:861:theorem le_inf'_iff {a : α} : a ≤ s.inf' H f ↔ ∀ b ∈ s, a ≤ f b :=
+.lake/packages/mathlib/Mathlib/Geometry/Manifold/MFDeriv/Basic.lean:131:theorem MDifferentiableAt.mdifferentiableWithinAt (h : MDifferentiableAt I I' f x) :
+.lake/packages/mathlib/Mathlib/Analysis/Complex/Hadamard.lean:107:lemma norm_invInterpStrip {ε : ℝ} (hε : ε > 0) :
+.lake/packages/mathlib/Mathlib/Analysis/Normed/Field/Basic.lean:70:theorem norm_inv (a : α) : ‖a⁻¹‖ = ‖a‖⁻¹ :=
+.lake/packages/mathlib/Mathlib/Analysis/Normed/Group/Basic.lean:421:theorem norm_inv' (a : E) : ‖a⁻¹‖ = ‖a‖ := by simpa using norm_div_rev 1 a
+
+exec
+/bin/bash -lc 'tail -45 /tmp/moc-repair-build.log' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 2703ms:
+✔ [2672/2689] Built MOC.Core
+✔ [2673/2689] Built MOC.Weights
+⚠ [2674/2689] Built MOC.SchurPhase
+warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2675/2689] Built MOC.PhaseMove
+✔ [2676/2689] Built MOC.Blocks
+✔ [2677/2689] Built MOC.Support
+⚠ [2678/2689] Built MOC.Normal
+warning: ././././MOC/Normal.lean:195:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Normal.lean:200:100: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2679/2689] Built MOC.Small
+✖ [2680/2689] Building MOC.Interlacing
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Interlacing.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Interlacing.olean -i ././.lake/build/lib/lean/MOC/Interlacing.ilean -c ././.lake/build/ir/MOC/Interlacing.c --json
+error: ././././MOC/Interlacing.lean:135:34: type mismatch, term
+  hq i
+after simplification has type
+  f (q i) < f y : Prop
+but is expected to have type
+  0 < 0 : Prop
+error: Lean exited with code 1
+⚠ [2681/2689] Built MOC.SchurPivot
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SchurPivot.lean:212:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2682/2689] Built MOC.Geometry
+✔ [2683/2689] Built MOC.Jacobi
+✔ [2684/2689] Built MOC.ContactTransfer
+⚠ [2685/2689] Built MOC.SpectralStationarity
+warning: ././././MOC/SpectralStationarity.lean:72:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+
+exec
+/bin/bash -lc "rg -n 'theorem norm_pos_iff|lemma norm_pos_iff|theorem geometric_hahn_banach_closed_point' Lean/.lake/packages/mathlib/Mathlib | head -20
+tail -18 /tmp/moc-repair-build.log" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 2633ms:
+Lean/.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/HahnBanach/Separation.lean:185:theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) (disj : x ∉ s) :
+Lean/.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/HahnBanach/Separation.lean:300:theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClosed s)
+Lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Group/Basic.lean:1243:lemma norm_pos_iff' : 0 < ‖a‖ ↔ a ≠ 1 := by rw [← not_le, norm_le_zero_iff']
+Lean/.lake/packages/mathlib/Mathlib/Topology/Algebra/Valued/NormedValued.lean:93:theorem norm_pos_iff_valuation_pos {x : L} : 0 < Valued.norm x ↔ (0 : Γ₀) < v x := by
+error: Lean exited with code 1
+⚠ [2681/2689] Built MOC.SchurPivot
+warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SchurPivot.lean:212:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+✔ [2682/2689] Built MOC.Geometry
+✔ [2683/2689] Built MOC.Jacobi
+✔ [2684/2689] Built MOC.ContactTransfer
+⚠ [2685/2689] Built MOC.SpectralStationarity
+warning: ././././MOC/SpectralStationarity.lean:72:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+
+apply patch
+patch: completed
+/tmp/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+diff --git a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+index 32a6bd2c2a2a6a53e3fefed1b2f88288ee9a322a..5d0914b421557cc6a6aee3a35ed115042ab6330e
+--- a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
++++ b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+@@ -132,7 +132,10 @@
+     (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+   have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
+     obtain ⟨i⟩ := ‹Nonempty ι›
+-    exact (lt_irrefl (0 : ℝ)) (by simpa only [hzero, ContinuousLinearMap.zero_apply] using hq i)
++    have hi := hq i
++    rw [show f = 0 from hzero, ContinuousLinearMap.zero_apply,
++      ContinuousLinearMap.zero_apply] at hi
++    exact (lt_irrefl (0 : ℝ)) hi
+   have hr : 0 < r := by linarith
+   have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+     (le_abs_self _).trans (by
+
+exec
+/bin/bash -lc 'cd Lean
+lake --no-cache build MOC.Interlacing >/tmp/moc-repair-interlacing.log 2>&1' in /tmp/moc-lean-fix-86_frwx8/after
+exec
+/bin/bash -lc "tail -18 /tmp/moc-repair-build.log
+tail -12 /tmp/moc-repair-interlacing.log
+cd Lean
+head -12 MOC/{Collinear,ContactTransfer,Interlacing,SchurPivot,SpectralStationarity}.lean
+sed -n '180,190p' .lake/packages/mathlib/Mathlib/Analysis/NormedSpace/HahnBanach/Separation.lean" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 6677ms:
+✔ [2686/2689] Built MOC.Variational
+⚠ [2687/2689] Built MOC.Singular
+warning: ././././MOC/Singular.lean:87:45: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/Singular.lean:87:45: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+warning: ././././MOC/Singular.lean:255:54: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/Singular.lean:304:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.weighted_squared_distance':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/Singular.lean:360:8: automatically included section variable(s) unused in theorem '_private.MOC.Singular.0.MOC.sharedMoments_on_three':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+==> MOC/Collinear.lean <==
+import MOC.Geometry
+import MOC.NormalOrbit
+import MOC.Support
+
+/-! Determinant hull inclusion for spectra on parallel affine lines. -/
+
+open BigOperators Matrix
+
+namespace MOC
+
+noncomputable section
+
+
+==> MOC/ContactTransfer.lean <==
+import MOC.Support
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Geometry.Manifold.Complex
+import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
+import Mathlib.Topology.Order.IntermediateValue
+import Mathlib.Topology.Order.Lattice
+
+/-! The analytic contact step for a supplied compactified curve. A holomorphic
+gap function with nonnegative real part on the entire punctured curve would
+have a bounded reciprocal transform and hence be constant. -/
+
+open Filter Function Set
+
+==> MOC/Interlacing.lean <==
+import MOC.Blocks
+import Mathlib.Analysis.Convex.Topology
+import Mathlib.Analysis.NormedSpace.HahnBanach.Separation
+import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Order.Fin.Basic
+import Mathlib.Tactic.Linarith
+
+/-! The hull inclusion for interlacing lists in Shitov's determinant argument
+(2025, Lemma 17, doi:10.4213/im9292e). -/
+
+open BigOperators Matrix
+
+
+==> MOC/SchurPivot.lean <==
+import MOC.PhaseMove
+import MOC.SchurPhase
+import Mathlib.LinearAlgebra.Matrix.SchurComplement
+
+/-! A phase at the first vector of a Schur basis. The first column of the
+initial sum has zero entries below its pivot, but the first row can couple
+to the remaining block. -/
+
+open BigOperators Matrix
+
+namespace MOC
+
+
+==> MOC/SpectralStationarity.lean <==
+import MOC.Support
+import Mathlib.Analysis.Calculus.Deriv.Slope
+import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Tactic.Linarith
+
+/-! First variation of the smallest support deficit over a finite set of matchings. -/
+
+open BigOperators Filter Matrix
+open scoped ComplexConjugate InnerProductSpace Topology
+
+namespace MOC
+
+  let ⟨f, _u, v, ha, hst, hb⟩ :=
+    geometric_hahn_banach_compact_closed (convex_singleton x) isCompact_singleton ht₁ ht₂
+      (disjoint_singleton_left.2 disj)
+  ⟨f, v, hst.trans' <| ha x <| mem_singleton _, hb⟩
+
+theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) (disj : x ∉ s) :
+    ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ u < f x :=
+  let ⟨f, s, _t, ha, hst, hb⟩ :=
+    geometric_hahn_banach_closed_compact hs₁ hs₂ (convex_singleton x) isCompact_singleton
+      (disjoint_singleton_right.2 disj)
+  ⟨f, s, ha, hst.trans <| hb x <| mem_singleton _⟩
+
+codex
+ContactTransfer, SchurPivot, and SpectralStationarity have passed. I’ve made the rewrite in Interlacing explicit, and its targeted rebuild is running alongside the remaining Collinear build.
+exec
+/bin/bash -lc 'tail -25 /tmp/moc-repair-build.log
+tail -25 /tmp/moc-repair-interlacing.log
+ps -o pid,etime,%cpu,comm -C lean -C lake | tail -15' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 1284ms:
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2688/2689] Built MOC.NormalOrbit
+warning: ././././MOC/NormalOrbit.lean:32:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_comp':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:41:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_add':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+    PID     ELAPSED %CPU COMMAND
+
+ exited 1 in 19612ms:
+ exited 1 in 88658ms:
+exec
+/bin/bash -lc 'tail -20 /tmp/moc-repair-build.log
+tail -25 /tmp/moc-repair-interlacing.log' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 218ms:
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+  [DecidableEq ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2689/2689] Built MOC.Collinear
+warning: ././././MOC/Collinear.lean:15:8: automatically included section variable(s) unused in theorem '_private.MOC.Collinear.0.MOC.real_diagonal_isHermitian':
+  [Fintype ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype ι] in theorem ...
+note: this linter can be disabled with `set_option linter.unusedSectionVars false`
+Some required builds logged failures:
+- MOC.Interlacing
+error: build failed
+✖ [2040/2040] Building MOC.Interlacing
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Interlacing.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Interlacing.olean -i ././.lake/build/lib/lean/MOC/Interlacing.ilean -c ././.lake/build/ir/MOC/Interlacing.c --json
+error: ././././MOC/Interlacing.lean:136:24: type mismatch
+  hzero
+has type
+  ?m.14661 = @OfNat.ofNat ?m.14640 0 (@Zero.toOfNat0 ?m.14640 NegZeroClass.toZero) : Prop
+but is expected to have type
+  f = @OfNat.ofNat (E →L[ℝ] ℝ) 0 (@Zero.toOfNat0 (E →L[ℝ] ℝ) ContinuousLinearMap.zero) : Prop
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Interlacing
+error: build failed
+
+apply patch
+patch: completed
+/tmp/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+diff --git a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+index 32a6bd2c2a2a6a53e3fefed1b2f88288ee9a322a..ce72e32b735f7be7ad6a2cad56d767b8282710a0
+--- a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
++++ b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+@@ -130,9 +130,11 @@
+     geometric_hahn_banach_closed_point (convex_convexHull ℝ _) hclosed hy
+   have hq (i : ι) : f (q i) < f y :=
+     (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+-  have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
++  have hf : 0 < ‖f‖ := by
++    apply norm_pos_iff.mpr
++    intro hzero
+     obtain ⟨i⟩ := ‹Nonempty ι›
+-    exact (lt_irrefl (0 : ℝ)) (by simpa only [hzero, ContinuousLinearMap.zero_apply] using hq i)
++    simpa [hzero] using hq i
+   have hr : 0 < r := by linarith
+   have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+     (le_abs_self _).trans (by
+
+exec
+/bin/bash -lc 'cd Lean
+lake --no-cache build MOC.Collinear MOC.ContactTransfer MOC.Interlacing MOC.SchurPivot MOC.SpectralStationarity > /tmp/moc-repair-final.log 2>&1' in /tmp/moc-lean-fix-86_frwx8/after
+2026-11-20T20:20:50.748934Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`/bin/bash -lc 'cd Lean\\naudit=$(mktemp /tmp/moc-axiom-audit-XXXXXX.lean)\\ntrap '\\\"'rm -f \\\\\\\"\\\"'$audit\\\"'\\\"' EXIT\\nfor module in Collinear ContactTransfer Interlacing SchurPivot SpectralStationarity; do\\n  printf 'import MOC.%s\\\\\\\\n' \\\\\\\"\\\"'$module\\\"\\ndone > \\\"$audit\\\"\\nsed -n '\\\"'/\\\"'^open Lean Elab Command in/,$p'\\\"' MOC.lean >> \\\\\\\"\\\"'$audit\\\"\\ntest -f .lake/build/lib/lean/MOC/Interlacing.olean && lake env lean \\\"$audit\\\"'` rejected: rm -f style commands are not permitted. Use a safer approach\")" }
+ exited 1 in 7645ms:
+exec
+/bin/bash -lc 'tail -22 /tmp/moc-repair-final.log' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 572ms:
+r ε : ℝ
+hball : Metric.closedBall x r ⊆ (convexHull ℝ) (Set.range p)
+hε : 0 ≤ ε
+hrε : 2 * ε < r
+hvertices : ∀ (i : ι), dist (p i) (q i) ≤ ε
+hpoint : dist y x ≤ ε
+hy : y ∉ (convexHull ℝ) (Set.range q)
+hclosed : IsClosed ((convexHull ℝ) (Set.range q))
+f : E →L[ℝ] ℝ
+d : ℝ
+hd : ∀ a ∈ (convexHull ℝ) (Set.range q), f a < d
+hdy : d < f y
+hq : ∀ (i : ι), f (q i) < f y
+hf : 0 < ‖f‖
+hr : 0 < r
+hlip : ∀ {u v : E}, dist u v ≤ ε → f u - f v ≤ ‖f‖ * ε
+i : ι
+⊢ False failed
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Interlacing
+error: build failed
+
+exec
+/bin/bash -lc "rg -n '"'^error:|''^warning:'"' /tmp/moc-repair-final.log | tail -14
+tail -58 /tmp/moc-repair-final.log
+sed -n '134,190p' Lean/MOC/Interlacing.lean" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 6508ms:
+34:warning: ././././MOC/NormalOrbit.lean:50:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.unitaryConj_adjoint':
+39:warning: ././././MOC/NormalOrbit.lean:60:8: automatically included section variable(s) unused in theorem '_private.MOC.NormalOrbit.0.MOC.frobeniusSq_eq_trace':
+45:warning: ././././MOC/Collinear.lean:15:8: automatically included section variable(s) unused in theorem '_private.MOC.Collinear.0.MOC.real_diagonal_isHermitian':
+51:warning: ././././MOC/SchurPhase.lean:97:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+54:warning: ././././MOC/SchurPivot.lean:109:22: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+56:warning: ././././MOC/SchurPivot.lean:212:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+59:warning: ././././MOC/SpectralStationarity.lean:72:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+61:warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+63:warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+65:warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+69:error: ././././MOC/Interlacing.lean:134:4: tactic 'apply' failed, failed to unify
+95:error: ././././MOC/Interlacing.lean:146:4: linarith failed to find a contradiction
+123:error: Lean exited with code 1
+126:error: build failed
+error: ././././MOC/Interlacing.lean:134:4: tactic 'apply' failed, failed to unify
+  0 < @norm ?m.14645 NormedAddGroup.toNorm ?m.14666
+with
+  0 < @norm (E →L[ℝ] ℝ) ContinuousLinearMap.hasOpNorm f
+E : Type u_1
+ι : Type u_2
+inst✝³ : NormedAddCommGroup E
+inst✝² : NormedSpace ℝ E
+inst✝¹ : Finite ι
+inst✝ : Nonempty ι
+p q : ι → E
+x y : E
+r ε : ℝ
+hball : Metric.closedBall x r ⊆ (convexHull ℝ) (Set.range p)
+hε : 0 ≤ ε
+hrε : 2 * ε < r
+hvertices : ∀ (i : ι), dist (p i) (q i) ≤ ε
+hpoint : dist y x ≤ ε
+hy : y ∉ (convexHull ℝ) (Set.range q)
+hclosed : IsClosed ((convexHull ℝ) (Set.range q))
+f : E →L[ℝ] ℝ
+d : ℝ
+hd : ∀ a ∈ (convexHull ℝ) (Set.range q), f a < d
+hdy : d < f y
+hq : ∀ (i : ι), f (q i) < f y
+⊢ 0 < ‖f‖
+error: ././././MOC/Interlacing.lean:146:4: linarith failed to find a contradiction
+case intro
+E : Type u_1
+ι : Type u_2
+inst✝³ : NormedAddCommGroup E
+inst✝² : NormedSpace ℝ E
+inst✝¹ : Finite ι
+inst✝ : Nonempty ι
+p q : ι → E
+x y : E
+r ε : ℝ
+hball : Metric.closedBall x r ⊆ (convexHull ℝ) (Set.range p)
+hε : 0 ≤ ε
+hrε : 2 * ε < r
+hvertices : ∀ (i : ι), dist (p i) (q i) ≤ ε
+hpoint : dist y x ≤ ε
+hy : y ∉ (convexHull ℝ) (Set.range q)
+hclosed : IsClosed ((convexHull ℝ) (Set.range q))
+f : E →L[ℝ] ℝ
+d : ℝ
+hd : ∀ a ∈ (convexHull ℝ) (Set.range q), f a < d
+hdy : d < f y
+hq : ∀ (i : ι), f (q i) < f y
+hf : 0 < ‖f‖
+hr : 0 < r
+hlip : ∀ {u v : E}, dist u v ≤ ε → f u - f v ≤ ‖f‖ * ε
+i : ι
+⊢ False failed
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Interlacing
+error: build failed
+    apply norm_pos_iff.mpr
+    intro hzero
+    obtain ⟨i⟩ := ‹Nonempty ι›
+    simpa [hzero] using hq i
+  have hr : 0 < r := by linarith
+  have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+    (le_abs_self _).trans (by
+      simpa only [Real.dist_eq] using
+        (f.dist_le_opNorm u v).trans (mul_le_mul_of_nonneg_left h (norm_nonneg f)))
+  have hbound : ∀ z ∈ convexHull ℝ (Set.range p), f z ≤ f x + 2 * ε * ‖f‖ := by
+    apply convexHull_min _ (convex_halfSpace_le f.isLinear _)
+    rintro _ ⟨i, rfl⟩
+    nlinarith only [hlip (hvertices i), (hq i).le, hlip hpoint]
+  have hball' (z : E) (hz : ‖z‖ ≤ r) : f z ≤ 2 * ε * ‖f‖ := by
+    have hz' : x + z ∈ Metric.closedBall x r := by
+      simpa only [Metric.mem_closedBall, dist_eq_norm, add_sub_cancel_left] using hz
+    simpa only [map_add, add_le_add_iff_left] using hbound _ (hball hz')
+  have hnorm : ‖f‖ ≤ 2 * ε * ‖f‖ / r := by
+    apply f.opNorm_le_bound' (div_nonneg
+      (mul_nonneg (mul_nonneg zero_le_two hε) (norm_nonneg f)) hr.le)
+    intro z hz
+    have hz' : 0 < ‖z‖ := lt_of_le_of_ne (norm_nonneg z) hz.symm
+    let t := r / ‖z‖
+    have ht : 0 ≤ t := div_nonneg hr.le hz'.le
+    have hsize : ‖t • z‖ ≤ r := by
+      rw [norm_smul, Real.norm_of_nonneg ht]
+      change r / ‖z‖ * ‖z‖ ≤ r
+      rw [div_mul_cancel₀ _ hz]
+    have hup := hball' (t • z) hsize
+    have hdown := hball' (-(t • z)) (by simpa only [norm_neg] using hsize)
+    rw [map_neg] at hdown
+    have hnorm' : ‖f (t • z)‖ ≤ 2 * ε * ‖f‖ := by
+      rw [Real.norm_eq_abs, abs_le]
+      exact ⟨by linarith only [hdown], hup⟩
+    rw [map_smul, smul_eq_mul, norm_mul, Real.norm_of_nonneg ht] at hnorm'
+    have hmul : r * ‖f z‖ ≤ (2 * ε * ‖f‖) * ‖z‖ := by
+      apply (div_le_iff₀ hz').mp
+      simpa only [t, div_mul_eq_mul_div] using hnorm'
+    rw [div_mul_eq_mul_div]
+    exact (le_div_iff₀ hr).mpr (by simpa only [mul_comm ‖f z‖ r] using hmul)
+  have habsurd := (le_div_iff₀ hr).mp hnorm
+  have hlt := mul_pos hf (sub_pos.mpr hrε)
+  nlinarith only [habsurd, hlt]
+
+/-- Deleting one row and column of a unitary diagonalization produces a
+determinant weighted by the squared moduli in the deleted row. -/
+theorem det_principal_unitary_diagonalization {n : ℕ}
+    (a : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
+    (hU : IsUnitary U) (p : Fin (n + 1)) :
+    ((U * diagonal a * Uᴴ).submatrix p.succAbove p.succAbove).det =
+      ∑ i, (Complex.normSq (U p i) : ℂ) * ∏ j ∈ Finset.univ.erase i, a j := by
+  let D := diagonal a
+  have hadj (X Y : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) (hXY : X * Y = 1) :
+      X.adjugate = X.det • Y := by
+    calc
+      X.adjugate = X.adjugate * (X * Y) := by rw [hXY, Matrix.mul_one]
+      _ = (X.adjugate * X) * Y := (Matrix.mul_assoc _ _ _).symm
+
+apply patch
+patch: completed
+/tmp/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+diff --git a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+index 32a6bd2c2a2a6a53e3fefed1b2f88288ee9a322a..353dacc4897744108d9e3d6355e12a373bb4880c
+--- a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
++++ b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+@@ -130,9 +130,11 @@
+     geometric_hahn_banach_closed_point (convex_convexHull ℝ _) hclosed hy
+   have hq (i : ι) : f (q i) < f y :=
+     (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+-  have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
++  have hf : 0 < ‖f‖ := by
++    apply (norm_pos_iff (a := f)).mpr
++    intro hzero
+     obtain ⟨i⟩ := ‹Nonempty ι›
+-    exact (lt_irrefl (0 : ℝ)) (by simpa only [hzero, ContinuousLinearMap.zero_apply] using hq i)
++    simpa [hzero] using hq i
+   have hr : 0 < r := by linarith
+   have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+     (le_abs_self _).trans (by
+@@ -141,6 +143,7 @@
+   have hbound : ∀ z ∈ convexHull ℝ (Set.range p), f z ≤ f x + 2 * ε * ‖f‖ := by
+     apply convexHull_min _ (convex_halfSpace_le f.isLinear _)
+     rintro _ ⟨i, rfl⟩
++    change f (p i) ≤ f x + 2 * ε * ‖f‖
+     nlinarith only [hlip (hvertices i), (hq i).le, hlip hpoint]
+   have hball' (z : E) (hz : ‖z‖ ≤ r) : f z ≤ 2 * ε * ‖f‖ := by
+     have hz' : x + z ∈ Metric.closedBall x r := by
+
+exec
+/bin/bash -lc 'cd Lean
+lake --no-cache build MOC.Collinear MOC.ContactTransfer MOC.Interlacing MOC.SchurPivot MOC.SpectralStationarity > /tmp/moc-repair-final.log 2>&1' in /tmp/moc-lean-fix-86_frwx8/after
+ exited 1 in 3990ms:
+exec
+/bin/bash -lc 'tail -18 /tmp/moc-repair-final.log' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 150ms:
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+✖ [2689/2689] Building MOC.Interlacing
+trace: .> LEAN_PATH=././.lake/packages/Cli/.lake/build/lib/lean:././.lake/packages/batteries/.lake/build/lib/lean:././.lake/packages/Qq/.lake/build/lib/lean:././.lake/packages/aesop/.lake/build/lib/lean:././.lake/packages/proofwidgets/.lake/build/lib/lean:././.lake/packages/importGraph/.lake/build/lib/lean:././.lake/packages/LeanSearchClient/.lake/build/lib/lean:././.lake/packages/plausible/.lake/build/lib/lean:././.lake/packages/mathlib/.lake/build/lib/lean:././.lake/build/lib/lean /tmp/moc-toolchain/lean-4.19.0-linux/bin/lean ././././MOC/Interlacing.lean -R ./././. -o ././.lake/build/lib/lean/MOC/Interlacing.olean -i ././.lake/build/lib/lean/MOC/Interlacing.ilean -c ././.lake/build/ir/MOC/Interlacing.c --json
+error: ././././MOC/Interlacing.lean:134:11: failed to synthesize
+  NormedAddGroup (E →L[ℝ] ℝ)
+
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././MOC/Interlacing.lean:135:4: no goals to be solved
+error: Lean exited with code 1
+Some required builds logged failures:
+- MOC.Interlacing
+error: build failed
+
+exec
+/bin/bash -lc "cd Lean
+rg -n 'theorem .*norm.*(zero|pos)|lemma .*norm.*(zero|pos)|instance.*NormedAddCommGroup' .lake/packages/mathlib/Mathlib/Analysis/Normed/Operator | head -75
+rg -n 'OperatorNorm' .lake/packages/mathlib/Mathlib/Analysis/NormedSpace/HahnBanach/Separation.lean" in /tmp/moc-lean-fix-86_frwx8/after
+ exited 1 in 315ms:
+.lake/packages/mathlib/Mathlib/Analysis/Normed/Operator/Banach.lean:305:theorem nonlinearRightInverseOfSurjective_nnnorm_pos (f : E →SL[σ] F)
+
+exec
+/bin/bash -lc "cd Lean
+rg -n 'opNorm_zero|opNorm_pos|opNorm_eq_zero|instance.*NormedAddCommGroup' .lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm* | head -80
+rg -n 'theorem .*le_opNorm' .lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm* | head -20" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 147ms:
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:175:theorem opNorm_zero : ‖(0 : E →SL[σ₁₂] F)‖ = 0 :=
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:291:  .ofSMulLE norm opNorm_zero opNorm_add_le opNorm_smul_le
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/NormedSpace.lean:95:theorem opNorm_zero_iff [RingHomIsometric σ₁₂] : ‖f‖ = 0 ↔ f = 0 :=
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/NormedSpace.lean:103:      exact opNorm_zero)
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/NormedSpace.lean:121:instance toNormedAddCommGroup [RingHomIsometric σ₁₂] : NormedAddCommGroup (E →SL[σ₁₂] F) :=
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/NormedSpace.lean:122:  NormedAddCommGroup.ofSeparation fun f => (opNorm_zero_iff f).mp
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:190:theorem le_opNorm : ‖f x‖ ≤ ‖f‖ * ‖x‖ := (isLeast_opNorm f).1.2 x
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:193:theorem dist_le_opNorm (x y : E) : dist (f x) (f y) ≤ ‖f‖ * dist x y := by
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:202:theorem le_opNorm_of_le {c : ℝ} {x} (h : ‖x‖ ≤ c) : ‖f x‖ ≤ ‖f‖ * c :=
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:215:theorem ratio_le_opNorm : ‖f x‖ / ‖x‖ ≤ ‖f‖ :=
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Basic.lean:220:theorem unit_le_opNorm : ‖x‖ ≤ 1 → ‖f x‖ ≤ ‖f‖ :=
+.lake/packages/mathlib/Mathlib/Analysis/NormedSpace/OperatorNorm/Bilinear.lean:66:theorem le_opNorm₂ [RingHomIsometric σ₁₃] (f : E →SL[σ₁₃] F →SL[σ₂₃] G) (x : E) (y : F) :
+
+apply patch
+patch: completed
+/tmp/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+diff --git a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+index 32a6bd2c2a2a6a53e3fefed1b2f88288ee9a322a..8a49ac348464963c5e4eeb9bdde56fb7b3eaa820
+--- a/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
++++ b/moc-lean-fix-86_frwx8/after/Lean/MOC/Interlacing.lean
+@@ -1,6 +1,7 @@
+ import MOC.Blocks
+ import Mathlib.Analysis.Convex.Topology
+ import Mathlib.Analysis.NormedSpace.HahnBanach.Separation
++import Mathlib.Analysis.NormedSpace.OperatorNorm.NormedSpace
+ import Mathlib.Logic.Equiv.Fin.Basic
+ import Mathlib.Order.Fin.Basic
+ import Mathlib.Tactic.Linarith
+@@ -130,9 +131,9 @@
+     geometric_hahn_banach_closed_point (convex_convexHull ℝ _) hclosed hy
+   have hq (i : ι) : f (q i) < f y :=
+     (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+-  have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
++  have hf : 0 < ‖f‖ := (norm_pos_iff (a := f)).mpr fun hzero => by
+     obtain ⟨i⟩ := ‹Nonempty ι›
+-    exact (lt_irrefl (0 : ℝ)) (by simpa only [hzero, ContinuousLinearMap.zero_apply] using hq i)
++    simpa [hzero] using hq i
+   have hr : 0 < r := by linarith
+   have hlip {u v : E} (h : dist u v ≤ ε) : f u - f v ≤ ‖f‖ * ε :=
+     (le_abs_self _).trans (by
+@@ -141,6 +142,7 @@
+   have hbound : ∀ z ∈ convexHull ℝ (Set.range p), f z ≤ f x + 2 * ε * ‖f‖ := by
+     apply convexHull_min _ (convex_halfSpace_le f.isLinear _)
+     rintro _ ⟨i, rfl⟩
++    change f (p i) ≤ f x + 2 * ε * ‖f‖
+     nlinarith only [hlip (hvertices i), (hq i).le, hlip hpoint]
+   have hball' (z : E) (hz : ‖z‖ ≤ r) : f z ≤ 2 * ε * ‖f‖ := by
+     have hz' : x + z ∈ Metric.closedBall x r := by
+
+exec
+/bin/bash -lc 'cd Lean
+lake --no-cache build MOC.Collinear MOC.ContactTransfer MOC.Interlacing MOC.SchurPivot MOC.SpectralStationarity > /tmp/moc-repair-final.log 2>&1 && (
+  audit=$(mktemp /tmp/moc-axiom-audit-XXXXXX.lean)
+  trap '"'unlink \""'$audit"'"' EXIT
+  for module in Collinear ContactTransfer Interlacing SchurPivot SpectralStationarity; do
+    printf 'import MOC.%s\\n' \""'$module"
+  done > "$audit"
+  sed -n '"'/"'^open Lean Elab Command in/,$p'"' MOC.lean >> \""'$audit"
+  lake env lean "$audit"
+)' in /tmp/moc-lean-fix-86_frwx8/after
+exec
+/bin/bash -lc 'tail -12 /tmp/moc-repair-final.log
+diff -u /tmp/moc-repair-baseline/Interlacing.lean Lean/MOC/Interlacing.lean' in /tmp/moc-lean-fix-86_frwx8/after
+ exited 1 in 788ms:
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [2688/2689] Replayed MOC.SpectralStationarity
+warning: ././././MOC/SpectralStationarity.lean:72:66: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:77:90: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+note: this linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
+warning: ././././MOC/SpectralStationarity.lean:102:25: 'ring' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+✔ [2689/2689] Built MOC.Interlacing
+Build completed successfully.
+--- /tmp/moc-repair-baseline/Interlacing.lean	2026-11-20 15:19:05.787030094 -0500
++++ Lean/MOC/Interlacing.lean	2026-11-20 15:21:35.087540631 -0500
+@@ -1,6 +1,7 @@
+ import MOC.Blocks
+ import Mathlib.Analysis.Convex.Topology
+ import Mathlib.Analysis.NormedSpace.HahnBanach.Separation
++import Mathlib.Analysis.NormedSpace.OperatorNorm.NormedSpace
+ import Mathlib.Logic.Equiv.Fin.Basic
+ import Mathlib.Order.Fin.Basic
+ import Mathlib.Tactic.Linarith
+@@ -65,6 +66,7 @@
+         change (finSuccEquiv' q).symm (Option.map f (finSuccEquivLast (Fin.last n))) = _
+         simp
+       refine ⟨g, ?_⟩
++      change (∏ i, ((a (g i) : ℂ) + b i)) = _
+       rw [Fin.prod_univ_castSucc, hlast]
+       simp_rw [hcast]
+     have hleft := hend (Fin.last n).castSucc le_rfl
+@@ -129,7 +131,7 @@
+     geometric_hahn_banach_closed_point (convex_convexHull ℝ _) hclosed hy
+   have hq (i : ι) : f (q i) < f y :=
+     (hd _ (subset_convexHull ℝ _ ⟨i, rfl⟩)).trans hdy
+-  have hf : 0 < ‖f‖ := norm_pos_iff.mpr fun hzero => by
++  have hf : 0 < ‖f‖ := (norm_pos_iff (a := f)).mpr fun hzero => by
+     obtain ⟨i⟩ := ‹Nonempty ι›
+     simpa [hzero] using hq i
+   have hr : 0 < r := by linarith
+@@ -140,6 +142,7 @@
+   have hbound : ∀ z ∈ convexHull ℝ (Set.range p), f z ≤ f x + 2 * ε * ‖f‖ := by
+     apply convexHull_min _ (convex_halfSpace_le f.isLinear _)
+     rintro _ ⟨i, rfl⟩
++    change f (p i) ≤ f x + 2 * ε * ‖f‖
+     nlinarith only [hlip (hvertices i), (hq i).le, hlip hpoint]
+   have hball' (z : E) (hz : ‖z‖ ≤ r) : f z ≤ 2 * ε * ‖f‖ := by
+     have hz' : x + z ∈ Metric.closedBall x r := by
+
+exec
+/bin/bash -lc 'find Lean -path Lean/.lake -prune -o -type f -newer /tmp/moc-repair-baseline/Collinear.lean -print
+node /home/dell/.agents/skills/maintain-project-knowledge/scripts/validate-docs.mjs' in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 2472ms:
+Lean/MOC/ContactTransfer.lean
+Lean/MOC/Interlacing.lean
+Lean/MOC/SpectralStationarity.lean
+Lean/MOC/SchurPivot.lean
+Lean/MOC/Collinear.lean
+Validated core documents: 0 (0 words); references: 0; evidence files: 0.
+Index coverage, internal links, core limits, reference contracts, and evidence ownership are valid.
+
+exec
+/bin/bash -lc "ps -eo pid,etime,%cpu,%mem,comm,args | rg 'moc-axiom|lake env lean' | cut -c 1-220" in /tmp/moc-lean-fix-86_frwx8/after
+ succeeded in 5029ms:
+      1       00:04  0.4  0.0 codex           codex-linux-sandbox --sandbox-policy-cwd /tmp/moc-lean-fix-86_frwx8/after --command-cwd /tmp/moc-lean-fix-86_frwx8/after --permission-profile {"type":"managed","file_system":
+      2       00:04  6.6  0.0 bash            /bin/bash -c ps -eo pid,etime,%cpu,%mem,comm,args | rg 'moc-axiom|lake env lean' | cut -c 1-220
+     38       00:00  0.0  0.0 rg              rg moc-axiom|lake env lean
+

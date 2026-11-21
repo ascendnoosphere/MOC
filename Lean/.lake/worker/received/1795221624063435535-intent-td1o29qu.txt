@@ -1,0 +1,2 @@
+lean: prove the determinant hull bound for two Hermitian spectra
+Lean/MOC/Hermitian.lean

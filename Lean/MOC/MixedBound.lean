@@ -202,6 +202,7 @@ private theorem vec4_one {α : Type*} (a b c d : α) : ![a, b, c, d] 1 = b := rf
 private theorem vec4_two {α : Type*} (a b c d : α) : ![a, b, c, d] 2 = c := rfl
 private theorem vec4_three {α : Type*} (a b c d : α) : ![a, b, c, d] 3 = d := rfl
 
+<<<<<<< HEAD
 /-- The squared-entry contribution and three signed two-by-two minors used
 in the order-four weighted-mixed inequality. -/
 theorem quaternionRotation_mixed_coordinates (q r : Fin 4 → ℝ)
@@ -213,6 +214,17 @@ theorem quaternionRotation_mixed_coordinates (q r : Fin 4 → ℝ)
     U 2 2 * U 3 3 - U 2 3 * U 3 2 = q 0 ^ 2 + q 1 ^ 2 + r 0 ^ 2 + r 1 ^ 2 - 1 ∧
     U 1 1 * U 2 2 - U 1 2 * U 2 1 = 1 - q 1 ^ 2 - q 2 ^ 2 - r 1 ^ 2 - r 2 ^ 2 ∧
     U 1 0 * U 3 2 - U 1 2 * U 3 0 = r 0 ^ 2 + r 2 ^ 2 - q 0 ^ 2 - q 2 ^ 2 := by
+=======
+/-- The mixed cost is the sum of two squared entries and the difference
+of two squared minors in the canonical order-four facet. -/
+theorem mixed_quaternion_rotation_lower (q r : Fin 4 → ℝ)
+    (hq : q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2 + q 3 ^ 2 = 1)
+    (hr : r 0 ^ 2 + r 1 ^ 2 + r 2 ^ 2 + r 3 ^ 2 = 1) :
+    let U := quaternionRotation q r;
+    -(2 / 27 : ℝ) ≤ U 1 2 ^ 2 + U 2 1 ^ 2 +
+      (U 2 2 * U 3 3 - U 2 3 * U 3 2) ^ 2 -
+      (U 1 0 * U 3 2 - U 1 2 * U 3 0) ^ 2 := by
+>>>>>>> origin/main
   let U := quaternionRotation q r
   have hentries : U 1 2 ^ 2 + U 2 1 ^ 2 =
       2 * ((q 0 * r 3 - q 3 * r 0) ^ 2 + (q 1 * r 2 + q 2 * r 1) ^ 2) := by
@@ -231,6 +243,7 @@ theorem quaternionRotation_mixed_coordinates (q r : Fin 4 → ℝ)
           vec4_zero, vec4_one, vec4_two, vec4_three]
         ring
       _ = _ := by rw [hq, hr]; ring
+<<<<<<< HEAD
   have hmiddle : U 1 1 * U 2 2 - U 1 2 * U 2 1 = 1 - q 1 ^ 2 - q 2 ^ 2 - r 1 ^ 2 - r 2 ^ 2 := by
     calc
       _ = (q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2 + q 3 ^ 2) * (r 0 ^ 2 + r 1 ^ 2 + r 2 ^ 2 + r 3 ^ 2) -
@@ -241,6 +254,8 @@ theorem quaternionRotation_mixed_coordinates (q r : Fin 4 → ℝ)
           vec4_zero, vec4_one, vec4_two, vec4_three]
         ring
       _ = _ := by rw [hq, hr]; ring
+=======
+>>>>>>> origin/main
   have hoff : U 1 0 * U 3 2 - U 1 2 * U 3 0 =
       r 0 ^ 2 + r 2 ^ 2 - q 0 ^ 2 - q 2 ^ 2 := by
     calc
@@ -251,6 +266,7 @@ theorem quaternionRotation_mixed_coordinates (q r : Fin 4 → ℝ)
           vec4_zero, vec4_one, vec4_two, vec4_three]
         ring
       _ = _ := by rw [hq, hr]; ring
+<<<<<<< HEAD
   exact ⟨hentries, hprincipal, hmiddle, hoff⟩
 
 /-- The mixed cost is the sum of two squared entries and the difference
@@ -264,6 +280,9 @@ theorem mixed_quaternion_rotation_lower (q r : Fin 4 → ℝ)
       (U 1 0 * U 3 2 - U 1 2 * U 3 0) ^ 2 := by
   obtain ⟨hentries, hprincipal, _, hoff⟩ := quaternionRotation_mixed_coordinates q r hq hr
   dsimp only
+=======
+  change -(2 / 27 : ℝ) ≤ U 1 2 ^ 2 + U 2 1 ^ 2 + _ - _
+>>>>>>> origin/main
   rw [hentries, hprincipal, hoff]
   exact mixed_quaternion_lower hq hr
 
