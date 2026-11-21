@@ -134,8 +134,8 @@ theorem determinant_rankOnePhase_of_nonreal_pencil_vector (A C : Matrix ι ι �
     rw [Matrix.sub_mul, Matrix.smul_mul, Matrix.mul_assoc (V * C) Vᴴ V, hV.2, Matrix.mul_one]
     rw [hVP]
     simp only [T, hR, Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, Matrix.one_mul,
-      Matrix.mul_smul, Matrix.smul_mul, smul_add, smul_smul, Matrix.mul_assoc, mul_neg,
-      neg_smul, mul_comm (z - 1) κ]
+      Matrix.mul_smul, Matrix.smul_mul, smul_add, smul_smul, Matrix.mul_assoc]
+    rw [show (z - 1) * (-κ) = -(κ * (z - 1)) by ring, neg_smul]
     abel
   have hdet : (A - κ • (V * C * Vᴴ)).det * z =
       T.det * ((1 + (z - 1) * r) * (1 + (z - 1) * (1 - s))) := by
@@ -190,6 +190,7 @@ theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
   have hH (z : ℂ) : ((H z : ℝ) : ℂ) = (z - 1) * star ρ + (star z - 1) * ρ := by
     have he : star ((z - 1) * star ρ) = (star z - 1) * ρ := by
       simp only [star_mul', star_sub, star_one, star_star, mul_comm]
+    dsimp only [H]
     rw [← he, Complex.star_def, Complex.add_conj]
   have hsupport (z : ℂ) (hz : z * star z = 1) :
       H z * (ξ * D).re ≤ -Complex.normSq ((H z : ℂ) * D) / 2 := by
@@ -216,12 +217,14 @@ theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
     change t ^ 2 - ρ.re ^ 2 = ρ.im ^ 2 at he
     linarith only [he, sq_pos_of_ne_zero him]
   have hright : ρ.re < t := by
-    by_contra! h
-    rw [le_antisymm htbound.2 h] at hsquare
+    apply lt_of_le_of_ne htbound.2
+    intro he
+    rw [he] at hsquare
     exact (lt_irrefl _) hsquare
   have hleft : -t < ρ.re := by
-    by_contra! h
-    rw [le_antisymm h htbound.1, neg_sq] at hsquare
+    apply lt_of_le_of_ne htbound.1
+    intro he
+    rw [← he, neg_sq] at hsquare
     exact (lt_irrefl _) hsquare
   let p : ℂ := ρ / (t : ℂ)
   have hp : p * star p = 1 := by
@@ -248,9 +251,7 @@ theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
   have hpn : (H p : ℂ) * D ≠ 0 := mul_ne_zero (Complex.ofReal_ne_zero.mpr hpos.ne') hD
   have hstrict : H p * (ξ * D).re < 0 :=
     (hsupport p hp).trans_lt (by linarith only [Complex.normSq_pos.mpr hpn])
-  have hξD : (ξ * D).re < 0 := by
-    by_contra! he
-    exact (not_lt_of_ge (mul_nonneg hpos.le he)) hstrict
+  have hξD : (ξ * D).re < 0 := neg_of_mul_neg_right hstrict hpos.le
   exact (not_le_of_gt (mul_pos_of_neg_of_neg hneg hξD))
     ((hsupport (-p) hn).trans (by linarith only [Complex.normSq_nonneg ((H (-p) : ℂ) * D)]))
 

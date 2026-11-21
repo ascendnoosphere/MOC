@@ -80,8 +80,11 @@ theorem rank_one_effects_two_bases
   have hh (u v : Fin 3 → ℝ) :
       O.val * diagonal (t • u + (1 - t) • v) * O.valᴴ =
         t • (O.val * diagonal u * O.valᴴ) + (1 - t) • (O.val * diagonal v * O.valᴴ) := by
-    rw [← Matrix.diagonal_add, Matrix.diagonal_smul, Matrix.diagonal_smul, Matrix.mul_add,
-      Matrix.add_mul, Matrix.mul_smul, Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_mul]
+    have hdiag : diagonal (t • u + (1 - t) • v) =
+        diagonal (t • u) + diagonal ((1 - t) • v) :=
+      (Matrix.diagonal_add (t • u) ((1 - t) • v)).symm
+    simp only [hdiag, Matrix.diagonal_smul, Matrix.mul_add, Matrix.add_mul,
+      Matrix.mul_smul, Matrix.smul_mul]
   have he' (l : Fin 3) : e' l = e (Equiv.swap 1 2 l) := rfl
   refine ⟨P, Q, t, (hbound j).1, (hbound j).2, ?_⟩
   rw [hp, hq]

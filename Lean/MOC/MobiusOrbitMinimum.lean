@@ -1,5 +1,6 @@
 import MOC.SpectralMobius
 import MOC.SpectralPerturbation
+import MOC.SpectralSecondVariation
 import Mathlib.Topology.MetricSpace.Bounded
 
 /-! Centering and coercivity of the energy-denominator functional on a
@@ -460,6 +461,17 @@ theorem mobiusOrbitFunctional_rebase [Nonempty κ] (u : κ → ℂ) (n : ℕ)
     _ = _ := by
       rw [inv_pow, ← pow_mul, inv_mul_cancel₀ (pow_ne_zero _ hL), one_mul]
 
+private theorem mobiusOrbitFunctional_scale [Nonempty κ] (u : κ → ℂ) (n : ℕ) (r t : ℂ) :
+    mobiusOrbitFunctional (fun j => r * u j) n t =
+      Complex.normSq r ^ n * mobiusOrbitFunctional u n (t * r) := by
+  have he : mobiusSpectrum t (fun j => r * u j) =
+      fun j => r * mobiusSpectrum (t * r) u j + 0 := by
+    funext j
+    simp only [mobiusSpectrum, mul_assoc, mul_div_assoc, add_zero]
+  unfold mobiusOrbitFunctional
+  rw [he, centeredEnergy_affine, mul_pow, mul_assoc]
+  simp only [mul_assoc]
+
 /-- A minimum in the original orbit becomes a local minimum at zero after
 rebasing at the minimizing parameter and applying any translation. -/
 theorem mobiusOrbitFunctional_rebase_isLocalMin [Nonempty κ] (u : κ → ℂ) (n : ℕ)
@@ -590,8 +602,9 @@ theorem sum_cubic_eq_zero_at_mobiusOrbitLocalMin [Nonempty κ] (u : κ → ℂ) 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
 
 /-- A regular strict support violation has a representative in its Möbius
-orbit with unit energy and equal ordinary and cubic moments. The original
-relative eigenbasis and distinct matching products are preserved. -/
+orbit with unit energy and equal ordinary and cubic moments. Zero is a local
+minimum in the representative's chart, and the relative eigenbasis and
+distinct matching products are preserved. -/
 theorem exists_mobius_balanced_support_violation (hn : 2 ≤ Fintype.card ι)
     (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U) (η : ℂ)
     (hsigned : Function.Injective (Sum.elim a (fun j => -b j)))
@@ -603,6 +616,7 @@ theorem exists_mobius_balanced_support_violation (hn : 2 ≤ Fintype.card ι)
       Function.Injective (matchingProduct c d) ∧ spectralEnergy c d = 1 ∧
       (∑ i, c i) = ∑ j, d j ∧
       (∑ i, (Complex.normSq (c i) : ℂ) * c i) = ∑ j, (Complex.normSq (d j) : ℂ) * d j ∧
+      IsLocalMin (mobiusOrbitFunctional (Sum.elim c (fun j => -d j)) (Fintype.card ι)) 0 ∧
       ∀ σ : Equiv.Perm ι,
         (k * matchingProduct c d σ).re < (k * determinantValue c d U).re := by
   let n := Fintype.card ι
@@ -649,13 +663,24 @@ theorem exists_mobius_balanced_support_violation (hn : 2 ≤ Fintype.card ι)
     have hle := pair_normSq_le_two_centeredEnergy v (Sum.inl i₀) (Sum.inr i₀)
     change _ ≤ 2 * E at hle
     linarith only [hp, hle]
+  have hminV : IsLocalMin (mobiusOrbitFunctional v n) 0 :=
+    mobiusOrbitFunctional_rebase_isLocalMin u n hcard t m ht hmin
   have hcubic := sum_cubic_eq_zero_at_mobiusOrbitLocalMin v n
-    (zero_lt_two.trans_le hn).ne' hmean hE
-    (mobiusOrbitFunctional_rebase_isLocalMin u n hcard t m ht hmin)
+    (zero_lt_two.trans_le hn).ne' hmean hE hminV
   let r : ℝ := (Real.sqrt E)⁻¹
   have hr : r ≠ 0 := inv_ne_zero (Real.sqrt_pos_of_pos hE).ne'
   have hrsq : r ^ 2 = E⁻¹ := by rw [show r = (Real.sqrt E)⁻¹ by rfl, inv_pow, Real.sq_sqrt hE.le]
   let w (j : ι ⊕ ι) := (r : ℂ) * v j
+  have hminW : IsLocalMin (mobiusOrbitFunctional w n) 0 := by
+    have hc : ContinuousAt (fun s : ℂ => s * (r : ℂ)) 0 :=
+      (continuous_id.mul continuous_const).continuousAt
+    have hbase : IsLocalMin (mobiusOrbitFunctional v n) ((0 : ℂ) * (r : ℂ)) := by
+      simpa only [zero_mul] using hminV
+    have hlocal := hbase.comp_continuous hc
+    filter_upwards [hlocal] with s hs
+    change mobiusOrbitFunctional w n 0 ≤ mobiusOrbitFunctional w n s
+    rw [mobiusOrbitFunctional_scale v n (r : ℂ) 0, mobiusOrbitFunctional_scale v n (r : ℂ) s]
+    exact mul_le_mul_of_nonneg_left hs (pow_nonneg (Complex.normSq_nonneg _) _)
   let c (i : ι) := mobiusSpectrum t a₀ i + (-m)
   let d (j : ι) := mobiusSpectrum (-t) b₀ j - (-m)
   have ha (i : ι) : 1 - t * a₀ i ≠ 0 := ht (Sum.inl i)
@@ -699,7 +724,7 @@ theorem exists_mobius_balanced_support_violation (hn : 2 ≤ Fintype.card ι)
     rw [determinantValue_scale c d U (r : ℂ),
       determinantValue_shift (mobiusSpectrum t a₀) (mobiusSpectrum (-t) b₀) hU (-m),
       determinantValue_mobius a₀ b₀ U hU t ha hb, determinantValue_shift a b hU s]
-  refine ⟨c', d', k, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨c', d', k, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · rw [← hw]
     exact fun i j h => hvinj (mul_left_cancel₀ hr' h)
   · intro σ τ h
@@ -712,6 +737,7 @@ theorem exists_mobius_balanced_support_violation (hn : 2 ≤ Fintype.card ι)
   · apply sub_eq_zero.mp
     simpa only [hw, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, Complex.normSq_neg,
       mul_neg, Finset.sum_neg_distrib, ← sub_eq_add_neg] using hcub
+  · simpa only [hw] using hminW
   · intro σ
     have he (z : ℂ) : k * (R * (z / Δ)) = η * z := by
       dsimp only [k]
@@ -771,18 +797,53 @@ private theorem signed_injective_of_regular_products (a b : ι → ℂ)
     | inl j => exact (hcross j i (add_eq_zero_iff_eq_neg.mpr h.symm)).elim
     | inr j => exact congrArg Sum.inr (hb (neg_injective h))
 
+private theorem eventually_centered_spectral_minimum (a b : ι → ℂ)
+    (henergy : spectralEnergy a b = 1) (htrace : (∑ i, a i) = ∑ j, b j)
+    (hmin : IsLocalMin (mobiusOrbitFunctional (Sum.elim a (fun j => -b j)) (Fintype.card ι)) 0) :
+    ∀ᶠ t : ℂ in 𝓝 0,
+      1 ≤ centeredSpectralEnergy (mobiusSpectrum t a) (mobiusSpectrum (-t) b) ^ Fintype.card ι *
+        Complex.normSq (mobiusDenominator a b t) := by
+  let u : ι ⊕ ι → ℂ := Sum.elim a (fun j => -b j)
+  have hval (t : ℂ) : mobiusOrbitFunctional u (Fintype.card ι) t =
+      centeredSpectralEnergy (mobiusSpectrum t a) (mobiusSpectrum (-t) b) ^ Fintype.card ι *
+        Complex.normSq (mobiusDenominator a b t) := by
+    have hv : mobiusSpectrum t u = Sum.elim (mobiusSpectrum t a)
+        (fun j => -mobiusSpectrum (-t) b j) := by
+      funext j
+      cases j <;> simp only [u, mobiusSpectrum, Sum.elim_inl, Sum.elim_inr, mul_neg, neg_mul, neg_div]
+    have he : centeredEnergy (mobiusSpectrum t u) =
+        centeredSpectralEnergy (mobiusSpectrum t a) (mobiusSpectrum (-t) b) := by
+      rw [centeredEnergy_eq_sum_sub_mean, hv]
+      simp only [centeredSpectralEnergy, spectralEnergy, Fintype.sum_sum_type, Sum.elim_inl,
+        Sum.elim_inr, Complex.normSq_neg, Finset.sum_neg_distrib, ← sub_eq_add_neg,
+        Fintype.card_sum, Nat.cast_add, two_mul]
+    have hd : (∏ j, Complex.normSq (1 - t * u j)) = Complex.normSq (mobiusDenominator a b t) := by
+      simp only [mobiusDenominator, map_mul, map_prod, Fintype.prod_sum_type, u,
+        Sum.elim_inl, Sum.elim_inr, mul_neg, sub_neg_eq_add]
+    simp only [mobiusOrbitFunctional, he, hd]
+  have hzero : mobiusOrbitFunctional u (Fintype.card ι) 0 = 1 := by
+    rw [hval 0]
+    simp [centeredSpectralEnergy, mobiusDenominator, henergy, htrace]
+  filter_upwards [hmin] with t ht
+  change mobiusOrbitFunctional u (Fintype.card ι) 0 ≤ mobiusOrbitFunctional u (Fintype.card ι) t at ht
+  rwa [hzero, hval t] at ht
+
 /-- The conjecture in positive order at least two reduces to unit-energy
-spectra with distinct signed points and matching products and equal ordinary
-and cubic moments. -/
+spectra with distinct signed points and matching products, equal ordinary
+and cubic moments, and the centered fourth-moment inequality. -/
 theorem conjecture_iff_mobius_balanced_regular (hn : 2 ≤ Fintype.card ι) :
     Conjecture ι ↔ ∀ (a b : ι → ℂ) (U : Matrix ι ι ℂ), IsUnitary U →
       Function.Injective (Sum.elim a (fun j => -b j)) →
       Function.Injective (matchingProduct a b) → spectralEnergy a b = 1 →
       (∑ i, a i) = (∑ j, b j) →
       (∑ i, (Complex.normSq (a i) : ℂ) * a i) = ∑ j, (Complex.normSq (b j) : ℂ) * b j →
+      ‖(2 * (Fintype.card ι : ℂ)) * ((∑ i, (Complex.normSq (a i) : ℂ) * a i ^ 2) +
+        ∑ i, (Complex.normSq (b i) : ℂ) * b i ^ 2) - ((∑ i, a i ^ 2) + ∑ i, b i ^ 2)‖ ≤
+        (Fintype.card ι : ℝ) * ((∑ i, Complex.normSq (a i) ^ 2) + ∑ i, Complex.normSq (b i) ^ 2) -
+          Complex.normSq ((∑ i, a i ^ 2) + ∑ i, b i ^ 2) / 2 →
       Holds a b U := by
   constructor
-  · intro h a b U hU _ _ _ _ _
+  · intro h a b U hU _ _ _ _ _ _
     exact h a b U hU
   · intro h
     apply (conjecture_iff_regular_matching_products (ι := ι)).mpr
@@ -791,11 +852,13 @@ theorem conjecture_iff_mobius_balanced_regular (hn : 2 ≤ Fintype.card ι) :
     rw [holds_iff_directional] at hbad
     push_neg at hbad
     obtain ⟨η, hη⟩ := hbad
-    obtain ⟨c, d, k, hcd, hmatch', henergy, htrace, hcubic, hstrict⟩ :=
+    obtain ⟨c, d, k, hcd, hmatch', henergy, htrace, hcubic, hmin, hstrict⟩ :=
       exists_mobius_balanced_support_violation hn a b U hU η
         (signed_injective_of_regular_products a b hcross hmatch) hmatch hη
+    have hfourth := fourth_moment_bound_of_eventually_centered_mobius_minimum c d henergy htrace hcubic
+      ((eventually_centered_spectral_minimum c d henergy htrace hmin).mono fun _ ht _ _ _ => ht)
     obtain ⟨σ, hσ⟩ := (holds_iff_directional c d U).mp
-      (h c d U hU hcd hmatch' henergy htrace hcubic) k
+      (h c d U hU hcd hmatch' henergy htrace hcubic hfourth) k
     exact (not_le_of_gt (hstrict σ)) hσ
 
 end
