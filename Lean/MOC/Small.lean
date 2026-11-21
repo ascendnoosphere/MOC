@@ -83,7 +83,6 @@ theorem holds_reindexed_blocks_of_conjectures {η : Type*} [Fintype η] [Decidab
   (holds_reindex_iff eRow eCol _ _ _).mpr
     (holds_blocks_of_conjectures hι hκ a b c d U V hU hV)
 
-<<<<<<< HEAD
 /-- A paired block split can be recognized directly in an existing eigenbasis. -/
 theorem holds_of_paired_blocks {η : Type*} [Fintype η] [DecidableEq η]
     (hι : Conjecture ι) (hκ : Conjecture κ) (eRow eCol : ι ⊕ κ ≃ η)
@@ -100,8 +99,6 @@ theorem holds_of_paired_blocks {η : Type*} [Fintype η] [DecidableEq η]
   rw [hBlocks, ← hsplit a eRow, ← hsplit b eCol]
   exact holds_blocks_of_conjectures hι hκ _ _ _ _ V W hV hW
 
-=======
->>>>>>> origin/main
 /-- Two paired blocks of size at most three give a verified case in the full ambient hull. -/
 theorem holds_blocks_le_three {m n : ℕ} (hm : m ≤ 3) (hn : n ≤ 3)
     (eRow eCol : Fin (m + n) ≃ Fin m ⊕ Fin n) (a b : Fin m → ℂ) (c d : Fin n → ℂ)
