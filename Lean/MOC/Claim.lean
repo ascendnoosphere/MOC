@@ -1,9 +1,4 @@
 import MOC.Small
-<<<<<<< HEAD
-
-open Matrix
-=======
->>>>>>> origin/main
 
 open Matrix
 

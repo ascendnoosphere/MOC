@@ -5,18 +5,10 @@ root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
 state=${MOC_LEAN_WORKER_STATE:-"$root/Lean/.lake/worker"}
 mkdir -p -- "$state"
 state=$(cd -- "$state" && pwd -P)
-<<<<<<< HEAD
 export MOC_LEAN_WORKER_STATE=$state
 batch=${MOC_LEAN_PUSH_BATCH:-5}
 build=(bash "$root/Code/lean-build.sh")
 publish=(bash "$root/Code/lean-publish.sh")
-=======
-branch=${MOC_LEAN_PUSH_BRANCH:-moc-verified}
-batch=${MOC_LEAN_PUSH_BATCH:-5}
-author=ascendnooshpere
-worker=(python3 -B "$root/Code/lean_worker.py" --state "$state")
-fixer=(python3 -B "$root/Code/lean_fix.py" --state-dir "$state")
->>>>>>> origin/main
 cd -- "$root"
 
 running() {
@@ -51,7 +43,6 @@ start_worker() {
 usage() {
   cat <<'HELP'
 Usage
-<<<<<<< HEAD
   Code/lean-workflow.sh start [--publish]
   Code/lean-workflow.sh status
   Code/lean-workflow.sh flush
@@ -60,56 +51,25 @@ Usage
 Operators start the four-core build watcher and optionally the publication
 workers. Authors write a one-line commit subject and the associated paths to
 a .txt file in Lean/.lake/worker/intents/. Build results appear in status.json
-and candidate.json. Publication uses origin/moc-verified in batches of five.
-=======
-  Code/lean-workflow.sh start [--repair] [--publish]
-  Code/lean-workflow.sh status
-  Code/lean-workflow.sh enqueue 'lean: precise change' <root-relative paths...>
-  Code/lean-workflow.sh flush
-  Code/lean-workflow.sh stop [watch|repair|commit|push]
-
-Start runs the four-core build watcher. Add --repair for isolated diagnostic
-patches and --publish for the verified commit and push consumers. Publication
-uses origin/moc-verified in batches of five by default. Set MOC_LEAN_PUSH_BRANCH
-or MOC_LEAN_PUSH_BATCH before starting to override those choices.
->>>>>>> origin/main
+and candidate.json. Publication uses origin/main in batches of five.
 HELP
 }
 
 case ${1:-help} in
   start)
     shift
-<<<<<<< HEAD
     enable_publish=false
     for option in "$@"; do
       case $option in
         --publish) enable_publish=true ;;
-=======
-    repair=false
-    publish=false
-    for option in "$@"; do
-      case $option in
-        --repair) repair=true ;;
-        --publish) publish=true ;;
->>>>>>> origin/main
         *) usage >&2; exit 2 ;;
       esac
     done
     command -v lake >/dev/null || { printf 'Pinned lake is required on PATH\n' >&2; exit 1; }
-<<<<<<< HEAD
     start_worker watch "${build[@]}" watch
     if "$enable_publish"; then
       start_worker commit "${publish[@]}" commit
       start_worker push "${publish[@]}" push --batch "$batch"
-=======
-    start_worker watch "${worker[@]}" watch
-    if "$repair"; then
-      start_worker repair "${fixer[@]}" --watch
-    fi
-    if "$publish"; then
-      start_worker commit env GIT_AUTHOR_NAME="$author" GIT_COMMITTER_NAME="$author" "${worker[@]}" commit
-      start_worker push "${worker[@]}" push --branch "$branch" --batch "$batch"
->>>>>>> origin/main
     fi
     ;;
   status)
@@ -120,15 +80,12 @@ case ${1:-help} in
         printf '%s stopped\n' "$name"
       fi
     done
-<<<<<<< HEAD
     for receipt in status candidate; do
       if [[ -f $state/$receipt.json ]]; then
         printf '%s result\n' "$receipt"
         cat -- "$state/$receipt.json"
       fi
     done
-=======
->>>>>>> origin/main
     ;;
   stop)
     shift
@@ -146,17 +103,8 @@ case ${1:-help} in
       fi
     done
     ;;
-<<<<<<< HEAD
   flush)
     exec "${publish[@]}" flush
-=======
-  enqueue)
-    shift
-    exec "${worker[@]}" enqueue "$@"
-    ;;
-  flush)
-    exec "${worker[@]}" flush --branch "$branch"
->>>>>>> origin/main
     ;;
   help|-h|--help)
     usage

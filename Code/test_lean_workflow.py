@@ -111,53 +111,32 @@ class HandoffTests(unittest.TestCase):
             mocked_git.assert_not_called()
         self.assertTrue((self.state / "rejected" / event.name).exists())
 
-    def test_merge_pushes_only_a_tree_with_audited_lean_sources(self):
-        branch = worker.PUBLISH_BRANCH
-        responses = {
-            ("remote", "get-url", "--push", "origin"): worker.PUBLISH_URL.encode(),
-            ("rev-parse", "--verify", f"refs/moc/published/{branch}"): b"verified",
-            ("rev-parse", f"refs/remotes/origin/{branch}"): b"verified",
-            ("rev-parse", "refs/remotes/origin/main"): b"main",
-            ("merge-base", "main", "verified"): b"base",
-            ("merge-tree", "--write-tree", "main", "verified"): b"merged-tree",
-            ("commit-tree", "merged-tree", "-p", "main", "-p", "verified",
-             "-m", "merge: integrate verified Lean results"): b"merge-commit",
-        }
+    def test_push_uses_main_and_the_remote_fast_forward_base(self):
+        calls = []
+        published = "remote-tip"
 
-        def fake_git(_repo, *args):
-            if args[0] in ("fetch", "push"):
-                return b""
-            return responses[args]
+        def fake_git(_repo, *args, **_kwargs):
+            nonlocal published
+            calls.append(args)
+            if args[:2] == ("rev-parse", "FETCH_HEAD"):
+                return b"remote-tip"
+            if args[0] == "update-ref":
+                published = args[2]
+            if args[0] == "rev-parse":
+                return published.encode()
+            if args[0] == "rev-list":
+                return b"audited-tip" if published == "remote-tip" else b""
+            return b""
 
-        def merge_sources(_repo, oid):
-            if oid == "merged-tree" and not compatible:
-                return self.sources | {self.path: b"unaudited Lean change"}
-            return self.sources
-
-        for compatible, has_base in ((True, True), (False, True), (True, False)):
-            if not has_base:
-                (self.state / "base.json").unlink()
-            with self.subTest(compatible=compatible, has_base=has_base), \
-                    patch.object(worker, "flush_for_merge") as flush, \
-                    patch.object(worker, "push_batches", return_value=0) as push, \
-                    patch.object(worker, "publisher_repo", return_value=self.root), \
-                    patch.object(worker, "git", side_effect=fake_git) as mocked_git, \
-                    patch.object(worker, "tree_sources", side_effect=merge_sources):
-                if compatible:
-                    worker.merge_verified(self.state)
-                    mocked_git.assert_called_with(self.root, "push", "origin",
-                                                  "merge-commit:refs/heads/main")
-                else:
-                    with self.assertRaisesRegex(RuntimeError, "need a new audit"):
-                        worker.merge_verified(self.state)
-                    self.assertFalse(any(c.args[1] in ("commit-tree", "push")
-                                         for c in mocked_git.call_args_list))
-                if has_base:
-                    flush.assert_called_once_with(self.state)
-                    push.assert_not_called()
-                else:
-                    flush.assert_not_called()
-                    push.assert_called_once_with(self.state, branch, batch=5, once=True, flush=True)
+        with patch.object(worker, "publisher_repo", return_value=self.root), \
+                patch.object(worker, "require_publication_remote"), \
+                patch.object(worker, "git", side_effect=fake_git):
+            self.assertEqual(worker.push_batches(self.state, "main", 5, once=True, flush=True), 0)
+            with self.assertRaisesRegex(RuntimeError, "Publication requires main"):
+                worker.push_batches(self.state, "moc-verified", 5, once=True, flush=True)
+        self.assertIn(("merge-base", "--is-ancestor", "remote-tip", "HEAD"), calls)
+        self.assertEqual([args for args in calls if args[0] == "push"],
+                         [("push", "origin", "audited-tip:refs/heads/main")])
 
     def test_build_driver_limits_affinity_and_sanitizes_import_paths(self):
         shim = self.root / "taskset"

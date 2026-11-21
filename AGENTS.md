@@ -48,7 +48,7 @@ and writes reports. Candidates require a passing Lean build and axiom audit.
 base for B and consumes only B's verified receipts. It compares the receipt
 with the exact proposed tree and uses A's commit subject. It authors commits
 as `ascendnooshpere` and publishes fast-forward batches to
-`origin/moc-verified`. It never compiles.
+`origin/main`. It never compiles.
 
 An operator manages workers through `Code/lean-workflow.sh`. After upgrading
 the workflow, an operator must replace older workers to load the new
