@@ -14,9 +14,12 @@ import MOC.IdentityPadding
 import MOC.NormalSupportMaximum
 import MOC.Obstruction
 import MOC.OppositePair
+import MOC.OppositePairNormal
+import MOC.PolydiskContact
 import MOC.RankTwoOverlap
 import MOC.SparseRow
 import MOC.SpectralAffineContact
+import MOC.ThreeValues
 import MOC.WeightedDiamondCensus
 
 open Lean Elab Command in

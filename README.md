@@ -33,10 +33,12 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | The first spectrum and the negated second spectrum on two tangent circles of positive radius. | Any finite order | [CircleSpectra.lean](Lean/MOC/CircleSpectra.lean) |
 | Two spectra that each lie on a circle or line, with independent circles or lines. | Any finite order | [TwoSpectralCircles.lean](Lean/MOC/TwoSpectralCircles.lean) |
 | A spectrum with at most two distinct values on either side. | Any finite order | [TwoValues.lean](Lean/MOC/TwoValues.lean) |
+| A second spectrum whose entries, except for one specified entry, take at most two distinct values. | Any positive order | [ThreeValues.lean](Lean/MOC/ThreeValues.lean) |
 | A first spectrum with one value in all but at most two positions. | Any finite order | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
 | Either spectrum with a repeated value. | Four | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
 | An opposite eigenvalue pair, with $a_i+b_j=0$ for some $i,j$. | Four | [FourCoincidence.lean](Lean/MOC/FourCoincidence.lean) |
 | An opposite eigenvalue pair whose two eigenvalue multiplicities sum to at least $n-2$. | Any finite order | [OppositePair.lean](Lean/MOC/OppositePair.lean) |
+| An opposite eigenvalue pair of simple eigenvalues with normal reciprocal compressions on the overlap of the two spectral support spaces. | Five | [OppositePairNormal.lean](Lean/MOC/OppositePairNormal.lean) |
 | Two equilateral triples with opposite first vertices and independent nonzero complex scales. Each spectrum has a fourth point off its circumcircle. | Four | [FourEquilateral.lean](Lean/MOC/FourEquilateral.lean) |
 | The centrally symmetric spectra $t+s\{\pm2,\pm(2+i)\}$ and $-t+s\{\pm3,\pm(3-i)\}$, with $s\ne0$. Both spectra are nonconcyclic, and every cross-sum is nonzero. | Four | [FourCentralSymmetry.lean](Lean/MOC/FourCentralSymmetry.lean) |
 | The fixed Hermitian spectrum $(-9,-8,-6,-2,8)$, every complex partner, and relative unitaries in a neighborhood of the specified rational orthogonal matrix. At each unitary, one probability law applies to every partner. | Five | [HermitianLineCertificate.lean](Lean/MOC/HermitianLineCertificate.lean) |

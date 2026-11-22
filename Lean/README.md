@@ -32,6 +32,7 @@ The [proved cases](../README.md#proved-cases) list the inclusion theorems. The r
 | Order four reduces to the Hermitian-by-normal case and pairs of distinct-entry spectra. In the second case, neither spectrum lies on a circle or line. | [HermitianByNormal.lean](MOC/HermitianByNormal.lean) |
 | In order four, MOC is equivalent to the existence of a maximizing normal sum in each direction on each unitary orbit. Requiring such a maximizer in every finite order is equivalent to the unrestricted conjecture. | [NormalSupportMaximum.lean](MOC/NormalSupportMaximum.lean) |
 | In a single complex spectral coordinate, a strict violation can be moved to a maximizer with at least three active permutations if the convex hull of the slopes contains zero in its interior. | [SpectralAffineContact.lean](MOC/SpectralAffineContact.lean) |
+| If a fixed unitary and direction give a strict violation in the unit spectral polydisk, some maximum of the support excess there has at least three maximizing permutations. | [PolydiskContact.lean](MOC/PolydiskContact.lean) |
 | In order four, the common law for a fixed simple real spectrum follows from weighted permutation support bounds for every real parameter $t>1$. Twelve permutation scores determine every score in this family. | [HermitianByNormalFour.lean](MOC/HermitianByNormalFour.lean) · [WeightedDiamondCensus.lean](MOC/WeightedDiamondCensus.lean) |
 
 `MOC.HermitianByNormal` states the inclusion for real $a$ and complex $b$. The claim for all orders is open. [Hermitian-by-normal statement](MOC/HermitianByNormal.lean)
