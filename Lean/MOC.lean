@@ -2,6 +2,7 @@ import MOC.Claim
 import MOC.FourCentralSymmetry
 import MOC.FourEquilateral
 import MOC.Geometry
+import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
 import MOC.Obstruction
 

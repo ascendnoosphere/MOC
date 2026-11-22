@@ -33,6 +33,7 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | An opposite eigenvalue pair, with $a_i+b_j=0$ for some $i,j$. | Four | [FourCoincidence.lean](Lean/MOC/FourCoincidence.lean) |
 | Two equilateral triples with opposite first vertices and independent nonzero complex scales. Each spectrum has a fourth point off its circumcircle. | Four | [FourEquilateral.lean](Lean/MOC/FourEquilateral.lean) |
 | The centrally symmetric spectra $t+s\{\pm2,\pm(2+i)\}$ and $-t+s\{\pm3,\pm(3-i)\}$, with $s\ne0$. Both spectra are nonconcyclic, and every cross-sum is nonzero. | Four | [FourCentralSymmetry.lean](Lean/MOC/FourCentralSymmetry.lean) |
+| The fixed Hermitian spectrum $(-9,-8,-6,-2,8)$, every complex partner, and relative unitaries in a neighborhood of the specified rational orthogonal matrix. At each unitary, one probability law applies to every partner. | Five | [HermitianLineCertificate.lean](Lean/MOC/HermitianLineCertificate.lean) |
 | A total rank of at most $n+2$ for $A+tI$ and $B-tI$, for some complex scalar $t$. | Any finite order | [RankSum.lean](Lean/MOC/RankSum.lean) · [RankTwoOverlap.lean](Lean/MOC/RankTwoOverlap.lean) |
 | Relative unitary $U=I+(z-1)vv^*$, with $\lVert v\rVert=1$ and $\lvert z\rvert=1$. | Any positive order | [HouseholderSupport.lean](Lean/MOC/HouseholderSupport.lean) |
 | A relative unitary with a row or column that has at most two nonzero entries. | Four | [SparseRow.lean](Lean/MOC/SparseRow.lean) · [Small.lean](Lean/MOC/Small.lean) |
