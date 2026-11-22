@@ -42,6 +42,14 @@ private def pivotSlope : Fin 12 → Fin 24 → ℤ :=
 def weightedDiamondPivotRay (x : ℝ) (j : Fin 12) (i : Fin 24) : ℝ :=
   (pivotConstant j i : ℝ) + x * (pivotSlope j i : ℝ)
 
+/-- Integer constant and linear coefficient of a pivot ray coordinate. -/
+def weightedDiamondPivotCoefficients (j : Fin 12) (i : Fin 24) : ℤ × ℤ :=
+  (pivotConstant j i, pivotSlope j i)
+
+theorem weightedDiamondPivotRay_eq_coefficients (x : ℝ) (j : Fin 12) (i : Fin 24) :
+    weightedDiamondPivotRay x j i = (weightedDiamondPivotCoefficients j i).1 +
+      x * (weightedDiamondPivotCoefficients j i).2 := rfl
+
 set_option maxRecDepth 6000 in
 private theorem pivotValueCoefficients (j k : Fin 12) :
     pivotConstant j (weightedDiamondPivot k) = (if j = k then 1 else 0) ∧

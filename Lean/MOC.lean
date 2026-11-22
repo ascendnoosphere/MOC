@@ -5,11 +5,13 @@ import MOC.ExtendedCases
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
+import MOC.FourMixedContactBound
 import MOC.FourSpectralSupport
 import MOC.Geometry
 import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
+import MOC.HermitianStationarySwap
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
 import MOC.NormalSupportMaximum
@@ -21,8 +23,12 @@ import MOC.RankTwoOverlap
 import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.ThreeValues
+import MOC.TrianglePairContacts
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
+import MOC.WeightedDiamondChart
+import MOC.WeightedDiamondLowerInitial
+import MOC.WeightedDiamondWitnessMasks
 
 open Lean Elab Command in
 run_cmd do

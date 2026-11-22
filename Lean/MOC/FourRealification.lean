@@ -290,10 +290,10 @@ theorem exists_zero_sum_trace_free_perturbation
     (hA : ∀ i, (A i)ᵀ = A i ∧ (A i).trace = 0)
     (hB : ∀ i, (B i)ᵀ = B i ∧ (B i).trace = 0) :
     ∃ x : Fin 3 × Fin 2 → ℝ, x ≠ 0 ∧
-      (∑ i, (x (i, 0)) • A i + (x (i, 1)) • B i) = 0 := by
+      (∑ i, (x (i, 0) • A i + x (i, 1) • B i)) = 0 := by
   let M : (Fin 3 × Fin 2 → ℝ) →ₗ[ℝ] Matrix (Fin 3) (Fin 3) ℝ :=
-    ∑ i : Fin 3, (LinearMap.proj (i, (0 : Fin 2))).smulRight (A i) +
-      (LinearMap.proj (i, (1 : Fin 2))).smulRight (B i)
+    ∑ i : Fin 3, ((LinearMap.proj (i, (0 : Fin 2))).smulRight (A i) +
+      (LinearMap.proj (i, (1 : Fin 2))).smulRight (B i))
   let slots : Fin 5 → Fin 3 × Fin 3 := ![(0, 0), (0, 1), (0, 2), (1, 1), (1, 2)]
   let entries : Matrix (Fin 3) (Fin 3) ℝ →ₗ[ℝ] (Fin 5 → ℝ) :=
     { toFun := fun H k => H (slots k).1 (slots k).2
@@ -311,7 +311,7 @@ theorem exists_zero_sum_trace_free_perturbation
   have h02 : M x 0 2 = 0 := congrFun hL 2
   have h11 : M x 1 1 = 0 := congrFun hL 3
   have h12 : M x 1 2 = 0 := congrFun hL 4
-  have hM : M x = ∑ i, (x (i, 0)) • A i + (x (i, 1)) • B i := by
+  have hM : M x = ∑ i, (x (i, 0) • A i + x (i, 1) • B i) := by
     simp [M, LinearMap.sum_apply, LinearMap.smulRight_apply]
   have hsym : (M x)ᵀ = M x := by
     simp [hM, Matrix.transpose_sum, Matrix.transpose_add, Matrix.transpose_smul,

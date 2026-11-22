@@ -31,11 +31,17 @@ The [proved cases](../README.md#proved-cases) list the inclusion theorems. The r
 | To prove unrestricted Hermitian-by-normal MOC, it suffices to treat orders at least four in which every partner eigenvalue is nonreal. | [FiveNonreal.lean](MOC/FiveNonreal.lean) |
 | Order four reduces to the Hermitian-by-normal case and pairs of distinct-entry spectra. In the second case, neither spectrum lies on a circle or line. | [HermitianByNormal.lean](MOC/HermitianByNormal.lean) |
 | In order four, MOC is equivalent to the existence of a maximizing normal sum in each direction on each unitary orbit. Requiring such a maximizer in every finite order is equivalent to the unrestricted conjecture. | [NormalSupportMaximum.lean](MOC/NormalSupportMaximum.lean) |
+| At a positive Hermitian orbit support maximum with a simple real spectrum, an exact transposition bound relates repeated stationary poles to inverse imaginary minors. A definite partner imaginary part makes the bound strict and forces distinct poles. | [HermitianStationarySwap.lean](MOC/HermitianStationarySwap.lean) |
 | In a single complex spectral coordinate, a strict violation can be moved to a maximizer with at least three active permutations if the convex hull of the slopes contains zero in its interior. | [SpectralAffineContact.lean](MOC/SpectralAffineContact.lean) |
 | If a fixed unitary and direction give a strict violation in the unit spectral polydisk, some maximum of the support excess there has at least three maximizing permutations. | [PolydiskContact.lean](MOC/PolydiskContact.lean) |
-| In order four, the common law for a fixed simple real spectrum follows from weighted permutation support bounds for every real parameter $t>1$. Twelve permutation scores determine every score in this family. | [HermitianByNormalFour.lean](MOC/HermitianByNormalFour.lean) · [WeightedDiamondCensus.lean](MOC/WeightedDiamondCensus.lean) |
+| A regular order-four support gap that dominates a positive multiple of a relabeled mixed profile has at most ten maximizing permutations. | [FourMixedContactBound.lean](MOC/FourMixedContactBound.lean) |
+| In order four, the common law for a fixed simple real spectrum follows from weighted permutation support bounds for $1<t\le 2$. Twelve permutation scores determine every score in this family. | [HermitianByNormalFour.lean](MOC/HermitianByNormalFour.lean) · [WeightedDiamondCensus.lean](MOC/WeightedDiamondCensus.lean) |
 
-The weighted-diamond facet check needs an exact list of ray transitions as each permutation inequality is imposed. The halfspace theorem justifies using adjacent rays when their positive supports form an antichain. [WeightedDiamondAdjacency.lean](MOC/WeightedDiamondAdjacency.lean)
+All sixteen weighted-diamond forms are nonnegative on the squared minors of an order-four unitary. To prove the support bound it suffices to decompose every nonnegative score gap into these forms and their row relabelings. [HermitianByNormalFourFacets.lean](MOC/HermitianByNormalFourFacets.lean)
+
+The chart $x=u/(1+u)$ with $u>0$ covers the required open parameter interval. Integer coefficient checks certify each added permutation inequality. The twelve pivot evaluations and the first additional inequality have a checked decomposition into sixteen rays. [WeightedDiamondChart.lean](MOC/WeightedDiamondChart.lean) · [WeightedDiamondLowerInitial.lean](MOC/WeightedDiamondLowerInitial.lean)
+
+The remaining ray lists can use bitsets to verify the support antichain and to check groups of non-adjacent crossings with a common third ray. [WeightedDiamondWitnessMasks.lean](MOC/WeightedDiamondWitnessMasks.lean)
 
 The split contrast of a weighted-diamond score has rank at most one. Projected matching products have a split contrast of rank two when both split areas and the support multiplier are nonzero. [FourSpectralSupport.lean](MOC/FourSpectralSupport.lean)
 
