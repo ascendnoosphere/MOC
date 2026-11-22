@@ -35,6 +35,10 @@ The [proved cases](../README.md#proved-cases) list the inclusion theorems. The r
 | If a fixed unitary and direction give a strict violation in the unit spectral polydisk, some maximum of the support excess there has at least three maximizing permutations. | [PolydiskContact.lean](MOC/PolydiskContact.lean) |
 | In order four, the common law for a fixed simple real spectrum follows from weighted permutation support bounds for every real parameter $t>1$. Twelve permutation scores determine every score in this family. | [HermitianByNormalFour.lean](MOC/HermitianByNormalFour.lean) · [WeightedDiamondCensus.lean](MOC/WeightedDiamondCensus.lean) |
 
+The weighted-diamond facet check needs an exact list of ray transitions as each permutation inequality is imposed. The halfspace theorem justifies using adjacent rays when their positive supports form an antichain. [WeightedDiamondAdjacency.lean](MOC/WeightedDiamondAdjacency.lean)
+
+The split contrast of a weighted-diamond score has rank at most one. Projected matching products have a split contrast of rank two when both split areas and the support multiplier are nonzero. [FourSpectralSupport.lean](MOC/FourSpectralSupport.lean)
+
 `MOC.HermitianByNormal` states the inclusion for real $a$ and complex $b$. The claim for all orders is open. [Hermitian-by-normal statement](MOC/HermitianByNormal.lean)
 
 ## Common permutation weights

@@ -5,6 +5,7 @@ import MOC.ExtendedCases
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
+import MOC.FourSpectralSupport
 import MOC.Geometry
 import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
@@ -20,6 +21,7 @@ import MOC.RankTwoOverlap
 import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.ThreeValues
+import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
 
 open Lean Elab Command in
