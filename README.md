@@ -26,24 +26,29 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | Two spectra on parallel affine lines. | Any finite order | [Collinear.lean](Lean/MOC/Collinear.lean) |
 | A real first spectrum and a second spectrum that is real outside one specified entry. | Any positive order | [OneOffLine.lean](Lean/MOC/OneOffLine.lean) |
 | A real first spectrum and at most three nonreal eigenvalues in the second spectrum, counted with multiplicity. | Any finite order | [FiveNonreal.lean](Lean/MOC/FiveNonreal.lean) |
+| A real first spectrum and at most three distinct nonreal eigenvalues in the second spectrum, with arbitrary multiplicities. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
 | A real first spectrum and a second spectrum whose nonreal eigenvalues lie on one circle or line. The real eigenvalues may be arbitrary. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
 | The first spectrum and all but one entry of the negated second spectrum on the same circle or line. | Any positive order | [GeneralizedSpectralCircles.lean](Lean/MOC/GeneralizedSpectralCircles.lean) |
+| The first spectrum on a circle or line, with at most three distinct values of the negated second spectrum outside that circle or line. The outlier values may have arbitrary multiplicities. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
 | The first spectrum and the negated second spectrum on two tangent circles of positive radius. | Any finite order | [CircleSpectra.lean](Lean/MOC/CircleSpectra.lean) |
 | Two spectra that each lie on a circle or line, with independent circles or lines. | Any finite order | [TwoSpectralCircles.lean](Lean/MOC/TwoSpectralCircles.lean) |
 | A spectrum with at most two distinct values on either side. | Any finite order | [TwoValues.lean](Lean/MOC/TwoValues.lean) |
 | A first spectrum with one value in all but at most two positions. | Any finite order | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
 | Either spectrum with a repeated value. | Four | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
 | An opposite eigenvalue pair, with $a_i+b_j=0$ for some $i,j$. | Four | [FourCoincidence.lean](Lean/MOC/FourCoincidence.lean) |
+| An opposite eigenvalue pair whose two eigenvalue multiplicities sum to at least $n-2$. | Any finite order | [OppositePair.lean](Lean/MOC/OppositePair.lean) |
 | Two equilateral triples with opposite first vertices and independent nonzero complex scales. Each spectrum has a fourth point off its circumcircle. | Four | [FourEquilateral.lean](Lean/MOC/FourEquilateral.lean) |
 | The centrally symmetric spectra $t+s\{\pm2,\pm(2+i)\}$ and $-t+s\{\pm3,\pm(3-i)\}$, with $s\ne0$. Both spectra are nonconcyclic, and every cross-sum is nonzero. | Four | [FourCentralSymmetry.lean](Lean/MOC/FourCentralSymmetry.lean) |
 | The fixed Hermitian spectrum $(-9,-8,-6,-2,8)$, every complex partner, and relative unitaries in a neighborhood of the specified rational orthogonal matrix. At each unitary, one probability law applies to every partner. | Five | [HermitianLineCertificate.lean](Lean/MOC/HermitianLineCertificate.lean) |
 | A total rank of at most $n+2$ for $A+tI$ and $B-tI$, for some complex scalar $t$. | Any finite order | [RankSum.lean](Lean/MOC/RankSum.lean) · [RankTwoOverlap.lean](Lean/MOC/RankTwoOverlap.lean) |
 | Relative unitary $U=I+(z-1)vv^*$, with $\lVert v\rVert=1$ and $\lvert z\rvert=1$. | Any positive order | [HouseholderSupport.lean](Lean/MOC/HouseholderSupport.lean) |
 | A relative unitary with a row or column that has at most two nonzero entries. | Four | [SparseRow.lean](Lean/MOC/SparseRow.lean) · [Small.lean](Lean/MOC/Small.lean) |
-| A relative unitary that splits into two blocks of order at most three after independent row and column permutations. | At most six | [Small.lean](Lean/MOC/Small.lean) |
+| An upper Hessenberg relative unitary after independent row and column permutations. Entries below the first subdiagonal are zero. | Any finite order | [SparseRow.lean](Lean/MOC/SparseRow.lean) |
+| A relative unitary that splits into blocks of order at most three after independent row and column permutations. Any number of blocks is allowed. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 | A relative unitary $U$ for which $U-I$ has zero entries outside a principal block of order at most three. | Any finite order | [IdentityPadding.lean](Lean/MOC/IdentityPadding.lean) · [Small.lean](Lean/MOC/Small.lean) |
 | Matching products that all lie on one affine line. | Any finite order | [CollinearKernelSupport.lean](Lean/MOC/CollinearKernelSupport.lean) |
-| Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Four | [FourCommonShift.lean](Lean/MOC/FourCommonShift.lean) |
+| Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
+| Large shifts $(a-z,b)$ for arbitrary spectra when every entry of the relative unitary $U$ is nonzero. The radius may depend on $a,b,U$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 
 ### Sufficient tests
 
@@ -54,8 +59,9 @@ Each test proves MOC for an instance that meets its hypotheses.
 | All real signed determinant weights of $U$ are nonnegative. | [Weights.lean](Lean/MOC/Weights.lean) |
 | For every permutation $\sigma$, the matching product has the form $c+\sum_j f(j,\sigma(j))$, with fixed $c$ and $f$. | [Weights.lean](Lean/MOC/Weights.lean) |
 | The relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and has largest Frobenius norm among the maximizing sums. | [NormalOrbit.lean](Lean/MOC/NormalOrbit.lean) |
-| A convex representation of zero gives weights at least $\varepsilon\ge0$ to two matching products $p,q$. Require $\lVert p\rVert+\lVert q\rVert>0$ and $(\lVert p\rVert+\lVert q\rVert)\lvert\det(A+B)\rvert\le\varepsilon\lvert\operatorname{Im}(p\bar q)\rvert$. | [DiskBoundary.lean](Lean/MOC/DiskBoundary.lean) |
+| In order four, the relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and the maximizing projection is nonzero. | [NormalSupportMaximum.lean](Lean/MOC/NormalSupportMaximum.lean) |
+| A convex representation of zero gives weights at least $\varepsilon\ge0$ to two matching products $p,q$. Require $\lVert p\rVert+\lVert q\rVert>0$ and $(\lVert p\rVert+\lVert q\rVert)\lvert\det(A+B)\rvert\le\varepsilon\lvert\mathrm{Im}(p\bar q)\rvert$. | [DiskBoundary.lean](Lean/MOC/DiskBoundary.lean) |
 
-For the large-shift case, let $T=\operatorname{tr}(AB)$ and $q_\sigma=\sum_j a_{\sigma(j)}b_j$. The margin requires a $\delta>0$ that applies in every unit direction. For each $\eta$ with $\lvert\eta\rvert=1$, some permutation satisfies $\operatorname{Re}(\eta(T-q_\sigma))\ge\delta$.
+For the large-shift case, let $T=\mathrm{tr}(AB)$ and $q_\sigma=\sum_j a_{\sigma(j)}b_j$. The margin requires a $\delta>0$ that applies in every unit direction. For each $\eta$ with $\lvert\eta\rvert=1$, some permutation satisfies $\mathrm{Re}(\eta(T-q_\sigma))\ge\delta$.
 
 The source guide defines the Lean statement and lists equivalent forms and proof reductions. [Source guide](Lean/README.md)

@@ -167,10 +167,13 @@ private theorem mul_mem_matchingHull_of_deleted {n : ℕ} (a b : Fin (n + 1) →
   exact matchingProduct_mem_hull a b τ
 
 /-- A row supported on two columns reduces the determinant inclusion to the
-conjecture in order one smaller. -/
-theorem holds_of_two_supported_row {n : ℕ} (hSmall : Conjecture (Fin n))
+normalized minors obtained at its nonzero pivots. -/
+theorem holds_of_two_supported_row_of_minors {n : ℕ}
     (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
-    (hU : IsUnitary U) (i j k : Fin (n + 1)) (hzero : ∀ l, l ≠ j → l ≠ k → U i l = 0) :
+    (hU : IsUnitary U) (i j k : Fin (n + 1)) (hzero : ∀ l, l ≠ j → l ≠ k → U i l = 0)
+    (hSmall : ∀ p, U i p ≠ 0 → IsUnitary (normalizedSparseRowMinor U i p (if p = j then k else j)) →
+      Holds (a ∘ i.succAbove) (b ∘ p.succAbove)
+        (normalizedSparseRowMinor U i p (if p = j then k else j))) :
     Holds a b U := by
   classical
   let S : Finset (Fin (n + 1)) := Finset.univ.filter fun l => U i l ≠ 0
@@ -226,8 +229,60 @@ theorem holds_of_two_supported_row {n : ℕ} (hSmall : Conjecture (Fin n))
   apply (convex_convexHull ℝ _).sum_mem
     (fun _ _ => Complex.normSq_nonneg _) hweights
   intro p hp
-  exact mul_mem_matchingHull_of_deleted a b i p
-    (hSmall _ _ _ (hV p ((hmem p).mp hp)))
+  have hnz := (hmem p).mp hp
+  exact mul_mem_matchingHull_of_deleted a b i p (hSmall p hnz (hV p hnz))
+
+/-- A row supported on two columns reduces the determinant inclusion to the
+conjecture in order one smaller. -/
+theorem holds_of_two_supported_row {n : ℕ} (hSmall : Conjecture (Fin n))
+    (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
+    (hU : IsUnitary U) (i j k : Fin (n + 1)) (hzero : ∀ l, l ≠ j → l ≠ k → U i l = 0) :
+    Holds a b U :=
+  holds_of_two_supported_row_of_minors a b hU i j k hzero fun _ _ hV => hSmall _ _ _ hV
+
+/-- An upper-Hessenberg relative unitary satisfies the determinant inclusion
+for arbitrary spectra in every finite order. -/
+theorem holds_of_upper_hessenberg {n : ℕ} (a b : Fin n → ℂ)
+    {U : Matrix (Fin n) (Fin n) ℂ} (hU : IsUnitary U)
+    (hHess : ∀ i j : Fin n, j.val + 1 < i.val → U i j = 0) : Holds a b U := by
+  induction n with
+  | zero => exact conjecture_zero _ _ _ hU
+  | succ n ih =>
+    cases n with
+    | zero => exact conjecture_one _ _ _ hU
+    | succ n =>
+      let i := Fin.last (n + 1)
+      let k := (Fin.last n).castSucc
+      have hzero (l : Fin (n + 2)) (hli : l ≠ i) (hlk : l ≠ k) : U i l = 0 := by
+        apply hHess
+        have hi : l.val ≠ n + 1 := fun h => hli (Fin.ext h)
+        have hk : l.val ≠ n := fun h => hlk (Fin.ext h)
+        have hb := l.isLt
+        change l.val + 1 < n + 1
+        omega
+      apply holds_of_two_supported_row_of_minors a b hU i i k hzero
+      intro p hp hV
+      apply ih _ _ hV
+      intro l m hlm
+      have hpbound : n ≤ p.val := by
+        by_contra! hlt
+        exact hp (hHess i p (by change p.val + 1 < n + 1; omega))
+      have hmp : m.castSucc < p := by
+        have hb := l.isLt
+        change m.val < p.val
+        omega
+      rw [normalizedSparseRowMinor, Matrix.mul_diagonal, Matrix.submatrix_apply,
+        show i.succAbove l = l.castSucc from Fin.succAbove_last_apply l,
+        Fin.succAbove_of_castSucc_lt _ _ hmp,
+        hHess l.castSucc m.castSucc hlm, zero_mul]
+
+/-- Rows and columns may be independently relabeled before checking the
+upper-Hessenberg condition. -/
+theorem holds_of_reindexed_upper_hessenberg {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {n : ℕ} (eRow eCol : Fin n ≃ ι) (a b : ι → ℂ) {U : Matrix ι ι ℂ} (hU : IsUnitary U)
+    (hHess : ∀ i j : Fin n, j.val + 1 < i.val → U (eRow i) (eCol j) = 0) : Holds a b U :=
+  (holds_reindex_iff eRow eCol a b U).mp
+    (holds_of_upper_hessenberg _ _ (unitary_reindex eRow eCol hU) hHess)
 
 theorem holds_of_row_degree_le_two {n : ℕ} (hSmall : Conjecture (Fin n))
     (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}

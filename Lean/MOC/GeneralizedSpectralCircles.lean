@@ -53,17 +53,17 @@ private theorem holds_affine_chart_iff (a b : ι → ℂ) (U : Matrix ι ι ℂ)
 
 private theorem exists_real_affine_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (d : ℂ) (hd : d ≠ 0) (s : ℝ) :
-    ∃ x y : ι → ℂ,
+    ∃ (x : ι → ℂ) (f : ℂ → ℂ),
       (∀ i, (d * a i).re = s → (x i).im = 0) ∧
-      (∀ i, (d * (-b i)).re = s → (y i).im = 0) ∧
-      (Holds x y U ↔ Holds a b U) := by
+      (∀ i, (d * (-b i)).re = s → (f (b i)).im = 0) ∧
+      (Holds x (f ∘ b) U ↔ Holds a b U) := by
   let k := -Complex.I * d
   let t : ℂ := (s : ℂ) * Complex.I
   have hk : k ≠ 0 := mul_ne_zero (neg_ne_zero.mpr Complex.I_ne_zero) hd
   have him (z : ℂ) : (k * z + t).im = s - (d * z).re := by
     rw [show k * z = -(Complex.I * (d * z)) by simp [k, mul_assoc]]
     simp [t, Complex.I_mul_im, Complex.mul_im, sub_eq_add_neg, add_comm]
-  refine ⟨fun i => k * a i + t, fun i => k * b i - t, ?_, ?_,
+  refine ⟨fun i => k * a i + t, fun z => k * z - t, ?_, ?_,
     holds_affine_chart_iff a b U hU k t hk⟩
   · intro i hi
     rw [him, hi, sub_self]
@@ -74,16 +74,16 @@ private theorem exists_real_affine_chart (a b : ι → ℂ) (U : Matrix ι ι �
 
 private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (o : ℂ) (r : ℝ) (ha : ∀ i, Complex.normSq (a i - o) = r) :
-    ∃ x y : ι → ℂ,
+    ∃ (x : ι → ℂ) (f : ℂ → ℂ),
       (∀ i, (x i).im = 0) ∧
-      (∀ i, Complex.normSq (-b i - o) = r → (y i).im = 0) ∧
-      (Holds x y U ↔ Holds a b U) := by
+      (∀ i, Complex.normSq (-b i - o) = r → (f (b i)).im = 0) ∧
+      (Holds x (f ∘ b) U ↔ Holds a b U) := by
   classical
   rcases isEmpty_or_nonempty ι with hι | hι
   · letI := hι
-    exact ⟨a, b, fun i => isEmptyElim i, fun i => isEmptyElim i, Iff.rfl⟩
+    exact ⟨a, id, fun i => isEmptyElim i, fun i => isEmptyElim i, Iff.rfl⟩
   by_cases hr : r = 0
-  · refine ⟨fun i => a i + -o, fun i => b i - -o, ?_, ?_, holds_shift_iff a b hU (-o)⟩
+  · refine ⟨fun i => a i + -o, fun z => z - -o, ?_, ?_, holds_shift_iff a b hU (-o)⟩
     · intro i
       have hz := Complex.normSq_eq_zero.mp ((ha i).trans hr)
       simp [← sub_eq_add_neg, hz]
@@ -120,8 +120,8 @@ private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι �
       (u * (z - p t)⁻¹).re = 1 / 2 := by
     apply re_mul_inv_of_circle u (z - p t) hz
     rw [show z - p t - u = z - o by dsimp [u]; ring, hc, hu]
-  obtain ⟨x, y, hx, hy, hxy⟩ := exists_real_affine_chart A B U hU u hune (1 / 2)
-  refine ⟨x, y, fun i => hx i (hline _ (hap i) (ha i)), ?_, ?_⟩
+  obtain ⟨x, f, hx, hy, hxy⟩ := exists_real_affine_chart A B U hU u hune (1 / 2)
+  refine ⟨x, fun z => f (-(-z - p t)⁻¹), fun i => hx i (hline _ (hap i) (ha i)), ?_, ?_⟩
   · intro i hi
     exact hy i (by simpa only [B, neg_neg] using hline _ (hbp i) hi)
   · have hinv := holds_inv_iff (fun i => a i - p t) (fun i => -b i - p t) U hU hap hbp
@@ -131,10 +131,10 @@ private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι �
 private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (q u v c : ℝ) (h : q ≠ 0 ∨ u ≠ 0 ∨ v ≠ 0)
     (ha : ∀ i, circleValue q u v c (a i) = 0) :
-    ∃ x y : ι → ℂ,
+    ∃ (x : ι → ℂ) (f : ℂ → ℂ),
       (∀ i, (x i).im = 0) ∧
-      (∀ i, circleValue q u v c (-b i) = 0 → (y i).im = 0) ∧
-      (Holds x y U ↔ Holds a b U) := by
+      (∀ i, circleValue q u v c (-b i) = 0 → (f (b i)).im = 0) ∧
+      (Holds x (f ∘ b) U ↔ Holds a b U) := by
   by_cases hq : q = 0
   · let d : ℂ := ⟨u, -v⟩
     have hd : d ≠ 0 := by
@@ -167,6 +167,21 @@ private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Mat
 private theorem ofReal_re_of_im_zero (z : ℂ) (hz : z.im = 0) : (z.re : ℂ) = z :=
   Complex.ext rfl hz.symm
 
+/-- A common generalized circle makes the first spectrum and the specified
+entries of the second spectrum real. One function transforms the partner values. -/
+theorem exists_real_chart_of_common_generalized_circle (a b : ι → ℂ) (p : ι → Prop)
+    (ha : SpectrumOnGeneralizedCircle (Sum.elim a (fun i : {i // p i} => -b i.val)))
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    ∃ (x : ι → ℝ) (f : ℂ → ℂ), (∀ i, p i → (f (b i)).im = 0) ∧
+      (Holds (fun i => (x i : ℂ)) (f ∘ b) U ↔ Holds a b U) := by
+  obtain ⟨q, u, v, c, h, hs⟩ := ha
+  obtain ⟨x, f, hx, hf, hxf⟩ :=
+    exists_real_generalized_circle_chart a b U hU q u v c h (fun i => hs (Sum.inl i))
+  have hleft : (fun i => ((x i).re : ℂ)) = x :=
+    funext fun i => ofReal_re_of_im_zero _ (hx i)
+  refine ⟨fun i => (x i).re, f, fun i hi => hf i (hs (Sum.inr ⟨i, hi⟩)), ?_⟩
+  rwa [hleft]
+
 /-- A single spectrum on a circle or line can be made real, while the other
 spectrum remains arbitrary. The relative unitary is unchanged. -/
 theorem exists_real_spectrum_of_generalized_circle (a b : ι → ℂ)
@@ -176,7 +191,7 @@ theorem exists_real_spectrum_of_generalized_circle (a b : ι → ℂ)
   obtain ⟨x, y, hx, _, hxy⟩ := exists_real_generalized_circle_chart a b U hU q u v c h ha
   have hleft : (fun i => ((x i).re : ℂ)) = x :=
     funext fun i => ofReal_re_of_im_zero _ (hx i)
-  exact ⟨fun i => (x i).re, y, by simpa only [hleft] using hxy⟩
+  exact ⟨fun i => (x i).re, y ∘ b, by simpa only [hleft] using hxy⟩
 
 /-- If the first spectrum and all but one entry of the reflected second spectrum
 lie on the same generalized circle, inclusion holds in every finite dimension. -/
@@ -184,21 +199,19 @@ theorem holds_of_common_circle_with_one_outlier (a b : ι → ℂ) (j : ι)
     (hcircle : SpectrumOnGeneralizedCircle
       (Sum.elim a (fun i : {i // i ≠ j} => -b i.val)))
     (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a b U := by
-  obtain ⟨q, u, v, c, h, hs⟩ := hcircle
-  obtain ⟨x, y, hx, hy, hxy⟩ :=
-    exists_real_generalized_circle_chart a b U hU q u v c h (fun i => hs (Sum.inl i))
-  have hleft : (fun i => ((x i).re : ℂ)) = x :=
-    funext fun i => ofReal_re_of_im_zero _ (hx i)
+  obtain ⟨x, f, hy, hxy⟩ :=
+    exists_real_chart_of_common_generalized_circle a b (fun i => i ≠ j) hcircle U hU
+  let y := f ∘ b
   have hright : Function.update (fun i => ((y i).re : ℂ)) j (y j) = y := by
     funext i
     by_cases hi : i = j
     · subst i
       exact Function.update_self j _ _
     · rw [Function.update_of_ne hi]
-      exact ofReal_re_of_im_zero _ (hy i (hs (Sum.inr ⟨i, hi⟩)))
+      exact ofReal_re_of_im_zero _ (hy i hi)
   apply hxy.mp
-  simpa only [hleft, hright] using
-    holds_of_one_complex_entry (fun i => (x i).re) (fun i => (y i).re) j (y j) U hU
+  simpa only [hright] using
+    holds_of_one_complex_entry x (fun i => (y i).re) j (y j) U hU
 
 end RealChart
 

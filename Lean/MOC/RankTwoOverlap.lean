@@ -162,7 +162,7 @@ theorem exists_overlap_frames (e : ι ⊕ κ ≃ ρ ⊕ σ)
 
 /-- Restricting a diagonal weight to the nonzero spectral entries discards
 only zero contributions. -/
-private theorem weighted_support_columns (U : Matrix ι ι ℂ) (a w : ι → ℂ)
+theorem weighted_support_columns (U : Matrix ι ι ℂ) (a w : ι → ℂ)
     (hw : ∀ i, a i = 0 → w i = 0) :
     let X := U.submatrix id (Subtype.val : {i // a i ≠ 0} → ι)
     X * diagonal (fun i => w i.val) * Xᴴ = U * diagonal w * Uᴴ := by
@@ -181,7 +181,7 @@ private theorem weighted_support_columns (U : Matrix ι ι ℂ) (a w : ι → �
     have hk' : a k = 0 := by simpa using hk
     simp [hw k hk']
 
-private def supportIndicator (a : ι → ℂ) (i : ι) : ℂ := if a i = 0 then 0 else 1
+def supportIndicator (a : ι → ℂ) (i : ι) : ℂ := if a i = 0 then 0 else 1
 
 private theorem matchingProduct_supportIndicator (a b : ι → ℂ) (τ : Equiv.Perm ι) (k : ℕ)
     (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + k) :
@@ -225,7 +225,7 @@ private theorem matchingProduct_supportIndicator (a b : ι → ℂ) (τ : Equiv.
 
 /-- The determinant of the sum of the support projections is the signed
 cover mass scaled by two for every edge inside both supports. -/
-private theorem determinantValue_supportIndicator (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+theorem determinantValue_supportIndicator (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
     (k : ℕ) (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + k) :
     ∃ q : ℝ, 0 ≤ q ∧ q ≤ 1 ∧ (q = 1 ∨ (0 : ℂ) ∈ Set.range (matchingProduct a b)) ∧
       determinantValue (supportIndicator a) (supportIndicator b) U = (2 : ℂ) ^ k * (q : ℂ) := by
@@ -372,7 +372,7 @@ private theorem two_edge_reciprocal_vertex (a b : ι → ℂ)
   unfold matchingProduct
   simp_rw [hv, Finset.prod_mul_distrib, hf, hg] <;> rfl
 
-private theorem support_columns_isometry (U : Matrix ι ι ℂ) (hU : IsUnitary U) (a : ι → ℂ) :
+theorem support_columns_isometry (U : Matrix ι ι ℂ) (hU : IsUnitary U) (a : ι → ℂ) :
     let X := U.submatrix id (Subtype.val : {i // a i ≠ 0} → ι)
     Xᴴ * X = 1 := by
   classical
@@ -381,7 +381,7 @@ private theorem support_columns_isometry (U : Matrix ι ι ℂ) (hU : IsUnitary 
     ← Matrix.submatrix_mul Uᴴ U Subtype.val id Subtype.val Function.bijective_id,
     hU.2, Matrix.submatrix_one _ Subtype.val_injective]
 
-private theorem det_support_sum_eq_zero_of_gram (X : Matrix ι ρ ℂ) (Y : Matrix ι σ ℂ)
+theorem det_support_sum_eq_zero_of_gram (X : Matrix ι ρ ℂ) (Y : Matrix ι σ ℂ)
     (a : ρ → ℂ) (b : σ → ℂ) (hG : (X * Xᴴ + Y * Yᴴ).det = 0) :
     (X * diagonal a * Xᴴ + Y * diagonal b * Yᴴ).det = 0 := by
   let T := fromCols X Y

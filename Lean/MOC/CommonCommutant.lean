@@ -26,7 +26,8 @@ private theorem diagonal_of_commute_simple_diagonal {a : Fin n → ℂ}
     rw [Matrix.diagonal_apply_ne _ hij]
     exact (mul_eq_zero.mp hzero).resolve_left (sub_ne_zero.mpr fun he => hij (ha he))
 
-private theorem constant_left_labels_of_diagonal_intertwining [Nonempty (Fin n)]
+/-- An expanding unitary support permits no nonconstant intertwining diagonal labels. -/
+theorem constant_left_labels_of_diagonal_intertwining [Nonempty (Fin n)]
     {U : Matrix (Fin n) (Fin n) ℂ} (hU : IsUnitary U)
     (hexpand : ∀ s : Finset (Fin n), s.Nonempty → (∃ i, i ∉ s) →
       s.card < (supportColumns U s).card)

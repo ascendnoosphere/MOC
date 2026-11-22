@@ -1,11 +1,23 @@
 import MOC.Claim
+import MOC.CollinearKernelSupport
+import MOC.DiskBoundary
+import MOC.ExtendedCases
 import MOC.FourCentralSymmetry
+import MOC.FourCommonShift
 import MOC.FourEquilateral
 import MOC.Geometry
 import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
+import MOC.HouseholderSupport
+import MOC.IdentityPadding
+import MOC.NormalSupportMaximum
 import MOC.Obstruction
+import MOC.OppositePair
+import MOC.RankTwoOverlap
+import MOC.SparseRow
+import MOC.SpectralAffineContact
+import MOC.WeightedDiamondCensus
 
 open Lean Elab Command in
 run_cmd do

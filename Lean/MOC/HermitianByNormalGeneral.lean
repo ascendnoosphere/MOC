@@ -1,5 +1,6 @@
 import MOC.FiveNonreal
 import MOC.TwoSpectralCircles
+import Mathlib.Data.Set.Card
 
 open Matrix
 
@@ -73,5 +74,38 @@ theorem holds_of_nonreal_partner_on_generalized_circle {n : ℕ}
       exact holds_of_generalized_circular_spectra _ b
         (spectrumOnGeneralizedCircle_of_line _ 0 1 0 (Or.inr one_ne_zero) (fun i => by simp))
         (spectrumOnGeneralizedCircle_neg hb') U hU
+
+/-- Multiplicities of the three nonreal values can be arbitrary. -/
+theorem holds_of_at_most_three_distinct_nonreal_partner_values {n : ℕ}
+    (a : Fin n → ℝ) (b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ)
+    (hU : IsUnitary U)
+    (hb : Nat.card (Set.range (fun i : {i // (b i).im ≠ 0} => b i)) ≤ 3) :
+    Holds (fun i => (a i : ℂ)) b U := by
+  classical
+  exact holds_of_nonreal_partner_on_generalized_circle a b U hU
+    (spectrumOnGeneralizedCircle_of_card_range_le_three _ hb)
+
+/-- A common circle or line may omit up to three distinct values of the
+reflected partner spectrum, with arbitrary multiplicities at those values. -/
+theorem holds_of_common_generalized_circle_with_three_distinct_outliers {n : ℕ}
+    (a b : Fin n → ℂ) (outliers : Finset ℂ) (hcard : outliers.card ≤ 3)
+    (ha : SpectrumOnGeneralizedCircle
+      (Sum.elim a (fun i : {i // -b i ∉ outliers} => -b i.val)))
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) : Holds a b U := by
+  obtain ⟨x, f, hf, hxf⟩ := exists_real_chart_of_common_generalized_circle
+    a b (fun i => -b i ∉ outliers) ha U hU
+  apply hxf.mp
+  apply holds_of_at_most_three_distinct_nonreal_partner_values x (f ∘ b) U hU
+  let g (z : ℂ) := f (-z)
+  have hsub : Set.range (fun i : {i // ((f ∘ b) i).im ≠ 0} => (f ∘ b) i) ⊆
+      g '' (outliers : Set ℂ) := by
+    rintro _ ⟨⟨i, hi⟩, rfl⟩
+    exact ⟨-b i, Finset.mem_coe.mpr (by_contra fun h => hi (hf i h)), by simp [g]⟩
+  rw [Set.Nat.card_coe_set_eq]
+  calc
+    _ ≤ (g '' (outliers : Set ℂ)).ncard :=
+      Set.ncard_le_ncard hsub (outliers.finite_toSet.image g)
+    _ ≤ (outliers : Set ℂ).ncard := Set.ncard_image_le outliers.finite_toSet
+    _ ≤ 3 := by simpa using hcard
 
 end MOC

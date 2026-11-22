@@ -433,6 +433,91 @@ theorem holds_of_normal_support_frobenius_maximum (a b : ι → ℂ)
     (unitaryConj_normal U (diagonal b) hU (diagonal_mul_adjoint_comm b)) hC hdet hmax' htie'
   exact holds_of_joint_unitary_diagonalization a b x y hU hW hx hy
 
+/-- Coordinates for a normal sum at a support maximum. The compressions of the
+second summand in the sum's eigenspaces are diagonal in these coordinates. -/
+theorem diagonal_chart_of_normal_support_maximum (A B : Matrix ι ι ℂ) (η : ℂ)
+    (hA : A * Aᴴ = Aᴴ * A) (hB : B * Bᴴ = Bᴴ * B) (hC : IsStarNormal (A + B))
+    (hmax : ∀ R : Matrix ι ι ℂ, IsUnitary R →
+      (η * (A + R * B * Rᴴ).det).re ≤ (η * (A + B).det).re)
+    (hscalar : ∀ X : Matrix ι ι ℂ, Commute A X → Commute B X →
+      ∃ c : ℂ, X = c • (1 : Matrix ι ι ℂ)) :
+    ∃ (h : ι → ℂ) (W D : Matrix ι ι ℂ), IsUnitary W ∧ A + B = W * diagonal h * Wᴴ ∧
+      D * Dᴴ = Dᴴ * D ∧
+      (diagonal h - D) * (diagonal h - D)ᴴ = (diagonal h - D)ᴴ * (diagonal h - D) ∧
+      (∀ i j, h i = h j → i ≠ j → D i j = 0) ∧
+      (∀ R : Matrix ι ι ℂ, IsUnitary R →
+        (η * (diagonal h - D + R * D * Rᴴ).det).re ≤ (η * (diagonal h).det).re) ∧
+      (∀ d : ι → ℂ, Commute (diagonal d) D → ∃ c : ℂ, ∀ i, d i = c) := by
+  obtain ⟨h, V, hV, hs⟩ := exists_unitary_diagonalization (A + B) hC
+  let B₀ := unitaryConj Vᴴ B
+  have hA₀ : unitaryConj Vᴴ A = diagonal h - B₀ := by
+    apply eq_sub_of_add_eq
+    rw [← unitaryConj_add, hs]
+    simpa only [Matrix.conjTranspose_conjTranspose] using
+      unitaryConj_inverse Vᴴ (diagonal h) (unitary_star hV)
+  obtain ⟨Q, hQ, hcQ, hwithin⟩ := exists_unitary_for_eigenvalue_compressions h B₀
+    (unitaryConj_normal Vᴴ B (unitary_star hV) hB)
+    (hA₀ ▸ unitaryConj_normal Vᴴ A (unitary_star hV) hA)
+  have hQh : unitaryConj Q (diagonal h) = diagonal h := by
+    rw [unitaryConj, hcQ.symm.eq, Matrix.mul_assoc, hQ.1, Matrix.mul_one]
+  let W := V * Q
+  let D := unitaryConj Wᴴ B
+  have hW : IsUnitary W := unitary_mul hV hQ
+  have hs' : A + B = unitaryConj W (diagonal h) := by
+    change A + B = unitaryConj (V * Q) (diagonal h)
+    rw [← unitaryConj_comp, hQh]
+    exact hs
+  have hA' : unitaryConj Wᴴ A = diagonal h - D := by
+    apply eq_sub_of_add_eq
+    rw [← unitaryConj_add, hs']
+    simpa only [Matrix.conjTranspose_conjTranspose] using
+      unitaryConj_inverse Wᴴ (diagonal h) (unitary_star hW)
+  have hD : D = Qᴴ * B₀ * Q := by
+    have he : D = unitaryConj Qᴴ B₀ := by
+      change unitaryConj (V * Q)ᴴ B = unitaryConj Qᴴ (unitaryConj Vᴴ B)
+      rw [Matrix.conjTranspose_mul, unitaryConj_comp]
+    simpa only [unitaryConj, Matrix.conjTranspose_conjTranspose] using he
+  have horbit (R : Matrix ι ι ℂ) :
+      unitaryConj W (diagonal h - D + R * D * Rᴴ) =
+        A + (W * R * Wᴴ) * B * (W * R * Wᴴ)ᴴ := by
+    change unitaryConj W (diagonal h - D + unitaryConj R D) =
+      A + unitaryConj (W * R * Wᴴ) B
+    rw [← hA', unitaryConj_add, unitaryConj_inverse _ _ hW, unitaryConj_comp]
+    exact congrArg (A + ·) (unitaryConj_comp (W * R) Wᴴ B)
+  refine ⟨h, W, D, hW, hs', unitaryConj_normal Wᴴ B (unitary_star hW) hB,
+    hA' ▸ unitaryConj_normal Wᴴ A (unitary_star hW) hA, hD.symm ▸ hwithin, ?_, ?_⟩
+  · intro R hR
+    have hR' := unitary_mul (unitary_mul hW hR) (unitary_star hW)
+    rw [← det_unitary_conjugation W (diagonal h - D + R * D * Rᴴ) hW,
+      ← det_unitary_conjugation W (diagonal h) hW]
+    change (η * (unitaryConj W (diagonal h - D + R * D * Rᴴ)).det).re ≤
+      (η * (unitaryConj W (diagonal h)).det).re
+    rw [horbit R, ← hs']
+    exact hmax _ hR'
+  · intro d hd
+    have hcd : Commute (diagonal h) (diagonal d) := by
+      change diagonal h * diagonal d = diagonal d * diagonal h
+      rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
+      exact congrArg diagonal (funext fun i => mul_comm _ _)
+    have ha : Commute (unitaryConj Wᴴ A) (diagonal d) := by
+      rw [hA']
+      exact hcd.sub_left hd.symm
+    have h' (X : Matrix ι ι ℂ) (hX : Commute (unitaryConj Wᴴ X) (diagonal d)) :
+        Commute X (unitaryConj W (diagonal d)) := by
+      have ht := (unitaryConj_commute_iff W _ _ hW).mpr hX
+      rwa [unitaryConj_inverse _ _ hW] at ht
+    obtain ⟨c, hc⟩ := hscalar _ (h' A ha) (h' B hd.symm)
+    have hc' := congrArg (unitaryConj Wᴴ) hc
+    rw [show unitaryConj Wᴴ (unitaryConj W (diagonal d)) = diagonal d by
+      simpa only [Matrix.conjTranspose_conjTranspose] using
+        unitaryConj_inverse Wᴴ (diagonal d) (unitary_star hW)] at hc'
+    refine ⟨c, fun i => ?_⟩
+    have he : diagonal d = c • (1 : Matrix ι ι ℂ) := by
+      simpa only [unitaryConj, Matrix.conjTranspose_conjTranspose, Matrix.mul_smul,
+        Matrix.smul_mul, Matrix.mul_one, hW.2] using hc'
+    simpa only [Matrix.diagonal_apply_eq, Matrix.smul_apply, Matrix.one_apply_eq,
+      smul_eq_mul, mul_one] using congrArg (fun X : Matrix ι ι ℂ => X i i) he
+
 end
 
 end MOC

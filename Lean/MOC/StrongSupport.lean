@@ -102,7 +102,8 @@ noncomputable section
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-private theorem permMatrix_conjugates (σ : Equiv.Perm ι) (M : Matrix ι ι ℂ) :
+/-- Conjugation by a permutation matrix relabels both indices. -/
+theorem permMatrix_conjugates (σ : Equiv.Perm ι) (M : Matrix ι ι ℂ) :
     σ.permMatrix ℂ * M * (σ.permMatrix ℂ)ᴴ = M.submatrix σ σ := by
   rw [Matrix.conjTranspose_permMatrix]
   change (σ.toPEquiv.toMatrix : Matrix ι ι ℂ) * M * (σ⁻¹).toPEquiv.toMatrix = _
@@ -110,18 +111,20 @@ private theorem permMatrix_conjugates (σ : Equiv.Perm ι) (M : Matrix ι ι ℂ
     Matrix.submatrix_submatrix, Function.comp_id, Function.id_comp,
     Equiv.Perm.inv_def, Equiv.symm_symm]
 
-/-- A permutation of the right eigenbasis realizes the matching product. -/
-theorem matchingProduct_mem_determinantRange (a b : ι → ℂ) (σ : Equiv.Perm ι) :
-    matchingProduct a b σ ∈ determinantRange a b := by
+/-- A permutation matrix is an allowed relative eigenbasis. -/
+theorem isUnitary_permMatrix (σ : Equiv.Perm ι) : IsUnitary (σ.permMatrix ℂ) := by
   have hright (τ : Equiv.Perm ι) :
       τ.permMatrix ℂ * (τ.permMatrix ℂ)ᴴ = 1 := by
     simpa only [Matrix.mul_one, Matrix.submatrix_one_equiv] using
       permMatrix_conjugates τ (1 : Matrix ι ι ℂ)
-  have hu (τ : Equiv.Perm ι) : IsUnitary (τ.permMatrix ℂ) := by
-    refine ⟨hright τ, ?_⟩
-    rw [Matrix.conjTranspose_permMatrix]
-    simpa only [Matrix.conjTranspose_permMatrix, inv_inv] using hright τ⁻¹
-  refine ⟨Equiv.Perm.permMatrix ℂ σ.symm, hu σ.symm, ?_⟩
+  refine ⟨hright σ, ?_⟩
+  rw [Matrix.conjTranspose_permMatrix]
+  simpa only [Matrix.conjTranspose_permMatrix, inv_inv] using hright σ⁻¹
+
+/-- A permutation of the right eigenbasis realizes the matching product. -/
+theorem matchingProduct_mem_determinantRange (a b : ι → ℂ) (σ : Equiv.Perm ι) :
+    matchingProduct a b σ ∈ determinantRange a b := by
+  refine ⟨Equiv.Perm.permMatrix ℂ σ.symm, isUnitary_permMatrix σ.symm, ?_⟩
   rw [determinantValue, permMatrix_conjugates, Matrix.submatrix_diagonal_equiv,
     Matrix.diagonal_add, Matrix.det_diagonal]
   simpa only [Function.comp_apply, Equiv.symm_symm] using (matchingProduct_inverse a b σ.symm).symm
