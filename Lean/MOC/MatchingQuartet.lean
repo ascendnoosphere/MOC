@@ -91,6 +91,20 @@ theorem matchingProduct_disjoint_swaps_alternating_sum
   rw [h₀₀, h₁₁, h₁₀, h₀₁]
   ring
 
+private theorem matchingProduct_disjoint_swaps_alternating_sum_ne_zero_of_unequal_pairs
+    (a b : ι → ℂ) (σ : Equiv.Perm ι) (i j k l : ι)
+    (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l)
+    (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l)
+    (haij : a (σ i) ≠ a (σ j)) (hakl : a (σ k) ≠ a (σ l))
+    (hbij : b i ≠ b j) (hbkl : b k ≠ b l) (hnz : ∀ r s, a r + b s ≠ 0) :
+    matchingProduct a b σ + matchingProduct a b (σ * Equiv.swap i j * Equiv.swap k l) -
+        matchingProduct a b (σ * Equiv.swap i j) - matchingProduct a b (σ * Equiv.swap k l) ≠ 0 := by
+  rw [matchingProduct_disjoint_swaps_alternating_sum a b σ i j k l hij hik hil hjk hjl hkl]
+  exact mul_ne_zero
+    (mul_ne_zero (Finset.prod_ne_zero_iff.mpr fun m _ => hnz (σ m) m)
+      (mul_ne_zero (sub_ne_zero.mpr haij) (sub_ne_zero.mpr hbij.symm)))
+    (mul_ne_zero (sub_ne_zero.mpr hakl) (sub_ne_zero.mpr hbkl.symm))
+
 /-- Simple spectra with no opposite pairs give a nonzero alternating sum. -/
 theorem matchingProduct_disjoint_swaps_alternating_sum_ne_zero
     (a b : ι → ℂ) (σ : Equiv.Perm ι) (i j k l : ι)
@@ -98,12 +112,10 @@ theorem matchingProduct_disjoint_swaps_alternating_sum_ne_zero
     (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l)
     (ha : Function.Injective a) (hb : Function.Injective b) (hnz : ∀ r s, a r + b s ≠ 0) :
     matchingProduct a b σ + matchingProduct a b (σ * Equiv.swap i j * Equiv.swap k l) -
-        matchingProduct a b (σ * Equiv.swap i j) - matchingProduct a b (σ * Equiv.swap k l) ≠ 0 := by
-  rw [matchingProduct_disjoint_swaps_alternating_sum a b σ i j k l hij hik hil hjk hjl hkl]
-  exact mul_ne_zero
-    (mul_ne_zero (Finset.prod_ne_zero_iff.mpr fun m _ => hnz (σ m) m)
-      (mul_ne_zero (sub_ne_zero.mpr (ha.ne (σ.injective.ne hij))) (sub_ne_zero.mpr (hb.ne hij.symm))))
-    (mul_ne_zero (sub_ne_zero.mpr (ha.ne (σ.injective.ne hkl))) (sub_ne_zero.mpr (hb.ne hkl.symm)))
+        matchingProduct a b (σ * Equiv.swap i j) - matchingProduct a b (σ * Equiv.swap k l) ≠ 0 :=
+  matchingProduct_disjoint_swaps_alternating_sum_ne_zero_of_unequal_pairs
+    a b σ i j k l hij hik hil hjk hjl hkl
+    (ha.ne (σ.injective.ne hij)) (ha.ne (σ.injective.ne hkl)) (hb.ne hij) (hb.ne hkl) hnz
 
 /-- A quartet with nonzero alternating sum has only one common translate satisfying
 its multiplicative identity. -/
@@ -135,13 +147,14 @@ private theorem quartet_common_height_eq_zero {z₀₀ z₀₁ z₁₀ z₁₁ :
       ring
     · simpa only [Complex.add_im, Complex.sub_im, Complex.zero_im] using him₀
 
-/-- For simple spectra with no opposite pairs, four matchings formed by disjoint swaps
-can share a common support height only when it is zero. -/
-theorem matchingProduct_disjoint_swaps_common_height_eq_zero
+/-- If each swap exchanges unequal values in both spectra and no pair sum
+vanishes, the four matching products have common support height only at zero. -/
+theorem matchingProduct_disjoint_swaps_common_height_eq_zero_of_unequal_pairs
     (a b : ι → ℂ) (σ : Equiv.Perm ι) (i j k l : ι)
     (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l)
     (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l)
-    (ha : Function.Injective a) (hb : Function.Injective b) (hnz : ∀ r s, a r + b s ≠ 0)
+    (haij : a (σ i) ≠ a (σ j)) (hakl : a (σ k) ≠ a (σ l))
+    (hbij : b i ≠ b j) (hbkl : b k ≠ b l) (hnz : ∀ r s, a r + b s ≠ 0)
     {η : ℂ} (hη : η ≠ 0) {H : ℝ}
     (h₀₀ : (η * matchingProduct a b σ).re = H)
     (h₀₁ : (η * matchingProduct a b (σ * Equiv.swap i j)).re = H)
@@ -155,8 +168,8 @@ theorem matchingProduct_disjoint_swaps_common_height_eq_zero
   have hdiag : z₀₀ * z₁₁ = z₀₁ * z₁₀ :=
     matchingProduct_disjoint_swaps_identity a b σ i j k l hij hik hil hjk hjl hkl
   have hΓ : z₀₀ + z₁₁ - z₀₁ - z₁₀ ≠ 0 :=
-    matchingProduct_disjoint_swaps_alternating_sum_ne_zero a b σ i j k l
-      hij hik hil hjk hjl hkl ha hb hnz
+    matchingProduct_disjoint_swaps_alternating_sum_ne_zero_of_unequal_pairs
+      a b σ i j k l hij hik hil hjk hjl hkl haij hakl hbij hbkl hnz
   have hdiag' : (η * z₀₀) * (η * z₁₁) = (η * z₀₁) * (η * z₁₀) := calc
     _ = η ^ 2 * (z₀₀ * z₁₁) := by ring
     _ = η ^ 2 * (z₀₁ * z₁₀) := by rw [hdiag]
@@ -166,5 +179,23 @@ theorem matchingProduct_disjoint_swaps_common_height_eq_zero
       η * (z₀₀ + z₁₁ - z₀₁ - z₁₀) by ring]
     exact mul_ne_zero hη hΓ
   exact quartet_common_height_eq_zero hdiag' hΓ' h₀₀ h₀₁ h₁₀ h₁₁
+
+/-- For simple spectra with no opposite pairs, four matchings formed by disjoint swaps
+can share a common support height only when it is zero. -/
+theorem matchingProduct_disjoint_swaps_common_height_eq_zero
+    (a b : ι → ℂ) (σ : Equiv.Perm ι) (i j k l : ι)
+    (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l)
+    (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l)
+    (ha : Function.Injective a) (hb : Function.Injective b) (hnz : ∀ r s, a r + b s ≠ 0)
+    {η : ℂ} (hη : η ≠ 0) {H : ℝ}
+    (h₀₀ : (η * matchingProduct a b σ).re = H)
+    (h₀₁ : (η * matchingProduct a b (σ * Equiv.swap i j)).re = H)
+    (h₁₀ : (η * matchingProduct a b (σ * Equiv.swap k l)).re = H)
+    (h₁₁ : (η * matchingProduct a b (σ * Equiv.swap i j * Equiv.swap k l)).re = H) :
+    H = 0 :=
+  matchingProduct_disjoint_swaps_common_height_eq_zero_of_unequal_pairs
+    a b σ i j k l hij hik hil hjk hjl hkl
+    (ha.ne (σ.injective.ne hij)) (ha.ne (σ.injective.ne hkl)) (hb.ne hij) (hb.ne hkl)
+    hnz hη h₀₀ h₀₁ h₁₀ h₁₁
 
 end MOC

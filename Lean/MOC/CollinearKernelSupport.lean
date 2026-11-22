@@ -23,8 +23,14 @@ private theorem block_products_eq_marker (K : Matrix ι ι ℂ) (hK : VanishingT
   by_cases hs : S.map σ.toEmbedding = S
   · rw [if_pos hs]
     have hpres (j : ι) : σ j ∈ S ↔ j ∈ S := by
-      rw [← hs]
-      simp [Finset.mem_map, Equiv.apply_eq_iff_eq]
+      constructor
+      · intro hj
+        have hmem : σ j ∈ S.map σ.toEmbedding := by rwa [hs]
+        rcases Finset.mem_map.mp hmem with ⟨a, ha, hσ⟩
+        rwa [← (Equiv.apply_eq_iff_eq σ).mp hσ]
+      · intro hj
+        have hmem : σ j ∈ S.map σ.toEmbedding := Finset.mem_map.mpr ⟨j, hj, rfl⟩
+        simpa only [hs] using hmem
     let t (j : ι) := if j ∈ S then p else q
     have hfactor (j : ι) : K (σ j) j = K (σ j) (t (σ j)) * K (t j) j := by
       by_cases hj : j ∈ S
