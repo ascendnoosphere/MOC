@@ -25,8 +25,11 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | Two real spectra. | Any finite order | [Hermitian.lean](Lean/MOC/Hermitian.lean) |
 | Two spectra on parallel affine lines. | Any finite order | [Collinear.lean](Lean/MOC/Collinear.lean) |
 | A real first spectrum and a second spectrum that is real outside one specified entry. | Any positive order | [OneOffLine.lean](Lean/MOC/OneOffLine.lean) |
+| A real first spectrum and at most three nonreal eigenvalues in the second spectrum, counted with multiplicity. | Any finite order | [FiveNonreal.lean](Lean/MOC/FiveNonreal.lean) |
+| A real first spectrum and a second spectrum whose nonreal eigenvalues lie on one circle or line. The real eigenvalues may be arbitrary. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
 | The first spectrum and all but one entry of the negated second spectrum on the same circle or line. | Any positive order | [GeneralizedSpectralCircles.lean](Lean/MOC/GeneralizedSpectralCircles.lean) |
 | The first spectrum and the negated second spectrum on two tangent circles of positive radius. | Any finite order | [CircleSpectra.lean](Lean/MOC/CircleSpectra.lean) |
+| Two spectra that each lie on a circle or line, with independent circles or lines. | Any finite order | [TwoSpectralCircles.lean](Lean/MOC/TwoSpectralCircles.lean) |
 | A spectrum with at most two distinct values on either side. | Any finite order | [TwoValues.lean](Lean/MOC/TwoValues.lean) |
 | A first spectrum with one value in all but at most two positions. | Any finite order | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
 | Either spectrum with a repeated value. | Four | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |

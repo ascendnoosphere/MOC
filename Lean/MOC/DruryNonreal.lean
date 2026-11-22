@@ -163,29 +163,12 @@ theorem determinant_rankOnePhase_of_nonreal_pencil_vector (A C : Matrix ι ι �
     _ = T.det * ((1 + (z - 1) * r) * (1 + (star z - 1) * s)) * z := by ring
     _ = _ := by rw [hratio]
 
-/-- The determinant of a nonsingular Hermitian pencil with a nonreal
-generalized eigenvalue cannot satisfy a quadratic support penalty on its orbit. -/
-theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
-    (hA : A.IsHermitian) (hC : C.IsHermitian) (κ ξ ρ : ℂ) (hκ : κ ≠ 0)
-    (hρ : ρ ≠ star ρ) (u : ι → ℂ) (hu : ∑ i, star (u i) * u i = 1)
-    (heig : C *ᵥ u = ρ • (A *ᵥ u)) :
-    let T := A - κ • C
-    IsUnit T.det →
-    (∀ V : Matrix ι ι ℂ, IsUnitary V →
-      let d := (A - κ • (V * C * Vᴴ)).det - T.det
-      (ξ * d).re ≤ -Complex.normSq d / 2) → False := by
-  dsimp only
-  let T := A - κ • C
-  let r := (1 - κ * ρ)⁻¹
-  let s := (1 - κ * star ρ)⁻¹
-  let D := -T.det * κ * r * s
-  intro hT hpenalty
-  change IsUnit T.det at hT
-  obtain ⟨hr, hs, _⟩ := determinant_rankOnePhase_of_nonreal_pencil_vector
-    A C hA hC κ ρ hρ u hu heig 1 (by simp) hT
-  have hD : D ≠ 0 :=
-    mul_ne_zero (mul_ne_zero (mul_ne_zero (neg_ne_zero.mpr (isUnit_iff_ne_zero.mp hT)) hκ)
-      (inv_ne_zero hr)) (inv_ne_zero hs)
+/-- A nonreal phase coefficient gives determinant increments in both directions
+on one line through zero. A nonsingular multiplier excludes quadratic support. -/
+theorem no_quadratic_support_of_phase_line (ξ D ρ : ℂ) (hD : D ≠ 0) (hρ : ρ ≠ star ρ)
+    (hpenalty : ∀ z : ℂ, z * star z = 1 →
+      let d := ((z - 1) * star ρ + (star z - 1) * ρ) * D
+      (ξ * d).re ≤ -Complex.normSq d / 2) : False := by
   let H (z : ℂ) := 2 * ((z - 1) * star ρ).re
   have hH (z : ℂ) : ((H z : ℝ) : ℂ) = (z - 1) * star ρ + (star z - 1) * ρ := by
     have he : star ((z - 1) * star ρ) = (star z - 1) * ρ := by
@@ -194,16 +177,9 @@ theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
     rw [← he, Complex.star_def, Complex.add_conj]
   have hsupport (z : ℂ) (hz : z * star z = 1) :
       H z * (ξ * D).re ≤ -Complex.normSq ((H z : ℂ) * D) / 2 := by
-    let V := rankOnePhase u z
-    have hd : (A - κ • (V * C * Vᴴ)).det - T.det = (H z : ℂ) * D := by
-      rw [(determinant_rankOnePhase_of_nonreal_pencil_vector A C hA hC κ ρ hρ
-        u hu heig z hz hT).2.2, ← hH]
-      dsimp only [D, r, s]
-      ring
-    have h := hpenalty V (rankOnePhase_unitary u z hu hz)
-    change (ξ * ((A - κ • (V * C * Vᴴ)).det - T.det)).re ≤
-      -Complex.normSq ((A - κ • (V * C * Vᴴ)).det - T.det) / 2 at h
-    rw [hd] at h
+    have h := hpenalty z hz
+    dsimp only at h
+    rw [← hH z] at h
     simpa only [mul_left_comm ξ (H z : ℂ) D, Complex.re_ofReal_mul] using h
   have him : ρ.im ≠ 0 := fun h => hρ (by
     simpa only [Complex.star_def] using (Complex.conj_eq_iff_im.mpr h).symm)
@@ -255,7 +231,45 @@ theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
   exact (not_le_of_gt (mul_pos_of_neg_of_neg hneg hξD))
     ((hsupport (-p) hn).trans (by linarith only [Complex.normSq_nonneg ((H (-p) : ℂ) * D)]))
 
-private theorem exists_normalized_column (v : ι → ℂ) (hv : v ≠ 0) :
+/-- The determinant of a nonsingular Hermitian pencil with a nonreal
+generalized eigenvalue cannot satisfy a quadratic support penalty on its orbit. -/
+theorem no_quadratic_support_of_nonreal_pencil_vector (A C : Matrix ι ι ℂ)
+    (hA : A.IsHermitian) (hC : C.IsHermitian) (κ ξ ρ : ℂ) (hκ : κ ≠ 0)
+    (hρ : ρ ≠ star ρ) (u : ι → ℂ) (hu : ∑ i, star (u i) * u i = 1)
+    (heig : C *ᵥ u = ρ • (A *ᵥ u)) :
+    let T := A - κ • C
+    IsUnit T.det →
+    (∀ V : Matrix ι ι ℂ, IsUnitary V →
+      let d := (A - κ • (V * C * Vᴴ)).det - T.det
+      (ξ * d).re ≤ -Complex.normSq d / 2) → False := by
+  dsimp only
+  let T := A - κ • C
+  let r := (1 - κ * ρ)⁻¹
+  let s := (1 - κ * star ρ)⁻¹
+  let D := -T.det * κ * r * s
+  intro hT hpenalty
+  change IsUnit T.det at hT
+  obtain ⟨hr, hs, _⟩ := determinant_rankOnePhase_of_nonreal_pencil_vector
+    A C hA hC κ ρ hρ u hu heig 1 (by simp) hT
+  have hD : D ≠ 0 :=
+    mul_ne_zero (mul_ne_zero (mul_ne_zero (neg_ne_zero.mpr (isUnit_iff_ne_zero.mp hT)) hκ)
+      (inv_ne_zero hr)) (inv_ne_zero hs)
+  apply no_quadratic_support_of_phase_line ξ D ρ hD hρ
+  intro z hz
+  let V := rankOnePhase u z
+  have hd : (A - κ • (V * C * Vᴴ)).det - T.det =
+      ((z - 1) * star ρ + (star z - 1) * ρ) * D := by
+    rw [(determinant_rankOnePhase_of_nonreal_pencil_vector A C hA hC κ ρ hρ
+      u hu heig z hz hT).2.2]
+    dsimp only [D, r, s]
+    ring
+  have h := hpenalty V (rankOnePhase_unitary u z hu hz)
+  change (ξ * ((A - κ • (V * C * Vᴴ)).det - T.det)).re ≤
+    -Complex.normSq ((A - κ • (V * C * Vᴴ)).det - T.det) / 2 at h
+  rwa [hd] at h
+
+/-- A nonzero complex column can be scaled to have squared norm one. -/
+theorem exists_normalized_complex_column (v : ι → ℂ) (hv : v ≠ 0) :
     ∃ k : ℂ, ∑ i, star ((k • v) i) * (k • v) i = 1 := by
   classical
   let s := ∑ i, Complex.normSq (v i)
@@ -299,7 +313,7 @@ theorem det_pencil_ne_zero_of_quadratic_support (A C : Matrix ι ι ℂ)
   have hvec : C *ᵥ v = ρ • (A *ᵥ v) := by
     apply sub_eq_zero.mp
     simpa only [Matrix.sub_mulVec, Matrix.smul_mulVec_assoc] using hz
-  obtain ⟨k, hk⟩ := exists_normalized_column v hv
+  obtain ⟨k, hk⟩ := exists_normalized_complex_column v hv
   have heig : C *ᵥ (k • v) = ρ • (A *ᵥ (k • v)) := by
     simp only [Matrix.mulVec_smul, hvec, smul_smul, mul_comm k ρ]
   exact no_quadratic_support_of_nonreal_pencil_vector A C hA hC κ ξ ρ hκ hρ
