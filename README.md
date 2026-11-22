@@ -1,23 +1,54 @@
-# Marcus–de Oliveira research continuation
+# Marcus–de Oliveira in Lean
 
-Start with the [research report](Docs/MOC_progress.pdf) for the statements, proofs and scope of the results, or read its [LaTeX source](Docs/MOC_progress.tex). For the order-four case analysis and its higher-dimensional extensions, see the [case index](Docs/Cases/README.md) or the [compiled proofs](Docs/Cases/Cases.pdf).
+This Lean 4 library states the Marcus–de Oliveira conjecture (MOC) and proves the cases below. The unrestricted conjecture is open. [Claim](Lean/MOC/Claim.lean)
 
-From the repository root, run `python3 -B Code/verify_cone82.py` to check the 82-facet boundary certificate. The [reproduction guide](Docs/reproduction.md) gives the commands for every verifier and the report build. Use Python 3.10 or later with assertions enabled. The symbolic checks use SymPy. The spin certificate also uses a C++17 compiler with OpenMP and GMP.
+## Build
 
-| Result in the report | Proof or verification |
+Install Elan. Run these commands from the repository root. [Elan](https://github.com/leanprover/elan)
+
+```sh
+cd Lean
+lake build
+```
+
+Elan uses the Lean version in `lean-toolchain`. Lake uses the dependency revisions in `lake-manifest.json`. [Toolchain](Lean/lean-toolchain) · [Manifest](Lean/lake-manifest.json)
+
+## Proved cases
+
+Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b$. Let $U$ be their relative unitary matrix. A matching product is $P_\sigma=\prod_j(a_{\sigma(j)}+b_j)$.
+
+| MOC proved for | Order | Lean proof |
+| --- | --- | --- |
+| All complex spectra and all relative unitary matrices. | At most three | [Small.lean](Lean/MOC/Small.lean) |
+| Pairs with a common unitary eigenbasis. | Any finite order | [Normal.lean](Lean/MOC/Normal.lean) |
+| Pairs with a singular sum. | Any finite order | [Singular.lean](Lean/MOC/Singular.lean) |
+| Two real spectra. | Any finite order | [Hermitian.lean](Lean/MOC/Hermitian.lean) |
+| Two spectra on parallel affine lines. | Any finite order | [Collinear.lean](Lean/MOC/Collinear.lean) |
+| A real first spectrum and a second spectrum that is real outside one specified entry. | Any positive order | [OneOffLine.lean](Lean/MOC/OneOffLine.lean) |
+| The first spectrum and all but one entry of the negated second spectrum on the same circle or line. | Any positive order | [GeneralizedSpectralCircles.lean](Lean/MOC/GeneralizedSpectralCircles.lean) |
+| The first spectrum and the negated second spectrum on two tangent circles of positive radius. | Any finite order | [CircleSpectra.lean](Lean/MOC/CircleSpectra.lean) |
+| A spectrum with at most two distinct values on either side. | Any finite order | [TwoValues.lean](Lean/MOC/TwoValues.lean) |
+| A first spectrum with one value in all but at most two positions. | Any finite order | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
+| Either spectrum with a repeated value. | Four | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
+| An opposite eigenvalue pair, with $a_i+b_j=0$ for some $i,j$. | Four | [FourCoincidence.lean](Lean/MOC/FourCoincidence.lean) |
+| A total rank of at most $n+2$ for $A+tI$ and $B-tI$, for some complex scalar $t$. | Any finite order | [RankSum.lean](Lean/MOC/RankSum.lean) · [RankTwoOverlap.lean](Lean/MOC/RankTwoOverlap.lean) |
+| Relative unitary $U=I+(z-1)vv^*$, with $\lVert v\rVert=1$ and $\lvert z\rvert=1$. | Any positive order | [HouseholderSupport.lean](Lean/MOC/HouseholderSupport.lean) |
+| A relative unitary with a row or column that has at most two nonzero entries. | Four | [SparseRow.lean](Lean/MOC/SparseRow.lean) · [Small.lean](Lean/MOC/Small.lean) |
+| A relative unitary that splits into two blocks of order at most three after independent row and column permutations. | At most six | [Small.lean](Lean/MOC/Small.lean) |
+| A relative unitary $U$ for which $U-I$ has zero entries outside a principal block of order at most three. | Any finite order | [IdentityPadding.lean](Lean/MOC/IdentityPadding.lean) · [Small.lean](Lean/MOC/Small.lean) |
+| Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Four | [FourCommonShift.lean](Lean/MOC/FourCommonShift.lean) |
+
+### Sufficient tests
+
+Each test proves MOC for an instance that meets its hypotheses.
+
+| Test | Lean proof |
 | --- | --- |
-| Shifted rank sum at most \(n+2\) | Sections 2–3 and [six-dimensional example](Code/verify_rank_sum_six.py) |
-| One order-four spectrum on a circle or line | Sections 4–6, [alternative normalization](Docs/MOC4_Hermitian_Proof.md) and [mixed inequalities](Code/moc4_hermitian_certificate.py) |
-| Complete list of 82 facets | [Boundary-chain verifier](Code/verify_cone82.py), [certificate](data/cone82.json) and [independent exhaustive audit](Code/audit_82_exact.cpp) |
-| All relative eigenbases in a specified neighborhood of complex spectral pairs | Section 7, [proof](Docs/moc4_open_spectra.md) and [verifier](Code/verify_moc4_open_spectra.py) |
-| Central positive weights for bundles of matrix algebras | Section 7 |
-| Spin-three-halves family, all spectra | Section 8 and [spin certificate](Docs/spin/PROOF.md) |
-| Fixed spectra obstructing singleton-matched scalar weights | Section 9 and [exact separation and three-weight certificate](Code/verify_singleton_obstruction.py) |
-| Three-dimensional intersection with two distinct nonzero eigenvalues on one side, or with reciprocal values on a line and repeated endpoints | [Overlap supplement](Docs/MOC_Overlap_Three_Supplement.md), including its separate comparison hull with zero |
-| Generalized circles on nested reducing subspaces | [Local pole theorem](Docs/local_pole_theorem.md) and [verifier](Code/verify_local_pole.py). The supplement uses the difference convention. |
+| All real signed determinant weights of $U$ are nonnegative. | [Weights.lean](Lean/MOC/Weights.lean) |
+| For every permutation $\sigma$, the matching product has the form $c+\sum_j f(j,\sigma(j))$, with fixed $c$ and $f$. | [Weights.lean](Lean/MOC/Weights.lean) |
+| The relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and has largest Frobenius norm among the maximizing sums. | [NormalOrbit.lean](Lean/MOC/NormalOrbit.lean) |
+| A convex representation of zero gives weights at least $\varepsilon\ge0$ to two matching products $p,q$. Require $\lVert p\rVert+\lVert q\rVert>0$ and $(\lVert p\rVert+\lVert q\rVert)\lvert\det(A+B)\rvert\le\varepsilon\lvert\operatorname{Im}(p\bar q)\rvert$. | [DiskBoundary.lean](Lean/MOC/DiskBoundary.lean) |
 
-The [document index](Docs/README.md) covers the larger research collection. [Lean formalization](Lean/README.md) gives the build and literature coverage.
+For the large-shift case, let $T=\operatorname{tr}(AB)$ and $q_\sigma=\sum_j a_{\sigma(j)}b_j$. The margin requires a $\delta>0$ that applies in every unit direction. For each $\eta$ with $\lvert\eta\rvert=1$, some permutation satisfies $\operatorname{Re}(\eta(T-q_\sigma))\ge\delta$.
 
-## Further order-four research
-
-The latest checkpoint includes [two certified quaternionic families](Docs/Cases/QuaternionAttack.md), [the mixed-facet reduction and its obstruction](Docs/Cases/SimplexAttack.md), and [a spectral neighborhood uniform in the fourth eigenvalue](Docs/Cases/SpectralAttack.md). The [two-eigenvalue hull](Docs/Cases/ExtremaAttack.md), [pencil experiments](Docs/Cases/PencilAttack.md), [centrally symmetric pairs](Docs/Cases/PairedAttack.md), and [first-jet calculations](Docs/Cases/JetExperiments.md) record the remaining tests and the scope of the numerical evidence. Unrestricted order-four MOC remains unresolved in this work.
+The source guide defines the Lean statement and lists equivalent forms and proof reductions. [Source guide](Lean/README.md)

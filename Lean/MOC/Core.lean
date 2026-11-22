@@ -77,6 +77,13 @@ theorem determinantValue_relative (a b : ι → ℂ) (V W : Matrix ι ι ℂ) (h
   simp only [determinantValue, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
     Matrix.mul_assoc]
 
+/-- Moving the unitary conjugation to the first summand uses the adjoint relative basis. -/
+theorem determinantValue_left_conjugation (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) :
+    (U * diagonal a * Uᴴ + diagonal b).det = determinantValue a b Uᴴ := by
+  simpa only [Matrix.conjTranspose_one, Matrix.one_mul, Matrix.mul_one] using
+    determinantValue_relative a b U (1 : Matrix ι ι ℂ) hU
+
 theorem relative_unitary (V W : Matrix ι ι ℂ) (hV : IsUnitary V) (hW : IsUnitary W) :
     IsUnitary (Vᴴ * W) := by
   constructor

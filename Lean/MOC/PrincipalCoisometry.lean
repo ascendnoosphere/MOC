@@ -43,8 +43,7 @@ private theorem exists_perm_extending_retained (i : Fin (n + 1)) (e : Fin n ↪ 
     exact fun h => hz ⟨k, h.symm⟩
   have hinj : Function.Injective g := by
     intro j k
-    rcases i.eq_self_or_eq_succAbove j with rfl | ⟨j, rfl⟩ <;>
-      rcases i.eq_self_or_eq_succAbove k with rfl | ⟨k, rfl⟩
+    induction j using i.succAboveCases <;> induction k using i.succAboveCases
     · exact fun _ => rfl
     · exact fun h => (hne _ h).elim
     · exact fun h => (hne _ h.symm).elim

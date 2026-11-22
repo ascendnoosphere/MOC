@@ -31,7 +31,11 @@ theorem holds_of_identity_outside (a b : ι → ℂ) {U : Matrix ι ι ℂ}
       exact Matrix.one_apply_ne (fun h : (i : ι) = (j : ι) => i.property (h.symm ▸ j.property))
     · change U (i : ι) (j : ι) = (1 : Matrix T T ℂ) i j
       rw [hout _ _ (Or.inl i.property)]
-      simp [Matrix.one_apply, Subtype.ext_iff]
+      by_cases hij : i = j
+      · subst j
+        simp only [Matrix.one_apply_eq]
+      · have hval : (i : ι) ≠ (j : ι) := fun h => hij (Subtype.ext h)
+        rw [Matrix.one_apply_ne hval, Matrix.one_apply_ne hij]
   have hVU : IsUnitary V := by
     have he := unitary_reindex e e hU
     rw [hblock] at he

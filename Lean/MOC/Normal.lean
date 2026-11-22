@@ -135,7 +135,7 @@ theorem roots_unitary_diagonalization (a : ι → ℂ) {U : Matrix ι ι ℂ} (h
 
 omit [DecidableEq ι] in
 /-- Equal eigenvalue multisets admit a bijection of their index sets preserving the values. -/
-private theorem exists_perm_of_equal_multisets (a a' : ι → ℂ)
+theorem exists_perm_of_equal_multisets (a a' : ι → ℂ)
     (h : (Finset.univ : Finset ι).val.map a = Finset.univ.val.map a') :
     ∃ e : Equiv.Perm ι, a = a' ∘ e := by
   classical
