@@ -7,6 +7,9 @@ polynomial for every pair of homothetic antipodal spectra in order four. -/
 
 open BigOperators Matrix
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 16000000
+
 namespace MOC.HomotheticFour
 
 abbrev Label := Fin 24

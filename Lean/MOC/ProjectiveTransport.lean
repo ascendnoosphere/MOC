@@ -40,7 +40,7 @@ theorem exists_fractional_factor (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU :
     have ht (j : ι) :
         fractionalMap α β γ δ (a (p j)) + -fractionalMap α β γ δ (-b j) =
           (α*δ-β*γ)*(a (p j)+b j) / ((γ*a (p j)+δ)*(γ*(-b j)+δ)) := by
-      simpa only [sub_neg_eq_add, sub_eq_add_neg] using
+      simpa only [sub_eq_add_neg, neg_neg] using
         fractional_difference α β γ δ (a (p j)) (-b j) (ha _) (hb _)
     unfold matchingProduct
     simp only [Function.comp_apply, ht, Finset.prod_div_distrib, Finset.prod_mul_distrib,

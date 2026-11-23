@@ -6,6 +6,9 @@ import Mathlib.Tactic.FinCases
 
 open BigOperators Matrix
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 16000000
+
 namespace MOC.DoubledFive
 abbrev Label := Fin 120
 abbrev Perm := Equiv.Perm (Fin 5)

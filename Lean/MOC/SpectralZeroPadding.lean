@@ -18,7 +18,7 @@ theorem spectralSupport_pad_card_le {n : ℕ} (a : Fin n → ℂ) (m : ℕ) :
     (spectralSupport (padSpectrumWithZeros a m)).card ≤ (spectralSupport a).card := by
   classical
   let e : Fin n ↪ Fin (n + m) :=
-    ⟨fun i => ⟨i.val, by omega⟩, fun _ _ h => Fin.ext (congrArg Fin.val h)⟩
+    ⟨fun i => ⟨i.val, by omega⟩, fun _ _ h => Fin.ext (congrArg (fun z : Fin (n + m) => z.val) h)⟩
   have sub : spectralSupport (padSpectrumWithZeros a m) ⊆ (spectralSupport a).map e := by
     intro i hi
     have hn : padSpectrumWithZeros a m i ≠ 0 := (Finset.mem_filter.mp hi).2
@@ -44,6 +44,8 @@ theorem holds_all_zero_paddings {n : ℕ} (a b : Fin n → ℂ)
   | succ m =>
     apply holds_of_shifted_support_le_card_add_two _ _ U hU 0
     simp only [add_zero, sub_zero, Fintype.card_fin]
+    change (spectralSupport (padSpectrumWithZeros a (m + 1))).card +
+      (spectralSupport (padSpectrumWithZeros b (m + 1))).card ≤ n + (m + 1) + 2
     have ha := spectralSupport_pad_card_le a (m + 1)
     have hb := spectralSupport_pad_card_le b (m + 1)
     omega

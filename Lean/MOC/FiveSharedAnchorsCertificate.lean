@@ -11,6 +11,9 @@ open BigOperators
 
 namespace MOC.FiveSharedAnchors
 
+set_option maxRecDepth 20000
+set_option maxHeartbeats 32000000
+
 abbrev Label := Equiv.Perm (Fin 5)
 def firstMarks : Fin 5 → ℤ := ![0, 2, 3, 6, 0]
 def secondMarks : Fin 5 → ℤ := ![0, -2, -3, -6, 0]

@@ -5,6 +5,9 @@ import Mathlib.Tactic.FinCases
 
 open BigOperators
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 16000000
+
 namespace MOC.DoubleAntipodalCertificate
 
 private def get (table : Array (Array ℤ)) (i j : ℕ) : ℤ :=

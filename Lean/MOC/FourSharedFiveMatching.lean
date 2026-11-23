@@ -10,6 +10,8 @@ open BigOperators
 
 namespace MOC.FourSharedFive
 
+noncomputable section
+
 /-- The first, second, third and fourth coordinates are the common signed marks. -/
 def left (z : Fin 6 → ℂ) : Fin 5 → ℂ := ![z 0, z 1, z 2, z 3, z 4]
 
@@ -1108,4 +1110,5 @@ theorem matching_eq (z : Fin 6 → ℂ) (p : Fin 120) :
   · exact product118 z
   · exact product119 z
 
+end
 end MOC.FourSharedFive

@@ -38,7 +38,9 @@ private theorem move_one_entry {O : Set (Matrix ι ι ℂ)} (hO : IsOpen O)
     have hprod : (P * U) i j = (1/2 : ℂ) * U k j := by
       rw [Matrix.mul_apply, Finset.sum_eq_single k]
       · simp only [P, Matrix.vecMulVec_apply, Function.comp_apply]
-        simp [v, mul_comm c (star c), hc]
+        have hcc : c * star c = (1/2 : ℂ) := (mul_comm _ _).trans hc
+        change v i * star (v k) * U k j = (1/2 : ℂ) * U k j
+        rw [show v i = c by simp [v], show v k = c by simp [v], hcc]
       · intro l _ hl
         by_cases hi : l = i
         · subst l

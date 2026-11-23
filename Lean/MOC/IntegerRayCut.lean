@@ -79,7 +79,8 @@ theorem Valid.advance {d : ℕ} [NeZero d] {a b : Stage d} {j : Fin d}
     refine le_antisymm ?_ (h.nonnegative p i hi)
     by_contra! hp
     exact Bool.noConfusion (h0.symm.trans ((onbit p i).mpr ⟨hi,hp⟩))
-  refine exists_conic_weights_after_adjacent_cut W a.imposed j _ _ hc.zero_of hm
+  refine exists_conic_weights_after_adjacent_cut W a.imposed j
+    (fun p => realRow (a.ray p)) (fun k => realRow (b.ray k)) hc.zero_of hm
     (fun p i hi => by dsimp only [realRow]; exact_mod_cast h.nonnegative p i hi) ?_ hc.weights
     (fun p i hi => by dsimp only [realRow]; exact_mod_cast h.next_nonnegative p i hi) ?_ ?_ ?_ v hv
     (fun i hi => hn i (incl hi)) (hn j (by rw [h.imposed]; exact Finset.mem_insert_self _ _))
