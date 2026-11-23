@@ -62,6 +62,8 @@ In order five, expand each matching product in a fixed list of basis functions o
 
 Three opposite pairs in order five admit one probability law for all six complex values if the remaining two entries on one specified side are equal. Fix the relative unitary and the label positions. The values can repeat. [ThreeSharedRepeatedFive.lean](MOC/ThreeSharedRepeatedFive.lean) · [ThreeSharedRepeatedFiveShapes.lean](MOC/ThreeSharedRepeatedFiveShapes.lean)
 
+For the five entries $0,x,-x,y,-y$ and their doubles, one law on at most five permutations works for every complex $x,y$ at fixed unitary. [DoubledFive.lean](MOC/DoubledFive.lean)
+
 Let one entry of each spectrum vary. A fixed set of real weights works for all values if it works at the four pairs formed by two distinct choices on each side. When the fixed entries are real, choose nonreal $s,u$. The two pairs $(s,u)$ and $(s,\bar u)$ suffice. [TwoFreeEntries.lean](MOC/TwoFreeEntries.lean) · [TwoFreeRealAnchors.lean](MOC/TwoFreeRealAnchors.lean)
 
 For a fixed unitary, one set of weights represents the determinant for every pair of spectra if it represents all the following pairs. Choose index sets $I,J$ of the same size, at most $\lfloor n/2\rfloor$. Set the first spectrum to zero on $I$ and one elsewhere. Set the second spectrum to one on $J$ and zero elsewhere. The corresponding determinant is the squared modulus of the minor on rows $I$ and columns $J$. [SubsetMarkerTest.lean](MOC/SubsetMarkerTest.lean)

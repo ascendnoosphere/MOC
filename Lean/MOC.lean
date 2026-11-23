@@ -3,6 +3,7 @@ import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
 import MOC.DiskBoundary
 import MOC.DoubleAntipodal
+import MOC.DoubledFive
 import MOC.ExtendedCases
 import MOC.FiveMatchingLaw
 import MOC.FiveSubsetEvents
