@@ -1,4 +1,5 @@
 import MOC.ThreeSharedRepeatedFive
+import MOC.Small
 import MOC.SpectralZeroPadding
 
 open Matrix

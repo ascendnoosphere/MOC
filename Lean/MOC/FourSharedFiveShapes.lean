@@ -1,4 +1,5 @@
 import MOC.FourSharedFive
+import MOC.Small
 import MOC.SpectralZeroPadding
 
 /-! Independently order the spectra. Any one of the four shared marks can be repeated. -/
