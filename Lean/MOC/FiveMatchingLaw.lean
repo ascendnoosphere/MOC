@@ -19,6 +19,7 @@ private theorem linear_score {d : ℕ} (L : (Fin d → ℝ) →ₗ[ℝ] ℝ) (v 
   intro k _
   exact mul_comm _ _
 
+set_option maxHeartbeats 3000000 in
 /-- A cone of nonnegative coefficient tests gives a single law for all evaluations
 of the matching polynomials. Each final ray must have nonnegative signed expectation. -/
 theorem exists_common_law {n m d : ℕ} (base : Fin d)

@@ -32,14 +32,12 @@ instance {m n : ℕ} (old : Fin m → Row) (next : Fin n → Row)
     Decidable (maskCrossing old next s j mask p k c) := by
   cases c <;> unfold maskCrossing <;> infer_instance
 
-def separationIndex {m : ℕ} (mask : Fin m → ℕ) (p k : Fin m) : Fin 24 :=
-  Fin.ofNat' 24 (Nat.log2 (Nat.ldiff (mask p) (mask k)))
-
 theorem validateRayMasks {m n : ℕ} {old : Fin m → Row} {next : Fin n → Row}
     {s : Finset (Fin 24)} {j : Fin 24} (plan : RayCutPlan m n) (mask : Fin m → ℕ)
+    (separator : Fin m → Fin m → Fin 24)
     (hsign : ∀ p i, i ∈ s → zero (old p i) = true ∨ positive (old p i) = true)
     (hm : ∀ p i, (mask p).testBit i.val = (decide (i ∈ s) && positive (old p i)))
-    (hsep : ∀ p k, p ≠ k → let i := separationIndex mask p k
+    (hsep : ∀ p k, p ≠ k → let i := separator p k
       (mask p).testBit i.val = true ∧ (mask k).testBit i.val = false)
     (hcross : ∀ p k, positive (old p j) = true → negative (old k j) = true →
       maskCrossing old next s j mask p k (plan.crossing p k)) :
@@ -60,7 +58,7 @@ theorem validateRayMasks {m n : ℕ} {old : Fin m → Row} {next : Fin n → Row
   constructor
   · intro p k h
     obtain ⟨hp, hk⟩ := hsep p k h
-    let i := separationIndex mask p k
+    let i := separator p k
     have hi : i ∈ s ∧ positive (old p i) = true := by
       simpa only [hm, Bool.and_eq_true, decide_eq_true_eq, i] using hp
     exact ⟨i, hi.1, hi.2, hz k i hi.1 hk⟩

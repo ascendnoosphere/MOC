@@ -48,7 +48,7 @@ private theorem select_cell (s : ℝ) (hs : 0 < s) (Y : Axis → ℝ)
     rw [pairing_gap]
     apply sub_nonneg.mpr
     apply (div_le_div_iff₀ (hd _) (hd _)).mp
-    apply ht (near t j) (first t j)
+    apply ht (near t j) (firstPriority t j)
     intro i hi
     have hz : pairing s Y (gap t j i) = 0 := by
       simp only [pairing, fun k => eval_zero_of_check s (prefix_check t j hj i hi k),
@@ -72,7 +72,11 @@ private theorem event_check (f : Facet) : ∀ p : Label,
     equal (slack f p) (sumPoly 46 fun e =>
       if (eventSets f e).2.map (FivePermutations.perm p).toEmbedding = (eventSets f e).1
       then weight f e else []) = true := by
-  fin_cases f <;> decide +kernel
+  have h : ∀ p : Label, equal (slack f p) (sumPoly 46 fun e =>
+      if FiveSubsetEvents.imageAt p (eventIndex f e).2 = (eventIndex f e).1
+      then weight f e else []) = true := by
+    fin_cases f <;> decide +kernel
+  simpa only [eventSets, FiveSubsetEvents.image_iff] using h
 
 private def signed (U : Matrix (Fin 5) (Fin 5) ℂ) (p : Label) :=
   realSignedWeight U (FivePermutations.perm p)

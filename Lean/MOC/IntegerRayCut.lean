@@ -1,4 +1,5 @@
 import MOC.WeightedDiamondTransitions
+import MOC.WeightedDiamondWitnessMasks
 import Mathlib.Data.Nat.Bitwise
 import Mathlib.Tactic.FinCases
 
@@ -47,8 +48,28 @@ instance {d : ℕ} (a b : Stage d) (j : Fin d) (mask : Fin a.count → ℕ)
     (p k : Fin a.count) (c : Choice a.count b.count) : Decidable (CrossOK a b j mask p k c) := by
   cases c <;> unfold CrossOK <;> infer_instance
 
-def distinguish {d m : ℕ} [NeZero d] (mask : Fin m → ℕ) (p k : Fin m) : Fin d :=
-  Fin.ofNat' d (Nat.log2 (Nat.ldiff (mask p) (mask k)))
+def bitUnion {d : ℕ} (column : Fin d → ℕ) (indices : List (Fin d)) : ℕ :=
+  RayCoefficients.unionMasks (indices.map column)
+
+/-- For each ray, the listed zero coordinates cover every other ray.
+One bitwise union checks all the other rays at once. -/
+theorem separates_of_cover {d m : ℕ} (mask : Fin m → ℕ) (column : Fin d → ℕ)
+    (indices : Fin m → List (Fin d)) (allBits : ℕ)
+    (hcol : ∀ p i, (column i).testBit p.val = (mask p).testBit i.val)
+    (hz : ∀ k i, i ∈ indices k → (mask k).testBit i.val = false)
+    (hc : ∀ k, bitUnion column (indices k) ||| 2 ^ k.val = allBits)
+    (hall : ∀ p : Fin m, allBits.testBit p.val = true) :
+    ∀ p k, p ≠ k → ∃ i : Fin d, (mask p).testBit i.val = true ∧ (mask k).testBit i.val = false := by
+  intro p k hpk
+  have hne : p.val ≠ k.val := fun he => hpk (Fin.ext he)
+  have hk : (2 ^ k.val : ℕ).testBit p.val = false := by
+    exact Nat.testBit_two_pow_of_ne hne.symm
+  have h := congrArg (fun b : ℕ => b.testBit p.val) (hc k)
+  change (bitUnion column (indices k) ||| 2 ^ k.val).testBit p.val = allBits.testBit p.val at h
+  rw [Nat.testBit_or, hk, Bool.or_false, hall] at h
+  obtain ⟨b, hb, hp⟩ := (RayCoefficients.testBit_unionMasks _ _).mp h
+  obtain ⟨i, hi, rfl⟩ := List.mem_map.mp hb
+  exact ⟨i, (hcol p i).symm.trans hp, hz k i hi⟩
 
 structure Valid {d : ℕ} [NeZero d] (a b : Stage d) (j : Fin d)
     (mask : Fin a.count → ℕ) (keep : Fin a.count → Fin b.count)
@@ -58,7 +79,7 @@ structure Valid {d : ℕ} [NeZero d] (a b : Stage d) (j : Fin d)
   next_nonnegative : ∀ p i, i ∈ a.imposed → 0 ≤ b.ray p i
   next_positive : ∀ p, ∃ i ∈ a.imposed, 0 < b.ray p i
   bits : ∀ p i, (mask p).testBit i.val = (decide (i ∈ a.imposed) && decide (0 < a.ray p i))
-  separates : ∀ p k, p ≠ k → let i : Fin d := distinguish mask p k
+  separates : ∀ p k, p ≠ k → ∃ i : Fin d,
     (mask p).testBit i.val = true ∧ (mask k).testBit i.val = false
   kept : ∀ p, 0 ≤ a.ray p j → ∀ i, a.ray p i = b.ray (keep p) i
   crossing : ∀ p k, 0 < a.ray p j → a.ray k j < 0 → CrossOK a b j mask p k (cross p k)
@@ -85,8 +106,7 @@ theorem Valid.advance {d : ℕ} [NeZero d] {a b : Stage d} {j : Fin d}
     (fun p i hi => by dsimp only [realRow]; exact_mod_cast h.next_nonnegative p i hi) ?_ ?_ ?_ v hv
     (fun i hi => hn i (incl hi)) (hn j (by rw [h.imposed]; exact Finset.mem_insert_self _ _))
   · intro p k hk
-    let i : Fin d := distinguish mask p k
-    obtain ⟨hp, hz⟩ := h.separates p k hk
+    obtain ⟨i, hp, hz⟩ := h.separates p k hk
     obtain ⟨hi, hp'⟩ := (onbit p i).mp hp
     exact ⟨i, hi, by dsimp only [realRow]; exact_mod_cast hp',
       by dsimp only [realRow]; exact_mod_cast offbit k i hi hz⟩

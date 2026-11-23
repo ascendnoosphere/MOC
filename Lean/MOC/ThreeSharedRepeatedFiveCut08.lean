@@ -9,6 +9,9 @@ namespace MOC.ThreeSharedRepeatedFive.Cut08
 set_option maxRecDepth 30000
 set_option maxHeartbeats 100000000
 
+local instance : NeZero stage07.count := ⟨by decide +kernel⟩
+local instance : NeZero stage08.count := ⟨by decide +kernel⟩
+
 private def positiveIndex : Array ℕ :=
   #[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 0, 0, 0, 19, 20, 21, 22, 0, 23, 24, 25, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 27, 28, 29, 30]
 
@@ -32,8 +35,38 @@ private def cross (p k : Fin 65) : Choice 65 64 :=
   if x < 65 then .skip (Fin.ofNat' 65 x)
   else .edge (Fin.ofNat' 64 (x-65)) (((x-65) / 64+1 : ℕ) : ℤ)
 
+private def positiveRows : Array (Fin 65) := #[4, 15, 18, 19, 20, 21, 22, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 43, 44, 45, 46, 48, 49, 50, 55, 61, 62, 63, 64]
+private def negativeRows : Array (Fin 65) := #[3, 8, 9, 10, 12, 13, 14, 24, 25, 27]
+private def positiveRay (i : Fin 31) : Fin 65 := positiveRows.getD i.val 0
+private def negativeRay (i : Fin 10) : Fin 65 := negativeRows.getD i.val 0
+private def positiveOf (p : Fin 65) : Fin 31 := Fin.ofNat' _ (positiveIndex.getD p.val 0)
+private def negativeOf (p : Fin 65) : Fin 10 := Fin.ofNat' _ (negativeIndex.getD p.val 0)
+
+private theorem crossingFast (p k : Fin 65) (hp : 0 < stage07.ray p 16)
+    (hk : stage07.ray k 16 < 0) :
+    CrossOK stage07 stage08 16 mask p k (cross p k) := by
+  have hitP : ∀ p, 0 < stage07.ray p 16 → positiveRay (positiveOf p) = p := by decide +kernel
+  have hitN : ∀ k, stage07.ray k 16 < 0 → negativeRay (negativeOf k) = k := by decide +kernel
+  have h : ∀ u v, CrossOK stage07 stage08 16 mask
+      (positiveRay u) (negativeRay v) (cross (positiveRay u) (negativeRay v)) := by
+    apply blocks
+    intro b
+    fin_cases b <;> decide +kernel
+  simpa only [hitP p hp, hitN k hk] using h (positiveOf p) (negativeOf k)
+
+private def columns : Array ℕ := #[36893488145271652248, 18159542886401035, 27029294605862404, 36893347409930780568, 29713840918244910474, 2303872145356521352, 0, 0, 0, 0, 34625784995402221584, 0, 0, 216735732520915041, 0, 0, 0, 28397166507987566740, 1407295848910182553, 0, 140737486552856, 25337387058987170368, 33152213368477720642, 29912417107745206752, 0, 0, 35255054270464, 0, 0, 0, 8496462915942187008, 11553999853004588320, 0]
+private def column (i : Fin 33) : ℕ := columns.getD i.val 0
+private def zeroRows : Array (List (Fin 33)) :=
+  #[[0, 26, 2, 22, 31], [0, 26, 13, 2], [0, 26, 13, 22], [21, 31, 17, 26, 22, 30, 13], [5, 22, 31, 26, 13, 30, 2], [0, 26, 1, 22, 2], [0, 26, 1, 31, 2], [20, 30, 22, 13, 2], [21, 18, 2, 22, 30, 26, 10, 13], [4, 18, 30, 13, 10, 26, 17], [21, 18, 23, 30, 26, 22, 10, 13, 17], [4, 13, 30, 2, 17, 26, 22, 31], [4, 10, 2, 26, 22, 31, 30, 1, 17], [18, 31, 2, 10, 26, 30, 13, 1, 17], [10, 13, 26, 30, 22, 2, 31, 1, 17], [0, 5, 13, 22, 2], [0, 26, 22, 5, 18, 23, 17], [0, 26, 31, 18, 5, 23, 4, 17], [0, 13, 23, 2, 22, 30], [0, 5, 22, 31, 30, 2, 1], [0, 5, 13, 30, 2, 1], [0, 13, 22, 2, 31, 30, 21, 1], [0, 13, 18, 22, 2, 30], [0, 13, 4, 30, 17], [0, 26, 22, 18, 30, 23, 4, 17], [0, 26, 31, 18, 30, 23, 4, 17], [0, 13, 23, 18, 22, 30, 21, 17], [0, 26, 22, 18, 30, 23, 21, 17], [0, 4, 2, 22, 31, 30, 1, 17], [0, 13, 18, 2, 31, 30, 1, 17], [0, 13, 22, 2, 31, 30, 1, 17], [5, 17, 22, 13, 26, 3], [5, 17, 13, 31, 26, 4, 3], [21, 23, 30, 2, 17, 26, 22, 13, 3], [5, 22, 30, 13, 26, 2, 3], [5, 23, 30, 1, 26, 31, 2, 3], [5, 22, 31, 13, 30, 2, 3], [5, 18, 30, 21, 26, 2, 13, 1, 3], [5, 18, 30, 31, 26, 2, 13, 1, 3], [21, 18, 2, 22, 30, 26, 13, 3], [4, 18, 30, 13, 26, 22, 17, 3], [4, 18, 30, 13, 26, 31, 17, 3], [21, 18, 23, 30, 26, 22, 13, 17, 3], [4, 13, 30, 2, 17, 26, 22, 3], [4, 13, 30, 2, 17, 26, 31, 3], [4, 13, 30, 2, 17, 22, 31, 3], [3, 31, 26, 2, 18, 30, 13, 1, 17], [20, 23, 2, 10, 26, 22, 13], [5, 22, 31, 26, 13, 2, 20], [5, 22, 31, 26, 30, 2, 1, 20], [5, 30, 20, 13, 26, 31, 2, 21, 1], [20, 17, 21, 1, 26, 10, 13], [20, 30, 18, 21, 26, 2, 10, 13, 1], [20, 23, 1, 10, 26, 17], [20, 23, 18, 22, 26, 21, 10, 13, 17], [20, 23, 1, 2, 26, 22, 31, 17], [20, 4, 10, 2, 26, 22, 31, 1, 17], [20, 30, 22, 26, 31, 2, 10, 4, 1], [20, 17, 13, 18, 31, 26, 2, 10, 1], [20, 30, 18, 31, 26, 2, 10, 13, 1], [20, 17, 13, 22, 31, 26, 2, 10, 1], [5, 17, 22, 13, 26, 20], [5, 17, 13, 31, 26, 4, 20], [5, 18, 30, 21, 26, 2, 13, 1, 20], [5, 18, 30, 31, 26, 2, 13, 1, 20]]
+private def zeros (k : Fin 65) : List (Fin 33) := zeroRows.getD k.val []
+
+private theorem separating : ∀ p k, p ≠ k → ∃ i : Fin 33,
+    (mask p).testBit i.val = true ∧ (mask k).testBit i.val = false := by
+  apply separates_of_cover mask column zeros 36893488147419103231 <;>
+    apply blocks <;> intro b <;> fin_cases b <;> decide +kernel
+
 private theorem valid : Valid stage07 stage08 16 mask keep cross := by
-  refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> apply blocks <;>
+  refine ⟨rfl, ?_, ?_, ?_, ?_, separating, ?_, crossingFast⟩ <;> apply blocks <;>
     intro b <;> fin_cases b <;> decide +kernel
 
 theorem covered {W : Submodule ℝ (Fin 33 → ℝ)} (h : Covered W stage07)

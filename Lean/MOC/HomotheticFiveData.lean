@@ -1,4 +1,4 @@
-import MOC.FivePermutations
+import MOC.FiveSubsetEvents
 import MOC.WeightedDiamondCoefficients
 import Mathlib.Tactic.FinCases
 
@@ -2738,9 +2738,8 @@ private def scoreRows : Array (Array ℕ) :=
     #[0, 0, 0, 0, 0],
     #[0, 335, 0, 0, 0]]
 
-private def events : Array (Finset (Fin 5) × Finset (Fin 5)) :=
-  #[
-    ({0},{0}), ({0},{1}), ({0},{2}), ({0},{3}), ({0},{4}), ({1},{0}), ({1},{1}), ({1},{2}), ({1},{3}), ({1},{4}), ({2},{0}), ({2},{1}), ({2},{2}), ({2},{3}), ({2},{4}), ({3},{0}), ({3},{1}), ({3},{2}), ({3},{3}), ({3},{4}), ({4},{0}), ({4},{1}), ({4},{2}), ({4},{3}), ({4},{4}), ({0,1},{0,1}), ({0,1},{0,2}), ({0,1},{0,3}), ({0,1},{0,4}), ({0,1},{1,2}), ({0,1},{1,3}), ({0,1},{1,4}), ({0,1},{2,3}), ({0,1},{2,4}), ({0,1},{3,4}), ({0,2},{0,1}), ({0,2},{0,2}), ({0,2},{0,3}), ({0,2},{0,4}), ({0,2},{1,2}), ({0,2},{1,3}), ({0,2},{1,4}), ({0,2},{2,3}), ({0,2},{2,4}), ({0,2},{3,4}), ({0,3},{0,1}), ({0,3},{0,2}), ({0,3},{0,3}), ({0,3},{0,4}), ({0,3},{1,2}), ({0,3},{1,3}), ({0,3},{1,4}), ({0,3},{2,3}), ({0,3},{2,4}), ({0,3},{3,4}), ({0,4},{0,1}), ({0,4},{0,2}), ({0,4},{0,3}), ({0,4},{0,4}), ({0,4},{1,2}), ({0,4},{1,3}), ({0,4},{1,4}), ({0,4},{2,3}), ({0,4},{2,4}), ({0,4},{3,4}), ({1,2},{0,1}), ({1,2},{0,2}), ({1,2},{0,3}), ({1,2},{0,4}), ({1,2},{1,2}), ({1,2},{1,3}), ({1,2},{1,4}), ({1,2},{2,3}), ({1,2},{2,4}), ({1,2},{3,4}), ({1,3},{0,1}), ({1,3},{0,2}), ({1,3},{0,3}), ({1,3},{0,4}), ({1,3},{1,2}), ({1,3},{1,3}), ({1,3},{1,4}), ({1,3},{2,3}), ({1,3},{2,4}), ({1,3},{3,4}), ({1,4},{0,1}), ({1,4},{0,2}), ({1,4},{0,3}), ({1,4},{0,4}), ({1,4},{1,2}), ({1,4},{1,3}), ({1,4},{1,4}), ({1,4},{2,3}), ({1,4},{2,4}), ({1,4},{3,4}), ({2,3},{0,1}), ({2,3},{0,2}), ({2,3},{0,3}), ({2,3},{0,4}), ({2,3},{1,2}), ({2,3},{1,3}), ({2,3},{1,4}), ({2,3},{2,3}), ({2,3},{2,4}), ({2,3},{3,4}), ({2,4},{0,1}), ({2,4},{0,2}), ({2,4},{0,3}), ({2,4},{0,4}), ({2,4},{1,2}), ({2,4},{1,3}), ({2,4},{1,4}), ({2,4},{2,3}), ({2,4},{2,4}), ({2,4},{3,4}), ({3,4},{0,1}), ({3,4},{0,2}), ({3,4},{0,3}), ({3,4},{0,4}), ({3,4},{1,2}), ({3,4},{1,3}), ({3,4},{1,4}), ({3,4},{2,3}), ({3,4},{2,4}), ({3,4},{3,4})]
+private def events : Array (Fin 15 × Fin 15) :=
+  #[(0,0), (0,1), (0,2), (0,3), (0,4), (1,0), (1,1), (1,2), (1,3), (1,4), (2,0), (2,1), (2,2), (2,3), (2,4), (3,0), (3,1), (3,2), (3,3), (3,4), (4,0), (4,1), (4,2), (4,3), (4,4), (5,5), (5,6), (5,7), (5,8), (5,9), (5,10), (5,11), (5,12), (5,13), (5,14), (6,5), (6,6), (6,7), (6,8), (6,9), (6,10), (6,11), (6,12), (6,13), (6,14), (7,5), (7,6), (7,7), (7,8), (7,9), (7,10), (7,11), (7,12), (7,13), (7,14), (8,5), (8,6), (8,7), (8,8), (8,9), (8,10), (8,11), (8,12), (8,13), (8,14), (9,5), (9,6), (9,7), (9,8), (9,9), (9,10), (9,11), (9,12), (9,13), (9,14), (10,5), (10,6), (10,7), (10,8), (10,9), (10,10), (10,11), (10,12), (10,13), (10,14), (11,5), (11,6), (11,7), (11,8), (11,9), (11,10), (11,11), (11,12), (11,13), (11,14), (12,5), (12,6), (12,7), (12,8), (12,9), (12,10), (12,11), (12,12), (12,13), (12,14), (13,5), (13,6), (13,7), (13,8), (13,9), (13,10), (13,11), (13,12), (13,13), (13,14), (14,5), (14,6), (14,7), (14,8), (14,9), (14,10), (14,11), (14,12), (14,13), (14,14)]
 
 
 private def entry (T : Array (Array ℕ)) (i j : ℕ) : ℕ := (T.getD i #[]).getD j 0
@@ -2756,11 +2755,13 @@ def inner (t : Cell) (j : Axis) := entry isInterior t.val j.val != 0
 def near (t : Cell) (j : Axis) : Cell := Fin.ofNat' _ (entry adjacent t.val j.val)
 def ls (t : Cell) (j : Axis) := get leftScale t.val j.val
 def rs (t : Cell) (j : Axis) := get rightScale t.val j.val
-def first (t : Cell) (j : Axis) : Priority := Fin.ofNat' _ (entry firstDifference t.val j.val)
+def firstPriority (t : Cell) (j : Axis) : Priority := Fin.ofNat' _ (entry firstDifference t.val j.val)
 def liftRow (t : Cell) (i : Priority) (k : Axis) := get scoreRows (20*t.val+i.val) k.val
 def fl (f : Facet) := get faceLeft 0 f.val
 def fr (f : Facet) := get faceRight 0 f.val
-def eventSets (f : Facet) (e : Term) := events.getD (entry eventNumbers f.val e.val) (∅,∅)
+def eventIndex (f : Facet) (e : Term) := events.getD (entry eventNumbers f.val e.val) (0,0)
+def eventSets (f : Facet) (e : Term) :=
+  (FiveSubsetEvents.subsets (eventIndex f e).1, FiveSubsetEvents.subsets (eventIndex f e).2)
 def weight (f : Facet) (e : Term) := get eventWeights f.val e.val
 def dot (a b : Axis → Poly) : Poly :=
   add (mul (a 0) (b 0)) (add (mul (a 1) (b 1)) (add (mul (a 2) (b 2))
@@ -2792,10 +2793,10 @@ theorem boundary_check (t : Cell) : ∀ j, inner t j = false → ∀ k,
   fin_cases t <;> decide +kernel
 
 theorem interior_check (t : Cell) : ∀ j, inner t j = true → ∀ k,
-    equal (mul (ls t j) (b t j k)) (mul (rs t j) (gap t j (first t j) k)) = true := by
+    equal (mul (ls t j) (b t j k)) (mul (rs t j) (gap t j (firstPriority t j) k)) = true := by
   fin_cases t <;> decide +kernel
 
-theorem prefix_check (t : Cell) : ∀ j, inner t j = true → ∀ i, i < first t j → ∀ k,
+theorem prefix_check (t : Cell) : ∀ j, inner t j = true → ∀ i, i < firstPriority t j → ∀ k,
     zero (gap t j i k) = true := by
   fin_cases t <;> decide +kernel
 

@@ -15,11 +15,13 @@ jobs:
       matrix:
         include:
           - group: lemmas
-            targets: +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
+            targets: +MOC.LexicographicScores +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
           - group: four-shapes
             targets: +MOC.DoubleAntipodal +MOC.HomotheticFour
           - group: five-shapes
             targets: +MOC.DoubledFive +MOC.HomotheticFive
+          - group: four-facets
+            targets: +MOC.WeightedDiamondLowerFacets
           - group: four-coordinate-law
             targets: +MOC.FourSharedFiveMatching +MOC.FourSharedFiveMinors
           - group: three-coordinate-law
@@ -44,11 +46,24 @@ jobs:
             targets: +MOC.FourSharedFiveCut37 +MOC.FourSharedFiveCut38 +MOC.FourSharedFiveCut39 +MOC.FourSharedFiveCut40 +MOC.FourSharedFiveCut41
           - group: three-rays
             targets: +MOC.ThreeSharedRepeatedFiveCut01 +MOC.ThreeSharedRepeatedFiveCut02 +MOC.ThreeSharedRepeatedFiveCut03 +MOC.ThreeSharedRepeatedFiveCut04 +MOC.ThreeSharedRepeatedFiveCut05 +MOC.ThreeSharedRepeatedFiveCut06 +MOC.ThreeSharedRepeatedFiveCut07 +MOC.ThreeSharedRepeatedFiveCut08 +MOC.ThreeSharedRepeatedFiveCut09 +MOC.ThreeSharedRepeatedFiveCut10 +MOC.ThreeSharedRepeatedFiveCut11 +MOC.ThreeSharedRepeatedFiveCut12 +MOC.ThreeSharedRepeatedFiveCut13 +MOC.ThreeSharedRepeatedFiveCut14 +MOC.ThreeSharedRepeatedFiveCut15 +MOC.ThreeSharedRepeatedFiveCut16 +MOC.ThreeSharedRepeatedFiveCut17 +MOC.ThreeSharedRepeatedFiveCut18 +MOC.ThreeSharedRepeatedFiveCut19 +MOC.ThreeSharedRepeatedFiveCut20 +MOC.ThreeSharedRepeatedFiveCut21 +MOC.ThreeSharedRepeatedFiveCut22 +MOC.ThreeSharedRepeatedFiveCut23
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - name: Mark start of local build
-        run: touch "$RUNNER_TEMP/moc-build-start"
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
       - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
         with:
           lake-package-directory: Lean
           auto-config: 'false'
@@ -56,10 +71,8 @@ jobs:
           build: 'true'
           build-args: ${{ matrix.targets }}
       - name: Collect compiled modules and build traces
-        run: |
-          mkdir -p "$RUNNER_TEMP/moc-objects"
-          find Lean/.lake/build -type f -newer "$RUNNER_TEMP/moc-build-start" -print0 |
-            tar --null -T - -czf "$RUNNER_TEMP/moc-objects/${{ matrix.group }}.tgz"
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: moc-${{ matrix.group }}

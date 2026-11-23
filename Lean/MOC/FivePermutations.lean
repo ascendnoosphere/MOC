@@ -5,6 +5,9 @@ import Mathlib.Data.Fintype.Perm
 
 namespace MOC.FivePermutations
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 16000000
+
 abbrev Label := Fin 120
 abbrev Perm := Equiv.Perm (Fin 5)
 

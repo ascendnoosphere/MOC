@@ -13,6 +13,8 @@ noncomputable section
 
 private theorem point_zero : ∀ i : Fin 33, point i 0 = 1 := by decide +kernel
 
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 16000 in
 private theorem label_surjective : Function.Surjective labelPoint := by
   change ∀ i : Fin 33, ∃ p : Fin 120, labelPoint p = i
   decide +kernel

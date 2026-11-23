@@ -37,6 +37,7 @@ private theorem coef_check : ∀ p : Label,
     equal (q 4) (point p 4) = true ∧ zero (q 5) = true := by
   decide +kernel
 
+set_option maxHeartbeats 1800000 in
 private theorem expansion (s : ℝ) (x y : ℂ) (a b : Fin 5 → Poly) :
     ∏ j, ((eval s (a j) : ℂ) * x + (eval s (b j) : ℂ) * y) =
       (eval s (coef a b 0) : ℂ)*x^5 + (eval s (coef a b 1) : ℂ)*(x^4*y) +
@@ -142,7 +143,8 @@ theorem holds_real (r : ℝ) (x y : ℂ) (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : 
     exact holds_positive _ (neg_pos.mpr h) x y _ (unitary_reindex _ _ hU)
   · subst r
     apply holds_of_commute _ _ hU
-    simp [Commute]
+    change U * diagonal _ = diagonal _ * U
+    simp
   · exact holds_positive r h x y U hU
 
 /-- Added center values can mix with all five original labels in every higher order. -/

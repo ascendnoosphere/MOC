@@ -425,7 +425,29 @@ private theorem form_nonneg (f : Facet) (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : I
   have he (a : ℕ) (r c : FourPerm) : 0 ≤ a • exceptional r c (subsetMinorSq U) :=
     nsmul_nonneg (exceptional_nonneg r c U hU) a
   fin_cases f <;> simp only [facetForm, Matrix.cons_val_zero', Matrix.cons_val_succ']
-    <;> repeat' first | apply add_nonneg | apply hs | apply he
+  · exact (add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg (hs 8 {0,3} {0,2}) (hs 4 {1,3} {0,1})) (hs 8 {1,3} {0,3})) (hs 4 {1,3} {2,3})) (hs 4 {2,3} {0,2})) (hs 4 {2,3} {1,3}))
+  · exact (hs 16 {1,3} {0,2})
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 4 {1} {1}) (hs 4 {3} {3})) (hs 4 {0,1} {0,3})) (hs 4 {0,3} {0,1}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 4 {1} {0}) (hs 4 {2} {3})) (hs 4 {0,1} {1,3})) (hs 4 {0,2} {0,1}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (add_nonneg (hs 2 {0,3} {0,1}) (hs 2 {0,3} {2,3})) (hs 2 {2,3} {0,3})) (hs 2 {2,3} {1,2})) (hs 2 {2,3} {2,3}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (add_nonneg (hs 2 {1,3} {0,1}) (hs 2 {1,3} {2,3})) (hs 2 {2,3} {0,2})) (hs 2 {2,3} {1,3})) (hs 2 {2,3} {2,3}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg (hs 4 {0,3} {0,1}) (hs 8 {0,3} {0,2})) (hs 4 {1,2} {0,1})) (hs 8 {1,3} {0,3})) (hs 4 {2,3} {0,3})) (hs 4 {2,3} {1,2}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 8 {0} {3}) (hs 8 {1} {2})) (hs 8 {0,3} {1,3})) (hs 8 {1,3} {1,2}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 4 {1} {1}) (hs 4 {2} {2})) (hs 4 {0,1} {0,2})) (hs 4 {0,2} {0,1}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 8 {2} {0}) (hs 8 {3} {1})) (hs 8 {0,3} {1,3})) (hs 8 {1,3} {1,2}))
+  · exact (hs 16 {0,3} {1,2})
+  · exact he 8 (fourPerm 0) (fourPerm 0)
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 8 {2} {1}) (hs 8 {3} {0})) (hs 8 {1,2} {1,3})) (hs 8 {1,3} {0,3}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg (hs 8 {0,3} {1,3}) (hs 4 {0,3} {2,3})) (hs 4 {1,2} {2,3})) (hs 8 {1,3} {1,2})) (hs 4 {2,3} {0,3})) (hs 4 {2,3} {1,2}))
+  · exact he 8 (fourPerm 0) (fourPerm 7)
+  · exact (hs 16 {0,2} {0,2})
+  · exact he 8 (fourPerm 1) (fourPerm 1)
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 8 {0} {2}) (hs 8 {1} {3})) (hs 8 {1,2} {1,3})) (hs 8 {1,3} {0,3}))
+  · exact (add_nonneg (add_nonneg (add_nonneg (hs 4 {1} {0}) (hs 4 {3} {2})) (hs 4 {0,1} {1,2})) (hs 4 {0,3} {0,1}))
+  · exact he 8 (fourPerm 1) (fourPerm 6)
+  · exact (hs 1 {2,3} {0,1})
+  · exact (add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg (hs 8 {0,3} {1,3}) (hs 4 {1,3} {0,1})) (hs 8 {1,3} {1,2})) (hs 4 {1,3} {2,3})) (hs 4 {2,3} {0,2})) (hs 4 {2,3} {1,3}))
+  · exact (hs 16 {1,2} {1,2})
 
 theorem boundary_nonneg (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) (f : Facet) :
     0 ≤ LiftedSimplexCertificate.mean geometry.index U
@@ -436,7 +458,10 @@ theorem boundary_nonneg (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) (f :
     fin_cases f <;> rfl
   have h : 0 ≤ L (subsetMinorSq U) := by rw [hL]; exact form_nonneg f U hU
   rw [diamond_weighted_profile U hU, map_sum] at h
-  simp only [map_smul, smul_eq_mul, hL] at h
+  have hs (σ : FourPerm) : L (realSignedWeight U σ • diamondPermProfile σ) =
+      realSignedWeight U σ * facetForm f (diamondPermProfile σ) := by
+    rw [map_smul, hL, smul_eq_mul]
+  simp_rw [hs] at h
   rw [← Equiv.sum_comp fourPermEquiv] at h
   change 0 ≤ ∑ p, realSignedWeight U (fourPerm p) * (slack f p : ℝ)
   simpa only [form_real] using h
