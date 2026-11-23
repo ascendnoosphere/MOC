@@ -64,6 +64,8 @@ Three opposite pairs in order five admit one probability law for all six complex
 
 For the five entries $0,x,-x,y,-y$ and their doubles, one law on at most five permutations works for every complex $x,y$ at fixed unitary. [DoubledFive.lean](MOC/DoubledFive.lean)
 
+For the four fixed harmonic marks, a common law on at most five permutations works for the two free entries. The harmonic marks and the relative unitary are fixed. [FiveSharedAnchors.lean](MOC/FiveSharedAnchors.lean) · [HarmonicAnchors.lean](MOC/HarmonicAnchors.lean)
+
 Let one entry of each spectrum vary. A fixed set of real weights works for all values if it works at the four pairs formed by two distinct choices on each side. When the fixed entries are real, choose nonreal $s,u$. The two pairs $(s,u)$ and $(s,\bar u)$ suffice. [TwoFreeEntries.lean](MOC/TwoFreeEntries.lean) · [TwoFreeRealAnchors.lean](MOC/TwoFreeRealAnchors.lean)
 
 For a fixed unitary, one set of weights represents the determinant for every pair of spectra if it represents all the following pairs. Choose index sets $I,J$ of the same size, at most $\lfloor n/2\rfloor$. Set the first spectrum to zero on $I$ and one elsewhere. Set the second spectrum to one on $J$ and zero elsewhere. The corresponding determinant is the squared modulus of the minor on rows $I$ and columns $J$. [SubsetMarkerTest.lean](MOC/SubsetMarkerTest.lean)

@@ -15,6 +15,7 @@ import MOC.FourMixedContactBound
 import MOC.FourSpectralSupport
 import MOC.FullSupportReduction
 import MOC.Geometry
+import MOC.HarmonicAnchors
 import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
@@ -32,6 +33,7 @@ import MOC.OppositePairNormal
 import MOC.PolydiskContact
 import MOC.ProjectiveTransport
 import MOC.RankTwoOverlap
+import MOC.SharedAnchorPadding
 import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.SpectralZeroPadding
