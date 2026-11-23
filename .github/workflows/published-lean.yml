@@ -1,0 +1,21 @@
+name: Build the published Lean modules
+on:
+  push:
+    branches:
+      - verify/published-moc-20261123
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Build and audit the published commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: '57ff8ce088c9ad50705d51329c4b3c988430a642'
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
