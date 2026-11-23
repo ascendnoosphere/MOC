@@ -30,6 +30,7 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | A real first spectrum and a second spectrum whose nonreal eigenvalues lie on one circle or line. The real eigenvalues may be arbitrary. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
 | The first spectrum and all but one entry of the negated second spectrum on the same circle or line. | Any positive order | [GeneralizedSpectralCircles.lean](Lean/MOC/GeneralizedSpectralCircles.lean) |
 | The first spectrum on a circle or line, with at most three distinct values of the negated second spectrum outside that circle or line. The outlier values may have arbitrary multiplicities. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
+| The first spectrum lies on a circle or line $C$. Each entry of the negated second spectrum lies on $C$ or on a second circle or line $D$. Either part can have any size. | Any finite order | [TwoCircleCover.lean](Lean/MOC/TwoCircleCover.lean) |
 | The first spectrum and the negated second spectrum on two tangent circles of positive radius. | Any finite order | [CircleSpectra.lean](Lean/MOC/CircleSpectra.lean) |
 | Two spectra that each lie on a circle or line, with independent circles or lines. | Any finite order | [TwoSpectralCircles.lean](Lean/MOC/TwoSpectralCircles.lean) |
 | A spectrum with at most two distinct values on either side. | Any finite order | [TwoValues.lean](Lean/MOC/TwoValues.lean) |

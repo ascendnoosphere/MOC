@@ -25,6 +25,7 @@ import MOC.SpectralAffineContact
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues
 import MOC.TrianglePairContacts
+import MOC.TwoCircleCover
 import MOC.TwoFreeRealAnchors
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
