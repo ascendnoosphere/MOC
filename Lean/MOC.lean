@@ -1,6 +1,7 @@
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.DiskBoundary
+import MOC.DoubleAntipodal
 import MOC.ExtendedCases
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
