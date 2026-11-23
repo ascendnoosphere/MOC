@@ -815,9 +815,51 @@ jobs:
           path: ${{ runner.temp }}/moc-objects/*.tgz
           retention-days: 1
           compression-level: 0
+  assemble-real-events:
+    name: Check the order-five polynomial subset events
+    needs: [check-real]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-real-events
+      MOC_TARGETS: +MOC.HomotheticFiveEvents
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
+        with:
+          path: Lean/.lake
+          key: lake-Linux-X64-86fb0afe31431406bdc5b1691b843128a5731c4792d5e6c1bbcd745af8097b7d-8361d126c6eeed67e13b378298a73d21306d296eec5a0de5c4842e41e0136ed5-6b0f6f5ee8f77f70522ffad3c36cd7419e12eea1
+          restore-keys: lake-Linux-X64-86fb0afe31431406bdc5b1691b843128a5731c4792d5e6c1bbcd745af8097b7d-8361d126c6eeed67e13b378298a73d21306d296eec5a0de5c4842e41e0136ed5-
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+          use-github-cache: 'false'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-real-events
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
   assemble-real:
     name: Build the real scaling theorem in order five
-    needs: [check-real]
+    needs: [assemble-real-events]
     runs-on: ubuntu-latest
     env:
       MOC_GROUP: assemble-real

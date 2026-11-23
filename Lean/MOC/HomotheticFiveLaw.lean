@@ -1,4 +1,4 @@
-import MOC.HomotheticFiveData
+import MOC.HomotheticFiveEvents
 import MOC.LexicographicScores
 
 /-! The first unequal lifting score selects a simplex. Each boundary
@@ -59,29 +59,7 @@ private theorem select_cell (s : ℝ) (hs : 0 < s) (Y : Axis → ℝ)
     rw [pairing_gap, sub_eq_zero] at hz
     exact (div_eq_div_iff (hd _).ne' (hd _).ne').mpr hz.symm
 
-private def sumPoly : (n : ℕ) → (Fin n → Poly) → Poly
-  | 0, _ => []
-  | n+1, v => add (v 0) (sumPoly n (fun i => v i.succ))
-
-private theorem eval_sumPoly (s : ℝ) (n : ℕ) (v : Fin n → Poly) :
-    eval s (sumPoly n v) = ∑ e, eval s (v e) := by
-  induction n with
-  | zero => simp [sumPoly, eval]
-  | succ n ih => rw [sumPoly, eval_add, ih, Fin.sum_univ_succ]
-
-set_option maxRecDepth 20000 in
-set_option maxHeartbeats 20000000 in
-private theorem event_check (f : Facet) : ∀ p : Label,
-    equal (slack f p) (sumPoly 46 fun e =>
-      if (eventSets f e).2.map (FivePermutations.perm p).toEmbedding = (eventSets f e).1
-      then weight f e else []) = true := by
-  have h : ∀ p : Label, equal (slack f p) (sumPoly 46 fun e =>
-      if FiveSubsetEvents.imageAt p (eventIndex f e).2 = (eventIndex f e).1
-      then weight f e else []) = true := by
-    fin_cases f <;> decide +kernel
-  simpa only [eventSets, FiveSubsetEvents.image_iff] using h
-
-private def signed (U : Matrix (Fin 5) (Fin 5) ℂ) (p : Label) :=
+private noncomputable def signed (U : Matrix (Fin 5) (Fin 5) ℂ) (p : Label) :=
   realSignedWeight U (FivePermutations.perm p)
 
 private theorem event_nonneg (s : ℝ) (hs : 0 < s)
@@ -119,7 +97,7 @@ private theorem event_nonneg (s : ℝ) (hs : 0 < s)
   exact mul_nonneg (subsetMinorSq_nonneg U I J)
     (eval_nonneg_of_check hs.le (nonnegative_weight f e))
 
-private def moments (s : ℝ) (U : Matrix (Fin 5) (Fin 5) ℂ) (k : Axis) : ℝ :=
+private noncomputable def moments (s : ℝ) (U : Matrix (Fin 5) (Fin 5) ℂ) (k : Axis) : ℝ :=
   ∑ p, signed U p * eval s (point p k)
 
 private theorem facet_nonneg (s : ℝ) (hs : 0 < s)
@@ -144,16 +122,22 @@ private theorem facet_nonneg (s : ℝ) (hs : 0 < s)
 
 private theorem reproduce (s : ℝ) (Y : Axis → ℝ) (t : Cell) (k : Axis) :
     ∑ j, pairing s Y (b t j) * eval s (point (vertex t j) k) = eval s (den t) * Y k := by
-  have h (r : Axis) := eval_eq_of_check s (reconstruct t r k)
-  simp only [eval_dot, apply_ite, eval] at h
+  have h (r : Axis) : (∑ j, eval s (b t j r) * eval s (point (vertex t j) k)) =
+      if r = k then eval s (den t) else 0 := by
+    rw [← eval_dot s (fun j => b t j r) (fun j => point (vertex t j) k),
+      eval_eq_of_check s (reconstruct t r k)]
+    split_ifs <;> rfl
   simp only [pairing, Finset.sum_mul]
   rw [Finset.sum_comm]
   calc
     _ = ∑ r, (∑ j, eval s (b t j r) * eval s (point (vertex t j) k)) * Y r := by
       simp only [Finset.sum_mul]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
-    _ = _ := by simp only [h, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+    _ = ∑ r, (if r = k then eval s (den t) else 0) * Y r :=
+      Finset.sum_congr rfl fun r _ => congrArg (· * Y r) (h r)
+    _ = _ := by
+      rw [Finset.sum_eq_single_of_mem k (Finset.mem_univ _) (fun r _ hr => by simp [hr])]
+      simp
 
 /-- One simplex of five permutations matches the four spectral coefficients and the total mass. -/
 theorem exists_law (s : ℝ) (hs : 0 < s)

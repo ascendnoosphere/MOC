@@ -42,6 +42,8 @@ private theorem anchor_law (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
 private theorem marks_neg (i : Fin 5) : (secondMarks i : ℂ) = -(firstMarks i : ℂ) := by
   fin_cases i <;> norm_num [firstMarks, secondMarks]
 
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 18000 in
 /-- Every unitary admits one law for the whole projective family of four
 shared harmonic marks. The remaining entries can take all complex values. -/
 theorem exists_harmonic_law (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
@@ -71,10 +73,16 @@ theorem exists_harmonic_law (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) 
       · simpa only [right, Function.update_of_ne hi, marks_neg, neg_neg] using hmark i
     have el : (f ∘ left (a r)) = mappedLeft f (f (a r)) := by
       funext i
-      by_cases hi : i = 4 <;> simp [left, mappedLeft, hi, Function.comp_apply]
+      by_cases hi : i = 4
+      · subst i
+        simp [left, mappedLeft]
+      · simp [left, mappedLeft, hi]
     have er : (fun j => -f (-right (-a s) j)) = mappedRight f (-f (a s)) := by
       funext i
-      by_cases hi : i = 4 <;> simp [right, mappedRight, hi, marks_neg]
+      by_cases hi : i = 4
+      · subst i
+        simp [right, mappedRight]
+      · simp [right, mappedRight, hi, marks_neg]
     have h := weight_agreement_fractional _ _ U hU w α β γ δ hd hl hr (he _ _)
     change weightedMatchingValue (f ∘ left (a r)) (fun j => -f (-right (-a s) j)) w =
       determinantValue (f ∘ left (a r)) (fun j => -f (-right (-a s) j)) U at h
@@ -83,7 +91,13 @@ theorem exists_harmonic_law (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) 
     intro h
     have heq := fractionalMap_injOn α β γ δ hd (hmark 0) (hmark 1) h
     norm_num [firstMarks] at heq
-  apply (weightedMatchingValue_eq_iff_four_corners _ _ U hU w 4 4 hf (neg_ne_neg.mpr hf)).mpr
+  have hn : -f (a 0) ≠ -f (a 1) := by
+    intro h
+    apply hf
+    simpa only [neg_neg] using congrArg (fun t : ℂ => -t) h
+  apply (weightedMatchingValue_eq_iff_four_corners
+    (fun i => f (firstMarks i : ℂ)) (fun i => -f (firstMarks i : ℂ))
+    U hU w 4 4 hf hn).mpr
   intro x hx y hy
   rcases Set.mem_insert_iff.mp hx with h | h <;> rcases Set.mem_insert_iff.mp hy with g | g
   · simpa only [h, g] using corners 0 0
