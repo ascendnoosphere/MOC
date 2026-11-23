@@ -974,12 +974,12 @@ jobs:
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
   replay:
-    name: Build three common marks
+    name: Build five cross padding
     if: ${{ startsWith(github.event.head_commit.message, 'Replay ') }}
     runs-on: ubuntu-latest
     env:
-      MOC_GROUP: three-common-marks
-      MOC_TARGETS: +MOC.ThreeSharedRepeatedFiveShapes
+      MOC_GROUP: five-cross-padding
+      MOC_TARGETS: +MOC.CrossPadding
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -1005,8 +1005,8 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           github-token: ${{ github.token }}
-          run-id: 45232121614
-          name: moc-three-rays
+          run-id: 45235204874
+          name: moc-lemmas
           path: ${{ runner.temp }}/replay-inputs
       - name: Check the requested proof modules
         run: |
@@ -1018,7 +1018,7 @@ jobs:
       - run: python .github/verify/module_objects.py archive
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: moc-three-common-marks
+          name: moc-five-cross-padding
           path: ${{ runner.temp }}/moc-objects/*.tgz
           retention-days: 1
           compression-level: 0
