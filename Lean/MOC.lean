@@ -1,6 +1,7 @@
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
+import MOC.CrossPadding
 import MOC.DiskBoundary
 import MOC.DoubleAntipodal
 import MOC.DoubledFive
