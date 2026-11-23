@@ -3,9 +3,8 @@ import MOC.CollinearKernelSupport
 import MOC.CrossPadding
 import MOC.DiskBoundary
 import MOC.DoubleAntipodal
+import MOC.DoubledFive
 import MOC.ExtendedCases
-import MOC.LiftedSimplex
-import MOC.FiveSharedAnchors
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
@@ -13,6 +12,7 @@ import MOC.FourMixedContactBound
 import MOC.FourSpectralSupport
 import MOC.FullSupportReduction
 import MOC.Geometry
+import MOC.HarmonicAnchors
 import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
@@ -25,6 +25,7 @@ import MOC.OppositePair
 import MOC.OppositePairNormal
 import MOC.PolydiskContact
 import MOC.RankTwoOverlap
+import MOC.SharedAnchorPadding
 import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.SubsetMarkerTest
