@@ -9,7 +9,8 @@ theorem weightedDiamond_lower_complete (u : ℝ) (hu : 0 < u) :
   have hd : 0 < eval u [1, 1] := by
     simp only [eval, Int.cast_one, mul_zero, add_zero, mul_one]
     exact add_pos zero_lt_one hu
-  exact weightedDiamondFacetCompleteness_of_chart hu (div_nonneg hu.le (by linarith))
+  have hx : 0 ≤ u / (1 + u) := div_nonneg hu.le (by positivity)
+  exact weightedDiamondFacetCompleteness_of_chart hu hx
     [0, 1] [1, 1] hd (by simp [eval]) lowerCompletePath
     (weightedDiamondLowerFirstCut_generates u hu)
     lowerFacet lowerScale lowerScale_positive lowerFacet_matches

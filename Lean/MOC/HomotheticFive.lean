@@ -7,6 +7,9 @@ complex axes and arbitrary mixing of added center values. -/
 
 open BigOperators Matrix MOC.RayCoefficients
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 2000000
+
 namespace MOC.HomotheticFive
 
 def spectrum (x y : ℂ) : Fin 5 → ℂ := ![0, x, -x, y, -y]
@@ -79,8 +82,13 @@ theorem exists_homothetic_law (s : ℝ) (hs : 0 < s)
   intro x y
   let F (p : Label) := matchingProduct (spectrum x y) (fun i => ((1+s : ℝ) : ℂ)*spectrum x y i)
     (FivePermutations.perm p)
-  have he : (∑ p : Label, (realSignedWeight U (FivePermutations.perm p) : ℂ)*F p) = _ :=
-    (Equiv.sum_comp FivePermutations.permEquiv _).trans (real_signed_determinant _ _ U hU)
+  let G (σ : FivePermutations.Perm) := (realSignedWeight U σ : ℂ) *
+    matchingProduct (spectrum x y) (fun i => ((1+s : ℝ) : ℂ)*spectrum x y i) σ
+  have hsum : (∑ p : Label, G (FivePermutations.perm p)) = ∑ σ : FivePermutations.Perm, G σ :=
+    Equiv.sum_comp FivePermutations.permEquiv G
+  have he : (∑ p : Label, (realSignedWeight U (FivePermutations.perm p) : ℂ)*F p) =
+      determinantValue (spectrum x y) (fun i => ((1+s : ℝ) : ℂ)*spectrum x y i) U :=
+    hsum.trans (real_signed_determinant _ _ U hU)
   rw [← he]
   change (∑ j, (w j : ℂ) * F (vertex t j)) = _
   simp only [F, product_eq, Finset.mul_sum]

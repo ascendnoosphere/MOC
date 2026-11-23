@@ -45,7 +45,7 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | An opposite eigenvalue pair of simple eigenvalues with normal reciprocal compressions on the overlap of the two spectral support spaces. | Five | [OppositePairNormal.lean](Lean/MOC/OppositePairNormal.lean) |
 | Two equilateral triples with opposite first vertices and independent nonzero complex scales. Each spectrum has a fourth point off its circumcircle. | Four | [FourEquilateral.lean](Lean/MOC/FourEquilateral.lean) |
 | The centrally symmetric spectra $t+s\{\pm2,\pm(2+i)\}$ and $-t+s\{\pm3,\pm(3-i)\}$, with $s\ne0$. Both spectra are nonconcyclic, and every cross-sum is nonzero. | Four | [FourCentralSymmetry.lean](Lean/MOC/FourCentralSymmetry.lean) |
-| The first spectrum has entries $x,-x,y,-y$. The second spectrum is $t$ times the first. The axes $x,y$ and scale $t$ can be any complex numbers. Opposite shifts are allowed. | Four | [HomotheticFour.lean](Lean/MOC/HomotheticFour.lean) |
+| The first spectrum has entries $x,-x,y,-y$. The second spectrum is $t$ times the first. The axes $x,y$ and the scale $t$ can be any complex numbers. Opposite shifts are allowed. | Four | [HomotheticFour.lean](Lean/MOC/HomotheticFour.lean) |
 | The first spectrum has entries $0,x,-x,y,-y$. The second spectrum is $r$ times the first. The axes $x,y$ are complex and $r$ is real. Both lists can have additional zeros and opposite shifts. | Five or greater | [HomotheticFive.lean](Lean/MOC/HomotheticFive.lean) |
 | For $X=(0,1,-1,i,-i)$, the spectra are $c+sX$ and $-c+rsX$, with complex $c,s$ and real $r\ge0$. Both lists can have additional copies of their centers. | Five or greater | [FiveCross.lean](Lean/MOC/FiveCross.lean) · [CrossPadding.lean](Lean/MOC/CrossPadding.lean) |
 | In order five, four entries of the first spectrum match four entries of the negated second spectrum. Use each label once. The matched values can repeat. At larger orders, append copies of one matched value to both signed lists. | Five or greater | [FourSharedFiveShapes.lean](Lean/MOC/FourSharedFiveShapes.lean) |
@@ -65,7 +65,7 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 | Large shifts $(a-z,b)$ for arbitrary spectra when every entry of the relative unitary $U$ is nonzero. The radius may depend on $a,b,U$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 
-A common fractional-linear map can act on the first spectrum and the negated second spectrum in each case. Its determinant must be nonzero. Its pole must avoid both signed spectra. The transformed pair has the same relative unitary. [ProjectiveTransport.lean](Lean/MOC/ProjectiveTransport.lean)
+A common fractional-linear map can act on the first spectrum and the negated second spectrum in each case. Its determinant must be nonzero. Its pole must avoid both signed spectra. The transformed pair has the same relative unitary. If fixed weights represent every partner of a first spectrum, they also represent every partner of its transformed spectrum. The converse holds. For this result the pole need only avoid the first spectrum. [ProjectiveTransport.lean](Lean/MOC/ProjectiveTransport.lean) · [CommonLawTransport.lean](Lean/MOC/CommonLawTransport.lean)
 
 ### Sufficient tests
 

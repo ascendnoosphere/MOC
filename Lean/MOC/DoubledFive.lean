@@ -6,6 +6,9 @@ and arbitrary relative unitaries. -/
 
 open BigOperators Matrix
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 2000000
+
 namespace MOC.DoubledFive
 
 /-- The origin and two pairs of opposite complex eigenvalues. -/
@@ -111,8 +114,11 @@ theorem exists_doubled_law (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
   refine ⟨fun j => perm (vertex t j), w, hw, hs, ?_⟩
   intro x y
   let F := fun p => matchingProduct (spectrum x y) (fun i => 2 * spectrum x y i) (perm p)
+  let G (σ : Perm) := (realSignedWeight U σ : ℂ) *
+    matchingProduct (spectrum x y) (fun i => 2 * spectrum x y i) σ
+  have hsum : (∑ p : Label, G (perm p)) = ∑ σ : Perm, G σ := Equiv.sum_comp permEquiv G
   exact (hr F (fun p => row_match x y t p)).trans
-    ((Equiv.sum_comp permEquiv _).trans (real_signed_determinant _ _ U hU))
+    (hsum.trans (real_signed_determinant (spectrum x y) (fun i => 2 * spectrum x y i) U hU))
 
 theorem holds_doubled (x y : ℂ) (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
     Holds (spectrum x y) (fun i => 2 * spectrum x y i) U := by

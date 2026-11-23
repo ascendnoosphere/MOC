@@ -6,6 +6,9 @@ score is a nonnegative sum of squared minors. -/
 
 open BigOperators Matrix MOC.RayCoefficients
 
+set_option maxRecDepth 16000
+set_option maxHeartbeats 2000000
+
 namespace MOC.HomotheticFive
 
 private def pairing (s : ℝ) (Y : Axis → ℝ) (v : Axis → Poly) : ℝ :=
@@ -104,7 +107,8 @@ private theorem event_nonneg (s : ℝ) (hs : 0 < s)
         if J.map σ.toEmbedding = I then realSignedWeight U σ else 0) = subsetMinorSq U I J := by
       simpa only [Finset.sum_filter, Complex.re_sum, apply_ite, Complex.zero_re,
         Complex.ofReal_re, realSignedWeight] using h
-    exact (Equiv.sum_comp FivePermutations.permEquiv _).trans h'
+    exact (Equiv.sum_comp FivePermutations.permEquiv (fun σ =>
+      if J.map σ.toEmbedding = I then realSignedWeight U σ else 0)).trans h'
   have hp (p : Label) : signed U p *
         (if J.map (FivePermutations.perm p).toEmbedding = I then eval s (weight f e) else 0) =
       (if J.map (FivePermutations.perm p).toEmbedding = I then signed U p else 0) *
@@ -166,7 +170,7 @@ theorem exists_law (s : ℝ) (hs : 0 < s)
     exact mul_div_cancel_left₀ _ hd.ne'
   have h0 (p : Label) : eval s (point p 0) = 1 := by simp [mass_coord, eval]
   have htot : ∑ p : Label, signed U p = 1 :=
-    (Equiv.sum_comp FivePermutations.permEquiv _).trans (sum_realSignedWeight U hU)
+    (Equiv.sum_comp FivePermutations.permEquiv (realSignedWeight U)).trans (sum_realSignedWeight U hU)
   refine ⟨t,w, fun j => div_nonneg (ht j) hd.le, ?_, h⟩
   simpa only [h0, Y, moments, mul_one, htot] using h 0
 

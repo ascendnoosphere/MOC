@@ -55,9 +55,13 @@ For a fixed unitary, one set of weights represents the determinant for every pai
 
 Start with two lists of order $d$. Count the occurrences of $c$ in the first list and $-c$ in the second list. Let $k$ be the sum of these counts. After adding $m$ copies of these two values, the inclusion holds for every relative unitary if $k+m+2\ge d$. In order four, a case proved for every unitary therefore extends to every larger order if at least one original entry has the specified value. [MarkedPadding.lean](MOC/MarkedPadding.lean)
 
-For a real first spectrum of order four, one probability law works for every complex partner at fixed $U$. Repeated first-spectrum values are allowed. [FourCommonLaw.lean](MOC/FourCommonLaw.lean)
+Fix an order-four unitary and a first spectrum on a circle or line. One probability law works for every complex partner. The first spectrum may contain repeated entries. A fractional-linear change of the first spectrum preserves the same all-partner law in every finite order if the pole avoids that first spectrum. [FourCommonLaw.lean](MOC/FourCommonLaw.lean) · [CommonLawTransport.lean](MOC/CommonLawTransport.lean)
+
+In order five, expand each matching product in a fixed list of basis functions of the spectral values. Test the signed mean of each generator of the cone of nonnegative linear functions on the coefficient vectors. If every test passes, one probability law works for all spectral values in that expansion. The singleton and two-element subset events supply tests with nonnegative mean for every unitary. [FiveMatchingLaw.lean](MOC/FiveMatchingLaw.lean) · [FiveSubsetEvents.lean](MOC/FiveSubsetEvents.lean)
 
 In order five, four opposite pairs admit one law for all six complex values at fixed $U$ and fixed label positions. Three opposite pairs also admit one law when the remaining two entries on one specified side agree. Four harmonic shared values admit a law on at most five permutations for the two free entries. [FourSharedFive.lean](MOC/FourSharedFive.lean) · [ThreeSharedRepeatedFive.lean](MOC/ThreeSharedRepeatedFive.lean) · [FiveSharedAnchors.lean](MOC/FiveSharedAnchors.lean)
+
+Append $m$ copies of $c$ and $-c$ to the order-four antipodal pair with an arbitrary complex scale. For $m=1$, require $c$ to occur in the first quadruple or $-c$ to occur in the second. For $m\ge2$, the value of $c$ is arbitrary. [HomotheticFourPadding.lean](MOC/HomotheticFourPadding.lean)
 
 For the order-four antipodal quadruples, one law uses at most seven permutations for all complex axes and scale factors. At scale two, five permutations suffice. For the order-five lists with a center, at most five permutations suffice for all axes at each fixed real scale greater than one. [HomotheticFour.lean](MOC/HomotheticFour.lean) · [DoubleAntipodal.lean](MOC/DoubleAntipodal.lean) · [HomotheticFive.lean](MOC/HomotheticFive.lean)
 
