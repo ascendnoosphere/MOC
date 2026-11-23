@@ -365,7 +365,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 84185389644abaac3e5ac605edece8bf74a97a13
+          ref: 962ed0da42d87a73a307f36b1de476de5d7aeb7d
       - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
         with:
           lake-package-directory: Lean
