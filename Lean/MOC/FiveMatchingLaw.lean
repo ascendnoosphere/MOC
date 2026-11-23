@@ -19,32 +19,23 @@ private theorem linear_score {d : ℕ} (L : (Fin d → ℝ) →ₗ[ℝ] ℝ) (v 
   intro k _
   exact mul_comm _ _
 
-set_option maxHeartbeats 3000000 in
-/-- A cone of nonnegative coefficient tests gives a single law for all evaluations
-of the matching polynomials. Each final ray must have nonnegative signed expectation. -/
-theorem exists_common_law {n m d : ℕ} (base : Fin d)
+set_option maxRecDepth 24000
+set_option maxHeartbeats 8000000
+
+private theorem exists_coordinate_law {n m d : ℕ} (base : Fin d)
     (point : Fin n → Fin d → ℤ) (labelPoint : Fin 120 → Fin n)
     (finalRay : Fin m → Fin n → ℤ) (hbase : ∀ i, point i base = 1)
     (hsurj : Function.Surjective labelPoint)
     (hrays : ∀ (c : Fin d → ℝ), (∀ i, 0 ≤ ∑ k, c k * (point i k : ℝ)) →
       ∃ μ : Fin m → ℝ, (∀ r, 0 ≤ μ r) ∧ ∀ i,
         (∑ k, c k * (point i k : ℝ)) = ∑ r, μ r * (finalRay r i : ℝ))
-    (left right : (Fin 6 → ℂ) → (Fin 5 → ℂ)) (basis : (Fin 6 → ℂ) → Fin d → ℂ)
-    (matching_eq : ∀ z p, matchingProduct (left z) (right z) (FivePermutations.perm p) =
-      ∑ k, (point (labelPoint p) k : ℂ) * basis z k)
-    (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U)
-    (hnonneg : ∀ r, 0 ≤ ∑ p, realSignedWeight U (FivePermutations.perm p) *
-      (finalRay r (labelPoint p) : ℝ)) :
-    ∃ w : Fin 120 → ℝ, (∀ p, 0 ≤ w p) ∧ (∑ p, w p = 1) ∧
-      ∀ z : Fin 6 → ℂ, ∑ p, (w p : ℂ) *
-        matchingProduct (left z) (right z) (FivePermutations.perm p) =
-          determinantValue (left z) (right z) U := by
+    (v : Fin 120 → ℝ) (hv : ∑ p, v p = 1)
+    (hnonneg : ∀ r, 0 ≤ ∑ p, v p * (finalRay r (labelPoint p) : ℝ)) :
+    ∃ w : Fin 120 → ℝ, (∀ p, 0 ≤ w p) ∧ (∑ p, w p = 1) ∧ ∀ k,
+      (∑ p, w p * (point (labelPoint p) k : ℝ)) = ∑ p, v p * (point (labelPoint p) k : ℝ) := by
   classical
   let b (p : Fin 120) (k : Fin d) : ℝ := point (labelPoint p) k
-  let v (p : Fin 120) := realSignedWeight U (FivePermutations.perm p)
   let x : Fin d → ℝ := ∑ p, v p • b p
-  have hv : ∑ p, v p = 1 := (FivePermutations.permEquiv.sum_comp (realSignedWeight U)).trans
-    (sum_realSignedWeight U hU)
   have hb₀ (p : Fin 120) : b p base = 1 := by simp [b, hbase]
   have hx₀ : x base = 1 := by
     simpa only [x, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hb₀, mul_one] using hv
@@ -84,6 +75,35 @@ theorem exists_common_law {n m d : ℕ} (base : Fin d)
     simpa only [x, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using congrFun hvec.symm k
   have hw₁ : ∑ p, w p = 1 := by
     simpa only [hb₀, mul_one, hv] using hwc base
+  exact ⟨w, hw, hw₁, hwc⟩
+
+/-- A cone of nonnegative coefficient tests gives a single law for all evaluations
+of the matching polynomials. Each final ray must have nonnegative signed expectation. -/
+theorem exists_common_law {n m d : ℕ} (base : Fin d)
+    (point : Fin n → Fin d → ℤ) (labelPoint : Fin 120 → Fin n)
+    (finalRay : Fin m → Fin n → ℤ) (hbase : ∀ i, point i base = 1)
+    (hsurj : Function.Surjective labelPoint)
+    (hrays : ∀ (c : Fin d → ℝ), (∀ i, 0 ≤ ∑ k, c k * (point i k : ℝ)) →
+      ∃ μ : Fin m → ℝ, (∀ r, 0 ≤ μ r) ∧ ∀ i,
+        (∑ k, c k * (point i k : ℝ)) = ∑ r, μ r * (finalRay r i : ℝ))
+    (left right : (Fin 6 → ℂ) → (Fin 5 → ℂ)) (basis : (Fin 6 → ℂ) → Fin d → ℂ)
+    (matching_eq : ∀ z p, matchingProduct (left z) (right z) (FivePermutations.perm p) =
+      ∑ k, (point (labelPoint p) k : ℂ) * basis z k)
+    (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U)
+    (hnonneg : ∀ r, 0 ≤ ∑ p, realSignedWeight U (FivePermutations.perm p) *
+      (finalRay r (labelPoint p) : ℝ)) :
+    ∃ w : Fin 120 → ℝ, (∀ p, 0 ≤ w p) ∧ (∑ p, w p = 1) ∧
+      ∀ z : Fin 6 → ℂ, ∑ p, (w p : ℂ) *
+        matchingProduct (left z) (right z) (FivePermutations.perm p) =
+          determinantValue (left z) (right z) U := by
+  classical
+  let v (p : Fin 120) := realSignedWeight U (FivePermutations.perm p)
+  have hv : ∑ p, v p = 1 := by
+    change (∑ p : Fin 120, realSignedWeight U (FivePermutations.permEquiv p)) = 1
+    rw [FivePermutations.permEquiv.sum_comp (realSignedWeight U)]
+    exact sum_realSignedWeight U hU
+  obtain ⟨w, hw, hw₁, hwc⟩ :=
+    exists_coordinate_law base point labelPoint finalRay hbase hsurj hrays v hv hnonneg
   refine ⟨w, hw, hw₁, ?_⟩
   intro z
   calc
@@ -96,7 +116,7 @@ theorem exists_common_law {n m d : ℕ} (base : Fin d)
       simp_rw [← mul_assoc, ← Finset.sum_mul]
       congr 1
       have he := congrArg (fun t : ℝ => (t : ℂ)) (hwc k)
-      simpa [b] using he
+      simpa using he
     _ = ∑ σ, (realSignedWeight U σ : ℂ) * matchingProduct (left z) (right z) σ :=
       FivePermutations.permEquiv.sum_comp _
     _ = _ := real_signed_determinant (left z) (right z) U hU

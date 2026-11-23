@@ -26,8 +26,8 @@ theorem isClosed_hasCommonWeights (U : Matrix ι ι ℂ) :
       apply continuous_finset_sum
       intro σ _
       exact continuous_subtype_val.comp ((continuous_apply σ).comp continuous_snd)
-    · apply isClosed_setOf_forall
-      intro b
+    · rw [Set.setOf_forall]
+      refine isClosed_iInter fun b => ?_
       apply isClosed_eq
       · unfold weightedMatchingValue matchingProduct
         apply continuous_finset_sum

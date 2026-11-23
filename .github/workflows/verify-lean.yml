@@ -118,4 +118,4 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           build: 'true'
-          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction
+          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FiveMatchingLaw

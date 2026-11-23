@@ -47,6 +47,14 @@ theorem holds_value_padding_of_count {d : ℕ} (a b : Fin d → ℂ) (c : ℂ) (
   rw [← ha, ← hb]
   exact (holds_shift_iff _ _ hU c).mpr hz
 
+/-- If at least d minus two opposite pairs are appended, the original
+d entries on each side can have arbitrary complex values. -/
+theorem holds_value_padding_of_order_bound {d : ℕ} (a b : Fin d → ℂ) (c : ℂ) (m : ℕ)
+    (h : d ≤ m + 2) (U : Matrix (Fin (d + m)) (Fin (d + m)) ℂ)
+    (hU : IsUnitary U) :
+    Holds (padSpectrumWithValue a c m) (padSpectrumWithValue b (-c) m) U :=
+  holds_value_padding_of_count a b c m (by omega) U hU
+
 /-- A case that holds for every unitary at order d extends to every larger
 order when the two multiplicities at c and -c total at least d minus three. -/
 theorem holds_all_value_paddings_of_count {d : ℕ} (a b : Fin d → ℂ) (c : ℂ)
