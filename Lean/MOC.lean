@@ -3,6 +3,8 @@ import MOC.CollinearKernelSupport
 import MOC.DiskBoundary
 import MOC.DoubleAntipodal
 import MOC.ExtendedCases
+import MOC.FiveMatchingLaw
+import MOC.FiveSubsetEvents
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
@@ -17,6 +19,7 @@ import MOC.HermitianStationarySwap
 import MOC.HomotheticFour
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
+import MOC.IntegerPivotFrame
 import MOC.MarkedPadding
 import MOC.NormalSupportMaximum
 import MOC.Obstruction
