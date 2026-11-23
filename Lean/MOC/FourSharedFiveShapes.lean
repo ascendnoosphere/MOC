@@ -37,6 +37,13 @@ theorem holds_of_four_pairs {ι : Type*} [Fintype ι] [DecidableEq ι]
   rw [ha, hb]
   exact holds z _ (unitary_reindex e f hU)
 
+/-- The difference of two order-five normal matrices with the same spectrum
+satisfies the determinant inclusion at every relative unitary. -/
+theorem holds_isospectral_difference (a : Fin 5 → ℂ) (U : Matrix (Fin 5) (Fin 5) ℂ)
+    (hU : IsUnitary U) : Holds a (fun i => -a i) U :=
+  holds_of_four_pairs a (fun i => -a i) (Equiv.refl _) (Equiv.refl _)
+    (fun j => by simp) U hU
+
 /-- Repeat one chosen shared mark on both signed lists any number of times. -/
 theorem holds_padded (z : Fin 6 → ℂ) (r : Fin 4) (m : ℕ)
     (U : Matrix (Fin (5 + m)) (Fin (5 + m)) ℂ) (hU : IsUnitary U) :
