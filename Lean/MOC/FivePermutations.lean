@@ -158,4 +158,6 @@ def permEquiv : Label ≃ Perm where
           rw [Fintype.card_perm, Fintype.card_fin, Fintype.card_fin]
           decide))).mp rank_perm.injective)
 
+theorem permEquiv_apply (i : Label) : permEquiv i = perm i := rfl
+
 end MOC.FivePermutations

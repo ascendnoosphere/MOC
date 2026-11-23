@@ -1,7 +1,7 @@
 import MOC.Geometry
 import MOC.Support
 import MOC.TwoValues
-import Mathlib.Data.Fintype.Perm
+import MOC.FiveSubsetEvents
 import Mathlib.NumberTheory.Zsqrtd.GaussianInt
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
@@ -49,39 +49,43 @@ private theorem radius_eq (t : ℝ) :
 private def direction : Fin 4 → GaussianInt :=
   ![⟨-1,-1⟩, ⟨-1,1⟩, ⟨1,-1⟩, ⟨1,1⟩]
 
-private abbrev Term := Finset (Fin 5) × Finset (Fin 5) × ℕ
-private def zeroTerm : Term := (∅, ∅, 0)
+private abbrev Term := Fin 15 × Fin 15 × ℕ
+private def zeroTerm : Term := (0, 0, 0)
 
 -- Each entry gives a row set, a column set and an integer coefficient.
-private def terms : Fin 4 → Fin 5 → Fin 13 → Term :=
+private def termIndex : Fin 4 → Fin 5 → Fin 13 → Term :=
   ![![
     fun _ => zeroTerm,
-    fun k => (![ ({0}, {0}, 1), ({0}, {1}, 2), ({0}, {4}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
-    ![({0}, {0}, 3), ({0, 1}, {1, 4}, 2), ({0, 1}, {2, 3}, 2), ({0, 1}, {3, 4}, 2), ({0, 2}, {1, 2}, 2), ({0, 2}, {1, 3}, 2), ({0, 2}, {2, 4}, 2), ({0, 3}, {1, 3}, 2), ({0, 3}, {2, 4}, 2), ({0, 3}, {3, 4}, 2), ({0, 4}, {1, 2}, 2), ({0, 4}, {1, 4}, 2), ({0, 4}, {2, 3}, 2)],
-    ![({0}, {0}, 3), ({0, 1}, {2, 4}, 2), ({0, 2}, {2, 4}, 2), ({0, 3}, {1, 3}, 2), ({0, 4}, {1, 3}, 2), ({1, 3}, {0, 2}, 2), ({1, 3}, {0, 3}, 2), ({1, 4}, {0, 1}, 2), ({1, 4}, {0, 4}, 2), ({2, 3}, {0, 1}, 2), ({2, 3}, {0, 4}, 2), ({2, 4}, {0, 2}, 2), ({2, 4}, {0, 3}, 2)],
-    fun k => (![ ({0}, {0}, 1), ({1}, {0}, 2), ({4}, {0}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
+    fun k => (![ (0, 0, 1), (0, 1, 2), (0, 4, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
+    ![(0, 0, 3), (5, 11, 2), (5, 12, 2), (5, 14, 2), (6, 9, 2), (6, 10, 2), (6, 13, 2), (7, 10, 2), (7, 13, 2), (7, 14, 2), (8, 9, 2), (8, 11, 2), (8, 12, 2)],
+    ![(0, 0, 3), (5, 13, 2), (6, 13, 2), (7, 10, 2), (8, 10, 2), (10, 6, 2), (10, 7, 2), (11, 5, 2), (11, 8, 2), (12, 5, 2), (12, 8, 2), (13, 6, 2), (13, 7, 2)],
+    fun k => (![ (0, 0, 1), (1, 0, 2), (4, 0, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
   ],
   ![
     fun _ => zeroTerm,
-    fun k => (![ ({0}, {0}, 1), ({0}, {1}, 2), ({0}, {3}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
-    ![({0}, {0}, 3), ({0, 1}, {1, 3}, 2), ({0, 1}, {2, 4}, 2), ({0, 1}, {3, 4}, 2), ({0, 2}, {1, 2}, 2), ({0, 2}, {1, 4}, 2), ({0, 2}, {2, 3}, 2), ({0, 3}, {1, 2}, 2), ({0, 3}, {1, 3}, 2), ({0, 3}, {2, 4}, 2), ({0, 4}, {1, 4}, 2), ({0, 4}, {2, 3}, 2), ({0, 4}, {3, 4}, 2)],
-    ![({0}, {0}, 3), ({0, 1}, {2, 3}, 2), ({0, 2}, {2, 3}, 2), ({0, 3}, {1, 4}, 2), ({0, 4}, {1, 4}, 2), ({1, 3}, {0, 1}, 2), ({1, 3}, {0, 3}, 2), ({1, 4}, {0, 2}, 2), ({1, 4}, {0, 4}, 2), ({2, 3}, {0, 2}, 2), ({2, 3}, {0, 4}, 2), ({2, 4}, {0, 1}, 2), ({2, 4}, {0, 3}, 2)],
-    fun k => (![ ({0}, {0}, 1), ({1}, {0}, 2), ({3}, {0}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
+    fun k => (![ (0, 0, 1), (0, 1, 2), (0, 3, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
+    ![(0, 0, 3), (5, 10, 2), (5, 13, 2), (5, 14, 2), (6, 9, 2), (6, 11, 2), (6, 12, 2), (7, 9, 2), (7, 10, 2), (7, 13, 2), (8, 11, 2), (8, 12, 2), (8, 14, 2)],
+    ![(0, 0, 3), (5, 12, 2), (6, 12, 2), (7, 11, 2), (8, 11, 2), (10, 5, 2), (10, 7, 2), (11, 6, 2), (11, 8, 2), (12, 6, 2), (12, 8, 2), (13, 5, 2), (13, 7, 2)],
+    fun k => (![ (0, 0, 1), (1, 0, 2), (3, 0, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
   ],
   ![
     fun _ => zeroTerm,
-    fun k => (![ ({0}, {0}, 1), ({0}, {2}, 2), ({0}, {4}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
-    ![({0}, {0}, 3), ({0, 1}, {1, 2}, 2), ({0, 1}, {1, 4}, 2), ({0, 1}, {2, 3}, 2), ({0, 2}, {1, 3}, 2), ({0, 2}, {2, 4}, 2), ({0, 2}, {3, 4}, 2), ({0, 3}, {1, 4}, 2), ({0, 3}, {2, 3}, 2), ({0, 3}, {3, 4}, 2), ({0, 4}, {1, 2}, 2), ({0, 4}, {1, 3}, 2), ({0, 4}, {2, 4}, 2)],
-    ![({0}, {0}, 3), ({0, 1}, {1, 4}, 2), ({0, 2}, {1, 4}, 2), ({0, 3}, {2, 3}, 2), ({0, 4}, {2, 3}, 2), ({1, 3}, {0, 2}, 2), ({1, 3}, {0, 4}, 2), ({1, 4}, {0, 1}, 2), ({1, 4}, {0, 3}, 2), ({2, 3}, {0, 1}, 2), ({2, 3}, {0, 3}, 2), ({2, 4}, {0, 2}, 2), ({2, 4}, {0, 4}, 2)],
-    fun k => (![ ({0}, {0}, 1), ({2}, {0}, 2), ({4}, {0}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
+    fun k => (![ (0, 0, 1), (0, 2, 2), (0, 4, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
+    ![(0, 0, 3), (5, 9, 2), (5, 11, 2), (5, 12, 2), (6, 10, 2), (6, 13, 2), (6, 14, 2), (7, 11, 2), (7, 12, 2), (7, 14, 2), (8, 9, 2), (8, 10, 2), (8, 13, 2)],
+    ![(0, 0, 3), (5, 11, 2), (6, 11, 2), (7, 12, 2), (8, 12, 2), (10, 6, 2), (10, 8, 2), (11, 5, 2), (11, 7, 2), (12, 5, 2), (12, 7, 2), (13, 6, 2), (13, 8, 2)],
+    fun k => (![ (0, 0, 1), (2, 0, 2), (4, 0, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
   ],
   ![
     fun _ => zeroTerm,
-    fun k => (![ ({0}, {0}, 1), ({0}, {2}, 2), ({0}, {3}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
-    ![({0}, {0}, 3), ({0, 1}, {1, 2}, 2), ({0, 1}, {1, 3}, 2), ({0, 1}, {2, 4}, 2), ({0, 2}, {1, 4}, 2), ({0, 2}, {2, 3}, 2), ({0, 2}, {3, 4}, 2), ({0, 3}, {1, 2}, 2), ({0, 3}, {1, 4}, 2), ({0, 3}, {2, 3}, 2), ({0, 4}, {1, 3}, 2), ({0, 4}, {2, 4}, 2), ({0, 4}, {3, 4}, 2)],
-    ![({0}, {0}, 3), ({0, 1}, {1, 3}, 2), ({0, 2}, {1, 3}, 2), ({0, 3}, {2, 4}, 2), ({0, 4}, {2, 4}, 2), ({1, 3}, {0, 1}, 2), ({1, 3}, {0, 4}, 2), ({1, 4}, {0, 2}, 2), ({1, 4}, {0, 3}, 2), ({2, 3}, {0, 2}, 2), ({2, 3}, {0, 3}, 2), ({2, 4}, {0, 1}, 2), ({2, 4}, {0, 4}, 2)],
-    fun k => (![ ({0}, {0}, 1), ({2}, {0}, 2), ({3}, {0}, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
+    fun k => (![ (0, 0, 1), (0, 2, 2), (0, 3, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩,
+    ![(0, 0, 3), (5, 9, 2), (5, 10, 2), (5, 13, 2), (6, 11, 2), (6, 12, 2), (6, 14, 2), (7, 9, 2), (7, 11, 2), (7, 12, 2), (8, 10, 2), (8, 13, 2), (8, 14, 2)],
+    ![(0, 0, 3), (5, 10, 2), (6, 10, 2), (7, 13, 2), (8, 13, 2), (10, 5, 2), (10, 8, 2), (11, 6, 2), (11, 7, 2), (12, 6, 2), (12, 7, 2), (13, 5, 2), (13, 8, 2)],
+    fun k => (![ (0, 0, 1), (2, 0, 2), (3, 0, 2), zeroTerm ] : Fin 4 → Term) ⟨min k.val 3, by omega⟩
   ]]
+
+private def terms (j : Fin 4) (d : Fin 5) (k : Fin 13) : Finset (Fin 5) × Finset (Fin 5) × ℕ :=
+  let e := termIndex j d k
+  (FiveSubsetEvents.subsets e.1, FiveSubsetEvents.subsets e.2.1, e.2.2)
 
 set_option maxRecDepth 16000 in
 set_option maxHeartbeats 32000000 in
@@ -89,8 +93,13 @@ private theorem certificate : ∀ (j : Fin 4) (d : Fin 5) (σ : Equiv.Perm (Fin 
     radiusCoeff d + (direction j * coeff σ d).re =
       ∑ k : Fin 13, if (terms j d k).2.1.map σ.toEmbedding = (terms j d k).1
         then ((terms j d k).2.2 : ℤ) else 0 := by
-  letI := fintypePerm (α := Fin 5)
-  decide +kernel
+  intro j d σ
+  obtain ⟨i, rfl⟩ := FivePermutations.permEquiv.surjective σ
+  have h : ∀ i : Fin 120, radiusCoeff d + (direction j * coeff (FivePermutations.perm i) d).re =
+      ∑ k : Fin 13, if FiveSubsetEvents.imageAt i (termIndex j d k).2.1 =
+        (termIndex j d k).1 then ((termIndex j d k).2.2 : ℤ) else 0 := by
+    fin_cases j <;> fin_cases d <;> decide +kernel
+  simpa only [FivePermutations.permEquiv_apply, terms, FiveSubsetEvents.image_iff] using h i
 
 private theorem bound (t : ℝ) (ht : 0 ≤ t) (U : Matrix (Fin 5) (Fin 5) ℂ)
     (hU : IsUnitary U) (j : Fin 4) :

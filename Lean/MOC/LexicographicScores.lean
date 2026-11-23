@@ -22,9 +22,10 @@ theorem exists_maximum_score_list (n : ℕ) (C : Type*) [Fintype C] [Nonempty C]
     intro c i
     refine Fin.cases ?_ (fun j => ?_) i
     · intro _
-      exact b.property.symm ▸ ha c (Finset.mem_univ c)
+      rw [b.property]
+      exact ha c (Finset.mem_univ c)
     · intro h
-      let c' : F := ⟨c, (h 0 (Fin.zero_lt_succ j)).trans b.property⟩
+      let c' : F := ⟨c, (h 0 (Fin.succ_pos j)).trans b.property⟩
       exact hb c' j (fun k hk => h k.succ (Fin.succ_lt_succ_iff.mpr hk))
 
 end MOC

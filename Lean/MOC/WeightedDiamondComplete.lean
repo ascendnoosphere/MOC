@@ -5,6 +5,9 @@ import MOC.WeightedDiamondChart
 
 namespace MOC.RayCoefficients
 
+set_option maxHeartbeats 12000000
+set_option maxRecDepth 16000
+
 set_option maxRecDepth 16000
 set_option maxHeartbeats 16000000
 

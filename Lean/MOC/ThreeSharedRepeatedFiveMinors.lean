@@ -7,6 +7,9 @@ open BigOperators Matrix
 
 namespace MOC.ThreeSharedRepeatedFive
 
+set_option maxHeartbeats 12000000
+set_option maxRecDepth 16000
+
 open FiveSubsetEvents
 
 private def terms : Array (Array (Fin 15 × Fin 15 × ℕ)) :=

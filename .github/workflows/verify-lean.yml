@@ -6,7 +6,69 @@ on:
 permissions:
   contents: read
 jobs:
+  check:
+    name: Check ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - group: lemmas
+            targets: +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
+          - group: four-shapes
+            targets: +MOC.DoubleAntipodal +MOC.HomotheticFour
+          - group: five-shapes
+            targets: +MOC.DoubledFive +MOC.HomotheticFive
+          - group: four-coordinate-law
+            targets: +MOC.FourSharedFiveMatching +MOC.FourSharedFiveMinors
+          - group: three-coordinate-law
+            targets: +MOC.ThreeSharedRepeatedFiveMatching +MOC.ThreeSharedRepeatedFiveMinors
+          - group: harmonic
+            targets: +MOC.HarmonicAnchors +MOC.CrossPadding +MOC.SharedAnchorPadding
+          - group: four-rays-a
+            targets: +MOC.WeightedDiamondLowerCut01 +MOC.WeightedDiamondLowerCut02 +MOC.WeightedDiamondLowerCut03 +MOC.WeightedDiamondLowerCut04 +MOC.WeightedDiamondLowerCut05
+          - group: four-rays-b
+            targets: +MOC.WeightedDiamondLowerCut06 +MOC.WeightedDiamondLowerCut07 +MOC.WeightedDiamondLowerCut08
+          - group: four-rays-c
+            targets: +MOC.WeightedDiamondLowerCut09 +MOC.WeightedDiamondLowerCut10 +MOC.WeightedDiamondLowerCut11
+          - group: five-rays-a
+            targets: +MOC.FourSharedFiveCut01 +MOC.FourSharedFiveCut02 +MOC.FourSharedFiveCut03 +MOC.FourSharedFiveCut04 +MOC.FourSharedFiveCut05 +MOC.FourSharedFiveCut06 +MOC.FourSharedFiveCut07 +MOC.FourSharedFiveCut08 +MOC.FourSharedFiveCut09 +MOC.FourSharedFiveCut10 +MOC.FourSharedFiveCut11 +MOC.FourSharedFiveCut12 +MOC.FourSharedFiveCut13 +MOC.FourSharedFiveCut14
+          - group: five-rays-b
+            targets: +MOC.FourSharedFiveCut15 +MOC.FourSharedFiveCut16 +MOC.FourSharedFiveCut17 +MOC.FourSharedFiveCut18 +MOC.FourSharedFiveCut19 +MOC.FourSharedFiveCut20 +MOC.FourSharedFiveCut21 +MOC.FourSharedFiveCut22
+          - group: five-rays-c
+            targets: +MOC.FourSharedFiveCut23 +MOC.FourSharedFiveCut24 +MOC.FourSharedFiveCut25 +MOC.FourSharedFiveCut26 +MOC.FourSharedFiveCut27 +MOC.FourSharedFiveCut28 +MOC.FourSharedFiveCut29 +MOC.FourSharedFiveCut30
+          - group: five-rays-d
+            targets: +MOC.FourSharedFiveCut31 +MOC.FourSharedFiveCut32 +MOC.FourSharedFiveCut33 +MOC.FourSharedFiveCut34 +MOC.FourSharedFiveCut35 +MOC.FourSharedFiveCut36
+          - group: five-rays-e
+            targets: +MOC.FourSharedFiveCut37 +MOC.FourSharedFiveCut38 +MOC.FourSharedFiveCut39 +MOC.FourSharedFiveCut40 +MOC.FourSharedFiveCut41
+          - group: three-rays
+            targets: +MOC.ThreeSharedRepeatedFiveCut01 +MOC.ThreeSharedRepeatedFiveCut02 +MOC.ThreeSharedRepeatedFiveCut03 +MOC.ThreeSharedRepeatedFiveCut04 +MOC.ThreeSharedRepeatedFiveCut05 +MOC.ThreeSharedRepeatedFiveCut06 +MOC.ThreeSharedRepeatedFiveCut07 +MOC.ThreeSharedRepeatedFiveCut08 +MOC.ThreeSharedRepeatedFiveCut09 +MOC.ThreeSharedRepeatedFiveCut10 +MOC.ThreeSharedRepeatedFiveCut11 +MOC.ThreeSharedRepeatedFiveCut12 +MOC.ThreeSharedRepeatedFiveCut13 +MOC.ThreeSharedRepeatedFiveCut14 +MOC.ThreeSharedRepeatedFiveCut15 +MOC.ThreeSharedRepeatedFiveCut16 +MOC.ThreeSharedRepeatedFiveCut17 +MOC.ThreeSharedRepeatedFiveCut18 +MOC.ThreeSharedRepeatedFiveCut19 +MOC.ThreeSharedRepeatedFiveCut20 +MOC.ThreeSharedRepeatedFiveCut21 +MOC.ThreeSharedRepeatedFiveCut22 +MOC.ThreeSharedRepeatedFiveCut23
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Mark start of local build
+        run: touch "$RUNNER_TEMP/moc-build-start"
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        run: |
+          mkdir -p "$RUNNER_TEMP/moc-objects"
+          find Lean/.lake/build -type f -newer "$RUNNER_TEMP/moc-build-start" -print0 |
+            tar --null -T - -czf "$RUNNER_TEMP/moc-objects/${{ matrix.group }}.tgz"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
   build:
+    name: Build and audit the complete library
+    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -14,19 +76,17 @@ jobs:
         with:
           lake-package-directory: Lean
           auto-config: 'false'
-          build: 'true'
+          build: 'false'
           use-mathlib-cache: 'true'
-  lemmas:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          lake-package-directory: Lean
-          auto-config: 'false'
-          build: 'true'
-          build-args: >-
-            +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction
-            +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport
-            +MOC.WeightedDiamondPackedCut +MOC.LiftedSimplex
-          use-mathlib-cache: 'true'
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-objects
+          merge-multiple: true
+      - name: Restore compiled modules and run the normal build
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-objects/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build

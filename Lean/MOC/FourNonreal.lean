@@ -12,7 +12,9 @@ theorem holds_four_of_generalized_circle (a b : Fin 4 → ℂ) (U : Matrix (Fin 
     (hU : IsUnitary U) (hc : SpectrumOnGeneralizedCircle a ∨ SpectrumOnGeneralizedCircle b) :
     Holds a b U := by
   apply hermitianByNormal_iff_generalized_circle.mp hermitianByNormal_four a b U hU
-  exact hc.imp_right (fun h => spectrumOnGeneralizedCircle_neg h)
+  rcases hc with h | h
+  · exact Or.inl h
+  · exact Or.inr (spectrumOnGeneralizedCircle_neg h)
 
 /-- At most four nonreal partner entries suffice in every order. Count entries with multiplicity. -/
 theorem hermitianByNormalAtMost_four (n : ℕ) : HermitianByNormalAtMost (Fin n) 4 := by
@@ -46,7 +48,7 @@ theorem holds_five_of_common_generalized_circle_contact (a b : Fin 5 → ℂ) (j
     (hc : SpectrumOnGeneralizedCircle (Sum.elim a (fun _ : Unit => -b j)))
     (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) : Holds a b U := by
   refine holds_of_common_generalized_circle_with_four_outliers a b (Finset.univ.erase j)
-    (by simp) ?_ U hU
+    (by simp [Finset.card_erase_of_mem]) ?_ U hU
   obtain ⟨q, u, v, c, hn, hp⟩ := hc
   refine ⟨q, u, v, c, hn, ?_⟩
   rintro (i | i)

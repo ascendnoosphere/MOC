@@ -7,6 +7,9 @@ open BigOperators Matrix
 
 namespace MOC.FiveSubsetEvents
 
+set_option maxHeartbeats 12000000
+set_option maxRecDepth 16000
+
 def subsets (s : Fin 15) : Finset (Fin 5) :=
   (#[{0}, {1}, {2}, {3}, {4}, {0, 1}, {0, 2}, {0, 3}, {0, 4}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}] : Array (Finset (Fin 5))).getD s.val ∅
 
@@ -144,6 +147,12 @@ set_option maxRecDepth 24000 in
 theorem image_check (p : Fin 120) : ∀ s,
     (subsets s).map (FivePermutations.perm p).toEmbedding = subsets (imageAt p s) := by
   fin_cases p <;> decide +kernel
+
+/-- An image test is one lookup in the permutation table. -/
+theorem image_iff (p : Fin 120) (I J : Fin 15) :
+    (subsets J).map (FivePermutations.perm p).toEmbedding = subsets I ↔ imageAt p J = I := by
+  rw [image_check]
+  exact subsets_injective.eq_iff
 
 theorem signed_event_nonneg (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U)
     (I J : Finset (Fin 5)) :

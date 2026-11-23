@@ -66,12 +66,12 @@ theorem weightedDiamondFacetCompleteness_of_chart {t x : ℝ} (ht : 0 < t) (hx :
       intro k _
       simp
 
-/-- The chart `x = u / (1 + u)` for positive `u` suffices for the order-four
-Hermitian-by-normal case. Closedness supplies the endpoint of the support test. -/
-theorem hermitianByNormal_four_of_lower_diamond_chart
+/-- Bounds on the open chart give the weighted-diamond bound through the
+closed endpoint t = 2. -/
+theorem weightedDiamond_support_le_two_of_lower_chart
     (hc : ∀ u : ℝ, 0 < u → WeightedDiamondFacetCompletenessAt (u / (1 + u))) :
-    HermitianByNormal (Fin 4) := by
-  apply hermitianByNormal_four_of_weightedDiamond_support_le_two
+    ∀ t : ℝ, 1 < t → t ≤ 2 → ∀ U : Matrix (Fin 4) (Fin 4) ℂ,
+      IsUnitary U → WeightedDiamondSupportAt t U := by
   intro t ht ht₂ U hU
   have hs : Set.Ioo (1 : ℝ) 2 ⊆ {q : ℝ | WeightedDiamondSupportAt q U} := by
     intro s hs
@@ -89,6 +89,14 @@ theorem hermitianByNormal_four_of_lower_diamond_chart
   apply closure_minimal hs (isClosed_weightedDiamondSupportAt U)
   rw [closure_Ioo (by norm_num : (1 : ℝ) ≠ 2)]
   exact ⟨ht.le, ht₂⟩
+
+/-- The chart x = u/(1+u) for positive u suffices for the order-four
+Hermitian-by-normal case. -/
+theorem hermitianByNormal_four_of_lower_diamond_chart
+    (hc : ∀ u : ℝ, 0 < u → WeightedDiamondFacetCompletenessAt (u / (1 + u))) :
+    HermitianByNormal (Fin 4) :=
+  hermitianByNormal_four_of_weightedDiamond_support_le_two
+    (weightedDiamond_support_le_two_of_lower_chart hc)
 
 end RayCoefficients
 end MOC

@@ -6,6 +6,7 @@ import MOC.DoubleAntipodal
 import MOC.DoubledFive
 import MOC.ExtendedCases
 import MOC.FourCentralSymmetry
+import MOC.FourCommonLaw
 import MOC.FourCommonShift
 import MOC.FourEquilateral
 import MOC.FourMixedContactBound
@@ -18,11 +19,10 @@ import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
 import MOC.HermitianStationarySwap
-import MOC.HomotheticFiveData
+import MOC.HomotheticFive
 import MOC.HomotheticFour
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
-import MOC.LexicographicScores
 import MOC.NormalSupportMaximum
 import MOC.Obstruction
 import MOC.OppositePair
@@ -34,7 +34,7 @@ import MOC.SharedAnchorPadding
 import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.SubsetMarkerTest
-import MOC.ThreeSharedRepeatedFive
+import MOC.ThreeSharedRepeatedFiveShapes
 import MOC.ThreeValues
 import MOC.TrianglePairContacts
 import MOC.TwoCircleCover
