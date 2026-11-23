@@ -74,11 +74,16 @@ private theorem columnTable : ∀ (p : Fin 297) (i : Fin 51),
   intro b
   fin_cases b <;> decide +kernel
 
-private theorem zeroTable : ∀ (k : Fin 297) (i : Fin 51),
-    i ∈ zeros k → (mask k).testBit i.val = false := by
+private theorem listedZeros : ∀ k : Fin 297, (zeros k).all
+    (fun i => !(mask k).testBit i.val) = true := by
   apply blocks
   intro b
   fin_cases b <;> decide +kernel
+
+private theorem zeroTable (k : Fin 297) (i : Fin 51) (hi : i ∈ zeros k) :
+    (mask k).testBit i.val = false := by
+  have h := List.all_eq_true.mp (listedZeros k) i hi
+  simpa only [Bool.not_eq_true] using h
 
 private theorem unionTable : ∀ k : Fin 297,
     bitUnion column (zeros k) ||| 2 ^ k.val = allBits := by
@@ -92,34 +97,64 @@ private theorem separating : ∀ p k : Fin 297, p ≠ k → ∃ i : Fin 51,
     (mask p).testBit i.val = true ∧ (mask k).testBit i.val = false :=
   separates_of_cover mask column zeros allBits columnTable zeroTable unionTable allTable
 
-private theorem oldSigns : ∀ (p : Fin 297) (i : Fin 51),
-    i ∈ stage40.imposed → 0 ≤ stage40.ray p i := by
+private abbrev scopeBits : ℕ := 2243003720663039
+
+-- Test the nested finite set once at each of its 51 possible coordinates.
+private theorem scope_eq : ∀ i : Fin 51,
+    decide (i ∈ stage40.imposed) = scopeBits.testBit i.val := by decide +kernel
+
+private theorem scope_true {i : Fin 51} (hi : i ∈ stage40.imposed) : scopeBits.testBit i.val = true :=
+  (scope_eq i).symm.trans (decide_eq_true hi)
+
+private theorem oldArithmetic : ∀ (p : Fin 297) (i : Fin 51),
+    scopeBits.testBit i.val = true → 0 ≤ stage40.ray p i := by
   apply blocks
   intro b
   fin_cases b <;> decide +kernel
 
-private theorem newSigns : ∀ (p : Fin 282) (i : Fin 51),
-    i ∈ stage40.imposed → 0 ≤ stage41.ray p i := by
+private theorem newArithmetic : ∀ (p : Fin 282) (i : Fin 51),
+    scopeBits.testBit i.val = true → 0 ≤ stage41.ray p i := by
   apply blocks
   intro b
   fin_cases b <;> decide +kernel
 
-private theorem newPositive : ∀ p : Fin 282, ∃ i ∈ stage40.imposed, 0 < stage41.ray p i := by
+private theorem oldSigns (p : Fin 297) (i : Fin 51) (hi : i ∈ stage40.imposed) : 0 ≤ stage40.ray p i :=
+  oldArithmetic p i (scope_true hi)
+
+private theorem newSigns (p : Fin 282) (i : Fin 51) (hi : i ∈ stage40.imposed) : 0 ≤ stage41.ray p i :=
+  newArithmetic p i (scope_true hi)
+
+private def witnesses : Array (Fin 51) := #[11, 33, 38, 33, 46, 42, 46, 33, 42, 46, 33, 46, 33, 33, 42, 33, 33, 33, 42, 33, 33, 42, 42, 33, 42, 33, 42, 42, 42, 33, 42, 42, 42, 42, 33, 33, 33, 42, 33, 46, 42, 33, 42, 42, 46, 33, 42, 33, 42, 33, 33, 33, 33, 46, 42, 33, 33, 33, 33, 42, 42, 33, 42, 33, 42, 46, 46, 42, 42, 46, 33, 46, 33, 46, 33, 42, 33, 42, 42, 33, 46, 46, 42, 33, 33, 42, 33, 33, 42, 11, 33, 33, 42, 46, 46, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 42, 42, 33, 33, 46, 42, 33, 42, 33, 42, 42, 33, 33, 46, 42, 33, 42, 42, 46, 33, 33, 33, 33, 33, 42, 33, 33, 33, 42, 33, 42, 33, 33, 46, 46, 33, 33, 33, 33, 33, 42, 33, 33, 46, 46, 42, 42, 33, 33, 33, 33, 33, 33, 33, 46, 46, 33, 33, 33, 33, 42, 42, 42, 33, 33, 42, 42, 33, 33, 42, 33, 33, 33, 33, 33, 42, 33, 42, 33, 33, 33, 42, 33, 42, 42, 42, 33, 33, 33, 33, 42, 33, 33, 42, 33, 42, 46, 33, 33, 42, 42, 33, 33, 33, 42, 42, 42, 33, 33, 33, 33, 33, 33, 33, 33, 42, 33, 42, 42, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 42, 33, 42, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33]
+private def atPositive (p : Fin 282) : Fin 51 := witnesses.getD p.val 0
+private theorem witnessTable : ∀ p : Fin 282, scopeBits.testBit (atPositive p).val = true ∧
+    0 < stage41.ray p (atPositive p) := by
   apply blocks
   intro b
   fin_cases b <;> decide +kernel
 
-private theorem supportTable : ∀ (p : Fin 297) (i : Fin 51), (mask p).testBit i.val =
+private theorem newPositive (p : Fin 282) : ∃ i ∈ stage40.imposed, 0 < stage41.ray p i :=
+  ⟨atPositive p, of_decide_eq_true ((scope_eq _).trans (witnessTable p).1), (witnessTable p).2⟩
+
+private theorem masksChecked : ∀ (p : Fin 297) (i : Fin 51), (mask p).testBit i.val =
+    (scopeBits.testBit i.val && decide (0 < stage40.ray p i)) := by
+  apply blocks
+  intro b
+  fin_cases b <;> decide +kernel
+
+private theorem supportTable (p : Fin 297) (i : Fin 51) : (mask p).testBit i.val =
     (decide (i ∈ stage40.imposed) && decide (0 < stage40.ray p i)) := by
+  rw [scope_eq]
+  exact masksChecked p i
+
+private theorem keptId : ∀ p : Fin 297, 0 ≤ stage40.ray p 43 →
+    rowId 40 p.val = rowId 41 (keep p).val := by
   apply blocks
   intro b
   fin_cases b <;> decide +kernel
 
-private theorem retained : ∀ p : Fin 297, 0 ≤ stage40.ray p 43 →
-    ∀ i : Fin 51, stage40.ray p i = stage41.ray (keep p) i := by
-  apply blocks
-  intro b
-  fin_cases b <;> decide +kernel
+private theorem retained (p : Fin 297) (hp : 0 ≤ stage40.ray p 43) (i : Fin 51) :
+    stage40.ray p i = stage41.ray (keep p) i :=
+  congrArg (fun r => poolRay r i) (keptId p hp)
 
 private theorem valid : Valid stage40 stage41 43 mask keep cross :=
   ⟨rfl, oldSigns, newSigns, newPositive, supportTable, separating, retained, crossingFast⟩
