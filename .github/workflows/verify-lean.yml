@@ -960,7 +960,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 962ed0da42d87a73a307f36b1de476de5d7aeb7d
+          ref: f44c71d7c8fe80d5c4b78f46aceaf828fb826f6d
       - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
         with:
           path: Lean/.lake
@@ -970,9 +970,40 @@ jobs:
         with:
           lake-package-directory: Lean
           auto-config: 'false'
-          build: 'true'
+          build: 'false'
           use-mathlib-cache: 'true'
-          use-github-cache: 'false'
+          use-github-cache: 'false'      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45235204874
+          name: moc-four-shapes
+          path: ${{ runner.temp }}/proofs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45235204874
+          name: moc-lemmas
+          path: ${{ runner.temp }}/proofs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45235204874
+          name: moc-assemble-doubling
+          path: ${{ runner.temp }}/proofs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45237174709
+          name: moc-three-common-marks
+          path: ${{ runner.temp }}/proofs
+      - name: Build and audit the exact published sources
+        run: |
+          for archive in "$RUNNER_TEMP"/proofs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build
+
   replay:
     name: Build five cross padding
     if: ${{ startsWith(github.event.head_commit.message, 'Replay ') }}
