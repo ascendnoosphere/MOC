@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   check-four:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only four ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -57,7 +57,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-matched:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only matched ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -111,7 +111,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-repeated:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only repeated ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -157,7 +157,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -166,7 +166,7 @@ jobs:
       matrix:
         include:
           - group: four-shapes
-            targets: +MOC.DoubleAntipodal +MOC.HomotheticFour
+            targets: +MOC.DoubleAntipodal +MOC.HomotheticFour +MOC.HomotheticFourPadding
           - group: five-doubling
             targets: +MOC.DoubledFive
           - group: five-shapes
@@ -357,4 +357,4 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           build: 'true'
-          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw
+          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.HomotheticFourPadding

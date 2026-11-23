@@ -36,11 +36,8 @@ theorem hermitianByNormal_five_iff_nonreal_full_support :
   · intro h a b U hU
     by_cases hb : ∃ p, (b p).im = 0
     · obtain ⟨p, hp⟩ := hb
-      apply holds_of_real_pivot (n := 4) (k := 5)
-        (fun c d V hV _ => hermitianByNormal_four c d V hV) a b U hU _ p hp
-      classical
-      simpa [nonrealCount] using
-        (Finset.card_filter_le (s := (Finset.univ : Finset (Fin 5))) fun i => (b i).im ≠ 0)
+      exact holds_of_real_pivot_of_transformed_partner a b U hU p hp
+        (fun _ a' V hV => hermitianByNormal_four a' _ V hV)
     · exact (holds_all_unitaries_iff_full_support _ _).mpr
         (fun V hV he => h a b V hV (fun j hj => hb ⟨j, hj⟩) he) U hU
 

@@ -25,7 +25,7 @@ theorem at_most_four (hfour : HermitianByNormal (Fin 4)) (n : ℕ) : HermitianBy
   subst m
   exact hfour
 
-/-- Up to four partner entries may lie outside the circle or line of the first spectrum. -/
+/-- Up to four entries of the negated partner spectrum may lie outside the first circle or line. -/
 theorem holds_with_four_outliers (hfour : HermitianByNormal (Fin 4)) {n : ℕ}
     (a b : Fin n → ℂ) (outliers : Finset (Fin n)) (hcard : outliers.card ≤ 4)
     (hc : SpectrumOnGeneralizedCircle

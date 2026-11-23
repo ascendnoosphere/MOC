@@ -92,13 +92,15 @@ private abbrev nextRows : Fin 91 → Row := lowerStage6.rays
 private abbrev imposed := lowerStage5.imposed
 
 private theorem oldSigns : ∀ p i, i ∈ imposed → zero (old p i) = true ∨ positive (old p i) = true := by
-  apply IntegerRayCut.blocks (n := 71)
+  refine IntegerRayCut.blocks (n := 71)
+    (P := fun p => ∀ i, i ∈ imposed → zero (old p i) = true ∨ positive (old p i) = true) ?_
   intro k
   fin_cases k <;> decide +kernel
 
 private theorem mask_eq : ∀ p i, (mask p).testBit i.val =
     (decide (i ∈ imposed) && positive (old p i)) := by
-  apply IntegerRayCut.blocks (n := 71)
+  refine IntegerRayCut.blocks (n := 71) (P := fun p => ∀ i : Fin 24,
+    (mask p).testBit i.val = (decide (i ∈ imposed) && positive (old p i))) ?_
   intro k
   fin_cases k <;> decide +kernel
 

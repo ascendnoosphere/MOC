@@ -17,7 +17,7 @@ theorem holds_four_of_generalized_circle (a b : Fin 4 → ℂ) (U : Matrix (Fin 
 theorem hermitianByNormalAtMost_four (n : ℕ) : HermitianByNormalAtMost (Fin n) 4 :=
   FourNonrealReduction.at_most_four hermitianByNormal_four n
 
-/-- Up to four partner entries may lie outside the circle or line of the first spectrum. -/
+/-- Up to four entries of the negated partner spectrum may lie outside the first circle or line. -/
 theorem holds_of_common_generalized_circle_with_four_outliers {n : ℕ}
     (a b : Fin n → ℂ) (outliers : Finset (Fin n)) (hcard : outliers.card ≤ 4)
     (hc : SpectrumOnGeneralizedCircle

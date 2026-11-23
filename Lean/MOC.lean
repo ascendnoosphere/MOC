@@ -21,6 +21,7 @@ import MOC.HermitianSpectralLine
 import MOC.HermitianStationarySwap
 import MOC.HomotheticFive
 import MOC.HomotheticFour
+import MOC.HomotheticFourPadding
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
 import MOC.MarkedPadding
