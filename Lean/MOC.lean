@@ -22,8 +22,10 @@ import MOC.PolydiskContact
 import MOC.RankTwoOverlap
 import MOC.SparseRow
 import MOC.SpectralAffineContact
+import MOC.SubsetMarkerTest
 import MOC.ThreeValues
 import MOC.TrianglePairContacts
+import MOC.TwoFreeRealAnchors
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
 import MOC.WeightedDiamondChart
