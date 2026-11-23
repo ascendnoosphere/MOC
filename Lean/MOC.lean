@@ -9,7 +9,9 @@ import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
 import MOC.FourMixedContactBound
-import MOC.FourNonreal
+import MOC.FourSharedFiveCone
+import MOC.FourSharedFiveMatching
+import MOC.FourSharedFiveMinors
 import MOC.FourSpectralSupport
 import MOC.FullSupportReduction
 import MOC.Geometry
@@ -27,6 +29,7 @@ import MOC.OppositePair
 import MOC.OppositePairNormal
 import MOC.PolydiskContact
 import MOC.RankTwoOverlap
+import MOC.RemainingCases
 import MOC.SharedAnchorPadding
 import MOC.SparseRow
 import MOC.SpectralAffineContact

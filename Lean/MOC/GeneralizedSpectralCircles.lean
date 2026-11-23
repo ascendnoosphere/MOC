@@ -85,10 +85,11 @@ theorem SpectrumOnGeneralizedCircle.inv_of_ne_zero {ι : Type*} {a : ι → ℂ}
     (ha : SpectrumOnGeneralizedCircle a) (hnz : ∀ i, a i ≠ 0) :
     SpectrumOnGeneralizedCircle (fun i => (a i)⁻¹) := by
   obtain ⟨q, u, v, c, hn, h⟩ := ha
-  rcases isEmpty_or_nonempty ι with he | ⟨i₀⟩
+  rcases isEmpty_or_nonempty ι with he | hne
   · letI := he
     exact spectrumOnGeneralizedCircle_of_line _ 1 0 0 (Or.inl one_ne_zero)
       (fun i => isEmptyElim i)
+  let i₀ : ι := Classical.choice hne
   refine ⟨c, u, -v, q, ?_, fun i => ?_⟩
   · by_contra! hz
     obtain ⟨hc, hu, hv⟩ := hz
@@ -142,6 +143,7 @@ private theorem exists_real_affine_chart (a b : ι → ℂ) (U : Matrix ι ι �
   · intro s hs
     simpa only [sub_eq_add_neg] using (hs.const_mul k hk).add_const (-t)
 
+set_option maxHeartbeats 800000 in
 private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (o : ℂ) (r : ℝ) (ha : ∀ i, Complex.normSq (a i - o) = r) :
     ∃ (x : ι → ℂ) (f : ℂ → ℂ),
@@ -199,12 +201,11 @@ private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι �
   · have hinv := holds_inv_iff (fun i => a i - p t) (fun i => -b i - p t) U hU hap hbp
     exact hxy.trans (hinv.trans (by
       simpa only [sub_eq_add_neg, neg_add, neg_neg] using holds_shift_iff a b hU (-(p t))))
-
   · intro s hs
-    apply hf s
-    apply spectrumOnGeneralizedCircle_neg
-    apply SpectrumOnGeneralizedCircle.inv_of_ne_zero _ (fun i => hbp i.val)
-    simpa only [sub_eq_add_neg] using (spectrumOnGeneralizedCircle_neg hs).add_const (-(p t))
+    have hsub : SpectrumOnGeneralizedCircle (fun i : s => -b i.val - p t) := by
+      simpa only [sub_eq_add_neg] using (spectrumOnGeneralizedCircle_neg hs).add_const (-(p t))
+    exact hf s (spectrumOnGeneralizedCircle_neg
+      (hsub.inv_of_ne_zero (fun i : s => hbp i.val)))
 
 private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (q u v c : ℝ) (h : q ≠ 0 ∨ u ≠ 0 ∨ v ≠ 0)
@@ -246,7 +247,7 @@ private theorem ofReal_re_of_im_zero (z : ℂ) (hz : z.im = 0) : (z.re : ℂ) = 
   Complex.ext rfl hz.symm
 
 /-- A common generalized circle makes the first spectrum and the specified
-entries of the second spectrum real. One function transforms the partner values. -/
+entries of the second spectrum real. The partner map also preserves generalized circles. -/
 theorem exists_real_chart_preserving_partner_circles (a b : ι → ℂ) (p : ι → Prop)
     (ha : SpectrumOnGeneralizedCircle (Sum.elim a (fun i : {i // p i} => -b i.val)))
     (U : Matrix ι ι ℂ) (hU : IsUnitary U) :

@@ -1,5 +1,5 @@
 import MOC.DoubleAntipodalCertificate
-import MOC.TwoValues
+import MOC.LiftedSimplex
 
 /-! A common law for two centrally symmetric complex spectra when the second
 spectrum is twice the first. The certificate uses five matching products. -/
@@ -119,61 +119,27 @@ private theorem product_eq (x y : ℂ) (p : Label) :
     push_cast
     ring
 
-private def mean (U : Matrix (Fin 4) (Fin 4) ℂ) : (Label → ℝ) →ₗ[ℝ] ℝ where
-  toFun v := ∑ p, realSignedWeight U (fourPerm p) * v p
-  map_add' v w := by simp [mul_add, Finset.sum_add_distrib]
-  map_smul' a v := by
-    simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun p _ => mul_left_comm _ _ _
-
-private def row (v : Label → ℤ) (p : Label) : ℝ := v p
-
-private def event (I J : Finset (Fin 4)) (p : Label) : ℝ :=
-  if J.map (fourPerm p).toEmbedding = I then 1 else 0
-
-private theorem mean_event (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U)
-    (I J : Finset (Fin 4)) : mean U (event I J) = subsetMinorSq U I J := by
-  have h := congrArg Complex.re (sum_signedWeight_image_eq_subsetMinorSq U hU I J)
-  have hm : (∑ σ : FourPerm, if J.map σ.toEmbedding = I then realSignedWeight U σ else 0) =
-      subsetMinorSq U I J := by
-    simpa only [Finset.sum_filter, Complex.re_sum, apply_ite, Complex.zero_re,
-      Complex.ofReal_re, realSignedWeight] using h
-  rw [← Equiv.sum_comp fourPermEquiv] at hm
-  simpa only [mean, LinearMap.coe_mk, AddHom.coe_mk, event, mul_ite, mul_one, mul_zero,
-    fourPermEquiv] using hm
-
-private theorem mean_slack_nonneg (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U)
-    (f : Facet) : 0 ≤ mean U (row (slack f)) := by
-  have h : (facetDen f : ℝ) • row (slack f) =
-      ∑ e : Term, ((term f e).2.2 : ℝ) • event (term f e).1 (term f e).2.1 := by
-    funext p
-    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, row, event, mul_ite, mul_one, mul_zero]
-    exact_mod_cast minor_decomposition f p
-  have hh := congrArg (mean U) h
-  simp only [map_smul, map_sum, smul_eq_mul, mean_event U hU] at hh
-  have hpos : (0 : ℝ) < facetDen f := by exact_mod_cast facetDen_pos f
-  apply nonneg_of_mul_nonneg_right _ hpos
-  rw [hh]
-  exact Finset.sum_nonneg fun e _ => mul_nonneg (by exact_mod_cast term_nonneg f e)
-    (subsetMinorSq_nonneg _ _ _)
-
-private theorem mean_bary_nonneg (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U)
-    (t : Cell) (ht : ∀ s, mean U (row (liftValue s)) ≤ mean U (row (liftValue t)))
-    (j : Fin 5) : 0 ≤ mean U (row (bary t j)) := by
-  have h : (aScale t j : ℝ) • row (bary t j) =
-      (bScale t j : ℝ) • (row (liftValue t) - row (liftValue (neighbor t j))) +
-      (cScale t j : ℝ) • row (slack (face t j)) := by
-    funext p
-    simp only [Pi.smul_apply, Pi.add_apply, Pi.sub_apply, smul_eq_mul, row]
-    exact_mod_cast transition t j p
-  have hh := congrArg (mean U) h
-  simp only [map_smul, map_add, map_sub, smul_eq_mul] at hh
-  obtain ⟨ha, hb, hc⟩ := scales_ok t j
-  have hpos : (0 : ℝ) < aScale t j := by exact_mod_cast ha
-  apply nonneg_of_mul_nonneg_right _ hpos
-  rw [hh]
-  exact add_nonneg (mul_nonneg (by exact_mod_cast hb) (sub_nonneg.mpr (ht _)))
-    (mul_nonneg (by exact_mod_cast hc) (mean_slack_nonneg U hU _))
+private def lawCertificate : LiftedSimplexCertificate (Fin 4) Label (Fin 5) Cell Facet Term where
+  index := fourPermEquiv
+  vertex := vertex
+  denominator := denominator
+  bary := bary
+  liftValue := liftValue
+  neighbor := neighbor
+  face := face
+  aScale := aScale
+  bScale := bScale
+  cScale := cScale
+  slack := slack
+  facetDen := facetDen
+  term := term
+  den_pos := den_pos
+  facetDen_pos := facetDen_pos
+  term_nonneg := term_nonneg
+  scales_ok := scales_ok
+  transition := transition
+  bary_mass := bary_mass
+  minor_decomposition := minor_decomposition
 
 private theorem row_match (x y : ℂ) (t : Cell) (p : Label) :
     let F := fun q => matchingProduct (antipodalQuadruple x y)
@@ -194,43 +160,13 @@ theorem exists_doubled_law (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
       ∀ x y : ℂ, ∑ j, (w j : ℂ) * matchingProduct (antipodalQuadruple x y)
         (fun i => 2 * antipodalQuadruple x y i) (σ j) =
           determinantValue (antipodalQuadruple x y) (fun i => 2 * antipodalQuadruple x y i) U := by
-  classical
-  obtain ⟨t, _, ht⟩ := Finset.exists_max_image Finset.univ
-    (fun s : Cell => mean U (row (liftValue s))) ⟨0, Finset.mem_univ _⟩
-  let w (j : Fin 5) := mean U (row (bary t j)) / (denominator t : ℝ)
-  have hd : (0 : ℝ) < denominator t := by exact_mod_cast den_pos t
-  have hm : ∑ p : Label, realSignedWeight U (fourPerm p) = 1 := by
-    exact (Equiv.sum_comp fourPermEquiv (realSignedWeight U)).trans (sum_realSignedWeight U hU)
-  refine ⟨fun j => fourPerm (vertex t j), w,
-    fun j => div_nonneg (mean_bary_nonneg U hU t (fun s => ht s (Finset.mem_univ s)) j) hd.le,
-    ?_, ?_⟩
-  · change ∑ j, (∑ p, realSignedWeight U (fourPerm p) * (bary t j p : ℝ)) / _ = 1
-    rw [← Finset.sum_div, div_eq_iff hd.ne', one_mul, Finset.sum_comm]
-    simp_rw [← Finset.mul_sum]
-    have hm' (p : Label) : ∑ j, (bary t j p : ℝ) = (denominator t : ℝ) := by
-      exact_mod_cast bary_mass t p
-    simp_rw [hm', ← Finset.sum_mul, hm, one_mul]
-  · intro x y
-    let F (p : Label) := matchingProduct (antipodalQuadruple x y)
-      (fun i => 2 * antipodalQuadruple x y i) (fourPerm p)
-    have hF : ∑ p : Label, (realSignedWeight U (fourPerm p) : ℂ) * F p =
-        determinantValue (antipodalQuadruple x y) (fun i => 2 * antipodalQuadruple x y i) U := by
-      exact (Equiv.sum_comp fourPermEquiv _).trans (real_signed_determinant _ _ U hU)
-    rw [← hF]
-    change ∑ j, (((∑ p, realSignedWeight U (fourPerm p) * (bary t j p : ℝ)) /
-      (denominator t : ℝ) : ℝ) : ℂ) * F (vertex t j) = _
-    push_cast
-    have hd' : (denominator t : ℂ) ≠ 0 := by exact_mod_cast (den_pos t).ne'
-    simp_rw [div_mul_eq_mul_div, ← Finset.sum_div]
-    apply (div_eq_iff hd').mpr
-    simp_rw [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    apply Finset.sum_congr rfl
-    intro p _
-    simp_rw [mul_assoc, ← Finset.mul_sum]
-    rw [show ∑ j, (bary t j p : ℂ) * F (vertex t j) = (denominator t : ℂ) * F p
-      from row_match x y t p]
-    ring
+  obtain ⟨t,w,hw,hs,hr⟩ := lawCertificate.exists_law U hU
+  refine ⟨fun j => fourPerm (vertex t j), w, hw, hs, ?_⟩
+  intro x y
+  let F := fun p => matchingProduct (antipodalQuadruple x y)
+    (fun i => 2 * antipodalQuadruple x y i) (fourPerm p)
+  exact (hr F (fun p => row_match x y t p)).trans
+    ((Equiv.sum_comp fourPermEquiv _).trans (real_signed_determinant _ _ U hU))
 
 end
 end DoubleAntipodalCertificate
