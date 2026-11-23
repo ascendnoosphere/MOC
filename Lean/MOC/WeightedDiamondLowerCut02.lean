@@ -30,8 +30,17 @@ private def edgeIndex : Array (Array ℕ) :=
 private def maskTable : Array ℕ :=
   #[33, 40, 48, 524352, 256, 512, 532480, 786432, 3, 5, 10, 12, 18, 20, 192, 4160, 8320, 12288, 262272, 266240]
 
-private def separators : Array ℕ :=
-  #[204459774230359580886565027840, 204459774230359580886565030915, 204459774230359580886565027972, 776947142075366406908311260787, 327135638768575329418495664392, 368027593614647245595515069737, 776947142075366407142387404403, 776947142075366406715038322291, 40891954844917867673287689249, 81783909618284728097005701186, 122675864538140313238180564003, 122675864538106536240975285315, 163567819268995514248567325828, 163567819234407869110361917572, 285004526693257073315238092007, 252786403505521617059640127884, 531347583205913911317811869101, 531091290932155609938142868909, 278017372693703789101001034322, 15574084365203170994185390674]
+private def columns : Array ℕ :=
+  #[769, 5376, 10752, 3074, 12292, 7, 49160, 344064, 16, 32, 0, 0, 688128, 196672, 0, 0, 0, 0, 786560, 200, 0, 0, 0, 0]
+
+private def zeros : Array (List (Fin 24)) :=
+  #[[1, 2, 6, 13, 18, 3, 4, 8, 9], [0, 4, 6, 13, 18, 1, 2, 8, 9], [0, 3, 6, 13, 18, 1, 2, 8, 9], [0, 3, 4, 7, 12, 8, 9, 13, 18], [0, 3, 4, 6, 13, 18, 9], [0, 3, 4, 6, 13, 18, 8], [0, 3, 4, 6, 18, 7, 8, 9, 12], [0, 3, 4, 6, 13, 7, 8, 9, 12], [2, 5, 6, 13, 18, 3, 4, 8, 9], [1, 5, 6, 13, 18, 3, 4, 8, 9], [0, 4, 6, 13, 18, 2, 5, 8, 9], [0, 4, 6, 13, 18, 1, 5, 8, 9], [0, 3, 6, 13, 18, 2, 5, 8, 9], [0, 3, 6, 13, 18, 1, 5, 8, 9], [0, 3, 4, 12, 19, 8, 9, 13, 18], [0, 3, 4, 7, 19, 8, 9, 13, 18], [0, 3, 4, 6, 18, 8, 9, 12, 19], [0, 3, 4, 6, 18, 7, 8, 9, 19], [0, 3, 4, 6, 13, 8, 9, 12, 19], [0, 3, 4, 6, 13, 7, 8, 9, 19]]
+
+private def positiveRays : Array (Fin 20) :=
+  #[0, 4, 8, 17, 19]
+
+private def negativeRays : Array (Fin 20) :=
+  #[3, 11, 13, 14]
 
 private def kept : Array (Fin 28) :=
   #[0, 1, 2, 0, 3, 4, 5, 6, 7, 8, 9, 0, 10, 0, 0, 11, 12, 13, 14, 15]
@@ -41,8 +50,12 @@ private def origin : Array (RayOrigin 20) :=
 
 private def mask (p : Fin 20) : ℕ := maskTable.getD p.val 0
 
-private def separator (p k : Fin 20) : Fin 24 :=
-  Fin.ofNat' 24 (((separators.getD p.val 0) >>> (5 * k.val)) % 32)
+private def column (i : Fin 24) : ℕ := columns.getD i.val 0
+private def zeroCoords (k : Fin 20) : List (Fin 24) := zeros.getD k.val []
+private def positiveRay (i : Fin 5) : Fin 20 := positiveRays.getD i.val 0
+private def negativeRay (i : Fin 4) : Fin 20 := negativeRays.getD i.val 0
+private def positiveOf (p : Fin 20) : Fin 5 := Fin.ofNat' _ (positiveIndex.getD p.val 0)
+private def negativeOf (p : Fin 20) : Fin 4 := Fin.ofNat' _ (negativeIndex.getD p.val 0)
 
 local instance : NeZero lowerStage2.size := ⟨by decide +kernel⟩
 local instance : NeZero lowerStage3.size := ⟨by decide +kernel⟩
@@ -58,31 +71,36 @@ private abbrev nextRows : Fin 28 → Row := lowerStage3.rays
 private abbrev imposed := lowerStage2.imposed
 
 private theorem oldSigns : ∀ p i, i ∈ imposed → zero (old p i) = true ∨ positive (old p i) = true := by
-  apply checkRayBlocks (n := 20)
+  apply IntegerRayCut.blocks (n := 20)
   intro k
   fin_cases k <;> decide +kernel
 
 private theorem mask_eq : ∀ p i, (mask p).testBit i.val =
     (decide (i ∈ imposed) && positive (old p i)) := by
-  apply checkRayBlocks (n := 20)
+  apply IntegerRayCut.blocks (n := 20)
   intro k
   fin_cases k <;> decide +kernel
 
-private theorem separate : ∀ p k, p ≠ k → let i := separator p k
+private theorem separate : ∀ p k, p ≠ k → ∃ i : Fin 24,
     (mask p).testBit i.val = true ∧ (mask k).testBit i.val = false := by
-  apply checkRayBlocks (n := 20)
-  intro k
-  fin_cases k <;> decide +kernel
+  apply IntegerRayCut.separates_of_cover mask column zeroCoords 1048575 <;>
+    apply IntegerRayCut.blocks <;> intro k <;> fin_cases k <;> decide +kernel
 
-private theorem crossing : ∀ p k, positive (old p 14) = true → negative (old k 14) = true →
+private theorem crossing (p k : Fin 20) (hp : positive (old p 14) = true)
+    (hk : negative (old k 14) = true) :
     maskCrossing old nextRows imposed 14 mask p k (plan.crossing p k) := by
-  apply checkRayBlocks (n := 20)
-  intro k
-  fin_cases k <;> decide +kernel
+  have hitP : ∀ p, positive (old p 14) = true → positiveRay (positiveOf p) = p := by decide +kernel
+  have hitN : ∀ k, negative (old k 14) = true → negativeRay (negativeOf k) = k := by decide +kernel
+  have h : ∀ u v, maskCrossing old nextRows imposed 14 mask (positiveRay u) (negativeRay v)
+      (plan.crossing (positiveRay u) (negativeRay v)) := by
+    apply IntegerRayCut.blocks
+    intro k
+    fin_cases k <;> decide +kernel
+  simpa only [hitP p hp, hitN k hk] using h (positiveOf p) (negativeOf k)
 
 theorem valid : plan.Valid old nextRows imposed 14 := by
-  obtain ⟨sep, cross⟩ := validateRayMasks plan mask separator oldSigns mask_eq separate crossing
-  refine ⟨oldSigns, ?_, ?_, ?_, sep, ?_, cross, ?_⟩ <;> apply checkRayBlocks <;>
+  obtain ⟨sep, cross⟩ := validateRayMasks plan mask oldSigns mask_eq separate crossing
+  refine ⟨oldSigns, ?_, ?_, ?_, sep, ?_, cross, ?_⟩ <;> apply IntegerRayCut.blocks <;>
     intro k <;> fin_cases k <;> decide +kernel
 
 end LowerCut2

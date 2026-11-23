@@ -53,6 +53,8 @@ Let one entry of each spectrum vary. A fixed set of real weights works for all v
 
 For a fixed unitary, one set of weights represents the determinant for every pair of spectra if it represents all the following pairs. Choose index sets $I,J$ of the same size, at most $\lfloor n/2\rfloor$. Set the first spectrum to zero on $I$ and one elsewhere. Set the second spectrum to one on $J$ and zero elsewhere. The corresponding determinant is the squared modulus of the minor on rows $I$ and columns $J$. [SubsetMarkerTest.lean](MOC/SubsetMarkerTest.lean)
 
+Start with two lists of order $d$. Count the occurrences of $c$ in the first list and $-c$ in the second list. Let $k$ be the sum of these counts. After adding $m$ copies of these two values, the inclusion holds for every relative unitary if $k+m+2\ge d$. In order four, a case proved for every unitary therefore extends to every larger order if at least one original entry has the specified value. [MarkedPadding.lean](MOC/MarkedPadding.lean)
+
 For a real first spectrum of order four, one probability law works for every complex partner at fixed $U$. Repeated first-spectrum values are allowed. [FourCommonLaw.lean](MOC/FourCommonLaw.lean)
 
 In order five, four opposite pairs admit one law for all six complex values at fixed $U$ and fixed label positions. Three opposite pairs also admit one law when the remaining two entries on one specified side agree. Four harmonic shared values admit a law on at most five permutations for the two free entries. [FourSharedFive.lean](MOC/FourSharedFive.lean) · [ThreeSharedRepeatedFive.lean](MOC/ThreeSharedRepeatedFive.lean) · [FiveSharedAnchors.lean](MOC/FiveSharedAnchors.lean)

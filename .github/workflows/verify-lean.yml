@@ -6,37 +6,67 @@ on:
 permissions:
   contents: read
 jobs:
-  check:
+  check-four:
     if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         include:
-          - group: lemmas
-            targets: +MOC.LexicographicScores +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
-          - group: four-shapes
-            targets: +MOC.DoubleAntipodal +MOC.HomotheticFour
-          - group: five-doubling
-            targets: +MOC.DoubledFive
-          - group: five-shapes
-            targets: +MOC.HomotheticFive
           - group: four-facets
             targets: +MOC.WeightedDiamondLowerFacets
-          - group: four-coordinate-law
-            targets: +MOC.FourSharedFiveMatching +MOC.FourSharedFiveMinors
-          - group: three-coordinate-law
-            targets: +MOC.ThreeSharedRepeatedFiveMatching +MOC.ThreeSharedRepeatedFiveMinors
-          - group: harmonic
-            targets: +MOC.HarmonicAnchors +MOC.CrossPadding +MOC.SharedAnchorPadding
           - group: four-rays-a
             targets: +MOC.WeightedDiamondLowerCut01 +MOC.WeightedDiamondLowerCut02 +MOC.WeightedDiamondLowerCut03 +MOC.WeightedDiamondLowerCut04 +MOC.WeightedDiamondLowerCut05
           - group: four-rays-b
             targets: +MOC.WeightedDiamondLowerCut06 +MOC.WeightedDiamondLowerCut07 +MOC.WeightedDiamondLowerCut08
           - group: four-rays-c
             targets: +MOC.WeightedDiamondLowerCut09 +MOC.WeightedDiamondLowerCut10 +MOC.WeightedDiamondLowerCut11
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  check-matched:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    name: Check ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - group: four-coordinate-law
+            targets: +MOC.FourSharedFiveMatching +MOC.FourSharedFiveMinors
           - group: five-rays-a
             targets: +MOC.FourSharedFiveCut01 +MOC.FourSharedFiveCut02 +MOC.FourSharedFiveCut03 +MOC.FourSharedFiveCut04 +MOC.FourSharedFiveCut05 +MOC.FourSharedFiveCut06 +MOC.FourSharedFiveCut07 +MOC.FourSharedFiveCut08 +MOC.FourSharedFiveCut09 +MOC.FourSharedFiveCut10 +MOC.FourSharedFiveCut11 +MOC.FourSharedFiveCut12 +MOC.FourSharedFiveCut13 +MOC.FourSharedFiveCut14
           - group: five-rays-b
@@ -47,6 +77,50 @@ jobs:
             targets: +MOC.FourSharedFiveCut31 +MOC.FourSharedFiveCut32 +MOC.FourSharedFiveCut33 +MOC.FourSharedFiveCut34 +MOC.FourSharedFiveCut35 +MOC.FourSharedFiveCut36
           - group: five-rays-e
             targets: +MOC.FourSharedFiveCut37 +MOC.FourSharedFiveCut38 +MOC.FourSharedFiveCut39 +MOC.FourSharedFiveCut40 +MOC.FourSharedFiveCut41
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  check-repeated:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    name: Check ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - group: three-coordinate-law
+            targets: +MOC.ThreeSharedRepeatedFiveMatching +MOC.ThreeSharedRepeatedFiveMinors
           - group: three-rays
             targets: +MOC.ThreeSharedRepeatedFiveCut01 +MOC.ThreeSharedRepeatedFiveCut02 +MOC.ThreeSharedRepeatedFiveCut03 +MOC.ThreeSharedRepeatedFiveCut04 +MOC.ThreeSharedRepeatedFiveCut05 +MOC.ThreeSharedRepeatedFiveCut06 +MOC.ThreeSharedRepeatedFiveCut07 +MOC.ThreeSharedRepeatedFiveCut08 +MOC.ThreeSharedRepeatedFiveCut09 +MOC.ThreeSharedRepeatedFiveCut10 +MOC.ThreeSharedRepeatedFiveCut11 +MOC.ThreeSharedRepeatedFiveCut12 +MOC.ThreeSharedRepeatedFiveCut13 +MOC.ThreeSharedRepeatedFiveCut14 +MOC.ThreeSharedRepeatedFiveCut15 +MOC.ThreeSharedRepeatedFiveCut16 +MOC.ThreeSharedRepeatedFiveCut17 +MOC.ThreeSharedRepeatedFiveCut18 +MOC.ThreeSharedRepeatedFiveCut19 +MOC.ThreeSharedRepeatedFiveCut20 +MOC.ThreeSharedRepeatedFiveCut21 +MOC.ThreeSharedRepeatedFiveCut22 +MOC.ThreeSharedRepeatedFiveCut23
     env:
@@ -82,12 +156,69 @@ jobs:
           path: ${{ runner.temp }}/moc-objects/*.tgz
           retention-days: 1
           compression-level: 0
-  build:
-    name: Build and audit the complete library
-    needs: check
+  check:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
+    name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - group: four-shapes
+            targets: +MOC.DoubleAntipodal +MOC.HomotheticFour
+          - group: five-doubling
+            targets: +MOC.DoubledFive
+          - group: five-shapes
+            targets: +MOC.HomotheticFive
+          - group: harmonic
+            targets: +MOC.HarmonicAnchors +MOC.CrossPadding +MOC.SharedAnchorPadding
+          - group: lemmas
+            targets: +MOC.LexicographicScores +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  assemble-four:
+    name: Build the four-point circle results
+    needs: [check-four]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-four
+      MOC_TARGETS: +MOC.FourCommonLaw +MOC.FourNonreal +MOC.RemainingCases
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
       - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
         with:
           lake-package-directory: Lean
@@ -97,15 +228,123 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           pattern: moc-*
-          path: ${{ runner.temp }}/moc-objects
+          path: ${{ runner.temp }}/moc-inputs
           merge-multiple: true
-      - name: Restore compiled modules and run the normal build
+      - name: Restore compiled modules and run Lake
         run: |
-          for archive in "$RUNNER_TEMP"/moc-objects/*.tgz; do
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
             tar -xzf "$archive"
           done
           cd Lean
-          lake build
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-four
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  assemble-matched:
+    name: Build the four common marks in order five
+    needs: [check-matched]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-matched
+      MOC_TARGETS: +MOC.FourSharedFiveShapes
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-matched
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  assemble-repeated:
+    name: Build the three common marks in order five
+    needs: [check-repeated]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-repeated
+      MOC_TARGETS: +MOC.ThreeSharedRepeatedFiveShapes
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-repeated
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  build:
+    name: Build and audit the complete library
+    needs: [check, assemble-four, assemble-matched, assemble-repeated]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: build
+      MOC_TARGETS: ''
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
   preflight:
     name: Check the independent proof interfaces
     if: ${{ startsWith(github.event.head_commit.message, 'Preflight ') }}
@@ -118,4 +357,4 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           build: 'true'
-          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FiveMatchingLaw
+          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw

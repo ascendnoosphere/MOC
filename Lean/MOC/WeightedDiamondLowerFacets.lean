@@ -282,10 +282,10 @@ private theorem scale_check : ∀ k : Fin 184, positive (entry k).2.2 = true := 
 
 set_option maxHeartbeats 30000000 in
 set_option maxRecDepth 32000 in
-private theorem ray_check : ∀ (k : Fin 184) (i : Fin 24),
+private theorem ray_check (k : Fin 184) : ∀ i : Fin 24,
     equal (coordinate (entry k).1 (entry k).2.1 i)
       (mul (scale 2 (entry k).2.2) (lowerStage12.rays k i)) = true := by
-  decide +kernel
+  fin_cases k <;> decide +kernel
 
 /-- The facet and scale assigned to each ray of the last cut. -/
 def lowerFacet (k : Fin 184) : WeightedDiamondFacetIndex :=
