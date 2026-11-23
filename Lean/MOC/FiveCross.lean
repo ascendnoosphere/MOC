@@ -188,8 +188,10 @@ private theorem diamond {R : ℝ} (hR : 0 < R) (z : ℂ)
   have w₂ : w 2 = a*c := rfl
   have w₃ : w 3 = b*d := rfl
   apply Complex.ext <;>
-    simp [μ, w₀, w₁, w₂, w₃, v₀, v₁, v₂, v₃, Complex.real_smul, Complex.mul_re,
-      Complex.mul_im, a, b, c, d] <;> try field_simp [ne_of_gt hR] <;> ring
+    simp only [Complex.add_re, Complex.add_im, Complex.smul_re, Complex.smul_im,
+      smul_eq_mul, Complex.re_ofReal_mul, Complex.im_ofReal_mul] <;>
+    norm_num [μ, w₀, w₁, w₂, w₃, v₀, v₁, v₂, v₃, a, b, c, d] <;>
+    field_simp [ne_of_gt hR] <;> ring
 
 /-- Each nonnegative real dilation of the five-point cross satisfies MOC
 for every relative unitary. -/

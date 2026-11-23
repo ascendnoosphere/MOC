@@ -8,7 +8,7 @@ permissions:
   actions: read
 jobs:
   check-four:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only four ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only four ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -89,7 +89,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-matched:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only matched ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only matched ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -174,7 +174,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-repeated:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only repeated ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only repeated ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -251,7 +251,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-doubling:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -326,7 +326,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-real:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -401,7 +401,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-harmonic:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -478,7 +478,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && !startsWith(github.event.head_commit.message, 'Replay ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -880,3 +880,52 @@ jobs:
           build: 'true'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
+  replay:
+    name: Build three common marks
+    if: ${{ startsWith(github.event.head_commit.message, 'Replay ') }}
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: three-common-marks
+      MOC_TARGETS: +MOC.ThreeSharedRepeatedFiveShapes
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
+        with:
+          path: Lean/.lake
+          key: lake-Linux-X64-86fb0afe31431406bdc5b1691b843128a5731c4792d5e6c1bbcd745af8097b7d-8361d126c6eeed67e13b378298a73d21306d296eec5a0de5c4842e41e0136ed5-6b0f6f5ee8f77f70522ffad3c36cd7419e12eea1
+          restore-keys: lake-Linux-X64-86fb0afe31431406bdc5b1691b843128a5731c4792d5e6c1bbcd745af8097b7d-8361d126c6eeed67e13b378298a73d21306d296eec5a0de5c4842e41e0136ed5-
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+          use-github-cache: 'false'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45230230542
+          name: moc-three-coordinate-law
+          path: ${{ runner.temp }}/replay-inputs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45232121614
+          name: moc-three-rays
+          path: ${{ runner.temp }}/replay-inputs
+      - name: Check the requested proof modules
+        run: |
+          for archive in "$RUNNER_TEMP"/replay-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-three-common-marks
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
