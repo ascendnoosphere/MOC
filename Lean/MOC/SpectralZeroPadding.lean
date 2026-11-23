@@ -95,10 +95,10 @@ theorem holds_all_shared_value_paddings_five (a b : Fin 5 → ℂ) (c : ℂ) (i 
     (by simp [b₀, hb]) h₀ m U hU
   have hleft : (fun k => padSpectrumWithZeros a₀ m k + c) = padSpectrumWithValue a c m := by
     funext k
-    by_cases h : k.val < 5 <;> simp [a₀, padSpectrumWithZeros, padSpectrumWithValue, h]
+    by_cases h : k.val < 5 <;> simp [a₀, padSpectrumWithZeros, padSpectrumWithValue, h] <;> ring
   have hright : (fun k => padSpectrumWithZeros b₀ m k - c) = padSpectrumWithValue b (-c) m := by
     funext k
-    by_cases h : k.val < 5 <;> simp [b₀, padSpectrumWithZeros, padSpectrumWithValue, h]
+    by_cases h : k.val < 5 <;> simp [b₀, padSpectrumWithZeros, padSpectrumWithValue, h] <;> ring
   rw [← hleft, ← hright]
   exact (holds_shift_iff _ _ hU c).mpr hz
 
