@@ -83,7 +83,7 @@ private theorem listedZeros : ∀ k : Fin 297, (zeros k).all
 private theorem zeroTable (k : Fin 297) (i : Fin 51) (hi : i ∈ zeros k) :
     (mask k).testBit i.val = false := by
   have h := List.all_eq_true.mp (listedZeros k) i hi
-  simpa only [Bool.not_eq_true] using h
+  simpa only [Bool.not_eq_true'] using h
 
 private theorem unionTable : ∀ k : Fin 297,
     bitUnion column (zeros k) ||| 2 ^ k.val = allBits := by
