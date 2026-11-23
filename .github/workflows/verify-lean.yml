@@ -7,6 +7,7 @@ permissions:
   contents: read
 jobs:
   check:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -15,11 +16,13 @@ jobs:
       matrix:
         include:
           - group: lemmas
-            targets: +MOC.LexicographicScores +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
+            targets: +MOC.LexicographicScores +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
           - group: four-shapes
             targets: +MOC.DoubleAntipodal +MOC.HomotheticFour
+          - group: five-doubling
+            targets: +MOC.DoubledFive
           - group: five-shapes
-            targets: +MOC.DoubledFive +MOC.HomotheticFive
+            targets: +MOC.HomotheticFive
           - group: four-facets
             targets: +MOC.WeightedDiamondLowerFacets
           - group: four-coordinate-law
@@ -103,3 +106,16 @@ jobs:
           done
           cd Lean
           lake build
+  preflight:
+    name: Check the independent proof interfaces
+    if: ${{ startsWith(github.event.head_commit.message, 'Preflight ') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction
