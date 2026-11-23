@@ -174,7 +174,7 @@ jobs:
           - group: harmonic
             targets: +MOC.HarmonicAnchors +MOC.CrossPadding +MOC.SharedAnchorPadding
           - group: lemmas
-            targets: +MOC.LexicographicScores +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
+            targets: +MOC.CommonLawTransport +MOC.LexicographicScores +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
     env:
       MOC_GROUP: ${{ matrix.group }}
       MOC_TARGETS: ${{ matrix.targets }}
@@ -357,7 +357,7 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           build: 'true'
-          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.HomotheticFourPadding
+          build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.HomotheticFourPadding +MOC.CommonLawTransport
   audit-published:
     name: Build and audit the exact proof commit
     if: ${{ startsWith(github.event.head_commit.message, 'Audit ') }}
