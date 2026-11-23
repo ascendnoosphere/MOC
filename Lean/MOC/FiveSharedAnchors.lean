@@ -9,6 +9,9 @@ open BigOperators Matrix
 
 namespace MOC.FiveSharedAnchors
 
+set_option maxRecDepth 32000
+set_option maxHeartbeats 12000000
+
 noncomputable section
 
 /-- The first four marks are 0, 2, 3 and 6. -/
@@ -25,7 +28,13 @@ private theorem corner_eq (p : Label) (x y : ℤ) :
   simp only [corner, matchingProduct, Int.cast_prod, Int.cast_add]
   apply Finset.prod_congr rfl
   intro j _
-  by_cases h : p j = 4 <;> by_cases k : j = 4 <;> simp [left, right, h, k]
+  have update_cast (v : Fin 5 → ℤ) (t : ℤ) (k : Fin 5) :
+      (Function.update v 4 t k : ℂ) = Function.update (fun l => (v l : ℂ)) 4 (t : ℂ) k := by
+    by_cases hk : k = 4
+    · subst k
+      simp only [Function.update_self]
+    · simp only [Function.update_of_ne hk]
+  simp only [left, right, update_cast]
 
 private theorem swap_product (a b : Fin 5 → ℂ) (p : Label) :
     matchingProduct b a p.symm = matchingProduct a b p := by

@@ -156,6 +156,140 @@ jobs:
           path: ${{ runner.temp }}/moc-objects/*.tgz
           retention-days: 1
           compression-level: 0
+  check-doubling:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    name: Check ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - group: five-doubling
+            targets: +MOC.DoubledFiveCertificate
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  check-real:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    name: Check ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - group: five-shapes
+            targets: +MOC.HomotheticFiveData
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  check-harmonic:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    name: Check ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - group: harmonic
+            targets: +MOC.FiveSharedAnchorsCertificate
+          - group: five-cross
+            targets: +MOC.FiveCross
+    env:
+      MOC_GROUP: ${{ matrix.group }}
+      MOC_TARGETS: ${{ matrix.targets }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Compute the source key
+        id: sources
+        run: python .github/verify/module_objects.py key
+      - name: Restore checked objects
+        id: objects
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/moc-objects
+          key: checked-moc-v1-${{ matrix.group }}-${{ steps.sources.outputs.key }}
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        if: steps.objects.outputs.cache-hit != 'true'
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          use-mathlib-cache: 'true'
+          build: 'true'
+          build-args: ${{ matrix.targets }}
+      - name: Collect compiled modules and build traces
+        if: steps.objects.outputs.cache-hit != 'true'
+        run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-${{ matrix.group }}
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
   check:
     if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
@@ -167,12 +301,6 @@ jobs:
         include:
           - group: four-shapes
             targets: +MOC.DoubleAntipodal +MOC.HomotheticFour +MOC.HomotheticFourPadding
-          - group: five-doubling
-            targets: +MOC.DoubledFive
-          - group: five-shapes
-            targets: +MOC.HomotheticFive
-          - group: harmonic
-            targets: +MOC.HarmonicAnchors +MOC.CrossPadding +MOC.SharedAnchorPadding
           - group: lemmas
             targets: +MOC.CommonLawTransport +MOC.LexicographicScores +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport +MOC.WeightedDiamondPackedCut +MOC.IntegerPivotFrame +MOC.LiftedSimplex
     env:
@@ -316,9 +444,117 @@ jobs:
           path: ${{ runner.temp }}/moc-objects/*.tgz
           retention-days: 1
           compression-level: 0
+  assemble-doubling:
+    name: Build the doubled spectra in order five
+    needs: [check-doubling]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-doubling
+      MOC_TARGETS: +MOC.DoubledFive
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-doubling
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  assemble-real:
+    name: Build the real scaling theorem in order five
+    needs: [check-real]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-real
+      MOC_TARGETS: +MOC.HomotheticFive
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-real
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
+  assemble-harmonic:
+    name: Build the cross spectra and harmonic marks
+    needs: [check-harmonic]
+    runs-on: ubuntu-latest
+    env:
+      MOC_GROUP: assemble-harmonic
+      MOC_TARGETS: +MOC.HarmonicAnchors +MOC.CrossPadding +MOC.SharedAnchorPadding
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'false'
+          use-mathlib-cache: 'true'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: moc-*
+          path: ${{ runner.temp }}/moc-inputs
+          merge-multiple: true
+      - name: Restore compiled modules and run Lake
+        run: |
+          for archive in "$RUNNER_TEMP"/moc-inputs/*.tgz; do
+            tar -xzf "$archive"
+          done
+          cd Lean
+          lake build $MOC_TARGETS
+      - run: python .github/verify/module_objects.py archive
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moc-assemble-harmonic
+          path: ${{ runner.temp }}/moc-objects/*.tgz
+          retention-days: 1
+          compression-level: 0
   build:
     name: Build and audit the complete library
-    needs: [check, assemble-four, assemble-matched, assemble-repeated]
+    needs: [check, assemble-four, assemble-matched, assemble-repeated, assemble-doubling, assemble-real, assemble-harmonic]
     runs-on: ubuntu-latest
     env:
       MOC_GROUP: build

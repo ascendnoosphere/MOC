@@ -137,7 +137,7 @@ private theorem vertex_coeff : ∀ (j : Fin 4) (d : Fin 5),
   decide +kernel
 
 private theorem vertex_mem (t : ℝ) (j : Fin 4) :
-    (↑(t*(1+t)^3) : ℂ) * GaussianInt.toComplex (vertex j) ∈
+    ((t*(1+t)^3 : ℝ) : ℂ) * GaussianInt.toComplex (vertex j) ∈
       Set.range (matchingProduct spectrum (fun i => (t : ℂ) * spectrum i)) := by
   refine ⟨Equiv.swap 0 (swapIndex j), ?_⟩
   rw [matching_eq, radius_eq, Complex.ofReal_sum, Finset.sum_mul]
@@ -154,7 +154,11 @@ private theorem diamond {R : ℝ} (hR : 0 < R) (z : ℂ)
   have h₁ := h 1
   have h₂ := h 2
   have h₃ := h 3
-  norm_num [direction, Complex.mul_re] at h₀ h₁ h₂ h₃
+  change -R ≤ (GaussianInt.toComplex ⟨-1,-1⟩ * z).re at h₀
+  change -R ≤ (GaussianInt.toComplex ⟨-1,1⟩ * z).re at h₁
+  change -R ≤ (GaussianInt.toComplex ⟨1,-1⟩ * z).re at h₂
+  change -R ≤ (GaussianInt.toComplex ⟨1,1⟩ * z).re at h₃
+  norm_num [Complex.mul_re] at h₀ h₁ h₂ h₃
   let a := R + z.re + z.im
   let b := R + z.re - z.im
   let c := R - z.re + z.im
@@ -172,10 +176,20 @@ private theorem diamond {R : ℝ} (hR : 0 < R) (z : ℂ)
   have hs : ∑ j, μ j = 1 := by
     simp [μ, w, Fin.sum_univ_succ, a, b, c, d]
     field_simp [ne_of_gt hR] <;> ring
-  refine mem_convexHull_of_exists_fintype μ _ hw hs (fun j => ⟨j, rfl⟩) ?_
+  refine mem_convexHull_of_exists_fintype μ
+    (fun j => (R : ℂ) * GaussianInt.toComplex (vertex j)) hw hs (fun j => ⟨j, rfl⟩) ?_
+  rw [Fin.sum_univ_four]
+  have v₀ : vertex 0 = 1 := rfl
+  have v₁ : vertex 1 = -1 := rfl
+  have v₂ : vertex 2 = ⟨0, 1⟩ := rfl
+  have v₃ : vertex 3 = ⟨0, -1⟩ := rfl
+  have w₀ : w 0 = a*b := rfl
+  have w₁ : w 1 = c*d := rfl
+  have w₂ : w 2 = a*c := rfl
+  have w₃ : w 3 = b*d := rfl
   apply Complex.ext <;>
-    simp [μ, w, Fin.sum_univ_succ, vertex, Complex.real_smul, Complex.mul_re,
-      Complex.mul_im, a, b, c, d] <;> field_simp [ne_of_gt hR] <;> ring
+    simp [μ, w₀, w₁, w₂, w₃, v₀, v₁, v₂, v₃, Complex.real_smul, Complex.mul_re,
+      Complex.mul_im, a, b, c, d] <;> try field_simp [ne_of_gt hR] <;> ring
 
 /-- Each nonnegative real dilation of the five-point cross satisfies MOC
 for every relative unitary. -/
