@@ -9,6 +9,7 @@ import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
 import MOC.FourMixedContactBound
+import MOC.FourNonreal
 import MOC.FourSpectralSupport
 import MOC.FullSupportReduction
 import MOC.Geometry
@@ -37,7 +38,6 @@ import MOC.TwoFreeRealAnchors
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
 import MOC.WeightedDiamondChart
-import MOC.WeightedDiamondComplete
 import MOC.WeightedDiamondLowerInitial
 import MOC.WeightedDiamondWitnessMasks
 

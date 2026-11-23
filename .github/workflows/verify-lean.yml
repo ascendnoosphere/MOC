@@ -16,3 +16,17 @@ jobs:
           auto-config: 'false'
           build: 'true'
           use-mathlib-cache: 'true'
+  lemmas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'true'
+          build-args: >-
+            +MOC.TwoFreeRealAnchors +MOC.SubsetMarkerTest +MOC.FullSupportReduction
+            +MOC.TwoCircleCover +MOC.SpectralZeroPadding +MOC.ProjectiveTransport
+            +MOC.WeightedDiamondPackedCut +MOC.LiftedSimplex
+          use-mathlib-cache: 'true'
