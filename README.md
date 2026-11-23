@@ -57,7 +57,7 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 | Large shifts $(a-z,b)$ for arbitrary spectra when every entry of the relative unitary $U$ is nonzero. The radius may depend on $a,b,U$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 
-A common fractional-linear map can act on the first spectrum and the negated second spectrum in each case. Its determinant must be nonzero. Its pole must avoid both signed spectra. The transformed pair has the same relative unitary. [ProjectiveTransport.lean](Lean/MOC/ProjectiveTransport.lean)
+A common fractional-linear map can act on the first spectrum and the negated second spectrum in each case. Its determinant must be nonzero. Its pole must avoid both signed spectra. The transformed pair has the same relative unitary. If fixed weights represent every partner of a first spectrum, they also represent every partner of its transformed spectrum. The converse holds. For this result the pole need only avoid the first spectrum. [ProjectiveTransport.lean](Lean/MOC/ProjectiveTransport.lean) · [CommonLawTransport.lean](Lean/MOC/CommonLawTransport.lean)
 
 ### Sufficient tests
 
