@@ -77,8 +77,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive
@@ -94,21 +103,51 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 4
       matrix:
         include:
-          - group: five-rays-d
-            targets: +MOC.FourSharedFiveCut31 +MOC.FourSharedFiveCut32 +MOC.FourSharedFiveCut33 +MOC.FourSharedFiveCut34 +MOC.FourSharedFiveCut35 +MOC.FourSharedFiveCut36
-          - group: five-rays-e
-            targets: +MOC.FourSharedFiveCut37 +MOC.FourSharedFiveCut38 +MOC.FourSharedFiveCut39 +MOC.FourSharedFiveCut40 +MOC.FourSharedFiveCut41
+          - group: five-cut-41
+            targets: +MOC.FourSharedFiveCut41
+          - group: five-cut-40
+            targets: +MOC.FourSharedFiveCut40
+          - group: five-cut-39
+            targets: +MOC.FourSharedFiveCut39
+          - group: five-cut-38
+            targets: +MOC.FourSharedFiveCut38
+          - group: five-cut-37
+            targets: +MOC.FourSharedFiveCut37
+          - group: five-cut-36
+            targets: +MOC.FourSharedFiveCut36
+          - group: five-cut-35
+            targets: +MOC.FourSharedFiveCut35
+          - group: five-cut-34
+            targets: +MOC.FourSharedFiveCut34
+          - group: five-cut-33
+            targets: +MOC.FourSharedFiveCut33
+          - group: five-cut-32
+            targets: +MOC.FourSharedFiveCut32
+          - group: five-cut-31
+            targets: +MOC.FourSharedFiveCut31
           - group: four-coordinate-law
             targets: +MOC.FourSharedFiveMatching +MOC.FourSharedFiveMinors
           - group: five-rays-a
             targets: +MOC.FourSharedFiveCut01 +MOC.FourSharedFiveCut02 +MOC.FourSharedFiveCut03 +MOC.FourSharedFiveCut04 +MOC.FourSharedFiveCut05 +MOC.FourSharedFiveCut06 +MOC.FourSharedFiveCut07 +MOC.FourSharedFiveCut08 +MOC.FourSharedFiveCut09 +MOC.FourSharedFiveCut10 +MOC.FourSharedFiveCut11 +MOC.FourSharedFiveCut12 +MOC.FourSharedFiveCut13 +MOC.FourSharedFiveCut14
-          - group: five-rays-b
-            targets: +MOC.FourSharedFiveCut15 +MOC.FourSharedFiveCut16 +MOC.FourSharedFiveCut17 +MOC.FourSharedFiveCut18 +MOC.FourSharedFiveCut19 +MOC.FourSharedFiveCut20 +MOC.FourSharedFiveCut21 +MOC.FourSharedFiveCut22
-          - group: five-rays-c
-            targets: +MOC.FourSharedFiveCut23 +MOC.FourSharedFiveCut24 +MOC.FourSharedFiveCut25 +MOC.FourSharedFiveCut26 +MOC.FourSharedFiveCut27 +MOC.FourSharedFiveCut28 +MOC.FourSharedFiveCut29 +MOC.FourSharedFiveCut30
+          - group: five-pair-15
+            targets: +MOC.FourSharedFiveCut15 +MOC.FourSharedFiveCut16
+          - group: five-pair-17
+            targets: +MOC.FourSharedFiveCut17 +MOC.FourSharedFiveCut18
+          - group: five-pair-19
+            targets: +MOC.FourSharedFiveCut19 +MOC.FourSharedFiveCut20
+          - group: five-pair-21
+            targets: +MOC.FourSharedFiveCut21 +MOC.FourSharedFiveCut22
+          - group: five-pair-23
+            targets: +MOC.FourSharedFiveCut23 +MOC.FourSharedFiveCut24
+          - group: five-pair-25
+            targets: +MOC.FourSharedFiveCut25 +MOC.FourSharedFiveCut26
+          - group: five-pair-27
+            targets: +MOC.FourSharedFiveCut27 +MOC.FourSharedFiveCut28
+          - group: five-pair-29
+            targets: +MOC.FourSharedFiveCut29 +MOC.FourSharedFiveCut30
     env:
       MOC_GROUP: ${{ matrix.group }}
       MOC_TARGETS: ${{ matrix.targets }}
@@ -162,8 +201,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive
@@ -239,8 +287,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive
@@ -314,8 +371,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive
@@ -389,8 +455,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive
@@ -466,8 +541,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive
@@ -543,8 +627,17 @@ jobs:
           auto-config: 'false'
           use-mathlib-cache: 'true'
           use-github-cache: 'false'
-          build: 'true'
+          build: ${{ !startsWith(matrix.group, 'five-pair-') && !startsWith(matrix.group, 'five-cut-') }}
           build-args: ${{ matrix.targets }}
+      - name: Check each large certificate with one compiler
+        if: (startsWith(matrix.group, 'five-pair-') || startsWith(matrix.group, 'five-cut-')) && steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
+        env:
+          leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee_NUM_THREADS: '1'
+        run: |
+          cd Lean
+          for target in $MOC_TARGETS; do
+            /usr/bin/time -f 'Peak resident memory %M KiB' lake build "$target"
+          done
       - name: Collect compiled modules and build traces
         if: steps.objects.outputs.cache-hit != 'true' && steps.prior_objects.outcome != 'success'
         run: python .github/verify/module_objects.py archive

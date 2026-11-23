@@ -14,7 +14,9 @@ theorem holds_padded_affine_dilation (m : ℕ) (s c : ℂ) (t : ℝ) (ht : 0 ≤
     Holds (fun i => padSpectrumWithZeros (fun j => s * spectrum j) m i + c)
       (fun i => padSpectrumWithZeros (fun j => s * ((t : ℂ) * spectrum j)) m i - c) U := by
   apply (holds_shift_iff _ _ hU c).mpr
-  have hz : spectrum 0 = 0 := rfl
+  have hz : spectrum 0 = 0 := by
+    change GaussianInt.toComplex 0 = 0
+    simp [GaussianInt.toComplex]
   apply holds_all_zero_paddings_five _ _ 0 0 (by simp [hz]) (by simp [hz]) _ m U hU
   intro V hV
   simpa only [add_zero, sub_zero] using holds_affine_dilation s 0 t ht V hV
