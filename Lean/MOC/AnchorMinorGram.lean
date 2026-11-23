@@ -62,11 +62,9 @@ theorem anchor_minor_column_gram (c : ℂ) (v : Matrix Unit ι ℂ) (u : Matrix 
       have hscale : vᴴ * ((1 - p) • (1 : Matrix Unit Unit ℂ)) * v = (1 - p) • (vᴴ * v) := by
         simp [Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one]
       have hleft : star c • ((-(c • vᴴ)) * v) = -(p • (vᴴ * v)) := by
-        simp [Matrix.neg_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul,
-          starRingEnd_apply, hpc]
+        rw [Matrix.neg_mul, Matrix.smul_mul, smul_neg, smul_smul, hpc]
       have hright : c • (vᴴ * (-(star c • v))) = -(p • (vᴴ * v)) := by
-        simp [Matrix.mul_neg, Matrix.smul_mul, Matrix.mul_smul, smul_smul,
-          starRingEnd_apply, hc]
+        rw [Matrix.mul_neg, Matrix.mul_smul, smul_neg, smul_smul, hc]
       rw [smul_sub, hleft, hright, hscale, sub_neg_eq_add, sub_neg_eq_add]
     _ = p • 1 + vᴴ * v := by
       simp only [sub_smul, one_smul]

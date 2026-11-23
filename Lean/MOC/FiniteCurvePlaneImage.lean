@@ -108,7 +108,7 @@ theorem exists_monic_plane_image_of_finite_projection
         change Polynomial.eval b
             (Polynomial.map (Polynomial.evalRingHom a) (Polynomial.C Polynomial.X)) = a
         rw [Polynomial.map_C, Polynomial.eval_C]
-        exact Polynomial.eval_X a
+        exact Polynomial.eval_X
       have hφt : φ (Ideal.Quotient.mk Q t) = eval z t := rfl
       rw [hρ, ← ht] at h
       exact hφt.symm.trans (h.trans hjX)
@@ -117,7 +117,7 @@ theorem exists_monic_plane_image_of_finite_projection
       have hjX : j₀ Polynomial.X = b := by
         change Polynomial.eval b (Polynomial.map (Polynomial.evalRingHom a) Polynomial.X) = b
         rw [Polynomial.map_X]
-        exact Polynomial.eval_X b
+        exact Polynomial.eval_X
       have hφu : φ v = eval z u := rfl
       rw [hρ] at h
       exact hφu.symm.trans (h.trans hjX)

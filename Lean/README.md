@@ -37,7 +37,7 @@ The [proved cases](../README.md#proved-cases) list the inclusion theorems. The r
 | A regular order-four support gap that dominates a positive multiple of a relabeled mixed profile has at most ten maximizing permutations. | [FourMixedContactBound.lean](MOC/FourMixedContactBound.lean) |
 | In order four, the common law for a fixed simple real spectrum follows from weighted permutation support bounds for $1<t\le 2$. Twelve permutation scores determine every score in this family. | [HermitianByNormalFour.lean](MOC/HermitianByNormalFour.lean) · [WeightedDiamondCensus.lean](MOC/WeightedDiamondCensus.lean) |
 
-All sixteen weighted-diamond forms are nonnegative on the squared minors of an order-four unitary. To prove the support bound it suffices to decompose every nonnegative score gap into these forms and their row relabelings. [HermitianByNormalFourFacets.lean](MOC/HermitianByNormalFourFacets.lean)
+For $x \ge 0$, all sixteen weighted-diamond forms are nonnegative on the squared minors of an order-four unitary. To prove the support bound it suffices to decompose every nonnegative score gap into these forms and their row relabelings. [HermitianByNormalFourFacets.lean](MOC/HermitianByNormalFourFacets.lean)
 
 The chart $x=u/(1+u)$ with $u>0$ covers the required open parameter interval. Integer coefficient checks certify each added permutation inequality. The twelve pivot evaluations and the first additional inequality have a checked decomposition into sixteen rays. [WeightedDiamondChart.lean](MOC/WeightedDiamondChart.lean) · [WeightedDiamondLowerInitial.lean](MOC/WeightedDiamondLowerInitial.lean)
 
@@ -51,13 +51,13 @@ The split contrast of a weighted-diamond score has rank at most one. Projected m
 
 A fixed set of real weights works for every complex partner spectrum if it works for all partners with entries in $\{0,1\}$. For real $a$, fix one partner entry at a nonreal value. The same weights work for all partners if they work for every complex choice of the other entries. [CommonWeights.lean](MOC/CommonWeights.lean)
 
-At order five, a fixed relative unitary can have no common weights that work for every pair of spectra with an opposite eigenvalue pair at fixed labels. [OppositePair.lean](MOC/OppositePair.lean)
+At order five, a fixed relative unitary can have no single set of nonnegative weights that sums to one and works for every pair of spectra with an opposite eigenvalue pair at fixed labels. [OppositePair.lean](MOC/OppositePair.lean)
 
 Let $a$, $x$, and $v$ be real lists of length $n$. For a partner of the form $x+zv$, the determinant and the matching products are polynomials in $z$. The coefficient of degree $n$ is the same in all these polynomials. The lower coefficients give a convex-hull test for one set of weights for all complex $z$. If the test holds, at most $n+1$ permutations suffice. The explicit order-five theorem takes membership in this hull as a hypothesis. [HermitianSpectralLine.lean](MOC/HermitianSpectralLine.lean)
 
 ## Check the library
 
-Run `lake build` from this directory. The root module checks the axioms that each imported safe `MOC` declaration uses. The check permits `propext`, `Classical.choice`, and `Quot.sound`. [Build instructions](../README.md#build) · [Root module](MOC.lean)
+Run `lake build` from this directory. The root module imports every project module and checks the axioms used by each safe declaration. The check permits `propext`, `Classical.choice`, and `Quot.sound`. [Build instructions](../README.md#build) · [Root module](MOC.lean)
 
 Use `import MOC` in a Lean file in this package. All proved cases and sufficient tests in the main README are in the audit. To check an individual module, give Lake its module name.
 
