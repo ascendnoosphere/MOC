@@ -21,6 +21,7 @@ The [proved cases](../README.md#proved-cases) list the inclusion theorems. The r
 | The statement for ordered spectra and a relative unitary is equivalent to the statement for normal matrices with their eigenvalue lists. | [Normal.lean](MOC/Normal.lean) |
 | In a positive order, it suffices to prove MOC for spectra with equal traces. | [Core.lean](MOC/Core.lean) |
 | It suffices to treat spectra for which all pair sums are nonzero and all matching products are distinct. | [SpectralPerturbation.lean](MOC/SpectralPerturbation.lean) |
+| For fixed spectra, it suffices to prove MOC for each relative unitary with no zero entries. One can also impose nonzero pair sums and distinct matching products at the same time. | [FullSupportReduction.lean](MOC/FullSupportReduction.lean) |
 | A counterexample of least order has order at least four. No independent row and column permutations give a proper block split of its relative unitary. | [Claim.lean](MOC/Claim.lean) |
 | In a counterexample of least order, every row and column has at least three nonzero entries. | [SparseRow.lean](MOC/SparseRow.lean) |
 | In a positive order, MOC has an equivalent determinant statement with matching factors $1-x_i y_j$. Set one specified entry of $x$ and one of $y$ to zero. | [Source.lean](MOC/Source.lean) |
@@ -50,6 +51,24 @@ The split contrast of a weighted-diamond score has rank at most one. Projected m
 ## Common permutation weights
 
 A fixed set of real weights works for every complex partner spectrum if it works for all partners with entries in $\{0,1\}$. For real $a$, fix one partner entry at a nonreal value. The same weights work for all partners if they work for every complex choice of the other entries. [CommonWeights.lean](MOC/CommonWeights.lean)
+
+Append $m$ copies of $c$ and $-c$ to the order-four antipodal pair with an arbitrary complex scale. For $m=1$, require $c$ to occur in the first quadruple or $-c$ to occur in the second. For $m\ge2$, the value of $c$ is arbitrary. [HomotheticFourPadding.lean](MOC/HomotheticFourPadding.lean)
+
+For the order-four spectra $(x,-x,y,-y)$ and $t(x,-x,y,-y)$, fix the relative unitary. One probability law on at most seven permutations works for all complex $x,y,t$. At scale two, five permutations suffice. [HomotheticFour.lean](MOC/HomotheticFour.lean) · [DoubleAntipodal.lean](MOC/DoubleAntipodal.lean)
+
+Start with two lists of order $d$. Count the occurrences of $c$ in the first list and $-c$ in the second list. Let $k$ be the sum of these counts. After adding $m$ copies of these two values, the inclusion holds for every relative unitary if $k+m+2\ge d$. In order four, a case proved for every unitary therefore extends to every larger order if at least one original entry has the specified value. [MarkedPadding.lean](MOC/MarkedPadding.lean)
+
+In order five, expand each matching product in a fixed list of basis functions of the spectral values. Test the signed mean of each generator of the cone of nonnegative linear functions on the coefficient vectors. If every test passes, one probability law works for all spectral values in that expansion. The singleton and two-element subset events supply tests with nonnegative mean for every unitary. [FiveMatchingLaw.lean](MOC/FiveMatchingLaw.lean) · [FiveSubsetEvents.lean](MOC/FiveSubsetEvents.lean)
+
+Three opposite pairs in order five admit one probability law for all six complex values if the remaining two entries on one specified side are equal. Fix the relative unitary and the label positions. The values can repeat. [ThreeSharedRepeatedFive.lean](MOC/ThreeSharedRepeatedFive.lean) · [ThreeSharedRepeatedFiveShapes.lean](MOC/ThreeSharedRepeatedFiveShapes.lean)
+
+For the five entries $0,x,-x,y,-y$ and their doubles, one law on at most five permutations works for every complex $x,y$ at fixed unitary. [DoubledFive.lean](MOC/DoubledFive.lean)
+
+For the four fixed harmonic marks, a common law on at most five permutations works for the two free entries. The harmonic marks and the relative unitary are fixed. [FiveSharedAnchors.lean](MOC/FiveSharedAnchors.lean) · [HarmonicAnchors.lean](MOC/HarmonicAnchors.lean)
+
+Let one entry of each spectrum vary. A fixed set of real weights works for all values if it works at the four pairs formed by two distinct choices on each side. When the fixed entries are real, choose nonreal $s,u$. The two pairs $(s,u)$ and $(s,\bar u)$ suffice. [TwoFreeEntries.lean](MOC/TwoFreeEntries.lean) · [TwoFreeRealAnchors.lean](MOC/TwoFreeRealAnchors.lean)
+
+For a fixed unitary, one set of weights represents the determinant for every pair of spectra if it represents all the following pairs. Choose index sets $I,J$ of the same size, at most $\lfloor n/2\rfloor$. Set the first spectrum to zero on $I$ and one elsewhere. Set the second spectrum to one on $J$ and zero elsewhere. The corresponding determinant is the squared modulus of the minor on rows $I$ and columns $J$. [SubsetMarkerTest.lean](MOC/SubsetMarkerTest.lean)
 
 At order five, a fixed relative unitary can have no single set of nonnegative weights that sums to one and works for every pair of spectra with an opposite eigenvalue pair at fixed labels. [OppositePair.lean](MOC/OppositePair.lean)
 
