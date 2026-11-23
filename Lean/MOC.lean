@@ -2,6 +2,7 @@ import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.DiskBoundary
 import MOC.ExtendedCases
+import MOC.FiveCross
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
@@ -24,6 +25,8 @@ import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.ThreeValues
 import MOC.TrianglePairContacts
+import MOC.TwoCircleCover
+import MOC.TwoFreeEntries
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
 import MOC.WeightedDiamondChart

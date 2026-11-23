@@ -40,6 +40,74 @@ theorem spectrumOnGeneralizedCircle_neg {ι : Type*} {a : ι → ℂ}
   simpa only [circleValue, Complex.normSq_neg, Complex.neg_re, Complex.neg_im,
     neg_mul, mul_neg, neg_neg] using ha i
 
+/-- Restricting the labels preserves the circle equation. -/
+theorem SpectrumOnGeneralizedCircle.comp {ι κ : Type*} {a : ι → ℂ}
+    (ha : SpectrumOnGeneralizedCircle a) (e : κ → ι) :
+    SpectrumOnGeneralizedCircle (fun i => a (e i)) := by
+  obtain ⟨q, u, v, c, hn, h⟩ := ha
+  exact ⟨q, u, v, c, hn, fun i => h (e i)⟩
+
+/-- Translation preserves a generalized circle. -/
+theorem SpectrumOnGeneralizedCircle.add_const {ι : Type*} {a : ι → ℂ}
+    (ha : SpectrumOnGeneralizedCircle a) (t : ℂ) :
+    SpectrumOnGeneralizedCircle (fun i => a i + t) := by
+  obtain ⟨q, u, v, c, hn, h⟩ := ha
+  refine ⟨q, u + q * t.re, v + q * t.im,
+    c + q * Complex.normSq t + 2 * (u * t.re + v * t.im), ?_, fun i => ?_⟩
+  · by_cases hq : q = 0
+    · simpa [hq] using hn
+    · exact Or.inl hq
+  · have hi := h i
+    simp only [circleValue, Complex.normSq_apply, Complex.add_re, Complex.add_im] at hi ⊢
+    linear_combination hi
+
+/-- Multiplication by a nonzero complex number preserves a generalized circle. -/
+theorem SpectrumOnGeneralizedCircle.const_mul {ι : Type*} {a : ι → ℂ}
+    (ha : SpectrumOnGeneralizedCircle a) (d : ℂ) (hd : d ≠ 0) :
+    SpectrumOnGeneralizedCircle (fun i => d * a i) := by
+  obtain ⟨q, u, v, c, hn, h⟩ := ha
+  let m : ℂ := d * (⟨u, v⟩ : ℂ)
+  refine ⟨q, m.re, m.im, c * Complex.normSq d, ?_, fun i => ?_⟩
+  · by_contra! hz
+    obtain ⟨hq, hr, hi⟩ := hz
+    have hm : m = 0 := Complex.ext hr hi
+    have huv := (mul_eq_zero.mp hm).resolve_left hd
+    have hu : u = 0 := congrArg Complex.re huv
+    have hv : v = 0 := congrArg Complex.im huv
+    simp [hq, hu, hv] at hn
+  · have hi := h i
+    simp only [circleValue, m, Complex.normSq_apply, Complex.mul_re, Complex.mul_im] at hi ⊢
+    change _ - 2 * ((d.re * u - d.im * v) * _ + (d.re * v + d.im * u) * _) + _ = 0
+    linear_combination (d.re * d.re + d.im * d.im) * hi
+
+/-- Inversion preserves a generalized circle when the given labels avoid its pole. -/
+theorem SpectrumOnGeneralizedCircle.inv_of_ne_zero {ι : Type*} {a : ι → ℂ}
+    (ha : SpectrumOnGeneralizedCircle a) (hnz : ∀ i, a i ≠ 0) :
+    SpectrumOnGeneralizedCircle (fun i => (a i)⁻¹) := by
+  obtain ⟨q, u, v, c, hn, h⟩ := ha
+  rcases isEmpty_or_nonempty ι with he | ⟨i₀⟩
+  · letI := he
+    exact spectrumOnGeneralizedCircle_of_line _ 1 0 0 (Or.inl one_ne_zero)
+      (fun i => isEmptyElim i)
+  refine ⟨c, u, -v, q, ?_, fun i => ?_⟩
+  · by_contra! hz
+    obtain ⟨hc, hu, hv⟩ := hz
+    have hv' : v = 0 := neg_eq_zero.mp hv
+    have hq : q ≠ 0 := by simpa [hu, hv'] using hn
+    have hi := h i₀
+    simp only [circleValue, hc, hu, hv', zero_mul, add_zero, mul_zero, sub_zero] at hi
+    exact (mul_ne_zero hq (Complex.normSq_pos.mpr (hnz i₀)).ne') hi
+  · have hi := h i
+    unfold circleValue at hi ⊢
+    rw [Complex.normSq_inv, Complex.inv_re, Complex.inv_im]
+    field_simp [(Complex.normSq_pos.mpr (hnz i)).ne'] <;> linear_combination hi
+
+/-- The map on partner values takes each subset on a generalized circle to a
+subset on a generalized circle. -/
+def PreservesPartnerCircles {ι : Type*} (b : ι → ℂ) (f : ℂ → ℂ) : Prop :=
+  ∀ s : Set ι, SpectrumOnGeneralizedCircle (fun i : s => b i.val) →
+    SpectrumOnGeneralizedCircle (fun i : s => f (b i.val))
+
 section RealChart
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -56,7 +124,7 @@ private theorem exists_real_affine_chart (a b : ι → ℂ) (U : Matrix ι ι �
     ∃ (x : ι → ℂ) (f : ℂ → ℂ),
       (∀ i, (d * a i).re = s → (x i).im = 0) ∧
       (∀ i, (d * (-b i)).re = s → (f (b i)).im = 0) ∧
-      (Holds x (f ∘ b) U ↔ Holds a b U) := by
+      (Holds x (f ∘ b) U ↔ Holds a b U) ∧ PreservesPartnerCircles b f := by
   let k := -Complex.I * d
   let t : ℂ := (s : ℂ) * Complex.I
   have hk : k ≠ 0 := mul_ne_zero (neg_ne_zero.mpr Complex.I_ne_zero) hd
@@ -64,26 +132,28 @@ private theorem exists_real_affine_chart (a b : ι → ℂ) (U : Matrix ι ι �
     rw [show k * z = -(Complex.I * (d * z)) by simp [k, mul_assoc]]
     simp [t, Complex.I_mul_im, Complex.mul_im, sub_eq_add_neg, add_comm]
   refine ⟨fun i => k * a i + t, fun z => k * z - t, ?_, ?_,
-    holds_affine_chart_iff a b U hU k t hk⟩
+    holds_affine_chart_iff a b U hU k t hk, ?_⟩
   · intro i hi
     rw [him, hi, sub_self]
   · intro i hi
     change (k * b i - t).im = 0
     rw [show k * b i - t = -(k * (-b i) + t) by ring, Complex.neg_im, him, hi,
       sub_self, neg_zero]
+  · intro s hs
+    simpa only [sub_eq_add_neg] using (hs.const_mul k hk).add_const (-t)
 
 private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (o : ℂ) (r : ℝ) (ha : ∀ i, Complex.normSq (a i - o) = r) :
     ∃ (x : ι → ℂ) (f : ℂ → ℂ),
       (∀ i, (x i).im = 0) ∧
       (∀ i, Complex.normSq (-b i - o) = r → (f (b i)).im = 0) ∧
-      (Holds x (f ∘ b) U ↔ Holds a b U) := by
+      (Holds x (f ∘ b) U ↔ Holds a b U) ∧ PreservesPartnerCircles b f := by
   classical
   rcases isEmpty_or_nonempty ι with hι | hι
   · letI := hι
-    exact ⟨a, id, fun i => isEmptyElim i, fun i => isEmptyElim i, Iff.rfl⟩
+    exact ⟨a, id, fun i => isEmptyElim i, fun i => isEmptyElim i, Iff.rfl, fun _ hs => hs⟩
   by_cases hr : r = 0
-  · refine ⟨fun i => a i + -o, fun z => z - -o, ?_, ?_, holds_shift_iff a b hU (-o)⟩
+  · refine ⟨fun i => a i + -o, fun z => z - -o, ?_, ?_, holds_shift_iff a b hU (-o), ?_⟩
     · intro i
       have hz := Complex.normSq_eq_zero.mp ((ha i).trans hr)
       simp [← sub_eq_add_neg, hz]
@@ -91,6 +161,8 @@ private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι �
       have hz := Complex.normSq_eq_zero.mp (hi.trans hr)
       change (b i - -o).im = 0
       rw [show b i - -o = -(-b i - o) by ring, hz, neg_zero, Complex.zero_im]
+    · intro s hs
+      simpa only [sub_neg_eq_add] using hs.add_const o
   obtain ⟨i₀⟩ := hι
   let d := a i₀ - o
   have hd : d ≠ 0 := by
@@ -120,13 +192,19 @@ private theorem exists_real_circle_chart (a b : ι → ℂ) (U : Matrix ι ι �
       (u * (z - p t)⁻¹).re = 1 / 2 := by
     apply re_mul_inv_of_circle u (z - p t) hz
     rw [show z - p t - u = z - o by dsimp [u]; ring, hc, hu]
-  obtain ⟨x, f, hx, hy, hxy⟩ := exists_real_affine_chart A B U hU u hune (1 / 2)
-  refine ⟨x, fun z => f (-(-z - p t)⁻¹), fun i => hx i (hline _ (hap i) (ha i)), ?_, ?_⟩
+  obtain ⟨x, f, hx, hy, hxy, hf⟩ := exists_real_affine_chart A B U hU u hune (1 / 2)
+  refine ⟨x, fun z => f (-(-z - p t)⁻¹), fun i => hx i (hline _ (hap i) (ha i)), ?_, ?_, ?_⟩
   · intro i hi
     exact hy i (by simpa only [B, neg_neg] using hline _ (hbp i) hi)
   · have hinv := holds_inv_iff (fun i => a i - p t) (fun i => -b i - p t) U hU hap hbp
     exact hxy.trans (hinv.trans (by
       simpa only [sub_eq_add_neg, neg_add, neg_neg] using holds_shift_iff a b hU (-(p t))))
+
+  · intro s hs
+    apply hf s
+    apply spectrumOnGeneralizedCircle_neg
+    apply SpectrumOnGeneralizedCircle.inv_of_ne_zero _ (fun i => hbp i.val)
+    simpa only [sub_eq_add_neg] using (spectrumOnGeneralizedCircle_neg hs).add_const (-(p t))
 
 private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (q u v c : ℝ) (h : q ≠ 0 ∨ u ≠ 0 ∨ v ≠ 0)
@@ -134,7 +212,7 @@ private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Mat
     ∃ (x : ι → ℂ) (f : ℂ → ℂ),
       (∀ i, (x i).im = 0) ∧
       (∀ i, circleValue q u v c (-b i) = 0 → (f (b i)).im = 0) ∧
-      (Holds x (f ∘ b) U ↔ Holds a b U) := by
+      (Holds x (f ∘ b) U ↔ Holds a b U) ∧ PreservesPartnerCircles b f := by
   by_cases hq : q = 0
   · let d : ℂ := ⟨u, -v⟩
     have hd : d ≠ 0 := by
@@ -146,8 +224,8 @@ private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Mat
       simp only [circleValue, hq, zero_mul, zero_sub] at hz
       change u * z.re - -v * z.im = c / 2
       linarith
-    obtain ⟨x, y, hx, hy, hxy⟩ := exists_real_affine_chart a b U hU d hd (c / 2)
-    exact ⟨x, y, fun i => hx i (hline _ (ha i)), fun i hi => hy i (hline _ hi), hxy⟩
+    obtain ⟨x, y, hx, hy, hxy, hf⟩ := exists_real_affine_chart a b U hU d hd (c / 2)
+    exact ⟨x, y, fun i => hx i (hline _ (ha i)), fun i hi => hy i (hline _ hi), hxy, hf⟩
   · let o : ℂ := ⟨u / q, v / q⟩
     let r := Complex.normSq o - c / q
     have hcircle (z : ℂ) (hz : circleValue q u v c z = 0) : Complex.normSq (z - o) = r := by
@@ -161,11 +239,26 @@ private theorem exists_real_generalized_circle_chart (a b : ι → ℂ) (U : Mat
       rw [Complex.normSq_sub, hnorm, hdot]
       dsimp only [r]
       ring
-    obtain ⟨x, y, hx, hy, hxy⟩ := exists_real_circle_chart a b U hU o r (fun i => hcircle _ (ha i))
-    exact ⟨x, y, hx, fun i hi => hy i (hcircle _ hi), hxy⟩
+    obtain ⟨x, y, hx, hy, hxy, hf⟩ := exists_real_circle_chart a b U hU o r (fun i => hcircle _ (ha i))
+    exact ⟨x, y, hx, fun i hi => hy i (hcircle _ hi), hxy, hf⟩
 
 private theorem ofReal_re_of_im_zero (z : ℂ) (hz : z.im = 0) : (z.re : ℂ) = z :=
   Complex.ext rfl hz.symm
+
+/-- A common generalized circle makes the first spectrum and the specified
+entries of the second spectrum real. One function transforms the partner values. -/
+theorem exists_real_chart_preserving_partner_circles (a b : ι → ℂ) (p : ι → Prop)
+    (ha : SpectrumOnGeneralizedCircle (Sum.elim a (fun i : {i // p i} => -b i.val)))
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    ∃ (x : ι → ℝ) (f : ℂ → ℂ), (∀ i, p i → (f (b i)).im = 0) ∧
+      (Holds (fun i => (x i : ℂ)) (f ∘ b) U ↔ Holds a b U) ∧ PreservesPartnerCircles b f := by
+  obtain ⟨q, u, v, c, h, hs⟩ := ha
+  obtain ⟨x, f, hx, hf, hxf, hmap⟩ :=
+    exists_real_generalized_circle_chart a b U hU q u v c h (fun i => hs (Sum.inl i))
+  have hleft : (fun i => ((x i).re : ℂ)) = x :=
+    funext fun i => ofReal_re_of_im_zero _ (hx i)
+  refine ⟨fun i => (x i).re, f, fun i hi => hf i (hs (Sum.inr ⟨i, hi⟩)), ?_, hmap⟩
+  rwa [hleft]
 
 /-- A common generalized circle makes the first spectrum and the specified
 entries of the second spectrum real. One function transforms the partner values. -/
@@ -174,13 +267,8 @@ theorem exists_real_chart_of_common_generalized_circle (a b : ι → ℂ) (p : �
     (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
     ∃ (x : ι → ℝ) (f : ℂ → ℂ), (∀ i, p i → (f (b i)).im = 0) ∧
       (Holds (fun i => (x i : ℂ)) (f ∘ b) U ↔ Holds a b U) := by
-  obtain ⟨q, u, v, c, h, hs⟩ := ha
-  obtain ⟨x, f, hx, hf, hxf⟩ :=
-    exists_real_generalized_circle_chart a b U hU q u v c h (fun i => hs (Sum.inl i))
-  have hleft : (fun i => ((x i).re : ℂ)) = x :=
-    funext fun i => ofReal_re_of_im_zero _ (hx i)
-  refine ⟨fun i => (x i).re, f, fun i hi => hf i (hs (Sum.inr ⟨i, hi⟩)), ?_⟩
-  rwa [hleft]
+  obtain ⟨x, f, hf, hxf, _⟩ := exists_real_chart_preserving_partner_circles a b p ha U hU
+  exact ⟨x, f, hf, hxf⟩
 
 /-- A single spectrum on a circle or line can be made real, while the other
 spectrum remains arbitrary. The relative unitary is unchanged. -/
@@ -188,7 +276,7 @@ theorem exists_real_spectrum_of_generalized_circle (a b : ι → ℂ)
     (ha : SpectrumOnGeneralizedCircle a) (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
     ∃ (x : ι → ℝ) (y : ι → ℂ), Holds (fun i => (x i : ℂ)) y U ↔ Holds a b U := by
   obtain ⟨q, u, v, c, h, ha⟩ := ha
-  obtain ⟨x, y, hx, _, hxy⟩ := exists_real_generalized_circle_chart a b U hU q u v c h ha
+  obtain ⟨x, y, hx, _, hxy, _⟩ := exists_real_generalized_circle_chart a b U hU q u v c h ha
   have hleft : (fun i => ((x i).re : ℂ)) = x :=
     funext fun i => ofReal_re_of_im_zero _ (hx i)
   exact ⟨fun i => (x i).re, y ∘ b, by simpa only [hleft] using hxy⟩
