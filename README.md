@@ -44,6 +44,7 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | The centrally symmetric spectra $t+s\{\pm2,\pm(2+i)\}$ and $-t+s\{\pm3,\pm(3-i)\}$, with $s\ne0$. Both spectra are nonconcyclic, and every cross-sum is nonzero. | Four | [FourCentralSymmetry.lean](Lean/MOC/FourCentralSymmetry.lean) |
 | The fixed Hermitian spectrum $(-9,-8,-6,-2,8)$, every complex partner, and relative unitaries in a neighborhood of the specified rational orthogonal matrix. At each unitary, one probability law applies to every partner. | Five | [HermitianLineCertificate.lean](Lean/MOC/HermitianLineCertificate.lean) |
 | A total rank of at most $n+2$ for $A+tI$ and $B-tI$, for some complex scalar $t$. | Any finite order | [RankSum.lean](Lean/MOC/RankSum.lean) · [RankTwoOverlap.lean](Lean/MOC/RankTwoOverlap.lean) |
+| Start with an order-$d$ pair that satisfies MOC for every relative unitary. If the two lists contain at most $d+3$ nonzero entries in total, append the same number of zeros to each list. The enlarged relative unitary is arbitrary. | Any order $n\ge d$ | [SpectralZeroPadding.lean](Lean/MOC/SpectralZeroPadding.lean) |
 | Relative unitary $U=I+(z-1)vv^*$, with $\lVert v\rVert=1$ and $\lvert z\rvert=1$. | Any positive order | [HouseholderSupport.lean](Lean/MOC/HouseholderSupport.lean) |
 | A relative unitary with a row or column that has at most two nonzero entries. | Four | [SparseRow.lean](Lean/MOC/SparseRow.lean) · [Small.lean](Lean/MOC/Small.lean) |
 | An upper Hessenberg relative unitary after independent row and column permutations. Entries below the first subdiagonal are zero. | Any finite order | [SparseRow.lean](Lean/MOC/SparseRow.lean) |
@@ -52,6 +53,8 @@ Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b
 | Matching products that all lie on one affine line. | Any finite order | [CollinearKernelSupport.lean](Lean/MOC/CollinearKernelSupport.lean) |
 | Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
 | Large shifts $(a-z,b)$ for arbitrary spectra when every entry of the relative unitary $U$ is nonzero. The radius may depend on $a,b,U$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
+
+A common fractional-linear map can act on the first spectrum and the negated second spectrum in each case. Its determinant must be nonzero. Its pole must avoid both signed spectra. The transformed pair has the same relative unitary. [ProjectiveTransport.lean](Lean/MOC/ProjectiveTransport.lean)
 
 ### Sufficient tests
 
