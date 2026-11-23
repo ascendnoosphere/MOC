@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   check-four:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only four ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only four ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -57,7 +57,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-matched:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only matched ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only matched ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -111,7 +111,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check-repeated:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only repeated ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only repeated ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -157,7 +157,7 @@ jobs:
           retention-days: 1
           compression-level: 0
   check:
-    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Preflight ') && !startsWith(github.event.head_commit.message, 'Audit ') && (!startsWith(github.event.head_commit.message, 'Only ') || startsWith(github.event.head_commit.message, 'Only shapes ')) }}
     name: Check ${{ matrix.group }}
     runs-on: ubuntu-latest
     strategy:
@@ -358,3 +358,17 @@ jobs:
           use-mathlib-cache: 'true'
           build: 'true'
           build-args: +MOC.MarkedPadding +MOC.FourCommonLawReduction +MOC.FourNonrealReduction +MOC.FiveMatchingLaw +MOC.HomotheticFourPadding
+  audit-published:
+    name: Build and audit the exact proof commit
+    if: ${{ startsWith(github.event.head_commit.message, 'Audit ') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 84185389644abaac3e5ac605edece8bf74a97a13
+      - uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: Lean
+          auto-config: 'false'
+          build: 'true'
+          use-mathlib-cache: 'true'
