@@ -80,3 +80,5 @@ For the large-shift case, let $T=\mathrm{tr}(AB)$ and $q_\sigma=\sum_j a_{\sigma
 The source guide defines the Lean statement and lists equivalent forms and proof reductions. [Source guide](Lean/README.md)
 
 For the normal-maximizer approach, see the [research note](Lean/NormalMaximizerResearch.md). It gives exact counterexamples to universal normality of Frobenius-maximal support sums, proves a sufficient joint determinant/Frobenius law for the existential tie-break, and isolates the remaining general proof obligation. The note is mathematical research, not a Lean-checked extension of the proved cases.
+
+For the Hessenberg-maximizer approach, see the [Hessenberg research note](Lean/HessenbergMaximizerResearch.md). It proves the arbitrary-kernel sparse-row recursion, nonnegativity of the signed permutation law for Hessenberg unitaries, support-preserving elimination, and exact Givens constraints. The general existence of a sparse maximizing representative remains open; these new proofs are not Lean-checked.
