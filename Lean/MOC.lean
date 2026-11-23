@@ -4,11 +4,14 @@ import MOC.CrossPadding
 import MOC.DiskBoundary
 import MOC.DoubleAntipodal
 import MOC.ExtendedCases
+import MOC.LiftedSimplex
+import MOC.FiveSharedAnchors
 import MOC.FourCentralSymmetry
 import MOC.FourCommonShift
 import MOC.FourEquilateral
 import MOC.FourMixedContactBound
 import MOC.FourSpectralSupport
+import MOC.FullSupportReduction
 import MOC.Geometry
 import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
@@ -24,6 +27,7 @@ import MOC.PolydiskContact
 import MOC.RankTwoOverlap
 import MOC.SparseRow
 import MOC.SpectralAffineContact
+import MOC.SubsetMarkerTest
 import MOC.ThreeValues
 import MOC.TrianglePairContacts
 import MOC.TwoCircleCover

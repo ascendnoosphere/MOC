@@ -321,12 +321,12 @@ abbrev Cell := Fin 19
 abbrev Facet := Fin 26
 abbrev Label := Fin 24
 
-def vertex (t : Cell) (j : Fin 5) : Label := Fin.ofNat _ (get vertices t.val j.val).toNat
+def vertex (t : Cell) (j : Fin 5) : Label := Fin.ofNat' _ (get vertices t.val j.val).toNat
 def denominator (t : Cell) : ℤ := get denom 0 t.val
 def bary (t : Cell) (j : Fin 5) (p : Label) : ℤ := get numerators (5*t.val+j.val) p.val
 def liftValue (t : Cell) (p : Label) : ℤ := get heights t.val p.val
-def neighbor (t : Cell) (j : Fin 5) : Cell := Fin.ofNat _ (get adjacent t.val j.val).toNat
-def face (t : Cell) (j : Fin 5) : Facet := Fin.ofNat _ (get boundary t.val j.val).toNat
+def neighbor (t : Cell) (j : Fin 5) : Cell := Fin.ofNat' _ (get adjacent t.val j.val).toNat
+def face (t : Cell) (j : Fin 5) : Facet := Fin.ofNat' _ (get boundary t.val j.val).toNat
 def aScale (t : Cell) (j : Fin 5) : ℤ := get lhsScale t.val j.val
 def bScale (t : Cell) (j : Fin 5) : ℤ := get heightScale t.val j.val
 def cScale (t : Cell) (j : Fin 5) : ℤ := get faceScale t.val j.val
