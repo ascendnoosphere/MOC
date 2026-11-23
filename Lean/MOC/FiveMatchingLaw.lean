@@ -117,8 +117,11 @@ theorem exists_common_law {n m d : ℕ} (base : Fin d)
       congr 1
       have he := congrArg (fun t : ℝ => (t : ℂ)) (hwc k)
       simpa using he
-    _ = ∑ σ, (realSignedWeight U σ : ℂ) * matchingProduct (left z) (right z) σ :=
-      FivePermutations.permEquiv.sum_comp _
+    _ = ∑ σ, (realSignedWeight U σ : ℂ) * matchingProduct (left z) (right z) σ := by
+      let f (σ : Equiv.Perm (Fin 5)) : ℂ :=
+        (realSignedWeight U σ : ℂ) * matchingProduct (left z) (right z) σ
+      change (∑ p : Fin 120, f (FivePermutations.permEquiv p)) = ∑ σ, f σ
+      exact FivePermutations.permEquiv.sum_comp f
     _ = _ := real_signed_determinant (left z) (right z) U hU
 
 end

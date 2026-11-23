@@ -26,7 +26,9 @@ theorem isClosed_hasCommonWeights (U : Matrix ι ι ℂ) :
       apply continuous_finset_sum
       intro σ _
       exact continuous_subtype_val.comp ((continuous_apply σ).comp continuous_snd)
-    · rw [Set.setOf_forall]
+    · change IsClosed {p : (ι → ℂ) × W | ∀ b : ι → ℂ,
+        weightedMatchingValue p.1 b (fun σ => (p.2 σ : ℝ)) = determinantValue p.1 b U}
+      rw [Set.setOf_forall]
       refine isClosed_iInter fun b => ?_
       apply isClosed_eq
       · unfold weightedMatchingValue matchingProduct
