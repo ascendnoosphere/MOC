@@ -1,6 +1,7 @@
 import MOC.FiveSharedAnchors
 import MOC.ProjectiveTransport
 import MOC.TwoFreeEntries
+import MOC.SpectralZeroPadding
 
 /-! A fractional-linear image of the four shared marks admits two free entries. -/
 
@@ -98,6 +99,21 @@ theorem holds_harmonic (α β γ δ : ℂ) (hd : α*δ-β*γ ≠ 0)
     Holds (mappedLeft (fractionalMap α β γ δ) x) (mappedRight (fractionalMap α β γ δ) y) U := by
   obtain ⟨w, hw, hs, he⟩ := exists_harmonic_law U hU
   exact holds_of_weights w hw hs (he α β γ δ hd hm x y)
+
+/-- Repeat any one of the four shared signed values. Every unitary at the
+larger order satisfies the inclusion for all choices of the two free entries. -/
+theorem holds_padded_harmonic (α β γ δ : ℂ) (hd : α*δ-β*γ ≠ 0)
+    (hm : ∀ i, γ*(firstMarks i : ℂ)+δ ≠ 0) (x y : ℂ)
+    (r : Fin 5) (hr : r ≠ 4) (m : ℕ)
+    (U : Matrix (Fin (5+m)) (Fin (5+m)) ℂ) (hU : IsUnitary U) :
+    let f := fractionalMap α β γ δ
+    let v := f (firstMarks r : ℂ)
+    Holds (padSpectrumWithValue (mappedLeft f x) v m)
+      (padSpectrumWithValue (mappedRight f y) (-v) m) U := by
+  apply holds_all_shared_value_paddings_five _ _ _ r r _ _
+    (holds_harmonic α β γ δ hd hm x y) m U hU
+  · simp [mappedLeft, hr]
+  · simp [mappedRight, hr]
 
 end
 

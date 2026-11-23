@@ -68,9 +68,36 @@ theorem holds_all_zero_paddings_five (a b : Fin 5 → ℂ) (i j : Fin 5)
     (hbase : ∀ V : Matrix (Fin 5) (Fin 5) ℂ, IsUnitary V → Holds a b V)
     (m : ℕ) (U : Matrix (Fin (5 + m)) (Fin (5 + m)) ℂ) (hU : IsUnitary U) :
     Holds (padSpectrumWithZeros a m) (padSpectrumWithZeros b m) U := by
-  apply holds_all_zero_paddings a b _ hbase m U hU
+  refine holds_all_zero_paddings a b ?_ hbase m U hU
   have h₁ := support_five_le_four a i ha
   have h₂ := support_five_le_four b j hb
   omega
+
+/-- Add `m` copies of `v` at the end of a spectral list. -/
+def padSpectrumWithValue {n : ℕ} (a : Fin n → ℂ) (v : ℂ) (m : ℕ)
+    (i : Fin (n + m)) : ℂ :=
+  if h : i.val < n then a ⟨i.val, h⟩ else v
+
+/-- If the two lists contain `c` and `-c`, add any number of copies of
+this pair. Every relative unitary of the larger order is allowed. -/
+theorem holds_all_shared_value_paddings_five (a b : Fin 5 → ℂ) (c : ℂ) (i j : Fin 5)
+    (ha : a i = c) (hb : b j = -c)
+    (hbase : ∀ V : Matrix (Fin 5) (Fin 5) ℂ, IsUnitary V → Holds a b V)
+    (m : ℕ) (U : Matrix (Fin (5 + m)) (Fin (5 + m)) ℂ) (hU : IsUnitary U) :
+    Holds (padSpectrumWithValue a c m) (padSpectrumWithValue b (-c) m) U := by
+  let a₀ := fun k => a k + -c
+  let b₀ := fun k => b k - -c
+  have h₀ (V : Matrix (Fin 5) (Fin 5) ℂ) (hV : IsUnitary V) : Holds a₀ b₀ V :=
+    (holds_shift_iff a b hV (-c)).mpr (hbase V hV)
+  have hz := holds_all_zero_paddings_five a₀ b₀ i j (by simp [a₀, ha])
+    (by simp [b₀, hb]) h₀ m U hU
+  have hleft : (fun k => padSpectrumWithZeros a₀ m k + c) = padSpectrumWithValue a c m := by
+    funext k
+    by_cases h : k.val < 5 <;> simp [a₀, padSpectrumWithZeros, padSpectrumWithValue, h] <;> ring
+  have hright : (fun k => padSpectrumWithZeros b₀ m k - c) = padSpectrumWithValue b (-c) m := by
+    funext k
+    by_cases h : k.val < 5 <;> simp [b₀, padSpectrumWithZeros, padSpectrumWithValue, h] <;> ring
+  rw [← hleft, ← hright]
+  exact (holds_shift_iff _ _ hU c).mpr hz
 
 end MOC

@@ -17,6 +17,7 @@ import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
 import MOC.HermitianStationarySwap
+import MOC.HomotheticFour
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
 import MOC.NormalSupportMaximum
@@ -36,6 +37,7 @@ import MOC.TwoFreeRealAnchors
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedDiamondCensus
 import MOC.WeightedDiamondChart
+import MOC.WeightedDiamondComplete
 import MOC.WeightedDiamondLowerInitial
 import MOC.WeightedDiamondWitnessMasks
 

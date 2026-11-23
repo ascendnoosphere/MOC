@@ -1,3 +1,4 @@
+import MOC.Core
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.LinearCombination
