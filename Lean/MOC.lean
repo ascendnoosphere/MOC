@@ -14,6 +14,7 @@ import MOC.HermitianByNormalGeneral
 import MOC.HermitianLineCertificate
 import MOC.HermitianSpectralLine
 import MOC.HermitianStationarySwap
+import MOC.HomotheticFour
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
 import MOC.NormalSupportMaximum

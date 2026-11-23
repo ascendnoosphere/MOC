@@ -52,6 +52,8 @@ The split contrast of a weighted-diamond score has rank at most one. Projected m
 
 A fixed set of real weights works for every complex partner spectrum if it works for all partners with entries in $\{0,1\}$. For real $a$, fix one partner entry at a nonreal value. The same weights work for all partners if they work for every complex choice of the other entries. [CommonWeights.lean](MOC/CommonWeights.lean)
 
+For the order-four spectra $(x,-x,y,-y)$ and $t(x,-x,y,-y)$, fix the relative unitary. One probability law on at most seven permutations works for all complex $x,y,t$. At scale two, five permutations suffice. [HomotheticFour.lean](MOC/HomotheticFour.lean) · [DoubleAntipodal.lean](MOC/DoubleAntipodal.lean)
+
 Let one entry of each spectrum vary. A fixed set of real weights works for all values if it works at the four pairs formed by two distinct choices on each side. When the fixed entries are real, choose nonreal $s,u$. The two pairs $(s,u)$ and $(s,\bar u)$ suffice. [TwoFreeEntries.lean](MOC/TwoFreeEntries.lean) · [TwoFreeRealAnchors.lean](MOC/TwoFreeRealAnchors.lean)
 
 For a fixed unitary, one set of weights represents the determinant for every pair of spectra if it represents all the following pairs. Choose index sets $I,J$ of the same size, at most $\lfloor n/2\rfloor$. Set the first spectrum to zero on $I$ and one elsewhere. Set the second spectrum to one on $J$ and zero elsewhere. The corresponding determinant is the squared modulus of the minor on rows $I$ and columns $J$. [SubsetMarkerTest.lean](MOC/SubsetMarkerTest.lean)
