@@ -34,6 +34,7 @@ import MOC.SparseRow
 import MOC.SpectralAffineContact
 import MOC.SpectralZeroPadding
 import MOC.SubsetMarkerTest
+import MOC.ThreeSharedRepeatedFiveShapes
 import MOC.ThreeValues
 import MOC.TrianglePairContacts
 import MOC.TwoCircleCover
