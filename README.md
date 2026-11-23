@@ -78,3 +78,5 @@ Each test proves MOC for an instance that meets its hypotheses.
 For the large-shift case, let $T=\mathrm{tr}(AB)$ and $q_\sigma=\sum_j a_{\sigma(j)}b_j$. The margin requires a $\delta>0$ that applies in every unit direction. For each $\eta$ with $\lvert\eta\rvert=1$, some permutation satisfies $\mathrm{Re}(\eta(T-q_\sigma))\ge\delta$.
 
 The source guide defines the Lean statement and lists equivalent forms and proof reductions. [Source guide](Lean/README.md)
+
+For the normal-maximizer approach, see the [research note](Lean/NormalMaximizerResearch.md). It gives exact counterexamples to universal normality of Frobenius-maximal support sums, proves a sufficient joint determinant/Frobenius law for the existential tie-break, and isolates the remaining general proof obligation. The note is mathematical research, not a Lean-checked extension of the proved cases.
