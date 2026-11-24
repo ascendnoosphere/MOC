@@ -1,7 +1,9 @@
+import MOC.AffineContactStep
 import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
+import MOC.ContactCurveGeometry
 import MOC.ContactCurveStep
 import MOC.ContactIteration
 import MOC.ContactTransfer
@@ -37,11 +39,13 @@ import MOC.OppositePair
 import MOC.OppositePairNormal
 import MOC.OrderFiveContact
 import MOC.OrderFourIndependent
+import MOC.OrderFourSecondVariation
 import MOC.Pencil
 import MOC.PolydiskContact
 import MOC.PositiveWeightMargin
 import MOC.ProjectiveTransport
 import MOC.RankTwoOverlap
+import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels
 import MOC.Reformulations
 import MOC.SchurEntryObstruction
@@ -50,6 +54,7 @@ import MOC.Source
 import MOC.SparseRow
 import MOC.StationaryFullSupport
 import MOC.SpectralAffineContact
+import MOC.SpectralMinorDecomposition
 import MOC.SpectralZeroPadding
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues

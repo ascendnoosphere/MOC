@@ -374,6 +374,14 @@ nor that arbitrary complex order-five mixers can be realified.
   fails. The file also proves the eight-contact equivalence under the
   one-contact transfer premise for mixers with no zero entries.
 
+- [AffineContactStep.lean](MOC/AffineContactStep.lean) constructs the next
+  contact directly on an affine profile line that keeps the same gap.
+  It gives an explicit test when only one spectral entry can vary.
+- [SpectralMinorDecomposition.lean](MOC/SpectralMinorDecomposition.lean)
+  checks which expectations suffice for a spectral objective. Along a
+  one-entry complex pencil, the hull test for every entry is equivalent
+  to one law on at most five permutations.
+
 The missing Lean step is the geometric construction from Section 3.
 Produce an infinite curve of exact profiles through a strict witness.
 Keep its old complex contact differences and its complex determinant

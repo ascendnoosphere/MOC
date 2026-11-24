@@ -75,3 +75,9 @@ The [native Lean coverage](MOC/Reformulations/NativeCoverage.lean) records the s
 
 The [research directory](research) contains the original reformulations. Research
 notes record arguments and open questions outside the checked proof library.
+
+The [contact reduction notes](OrderFiveContactReduction.md) distinguish
+the formal contact transfer from the geometric step needed to construct
+a curve. The [order-four reduction](MOC/OrderFourIndependent.lean) and
+[second-order test](MOC/OrderFourSecondVariation.lean) give necessary
+conditions on an order-four counterexample.
