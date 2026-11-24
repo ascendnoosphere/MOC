@@ -268,12 +268,15 @@ Further checked steps narrow the open branches:
 
 - The [finite-affine connectedness theorem](MOC/FiniteCurveAffineConnected.lean)
   treats a prime finite affine curve whose coordinates can be recovered
-  rationally from a plane model. It includes the previously excluded
-  finite fibres. The required fixed-gap slice is still open.
+  rationally from a plane model. The [primitive-coordinate theorem](MOC/FiniteCurvePrimitiveCoordinate.lean)
+  proves the recovery and connectedness for any prime complex curve with
+  a finite injective polynomial projection. The fixed-gap slice is still open.
 - The [near-balanced signed-Klein mixer theorem](MOC/QuaternionMixerParity.lean)
   proves the hull inclusion for every spectrum pair when its explicit
   signing, unitary, determinant, and cubic conditions hold. It is a
-  mixer class, not an order-four proof.
+  mixer class, not an order-four proof. The [binary quaternion sign rule](MOC/QuaternionBinaryBasis.lean)
+  verifies the signing for the concrete binary table; normalization is
+  still a stated condition on that table.
 - The [reflection residue](MOC/OrderFourReflectionResidue.lean) checks
   the scalar cancellation for the two signed reflection directions.
   It does not force either direction to improve support.

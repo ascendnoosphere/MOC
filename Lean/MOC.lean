@@ -21,6 +21,7 @@ import MOC.FiniteCurveBranchValues
 import MOC.FiniteCurveAffineConnected
 import MOC.FiniteCurveGrowth
 import MOC.FiniteCurvePlaneImage
+import MOC.FiniteCurvePrimitiveCoordinate
 import MOC.FiniteCurveProperProjection
 import MOC.FiniteCurveRootCover
 import MOC.FiveMatchingLaw
@@ -71,6 +72,7 @@ import MOC.PositiveWeightMargin
 import MOC.ProjectiveTransport
 import MOC.ProofRoutes
 import MOC.QuaternionParitySharp
+import MOC.QuaternionBinaryBasis
 import MOC.QuaternionIntrinsic
 import MOC.QuaternionMixerParity
 import MOC.RankTwoOverlap
