@@ -5,6 +5,7 @@ import MOC.Reformulations.Commutant
 import MOC.Reformulations.Compounds
 import MOC.Reformulations.Contacts
 import MOC.Reformulations.Coupling
+import MOC.Reformulations.DeterminantPath
 import MOC.Reformulations.FirstAtlas
 import MOC.Reformulations.FirstGeometric
 import MOC.Reformulations.FirstHermitian
@@ -15,7 +16,10 @@ import MOC.Reformulations.FirstSpinFactor
 import MOC.Reformulations.FirstStructured
 import MOC.Reformulations.FirstTensorStationary
 import MOC.Reformulations.FirstUnitary
+import MOC.Reformulations.NativeAudit
+import MOC.Reformulations.NativeCoverage
 import MOC.Reformulations.NativeFirstAAlgebra
+import MOC.Reformulations.NativeFirstAAtomicKernels
 import MOC.Reformulations.NativeFirstABaseChange
 import MOC.Reformulations.NativeFirstAFredholm
 import MOC.Reformulations.NativeFirstAHermitian
@@ -29,6 +33,8 @@ import MOC.Reformulations.NativeFirstBGeometry
 import MOC.Reformulations.NativeFirstBGraded
 import MOC.Reformulations.NativeFirstBHomology
 import MOC.Reformulations.NativeFirstBIndex
+import MOC.Reformulations.NativeFirstBQuotients
+import MOC.Reformulations.NativeFirstBSpectra
 import MOC.Reformulations.NativeLinksA
 import MOC.Reformulations.NativeLinksACoupling
 import MOC.Reformulations.NativeLinksAQuadratic

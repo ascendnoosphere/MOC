@@ -66,3 +66,5 @@ lake build +MOC.RankTwoOverlap
 ```
 
 The checked reduction and equivalence API is in `MOC.Reformulations`. Exhaustive ray and permutation certificates are not part of this build.
+
+The [native Lean coverage](MOC/Reformulations/NativeCoverage.lean) records the agreed scope and proof status for atlas entries 001–133. The [native implication audit](MOC/Reformulations/NativeAudit.lean) records the directions and gaps for all 266 entries (243 atlas entries, eleven C★ statements, and twelve named reductions). A labelled spectral equivalence does not establish a reverse implication for the original native object.

@@ -127,15 +127,40 @@ theorem finiteSchattenThreeHull_of_interior (a b c s : ℝ) (h : c ^ 2 + s ^ 2 =
       simp_rw [v, Finset.sum_add_distrib, Equiv.sum_comp σ]
       simp [d, t, Fin.sum_univ_two]
       ring
-    · have hdiff := σ.injective.ne (show (0 : Fin 2) ≠ 1 by decide)
-      by_cases hzero : σ 0 = 0
-      · have hone : σ 1 = 1 := by omega
-        simpa [Matrix.det_diagonal, Fin.prod_univ_two, v, d, t, hzero, hone,
-          show (a + a) * (b + b) = 4 * a * b by ring] using halign
-      · have hzero' : σ 0 = 1 := by omega
-        have hone : σ 1 = 0 := by omega
-        simpa [Matrix.det_diagonal, Fin.prod_univ_two, v, d, t, hzero', hone,
-          add_comm b a, pow_two] using hswap
+    · let w : ℝ := if σ 0 = 0 then 1 else 0
+      have hw : w ^ 2 = w := by simp [w, ite_pow]
+      have hwd : w * (1 - w) = 0 := by rw [mul_sub, mul_one, ← pow_two, hw, sub_self]
+      have hd (j : Fin 2) : d j = b + (if j = 0 then 1 else 0) * (a - b) := by
+        revert j
+        rw [Fin.forall_fin_two]
+        constructor <;> simp [d]
+      have hsum : d (σ 0) + d (σ 1) = a + b := by
+        simpa only [Fin.sum_univ_two, d, Fin.cons_zero, Fin.cons_succ, Fin.cons_one] using
+          (Equiv.sum_comp σ d)
+      have h0 : v σ 0 = a + b + w * (a - b) := by
+        change d (σ 0) + a = _
+        rw [hd]
+        change b + w * (a - b) + a = _
+        ring
+      have h1 : v σ 1 = a + b - w * (a - b) := by
+        change d (σ 1) + b = _
+        rw [hd (σ 0)] at hsum
+        change b + w * (a - b) + d (σ 1) = a + b at hsum
+        linarith
+      let D := (diagonal (v σ)).det
+      have hD : D = (a + b) ^ 2 - w * (a - b) ^ 2 := by
+        change (diagonal (v σ)).det = _
+        rw [Matrix.det_diagonal, Fin.prod_univ_two, h0, h1]
+        linear_combination -(a - b) ^ 2 * hw
+      have hprod : (D - (a + b) ^ 2) * (D - 4 * a * b) = 0 := by
+        calc
+          _ = -(w * (1 - w)) * (a - b) ^ 4 := by rw [hD]; ring
+          _ = _ := by rw [hwd, neg_zero, zero_mul]
+      intro hDcrit
+      change D = -t at hDcrit
+      rcases mul_eq_zero.mp hprod with he | he
+      · exact hswap ((sub_eq_zero.mp he).symm.trans hDcrit)
+      · exact halign ((sub_eq_zero.mp he).symm.trans hDcrit)
   change finiteDetThree (equalPair a b c s) ∉
     convexHull ℝ (Set.range (fun σ => ∏ j, canonicalFactorThree (v σ j)))
   rw [hpoint]
