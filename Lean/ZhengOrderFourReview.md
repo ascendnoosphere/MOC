@@ -151,3 +151,7 @@ complementary four-dimensional block in a proper paired block split,
 and the existing smaller-order reductions can be specialized with
 that theorem as a hypothesis. Do not use this conditional consequence
 as a proof of order five before the hypothesis is certified.
+
+## 5. Independent supplement reconstruction
+
+Seven of the 90 exceptional cases (T1, T18–T23) now have independent replacement proofs in [ZhengReconstructedSupplement.md](ZhengReconstructedSupplement.md), checked by [research/zheng_reconstructed_cases.py](research/zheng_reconstructed_cases.py). This uses zero-height contact closure and a uniform cubic-sign certificate after minimizing nonminor mass. All seven exact checks passed using four CPU processes. The note also proves that a common law across two disjoint coincidence families can fail, limiting a direct extension of the single-coincidence pole bound. The 83 other exceptional cases are not yet certified. The original external proof status and Lean audit status remain unchanged.
