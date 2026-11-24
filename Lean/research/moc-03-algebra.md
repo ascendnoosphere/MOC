@@ -10,7 +10,7 @@ The numbering follows the Atlas of Generalized Spectral Invariants (November 202
 
 Let $\mathcal A$ be a finite-dimensional complex unital associative algebra of dimension $n$ with a fixed Hermitian inner product. Let $L_a(x)=ax$ and $L_b(x)=bx$ be normal linear maps, with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$ on $\mathcal A$,
 
-$$\det_{\mathbb C}(L_a+UL_bU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det_{\mathbb C}(L_a+UL_bU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 If $UL_bU^*$ is again left multiplication by $b'$, the determinant is the regular norm of $a+b'$. No closure of the regular representation under all unitary conjugations is assumed.
 
@@ -18,7 +18,7 @@ If $UL_bU^*$ is again left multiplication by $b'$, the determinant is the regula
 
 Let $\mathcal A$ be a finite-dimensional commutative unital complex algebra of dimension $n$. For characters $\chi$ of $\mathcal A$, let $m_\chi$ be the dimension of the associated local factor. List $\lambda_j=\chi(a)$ and $\mu_j=\chi(b)$ with each character repeated $m_\chi$ times in the same order. Then
 
-$$\det L_{a+b}\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det L_{a+b}\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 In fact $\det L_{a+b}=\prod_\chi(\chi(a)+\chi(b))^{m_\chi}$ is one permutation value, even if the multiplication maps are not normal.
 
@@ -26,15 +26,15 @@ In fact $\det L_{a+b}=\prod_\chi(\chi(a)+\chi(b))^{m_\chi}$ is one permutation v
 
 Let $\mathcal A$ be central simple of degree $r$ over a field $F$ with a fixed embedding in $\mathbb C$. Choose a splitting $\mathcal A\otimes_F\mathbb C\simeq M_r(\mathbb C)$. Let $a,b$ have normal images with reduced characteristic roots $\lambda_j,\mu_j$. For every unitary $u$ in the split matrix algebra,
 
-$$\operatorname{Nrd}(a+ubu^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{r}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{r}\right\}.$$
+$$\mathrm{Nrd}(a+ubu^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{r}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{r}\right\}.$$
 
-Here $\operatorname{Nrd}$ is the reduced norm of the complex scalar extension, equal to the ordinary determinant in the split representation.
+Here $\mathrm{Nrd}$ is the reduced norm of the complex scalar extension, equal to the ordinary determinant in the split representation.
 
 ## 028 Quaternion algebra
 
 Let $q=a+v$ and $p=b+w$ in $\mathbb H$, where $a,b$ are real and $v,w$ are imaginary quaternions. Set $\lambda_{1,2}=a\pm i\|v\|$ and $\mu_{1,2}=b\pm i\|w\|$. For every unit quaternion $u$,
 
-$$N(q+upu^{-1})\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{2}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{2}\right\}.$$
+$$N(q+upu^{-1})\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{2}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{2}\right\}.$$
 
 The quadratic norm $N(x)=x\bar x$ is the reduced determinant. Unit quaternion conjugation rotates the imaginary part, so the two endpoints are $(a+b)^2+(\|v\|\pm\|w\|)^2$.
 
@@ -42,7 +42,7 @@ The quadratic norm $N(x)=x\bar x$ is the reduced determinant. Unit quaternion co
 
 Fix the standard complex representation $\chi:M_n(\mathbb H)\to M_{2n}(\mathbb C)$, a unital multiplicative map that preserves adjoints. Let $A,B$ be quaternionic normal matrices and let $\lambda_j,\mu_j$ list all $N=2n$ complex eigenvalues of $\chi(A),\chi(B)$, including conjugate pairs and multiplicity. For every quaternionic unitary $U$,
 
-$$\det_{\mathbb C}\chi(A+UBU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
+$$\det_{\mathbb C}\chi(A+UBU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
 
 The Study determinant is the nonnegative square root of the left side under the square-root convention. Do not take square roots of arbitrary complex permutation products; the displayed hull concerns the squared Study determinant.
 
@@ -50,7 +50,7 @@ The Study determinant is the nonnegative square root of the left side under the 
 
 Let $D$ be a division ring with a specified unital faithful representation $\rho:D\to M_s(\mathbb C)$. Extend it to block matrices of order $r$. Let $A,B\in M_r(D)$ have normal complex images. Put $N=rs$ and let $\lambda_j,\mu_j$ be their complex eigenvalues. For every $U\in U(N)$,
 
-$$\det_{\mathbb C}(\rho(A)+U\rho(B)U^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
+$$\det_{\mathbb C}(\rho(A)+U\rho(B)U^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
 
 The determinant here is a determinant of the realization. The Dieudonné determinant takes values in abelianized units; no ordinary convex combination in that group is specified.
 
@@ -58,7 +58,7 @@ The determinant here is a determinant of the realization. The Dieudonné determi
 
 Let $x=a+v$, $y=b+w$ be real octonions with imaginary parts $v,w$. Let $\lambda_{1,2}=a\pm i\|v\|$, $\mu_{1,2}=b\pm i\|w\|$. For every norm-preserving octonion automorphism $g$,
 
-$$N(x+g(y))\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{2}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{2}\right\}.$$
+$$N(x+g(y))\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{2}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{2}\right\}.$$
 
 The norm is $N(z)=z\bar z$. The bounds follow from $-\|v\|\|w\|\le\langle v,g(w)\rangle\le\|v\|\|w\|$. This statement does not use nonassociative matrix multiplication.
 
@@ -66,7 +66,7 @@ The norm is $N(z)=z\bar z$. The bounds follow from $-\|v\|\|w\|\le\langle v,g(w)
 
 Let $\mathrm{Cl}(V,q)$ be a complex Clifford algebra of a finite-dimensional quadratic space, and choose a finite-dimensional spinor or regular representation $\rho$ on a complex Hilbert space of dimension $N$. For $a,b$ with normal represented operators, let $\lambda_j,\mu_j$ be the represented eigenvalues. For every unitary $U$,
 
-$$\det(\rho(a)+U\rho(b)U^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
+$$\det(\rho(a)+U\rho(b)U^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
 
 If the sum is represented by an algebra element, its representation determinant is used. The result depends on the selected representation.
 
@@ -74,7 +74,7 @@ If the sum is represented by an algebra element, its representation determinant 
 
 Let $G$ be a finite group of order $N$. On $\mathbb C[G]$ use the orthonormal group basis and the involution $g^*=g^{-1}$ with conjugate coefficients. For normal $a,b$ in this algebra, let $\lambda_j,\mu_j$ be the eigenvalues of the left regular convolution matrices $L_a,L_b$. For every unitary $U$ of the regular space,
 
-$$\det(L_a+UL_bU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
+$$\det(L_a+UL_bU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{N}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{N}\right\}.$$
 
 The regular determinant is the group determinant; the spectrum includes the Fourier-block multiplicities.
 
@@ -82,7 +82,7 @@ The regular determinant is the group determinant; the spectrum includes the Four
 
 Let $\mathcal A$ be a finite-dimensional complex Frobenius algebra (an algebra with a nondegenerate bilinear pairing from a Frobenius functional). Choose a positive Hermitian inner product on its underlying $n$ dimensional space. Let $L_a,L_b$ be normal multiplication maps, with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$,
 
-$$\det(L_a+UL_bU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(L_a+UL_bU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 This uses the regular trace and multiplication determinant, not the possibly nonpositive Frobenius functional.
 
@@ -90,14 +90,14 @@ This uses the regular trace and multiplication determinant, not the possibly non
 
 Let $p\in\mathbb C[t]$ be monic of degree $n$ and let $\mathcal A=\mathbb C[t]/(p)$. Let $a=f(t)$, $b=g(t)$ in this quotient. List the roots $r_j$ of $p$ with multiplicity and put $\lambda_j=f(r_j)$, $\mu_j=g(r_j)$. Then
 
-$$\det L_{a+b}\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det L_{a+b}\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The determinant equals the product with the identity permutation. This follows from simultaneous triangularization of the two multiplication maps, including repeated roots.
 
 ## 036 Finite projective module
 
-Let $E$ be a finite projective module of constant positive rank $n$ over a commutative unital ring $R$. Fix a homomorphism $x:R\to\mathbb C$ and a Hermitian inner product on $E_x=E\otimes_{R,x}\mathbb C$. Let $A,B\in\operatorname{End}_R(E)$ have normal fiber maps $A_x,B_x$ with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$ of $E_x$,
+Let $E$ be a finite projective module of constant positive rank $n$ over a commutative unital ring $R$. Fix a homomorphism $x:R\to\mathbb C$ and a Hermitian inner product on $E_x=E\otimes_{R,x}\mathbb C$. Let $A,B\in\mathrm{End}_R(E)$ have normal fiber maps $A_x,B_x$ with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$ of $E_x$,
 
-$$\det(A_x+UB_xU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(A_x+UB_xU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The left side is the scalar on the top exterior fiber. A determinant line without an endomorphism or scalar realization is not a complex number.

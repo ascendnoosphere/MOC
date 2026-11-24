@@ -4,23 +4,23 @@ These eleven statements retain the numbering in *C-star-algebraic forms of the M
 
 ## Setting and notation
 
-Let $n\ge1$, and let $\mathcal A=M_n(\mathbb C)$ with the usual matrix trace $\operatorname{Tr}$, determinant $\det$, and adjoint $*$. Write $U(n)=\{u:u^*u=uu^*=I\}$ for the unitary group. An element $a$ is normal if $a^*a=aa^*$. For a normal element $a$, its spectrum $\sigma(a)$ is the set of its distinct eigenvalues. Its spectral projection $p_\lambda^a$ is the orthogonal projection onto the eigenspace of $\lambda$, and its multiplicity is $m_a(\lambda)=\operatorname{Tr}p_\lambda^a$. Thus $a=\sum_{\lambda\in\sigma(a)}\lambda p_\lambda^a$ and $\sum_\lambda m_a(\lambda)=n$.
+Let $n\ge1$, and let $\mathcal A=M_n(\mathbb C)$ with the usual matrix trace $\mathrm{Tr}$, determinant $\det$, and adjoint $*$. Write $U(n)=\{u:u^*u=uu^*=I\}$ for the unitary group. An element $a$ is normal if $a^*a=aa^*$. For a normal element $a$, its spectrum $\sigma(a)$ is the set of its distinct eigenvalues. Its spectral projection $p_\lambda^a$ is the orthogonal projection onto the eigenspace of $\lambda$, and its multiplicity is $m_a(\lambda)=\mathrm{Tr}p_\lambda^a$. Thus $a=\sum_{\lambda\in\sigma(a)}\lambda p_\lambda^a$ and $\sum_\lambda m_a(\lambda)=n$.
 
 A spectral list $(\lambda_1,\ldots,\lambda_n)$ repeats each $\lambda$ according to $m_a(\lambda)$; the list $(\mu_1,\ldots,\mu_n)$ is defined in the same way for $b$. Let $S_n$ be the set of permutations of $\{1,\ldots,n\}$. Define
 
 $$
 V(a,b)=\left\{\prod_{j=1}^n(\lambda_j+\mu_{\pi(j)}):\pi\in S_n\right\},
-\qquad P(a,b)=\operatorname{conv}V(a,b).
+\qquad P(a,b)=\mathrm{conv}V(a,b).
 $$
 
-Here $\operatorname{conv}$ denotes real-affine convex hull: a finite convex combination has real nonnegative coefficients with sum one. The unitary orbit of a normal element $b$ is $\mathcal O(b)=\{ubu^*:u\in U(n)\}$. These definitions are independent of the order of the spectral lists.
+Here $\mathrm{conv}$ denotes real-affine convex hull: a finite convex combination has real nonnegative coefficients with sum one. The unitary orbit of a normal element $b$ is $\mathcal O(b)=\{ubu^*:u\in U(n)\}$. These definitions are independent of the order of the spectral lists.
 
 ## Conjecture 1 — Matrix form
 
 For every positive integer $n$, all normal matrices $a,b\in M_n(\mathbb C)$, and every $u\in U(n)$,
 
 $$
-\det(a+ubu^*)\in\operatorname{conv}\left\{
+\det(a+ubu^*)\in\mathrm{conv}\left\{
 \prod_{j=1}^n(\lambda_j+\mu_{\pi(j)}):\pi\in S_n
 \right\}.
 $$
@@ -42,7 +42,7 @@ Normal matrices have the same unitary orbit if and only if they have the same sp
 Let $a,b\in\mathcal A$ be normal. Define the commutant $\{a\}'=\{c\in\mathcal A:ca=ac\}$. For every $y\in\mathcal O(b)$,
 
 $$
-\det(a+y)\in\operatorname{conv}\{\det(a+z):z\in\mathcal O(b)\cap\{a\}'\}.
+\det(a+y)\in\mathrm{conv}\{\det(a+z):z\in\mathcal O(b)\cap\{a\}'\}.
 $$
 
 The right side uses the commuting part of the orbit. Since two commuting normal matrices admit a common orthonormal eigenbasis, the determinants on this part are exactly $V(a,b)$. Each permutation of the spectral list of $b$ occurs by putting its eigenvalues on the eigenbasis of $a$ in that order.
@@ -62,13 +62,13 @@ $$
 For every $u\in U(n)$,
 
 $$
-\det(a+ubu^*)\in\operatorname{conv}\left\{
+\det(a+ubu^*)\in\mathrm{conv}\left\{
 \prod_{\lambda\in\sigma(a)}\prod_{\mu\in\sigma(b)}
 (\lambda+\mu)^{m_{\lambda\mu}}:m\in\mathcal T(m_a,m_b)
 \right\}.
 $$
 
-A factor with exponent zero is one, including when its base is zero. For a commuting representative $z\in\mathcal O(b)\cap\{a\}'$, the joint multiplicity is $\operatorname{Tr}(p_\lambda^a p_\mu^z)$. Conversely, each integer coupling gives a commuting pair by assigning the prescribed dimensions to simultaneous eigenspaces. Integer couplings give exactly the permutation products, including repeated eigenvalues.
+A factor with exponent zero is one, including when its base is zero. For a commuting representative $z\in\mathcal O(b)\cap\{a\}'$, the joint multiplicity is $\mathrm{Tr}(p_\lambda^a p_\mu^z)$. Conversely, each integer coupling gives a commuting pair by assigning the prescribed dimensions to simultaneous eigenspaces. Integer couplings give exactly the permutation products, including repeated eigenvalues.
 
 ## Conjecture 5 — Cartesian form
 
@@ -76,7 +76,7 @@ Let $h_1,h_2,k_1,k_2\in\mathcal A$ be self-adjoint, with $h_1h_2=h_2h_1$ and $k_
 
 $$
 \det\left((h_1+uk_1u^*)+i(h_2+uk_2u^*)\right)
-\in\operatorname{conv}\left\{
+\in\mathrm{conv}\left\{
 \prod_{j=1}^n\left((s_j+r_{\pi(j)})+i(t_j+q_{\pi(j)})\right):\pi\in S_n
 \right\}.
 $$
@@ -95,7 +95,7 @@ $$
 For every $u\in U(n)$,
 
 $$
-\det(f(a)+ug(b)u^*)\in\operatorname{conv}\left\{
+\det(f(a)+ug(b)u^*)\in\mathrm{conv}\left\{
 \prod_{j=1}^n(f(\lambda_j)+g(\mu_{\pi(j)})):\pi\in S_n
 \right\}.
 $$
@@ -107,7 +107,7 @@ The maps $f$ and $g$ need not be injective. The lists of the images retain multi
 Let $a,b\in\mathcal A$ be normal. For every $u\in U(n)$ and every $s,t,z\in\mathbb C$,
 
 $$
-\det(sa+tubu^*+zI)\in\operatorname{conv}\left\{
+\det(sa+tubu^*+zI)\in\mathrm{conv}\left\{
 \prod_{j=1}^n(s\lambda_j+t\mu_{\pi(j)}+z):\pi\in S_n
 \right\}.
 $$
@@ -115,7 +115,7 @@ $$
 In particular, at $s=t=1$, for every $z\in\mathbb C$,
 
 $$
-\det(zI+a+ubu^*)\in\operatorname{conv}\left\{
+\det(zI+a+ubu^*)\in\mathrm{conv}\left\{
 \prod_{j=1}^n(z+\lambda_j+\mu_{\pi(j)}):\pi\in S_n
 \right\}.
 $$
@@ -126,15 +126,15 @@ The characteristic-polynomial comparison is pointwise in the scalar variable. Th
 
 Let $X,Y\subset\mathbb C$ be nonempty finite sets. Let $C(X)$ and $C(Y)$ denote the unital complex C-star algebras of all complex functions on these finite sets, with pointwise operations, conjugation as adjoint, and supremum norm. Let $\mathcal U=C(X)*_{\mathbb C}C(Y)$ be their full unital free product: its two copies have the same identity and satisfy their separate algebra relations, with no additional commutation relations between them. Write $\iota_X,\iota_Y$ for their canonical maps into $\mathcal U$.
 
-Define $x=\iota_X(\operatorname{id}_X)$ and $y=\iota_Y(\operatorname{id}_Y)$. The coordinate functions are $\operatorname{id}_X(\lambda)=\lambda$ and $\operatorname{id}_Y(\mu)=\mu$. Let $q:\mathcal U\to C(X\times Y)$ be the unital quotient that makes the two copies commute, sending the generators to the two coordinate functions on $X\times Y$.
+Define $x=\iota_X(\mathrm{id}_X)$ and $y=\iota_Y(\mathrm{id}_Y)$. The coordinate functions are $\mathrm{id}_X(\lambda)=\lambda$ and $\mathrm{id}_Y(\mu)=\mu$. Let $q:\mathcal U\to C(X\times Y)$ be the unital quotient that makes the two copies commute, sending the generators to the two coordinate functions on $X\times Y$.
 
-Fix integer multiplicity functions $m_X:X\to\mathbb Z_{\ge0}$ and $m_Y:Y\to\mathbb Z_{\ge0}$ with $\sum_Xm_X=\sum_Ym_Y=n$. Let $\operatorname{Rep}_n(\mathcal U;m_X,m_Y)$ consist of all unital adjoint-preserving representations $\rho:\mathcal U\to M_n(\mathbb C)$ such that the images of the indicator functions $\iota_X(1_{\{\lambda\}})$ and $\iota_Y(1_{\{\mu\}})$ have ranks $m_X(\lambda),m_Y(\mu)$. Let $\operatorname{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)$ be the subset that factors through $q$.
+Fix integer multiplicity functions $m_X:X\to\mathbb Z_{\ge0}$ and $m_Y:Y\to\mathbb Z_{\ge0}$ with $\sum_Xm_X=\sum_Ym_Y=n$. Let $\mathrm{Rep}_n(\mathcal U;m_X,m_Y)$ consist of all unital adjoint-preserving representations $\rho:\mathcal U\to M_n(\mathbb C)$ such that the images of the indicator functions $\iota_X(1_{\{\lambda\}})$ and $\iota_Y(1_{\{\mu\}})$ have ranks $m_X(\lambda),m_Y(\mu)$. Let $\mathrm{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)$ be the subset that factors through $q$.
 
-For every $\pi\in\operatorname{Rep}_n(\mathcal U;m_X,m_Y)$,
+For every $\pi\in\mathrm{Rep}_n(\mathcal U;m_X,m_Y)$,
 
 $$
-\det(\pi(x+y))\in\operatorname{conv}\{\det(\rho(x+y)):
-\rho\in\operatorname{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)\}.
+\det(\pi(x+y))\in\mathrm{conv}\{\det(\rho(x+y)):
+\rho\in\mathrm{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)\}.
 $$
 
 The two normal images $\pi(x),\pi(y)$ may have arbitrary relative spectral projections of the specified ranks. The abelian representations have commuting images. This is the determinant comparison between all relative positions and their commuting subset.
@@ -151,13 +151,13 @@ For each permutation $\pi$, let $P_\pi$ be the permutation matrix with its unit 
 
 $$
 \ell_{\alpha,\beta}(v(W))\in
-\operatorname{conv}\{\ell_{\alpha,\beta}(v(P_\pi)):\pi\in S_n\}.
+\mathrm{conv}\{\ell_{\alpha,\beta}(v(P_\pi)):\pi\in S_n\}.
 $$
 
 The determinant expansion by principal minors and the Cauchy-Binet formula give
 
 $$
-\ell_{\alpha,\beta}(v(W))=\det(\operatorname{diag}(\alpha)+W\operatorname{diag}(\beta)W^*).
+\ell_{\alpha,\beta}(v(W))=\det(\mathrm{diag}(\alpha)+W\mathrm{diag}(\beta)W^*).
 $$
 
 For a permutation matrix, $v(P_\pi)_{S,T}$ is one if $T=\pi(S)$ and zero otherwise. Thus the comparison terms are the products of the matched spectral sums.
@@ -196,7 +196,7 @@ Conjecture 1 does not demand such uniform weights: its weights may depend on the
 
 ## Conjecture 11 — Abelianization convexity principle
 
-Let $X,Y\subset\mathbb C$ be nonempty finite sets and let $\mathcal U=C(X)*_{\mathbb C}C(Y)$, with inclusions $\iota_X,\iota_Y$ and abelianization quotient $q:\mathcal U\to C(X\times Y)$, as defined in Conjecture 8. Fix a positive integer $n$ and multiplicity functions $m_X,m_Y$ with nonnegative integer values and total $n$ each. Use the representation sets $\operatorname{Rep}_n(\mathcal U;m_X,m_Y)$ and $\operatorname{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)$ of Conjecture 8.
+Let $X,Y\subset\mathbb C$ be nonempty finite sets and let $\mathcal U=C(X)*_{\mathbb C}C(Y)$, with inclusions $\iota_X,\iota_Y$ and abelianization quotient $q:\mathcal U\to C(X\times Y)$, as defined in Conjecture 8. Fix a positive integer $n$ and multiplicity functions $m_X,m_Y$ with nonnegative integer values and total $n$ each. Use the representation sets $\mathrm{Rep}_n(\mathcal U;m_X,m_Y)$ and $\mathrm{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)$ of Conjecture 8.
 
 Define the linear subspace
 
@@ -211,11 +211,11 @@ For a matrix $M\in M_n(\mathbb C)$ define the following three types of maps:
 
 In the polynomial case take the real-affine convex hull of coefficient vectors of monic polynomials. Thus a single convex combination represents the polynomial for all $t$, not a new convex combination for each evaluation point.
 
-For every $\pi\in\operatorname{Rep}_n(\mathcal U;m_X,m_Y)$, every $w\in\mathcal W$ and every choice of $\Psi$ above,
+For every $\pi\in\mathrm{Rep}_n(\mathcal U;m_X,m_Y)$, every $w\in\mathcal W$ and every choice of $\Psi$ above,
 
 $$
-\Psi(\pi(w))\in\operatorname{conv}\{\Psi(\rho(w)):
-\rho\in\operatorname{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)\}.
+\Psi(\pi(w))\in\mathrm{conv}\{\Psi(\rho(w)):
+\rho\in\mathrm{Rep}^{\rm ab}_n(\mathcal U;m_X,m_Y)\}.
 $$
 
 The determinant case includes the free-product, orbit, commutant, integer-coupling, Cartesian, functional-calculus, affine and matrix forms. The coefficient and polynomial cases assert the additional coefficientwise and simultaneous polynomial comparisons. They allow the weights to depend on the chosen functions and on the representation. Conjecture 10 would supply weights independent of the eigenvalues. Conjecture 11 applies to sums of functions from the two copies of the free product; arbitrary products or other words in the free product are not included.

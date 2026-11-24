@@ -2,13 +2,13 @@
 
 Atlas entries 085–098.
 
-All finite eigenvalue lists include multiplicities unless stated otherwise. $S_n$ denotes the permutations of $\{1,\ldots,n\}$, $U(n)$ the unitary group, $*$ the Hermitian adjoint and $\operatorname{conv}$ the real-affine convex hull. For normal complex operators $A,B$ of order $n$, the Marcus-de Oliveira conjecture compares $\det(A+UBU^*)$ with the products $\prod_{j=1}^n(\lambda_j+\mu_{\pi(j)})$ of matched eigenvalue sums. The statements below specify the required operator and determinant for each object. An auxiliary realization is part of a formulation where the object itself has no scalar determinant.
+All finite eigenvalue lists include multiplicities unless stated otherwise. $S_n$ denotes the permutations of $\{1,\ldots,n\}$, $U(n)$ the unitary group, $*$ the Hermitian adjoint and $\mathrm{conv}$ the real-affine convex hull. For normal complex operators $A,B$ of order $n$, the Marcus-de Oliveira conjecture compares $\det(A+UBU^*)$ with the products $\prod_{j=1}^n(\lambda_j+\mu_{\pi(j)})$ of matched eigenvalue sums. The statements below specify the required operator and determinant for each object. An auxiliary realization is part of a formulation where the object itself has no scalar determinant.
 
 ## 085 Hypercohomology
 
 Let $\mathcal C^\bullet$ be a bounded complex of sheaves of complex vector spaces on $X$. Suppose its hypercohomology spaces $V_k=\mathbb H^k(X,\mathcal C^\bullet)$ are finite-dimensional, and choose Hermitian inner products. Let two derived endomorphisms induce normal maps $F_k,G_k$ with eigenvalues $\lambda_{kj},\mu_{kj}$, $1\le j\le n_k=\dim V_k$. For every family of unitary maps $U_k$ on the nonzero spaces, the degreewise determinant scalars satisfy
 
-$$D_k=\det(F_k+U_kG_kU_k^*)\in P_k=\operatorname{conv}\left\{\prod_{j=1}^{n_k}(\lambda_{kj}+\mu_{k,\pi(j)}):\pi\in S_{n_k}\right\}.$$
+$$D_k=\det(F_k+U_kG_kU_k^*)\in P_k=\mathrm{conv}\left\{\prod_{j=1}^{n_k}(\lambda_{kj}+\mu_{k,\pi(j)}):\pi\in S_{n_k}\right\}.$$
 
 If every odd-degree $D_k$ is nonzero, the scalar on the alternating determinant line belongs to $\{\prod_k z_k^{(-1)^k}:z_k\in P_k,\ z_k\ne0\text{ in odd degree}\}$. This set is a product of hulls and inverse hulls, not a single convex hull. The alternating trace uses signs and does not define positive spectral multiplicities.
 
@@ -16,7 +16,7 @@ If every odd-degree $D_k$ is nonzero, the scalar on the alternating determinant 
 
 Let $\mathcal A$ be a complex associative algebra with $V=HH_k(\mathcal A)$ of dimension $n>0$. Let $f,g:\mathcal A\to\mathcal A$ be algebra endomorphisms inducing normal linear maps $F=HH_k(f),G=HH_k(g)$ in a chosen Hermitian inner product. For their eigenvalues $\lambda_j,\mu_j$ and every unitary $U$ on $V$,
 
-$$\det_V(HH_k(f)+UHH_k(g)U^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det_V(HH_k(f)+UHH_k(g)U^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 Here Hochschild homology is the homology of the Hochschild chain complex with coefficients in the algebra itself.
 
@@ -24,13 +24,13 @@ Here Hochschild homology is the homology of the Hochschild chain complex with co
 
 Let $\mathcal A$ be a complex associative algebra with finite positive $n=\dim HH^k(\mathcal A,\mathcal A)$. Let $f,g$ be algebra automorphisms. Each acts on Hochschild cochains by conjugating the output and applying the inverse to all inputs; let $F,G$ be the induced cohomology maps. Assume $F,G$ are normal for a fixed Hermitian product. With their eigenvalues $\lambda_j,\mu_j$, for every unitary $U$ on $HH^k(\mathcal A,\mathcal A)$,
 
-$$\det(F+UGU^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(F+UGU^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 ## 088 Cyclic homology
 
 Let $\mathcal A$ be a complex unital algebra for which the cyclic homology group $HC_k(\mathcal A)$ has dimension $n>0$. Let two unital algebra endomorphisms induce $F,G$ on this group, both normal for a fixed Hermitian product. If $\lambda_j,\mu_j$ are their eigenvalues, then for every unitary $U$ on $HC_k(\mathcal A)$,
 
-$$\det(F+UGU^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(F+UGU^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 Use the specified cyclic degree rather than the Euler characteristic of the cyclic complex.
 
@@ -38,7 +38,7 @@ Use the specified cyclic degree rather than the Euler characteristic of the cycl
 
 Let a compact torus $T$ act on a space $X$. Let $R=H^*(BT;\mathbb C)$, the coefficient ring of Borel equivariant cohomology. Choose a finite free $R$-module of equivariant cohomology preserved by two induced $R$-linear maps $F,G$ and choose a character $x:R\to\mathbb C$. In the specialized space $V_x$ of rank $n>0$, assume $F_x,G_x$ normal with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$ of $V_x$,
 
-$$\det(F_x+UG_xU^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(F_x+UG_xU^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The scalar specialization is required before taking the ordinary real-affine hull.
 
@@ -52,9 +52,9 @@ The left side is the normalized Fuglede-Kadison determinant in the endomorphism 
 
 ## 091 Persistent homology
 
-Let two finite persistence barcodes in the same degree have $n>0$ finite intervals $[b_j,d_j)$ and $[c_j,e_j)$, with lifetimes $\lambda_j=d_j-b_j>0$ and $\mu_j=e_j-c_j>0$. Associate to the barcodes the positive lifetime operators $A=\operatorname{diag}(\lambda_j)$ and $B=\operatorname{diag}(\mu_j)$ on $\mathbb C^n$. For every unitary $U$,
+Let two finite persistence barcodes in the same degree have $n>0$ finite intervals $[b_j,d_j)$ and $[c_j,e_j)$, with lifetimes $\lambda_j=d_j-b_j>0$ and $\mu_j=e_j-c_j>0$. Associate to the barcodes the positive lifetime operators $A=\mathrm{diag}(\lambda_j)$ and $B=\mathrm{diag}(\mu_j)$ on $\mathbb C^n$. For every unitary $U$,
 
-$$\det(A+UBU^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(A+UBU^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 This compares lifetime products for a chosen linear combination of barcode coordinates. It is not a claim that an arbitrary unitary mixing is a morphism of persistence modules or that this determinant is intrinsic to the category.
 
@@ -62,7 +62,7 @@ This compares lifetime products for a chosen linear combination of barcode coord
 
 Let $(E_r^{p,q},d_r)$ be a spectral sequence of complex vector spaces. Fix a page and a bidegree with $n=\dim E_r^{p,q}>0$ finite. Let two compatible spectral-sequence maps induce normal operators $F_r^{p,q},G_r^{p,q}$ in a fixed Hermitian inner product, with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$ on that bidegree,
 
-$$\det(F_r^{p,q}+UG_r^{p,q}U^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(F_r^{p,q}+UG_r^{p,q}U^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 Page differentials and passage to the next page may change spectral multiplicities. No common weights across pages are required.
 
@@ -70,11 +70,11 @@ Page differentials and passage to the next page may change spectral multipliciti
 
 Let $V=V_{\bar0}\oplus V_{\bar1}$ be a finite complex super vector space with positive Hermitian inner products on its two summands. Let $A,B$ be even normal operators, with block eigenvalues $\lambda_{\epsilon j},\mu_{\epsilon j}$ of length $n_\epsilon$. For every even unitary $U=U_0\oplus U_1$ define $C_\epsilon=A_\epsilon+U_\epsilon B_\epsilon U_\epsilon^*$ and
 
-$$P_\epsilon=\operatorname{conv}\left\{\prod_{j=1}^{n_\epsilon}(\lambda_{\epsilon j}+\mu_{\epsilon,\pi(j)}):\pi\in S_{n_\epsilon}\right\}.$$
+$$P_\epsilon=\mathrm{conv}\left\{\prod_{j=1}^{n_\epsilon}(\lambda_{\epsilon j}+\mu_{\epsilon,\pi(j)}):\pi\in S_{n_\epsilon}\right\}.$$
 
 The formulation is $\det C_\epsilon\in P_\epsilon$ in each parity. If $C_1$ is invertible, the Berezinian (superdeterminant) satisfies
 
-$$\operatorname{Ber}(A+UBU^*)\in\{z_0/z_1:z_0\in P_0,\ z_1\in P_1\setminus\{0\}\}.$$
+$$\mathrm{Ber}(A+UBU^*)\in\{z_0/z_1:z_0\in P_0,\ z_1\in P_1\setminus\{0\}\}.$$
 
 A zero-dimensional block has determinant one. Signed superdimension cannot replace the two spectral lengths.
 
@@ -82,7 +82,7 @@ A zero-dimensional block has determinant one. Signed superdimension cannot repla
 
 Let $C^\bullet$ be a bounded perfect complex of complex vector spaces, and let derived endomorphisms $f,g$ induce normal $F_k,G_k$ on each finite-dimensional cohomology $H^k(C^\bullet)$, with a fixed Hermitian product there. Let their eigenvalues be $\lambda_{kj},\mu_{kj}$ of length $n_k$. For each family of unitary $U_k$, set $D_k=\det(F_k+U_kG_kU_k^*)$ and
 
-$$P_k=\operatorname{conv}\left\{\prod_{j=1}^{n_k}(\lambda_{kj}+\mu_{k,\pi(j)}):\pi\in S_{n_k}\right\}.$$
+$$P_k=\mathrm{conv}\left\{\prod_{j=1}^{n_k}(\lambda_{kj}+\mu_{k,\pi(j)}):\pi\in S_{n_k}\right\}.$$
 
 The conjecture is $D_k\in P_k$ for each $k$. If the odd-degree maps of the sum are invertible, its induced scalar on the determinant line $\bigotimes_k(\bigwedge^{n_k}H^k)^{(-1)^k}$ lies in $\{\prod_k z_k^{(-1)^k}:z_k\in P_k,\ z_k\ne0\text{ for odd }k\}$. A determinant line is a line, not a number until a scalar action is specified.
 
@@ -114,6 +114,6 @@ This is the Laplacian log-determinant version on a finite collection of determin
 
 Let $X$ be a finite CW complex and $f,g:X\to X$ continuous maps. For each nonzero finite-dimensional homology space $H_k(X;\mathbb C)$ suppose the induced operators $F_k,G_k$ are normal for a fixed Hermitian product. Let $\lambda_{kj},\mu_{kj}$ be their eigenvalues, and $U_k$ arbitrary unitary operators in those degrees. Then the degreewise Lefschetz determinant form is
 
-$$\det(F_k+U_kG_kU_k^*)\in\operatorname{conv}\left\{\prod_j(\lambda_{kj}+\mu_{k,\pi(j)}):\pi\in S_{n_k}\right\}.$$
+$$\det(F_k+U_kG_kU_k^*)\in\mathrm{conv}\left\{\prod_j(\lambda_{kj}+\mu_{k,\pi(j)}):\pi\in S_{n_k}\right\}.$$
 
 The Lefschetz trace of the graded sum is $\sum_k(-1)^k\sum_j(\lambda_{kj}+\mu_{kj})$, independent of $U_k$. If the sum is induced by a map of spaces, this is its Lefschetz number. Alternating determinant products use the product of degreewise hulls with inverses in odd degree, not a hull of signed trace averages.

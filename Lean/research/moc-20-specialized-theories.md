@@ -6,7 +6,7 @@ All eigenvalue lists use the indicated multiplicities. $S_n$ is the set of permu
 
 ## 232 Berkovich analytic geometry
 
-Let $K$ be a complete nonarchimedean field with a nontrivial absolute value, and let $X,Y$ be Berkovich analytic spaces. Choose finite sets of analytic points $x_j,y_j$ of equal cardinality $n>0$ and analytic functions $f,g$ nonzero at those points in the seminorm sense. Let $s_j=\log|f(x_j)|$, $t_j=\log|g(y_j)|$. For the positive seminorm-value operators $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$ on $\mathbb C^n$, for every unitary $U$,
+Let $K$ be a complete nonarchimedean field with a nontrivial absolute value, and let $X,Y$ be Berkovich analytic spaces. Choose finite sets of analytic points $x_j,y_j$ of equal cardinality $n>0$ and analytic functions $f,g$ nonzero at those points in the seminorm sense. Let $s_j=\log|f(x_j)|$, $t_j=\log|g(y_j)|$. For the positive seminorm-value operators $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$ on $\mathbb C^n$, for every unitary $U$,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -14,7 +14,7 @@ The product of values gives the modulus of the norm for a finite reduced fiber w
 
 ## 233 Nonarchimedean matrix analysis
 
-Let $K$ be a discretely valued field with normalized valuation $v$. For invertible matrices $X,Y\in GL_n(K)$ choose either the Newton slope lists (valuations of eigenvalues in an algebraic closure) or Hodge slope lists (valuations of elementary divisors relative to a specified lattice). Use the same convention for both and denote the lists by $s_j,t_j$. Put $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$. For every unitary $U$,
+Let $K$ be a discretely valued field with normalized valuation $v$. For invertible matrices $X,Y\in GL_n(K)$ choose either the Newton slope lists (valuations of eigenvalues in an algebraic closure) or Hodge slope lists (valuations of elementary divisors relative to a specified lattice). Use the same convention for both and denote the lists by $s_j,t_j$. Put $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$. For every unitary $U$,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -22,7 +22,7 @@ The separate sums of either kind of slope equal the determinant valuations. The 
 
 ## 234 Smith normal form over a principal ideal domain
 
-Let $R$ be a principal ideal domain with a chosen prime element $\varpi$ and corresponding integer valuation $v_\varpi$. Let $X,Y$ be square full-rank matrices of order $n$ over $R$ with Smith invariant factors $d_j,e_j$ ordered by divisibility. Put $s_j=v_\varpi(d_j)$, $t_j=v_\varpi(e_j)$ and form positive diagonal operators $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$ on $\mathbb C^n$. For every unitary $U$,
+Let $R$ be a principal ideal domain with a chosen prime element $\varpi$ and corresponding integer valuation $v_\varpi$. Let $X,Y$ be square full-rank matrices of order $n$ over $R$ with Smith invariant factors $d_j,e_j$ ordered by divisibility. Put $s_j=v_\varpi(d_j)$, $t_j=v_\varpi(e_j)$ and form positive diagonal operators $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$ on $\mathbb C^n$. For every unitary $U$,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -30,7 +30,7 @@ The log-determinants of the input operators equal $v_\varpi(\det X),v_\varpi(\de
 
 ## 235 Module length over a discrete valuation ring
 
-Let $R$ be a discrete valuation ring with uniformizer $\varpi$. Let $M,N$ be finite torsion modules with square diagonal presentations of common positive size $n$, allowing unit diagonal entries for zero summands. Write $M=\bigoplus_{j=1}^n R/(\varpi^{s_j})$ and $N=\bigoplus_{j=1}^n R/(\varpi^{t_j})$, $s_j,t_j\ge0$. Form positive length operators $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$. For every unitary $U$,
+Let $R$ be a discrete valuation ring with uniformizer $\varpi$. Let $M,N$ be finite torsion modules with square diagonal presentations of common positive size $n$, allowing unit diagonal entries for zero summands. Write $M=\bigoplus_{j=1}^n R/(\varpi^{s_j})$ and $N=\bigoplus_{j=1}^n R/(\varpi^{t_j})$, $s_j,t_j\ge0$. Form positive length operators $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$. For every unitary $U$,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -38,7 +38,7 @@ The individual log-determinants are the module lengths and the valuations of the
 
 ## 236 Iwasawa theory
 
-Let $M,N$ be finitely generated torsion modules over a one-variable Iwasawa algebra $\Lambda=\mathcal O[[T]]$ for the integers of a finite extension of $\mathbb Q_p$. Fix generators of their characteristic ideals, written as a power of a uniformizer times a distinguished polynomial times a unit. Assume the two distinguished polynomials have equal positive degree $n$ and nonzero roots. Let $s_j,t_j$ be the valuations of those roots, counted with multiplicity in an algebraic closure and in a fixed normalization. Define $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$. For every unitary $U$,
+Let $M,N$ be finitely generated torsion modules over a one-variable Iwasawa algebra $\Lambda=\mathcal O[[T]]$ for the integers of a finite extension of $\mathbb Q_p$. Fix generators of their characteristic ideals, written as a power of a uniformizer times a distinguished polynomial times a unit. Assume the two distinguished polynomials have equal positive degree $n$ and nonzero roots. Let $s_j,t_j$ be the valuations of those roots, counted with multiplicity in an algebraic closure and in a fixed normalization. Define $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$. For every unitary $U$,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -46,7 +46,7 @@ The spectral length is the common distinguished polynomial degree (the $\lambda$
 
 ## 237 Differential modules and irregular connections
 
-Let $M,N$ be formal meromorphic differential modules of equal positive rank $n$ over a characteristic-zero Laurent series field. Let $s_j,t_j$ be their nonnegative formal slopes in a common valuation convention, repeated by ranks of slope components. Define positive slope operators $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$ on complex Hilbert spaces of dimension $n$. For every unitary $U$,
+Let $M,N$ be formal meromorphic differential modules of equal positive rank $n$ over a characteristic-zero Laurent series field. Let $s_j,t_j$ be their nonnegative formal slopes in a common valuation convention, repeated by ranks of slope components. Define positive slope operators $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$ on complex Hilbert spaces of dimension $n$. For every unitary $U$,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -54,7 +54,7 @@ The two separate log-determinants are the irregularities $\sum_j s_j$ and $\sum_
 
 ## 238 Difference equations
 
-Let $M,N$ be finite-rank difference modules of rank $n>0$ over the same valued difference field, with a chosen slope theory in which determinant slope equals the sum of intrinsic slopes. Let $s_j,t_j$ list these slopes with multiplicity. Use positive slope operators $A=\operatorname{diag}(e^{s_j})$, $B=\operatorname{diag}(e^{t_j})$. For every unitary $U$ on the common complex realization,
+Let $M,N$ be finite-rank difference modules of rank $n>0$ over the same valued difference field, with a chosen slope theory in which determinant slope equals the sum of intrinsic slopes. Let $s_j,t_j$ list these slopes with multiplicity. Use positive slope operators $A=\mathrm{diag}(e^{s_j})$, $B=\mathrm{diag}(e^{t_j})$. For every unitary $U$ on the common complex realization,
 
 $$\min_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}})\le \log\det(A+UBU^*)\le\max_{\pi\in S_n}\sum_{j=1}^{n}\log(e^{s_j}+e^{t_{\pi(j)}}).$$
 
@@ -80,7 +80,7 @@ The separate sums of the log singular values equal $\log|\det X|$ and $\log|\det
 
 Let two compact fractal metric-measure spaces have specified self-adjoint nonnegative Laplacians with discrete spectrum and finite eigenvalue multiplicities. Select $n>0$ orthonormal eigenmodes of each (positive modes if zero modes are excluded), and let $A,B$ be the restricted operators with eigenvalues $\lambda_j,\mu_j$. For every unitary identification $U$ of these mode spaces,
 
-$$\det(A+UBU^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(A+UBU^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The finite spectral length is $n$. Spectral dimension obtained from eigenvalue counting and Hausdorff dimension are not the order of this determinant. Any full zeta determinant requires analytic continuation and a separate limit formulation.
 
@@ -88,7 +88,7 @@ The finite spectral length is $n$. Spectral dimension obtained from eigenvalue c
 
 Let $F,G$ be order-preserving positively homogeneous maps of degree one on the positive cone in $\mathbb R^n$. Choose interior eigenvectors $x,y$ with $F(x)=\lambda x$ and $G(y)=\mu y$, and assume the maps are differentiable there. Let $A=DF(x)$, $B=DG(y)$ be their derivatives, normal after complexification for a fixed Euclidean product. Let $\alpha_j,\beta_j$ be all complex eigenvalues of these derivatives. For every unitary $U$ on the complex tangent space,
 
-$$\det(DF(x)+UDG(y)U^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\alpha_j+\beta_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(DF(x)+UDG(y)U^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\alpha_j+\beta_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 By homogeneity $A x=\lambda x$ and $B y=\mu y$, so the positive cone eigenvalues are among the derivative eigenvalues. The remaining derivative spectrum supplies the determinant. A general nonlinear map has no intrinsic determinant of its cone eigenvalues.
 
@@ -96,6 +96,6 @@ By homogeneity $A x=\lambda x$ and $B y=\mu y$, so the positive cone eigenvalues
 
 Let $(A_1,\ldots,A_r)$ and $(B_1,\ldots,B_r)$ be internally commuting normal tuples of order $n$ on a complex Hilbert space. Enumerate their joint spectra $a_j,b_j\in\mathbb C^r$ with joint eigenspace multiplicities. For every $c\in\mathbb C^r$ and unitary $U$, define $L_c(x)=\sum_{\ell=1}^r c_\ell x_\ell$. Then
 
-$$\det\left(\sum_{\ell=1}^r c_\ell(A_\ell+UB_\ell U^*)\right)\in\operatorname{conv}\left\{\prod_{j=1}^n L_c(a_j+b_{\pi(j)}):\pi\in S_n\right\}.$$
+$$\det\left(\sum_{\ell=1}^r c_\ell(A_\ell+UB_\ell U^*)\right)\in\mathrm{conv}\left\{\prod_{j=1}^n L_c(a_j+b_{\pi(j)}):\pi\in S_n\right\}.$$
 
 This is the scalar determinant comparison for every direction in the joint spectral data. The joint mixed-state numerical range of each tuple is the convex hull of its joint eigenvalues; the determinant hull uses matched spectral sums instead. Weights may depend on $c$; a simultaneous polynomial or vector hull is a stronger form. The case $r=1$ is the full matrix conjecture.

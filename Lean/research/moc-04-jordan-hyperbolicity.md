@@ -10,7 +10,7 @@ The numbering follows the Atlas of Generalized Spectral Invariants (November 202
 
 Let $J$ be a simple Euclidean Jordan algebra with unit $e$ and rank $r$; its Jordan determinant $\det_J(x)$ is the product of the $r$ real spectral values in a Jordan-frame decomposition. Let $a,b\in J$ have spectral values $\lambda_j,\mu_j$. For every Jordan automorphism $g$ of $J$,
 
-$$\det_J(a+g(b))\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{r}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{r}\right\}.$$
+$$\det_J(a+g(b))\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{r}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{r}\right\}.$$
 
 The hull is a real interval. This is an intrinsic candidate for Jordan rank, not for the real vector-space dimension of $J$.
 
@@ -18,13 +18,13 @@ The hull is a real interval. This is an intrinsic candidate for Jordan rank, not
 
 Let $A,B$ be real symmetric matrices of order $n$ with real eigenvalues $\lambda_j,\mu_j$. The Jordan product is $A\circ B=(AB+BA)/2$ and the Jordan determinant is the ordinary determinant. For every orthogonal $Q\in O(n)$,
 
-$$\det(A+QBQ^T)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(A+QBQ^T)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 ## 039 Complex Hermitian Jordan algebra
 
 Let $A,B\in M_n(\mathbb C)$ be Hermitian with real eigenvalues $\lambda_j,\mu_j$. Regard them as elements of the real Jordan algebra with product $(AB+BA)/2$. For every $U\in U(n)$,
 
-$$\det_J(A+UBU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det_J(A+UBU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 Here $\det_J=\det_{\mathbb C}$ on Hermitian matrices; Jordan rank is $n$, not the real dimension $n^2$.
 
@@ -32,7 +32,7 @@ Here $\det_J=\det_{\mathbb C}$ on Hermitian matrices; Jordan rank is $n$, not th
 
 Let $A,B\in M_n(\mathbb H)$ be Hermitian. List their $n$ real right eigenvalues $\lambda_j,\mu_j$. Define the Moore determinant $\det_M$ of a quaternionic Hermitian matrix as the product of its real right eigenvalues. For every quaternionic unitary $U$,
 
-$$\det_M(A+UBU^*)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det_M(A+UBU^*)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The interval uses $n$ eigenvalues, not the $2n$ eigenvalues of the complex realization. Squaring a determinant does not by itself prove this signed interval statement.
 
@@ -40,7 +40,7 @@ The interval uses $n$ eigenvalues, not the $2n$ eigenvalues of the complex reali
 
 Let $J=H_3(\mathbb O)$ be the real Albert algebra of Hermitian three-by-three octonionic matrices with its Jordan product. Let $a,b$ have three real Jordan spectral values $\lambda_j,\mu_j$. Write $N_J$ for the exceptional cubic Jordan norm. For every unit-preserving Jordan automorphism $g$ of $J$,
 
-$$N_J(a+g(b))\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{3}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{3}\right\}.$$
+$$N_J(a+g(b))\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{3}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{3}\right\}.$$
 
 The six products define the real comparison interval. No associative matrix determinant is used.
 
@@ -56,7 +56,7 @@ These endpoints are the two permutation products of the spectral pairs $s\pm\|x\
 
 Let $J$ be a simple Euclidean Jordan algebra of rank $r$, and let $a,b$ be in the interior of its cone of squares. Their Jordan spectral values $\lambda_j,\mu_j$ are positive. For every Jordan automorphism $g$ fixing the unit,
 
-$$\det_J(a+g(b))\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{r}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{r}\right\}.$$
+$$\det_J(a+g(b))\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{r}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{r}\right\}.$$
 
 The bounds are positive. This uses the compact frame-changing automorphisms, not all cone automorphisms, which can change spectral values.
 
@@ -64,7 +64,7 @@ The bounds are positive. This uses the compact frame-changing automorphisms, not
 
 Let $p$ be homogeneous of degree $d\ge1$ and hyperbolic with respect to $e$, with $p(e)>0$. This means $p(te-x)$ has $d$ real roots for every real $x$. Write $\lambda_j,\mu_j$ for these roots for $a,b$ and let $D_p(x)=p(x)/p(e)$. Let $g$ be a real linear automorphism satisfying $g(e)=e$ and $p(gx)=p(x)$ for all $x$. The proposed assertion is
 
-$$D_p(a+g(b))\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{d}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{d}\right\}.$$
+$$D_p(a+g(b))\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{d}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{d}\right\}.$$
 
 There need not be a frame or a realization of every permutation by $g$. This is a new test, not a consequence of hyperbolicity alone.
 
@@ -72,7 +72,7 @@ There need not be a frame or a realization of every permutation by $g$. This is 
 
 Fix $1\le k\le n$ and let $p(x)=e_k(x)=\sum_{|I|=k}\prod_{i\in I}x_i$ on $\mathbb R^n$, hyperbolic along $\mathbf1$. Let $a,b$ be in its open hyperbolicity cone. Let $\lambda_j,\mu_j$ be the $k$ roots of $e_k(t\mathbf1-a)$ and $e_k(t\mathbf1-b)$. For every coordinate permutation $Q$ the proposed assertion is
 
-$$e_k(a+Qb)/\binom nk\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{k}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{k}\right\}.$$
+$$e_k(a+Qb)/\binom nk\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{k}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{k}\right\}.$$
 
 The permutation on the right acts on the $k$ hyperbolic roots, not on the $n$ coordinates. These are different for $k<n$.
 
@@ -88,7 +88,7 @@ This is the positive determinant interval under a decreasing logarithm, not conv
 
 Let $A,B$ be Hermitian of order $n$ with eigenvalues $\lambda_j,\mu_j$. For every unitary $U$, let $c(U)$ be the ordered real eigenvalue vector of $A+UBU^*$. Then the determinant objective on this vector satisfies
 
-$$\prod_{j=1}^n c_j(U)\ \in\ \operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\prod_{j=1}^n c_j(U)\ \in\ \mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The right side uses products of pairwise matched spectral sums. It is not the majorization permutahedron of either input; a determinant is not a linear functional of that permutahedron.
 
@@ -96,6 +96,6 @@ The right side uses products of pairwise matched spectral sums. It is not the ma
 
 Let $A,B$ be normal matrices of order $n$ with eigenvalues $\lambda_j,\mu_j$. For $0\le k\le n$, let $D(A[n-k],C[k])$ denote the polarization of $\det$, normalized by $\det(sA+tC)=\sum_k\binom nk s^{n-k}t^k D(A[n-k],C[k])$. For every unitary $U$ the coefficient candidate is
 
-$$\binom nk D(A[n-k],(UBU^*)[k])\in\operatorname{conv}\left\{\sum_{|I|=k}\prod_{i\notin I}\lambda_i\prod_{i\in I}\mu_{\pi(i)}:\pi\in S_n\right\}.$$
+$$\binom nk D(A[n-k],(UBU^*)[k])\in\mathrm{conv}\left\{\sum_{|I|=k}\prod_{i\notin I}\lambda_i\prod_{i\in I}\mu_{\pi(i)}:\pi\in S_n\right\}.$$
 
 The assertion is for a fixed coefficient $k$. The stronger simultaneous compound statement asks for a common set of permutation weights for all coefficients and all eigenvalue lists. Ordinary double stochasticity of the matrix of squared compound minors does not by itself provide such weights.

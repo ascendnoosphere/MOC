@@ -8,7 +8,7 @@ All finite eigenvalue lists include multiplicities unless stated otherwise. $S_n
 
 Let $X$ be a complex Banach space and $A,B$ bounded operators with finite-dimensional common invariant subspace $E$ of positive dimension $n$. Fix a Hilbert inner product on $E$ for which both restrictions are normal. Let $\lambda_j,\mu_j$ be the eigenvalues of the restrictions. For every unitary $U:E\to E$,
 
-$$\det_E(A|_E+UB|_EU^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det_E(A|_E+UB|_EU^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The determinant uses the finite-dimensional action, not the entire Banach-space spectrum. The inner product is part of the data. For nuclear determinants on infinite spaces, a separate continuity and summability condition is necessary.
 
@@ -16,7 +16,7 @@ The determinant uses the finite-dimensional action, not the entire Banach-space 
 
 Let $H$ be a separable infinite-dimensional complex Hilbert space, and let $A,B$ be normal trace-class operators on $H$. Fix complete orthonormal eigenbases, and list their eigenvalues $\lambda_j,\mu_j$ with multiplicity (including zeros for kernel basis vectors). For every unitary $U$ on $H$, the Fredholm determinant form is
 
-$$\det_F(I+A+UBU^*)\in\overline{\operatorname{conv}}\left\{\prod_{j\ge1}(1+\lambda_j+\mu_{\pi(j)}):\pi\text{ a finite permutation of }\mathbb N\right\}.$$
+$$\det_F(I+A+UBU^*)\in\overline{\mathrm{conv}}\left\{\prod_{j\ge1}(1+\lambda_j+\mu_{\pi(j)}):\pi\text{ a finite permutation of }\mathbb N\right\}.$$
 
 The Fredholm determinant of $I+C$ for trace-class $C$ is the convergent eigenvalue product $\prod_j(1+c_j)$. Finite-rank approximation in trace norm and continuity of this determinant reduce the closed-hull formulation to the finite matrix conjecture. A finite permutation fixes all but finitely many indices.
 
@@ -24,9 +24,9 @@ The Fredholm determinant of $I+C$ for trace-class $C$ is the convergent eigenval
 
 Let $\mathcal A$ be a complex unital Banach algebra with a continuous unital homomorphism $\rho:\mathcal A\to M_n(\mathbb C)$. Let $a,b$ have normal images, and let $\lambda_j,\mu_j$ be the eigenvalues of those images. For every unitary $u\in U(n)$, the determinant associated with this representation satisfies
 
-$$\det(\rho(a)+u\rho(b)u^*)\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(\rho(a)+u\rho(b)u^*)\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
-Its additive trace is $\operatorname{Tr}\rho(a)$. If an intrinsic trace-associated determinant instead takes values modulo a period group, this complex hull requires an additional scalar realization.
+Its additive trace is $\mathrm{Tr}\rho(a)$. If an intrinsic trace-associated determinant instead takes values modulo a period group, this complex hull requires an additional scalar realization.
 
 ## 052 Commutative C-star algebra C(X)
 
@@ -40,7 +40,7 @@ The actual joint distribution $(f,g)_*\nu$ is a coupling, so this is the commuti
 
 Let $\mathcal A$ be a unital complex C-star algebra and $\rho:\mathcal A\to M_n(\mathbb C)$ a unital adjoint-preserving representation. For normal $a,b\in\mathcal A$, let $\lambda_j,\mu_j$ be the spectra with multiplicity of $\rho(a),\rho(b)$. For every unitary $u\in\mathcal A$,
 
-$$\det(\rho(a+ubu^*))\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(\rho(a+ubu^*))\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 This is the classical conjecture in each finite-dimensional representation. An algebra without such a representation needs a separate determinant, as in the tracial formulation below.
 
@@ -48,7 +48,7 @@ This is the classical conjecture in each finite-dimensional representation. An a
 
 Let $a,b$ be normal in a unital C-star algebra with a finite-dimensional unital adjoint-preserving representation $\rho$ of dimension $n$. For any continuous $f:\sigma(a)\to\mathbb C$, $g:\sigma(b)\to\mathbb C$, let $\lambda_j,\mu_j$ be the represented eigenvalues of $a,b$. For every unitary $U$ on the representation space,
 
-$$\det(\rho(f(a))+U\rho(g(b))U^*)\in\operatorname{conv}\left\{\prod_{j=1}^n(f(\lambda_j)+g(\mu_{\pi(j)})):\pi\in S_n\right\}.$$
+$$\det(\rho(f(a))+U\rho(g(b))U^*)\in\mathrm{conv}\left\{\prod_{j=1}^n(f(\lambda_j)+g(\mu_{\pi(j)})):\pi\in S_n\right\}.$$
 
 Continuous functional calculus preserves normality and gives the stated spectral values. Taking the identity functions gives the matrix form.
 
@@ -64,7 +64,7 @@ where $\Delta_\tau(x)=\exp(\tau(\log|x|))$. For normalized matrix trace the boun
 
 Let $\mathcal M$ be a type II1 factor (a finite factor with diffuse projection ranks) with normalized trace $\tau$. Let $a=\sum_i\lambda_i p_i$ and $b=\sum_j\mu_j q_j$ be finite-spectrum positive invertible elements with orthogonal spectral projections summing to one. Define the transportation polytope $\mathcal T=\{m_{ij}\ge0:\sum_j m_{ij}=\tau(p_i),\sum_i m_{ij}=\tau(q_j)\}$. For every unitary $u$ the formulation is
 
-$$\Delta_\tau(a+ubu^*)\in\operatorname{conv}\left\{\exp\left(\sum_{i,j}m_{ij}\log(\lambda_i+\mu_j)\right):m\in\mathcal T\right\}.$$
+$$\Delta_\tau(a+ubu^*)\in\mathrm{conv}\left\{\exp\left(\sum_{i,j}m_{ij}\log(\lambda_i+\mu_j)\right):m\in\mathcal T\right\}.$$
 
 The real masses are normalized projection dimensions. In the diffuse factor the commuting configurations can realize such masses by splitting projections. In a matrix factor integer rank constraints give the original positive matrix matching interval after normalization.
 
@@ -96,6 +96,6 @@ This compares a noncommutative sum with commuting couplings. For nonnormal varia
 
 Let $H$ be an infinite-dimensional separable Hilbert space, $\mathcal Q(H)=\mathcal B(H)/\mathcal K(H)$ its Calkin algebra, and $q$ the quotient map. Fix a unital matrix subalgebra $\mathcal F\subset\mathcal Q(H)$ and an adjoint-preserving isomorphism $\rho:\mathcal F\to M_n(\mathbb C)$. Suppose $q(A),q(B)\in\mathcal F$ are normal, with represented eigenvalues $\lambda_j,\mu_j$. For each unitary $v\in\mathcal F$,
 
-$$\det(\rho(q(A)+vq(B)v^*))\in\operatorname{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
+$$\det(\rho(q(A)+vq(B)v^*))\in\mathrm{conv}\left\{\prod_{j=1}^{n}(\lambda_j+\mu_{\pi(j)}):\pi\in S_{n}\right\}.$$
 
 The determinant is confined to the specified finite subalgebra and is insensitive to compact perturbations of the lifts. The full Calkin algebra has no ordinary scalar determinant of all elements. The Fredholm index is not such a determinant.
