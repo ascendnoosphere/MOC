@@ -35,6 +35,7 @@ import MOC.FourEquilateral
 import MOC.FourNonrealReduction
 import MOC.FourParityCorrection
 import MOC.FourQuaternionMinor
+import MOC.FourZeroDiagonal
 import MOC.FullSupportReduction
 import MOC.GeneralContactReduction
 import MOC.Geometry

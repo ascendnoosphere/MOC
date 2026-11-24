@@ -49,6 +49,7 @@ flowchart BT
     TRANSFER["Increase the contact count below 6<br/>on the nonzero chart · checked"]:::checked
     SIX["Support bound at 6 or more contacts<br/>on the nonzero chart · open"]:::open
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
+    ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
     WITNESS --> OR4
     NORMAL --> OR4
@@ -57,6 +58,7 @@ flowchart BT
     TRANSFER -. proves the reduction .-> SIX
     SIX <-->|iff| FOUR
     TESTS -. narrow the witness set .-> WITNESS
+    ZERO -. excludes a mixer family .-> WITNESS
     PHASE -. restrict realizable profiles .-> SIX
     OR4 <-->|iff| FOUR
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
@@ -333,6 +335,11 @@ using the second-order, reflection, and flat-plane tests. The
 three free entries in the imaginary symmetric test when an
 order-four orthogonal mixer has a row with no zero entries. This
 does not exclude the resulting witnesses. It is a separate exact route. The one-entry law is also an exact reformulation; its five-label
+For a sparse family, the [zero-diagonal theorem](MOC/FourZeroDiagonal.lean)
+proves the full hull inclusion for real orthogonal order-four mixers
+with zero diagonal, for arbitrary complex spectra. An alternating split
+of the matching and two orthogonal two-by-two blocks give nonnegative
+weights. The proof does not enumerate the matchings.
 bound does not supply the law.
 
 See [Literature.md](Literature.md) for primary sources, DOIs, and the
