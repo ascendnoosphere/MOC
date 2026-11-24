@@ -77,7 +77,9 @@ equivalence, proof and refutation both transfer.
   separable fibres of a monic plane polynomial have complete
   local holomorphic branches. The [global gluing](MOC/FiniteCurveConnected.lean)
   proves connectedness for a punctured simple-root cover of an irreducible
-  plane polynomial. The curve slice through each witness is a separate step.
+  plane polynomial. The [full plane zero set](MOC/FiniteCurveClosure.lean)
+  is also connected, including exceptional fibres. The curve slice
+  through each witness is still a separate step.
 - [Cross-ratio test](MOC/ContactCrossRatios.lean):
   one four-swap pattern at nonzero height imposes a positive real
   product of two spectral cross ratios.
@@ -110,3 +112,13 @@ equivalence, proof and refutation both transfer.
   for a separated pair-cost class, a best assignment of pairs can
   beat every assignment induced by a permutation of the labels.
   This is an obstruction to the relaxation, not to MOC.
+
+## Transfer between branches
+
+Lean records the reverse proof for each exact branch. Two exact
+branches under the same root imply each other. Any sufficient branch
+implies every exact branch under its root. An all-order branch also
+implies each exact branch in orders four and five. For a one-way
+branch, the proof does not infer its premise from its conclusion.
+The [native audit](MOC/Reformulations/NativeAudit.lean) records which
+additional special-case and restricted comparisons are not root branches.

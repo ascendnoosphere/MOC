@@ -20,10 +20,30 @@ structure Route (parent : Prop) where
   label : String
   goal : Prop
   close : goal → parent
+  isExact : Bool
+  reverse : isExact = true → parent → goal
 
 def fromIff {parent goal : Prop} (label : String) (h : goal ↔ parent) :
     Route parent :=
-  ⟨label, goal, h.mp⟩
+  ⟨label, goal, h.mp, true, fun _ => h.mpr⟩
+
+def sufficient {parent goal : Prop} (label : String) (h : goal → parent) :
+    Route parent :=
+  ⟨label, goal, h, false, fun hf => by cases hf⟩
+
+/-- Any sufficient source implies each exact target on the same root. -/
+theorem Route.implies_exact {P : Prop} (source target : Route P)
+    (ht : target.isExact = true) : source.goal → target.goal :=
+  fun h => target.reverse ht (source.close h)
+
+/-- Two exact alternatives to the same root are equivalent. -/
+theorem Route.iff_exact {P : Prop} (a b : Route P)
+    (ha : a.isExact = true) (hb : b.isExact = true) : a.goal ↔ b.goal :=
+  ⟨a.implies_exact b hb, b.implies_exact a ha⟩
+
+/-- A refutation transfers back only when the target has a reverse link. -/
+theorem Route.refute_exact {P : Prop} (r : Route P) (hr : r.isExact = true)
+    (h : ¬ r.goal) : ¬ P := mt (r.reverse hr) h
 
 /-- Existential form of the disjunction of the listed branch goals. -/
 def AnyRoute {P : Prop} (routes : List (Route P)) : Prop :=
@@ -147,7 +167,7 @@ def SixContactStep : Prop :=
       ∃ v' : StrictMatchingSupport U, v.contacts.card < v'.contacts.card
 
 def of_witness_iff {P Bad : Prop} (label : String) (e : (¬ P) ↔ Bad) : Route P :=
-  ⟨label, ¬ Bad, fun h => Classical.byContradiction (fun hP => h (e.mp hP))⟩
+  fromIff label ((not_congr e).symm.trans not_not)
 
 def fourRoutes : List (Route (Conjecture (Fin 4))) :=
   [fromIff "Normal matrices of order four" conjecture_iff_normalConjecture.symm,
@@ -160,9 +180,9 @@ def fourRoutes : List (Route (Conjecture (Fin 4))) :=
    fromIff "Principal coisometry of dimension three" (conjecture_iff_principalCoisometry 3).symm,
    of_witness_iff "Exclude all regular stationary orthogonal witnesses"
       not_conjecture_four_iff_regular_stationary_orthogonal_witness,
-   ⟨"One-contact transfer AND the six-contact support test",
-      SixContactStep ∧ Reformulations.ContactForm 4 6,
-      fun h => conjecture_of_contact_step h.1 h.2⟩,
+   sufficient "One-contact transfer AND the six-contact support test"
+      (fun h : SixContactStep ∧ Reformulations.ContactForm 4 6 =>
+        conjecture_of_contact_step h.1 h.2),
    fromIff "Three-anchor rank-one kernel"
       (Reformulations.conjecture_iff_three_anchor_kernel (0 : Fin 4) 1 0 (by simp)).symm]
 
@@ -175,14 +195,15 @@ def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
    fromIff "Principal coisometry of dimension four" (conjecture_iff_principalCoisometry 4).symm,
    fromIff "Three-anchor rank-one kernel"
       (Reformulations.conjecture_iff_three_anchor_kernel (0 : Fin 5) 1 0 (by simp)).symm,
-   ⟨"Order four AND existence of normal order-five maximizers",
-      Conjecture (Fin 4) ∧ NormalMaximizers 5, fun h => five_of_four_and_normalMaximizers h.1 h.2⟩,
-   ⟨"One-contact transfer AND the eight-contact support test",
-      EightContactStep ∧ FullSupportEightContactTest,
-      fun h => (conjecture_five_iff_fullSupportEight_of_step h.1).mpr h.2⟩,
-   ⟨"Orthogonal minor convexification AND orthogonal order five",
-      TwoOrthogonalMinorTables (Fin 5) ∧ OrthogonalConjecture (Fin 5),
-      fun h => (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2⟩]
+   sufficient "Order four AND existence of normal order-five maximizers"
+      (fun h : Conjecture (Fin 4) ∧ NormalMaximizers 5 =>
+        five_of_four_and_normalMaximizers h.1 h.2),
+   sufficient "One-contact transfer AND the eight-contact support test"
+      (fun h : EightContactStep ∧ FullSupportEightContactTest =>
+        (conjecture_five_iff_fullSupportEight_of_step h.1).mpr h.2),
+   sufficient "Orthogonal minor convexification AND orthogonal order five"
+      (fun h : TwoOrthogonalMinorTables (Fin 5) ∧ OrthogonalConjecture (Fin 5) =>
+        (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2)]
 
 theorem four_routes_iff : AnyRoute fourRoutes ↔ Conjecture (Fin 4) :=
   any_iff_of_branch _ conjecture_iff_normalConjecture.symm (List.mem_cons_self ..)
@@ -276,8 +297,8 @@ def nativeRoutes : List (Route MOCIsTrue) :=
    fromIff "Regular spectra with scalar common commutant"
       mocIsTrue_iff_regular_scalar_common_commutant.symm,
    fromIff "All three order ranges" all_iff_four_and_five_and_higher.symm,
-   ⟨"Simultaneous characteristic hull", _, CStar.moc_of_simultaneousCharacteristicForm⟩,
-   ⟨"Simultaneous mixed-pencil coefficients", _, moc_of_simultaneousMixedPencilHull⟩]
+   sufficient "Simultaneous characteristic hull" CStar.moc_of_simultaneousCharacteristicForm,
+   sufficient "Simultaneous mixed-pencil coefficients" moc_of_simultaneousMixedPencilHull]
 
 theorem native_routes_iff : AnyRoute nativeRoutes ↔ MOCIsTrue :=
   any_iff_of_branch _ moc_iff_complexMatrices.symm (List.mem_cons_self ..)
@@ -548,6 +569,11 @@ theorem five_own_or_all_routes_iff :
     (AnyRoute fiveRoutes ∨ AnyRoute allRoutes) ↔ Conjecture (Fin 5) :=
   ⟨fun h => h.elim five_routes_iff.mp (fun he => all_routes_iff.mp he 5),
    fun h => Or.inl (five_routes_iff.mpr h)⟩
+
+theorem all_route_implies_exact_at {n : ℕ} (source : Route MOCIsTrue)
+    (target : Route (Conjecture (Fin n))) (ht : target.isExact = true) :
+    source.goal → target.goal :=
+  fun h => target.reverse ht (source.close h n)
 
 /-- Refuting a single sufficient-only route does not refute its parent.
 A checked failure of the parent, however, refutes every listed route. -/

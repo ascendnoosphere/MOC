@@ -12,6 +12,7 @@ import MOC.ContactWeightPositivity
 import MOC.DisjointContactRectangle
 import MOC.DiskBoundary
 import MOC.ExtendedCases
+import MOC.FiniteCurveClosure
 import MOC.FiniteCurveConnected
 import MOC.FiniteCurveBranchValues
 import MOC.FiniteCurveGrowth
