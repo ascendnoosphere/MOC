@@ -412,3 +412,63 @@ assert len(ineq)==24
 print("Latin partitions:", len(parts))
 print("Strict inequalities g[i] > g[j] + g[k]:", ineq)
 ```
+
+## 8. Exact limitation of the geometric-mean condition alone
+
+The strict inequalities (10), without (7)--(8), can in fact hold
+for an additive complex spectral profile. Take integer complex
+spectra (direction \(\eta=1\)):
+\[
+a=(-89-75i,-5+7i,-17+99i,-76+24i),\quad
+b=(13-3i,5-90i,96+51i,108+135i).
+\]
+The largest projected matching product is \(32076180\), attained
+at permutation 2103. For the negative set \(N\) of Section 2,
+\[
+G_N\ge126266249,\qquad
+\max_{\mathcal P}\sum_{L\in\mathcal P}G_L\le114321308.
+\]
+These bounds follow by integer arithmetic: the floor fourth root
+of a product of four nonnegative integer gaps is
+\(\operatorname{isqrt}(\operatorname{isqrt}(\prod g_\sigma))\);
+adding one to it gives an upper bound. They can be checked by
+appending the following code to the enumeration in Section 7:
+
+```python
+from math import isqrt
+a = [(-89,-75),(-5,7),(-17,99),(-76,24)]
+b = [(13,-3),(5,-90),(96,51),(108,135)]
+def cmul(z,w):
+    return (z[0]*w[0]-z[1]*w[1],z[0]*w[1]+z[1]*w[0])
+def score(p):
+    z=(1,0)
+    for i in range(4):
+        z=cmul(z,(a[i][0]+b[p[i]][0],a[i][1]+b[p[i]][1]))
+    return z[0]
+s={p:score(p) for p in P}
+m=max(s.values())
+assert m==32076180 and s[(2,1,0,3)]==m
+g={p:m-v for p,v in s.items()}
+def floor_G(l):
+    return isqrt(isqrt(prod(g[p] for p in l)))
+assert floor_G(N)==126266249
+assert max(sum(floor_G(l)+1 for l in part)
+           for part in parts)==114321308
+```
+
+The maximizing label 2103 is a transposition; it violates (8).
+So this example does not satisfy the complete necessary system
+and is not a counterexample to MOC. It does establish that an
+attempt to prove the geometric-mean inequality in the opposite
+direction for all spectral data, without the other constraints,
+would be false.
+
+Numerical exploratory searches were also made subject to (7)--(8)
+and the hull-edge conditions. They found profiles close to the
+equality boundary in (10), but no certified exclusion or feasible
+point of the full strict system. Such searches are not used in
+any of the proofs. The new finite sign census in Section 7 and
+the previous dense sign census were checked with exact integer
+operations. There is no verified Lean proof of the new results
+in this note.
+
