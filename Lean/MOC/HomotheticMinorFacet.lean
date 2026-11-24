@@ -1,4 +1,5 @@
-import MOC.WeightedDiamondHardFacets
+import MOC.FourMinorTransport
+import MOC.FourQuaternionMinor
 
 /-! An order-four squared-minor inequality for a pair of homothetic antipodal spectra. -/
 
@@ -10,6 +11,13 @@ private def minorFacet {M : Type*} [AddCommGroup M]
     (m : Finset (Fin 4) → Finset (Fin 4) → M) : M :=
   m {2} {0} + m {3} {1} + m {0,2} {0,3} + m {0,2} {1,3} -
     m {0,3} {1,2} + m {0,3} {1,3}
+
+/-- Linear evaluation of one coordinate of a squared-minor profile. -/
+private def minorCoordinate (I J : Finset (Fin 4)) :
+    (Finset (Fin 4) → Finset (Fin 4) → ℝ) →ₗ[ℝ] ℝ where
+  toFun m := m I J
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 private theorem vec0 {α : Type*} (a b c d : α) : ![a,b,c,d] 0 = a := rfl
 private theorem vec1 {α : Type*} (a b c d : α) : ![a,b,c,d] 1 = b := rfl
@@ -78,7 +86,7 @@ theorem homothetic_minor_facet_nonneg (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsU
   have hprofile : subsetMinorSq U = ∑ k : κ, w k • m k := by
     funext I J
     simpa only [m, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using hm I J
-  let L := minorFacet diamondEvaluate
+  let L := minorFacet minorCoordinate
   have hL (v : Finset (Fin 4) → Finset (Fin 4) → ℝ) : L v = minorFacet v := by
     rfl
   change 0 ≤ minorFacet (subsetMinorSq U)

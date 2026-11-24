@@ -288,27 +288,7 @@ dimension eight. The full conjecture is equivalent to proving
 nonnegative determinant gaps for every order-five complex unitary
 and every realizable profile with at least eight zero projected gaps.
 
-A direct extension of the order-four case-by-case classification
-is impractical. The symmetry group acts by left and right
-permutation relabeling and inversion and has order
-\(2(5!)^2=28800\). To count orbits of eight-element subsets, for each
-group element with cycle lengths \(d_1,\ldots,d_r\) on \(S_5\), count
-its invariant eight-element subsets by
-\[
-[z^8]\prod_{\ell=1}^r(1+z^{d_\ell}).
-\]
-Average these integers over all group elements (Burnside's lemma).
-The exact enumeration yields 26 cycle types and:
-
-| Order | Contact labels | Subsets | Symmetry classes |
-| --- | ---: | ---: | ---: |
-| 4 | 6 | 134596 | 214 |
-| 5 | 6 | 3652745460 | 133816 |
-| 5 | 7 | 59487568920 | 2099444 |
-| 5 | 8 | 840261910995 | 29342815 |
-
-These are counts of all label subsets, not of realizable spectral
-contact sets. A proof can and should avoid treating them individually.
+The eight-contact condition is a reduction, not a proof. The remaining task is an argument on realizable spectral profiles, not a census of label subsets.
 
 The order-four geometric realification argument does not extend
 formally: ten general points of \(\mathbb P^4\) do not lie on an

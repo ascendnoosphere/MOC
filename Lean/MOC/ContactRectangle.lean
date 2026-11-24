@@ -1,4 +1,4 @@
-import MOC.Obstruction
+import MOC.Core
 import Mathlib.Tactic.LinearCombination
 
 /-! Disjoint swaps in order four give four products of two independent
@@ -96,52 +96,5 @@ theorem matchingProduct_swap_rectangle_height_zero
   rcases rectangle_factors_eq_of_nonzero_height h hxy hx'y hxy' hx'y' with he | he
   · exact hx (mul_left_cancel₀ hη he)
   · exact hy he
-
-private def positiveMixedPerm : Fin 4 → Equiv.Perm (Fin 4) :=
-  ![Equiv.swap 1 2 * Equiv.swap 1 3, Equiv.swap 0 1 * Equiv.swap 1 2,
-    Equiv.swap 0 2 * Equiv.swap 2 3, Equiv.swap 0 1 * Equiv.swap 0 3]
-
-private theorem positiveMixedPerm_cost (k : Fin 4) : 0 < permutationCost (positiveMixedPerm k) := by
-  fin_cases k
-  · change (0 : ℝ) < 0 + 1 + 0 - 0
-    norm_num
-  · change (0 : ℝ) < 0 + 0 + 1 - 0
-    norm_num
-  · change (0 : ℝ) < 0 + 0 + 1 - 0
-    norm_num
-  · change (0 : ℝ) < 1 + 0 + 0 - 0
-    norm_num
-
-/-- Every fixed edge occurs in a positive-cost permutation of every
-row and column relabeling of the order-four mixed ray. -/
-theorem exists_positive_mixed_perm_of_assignment (r c : Equiv.Perm (Fin 4)) (i j : Fin 4) :
-    ∃ σ : Equiv.Perm (Fin 4), σ i = j ∧ 0 < permutationCost (r * σ * c) := by
-  have hcover : ∀ i j : Fin 4, ∃ k : Fin 4, positiveMixedPerm k i = j := by decide
-  obtain ⟨k, hk⟩ := hcover (c.symm i) (r j)
-  refine ⟨r.symm * positiveMixedPerm k * c.symm, ?_, ?_⟩
-  · simp only [Equiv.Perm.mul_apply, hk, Equiv.symm_apply_apply]
-  have hrelabel : r * (r.symm * positiveMixedPerm k * c.symm) * c = positiveMixedPerm k := by
-    ext t
-    simp only [Equiv.Perm.mul_apply, Equiv.symm_apply_apply, Equiv.apply_symm_apply]
-  rw [hrelabel]
-  exact positiveMixedPerm_cost k
-
-/-- If a matching product vanishes, a zero-height gap cannot dominate
-a positive multiple of any relabeled mixed ray. -/
-theorem mixed_coefficient_zero_of_zero_matchingProduct
-    {a b : Fin 4 → ℂ} {η : ℂ} {coeff : ℝ}
-    (r c : Equiv.Perm (Fin 4)) (hcoeff : 0 ≤ coeff)
-    (hzero : ∃ τ, matchingProduct a b τ = 0)
-    (hgap : ∀ σ, coeff * permutationCost (r * σ * c) ≤ -(η * matchingProduct a b σ).re) :
-    coeff = 0 := by
-  obtain ⟨τ, hτ⟩ := hzero
-  obtain ⟨i, _, hi⟩ := Finset.prod_eq_zero_iff.mp hτ
-  obtain ⟨σ, hσ, hpos⟩ := exists_positive_mixed_perm_of_assignment r c i (τ i)
-  have hval : matchingProduct a b σ = 0 :=
-    Finset.prod_eq_zero (Finset.mem_univ i) (by rw [hσ]; exact hi)
-  have hcost := hgap σ
-  rw [hval, mul_zero, Complex.zero_re, neg_zero] at hcost
-  by_contra h
-  exact (not_lt_of_ge hcost) (mul_pos (lt_of_le_of_ne hcoeff (Ne.symm h)) hpos)
 
 end MOC
