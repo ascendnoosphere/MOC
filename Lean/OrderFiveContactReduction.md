@@ -391,6 +391,18 @@ nor that arbitrary complex order-five mixers can be realified.
 - [TripleFibreContact.lean](MOC/TripleFibreContact.lean) bounds a
   three-label fibre by four contacts at nonzero height for simple spectra.
 
+- [TripleFibreAmbient.lean](MOC/TripleFibreAmbient.lean) applies the
+  fibre bound in any order. In order five it fixes two assignments.
+- [SubsetAssignmentSupport.lean](MOC/SubsetAssignmentSupport.lean)
+  checks a bound from an assignment certificate on subsets for one
+  objective. It does not require a common law for all spectra.
+- [FiniteCurveGrowth.lean](MOC/FiniteCurveGrowth.lean) proves uniform
+  root growth for monic polynomial families and proves that polynomially
+  bounded holomorphic functions off a finite set agree with polynomials.
+  It also proves that a proper holomorphic factorization off finitely
+  many points contradicts irreducibility. The next analytic step is
+  to derive such factors from a disconnected cover by simple roots.
+
 The missing Lean step is the geometric construction from Section 3.
 Produce an infinite curve of exact profiles through a strict witness.
 Keep its old complex contact differences and its complex determinant

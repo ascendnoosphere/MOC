@@ -11,6 +11,7 @@ import MOC.ContactWeightPositivity
 import MOC.DisjointContactRectangle
 import MOC.DiskBoundary
 import MOC.ExtendedCases
+import MOC.FiniteCurveGrowth
 import MOC.FiniteCurvePlaneImage
 import MOC.FiveMatchingLaw
 import MOC.FourCommonShift
@@ -59,9 +60,11 @@ import MOC.StationaryFullSupport
 import MOC.SpectralAffineContact
 import MOC.SpectralMinorDecomposition
 import MOC.SpectralZeroPadding
+import MOC.SubsetAssignmentSupport
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues
 import MOC.Transfer
+import MOC.TripleFibreAmbient
 import MOC.TripleFibreContact
 import MOC.TrianglePairContacts
 import MOC.TriangleRectangleContact
