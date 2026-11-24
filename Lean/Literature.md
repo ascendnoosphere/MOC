@@ -20,6 +20,10 @@ Schur elimination for Hermitian blocks; see E. V. Haynsworth,
 *Determination of the inertia of a partitioned Hermitian matrix*,
 [DOI](https://doi.org/10.1016/0024-3795(68)90050-5). The two-outlier
 determinant comparison is proved directly, not taken from that paper.
+The [spectral form](MOC/SpectralTwoOutlierComparison.lean) proves the
+height-zero bound for the stated two-outlier spectra and every unitary
+mixer. It uses an ambient inverse Gram determinant instead of an
+adapted block basis.
 
 For the algebraic slice, [Stacks Project §10.60](https://stacks.math.columbia.edu/tag/00KD)
 records the principal and generalized height bounds. The

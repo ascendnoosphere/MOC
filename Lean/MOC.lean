@@ -10,6 +10,7 @@ import MOC.ContactCurveGeometry
 import MOC.ContactCurveStep
 import MOC.ContactFibreGluing
 import MOC.ContactIteration
+import MOC.ContactSubsetObstruction
 import MOC.ContactTransfer
 import MOC.ContactWeightPositivity
 import MOC.DisjointContactRectangle
@@ -52,6 +53,8 @@ import MOC.MatchingRectangleSupport
 import MOC.MobiusStationarity
 import MOC.PolynomialEvaluationHeight
 import MOC.PositiveTwoOutlierBlock
+import MOC.SpectralTwoOutlierComparison
+import MOC.TwoOutlierChainObstruction
 import MOC.NestedContactObjective
 import MOC.NestedRectangleObstruction
 import MOC.NormalSupportMaximum

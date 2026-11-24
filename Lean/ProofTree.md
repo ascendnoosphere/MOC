@@ -80,7 +80,7 @@ flowchart BT
     ANDO{{"AND: orthogonal route"}}
     REAL["Order-five bound for orthogonal mixers · open"]:::open
     MIX["Two-table orthogonal convexification · open"]:::open
-    CHAIN["A single additive column chain<br/>can fail at twelve contacts"]:::blocked
+    CHAIN["A single additive chain in either<br/>orientation can fail at 24 or more contacts"]:::blocked
     COST["Checked pair-cost formula<br/>and objective-specific certificates"]:::checked
     DEAD["Universal positive common law<br/>refuted; not an MOC counterexample"]:::blocked
     DENSE --> OR5
@@ -114,12 +114,14 @@ flowchart BT
     STEP["Affine transfer by connectedness<br/>and cofinite gap image · checked"]:::checked
     CHART["Exact injective chart and<br/>one inverse equation · checked"]:::checked
     TERMINAL["Support at 2n-2 contacts<br/>with all products nonzero · open"]:::open
+    OUTLIER["Height-zero bound for two imaginary<br/>outliers, arbitrary mixer · checked"]:::checked
     CHART --> CUT
     CUT --> MODEL
     MODEL --> BOTH
     STEP --> BOTH
     BOTH --> TRANSFER
     TRANSFER -. reduces MOC to .-> TERMINAL
+    OUTLIER -. proves a terminal family .-> TERMINAL
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
 ```
@@ -308,9 +310,18 @@ results on individual support objectives. A covering theorem for all
 terminal profiles is still open. A
 [rectangle obstruction](MOC/NestedRectangleObstruction.lean) rules out
 a single additive column-prefix chain for some order-five profiles
-with twelve or more contacts. It does not rule out a chain in the
-other orientation or a different certificate. Failure of a certificate
-alone does not refute MOC. The common pair law already has an
+with twelve or more contacts. The
+[two-outlier obstruction](MOC/TwoOutlierChainObstruction.lean) gives
+simple-spectrum instances with at least 24 contacts for which neither a row-prefix
+nor a column-prefix additive chain works. The same support inequality is
+proved directly by the [two-outlier theorem](MOC/SpectralTwoOutlierComparison.lean).
+Neither obstruction rules out multiple-chain or subset-event certificates,
+and failure of a certificate alone does not refute MOC. The common pair law already has an
+The [subset-event obstruction test](MOC/ContactSubsetObstruction.lean)
+shows that each noncontact needs a subset image that no contact shares.
+At nonpositive support height, the contacts obtained from that
+noncontact by one swap cannot by themselves prevent this separation.
+Longer relative permutations still matter.
 order-five obstruction.
 
 **Order-four backup.** Exclude the regular stationary orthogonal witnesses
@@ -324,10 +335,14 @@ bound does not supply the law.
 See [Literature.md](Literature.md) for primary sources, DOIs, and the
 scope of the techniques used.
 
-The [two-outlier block comparison](MOC/PositiveTwoOutlierBlock.lean)
-gives a separate route to the height-zero bound. It controls the real
-part of the determinant by two positive reference planes after Schur
-elimination. The bound applies in every order when the block comparison
-holds. Passing from spectral data and an arbitrary mixer to those block
-conditions is a separate step. For the block elimination technique, see
+The [two-outlier theorem](MOC/SpectralTwoOutlierComparison.lean)
+checks a terminal family in every order with at least two labels. Each spectrum has one pure
+imaginary value and positive real values at its other labels. If all
+matching products lie on one side of the imaginary axis, the determinant
+lies on that same side for every unitary mixer. The
+[inverse Gram argument](MOC/TwoOutlierInverseGram.lean) removes a basis
+choice: the inverse Gram determinant at either spectral endpoint is
+the reciprocal of the product of the two endpoint values. The result
+does not yet test other supporting lines for these spectra.
+For related Hermitian block elimination, see
 [Haynsworth, DOI 10.1016/0024-3795(68)90050-5](https://doi.org/10.1016/0024-3795(68)90050-5).
