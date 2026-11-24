@@ -15,9 +15,15 @@ import MOC.Reformulations.FirstSpinFactor
 import MOC.Reformulations.FirstStructured
 import MOC.Reformulations.FirstTensorStationary
 import MOC.Reformulations.FirstUnitary
+import MOC.Reformulations.NativeFirstAAlgebra
+import MOC.Reformulations.NativeLinksB
+import MOC.Reformulations.NativeLinksCMonomial
+import MOC.Reformulations.NativeLinksCTraceless
+import MOC.Reformulations.NativeLinksD
 import MOC.Reformulations.SecondAtlas
 import MOC.Reformulations.SecondCoefficient
 import MOC.Reformulations.SecondCoefficientFree
 import MOC.Reformulations.SecondNative
 import MOC.Reformulations.SecondReal
 import MOC.Reformulations.StationaryFour
+import MOC.Reformulations.ThreeAnchorKernel
