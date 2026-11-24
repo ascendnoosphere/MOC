@@ -2,6 +2,7 @@ import MOC.Reformulations
 import MOC.NormalSupportMaximum
 import MOC.OrderFourIndependent
 import MOC.OrderFiveContact
+import MOC.OrderFiveCommonLawObstruction
 import MOC.OrderFivePairMarkers
 import MOC.PrincipalCoisometry
 import MOC.ReducingCommutant
@@ -110,6 +111,15 @@ def PositivePairLawFive : Prop :=
       ∀ I J : Finset (Fin 5), I.card = 2 → J.card = 2 →
         (∑ σ ∈ Finset.univ.filter (fun σ : Equiv.Perm (Fin 5) => J.map σ.toEmbedding = I), w σ) =
           subsetMinorSq U I J
+
+theorem not_positivePairLawFive : ¬ PositivePairLawFive := by
+  intro h
+  obtain ⟨w, hw, hm⟩ := h orderFiveFlatReflection unitary_orderFiveFlatReflection
+  have hEq := (orderFive_weighted_spectra_eq_all_iff_doubleton_images _
+    unitary_orderFiveFlatReflection w).mpr hm
+  have hs := (orderFive_weighted_spectra_eq_all_iff_pair_images _
+    unitary_orderFiveFlatReflection w).mp hEq |>.1
+  exact orderFiveFlatReflection_no_positive_pair_law ⟨w, hw, hs, hm⟩
 
 theorem five_of_positivePairLaw (h : PositivePairLawFive) : Conjecture (Fin 5) := by
   intro a b U hU

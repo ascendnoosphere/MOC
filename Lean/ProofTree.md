@@ -54,7 +54,8 @@ The checked alternatives include:
   identify which minor data a fixed law must preserve. A universal
   positive common law is not an active branch: [Drury's Householder
   counterexample](https://doi.org/10.1016/S0024-3795(99)00173-1)
-  rules out that stronger property in order five.
+  rules out that stronger property in order five. The library now has a
+  [symbolic Lean proof of this obstruction](MOC/OrderFiveCommonLawObstruction.lean).
   The [explicit pair cost](MOC/OrderFivePairCost.lean) expresses every
   directional order-five objective in these coordinates.
 - Prove orthogonal order five **AND** a two-table orthogonal
@@ -94,3 +95,18 @@ equivalence, proof and refutation both transfer.
   the proposed displacement-label repair has an exact scalar feasibility
   test. This excludes that repair below its threshold, not the hull
   inclusion or other possible repairs.
+- [Flat disjoint row planes](MOC/OrderFourFlatPlanes.lean):
+  at a strict order-four witness, two flat disjoint signed swaps must
+  have a strictly losing product. Otherwise the rotations create a
+  sparse column and reduce to order three.
+- [Branch values](MOC/FiniteCurveBranchValues.lean): the omitted
+  nonseparable fibres of a monic irreducible plane polynomial form a
+  finite set. Its regular root cover is connected.
+- [Reciprocal-conjugate support](MOC/ReciprocalConjugateSupport.lean):
+  a Gram inequality proves the matching bound in a specified direction
+  for reciprocal-conjugate spectra, in every order. It is not a bound
+  in every direction for those spectra.
+- [Pair assignment relaxation](MOC/PairAssignmentObstruction.lean):
+  for a separated pair-cost class, a best assignment of pairs can
+  beat every assignment induced by a permutation of the labels.
+  This is an obstruction to the relaxation, not to MOC.
