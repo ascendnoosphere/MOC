@@ -110,15 +110,18 @@ flowchart BT
     TRANSFER["Increase contacts at a strict witness"]:::open
     ORC{{"OR: use a checked transfer"}}
     BOTH{{"AND: supply the compact curve and apply transfer"}}
-    PLA{{"AND: supply the plane model and apply transfer"}}
-    MODEL["Fixed-gap plane model with a varying gap<br/>as its base coordinate · open in general"]:::open
-    STEP["Connected-profile transfer<br/>including exceptional fibres · checked"]:::checked
+    PLA{{"AND: supply the finite affine slice and apply transfer"}}
+    MODEL["Infinite fixed-gap affine slice<br/>through the witness · open"]:::open
+    HEIGHT["Fewer equations than prime-chain edges<br/>leave a prime below the witness · checked"]:::checked
+    STEP["Affine transfer by connectedness<br/>and cofinite gap image · checked"]:::checked
     SLICE["Construct a fixed-gap curve through<br/>each low-contact witness · open in Lean"]:::open
     FIXED["Fixed-gap transfer on a supplied curve<br/>and finite iteration · checked"]:::checked
     PLANE["Connected plane root cover<br/>including exceptional fibres · checked"]:::checked
     CHART["Exact rank-one charts and<br/>translation obstruction · checked"]:::checked
-    PLANE -. toward a model for the slice .-> SLICE
+    PLANE -. used in affine connectedness .-> STEP
     CHART -. sets up the constraints .-> SLICE
+    CHART -. sets up the constraints .-> MODEL
+    HEIGHT -. controls the dimension cut .-> MODEL
     SLICE --> BOTH
     FIXED --> BOTH
     BOTH --> ORC
@@ -284,3 +287,48 @@ Further checked steps narrow the open branches:
   order-four violation: at height zero a contact and five active
   single-swap neighbors force all matching products onto one line.
   The theorem assumes simple spectra and nonzero matching products.
+
+## The next proof obligations
+
+The [affine contact theorem](MOC/AffineContactCurve.lean) now consumes
+polynomial equations in the slice ideal. A varying gap need not be the
+finite projection coordinate. The translation obstruction guarantees a
+varying gap when the exact profile image is infinite, and the cofinite
+image theorem gives a negative real value of that gap. This removes
+compactification and separate gap-surjectivity from the affine route.
+
+1. **Construct the slice.** Work in the normalized rank-one chart, not
+   in the whole matching-profile image. Start with nonzero matching
+   products and a nonzero residual pivot. The chart has $2n-2$
+   parameters, including the common scalar. Keep the chart open by
+   adjoining the inverse of the product of its required nonzero
+   coordinates; this adds one variable and one equation. Fix the
+   $k-1$ old **complex** contact differences and the one **complex**
+   determinant gap. For $k<2n-2$, show that the slice through the
+   witness has a curve with infinitely many exact profiles.
+   The [polynomial evaluation bound](MOC/PolynomialEvaluationHeight.lean) proves that fewer
+   cuts than variables leave a prime below the witness.
+   The chart and the finite one-dimensional quotient still have to
+   be linked to this bound.
+2. **Certify the terminal support bound.** The transfer raises the
+   number of contact labels, not the number of distinct values. It
+   does not make signed weights nonnegative. Six labels in order four
+   or eight in order five still need a support proof.
+3. **Use concrete tests to choose the next route.** For a unit
+   quaternion mixer the [transpose-average theorem](MOC/QuaternionIdenticalSpectra.lean)
+   puts the midpoint in the hull, so a violation requires a strict
+   contribution from the antisymmetric part. For identical aligned
+   spectra that part vanishes. The
+   [normalized near-balanced case](MOC/QuaternionBinaryNormalize.lean)
+   gives a direct hull theorem for arbitrary spectra in its stated range.
+
+See [Literature.md](Literature.md) for the primary sources, DOIs, and
+the scope of each imported technique.
+
+The [two-outlier block comparison](MOC/PositiveTwoOutlierBlock.lean)
+gives a separate route to the height-zero bound. It controls the real
+part of the determinant by two positive reference planes after Schur
+elimination. The bound applies in every order when the block comparison
+holds. Passing from spectral data and an arbitrary mixer to those block
+conditions is a separate step. For the block elimination technique, see
+[Haynsworth, DOI 10.1016/0024-3795(68)90050-5](https://doi.org/10.1016/0024-3795(68)90050-5).

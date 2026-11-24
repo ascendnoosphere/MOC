@@ -3,7 +3,8 @@ import MOC.SupportedCompressionReduction
 import Mathlib.Tactic.FunProp
 
 /-! A real pole in the partner reduces the order. The real-pivot reduction
-preserves the number of nonreal labels, as in Shitov's induction. -/
+preserves the number of nonreal labels, as in Shitov, *A further sufficient condition for the determinantal
+conjecture*, DOI: 10.4213/im9292e. -/
 
 open Matrix Filter
 open scoped Topology

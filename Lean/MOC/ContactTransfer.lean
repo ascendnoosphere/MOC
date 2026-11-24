@@ -7,7 +7,9 @@ import Mathlib.Topology.Order.Lattice
 
 /-! The analytic contact step for a supplied compactified curve. A holomorphic
 gap function with nonnegative real part on the entire punctured curve would
-have a bounded reciprocal transform and hence be constant. -/
+have a bounded reciprocal transform and hence be constant.
+The contact setup follows Zheng, DOI: 10.13140/RG.2.2.36790.25923;
+the transfer here fixes the determinant gap. -/
 
 open Filter Function Set
 open scoped Manifold Topology

@@ -1,6 +1,10 @@
 import MOC.OrderFivePairMarkers
 import MOC.HouseholderSupport
 
+/-! Drury demonstrates compound-law failure for an order-five Householder
+reflection in *OMC for Householder reflections*, DOI: 10.1016/S0024-3795(99)00173-1.
+The proof here uses a bound on the number of moved labels. -/
+
 open Matrix Finset BigOperators
 
 namespace MOC

@@ -4,7 +4,8 @@ import Mathlib.Algebra.CharZero.Infinite
 
 /-! Anchored matching coordinates for the spectral source.
 See Howard–Millson–Snowden–Vakil, *The equations for the moduli space of n
-points on the line*, Lemma 4.3, for the configuration-space chart. -/
+points on the line*, DOI: 10.1215/00127094-2008-063, for the
+configuration-space chart. -/
 
 open BigOperators Matrix
 

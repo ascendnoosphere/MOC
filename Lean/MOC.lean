@@ -1,4 +1,5 @@
 import MOC.AffineContactStep
+import MOC.AffineContactCurve
 import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
@@ -15,6 +16,7 @@ import MOC.DisjointContactRectangle
 import MOC.DiskBoundary
 import MOC.ExtendedCases
 import MOC.FiniteCurveClosure
+import MOC.FiniteCurveCofiniteImage
 import MOC.FiniteCurveConnected
 import MOC.FiniteCurveFiberSeparation
 import MOC.FiniteCurveBranchValues
@@ -42,11 +44,14 @@ import MOC.HermitianStationarySwap
 import MOC.HomotheticMinorFacet
 import MOC.HouseholderSupport
 import MOC.IdentityPadding
+import MOC.KrullHeightChain
 import MOC.LexicographicScores
 import MOC.MarkedPadding
 import MOC.MatchingProfileClosed
 import MOC.MatchingRectangleSupport
 import MOC.MobiusStationarity
+import MOC.PolynomialEvaluationHeight
+import MOC.PositiveTwoOutlierBlock
 import MOC.NestedContactObjective
 import MOC.NormalSupportMaximum
 import MOC.Obstruction
@@ -74,8 +79,11 @@ import MOC.ProofRoutes
 import MOC.QuaternionParitySharp
 import MOC.QuaternionBinaryBasis
 import MOC.QuaternionIntrinsic
+import MOC.QuaternionIdenticalSpectra
 import MOC.QuaternionMixerParity
+import MOC.QuaternionBinaryNormalize
 import MOC.RankTwoOverlap
+import MOC.RadialExternalCertificates
 import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels
 import MOC.ReciprocalConjugateSupport

@@ -4,7 +4,9 @@ import MOC.ContactTransfer
 import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.Algebra.Polynomial.Roots
 
-/-! The translation-line obstruction in arbitrary-order contact reduction. -/
+/-! The translation-line obstruction in arbitrary-order contact reduction.
+   The contact-count strategy extends Zheng, Theorem 3.6,
+   DOI: 10.13140/RG.2.2.36790.25923. -/
 
 open scoped BigOperators Manifold Topology
 open Polynomial

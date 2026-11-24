@@ -86,3 +86,6 @@ reduces each real rank-one phase motion to its reflection endpoint.
 Use the [proof tree](ProofTree.md) to compare complete routes to the
 all-order, order-four, and order-five goals. It distinguishes alternative
 proofs from steps that must be proved together.
+
+See [the literature notes](Literature.md) for DOIs and for the difference
+between published results, preprint claims, and Lean proofs in this library.

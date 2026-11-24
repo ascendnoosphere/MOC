@@ -29,10 +29,12 @@ eigenvalues of the two matrices, add each pair, and multiply the sums.
 A counterexample to this restricted statement also refutes MOC.
 [Proof of equivalence](Lean/MOC/Reformulations/TracelessSupport.lean)
 
-See the [proof tree](Lean/ProofTree.md) for the routes to orders four and five.
+See the [proof tree](Lean/ProofTree.md) for the routes to the full conjecture and to orders four and five.
 
 See the [source guide](Lean/README.md) for more reductions. It links to the
 indexes of checked proofs, restricted results, and open questions.
+See the [literature and DOI guide](Lean/Literature.md) for the sources and the
+exact scope of each technique used.
 
 ## Build and check
 

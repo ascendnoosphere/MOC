@@ -3,8 +3,9 @@ import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Data.Complex.BigOperators
 
 /-! The all-order signed determinant identity and the Birkhoff reduction.
-Bibliography entries 6, 9, 12, 13, and 78 motivate the distinction between
-singleton marginals and the full squared-minor problem. -/
+For the compound-moment condition, see Merikoski–Virtanen,
+DOI: 10.1016/0024-3795(89)90709-X. The singleton marginal is weaker than
+a positive law matching every squared minor. -/
 
 open BigOperators Matrix Finset
 
