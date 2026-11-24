@@ -1,12 +1,16 @@
 # MOC source guide
 
+Use this guide to find the Lean statement, the proof of a reduction, or the
+status of a reformulation. For cases that Lean proves directly, see the
+[proved-case list](ProvedCases.md).
+
 ## Statement
 
 Let $a$ and $b$ be two ordered spectra of length $n$. Let $U$ be the unitary matrix that relates their eigenbases. The proposition `MOC.Holds a b U` states the inclusion below. [Definitions](MOC/Core.lean)
 
 $$
 \det\bigl(\mathrm{diag}(a)+U\mathrm{diag}(b)U^*\bigr)
-\in \mathrm{conv}_{\mathbb R}
+\in \mathrm{conv}_{\mathbb{R}}
 \left\{\prod_{j=1}^{n}(a_{\sigma(j)}+b_j)\mid\sigma\in S_n\right\}.
 $$
 
@@ -14,7 +18,7 @@ $$
 
 ## Equivalent forms and reductions
 
-The [proved cases](../README.md#proved-cases) list the inclusion theorems. The results below give equivalent statements or specify which instances suffice for a proof.
+Each result below states an equivalence or gives a restriction that is enough for a proof.
 
 | Reduction | Lean source |
 | --- | --- |
@@ -59,7 +63,7 @@ Let $a$, $x$, and $v$ be real lists of length $n$. For a partner of the form $x+
 
 Run `lake build` from this directory. The root module imports every project module and checks the axioms used by each safe declaration. The check permits `propext`, `Classical.choice`, and `Quot.sound`. [Build instructions](../README.md#build) · [Root module](MOC.lean)
 
-Use `import MOC` in a Lean file in this package. All proved cases and sufficient tests in the main README are in the audit. To check an individual module, give Lake its module name.
+Use `import MOC` in a Lean file in this package. The proofs in the proved-case list are part of this check. To check an individual module, give Lake its module name.
 
 ```sh
 lake build +MOC.RankTwoOverlap
@@ -67,4 +71,7 @@ lake build +MOC.RankTwoOverlap
 
 The checked reduction and equivalence API is in `MOC.Reformulations`. Exhaustive ray and permutation certificates are not part of this build.
 
-The [native Lean coverage](MOC/Reformulations/NativeCoverage.lean) records the agreed scope and proof status for atlas entries 001–133. The [native implication audit](MOC/Reformulations/NativeAudit.lean) records the directions and gaps for all 266 entries (243 atlas entries, eleven C★ statements, and twelve named reductions). A labelled spectral equivalence does not establish a reverse implication for the original native object.
+The [native Lean coverage](MOC/Reformulations/NativeCoverage.lean) records the scope and proof status for atlas entries 001–133. The [native implication audit](MOC/Reformulations/NativeAudit.lean) records the directions and gaps for all 266 entries (243 atlas entries, eleven C★ statements, and twelve named reductions). A labelled spectral equivalence does not establish a reverse implication for the original native object.
+
+The [research directory](research) contains the original reformulations. Research
+notes record arguments and open questions outside the checked proof library.

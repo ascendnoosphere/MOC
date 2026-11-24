@@ -1,92 +1,48 @@
 # Marcus–de Oliveira in Lean
 
-This Lean 4 library states the Marcus–de Oliveira conjecture (MOC) and proves the cases below. The unrestricted conjecture is open. [Claim](Lean/MOC/Claim.lean)
+This Lean 4 library proves cases of the Marcus–de Oliveira conjecture (MOC).
+It also proves reductions of the general problem. The library does not prove
+MOC for all finite orders.
 
-**Order-four external claim.** Zheng's [preprint](https://doi.org/10.13140/RG.2.2.36790.25923) reports an order-four proof. The full theorem is not a Lean-verified result in this package. See the [status note](Lean/ZhengOrderFourReview.md).
+## What Lean proves
 
-## Build
+- **Orders up to three:** MOC holds for all pairs of normal matrices.
+  [Proof](Lean/MOC/Small.lean)
+- **Singular sums:** If the sum of the two normal matrices is singular, MOC
+  holds in any finite order.
+  [Proof](Lean/MOC/Singular.lean)
+- **Spectra on circles or lines:** If each spectrum lies on a circle or a
+  line, MOC holds in any finite order. The two spectra can lie on different
+  circles or lines.
+  [Proof](Lean/MOC/TwoSpectralCircles.lean)
 
-Install Elan. Run these commands from the repository root. [Elan](https://github.com/leanprover/elan)
+See the [detailed list of proved cases](Lean/ProvedCases.md) for the exact
+conditions and proof files.
+
+## An equivalent statement
+
+One reduction uses only spectra whose entries sum to zero. It also uses only
+unitary changes of eigenbasis with no zero entries. In orders four and higher,
+it suffices to prove that the real part of the determinant is at most the
+real part of one matching product. To form a matching product, pair the
+eigenvalues of the two matrices, add each pair, and multiply the sums.
+A counterexample to this restricted statement also refutes MOC.
+[Proof of equivalence](Lean/MOC/Reformulations/TracelessSupport.lean)
+
+See the [source guide](Lean/README.md) for more reductions. It links to the
+indexes of checked proofs, restricted results, and open questions.
+
+## Build and check
+
+Install [Elan](https://github.com/leanprover/elan). From the repository root,
+run:
 
 ```sh
 cd Lean
 lake build
 ```
 
-Elan uses the Lean version in `lean-toolchain`. Lake uses the dependency revisions in `lake-manifest.json`. [Toolchain](Lean/lean-toolchain) · [Manifest](Lean/lake-manifest.json)
-
-## Proved cases
-
-Let $A$ and $B$ be normal matrices of order $n$, with ordered spectra $a$ and $b$. Let $U$ be their relative unitary matrix. A matching product is $P_\sigma=\prod_j(a_{\sigma(j)}+b_j)$.
-
-| MOC proved for | Order | Lean proof |
-| --- | --- | --- |
-| All complex spectra and all relative unitary matrices. | At most three | [Small.lean](Lean/MOC/Small.lean) |
-| Pairs with a common unitary eigenbasis. | Any finite order | [Normal.lean](Lean/MOC/Normal.lean) |
-| Pairs with a singular sum. | Any finite order | [Singular.lean](Lean/MOC/Singular.lean) |
-| Two real spectra. | Any finite order | [Hermitian.lean](Lean/MOC/Hermitian.lean) |
-| Two spectra on parallel affine lines. | Any finite order | [Collinear.lean](Lean/MOC/Collinear.lean) |
-| A real first spectrum and a second spectrum that is real outside one specified entry. | Any positive order | [OneOffLine.lean](Lean/MOC/OneOffLine.lean) |
-| A real first spectrum and at most three nonreal eigenvalues in the second spectrum, counted with multiplicity. | Any finite order | [FiveNonreal.lean](Lean/MOC/FiveNonreal.lean) |
-| A real first spectrum and at most three distinct nonreal eigenvalues in the second spectrum, with arbitrary multiplicities. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
-| A real first spectrum and a second spectrum whose nonreal eigenvalues lie on one circle or line. The real eigenvalues may be arbitrary. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
-| The first spectrum and all but one entry of the negated second spectrum on the same circle or line. | Any positive order | [GeneralizedSpectralCircles.lean](Lean/MOC/GeneralizedSpectralCircles.lean) |
-| The first spectrum on a circle or line, with at most three distinct values of the negated second spectrum outside that circle or line. The outlier values may have arbitrary multiplicities. | Any finite order | [HermitianByNormalGeneral.lean](Lean/MOC/HermitianByNormalGeneral.lean) |
-| The first spectrum lies on a circle or line $C$. Each entry of the negated second spectrum lies on $C$ or on a second circle or line $D$. Either part can have any size. | Any finite order | [TwoCircleCover.lean](Lean/MOC/TwoCircleCover.lean) |
-| The first spectrum and the negated second spectrum on two tangent circles of positive radius. | Any finite order | [CircleSpectra.lean](Lean/MOC/CircleSpectra.lean) |
-| Two spectra that each lie on a circle or line, with independent circles or lines. | Any finite order | [TwoSpectralCircles.lean](Lean/MOC/TwoSpectralCircles.lean) |
-| A spectrum with at most two distinct values on either side. | Any finite order | [TwoValues.lean](Lean/MOC/TwoValues.lean) |
-| A second spectrum whose entries, except for one specified entry, take at most two distinct values. | Any positive order | [ThreeValues.lean](Lean/MOC/ThreeValues.lean) |
-| A first spectrum with one value in all but at most two positions. | Any finite order | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
-| Either spectrum with a repeated value. | Four | [TwoExceptions.lean](Lean/MOC/TwoExceptions.lean) |
-| An opposite eigenvalue pair, with $a_i+b_j=0$ for some $i,j$. | Four | [FourCoincidence.lean](Lean/MOC/FourCoincidence.lean) |
-| An opposite eigenvalue pair whose two eigenvalue multiplicities sum to at least $n-2$. | Any finite order | [OppositePair.lean](Lean/MOC/OppositePair.lean) |
-| An opposite eigenvalue pair of simple eigenvalues with normal reciprocal compressions on the overlap of the two spectral support spaces. | Five | [OppositePairNormal.lean](Lean/MOC/OppositePairNormal.lean) |
-| Two equilateral triples with opposite first vertices and independent nonzero complex scales. Each spectrum has a fourth point off its circumcircle. | Four | [FourEquilateral.lean](Lean/MOC/FourEquilateral.lean) |
-| A total rank of at most $n+2$ for $A+tI$ and $B-tI$, for some complex scalar $t$. | Any finite order | [RankSum.lean](Lean/MOC/RankSum.lean) · [RankTwoOverlap.lean](Lean/MOC/RankTwoOverlap.lean) |
-| Each list has at most three free entries. The other entries are $c$ in the first list and $-c$ in the second list. | Any finite order | [MarkedPadding.lean](Lean/MOC/MarkedPadding.lean) |
-| Each list has at most four free entries. The other entries are $c$ in the first list and $-c$ in the second list. | Six or greater | [MarkedPadding.lean](Lean/MOC/MarkedPadding.lean) |
-| Start with an order-$d$ pair that satisfies MOC for every relative unitary. If the two lists contain at most $d+3$ nonzero entries in total, append the same number of zeros to each list. The enlarged relative unitary is arbitrary. | Any order $n\ge d$ | [SpectralZeroPadding.lean](Lean/MOC/SpectralZeroPadding.lean) |
-| Relative unitary $U=I+(z-1)vv^*$, with $\lVert v\rVert=1$ and $\lvert z\rvert=1$. | Any positive order | [HouseholderSupport.lean](Lean/MOC/HouseholderSupport.lean) |
-| A relative unitary with a row or column that has at most two nonzero entries. | Four | [SparseRow.lean](Lean/MOC/SparseRow.lean) · [Small.lean](Lean/MOC/Small.lean) |
-| Each list has at most three free entries. The other entries are $c$ in the first list and $-c$ in the second list. | Any finite order | [MarkedPadding.lean](Lean/MOC/MarkedPadding.lean) |
-| Each list has at most four free entries. The other entries are $c$ in the first list and $-c$ in the second list. | Six or greater | [MarkedPadding.lean](Lean/MOC/MarkedPadding.lean) |
-| Start with an order-$d$ pair that satisfies MOC for every relative unitary. If the two lists contain at most $d+3$ nonzero entries in total, append the same number of zeros to each list. The enlarged relative unitary is arbitrary. | Any order $n\ge d$ | [SpectralZeroPadding.lean](Lean/MOC/SpectralZeroPadding.lean) |
-| An upper Hessenberg relative unitary after independent row and column permutations. Entries below the first subdiagonal are zero. | Any finite order | [SparseRow.lean](Lean/MOC/SparseRow.lean) |
-| A relative unitary that splits into blocks of order at most three after independent row and column permutations. Any number of blocks is allowed. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
-| A relative unitary $U$ for which $U-I$ has zero entries outside a principal block of order at most three. | Any finite order | [IdentityPadding.lean](Lean/MOC/IdentityPadding.lean) · [Small.lean](Lean/MOC/Small.lean) |
-| Matching products that all lie on one affine line. | Any finite order | [CollinearKernelSupport.lean](Lean/MOC/CollinearKernelSupport.lean) |
-| Large shifts $(a-z,b)$ for fixed $a,b,U$, with the trace margin given below. The theorem applies for all sufficiently large $\lvert z\rvert$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
-| Large shifts $(a-z,b)$ for arbitrary spectra when every entry of the relative unitary $U$ is nonzero. The radius may depend on $a,b,U$. | Any finite order | [ExtendedCases.lean](Lean/MOC/ExtendedCases.lean) |
-
-A common fractional-linear map can act on the first spectrum and the negated second spectrum in each case. Its determinant must be nonzero. Its pole must avoid both signed spectra. The transformed pair has the same relative unitary. If fixed weights represent every partner of a first spectrum, they also represent every partner of its transformed spectrum. The converse holds. For this result the pole need only avoid the first spectrum. [ProjectiveTransport.lean](Lean/MOC/ProjectiveTransport.lean) · [CommonLawTransport.lean](Lean/MOC/CommonLawTransport.lean)
-
-### Sufficient tests
-
-Each test proves MOC for an instance that meets its hypotheses.
-
-| Test | Lean proof |
-| --- | --- |
-| All real signed determinant weights of $U$ are nonnegative. | [Weights.lean](Lean/MOC/Weights.lean) |
-| For every permutation $\sigma$, the matching product has the form $c+\sum_j f(j,\sigma(j))$, with fixed $c$ and $f$. | [Weights.lean](Lean/MOC/Weights.lean) |
-| The relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and has largest Frobenius norm among the maximizing sums. | [NormalOrbit.lean](Lean/MOC/NormalOrbit.lean) |
-| In order four, the relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and the maximizing projection is nonzero. | [NormalSupportMaximum.lean](Lean/MOC/NormalSupportMaximum.lean) |
-| A convex representation of zero gives weights at least $\varepsilon\ge0$ to two matching products $p,q$. Require $\lVert p\rVert+\lVert q\rVert>0$ and $(\lVert p\rVert+\lVert q\rVert)\lvert\det(A+B)\rvert\le\varepsilon\lvert\mathrm{Im}(p\bar q)\rvert$. | [DiskBoundary.lean](Lean/MOC/DiskBoundary.lean) |
-
-For the large-shift case, let $T=\mathrm{tr}(AB)$ and $q_\sigma=\sum_j a_{\sigma(j)}b_j$. The margin requires a $\delta>0$ that applies in every unit direction. For each $\eta$ with $\lvert\eta\rvert=1$, some permutation satisfies $\mathrm{Re}(\eta(T-q_\sigma))\ge\delta$.
-
-The source guide defines the Lean statement and lists equivalent forms and proof reductions. [Source guide](Lean/README.md)
-
-For the normal-maximizer approach, see the [research note](Lean/NormalMaximizerResearch.md). It gives exact counterexamples to universal normality of Frobenius-maximal support sums, proves a sufficient joint determinant/Frobenius law for the existential tie-break, and isolates the remaining general proof obligation. The note is mathematical research, not a Lean-checked extension of the proved cases.
-
-For the Hessenberg-maximizer approach, see the [Hessenberg research note](Lean/HessenbergMaximizerResearch.md). It proves the arbitrary-kernel sparse-row recursion, nonnegativity of the signed permutation law for Hessenberg unitaries, support-preserving elimination, and exact Givens constraints. The general existence of a sparse maximizing representative remains open; these new proofs are not Lean-checked.
-
-The [order-four sparse-maximizer note](Lean/SparseMaximizerOrderFour.md) proves the determinant hull inclusion for any order-four unitary with at least four zero entries, classifies the three-zero pattern, establishes its sharp negative signed-mass bound, and reduces its spectral support test to a three-variable convex minimization. It also gives an obstruction to sparsification for general minor-linear objectives. These are mathematical proofs, not yet Lean-checked.
-
-The [stationary pivot reduction](Lean/StationaryPivotReduction.md) proves that any order-four global support maximizer with a zero entry can be replaced by a permutation maximizer for arbitrary complex spectra. More generally it applies to a real stationary mixer with a nonnegative entrywise Schur-complement pivot. The [three-zero tangent certificate](Lean/StationaryThreeZero.md) gives an independent explicit proof and symbolic check for that pattern. These are mathematical proofs, not yet Lean-checked; the fully supported case remains open.
-
-The [general contact reduction](Lean/OrderFiveContactReduction.md) extends Zheng's contact argument to arbitrary complex unitary mixers and every order using normalized rank-two kernels, without a new realification theorem. Any hypothetical order-five counterexample can be chosen with at least eight supporting matching labels. The note also extends the dense real orthogonal Cauchy-mixer common-law proof to arbitrary orders using the published nonnegative double-dimer identity. These are mathematical derivations, not new Lean-checked theorems.
-
-## Proof scope
-
-The Lean library retains structural proofs, without exhaustive ray or permutation validation. Removed certificate-dependent cases are open in this library. `MOC.Reformulations` contains the checked equivalences, restrictions, and proof targets; the targets are not assumed or declared proved.
+The build uses the versions in [lean-toolchain](Lean/lean-toolchain) and
+[lake-manifest.json](Lean/lake-manifest.json). It checks the project proofs
+and reports any axiom outside the standard Lean list.
+[Proof check](Lean/MOC.lean)
