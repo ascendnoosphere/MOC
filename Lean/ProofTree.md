@@ -315,8 +315,11 @@ with twelve or more contacts. The
 simple-spectrum instances with at least 24 contacts for which neither a row-prefix
 nor a column-prefix additive chain works. The same support inequality is
 proved directly by the [two-outlier theorem](MOC/SpectralTwoOutlierComparison.lean).
-Neither obstruction rules out multiple-chain or subset-event certificates,
-and failure of a certificate alone does not refute MOC. The common pair law already has an
+Neither obstruction rules out multiple-chain or subset-event certificates.
+In fact, an [explicit complement-paired certificate](MOC/TwoOutlierMinorCertificate.lean)
+proves the bound when the outlier heights dominate the stated
+spectator products. It pairs complementary subset events before
+checking signs. Failure of a certificate alone does not refute MOC.
 The [subset-event obstruction test](MOC/ContactSubsetObstruction.lean)
 shows that each noncontact needs a subset image that no contact shares.
 At nonpositive support height, the contacts obtained from that

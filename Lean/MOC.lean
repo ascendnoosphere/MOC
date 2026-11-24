@@ -55,6 +55,7 @@ import MOC.PolynomialEvaluationHeight
 import MOC.PositiveTwoOutlierBlock
 import MOC.SpectralTwoOutlierComparison
 import MOC.TwoOutlierChainObstruction
+import MOC.TwoOutlierMinorCertificate
 import MOC.NestedContactObjective
 import MOC.NestedRectangleObstruction
 import MOC.NormalSupportMaximum
