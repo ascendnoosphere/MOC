@@ -2,6 +2,8 @@
 
 This Lean 4 library states the Marcus–de Oliveira conjecture (MOC) and proves the cases below. The unrestricted conjecture is open. [Claim](Lean/MOC/Claim.lean)
 
+**Order-four external proof under review (2026-11-24).** Denzel Zheng's [October 2026 preprint](https://doi.org/10.13140/RG.2.2.36790.25923) claims the full order-four theorem. The supplied main PDF has been reviewed and its facet/contact census and several key polynomial identities have been independently verified in exact arithmetic. The required separate exceptional-contact supplement was not available, so the order-four theorem has not been added to the Lean-verified results. See the [review and audit](Lean/ZhengOrderFourReview.md). The project now also has a [general contact reduction and order-five research note](Lean/OrderFiveContactReduction.md).
+
 ## Build
 
 Install Elan. Run these commands from the repository root. [Elan](https://github.com/leanprover/elan)
@@ -90,3 +92,5 @@ The [stationary pivot reduction](Lean/StationaryPivotReduction.md) proves that a
 The [dense stationary order-four reduction](Lean/DenseStationaryOrderFour.md) eliminates two of the three dense real sign classes using the stationary pivot theorem, reduces all remaining no-pivot sign patterns to one explicit Hadamard/minor-sign chamber, and formulates the remaining full conjecture as an explicit polynomial feasibility problem. Its emptiness is not yet established.
 
 The [stationary Latin-gap note](Lean/StationaryLatinGap.md) proves the real-orthogonal stationary signed marginal identity in every finite order, derives thirteen geometric-mean bounds and twenty-four strict linear gap conditions for a hypothetical order-four violation, and reduces the residual proof to a finite spectral-only sufficient feasibility test. It includes exact permutation checks and an integer spectral obstruction to using the geometric-mean condition alone. The spectral feasibility problem remains unresolved; the new mathematics is not Lean-checked.
+
+The [general contact reduction](Lean/OrderFiveContactReduction.md) extends Zheng's contact argument to arbitrary complex unitary mixers and every order using normalized rank-two kernels, without a new realification theorem. Any hypothetical order-five counterexample can be chosen with at least eight supporting matching labels. The note also extends the dense real orthogonal Cauchy-mixer common-law proof to arbitrary orders using the published nonnegative double-dimer identity. These are mathematical derivations, not new Lean-checked theorems. Exact verification scripts: [facet and contact census](Lean/research/zheng_contact_audit.py), [matching identities](Lean/research/zheng_algebra_audit.py).
