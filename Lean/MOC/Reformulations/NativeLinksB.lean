@@ -47,57 +47,6 @@ def HasRealJointSpectrum {n r : ℕ} (A : Fin r → Matrix (Fin n) (Fin n) ℂ)
   ∃ V : Matrix (Fin n) (Fin n) ℂ, IsUnitary V ∧
     ∀ k, A k = V * diagonal (fun j => (a j k : ℂ)) * Vᴴ
 
-/-- The actual joint eigenvalue data exist for every finite commuting
-Hermitian tuple. There is no assumption of simple joint spectrum. -/
-theorem exists_realJointSpectrum {n r : ℕ} (A : Fin r → Matrix (Fin n) (Fin n) ℂ)
-    (hA : ∀ k, (A k).IsHermitian) (hC : ∀ k l, Commute (A k) (A l)) :
-    ∃ a, HasRealJointSpectrum A a := by
-  classical
-  let E := EuclideanSpace ℂ (Fin n)
-  let T (k : Fin r) : Module.End ℂ E := toEuclideanLin (A k)
-  have hT (k : Fin r) : (T k).IsSymmetric := isHermitian_iff_isSymmetric.mp (hA k)
-  have hTC : Pairwise (Function.onFun Commute T) := by
-    intro k l _
-    exact (hC k l).map (Matrix.toLinAlgEquiv (EuclideanSpace.basisFun (Fin n) ℂ).toBasis)
-  let V (μ : Fin r → ℂ) := ⨅ k, Module.End.eigenspace (T k) (μ k)
-  have ho : OrthogonalFamily ℂ (fun μ => V μ) (fun μ => (V μ).subtypeₗᵢ) :=
-    LinearMap.IsSymmetric.orthogonalFamily_iInf_eigenspaces hT
-  have hsum : DirectSum.IsInternal V :=
-    LinearMap.IsSymmetric.directSum_isInternal_of_pairwise_commute hT hTC
-  have hn : Module.finrank ℂ E = n := finrank_euclideanSpace
-  let v := hsum.subordinateOrthonormalBasis hn ho
-  let μ j := hsum.subordinateOrthonormalBasisIndex hn j ho
-  let U := (EuclideanSpace.basisFun (Fin n) ℂ).toBasis.toMatrix v.toBasis
-  have hU₀ := (EuclideanSpace.basisFun (Fin n) ℂ).toMatrix_orthonormalBasis_mem_unitary v
-  have hU : IsUnitary U :=
-    ⟨Matrix.mem_unitaryGroup_iff.mp hU₀, Matrix.mem_unitaryGroup_iff'.mp hU₀⟩
-  refine ⟨fun j k => (μ j k).re, U, hU, ?_⟩
-  intro k
-  have hv (j : Fin n) : v j ∈ Module.End.eigenspace (T k) (μ j k) :=
-    (Submodule.mem_iInf.mp (hsum.subordinateOrthonormalBasis_subordinate hn j ho)) k
-  have hr (j : Fin n) : (((μ j k).re : ℝ) : ℂ) = μ j k := by
-    have hEig : (T k).HasEigenvalue (μ j k) :=
-      Module.End.hasEigenvalue_of_hasEigenvector ⟨hv j, v.toBasis.ne_zero j⟩
-    have hConj : conj (μ j k) = μ j k := (hT k).conj_eigenvalue_eq_self hEig
-    apply Complex.ext
-    · simp
-    · have hIm := congrArg Complex.im hConj
-      simp only [Complex.conj_im] at hIm
-      simp only [Complex.ofReal_im]
-      linarith
-  have hEq : A k * U = U * diagonal (fun j => ((μ j k).re : ℂ)) := by
-    ext i j : 1
-    have h := congrArg (fun x : E => WithLp.equiv 2 (Fin n → ℂ) x i)
-      (Module.End.mem_eigenspace_iff.mp (hv j))
-    change WithLp.equiv 2 (Fin n → ℂ) (toEuclideanLin (A k) (v j)) i = _ at h
-    rw [Matrix.piLp_equiv_toEuclideanLin_apply] at h
-    change (A k *ᵥ (fun l => v j l)) i = (μ j k • v j) i at h
-    rw [Matrix.mul_diagonal, Matrix.mul_apply, hr]
-    simpa only [U, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
-      OrthonormalBasis.coe_toBasis, EuclideanSpace.basisFun_repr, Matrix.mulVec, dotProduct,
-      PiLp.smul_apply, smul_eq_mul, mul_comm (μ j k)] using h
-  rw [← hEq, Matrix.mul_assoc, hU.1, Matrix.mul_one]
-
 /-- The actual linear evaluation used in the integrable-systems comparison. -/
 def evaluateSpectrum {n r : ℕ} (c : Fin r → ℂ) (a : Fin n → Fin r → ℝ)
     (j : Fin n) : ℂ :=

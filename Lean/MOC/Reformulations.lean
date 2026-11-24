@@ -16,7 +16,19 @@ import MOC.Reformulations.FirstStructured
 import MOC.Reformulations.FirstTensorStationary
 import MOC.Reformulations.FirstUnitary
 import MOC.Reformulations.NativeFirstAAlgebra
+import MOC.Reformulations.NativeFirstAPolynomial
+import MOC.Reformulations.NativeFirstARepresentations
+import MOC.Reformulations.NativeFirstB
+import MOC.Reformulations.NativeFirstBGeometry
+import MOC.Reformulations.NativeFirstBGraded
+import MOC.Reformulations.NativeLinksA
+import MOC.Reformulations.NativeLinksACoupling
+import MOC.Reformulations.NativeLinksAQuadratic
 import MOC.Reformulations.NativeLinksB
+import MOC.Reformulations.NativeLinksBGaussian
+import MOC.Reformulations.NativeLinksBTorus
+import MOC.Reformulations.NativeLinksCFlow
+import MOC.Reformulations.NativeLinksCIncidence
 import MOC.Reformulations.NativeLinksCMonomial
 import MOC.Reformulations.NativeLinksCTraceless
 import MOC.Reformulations.NativeLinksD
@@ -27,3 +39,4 @@ import MOC.Reformulations.SecondNative
 import MOC.Reformulations.SecondReal
 import MOC.Reformulations.StationaryFour
 import MOC.Reformulations.ThreeAnchorKernel
+import MOC.Reformulations.TracelessSupport
