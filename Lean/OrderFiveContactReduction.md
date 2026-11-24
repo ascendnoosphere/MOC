@@ -1,11 +1,11 @@
 # General contact reduction and the next order-five problem
 
-Status: mathematical proof notes; not yet Lean-checked. The reduction
-in Sections 1--4 holds for every finite order n >= 2, including arbitrary
-complex relative unitaries. It is independent of the unverified full
-order-four theorem. Section 5 extends a structured-mixer result using
-the published totally nonnegative Grassmannian double-dimer identity.
-The unrestricted order-five conjecture remains unproved.
+Status: the translation obstruction, contact transfer on a supplied
+fixed-gap curve, and finite iteration have Lean proofs. The construction
+of that curve through each small-contact profile is a mathematical step
+that this library does not yet formalize. No order-four result is needed
+for the general contact argument. Section 5 uses the published double-dimer
+identity and is not a Lean theorem. The library does not prove all of order five.
 
 Source and attribution: Zheng, *The Marcus–de Oliveira conjecture for
 n = 4*, [preprint DOI](https://doi.org/10.13140/RG.2.2.36790.25923),
@@ -173,105 +173,64 @@ degenerate spectra and zero matching products at the original point.
 
 ## 3. General contact-reduction theorem
 
-**Theorem.** Fix \(n\ge2\), and fix a complex unitary matrix \(U\).
-If there are spectra for which the determinant violates the matching
-convex hull, then there are (possibly different) finite complex spectra
-and a support direction for which the *same* \(U\) violates the
-matching convex hull and at least \(2n-2\) distinct permutations attain
-the supporting matching value.
+**Theorem.** Fix a finite order \(n\ge2\) and a complex unitary \(U\).
+If the hull inclusion fails for this \(U\), then it fails for the same
+\(U\) with at least \(2n-2\) contact permutations. Different contacts
+can have the same complex matching product.
 
-The proof is an extension of Zheng's contact theorem (Theorem 3.6).
-It works on \(X_n\) from Section 1 and does not use realification.
-The contact count refers to permutation labels, not necessarily
-distinct complex matching products.
-
-By strict real affine separation and a common spectral scaling, start
-with \(p\in X_n\) for which
+Use strict separation and absorb the support direction by a common
+spectral scaling. Work in the minimum-support convention. Let \(p\)
+be the matching profile, let \(\pi\) attain the minimum real part, and
+let \(T\) be the \(k\) matching labels with that real part. Let \(w\)
+be the real signed determinant law for the fixed \(U\). Define
 \[
-g_\sigma=\Re(p_\sigma-p_\pi)\ge0,\qquad
-L(p)=\sum_\sigma w_\sigma g_\sigma<0,
+D(p)=\sum_\sigma w_\sigma(p_\sigma-p_\pi).
 \]
-where \(\pi\) minimizes the projected matching value and the real
-\(w_\sigma\) are the fixed coefficients (4). This is the minimum-support
-convention; a maximum-support violation is its negative.
-The sum of the gaps is positive because otherwise \(L=0\).
-Scale the profile by a positive number to arrange
-\(\sum_\sigma g_\sigma=1\). This retains strict violation and contacts.
-Let \(T\) be the set of contacts and \(k=|T|\).
+The starting profile has \(\Re D(p)<0\).
 
-Suppose \(k<2n-2\). In the irreducible cone \(X_n\), fix the *complex*
-values of the \(k-1\) differences \(p_\tau-p_\pi\) for \(\tau\in T\),
-\(\tau\ne\pi\). Also fix the complex number
-\(\sum_\sigma(p_\sigma-p_\pi)\). These are \(k\) affine linear
-conditions. By the dimension theorem, every irreducible component
-of their intersection through the current point has dimension at
-least \(2n-2-k\ge1\). Choose one such component \(Y\).
+Suppose \(k<2n-2\). In the matching-profile variety \(X_n\), fix the
+\(k-1\) complex differences \(p_\tau-p_\pi\) for
+\(\tau\in T\setminus\{\pi\}\). Also fix the complex value of
+\(D(p)\). There are \(k\) affine linear conditions. Each irreducible
+component through the starting point has dimension at least
+\(2n-2-k\ge1\). The last condition keeps the determinant violation
+strict. It replaces the normalization of the sum of the real gaps.
 
-Not all complex differences \(p_\sigma-p_\pi\) can be constant on \(Y\).
-If they were, the positive-dimensional closed algebraic set \(Y\)
-would lie on, and hence equal, the affine line \(p+\mathbb C\mathbf1\).
-The translation-line lemma would contradict the strict violation at
-the current point.
+Some difference \(p_\sigma-p_\pi\) varies on this component.
+Otherwise the component lies on a translation line in the constant
+profile direction. A positive-dimensional closed algebraic subset of
+that line is the whole line. Section 2 would give the hull inclusion,
+which contradicts the strict violation.
 
-Choose an irreducible affine algebraic curve in \(Y\) through the
-current point on which some difference is nonconstant.
-For completeness this can be done by generic affine hyperplanes
-through the point: if \(d=\dim Y\), the level set of a nonconstant
-difference is a proper closed subset of dimension at most \(d-1\).
-Cut by \(d-1\) sufficiently general hyperplanes through the point
-so that this level set has local dimension zero, while the
-dimension theorem guarantees a curve component through the point
-of the section of \(Y\). Choose such a component. This ensures the
-difference is nonconstant on it.
+Cut the component by general affine hyperplanes through the starting
+point to obtain a curve on which that difference still varies. For a
+component of dimension \(d\), use \(d-1\) hyperplanes. The same
+hyperplanes cut the proper level set of the varying difference to
+local dimension zero. The dimension theorem then supplies a curve
+component through the point that is not in this level set.
 
-Normalize the curve and compactify it to a connected compact
-Riemann surface \(\Sigma\). All coordinate differences are then
-meromorphic, with poles in a finite set \(S\) which may be enlarged
-to include all points at infinity. The old contact differences
-are constant, and their real parts are zero. Write \(H_\sigma\)
-for the remaining meromorphic differences. Their real parts sum
-to one on the punctured surface, and they are not all constant.
-At a preimage of the starting point, their real parts are all
-positive and \(L<0\).
+Normalize and compactify this curve. Remove the finitely many points
+over infinity. On the remaining connected curve, the old differences
+are constant and all differences \(H_\sigma=p_\sigma-p_\pi\) are
+holomorphic. If all real gaps stayed nonnegative, each transform
+\(1/(1+H_\sigma)\) would be bounded by one. These transforms extend
+over the removed points. On the compact connected surface they are
+constant, contrary to the variation of a difference.
 
-Suppose there were no point retaining nonnegative gaps, adding a
-new contact, and retaining \(L<0\). On the punctured surface consider
-the component \(\Omega\) containing the starting point of the open
-set where all remaining real gaps are positive and \(L<0\).
-The harmonic function \(-L\) is positive there. On its boundary
-in \(\Sigma\setminus S\), continuity and the supposed absence of
-a new strictly violating contact force \(L=0\).
-Extend \(-L\) by zero off \(\Omega\); the subharmonic gluing lemma
-makes this function subharmonic. It is bounded above, because
-on \(\Omega\) every gap lies in \([0,1]\) and the coefficients \(w\)
-are fixed. It therefore extends subharmonically across the
-finitely many removed points by the removable-singularity theorem
-for bounded-above subharmonic functions.
+Thus some real gap is negative at a point on the punctured curve.
+The minimum of the gaps for labels outside \(T\) is continuous.
+It starts positive and is negative at that point. At an intermediate
+point it is zero. This adds a contact, keeps all old contacts, and
+keeps \(D(p)\) fixed. Every point of the affine curve is an exact
+spectral profile. Repeat until there are at least \(2n-2\) contacts.
 
-A subharmonic function on a connected compact Riemann surface is
-constant. Here its positive value at the starting point implies
-a positive constant; hence the entire punctured surface lies
-in \(\Omega\). All \(\Re H_\sigma\) are then positive there.
-A meromorphic function with a pole has real part of both signs
-arbitrarily close to the pole, by its leading Laurent term.
-Thus no \(H_\sigma\) has a pole. They are holomorphic on a compact
-surface and hence constant, a contradiction.
-
-It follows that a new point with another contact and a strict
-violation exists. The curve is contained in \(X_n\), so this point
-has finite spectral representatives by Section 1; the sum
-normalization excludes the zero profile. The relative unitary and
-all its signed weights have been fixed throughout. Repeat until
-at least \(2n-2\) contacts are present. QED.
-
-No conclusion that the chosen unitary maximizes the *new* spectra's
-support is needed. If a global maximizing representative is
-subsequently desired, compactness permits its selection for the
-final spectra and direction without losing the strict violation.
+The proof does not require a new maximizing mixer. The mixer stays
+fixed. The dimension and curve construction are mathematical steps;
+the Lean results do not yet supply this construction.
 
 ## 4. Consequence for n = 5
 
-There are \(120\) matching products. Any violation has a witness
+There are \(120\) matching labels. Their products can coincide. Any violation has a witness
 with at least eight contact permutations.
 
 By the minor expansion and complementary minors, the support
@@ -392,22 +351,31 @@ This proof uses Lam's published identity as a mathematical input.
 It does not assert that every real orthogonal mixer is of this type,
 nor that arbitrary complex order-five mixers can be realified.
 
-## 6. Remaining work and integration
+## 6. Lean results and the next step
 
-* Keep the full order-four theorem in the external-claim audit
-  category until its supplementary inequalities are available and
-  checked.
-* Formalize the normalized-kernel translation lemma using the
-  existing profile closure, rank-two normalization, signed marginal,
-  and compact-curve contact lemmas. The algebraic dimension/curve
-  selection step will require explicit mathematical development in
-  Lean.
-* For order five, work in the 42-dimensional indicator space and the
-  eight-dimensional complex matching cone, using the eight-contact
-  reduction. Do not assume that all 29 million contact orbits are
-  geometrically realizable.
-* If order-four MOC is verified, import it as a proved theorem to
-  the existing degree-two row/column and proper block reductions at
-  order five. The full order-five proof still needs a new argument.
+- [GeneralContactReduction.lean](MOC/GeneralContactReduction.lean) proves
+  the translation obstruction. Infinitely many realizable translates
+  already force an affine sum of singleton terms. It also proves the
+  analytic transfer for a supplied infinite fixed-gap curve.
+- [ContactCurveStep.lean](MOC/ContactCurveStep.lean) turns that transfer
+  into a strict increase of the contact set. [ContactIteration.lean](MOC/ContactIteration.lean)
+  proves that repeated increases reach the target.
+- [RealizableContactKernels.lean](MOC/RealizableContactKernels.lean) proves
+  the normalized chart and shows how to recover its entries from
+  matching ratios. Its general pivot chart also covers profiles with
+  zero coordinates.
+- [ContactWeightPositivity.lean](MOC/ContactWeightPositivity.lean) gives
+  nonnegative laws for certain grouped objectives. It also shows that
+  a large contact set does not make all signed determinant weights
+  nonnegative.
+- [OrderFiveContact.lean](MOC/OrderFiveContact.lean) proves the block
+  reduction. If a mixer with a proper block split or with a row or
+  column of degree at most two gives an order-five failure, order four
+  fails. The file also proves the eight-contact equivalence under the
+  one-contact transfer premise for mixers with no zero entries.
 
-No axioms or unchecked Lean declarations have been added.
+The missing Lean step is the geometric construction from Section 3.
+Produce an infinite curve of exact profiles through a strict witness.
+Keep its old complex contact differences and its complex determinant
+gap fixed. After that step, the stated transfer and iteration apply.
+The eight-contact inequalities themselves still require a proof.

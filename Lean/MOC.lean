@@ -2,8 +2,10 @@ import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
+import MOC.ContactCurveStep
 import MOC.ContactIteration
 import MOC.ContactTransfer
+import MOC.ContactWeightPositivity
 import MOC.DisjointContactRectangle
 import MOC.DiskBoundary
 import MOC.ExtendedCases
@@ -15,6 +17,7 @@ import MOC.FourEquilateral
 import MOC.FourNonrealReduction
 import MOC.FourQuaternionMinor
 import MOC.FullSupportReduction
+import MOC.GeneralContactReduction
 import MOC.Geometry
 import MOC.HermitianByNormalFour
 import MOC.HermitianByNormalGeneral
@@ -33,6 +36,7 @@ import MOC.Obstruction
 import MOC.OppositePair
 import MOC.OppositePairNormal
 import MOC.OrderFiveContact
+import MOC.OrderFourIndependent
 import MOC.Pencil
 import MOC.PolydiskContact
 import MOC.PositiveWeightMargin
