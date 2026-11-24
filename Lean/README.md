@@ -82,3 +82,7 @@ a curve. The [order-four reduction](MOC/OrderFourIndependent.lean) and
 [second-order test](MOC/OrderFourSecondVariation.lean) give necessary
 conditions on an order-four counterexample. The [reflection test](MOC/OrderFourReflectionTest.lean)
 reduces each real rank-one phase motion to its reflection endpoint.
+
+Use the [proof tree](ProofTree.md) to compare complete routes to the
+all-order, order-four, and order-five goals. It distinguishes alternative
+proofs from steps that must be proved together.
