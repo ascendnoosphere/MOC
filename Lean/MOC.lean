@@ -2,6 +2,7 @@ import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
+import MOC.ContactIteration
 import MOC.ContactTransfer
 import MOC.DisjointContactRectangle
 import MOC.DiskBoundary
@@ -31,16 +32,19 @@ import MOC.NormalSupportMaximum
 import MOC.Obstruction
 import MOC.OppositePair
 import MOC.OppositePairNormal
+import MOC.OrderFiveContact
 import MOC.Pencil
 import MOC.PolydiskContact
 import MOC.PositiveWeightMargin
 import MOC.ProjectiveTransport
 import MOC.RankTwoOverlap
+import MOC.RealizableContactKernels
 import MOC.Reformulations
 import MOC.SchurEntryObstruction
 import MOC.SchurQuadraticSupport
 import MOC.Source
 import MOC.SparseRow
+import MOC.StationaryFullSupport
 import MOC.SpectralAffineContact
 import MOC.SpectralZeroPadding
 import MOC.SubsetMarkerTest
