@@ -96,7 +96,7 @@ theorem not_moc_of_sevenContactStationaryWitness (h : SevenContactStationaryWitn
     ¬ MOCIsTrue := by
   rintro hm
   obtain ⟨a, b, O, η, p, _, _, hp, hcontacts, hgap⟩ := h
-  exact (not_le_of_gt hgap) (sevenContactTarget_of_moc hm a b _ η p
+  exact (not_le_of_gt hgap) (contactForm_of_conjecture (k := 7) (hm 4) a b _ η p
     (isUnitary_ofReal_orthogonal O) hp hcontacts)
 
 end

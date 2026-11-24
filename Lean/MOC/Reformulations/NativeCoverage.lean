@@ -4,8 +4,7 @@
 Each original entry is listed once. “Native” means the determinant or
 operator in the source, not a labelled list with arbitrary scalar
 re-evaluation. An iff here proves transfer in both directions, not MOC
-itself. Finite restrictions, named open propositions and unresolved
-realizations are explicitly marked.
+itself. Finite restrictions and unresolved realizations are explicitly marked.
 
 A dash in the declaration column means that the native step is not
 formalized. For arrows to full MOC, see `NativeAudit.lean`.
@@ -45,7 +44,7 @@ ID | Status | Lean declaration or gap | Exact scope
 032 | native gap |  | Finite representation argument is symbolic via 051, but an actual Clifford target requires compiled quadratic-form isometry dependencies; no spinor/regular reverse follows automatically.
 033 | native gap |  | Need actual complex group algebra star-compatible regular matrix map and cyclic Fourier construction, not an arbitrary spectral relabelling.
 034 | new exact native iff | NativeFirstAAlgebra.moc_iff_nativeFrobeniusAlgebra | Actual bilinear nondegeneracy from the Frobenius functional; construct coordinate sum in reverse.
-035 | new native open target | NativeFirstABaseChange.nativePolynomialQuotientNormHull | Actual AdjoinRoot quotient and norm of product-map of f+g. Need repeated-root/local-factor norm law.
+035 | exact native theorem | NativeFirstABaseChange.polynomialQuotientNorm_eq_prod_eval; NativeFirstABaseChange.polynomialQuotientNorm_mem_hull | Actual AdjoinRoot quotient; multiplication norm is the product of evaluations at all roots counted with multiplicity, so the identity matching is attained.
 036 | new native forward | NativeFirstABaseChange.nativeProjectiveFiberHull_of_moc | Actual tensor scalar extension of endomorphisms. Free-fiber reverse is mathematically available but not separately checked here.
 037 | native gap |  | A general Euclidean Jordan-algebra model with Jordan-frame spectrum and automorphisms is not provided here; 038/039/042 are separate.
 038 | native specialization only | FirstHermitian.hermitianMatrixHull; Realification.isUnitary_ofReal_orthogonal | Complexification route available. Explicit proof identifying real spectral lists under complexification and real matrix det not added.

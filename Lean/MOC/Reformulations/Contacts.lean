@@ -24,18 +24,4 @@ theorem not_moc_of_not_contactForm {n k : ℕ} (h : ¬ ContactForm n k) :
     ¬ MOCIsTrue :=
   fun hm => h (contactForm_of_conjecture (hm n))
 
-/-- The reverse implication in OrderFiveContactReduction.md is not proved by
-the two theorems above. It requires the contact-transfer existence theorem. -/
-def AllOrderContactTarget : Prop :=
-  ∀ n : ℕ, 2 ≤ n → ContactForm n (2 * n - 2)
-
-theorem allOrderContactTarget_of_moc (h : MOCIsTrue) : AllOrderContactTarget :=
-  fun n _ => contactForm_of_conjecture (h n)
-
-/-- The seven-contact threshold in the proposed order-four reduction. -/
-def SevenContactTarget : Prop := ContactForm 4 7
-
-theorem sevenContactTarget_of_moc (h : MOCIsTrue) : SevenContactTarget :=
-  contactForm_of_conjecture (h 4)
-
 end MOC.Reformulations
