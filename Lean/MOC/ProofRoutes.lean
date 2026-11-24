@@ -7,6 +7,7 @@ import MOC.OrderFivePairMarkers
 import MOC.PrincipalCoisometry
 import MOC.ReducingCommutant
 import MOC.SpectralMinorDecomposition
+import MOC.SaturatedContactReduction
 
 /-! A branch belongs here only if there is a Lean proof that it closes its
 parent. Open premises within one branch are joined by AND, not OR. -/
@@ -180,6 +181,7 @@ def fourRoutes : List (Route (Conjecture (Fin 4))) :=
    fromIff "Principal coisometry of dimension three" (conjecture_iff_principalCoisometry 3).symm,
    of_witness_iff "Exclude all regular stationary orthogonal witnesses"
       not_conjecture_four_iff_regular_stationary_orthogonal_witness,
+   fromIff "Nonzero six-contact support bound" conjecture_iff_contact_saturated_bound.symm,
    sufficient "One-contact transfer AND the six-contact support test"
       (fun h : SixContactStep ∧ Reformulations.ContactForm 4 6 =>
         conjecture_of_contact_step h.1 h.2),
@@ -198,6 +200,7 @@ def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
    sufficient "Order four AND existence of normal order-five maximizers"
       (fun h : Conjecture (Fin 4) ∧ NormalMaximizers 5 =>
         five_of_four_and_normalMaximizers h.1 h.2),
+   fromIff "Nonzero eight-contact support bound" conjecture_iff_contact_saturated_bound.symm,
    sufficient "One-contact transfer AND the eight-contact support test"
       (fun h : EightContactStep ∧ FullSupportEightContactTest =>
         (conjecture_five_iff_fullSupportEight_of_step h.1).mpr h.2),
@@ -228,6 +231,11 @@ theorem all_iff_four_and_five_and_higher :
   exact hhi n (by omega)
 
 open Reformulations
+
+/-- The terminal contact support bound in every order is equivalent to MOC. -/
+theorem moc_iff_contact_saturated_bounds :
+    MOCIsTrue ↔ ∀ n : ℕ, ContactSaturatedBound (Fin n) :=
+  forall_congr' fun _ => conjecture_iff_contact_saturated_bound
 
 def nativeRoutes : List (Route MOCIsTrue) :=
   [fromIff "Normal complex matrices" moc_iff_complexMatrices.symm,
@@ -289,6 +297,8 @@ def nativeRoutes : List (Route MOCIsTrue) :=
    fromIff "Traceless real-part bound" moc_iff_traceless_real_bound.symm,
    fromIff "Regular anchored spectra" moc_iff_anchored_regular.symm,
    fromIff "Three-anchor rank-one kernel in all orders" moc_iff_three_anchor_kernel.symm,
+   fromIff "Nonzero contact-saturated support bounds in every order"
+      moc_iff_contact_saturated_bounds.symm,
    fromIff "Normal maximizers in every order" mocIsTrue_iff_exists_normal_support_maximizer.symm,
    fromIff "Principal coisometries in all orders" mocIsTrue_iff_principalCoisometry.symm,
    fromIff "No paired block split" mocIsTrue_iff_no_proper_paired_blocks.symm,

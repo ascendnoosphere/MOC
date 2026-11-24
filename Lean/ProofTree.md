@@ -14,6 +14,7 @@ flowchart BT
     ALL["Unrestricted MOC · open"]:::open
     ROUTES{{"OR: choose a complete all-order route"}}
     NATIVE["Native and structural analogies<br/>exact and sufficient routes"]:::open
+    SAT["Support bound at 2n-2 contacts<br/>and all-nonzero matching products"]:::open
     ATLAS["243 evaluated atlas forms<br/>each exact, not a native-object proof"]:::open
     SPLIT{{"AND: prove all three order ranges"}}
     FOUR["Order 4 · open"]:::open
@@ -21,6 +22,7 @@ flowchart BT
     HIGH["Orders 6 and higher · open"]:::open
     LOW["Orders 0 to 3 · already proved"]:::checked
     NATIVE --> ROUTES
+    SAT --> ROUTES
     ATLAS --> ROUTES
     FOUR --> SPLIT
     FIVE --> SPLIT
@@ -44,18 +46,16 @@ flowchart BT
     NORMAL["A normal sum at some maximizer<br/>of each support problem"]:::open
     PENCIL["A positive law for each<br/>one-entry complex pencil"]:::open
     CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
-    AND4{{"AND: contact route"}}
-    TRANSFER["Increase the contact count<br/>below 6 · open in Lean"]:::open
-    SIX["Support bound at 6 or more contacts · open"]:::open
+    TRANSFER["Increase the contact count below 6<br/>on the nonzero chart · checked"]:::checked
+    SIX["Support bound at 6 or more contacts<br/>on the nonzero chart · open"]:::open
     TESTS["Checked witness tests: Hessian,<br/>reflections and flat row planes"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
     WITNESS --> OR4
     NORMAL --> OR4
     PENCIL --> OR4
     CHART --> OR4
-    TRANSFER --> AND4
-    SIX --> AND4
-    AND4 --> OR4
+    TRANSFER -. proves the reduction .-> SIX
+    SIX <-->|iff| FOUR
     TESTS -. narrow the witness set .-> WITNESS
     PHASE -. restrict realizable profiles .-> SIX
     OR4 <-->|iff| FOUR
@@ -75,9 +75,8 @@ flowchart BT
     ANDN{{"AND: normal-maximizer route"}}
     FOUR["Order 4 · open"]:::open
     NORMAL["A normal sum at some maximizer<br/>of each order-five support problem"]:::open
-    ANDC{{"AND: contact route"}}
-    TRANSFER["Increase the contact count<br/>below 8 · open in Lean"]:::open
-    EIGHT["Support bound at 8 or more contacts · open"]:::open
+    TRANSFER["Increase the contact count below 8<br/>on the nonzero chart · checked"]:::checked
+    EIGHT["Support bound at 8 or more contacts<br/>on the nonzero chart · open"]:::open
     ANDO{{"AND: orthogonal route"}}
     REAL["Order-five bound for orthogonal mixers · open"]:::open
     MIX["Two-table orthogonal convexification · open"]:::open
@@ -88,12 +87,11 @@ flowchart BT
     CHART --> OR5
     FOUR --> ANDN
     NORMAL --> ANDN
-    TRANSFER --> ANDC
-    EIGHT --> ANDC
+    TRANSFER -. proves the reduction .-> EIGHT
+    EIGHT <-->|iff| FIVE
     REAL --> ANDO
     MIX --> ANDO
     ANDN --> OR5
-    ANDC --> OR5
     ANDO --> OR5
     COST -. can help on each objective .-> DENSE
     COST -. can help on each objective .-> EIGHT
@@ -103,32 +101,23 @@ flowchart BT
     classDef blocked fill:#fae5e5,stroke:#a33434,color:#361010
 ```
 
-## Shared contact gap
+## Why the contact count increases
 
 ```mermaid
 flowchart BT
-    TRANSFER["Increase contacts at a strict witness"]:::open
-    ORC{{"OR: use a checked transfer"}}
-    BOTH{{"AND: supply the compact curve and apply transfer"}}
-    PLA{{"AND: supply the finite affine slice and apply transfer"}}
-    MODEL["Infinite fixed-gap affine slice<br/>through the witness · open"]:::open
-    HEIGHT["Fewer equations than prime-chain edges<br/>leave a prime below the witness · checked"]:::checked
+    TRANSFER["Increase contacts at a nonzero strict witness<br/>below 2n-2 · checked"]:::checked
+    BOTH{{"AND: construct the curve and apply transfer"}}
+    CUT["Fixed-gap chart leaves a prime strictly<br/>below the witness · checked"]:::checked
+    MODEL["Finite prime affine curve through<br/>the witness · checked"]:::checked
     STEP["Affine transfer by connectedness<br/>and cofinite gap image · checked"]:::checked
-    SLICE["Construct a fixed-gap curve through<br/>each low-contact witness · open in Lean"]:::open
-    FIXED["Fixed-gap transfer on a supplied curve<br/>and finite iteration · checked"]:::checked
-    PLANE["Connected plane root cover<br/>including exceptional fibres · checked"]:::checked
-    CHART["Exact rank-one charts and<br/>translation obstruction · checked"]:::checked
-    PLANE -. used in affine connectedness .-> STEP
-    CHART -. sets up the constraints .-> SLICE
-    CHART -. sets up the constraints .-> MODEL
-    HEIGHT -. controls the dimension cut .-> MODEL
-    SLICE --> BOTH
-    FIXED --> BOTH
-    BOTH --> ORC
-    MODEL --> PLA
-    STEP --> PLA
-    PLA --> ORC
-    ORC --> TRANSFER
+    CHART["Exact injective chart and<br/>one inverse equation · checked"]:::checked
+    TERMINAL["Support at 2n-2 contacts<br/>with all products nonzero · open"]:::open
+    CHART --> CUT
+    CUT --> MODEL
+    MODEL --> BOTH
+    STEP --> BOTH
+    BOTH --> TRANSFER
+    TRANSFER -. reduces MOC to .-> TERMINAL
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
 ```
@@ -149,6 +138,9 @@ has proved that it would be enough.
 - **OR: An evaluated atlas comparison.** Each of the 243 numbered
   links uses complex evaluation on labelled finite data. This branch
   does not identify the original native objects with MOC.
+- **OR: The terminal contact bound.** Exclude strict witnesses with at least
+  $2n-2$ contacts and no zero matching product, in each order. This is
+  [equivalent to unrestricted MOC](MOC/ProofRoutes.lean).
 - **OR: An order split.** Prove order four **AND** order five **AND**
   all orders at least six. The cases of order at most three are already
   proved.
@@ -167,9 +159,8 @@ The checked alternatives include:
   whose sum is normal.
 - Prove the [common law for each one-entry complex pencil](MOC/ProofRoutes.lean),
   or the [three-anchor kernel bound](MOC/Reformulations/ThreeAnchorKernel.lean).
-- Prove a one-contact transfer **AND** the support bound at six or more
-  contacts. The [fixed-gap step](MOC/ContactCurveStep.lean) applies once
-  the required curve exists. The construction of that curve is open in Lean.
+- Prove the support bound at six or more contacts when every matching
+  product is nonzero. Lean proves the [contact transfer and equivalence](MOC/SaturatedContactReduction.lean).
 
 ## Order five
 
@@ -180,8 +171,9 @@ The checked alternatives include:
   work for different pencils.
 - Prove order four **AND** show that each order-five support problem
   has a maximizer with a normal sum.
-- Prove a one-contact transfer **AND** the support bound at eight or
-  more contacts, for mixers with no zero entries.
+- Prove the support bound at eight or more contacts with no zero
+  matching products. The checked transfer does not require full
+  mixer support.
 - Use [subset assignment certificates](MOC/SubsetAssignmentSupport.lean)
   on individual support objectives. The [doubleton image tests](MOC/OrderFivePairMarkers.lean)
   identify which minor data a fixed law must preserve. A universal
@@ -260,7 +252,7 @@ additional special-case and restricted comparisons are not root branches.
 
 | Gap | What Lean proves | What remains |
 | --- | --- | --- |
-| Fixed-gap curve | [Connected-profile transfer](MOC/ConnectedContactStep.lean) applies to supplied exact profiles on a monic irreducible plane model, even at an exceptional fibre. [Proper projection](MOC/FiniteCurveProperProjection.lean) controls limits of lifts to the affine curve. | Construct the required slice and show that its profile maps have the needed connected representation through any low-contact witness. |
+| Fixed-gap curve | [Connected-profile transfer](MOC/ConnectedContactStep.lean) applies to supplied exact profiles on a monic irreducible plane model, even at an exceptional fibre. [Proper projection](MOC/FiniteCurveProperProjection.lean) controls limits of lifts to the affine curve. | Use the checked transfer to prove the terminal support inequality. |
 | Order-four stationary maximum | [Column reflections](MOC/OrderFourColumnReflections.lean) send a column to a signed coordinate and reduce to order three. Those reflections strictly lose support at a strict witness. | Show that every remaining stationary candidate has an improving or flat direction, or certify it by a different route. |
 | Order-four contact geometry | [Fibre gluing](MOC/ContactFibreGluing.lean) gives a matching-line proof when two full zero-height fibres meet under its spectral conditions. [Triangle closure](MOC/ZeroHeightTriangleClosure.lean) forces missing contacts from four specified contacts at height zero. | Cover profiles outside these patterns. |
 | Quaternion corrections | The [intrinsic displacement proof](MOC/QuaternionIntrinsic.lean) gives the possible monomial types and their permutation parities. | Connect these to the local signs in the actual quaternion mixer, then prove nonnegativity of its corrected law. |
@@ -273,7 +265,8 @@ Further checked steps narrow the open branches:
   treats a prime finite affine curve whose coordinates can be recovered
   rationally from a plane model. The [primitive-coordinate theorem](MOC/FiniteCurvePrimitiveCoordinate.lean)
   proves the recovery and connectedness for any prime complex curve with
-  a finite injective polynomial projection. The fixed-gap slice is still open.
+  a finite injective polynomial projection. The
+  [fixed-gap chart](MOC/PolynomialContactSlice.lean) supplies a slice through each low-contact witness.
 - The [near-balanced signed-Klein mixer theorem](MOC/QuaternionMixerParity.lean)
   proves the hull inclusion for every spectrum pair when its explicit
   signing, unitary, determinant, and cubic conditions hold. It is a
@@ -288,42 +281,38 @@ Further checked steps narrow the open branches:
   single-swap neighbors force all matching products onto one line.
   The theorem assumes simple spectra and nonzero matching products.
 
-## The next proof obligations
+## What remains
 
-The [affine contact theorem](MOC/AffineContactCurve.lean) now consumes
-polynomial equations in the slice ideal. A varying gap need not be the
-finite projection coordinate. The translation obstruction guarantees a
-varying gap when the exact profile image is infinite, and the cofinite
-image theorem gives a negative real value of that gap. This removes
-compactification and separate gap-surjectivity from the affine route.
+The [contact reduction](MOC/SaturatedContactReduction.lean) now raises
+the number of contacts of any strict witness with all matching products
+nonzero below $2n-2$. The normalized chart has $2n-2$ parameters. Its
+inverse variable and equation keep the chart open without using up a
+degree of freedom. The fixed complex differences and determinant gap
+leave a prime strictly below evaluation at the witness. A finite
+affine curve through that point has an infinite exact profile image.
+The cofinite gap image and connectedness give the next contact without
+changing the mixer or losing any old contacts.
+The contact strategy starts from [Zheng, preprint DOI 10.13140/RG.2.2.36790.25923](https://doi.org/10.13140/RG.2.2.36790.25923); the affine curve construction and transfer are checked here.
 
-1. **Construct the slice.** Work in the normalized rank-one chart, not
-   in the whole matching-profile image. Start with nonzero matching
-   products and a nonzero residual pivot. The chart has $2n-2$
-   parameters, including the common scalar. Keep the chart open by
-   adjoining the inverse of the product of its required nonzero
-   coordinates; this adds one variable and one equation. Fix the
-   $k-1$ old **complex** contact differences and the one **complex**
-   determinant gap. For $k<2n-2$, show that the slice through the
-   witness has a curve with infinitely many exact profiles.
-   The [polynomial evaluation bound](MOC/PolynomialEvaluationHeight.lean) proves that fewer
-   cuts than variables leave a prime below the witness.
-   The chart and the finite one-dimensional quotient still have to
-   be linked to this bound.
-2. **Certify the terminal support bound.** The transfer raises the
-   number of contact labels, not the number of distinct values. It
-   does not make signed weights nonnegative. Six labels in order four
-   or eight in order five still need a support proof.
-3. **Use concrete tests to choose the next route.** For a unit
-   quaternion mixer the [transpose-average theorem](MOC/QuaternionIdenticalSpectra.lean)
-   puts the midpoint in the hull, so a violation requires a strict
-   contribution from the antisymmetric part. For identical aligned
-   spectra that part vanishes. The
-   [normalized near-balanced case](MOC/QuaternionBinaryNormalize.lean)
-   gives a direct hull theorem for arbitrary spectra in its stated range.
+**Main target.** Prove the terminal support inequality at $2n-2$
+contact labels. The reduction counts labels, not distinct values.
+It does not prove that signed weights are nonnegative, that all terminal
+profiles admit a chosen certificate, or that a stationary mixer stays
+stationary as its spectra move. Six contacts are enough in order
+four and eight in order five. A strict terminal violation would refute MOC.
 
-See [Literature.md](Literature.md) for the primary sources, DOIs, and
-the scope of each imported technique.
+**Certificate route.** Use the checked subset-event and nested-transport
+results on individual support objectives. A covering theorem for all
+terminal profiles is still open. Failure of a certificate alone does not
+refute MOC. The common pair law already has an order-five obstruction.
+
+**Order-four backup.** Exclude the regular stationary orthogonal witnesses
+using the second-order, reflection, and flat-plane tests. This is a separate
+exact route. The one-entry law is also an exact reformulation; its five-label
+bound does not supply the law.
+
+See [Literature.md](Literature.md) for primary sources, DOIs, and the
+scope of the techniques used.
 
 The [two-outlier block comparison](MOC/PositiveTwoOutlierBlock.lean)
 gives a separate route to the height-zero bound. It controls the real

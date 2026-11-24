@@ -87,5 +87,10 @@ Use the [proof tree](ProofTree.md) to compare complete routes to the
 all-order, order-four, and order-five goals. It distinguishes alternative
 proofs from steps that must be proved together.
 
+The [contact reduction](MOC/SaturatedContactReduction.lean) is exact in
+every order. It suffices to test strict support witnesses with at least
+$2n-2$ maximal matching labels and no zero matching product. The
+terminal support bound remains open.
+
 See [the literature notes](Literature.md) for DOIs and for the difference
 between published results, preprint claims, and Lean proofs in this library.

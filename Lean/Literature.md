@@ -7,7 +7,7 @@ linked Lean declaration proves it.
 
 | Primary source | Result or technique | Use in this repository |
 | --- | --- | --- |
-| D. Zheng, *The Marcus–de Oliveira conjecture for n = 4*, [preprint DOI](https://doi.org/10.13140/RG.2.2.36790.25923) | Theorem 3.6 moves a violating order-four profile to one with at least six contact labels. The proposed closing argument uses a classification of contact sets. | [Contact transfer on an affine curve](MOC/AffineContactCurve.lean) keeps the complex determinant gap fixed and uses connectedness plus a cofinite coordinate image. It still needs the slice through a witness. The repository does not count the preprint's order-four conclusion as a Lean proof. |
+| D. Zheng, *The Marcus–de Oliveira conjecture for n = 4*, [preprint DOI](https://doi.org/10.13140/RG.2.2.36790.25923) | Theorem 3.6 moves a violating order-four profile to one with at least six contact labels. The proposed closing argument uses a classification of contact sets. | [Contact transfer on an affine curve](MOC/AffineContactCurve.lean) keeps the complex determinant gap fixed and uses connectedness plus a cofinite coordinate image. [Curve selection](MOC/FiniteCurveAtPinnedPrime.lean) and the [saturated reduction](MOC/SaturatedContactReduction.lean) construct and use the slice in all orders. The repository does not count the preprint's order-four conclusion as a Lean proof. |
 | B. Howard, J. Millson, A. Snowden and R. Vakil, *The equations for the moduli space of n points on the line*, [DOI](https://doi.org/10.1215/00127094-2008-063) | Projective configuration charts and invariant relations. | [Anchored matching coordinates](MOC/Source.lean) give an explicit rank-one kernel chart. No invariant-ring presentation is assumed in the Lean transfer. |
 | J. K. Merikoski and A. Virtanen, *Some notes on de Oliveira's determinantal conjecture*, [DOI](https://doi.org/10.1016/0024-3795(89)90709-X) | Subset-image and squared-minor conditions for common weights. | [Signed moments](MOC/Weights.lean) and the [order-five objective formula](MOC/OrderFivePairCost.lean) support certificates for a chosen spectral objective. They do not assert a positive law for every objective at once. |
 | S. W. Drury, *OMC for Householder reflections*, [DOI](https://doi.org/10.1016/S0024-3795(99)00173-1) | MOC for Householder mixers; failure of the stronger common compound law in order five. | [Order-five obstruction](MOC/OrderFiveCommonLawObstruction.lean) proves the distinction by bounding the number of moved labels. The example is not a counterexample to MOC. |
@@ -26,5 +26,9 @@ records the principal and generalized height bounds. The
 [upstream Mathlib development](https://raw.githubusercontent.com/leanprover-community/mathlib4/master/Mathlib/RingTheory/Ideal/KrullsHeightTheorem.lean)
 is newer than the pinned project toolchain. This repository proves the
 [prime-chain generator bound](MOC/KrullHeightChain.lean) on the pinned
-toolchain. That bound does not by itself construct a finite affine
-curve through the chosen contact witness.
+toolchain. The [curve construction](MOC/FiniteCurveAtPinnedPrime.lean)
+uses finite Noether normalization and
+[going down over a normal domain](https://stacks.math.columbia.edu/tag/00H8).
+Lean proves the required characteristic-zero going-down result using
+Galois transitivity of primes. These steps complete the transfer, not
+the terminal support inequality.

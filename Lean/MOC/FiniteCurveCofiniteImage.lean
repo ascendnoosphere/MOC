@@ -8,6 +8,33 @@ open scoped BigOperators
 
 namespace MOC
 
+/-- The finite projection itself, unlike a general varying coordinate,
+takes every complex value on the affine curve. -/
+theorem surjective_finite_affine_projection
+    {σ : Type*} [Fintype σ]
+    (Q : Ideal (MvPolynomial σ ℂ)) [Q.IsPrime]
+    (f : Polynomial ℂ →ₐ[ℂ] (MvPolynomial σ ℂ ⧸ Q)) (hf : f.Finite)
+    (hfi : Function.Injective f)
+    (t : MvPolynomial σ ℂ) (ht : Ideal.Quotient.mk Q t = f Polynomial.X) :
+    Function.Surjective (fun x : zeroLocus Q => eval x.val t) := by
+  obtain ⟨P, hP, hirr, hplane⟩ :=
+    exists_monic_irreducible_plane_image_of_finite_projection Q f hf hfi t t ht
+  have hPd : P.natDegree ≠ 0 := fun h =>
+    hirr.not_isUnit ((hP.natDegree_eq_zero_iff_eq_one.mp h).symm ▸ isUnit_one)
+  intro a
+  let R := P.map (Polynomial.evalRingHom a)
+  have hRm : R.Monic := hP.map _
+  have hRn : R.natDegree ≠ 0 := by
+    change (P.map (Polynomial.evalRingHom a)).natDegree ≠ 0
+    rw [hP.natDegree_map]
+    exact hPd
+  have hRd : R.degree ≠ 0 := by
+    rw [Polynomial.degree_eq_natDegree hRm.ne_zero]
+    exact_mod_cast hRn
+  obtain ⟨b, hb⟩ := IsAlgClosed.exists_root R hRd
+  obtain ⟨z, hz, hza, _⟩ := (hplane a b).mp hb
+  exact ⟨⟨z, hz⟩, hza⟩
+
 /-- Every nonconstant polynomial coordinate on a prime finite complex
 affine curve has cofinite image. This applies to the actual affine points,
 not merely a dense regular locus. -/
