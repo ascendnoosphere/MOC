@@ -41,7 +41,8 @@ theorem StrictMatchingSupport.exists_more_contacts_on_affine_curve
     (hvar : ∃ q : Equiv.Perm ι, ∃ x y : zeroLocus Q,
       w.η * (eval x.val (F w.pivot) - eval x.val (F q)) ≠
         w.η * (eval y.val (F w.pivot) - eval y.val (F q))) :
-    ∃ w' : StrictMatchingSupport U, w.contacts ⊂ w'.contacts ∧
+    ∃ w' : StrictMatchingSupport U, w'.η = w.η ∧ w'.pivot = w.pivot ∧
+      w.contacts ⊂ w'.contacts ∧
       ∃ z : zeroLocus Q, matchingProduct w'.a w'.b = fun q => eval z.val (F q) := by
   letI := connectedSpace_prime_finite_affine_curve Q f hf hfi t ht
   let P (z : zeroLocus Q) (q : Equiv.Perm ι) := eval z.val (F q)
@@ -57,10 +58,10 @@ theorem StrictMatchingSupport.exists_more_contacts_on_affine_curve
     simp [g, P]
   obtain ⟨z, hz⟩ := exists_affine_point_with_negative_real_of_varying_coordinate
     Q f hf hfi t g ht ⟨x, y, by rw [he, he]; exact hxy⟩
-  obtain ⟨v, hv, z', _, hz'⟩ := w.exists_more_contacts_on_connected_profiles
+  obtain ⟨v, hη, hp, hv, z', _, hz'⟩ := w.exists_more_contacts_on_connected_profiles
     hU isPreconnected_univ P (fun z _ => hexact z) hc (Set.mem_univ z₀) hbase
     (fun z _ => hold z) (fun z _ => hgap z) ⟨z, Set.mem_univ _, q, by rwa [he] at hz⟩
-  exact ⟨v, hv, z', hz'⟩
+  exact ⟨v, hη, hp, hv, z', hz'⟩
 
 
 /-- The affine slice need only have infinitely many exact profiles.
@@ -85,7 +86,8 @@ theorem StrictMatchingSupport.exists_more_contacts_on_infinite_affine_curve
       matchingProfileDetGap U w.η w.pivot (fun q => eval z.val (F q)) =
         matchingProfileDetGap U w.η w.pivot (matchingProduct w.a w.b))
     (hinf : (Set.range fun z : zeroLocus Q => fun q => eval z.val (F q)).Infinite) :
-    ∃ w' : StrictMatchingSupport U, w.contacts ⊂ w'.contacts ∧
+    ∃ w' : StrictMatchingSupport U, w'.η = w.η ∧ w'.pivot = w.pivot ∧
+      w.contacts ⊂ w'.contacts ∧
       ∃ z : zeroLocus Q, matchingProduct w'.a w'.b = fun q => eval z.val (F q) := by
   classical
   let P (z : zeroLocus Q) (q : Equiv.Perm ι) := eval z.val (F q)
@@ -138,7 +140,8 @@ theorem StrictMatchingSupport.exists_more_contacts_on_affine_constraints
         (C w.η * (F q - F w.pivot))) -
       C (matchingProfileDetGap U w.η w.pivot (matchingProduct w.a w.b)) ∈ Q)
     (hinf : (Set.range fun z : zeroLocus Q => fun q => eval z.val (F q)).Infinite) :
-    ∃ w' : StrictMatchingSupport U, w.contacts ⊂ w'.contacts ∧
+    ∃ w' : StrictMatchingSupport U, w'.η = w.η ∧ w'.pivot = w.pivot ∧
+      w.contacts ⊂ w'.contacts ∧
       ∃ z : zeroLocus Q, matchingProduct w'.a w'.b = fun q => eval z.val (F q) := by
   refine w.exists_more_contacts_on_infinite_affine_curve hU Q f hf hfi t ht F z₀
     hbase hexact ?_ ?_ hinf

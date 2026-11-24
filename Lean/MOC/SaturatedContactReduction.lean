@@ -49,7 +49,7 @@ theorem StrictMatchingSupport.exists_more_contacts_nonzero
     exact PolynomialContactChart.contact_mem_of_span_le o i₀ j₀ w Q hS q hq
   have hG : PolynomialContactChart.gapEquation o i₀ w ∈ Q :=
     hS (Ideal.subset_span (PolynomialContactChart.gap_mem_equations o i₀ j₀ w))
-  obtain ⟨v, hv, y, hy⟩ := w.exists_more_contacts_on_affine_constraints
+  obtain ⟨v, _, _, hv, y, hy⟩ := w.exists_more_contacts_on_affine_constraints
     hU Q f hf hfi t ht (PolynomialContactChart.liftedProfile o i₀) z₀ hz
     hins.1 hr hG (Set.infinite_range_of_injective hins.2)
   have hInv : PolynomialContactChart.inverseEquation o i₀ j₀ ∈ Q :=

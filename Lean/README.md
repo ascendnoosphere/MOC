@@ -42,6 +42,9 @@ Each result below states an equivalence or gives a restriction that is enough fo
 | At a positive Hermitian orbit support maximum with a simple real spectrum, an exact transposition bound relates repeated stationary poles to inverse imaginary minors. A definite partner imaginary part makes the bound strict and forces distinct poles. | [HermitianStationarySwap.lean](MOC/HermitianStationarySwap.lean) |
 | In a single complex spectral coordinate, a strict violation can be moved to a maximizer with at least three active permutations if the convex hull of the slopes contains zero in its interior. | [SpectralAffineContact.lean](MOC/SpectralAffineContact.lean) |
 | If a fixed unitary and direction give a strict violation in the unit spectral polydisk, some maximum of the support excess there has at least three maximizing permutations. | [PolydiskContact.lean](MOC/PolydiskContact.lean) |
+| A one-entry pencil has a common law exactly when conditional slope hulls can meet two complex moment equations. | [GroupedPencil.lean](MOC/GroupedPencil.lean) |
+| The squared Frobenius self-commutator of a principal compression equals eight times a spectral covariance determinant, using the deleted row's weights. An imaginary strip gives a quadratic width bound for this squared norm. This does not provide a hull comparison. | [CompressionDefect.lean](MOC/CompressionDefect.lean) |
+| It suffices to use Gaussian-integer spectra and unitary mixers with Gaussian-rational entries. Cayley density proves the reduction; no finite search is part of it. | [GaussianCayley.lean](MOC/GaussianCayley.lean) |
 
 `MOC.HermitianByNormal` states the inclusion for real $a$ and complex $b$. The claim for all orders is open. [Hermitian-by-normal statement](MOC/HermitianByNormal.lean)
 
@@ -76,9 +79,9 @@ The [native Lean coverage](MOC/Reformulations/NativeCoverage.lean) records the s
 The [research directory](research) contains the original reformulations. Research
 notes record arguments and open questions outside the checked proof library.
 
-The [contact reduction notes](OrderFiveContactReduction.md) distinguish
-the formal contact transfer from the geometric step needed to construct
-a curve. The [order-four reduction](MOC/OrderFourIndependent.lean) and
+The [contact reduction notes](OrderFiveContactReduction.md) describe
+the global curve construction and contact transfer, and distinguish
+them from the terminal inequality. The [order-four reduction](MOC/OrderFourIndependent.lean) and
 [second-order test](MOC/OrderFourSecondVariation.lean) give necessary
 conditions on an order-four counterexample. The [reflection test](MOC/OrderFourReflectionTest.lean)
 reduces each real rank-one phase motion to its reflection endpoint.
@@ -87,10 +90,19 @@ Use the [proof tree](ProofTree.md) to compare complete routes to the
 all-order, order-four, and order-five goals. It distinguishes alternative
 proofs from steps that must be proved together.
 
-The [contact reduction](MOC/SaturatedContactReduction.lean) is exact in
-every order. It suffices to test strict support witnesses with at least
-$2n-2$ maximal matching labels and no zero matching product. The
-terminal support bound remains open.
+The [global contact reduction](MOC/GlobalContactSlice.lean) is exact
+in every order. Every strict witness can reach at least $2n-2$ maximal
+matching labels without changing the mixer, phase, pivot, complex
+determinant gap, or the original complex contact differences. This
+includes witnesses with zero matching products. The profile ring has
+[dimension $2n-2$](MOC/ProfileDimension.lean) for $n\ge 2$. The [balanced terminal equivalence](MOC/BalancedContactReduction.lean)
+further lets us require a nonnormal orbit maximizer with equal traces
+and cubic moments on unit energy and unit direction. The resulting
+terminal support bound remains open. The [equation budget](MOC/ContactEquationBudget.lean)
+can force a new contact even after the count threshold when the
+active equations are redundant. The [nonzero-chart reduction](MOC/SaturatedContactReduction.lean)
+is also available when the final argument requires nonzero matching
+products.
 
 See [the literature notes](Literature.md) for DOIs and for the difference
 between published results, preprint claims, and Lean proofs in this library.

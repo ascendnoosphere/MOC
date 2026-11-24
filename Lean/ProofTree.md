@@ -14,7 +14,8 @@ flowchart BT
     ALL["Unrestricted MOC · open"]:::open
     ROUTES{{"OR: choose a complete all-order route"}}
     NATIVE["Native and structural analogies<br/>exact and sufficient routes"]:::open
-    SAT["Support bound at 2n-2 contacts<br/>and all-nonzero matching products"]:::open
+    SAT["Support bound for balanced,<br/>orbit-maximal terminal witnesses"]:::open
+    SIMPLE["Support bound at ≥ 2n-2 contacts<br/>on the full exact profile locus"]:::open
     ATLAS["243 evaluated atlas forms<br/>each exact, not a native-object proof"]:::open
     SPLIT{{"AND: prove all three order ranges"}}
     FOUR["Order 4 · open"]:::open
@@ -22,6 +23,7 @@ flowchart BT
     HIGH["Orders 6 and higher · open"]:::open
     LOW["Orders 0 to 3 · already proved"]:::checked
     NATIVE --> ROUTES
+    SIMPLE <-->|iff| SAT
     SAT --> ROUTES
     ATLAS --> ROUTES
     FOUR --> SPLIT
@@ -46,8 +48,8 @@ flowchart BT
     NORMAL["A normal sum at some maximizer<br/>of each support problem"]:::open
     PENCIL["A positive law for each<br/>one-entry complex pencil"]:::open
     CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
-    TRANSFER["Increase the contact count below 6<br/>on the nonzero chart · checked"]:::checked
-    SIX["Support bound at 6 or more contacts<br/>on the nonzero chart · open"]:::open
+    TRANSFER["Increase the contact count below 6<br/>even at zero products · checked"]:::checked
+    SIX["Support bound at 6 or more contacts<br/>· open"]:::open
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
@@ -77,8 +79,8 @@ flowchart BT
     ANDN{{"AND: normal-maximizer route"}}
     FOUR["Order 4 · open"]:::open
     NORMAL["A normal sum at some maximizer<br/>of each order-five support problem"]:::open
-    TRANSFER["Increase the contact count below 8<br/>on the nonzero chart · checked"]:::checked
-    EIGHT["Support bound at 8 or more contacts<br/>on the nonzero chart · open"]:::open
+    TRANSFER["Increase the contact count below 8<br/>even at zero products · checked"]:::checked
+    EIGHT["Support bound at 8 or more contacts<br/>· open"]:::open
     ANDO{{"AND: orthogonal route"}}
     REAL["Order-five bound for orthogonal mixers · open"]:::open
     MIX["Two-table orthogonal convexification · open"]:::open
@@ -109,13 +111,16 @@ flowchart BT
 
 ```mermaid
 flowchart BT
-    TRANSFER["Increase contacts at a nonzero strict witness<br/>below 2n-2 · checked"]:::checked
+    TRANSFER["Increase contacts at any strict witness<br/>below 2n-2 · checked"]:::checked
     BOTH{{"AND: construct the curve and apply transfer"}}
-    CUT["Fixed-gap chart leaves a prime strictly<br/>below the witness · checked"]:::checked
+    CUT["Pinned prime chain leaves a curve after<br/>fixed complex gap and differences · checked"]:::checked
     MODEL["Finite prime affine curve through<br/>the witness · checked"]:::checked
     STEP["Affine transfer by connectedness<br/>and cofinite gap image · checked"]:::checked
-    CHART["Exact injective chart and<br/>one inverse equation · checked"]:::checked
-    TERMINAL["Support at 2n-2 contacts<br/>with all products nonzero · open"]:::open
+    CHART["Exact prime profile locus and<br/>dimension 2n-2 · checked"]:::checked
+    TERMINAL["Support at ≥ 2n-2 contacts<br/>· open"]:::open
+    BALANCE["Keep terminal contacts at a<br/>balanced orbit maximum · checked"]:::checked
+    BUDGET["Use independent controlling equations<br/>rather than label count · checked"]:::checked
+    TIGHT["Exclude balanced nonnormal<br/>terminal orbit maxima · open"]:::open
     OUTLIER["Height-zero bound for two imaginary<br/>outliers, arbitrary mixer · checked"]:::checked
     CHART --> CUT
     CUT --> MODEL
@@ -123,6 +128,9 @@ flowchart BT
     STEP --> BOTH
     BOTH --> TRANSFER
     TRANSFER -. reduces MOC to .-> TERMINAL
+    BALANCE -. proves refinement .-> TIGHT
+    BUDGET -. excludes some contact sets .-> TERMINAL
+    TERMINAL <-->|iff| TIGHT
     OUTLIER -. proves a terminal family .-> TERMINAL
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
@@ -145,8 +153,11 @@ has proved that it would be enough.
   links uses complex evaluation on labelled finite data. This branch
   does not identify the original native objects with MOC.
 - **OR: The terminal contact bound.** Exclude strict witnesses with at least
-  $2n-2$ contacts and no zero matching product, in each order. This is
-  [equivalent to unrestricted MOC](MOC/ProofRoutes.lean).
+  $2n-2$ contacts in each order, allowing zero products. This is
+  [equivalent to unrestricted MOC](MOC/GlobalContactSlice.lean).
+  The [nonzero-only criterion](MOC/SaturatedContactReduction.lean) is
+  also equivalent; it remains an option when a proof uses quotients of
+  matching products.
 - **OR: An order split.** Prove order four **AND** order five **AND**
   all orders at least six. The cases of order at most three are already
   proved.
@@ -165,8 +176,8 @@ The checked alternatives include:
   whose sum is normal.
 - Prove the [common law for each one-entry complex pencil](MOC/ProofRoutes.lean),
   or the [three-anchor kernel bound](MOC/Reformulations/ThreeAnchorKernel.lean).
-- Prove the support bound at six or more contacts when every matching
-  product is nonzero. Lean proves the [contact transfer and equivalence](MOC/SaturatedContactReduction.lean).
+- Prove the support bound at six or more contacts. Lean proves the
+  [global contact transfer and equivalence](MOC/GlobalContactSlice.lean).
 
 ## Order five
 
@@ -177,9 +188,8 @@ The checked alternatives include:
   work for different pencils.
 - Prove order four **AND** show that each order-five support problem
   has a maximizer with a normal sum.
-- Prove the support bound at eight or more contacts with no zero
-  matching products. The checked transfer does not require full
-  mixer support.
+- Prove the support bound at eight or more contacts. The checked global
+  transfer does not require full mixer support or nonzero matching products.
 - Use [subset assignment certificates](MOC/SubsetAssignmentSupport.lean)
   on individual support objectives. The [doubleton image tests](MOC/OrderFivePairMarkers.lean)
   identify which minor data a fixed law must preserve. A universal
@@ -289,16 +299,21 @@ Further checked steps narrow the open branches:
 
 ## What remains
 
-The [contact reduction](MOC/SaturatedContactReduction.lean) now raises
-the number of contacts of any strict witness with all matching products
-nonzero below $2n-2$. The normalized chart has $2n-2$ parameters. Its
-inverse variable and equation keep the chart open without using up a
-degree of freedom. The fixed complex differences and determinant gap
-leave a prime strictly below evaluation at the witness. A finite
-affine curve through that point has an infinite exact profile image.
-The cofinite gap image and connectedness give the next contact without
-changing the mixer or losing any old contacts.
-The contact strategy starts from [Zheng, preprint DOI 10.13140/RG.2.2.36790.25923](https://doi.org/10.13140/RG.2.2.36790.25923); the affine curve construction and transfer are checked here.
+The [global transfer](MOC/GlobalContactSlice.lean) starts at any strict
+witness, including one with zero matching products. The [exact locus
+theorem](MOC/ExactProfileLocus.lean) identifies the matching profiles
+with the zero locus of a prime polynomial pullback kernel. The
+[dimension bounds](MOC/ProfileDimension.lean) give $2n-2$ variables
+in any finite injective normalization for $n\ge 2$. Going down gives
+a prime chain below the pinned point; the fixed complex differences
+and gap leave a prime affine curve. Connectedness and a cofinite
+coordinate image give a new contact. Iteration preserves the mixer,
+direction, pivot, complex gap, and all original complex differences.
+One may also pin $m$ polynomial observables and still reach at least
+$2n-2-m$ contacts. For example, fixing one match value keeps it
+nonzero when it was nonzero initially.
+The contact strategy follows [Zheng, preprint DOI 10.13140/RG.2.2.36790.25923](https://doi.org/10.13140/RG.2.2.36790.25923);
+the pinned global affine argument is proved here.
 
 **Main target.** Prove the terminal support inequality at $2n-2$
 contact labels. The reduction counts labels, not distinct values.
@@ -307,8 +322,34 @@ profiles admit a chosen certificate, or that a stationary mixer stays
 stationary as its spectra move. Six contacts are enough in order
 four and eight in order five. A strict terminal violation would refute MOC.
 
+**Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)
+uses the number of polynomial observables that determine the old
+complex differences and gap, not the number of labels. In order at
+least four, a witness whose contacts lie in one three-column fibre
+always gains another label, even if all six are contacts. The
+alternating identity leaves at most four contact equations and one
+gap equation, below the dimension threshold. This does not extend to
+an arbitrary six-label set without a relation on its exact profiles.
+
+**Joint contact and orbit route.** The [balanced terminal equivalence](MOC/BalancedContactReduction.lean)
+lets us retain any terminal set and its pivot while choosing unit spectral
+energy, unit direction, equal traces, equal squared-norm-weighted traces,
+and a nonnormal sum at a global unitary support maximum. The ordinary
+and cubic balances follow from opposite translations and common
+fractional-linear spectral changes with compensated phase. Those moves
+preserve the contact inequalities. The Frobenius tie-break ensures
+nonnormality. Mixer stationarity applies with no contact restrictions
+on the mixer. Unrestricted spectral-coordinate stationarity does not
+follow, because those changes can destroy the prescribed contacts.
+
+
 **Certificate route.** Use the checked subset-event and nested-transport
-results on individual support objectives. A covering theorem for all
+results on individual support objectives. The [full flag law](MOC/FullFlagLaw.lean)
+glues all nested row-set marginal laws on one flag, so one nonnegative
+sum of scores across a flag certifies the objective even when the
+individual scores need not be nonnegative. This is not a law for
+incompatible flags. See [Lyons, DOI 10.1007/s10240-003-0016-0](https://doi.org/10.1007/s10240-003-0016-0)
+for the projection-measure background. A covering theorem for all
 terminal profiles is still open. A
 [rectangle obstruction](MOC/NestedRectangleObstruction.lean) rules out
 a single additive column-prefix chain for some order-five profiles
@@ -318,6 +359,11 @@ simple-spectrum instances with at least 24 contacts for which neither a row-pref
 nor a column-prefix additive chain works. The same support inequality is
 proved directly by the [two-outlier theorem](MOC/SpectralTwoOutlierComparison.lean).
 Neither obstruction rules out multiple-chain or subset-event certificates.
+The [crossed exterior transport](MOC/CrossedMinorTransport.lean) glues
+two inclusion couplings through one unnormalized exterior array. It
+does not require either array to have unit mass. The [matrix bridge
+note](CrossedMinorTransport.md) derives the crossed squared-minor
+application separately and marks the unformalized boundary.
 In fact, an [explicit complement-paired certificate](MOC/TwoOutlierMinorCertificate.lean)
 proves the bound when the outlier heights dominate the stated
 spectator products. It pairs complementary subset events before
@@ -327,20 +373,31 @@ shows that each noncontact needs a subset image that no contact shares.
 At nonpositive support height, the contacts obtained from that
 noncontact by one swap cannot by themselves prevent this separation.
 Longer relative permutations still matter.
-order-five obstruction.
 
 **Order-four backup.** Exclude the regular stationary orthogonal witnesses
 using the second-order, reflection, and flat-plane tests. The
 [phase Hessian reduction](MOC/PhaseHessianReduction.lean) leaves only
 three free entries in the imaginary symmetric test when an
 order-four orthogonal mixer has a row with no zero entries. This
-does not exclude the resulting witnesses. It is a separate exact route. The one-entry law is also an exact reformulation; its five-label
-For a sparse family, the [zero-diagonal theorem](MOC/FourZeroDiagonal.lean)
-proves the full hull inclusion for real orthogonal order-four mixers
-with zero diagonal, for arbitrary complex spectra. An alternating split
-of the matching and two orthogonal two-by-two blocks give nonnegative
-weights. The proof does not enumerate the matchings.
-bound does not supply the law.
+does not exclude the resulting witnesses. The [dense-cross reduction](MOC/StationaryDenseCross.lean)
+requires both a fully nonzero row and a fully nonzero column in a
+remaining order-four stationary orthogonal witness. It uses the
+[zero-diagonal theorem](MOC/FourZeroDiagonal.lean) after reindexing the
+zeros into a diagonal. The [grouped pencil law](MOC/GroupedPencil.lean)
+is an independent exact reformulation; reducing to two coupled
+complex moments does not prove their feasibility.
+
+**Orbit reduction.** The [complex flat-swap theorem](MOC/ComplexFlatSwap.lean)
+applies to arbitrary order and to any unitary starting mixer. At a
+maximizer, a tie under a signed swap makes the full phase-and-rotation
+pair orbit flat. For each specified column, one can choose a maximizer
+at which swapping any two nonzero entries strictly lowers support.
+This does not give one minimizer simultaneously for all columns.
+The [pair Rayleigh formula](MOC/PairRayleigh.lean) gives the exact
+maximum over the full complex two-coordinate unitary orbit, including
+a singular baseline. The proof identifies the orbit with a rank-one
+perturbation and uses four cofactors of the baseline.
+
 
 See [Literature.md](Literature.md) for primary sources, DOIs, and the
 scope of the techniques used.

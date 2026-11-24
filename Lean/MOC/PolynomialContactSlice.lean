@@ -222,8 +222,9 @@ theorem exists_more_contacts_on_localized_slice_of_finite_projection
   obtain ⟨hex, hinj⟩ := localProfile_on_slice hi w Q hQ
   letI : Infinite (zeroLocus Q) := Infinite.of_surjective _
     (surjective_finite_affine_projection Q f hf hfi t ht)
-  refine w.exists_more_contacts_on_affine_constraints hU Q f hf hfi t ht
-    (liftedProfile o i₀) z₀ hbase hex ?_ ?_ (Set.infinite_range_of_injective hinj)
+  refine (w.exists_more_contacts_on_affine_constraints hU Q f hf hfi t ht
+    (liftedProfile o i₀) z₀ hbase hex ?_ ?_ (Set.infinite_range_of_injective hinj)).imp
+      (fun _ h => h.2.2)
   · intro q hq
     have hp := congrFun hbase w.pivot
     have he := congrFun hbase q

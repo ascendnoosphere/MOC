@@ -1,11 +1,14 @@
 # General contact reduction and the next order-five problem
 
-Status: the translation obstruction, contact transfer on a supplied
-fixed-gap curve, and finite iteration have Lean proofs. The construction
-of that curve through each small-contact profile is a mathematical step
-that this library does not yet formalize. No order-four result is needed
-for the general contact argument. Section 5 uses the published double-dimer
-identity and is not a Lean theorem. The library does not prove all of order five.
+Status: Lean proves the [exact profile locus](MOC/ExactProfileLocus.lean),
+[its dimension](MOC/ProfileDimension.lean) for $n\ge 2$, and
+[global contact transfer and iteration](MOC/GlobalContactSlice.lean),
+including zero products. Any strict witness reaches eight contacts in
+order five. The [balanced reduction](MOC/BalancedContactReduction.lean)
+can retain those eight contacts at a nonnormal unitary support maximum.
+No order-four result is needed. Section 5 uses the published
+double-dimer identity and is not a Lean theorem. The order-five terminal
+inequality remains open.
 
 Source and attribution: Zheng, *The Marcus–de Oliveira conjecture for
 n = 4*, [preprint DOI](https://doi.org/10.13140/RG.2.2.36790.25923),
@@ -403,8 +406,8 @@ nor that arbitrary complex order-five mixers can be realified.
   many points contradicts irreducibility. The next analytic step is
   to derive such factors from a disconnected cover by simple roots.
 
-The missing Lean step is the geometric construction from Section 3.
-Produce an infinite curve of exact profiles through a strict witness.
-Keep its old complex contact differences and its complex determinant
-gap fixed. After that step, the stated transfer and iteration apply.
-The eight-contact inequalities themselves still require a proof.
+The [global contact theorem](MOC/GlobalContactSlice.lean) supplies the
+geometric construction and proves the transfer with the old complex
+contact differences and determinant gap fixed. It uses a prime curve
+through the chosen exact profile, not merely a curve of spectral
+parameters. The eight-contact inequality itself remains open.

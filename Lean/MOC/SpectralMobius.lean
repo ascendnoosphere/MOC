@@ -58,12 +58,14 @@ theorem determinantValue_mobius (a b : ι → ℂ) (U : Matrix ι ι ℂ)
 
 /-- The normalized gap bounds every fractional-linear change followed by an
 opposite translation. The translation can minimize the energy before rescaling. -/
-theorem spectralEnergy_shifted_mobius_bound
+theorem spectralEnergy_shifted_mobius_bound_of_profile_scale_maximum
     (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
     (η : ℂ) (hη : Complex.normSq η = 1) {g : ℝ} (hg : 0 < g)
     (hgap : ∀ σ : Equiv.Perm ι,
       g ≤ (η * (determinantValue a b U - matchingProduct a b σ)).re)
     (hmax : ∀ (c d : ι → ℂ) (k : ℂ), spectralEnergy c d ≤ 1 → Complex.normSq k = 1 →
+      (∃ r : ℝ, 0 < r ∧ ∀ σ : Equiv.Perm ι,
+        (k * matchingProduct c d σ).re = r * (η * matchingProduct a b σ).re) →
       ∃ σ : Equiv.Perm ι, (k * (determinantValue c d U - matchingProduct c d σ)).re ≤ g)
     (t s₀ : ℂ) (ha : ∀ i, 1 - t * a i ≠ 0) (hb : ∀ j, 1 + t * b j ≠ 0)
     (he : 0 < spectralEnergy (fun i => mobiusSpectrum t a i + s₀)
@@ -94,21 +96,26 @@ theorem spectralEnergy_shifted_mobius_bound
       div_self hΔpos.ne']
   have hscale : spectralEnergy (fun i => (r : ℂ) * c i) (fun i => (r : ℂ) * d i) ≤ 1 := by
     rw [spectralEnergy_scale, hrsq, inv_mul_cancel₀ he.ne']
-  obtain ⟨σ, hσ⟩ := hmax _ _ k hscale hk
-  rw [determinantValue_scale, matchingProduct_scale] at hσ
-  dsimp only [c, d] at hσ
-  rw [determinantValue_shift _ _ hU s₀, matchingProduct_shift _ _ s₀,
-    determinantValue_mobius a b U hU t ha hb,
-    matchingProduct_mobius a b t σ ha hb] at hσ
-  have hrewrite :
-      k * ((r : ℂ) ^ Fintype.card ι * (determinantValue a b U / Δ) -
-        (r : ℂ) ^ Fintype.card ι * (matchingProduct a b σ / Δ)) =
-      (m : ℂ) * (η * (determinantValue a b U - matchingProduct a b σ)) := by
+  have hscaled (z : ℂ) : k * ((r : ℂ) ^ Fintype.card ι * (z / Δ)) =
+      (m : ℂ) * (η * z) := by
     dsimp only [k, m]
     push_cast
     field_simp [hΔ, Complex.ofReal_ne_zero.mpr hs.ne']
     ring
-  rw [hrewrite, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero] at hσ
+  have hscaleP (σ : Equiv.Perm ι) :
+      (k * matchingProduct (fun i => (r : ℂ) * c i)
+        (fun j => (r : ℂ) * d j) σ).re = m * (η * matchingProduct a b σ).re := by
+    rw [matchingProduct_scale]
+    dsimp only [c, d]
+    rw [matchingProduct_shift _ _ s₀, matchingProduct_mobius a b t σ ha hb, hscaled,
+      Complex.re_ofReal_mul]
+  obtain ⟨σ, hσ⟩ := hmax _ _ k hscale hk ⟨m, hm, hscaleP⟩
+  rw [determinantValue_scale, matchingProduct_scale] at hσ
+  dsimp only [c, d] at hσ
+  rw [determinantValue_shift _ _ hU s₀, matchingProduct_shift _ _ s₀,
+    determinantValue_mobius a b U hU t ha hb,
+    matchingProduct_mobius a b t σ ha hb, ← mul_sub, ← sub_div] at hσ
+  rw [hscaled, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero] at hσ
   have hmbound : m ≤ 1 := by
     by_contra! hbad
     have h := mul_le_mul_of_nonneg_left (hgap σ) hm.le
@@ -121,6 +128,23 @@ theorem spectralEnergy_shifted_mobius_bound
   have hsq := pow_le_pow_left₀ hm.le hmbound 2
   rw [hmsq, one_pow] at hsq
   exact (inv_le_one₀ hp).mp hsq
+
+/-- The shifted Möbius bound at an unrestricted positive gap maximum. -/
+theorem spectralEnergy_shifted_mobius_bound
+    (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (η : ℂ) (hη : Complex.normSq η = 1) {g : ℝ} (hg : 0 < g)
+    (hgap : ∀ σ : Equiv.Perm ι,
+      g ≤ (η * (determinantValue a b U - matchingProduct a b σ)).re)
+    (hmax : ∀ (c d : ι → ℂ) (k : ℂ), spectralEnergy c d ≤ 1 → Complex.normSq k = 1 →
+      ∃ σ : Equiv.Perm ι, (k * (determinantValue c d U - matchingProduct c d σ)).re ≤ g)
+    (t s₀ : ℂ) (ha : ∀ i, 1 - t * a i ≠ 0) (hb : ∀ j, 1 + t * b j ≠ 0)
+    (he : 0 < spectralEnergy (fun i => mobiusSpectrum t a i + s₀)
+      (fun j => mobiusSpectrum (-t) b j - s₀)) :
+    1 ≤ spectralEnergy (fun i => mobiusSpectrum t a i + s₀)
+      (fun j => mobiusSpectrum (-t) b j - s₀) ^ Fintype.card ι *
+      Complex.normSq (mobiusDenominator a b t) :=
+  spectralEnergy_shifted_mobius_bound_of_profile_scale_maximum a b U hU η hη hg hgap
+    (fun c d k hcd hk _ => hmax c d k hcd hk) t s₀ ha hb he
 
 /-- The same bound for a fractional-linear change without translation. -/
 theorem spectralEnergy_mobius_bound (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
@@ -264,16 +288,14 @@ private theorem hasDerivAt_mobius_denominator (a b : ι → ℂ) (p : ℂ)
 
 /-- At a positive gap maximum on the spectral unit sphere, the two
 norm-squared-weighted first moments agree. -/
-theorem equal_cubic_moments_of_positive_gap_maximizer [Nonempty ι]
-    (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U) (η : ℂ)
-    (hη : Complex.normSq η = 1) (henergy : spectralEnergy a b = 1) {g : ℝ} (hg : 0 < g)
-    (hgap : ∀ σ : Equiv.Perm ι,
-      g ≤ (η * (determinantValue a b U - matchingProduct a b σ)).re)
-    (hmax : ∀ (c d : ι → ℂ) (k : ℂ), spectralEnergy c d ≤ 1 → Complex.normSq k = 1 →
-      ∃ σ : Equiv.Perm ι, (k * (determinantValue c d U - matchingProduct c d σ)).re ≤ g) :
+theorem equal_cubic_moments_of_mobius_energy_bound [Nonempty ι]
+    (a b : ι → ℂ) (henergy : spectralEnergy a b = 1)
+    (htrace : (∑ i, a i) = ∑ i, b i)
+    (hbound : ∀ t : ℂ, (∀ i, 1 - t * a i ≠ 0) → (∀ j, 1 + t * b j ≠ 0) →
+      0 < spectralEnergy (mobiusSpectrum t a) (mobiusSpectrum (-t) b) →
+      1 ≤ spectralEnergy (mobiusSpectrum t a) (mobiusSpectrum (-t) b) ^ Fintype.card ι *
+        Complex.normSq (mobiusDenominator a b t)) :
     (∑ i, (Complex.normSq (a i) : ℂ) * a i) = ∑ i, (Complex.normSq (b i) : ℂ) * b i := by
-  have htrace := equal_trace_of_positive_support_gap_maximizer a b U hU η g
-    henergy.le hg hgap fun c d hcd => hmax c d η hcd hη
   let s : ℂ := (∑ i, (Complex.normSq (a i) : ℂ) * a i) - ∑ i, (Complex.normSq (b i) : ℂ) * b i
   have hz (p : ℂ) : (p * s).re = 0 := by
     let E (r : ℝ) := spectralEnergy (mobiusSpectrum ((r : ℂ) * p) a)
@@ -303,7 +325,7 @@ theorem equal_cubic_moments_of_positive_gap_maximizer [Nonempty ι]
     have hmin : IsLocalMin f 0 := by
       filter_upwards [ha, hb, hEpos] with r hra hrb hrE
       rw [hf₀]
-      exact spectralEnergy_mobius_bound a b U hU η hη hg hgap hmax ((r : ℂ) * p) hra hrb hrE
+      exact hbound ((r : ℂ) * p) hra hrb hrE
     have hzero := hmin.hasDerivAt_eq_zero hf
     have hn : (Fintype.card ι : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
     exact (mul_eq_zero.mp ((mul_eq_zero.mp hzero).resolve_left hn)).resolve_left two_ne_zero
@@ -312,6 +334,21 @@ theorem equal_cubic_moments_of_positive_gap_maximizer [Nonempty ι]
   apply Complex.ext
   · simpa using hz 1
   · simpa [Complex.mul_re] using hz Complex.I
+
+/-- At an unrestricted positive gap maximum, the cubic balance follows from
+the Möbius energy bound. -/
+theorem equal_cubic_moments_of_positive_gap_maximizer [Nonempty ι]
+    (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U) (η : ℂ)
+    (hη : Complex.normSq η = 1) (henergy : spectralEnergy a b = 1) {g : ℝ} (hg : 0 < g)
+    (hgap : ∀ σ : Equiv.Perm ι,
+      g ≤ (η * (determinantValue a b U - matchingProduct a b σ)).re)
+    (hmax : ∀ (c d : ι → ℂ) (k : ℂ), spectralEnergy c d ≤ 1 → Complex.normSq k = 1 →
+      ∃ σ : Equiv.Perm ι, (k * (determinantValue c d U - matchingProduct c d σ)).re ≤ g) :
+    (∑ i, (Complex.normSq (a i) : ℂ) * a i) = ∑ i, (Complex.normSq (b i) : ℂ) * b i := by
+  have htrace := equal_trace_of_positive_support_gap_maximizer a b U hU η g
+    henergy.le hg hgap fun c d hcd => hmax c d η hcd hη
+  exact equal_cubic_moments_of_mobius_energy_bound a b henergy htrace
+    (spectralEnergy_mobius_bound a b U hU η hη hg hgap hmax)
 
 end
 

@@ -1,5 +1,6 @@
 import MOC.AffineContactStep
 import MOC.AffineContactCurve
+import MOC.BalancedContactReduction
 import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
@@ -37,6 +38,10 @@ import MOC.FourParityCorrection
 import MOC.FourQuaternionMinor
 import MOC.FourZeroDiagonal
 import MOC.FullSupportReduction
+import MOC.FullFlagLaw
+import MOC.GaussianCayley
+import MOC.GlobalContactSlice
+import MOC.GroupedPencil
 import MOC.GeneralContactReduction
 import MOC.Geometry
 import MOC.HermitianByNormalFour
@@ -79,10 +84,12 @@ import MOC.OrderFourReflectionResidue
 import MOC.OrderFourSecondVariation
 import MOC.PairAssignmentObstruction
 import MOC.Pencil
+import MOC.PairRayleigh
 import MOC.PolydiskContact
 import MOC.PositiveWeightMargin
 import MOC.ProjectiveTransport
 import MOC.ProofRoutes
+import MOC.ProfileDimension
 import MOC.QuaternionParitySharp
 import MOC.QuaternionBinaryBasis
 import MOC.QuaternionIntrinsic
@@ -106,6 +113,7 @@ import MOC.SpectralGramNeighborhood
 import MOC.SpectralMinorDecomposition
 import MOC.SpectralZeroPadding
 import MOC.StationaryFullSupport
+import MOC.StationaryDenseCross
 import MOC.SubsetAssignmentSupport
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues
@@ -114,6 +122,7 @@ import MOC.TrianglePairContacts
 import MOC.TriangleRectangleContact
 import MOC.TripleFibreAmbient
 import MOC.TripleFibreContact
+import MOC.TropicalSupport
 import MOC.TwoCircleCover
 import MOC.TwoFreeRealAnchors
 import MOC.WeightedDiamondAdjacency

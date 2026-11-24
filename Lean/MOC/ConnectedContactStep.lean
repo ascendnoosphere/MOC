@@ -23,7 +23,8 @@ theorem StrictMatchingSupport.exists_more_contacts_on_connected_profiles
     (hold : ∀ x ∈ S, ∀ q ∈ w.contacts, (w.η * (P x w.pivot - P x q)).re = 0)
     (hgap : ∀ x ∈ S, 0 < (matchingProfileDetGap U w.η w.pivot (P x)).re)
     (hneg : ∃ x ∈ S, ∃ q, (w.η * (P x w.pivot - P x q)).re < 0) :
-    ∃ w' : StrictMatchingSupport U, w.contacts ⊂ w'.contacts ∧
+    ∃ w' : StrictMatchingSupport U, w'.η = w.η ∧ w'.pivot = w.pivot ∧
+      w.contacts ⊂ w'.contacts ∧
       ∃ z ∈ S, matchingProduct w'.a w'.b = P z := by
   classical
   let J : Finset (Equiv.Perm ι) := w.contactsᶜ
@@ -66,7 +67,7 @@ theorem StrictMatchingSupport.exists_more_contacts_on_connected_profiles
     Finset.mem_filter.mpr ⟨Finset.mem_univ _, (sub_eq_zero.mp ((hH q).symm.trans hq)).symm⟩
   obtain ⟨j, hj, hj0⟩ := Finset.exists_mem_eq_inf' jn (fun q => H q z)
   have hj' := hmem j (hj0.symm.trans hmz)
-  refine ⟨w', Finset.ssubset_iff_subset_ne.mpr
+  refine ⟨w', rfl, rfl, Finset.ssubset_iff_subset_ne.mpr
     ⟨fun q hq => hmem q (hold z hz q hq), ?_⟩, z, hz, he⟩
   intro heq
   exact Finset.mem_compl.mp hj (heq ▸ hj')
@@ -83,7 +84,7 @@ theorem StrictMatchingSupport.exists_more_contacts_of_connected_profiles
     (hgap : ∀ x ∈ S, 0 < (matchingProfileDetGap U w.η w.pivot (P x)).re)
     (hneg : ∃ x ∈ S, ∃ q, (w.η * (P x w.pivot - P x q)).re < 0) :
     ∃ w' : StrictMatchingSupport U, w.contacts ⊂ w'.contacts := by
-  obtain ⟨v, hv, -⟩ := w.exists_more_contacts_on_connected_profiles
+  obtain ⟨v, _, _, hv, -⟩ := w.exists_more_contacts_on_connected_profiles
     hU hconn P hexact hc hx₀ hbase hold hgap hneg
   exact ⟨v, hv⟩
 
