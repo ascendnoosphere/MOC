@@ -1,5 +1,127 @@
 # MOC proof tree
 
+## Overview
+
+Read the arrows from a proof route toward its conclusion.
+**Iff** labels mark checked equivalences. A plain arrow marks a checked
+sufficient implication, not a proof of its premise. Dashed arrows mark
+research dependencies, not proved implications. Orange nodes are open;
+green nodes describe steps that Lean has proved. The diagrams group
+related routes. [ProofRoutes.lean](MOC/ProofRoutes.lean) gives the full list.
+
+```mermaid
+flowchart BT
+    ALL["Unrestricted MOC · open"]:::open
+    ROUTES{{"OR: choose a complete all-order route"}}
+    NATIVE["Native and structural analogies<br/>exact and sufficient routes"]:::open
+    ATLAS["243 evaluated atlas forms<br/>each exact, not a native-object proof"]:::open
+    SPLIT{{"AND: prove all three order ranges"}}
+    FOUR["Order 4 · open"]:::open
+    FIVE["Order 5 · open"]:::open
+    HIGH["Orders 6 and higher · open"]:::open
+    LOW["Orders 0 to 3 · already proved"]:::checked
+    NATIVE --> ROUTES
+    ATLAS --> ROUTES
+    FOUR --> SPLIT
+    FIVE --> SPLIT
+    HIGH --> SPLIT
+    LOW -. already covered .-> SPLIT
+    SPLIT --> ROUTES
+    ROUTES <-->|iff| ALL
+    ALL --> FOUR
+    ALL --> FIVE
+    classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
+    classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
+```
+
+## Order four: the main proof routes
+
+```mermaid
+flowchart BT
+    FOUR["Order 4 · open"]:::open
+    OR4{{"OR: prove one complete route"}}
+    WITNESS["Exclude every regular stationary<br/>orthogonal counterexample"]:::open
+    NORMAL["A normal sum at some maximizer<br/>of each support problem"]:::open
+    PENCIL["A positive law for each<br/>one-entry complex pencil"]:::open
+    CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
+    AND4{{"AND: contact route"}}
+    TRANSFER["Increase the contact count<br/>below 6 · open in Lean"]:::open
+    SIX["Support bound at 6 or more contacts · open"]:::open
+    TESTS["Checked witness tests: Hessian,<br/>reflections and flat row planes"]:::checked
+    PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
+    WITNESS --> OR4
+    NORMAL --> OR4
+    PENCIL --> OR4
+    CHART --> OR4
+    TRANSFER --> AND4
+    SIX --> AND4
+    AND4 --> OR4
+    TESTS -. narrow the witness set .-> WITNESS
+    PHASE -. restrict realizable profiles .-> SIX
+    OR4 <-->|iff| FOUR
+    classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
+    classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
+```
+
+## Order five: the main proof routes
+
+```mermaid
+flowchart BT
+    FIVE["Order 5 · open"]:::open
+    OR5{{"OR: prove one complete route"}}
+    DENSE["Bound every regular full-support instance · open"]:::open
+    PENCIL["A positive law for each one-entry pencil"]:::open
+    CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
+    ANDN{{"AND: normal-maximizer route"}}
+    FOUR["Order 4 · open"]:::open
+    NORMAL["A normal sum at some maximizer<br/>of each order-five support problem"]:::open
+    ANDC{{"AND: contact route"}}
+    TRANSFER["Increase the contact count<br/>below 8 · open in Lean"]:::open
+    EIGHT["Support bound at 8 or more contacts · open"]:::open
+    ANDO{{"AND: orthogonal route"}}
+    REAL["Order-five bound for orthogonal mixers · open"]:::open
+    MIX["Two-table orthogonal convexification · open"]:::open
+    COST["Checked pair-cost formula<br/>and objective-specific certificates"]:::checked
+    DEAD["Universal positive common law<br/>refuted; not an MOC counterexample"]:::blocked
+    DENSE --> OR5
+    PENCIL --> OR5
+    CHART --> OR5
+    FOUR --> ANDN
+    NORMAL --> ANDN
+    TRANSFER --> ANDC
+    EIGHT --> ANDC
+    REAL --> ANDO
+    MIX --> ANDO
+    ANDN --> OR5
+    ANDC --> OR5
+    ANDO --> OR5
+    COST -. can help on each objective .-> DENSE
+    COST -. can help on each objective .-> EIGHT
+    OR5 <-->|iff| FIVE
+    classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
+    classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
+    classDef blocked fill:#fae5e5,stroke:#a33434,color:#361010
+```
+
+## Shared contact gap
+
+```mermaid
+flowchart BT
+    TRANSFER["Increase contacts at a strict witness"]:::open
+    BOTH{{"AND: supply the curve and apply transfer"}}
+    SLICE["Construct a fixed-gap curve through<br/>each low-contact witness · open in Lean"]:::open
+    FIXED["Fixed-gap transfer on a supplied curve<br/>and finite iteration · checked"]:::checked
+    PLANE["Connected plane root cover<br/>including exceptional fibres · checked"]:::checked
+    CHART["Exact rank-one charts and<br/>translation obstruction · checked"]:::checked
+    PLANE -. toward a model for the slice .-> SLICE
+    CHART -. sets up the constraints .-> SLICE
+    SLICE --> BOTH
+    FIXED --> BOTH
+    BOTH --> TRANSFER
+    classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
+    classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
+```
+
 The [Lean tree](MOC/ProofRoutes.lean) has three roots: all finite orders,
 order four, and order five. An **OR** node needs one complete branch.
 An **AND** node needs every child. A branch can be open even when Lean
