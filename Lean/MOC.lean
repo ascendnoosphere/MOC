@@ -33,12 +33,15 @@ import MOC.MarkedPadding
 import MOC.MatchingProfileClosed
 import MOC.MatchingRectangleSupport
 import MOC.MobiusStationarity
+import MOC.NestedContactObjective
 import MOC.NormalSupportMaximum
 import MOC.Obstruction
 import MOC.OppositePair
 import MOC.OppositePairNormal
 import MOC.OrderFiveContact
+import MOC.OrderFivePairMarkers
 import MOC.OrderFourIndependent
+import MOC.OrderFourReflectionTest
 import MOC.OrderFourSecondVariation
 import MOC.Pencil
 import MOC.PolydiskContact
@@ -59,6 +62,7 @@ import MOC.SpectralZeroPadding
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues
 import MOC.Transfer
+import MOC.TripleFibreContact
 import MOC.TrianglePairContacts
 import MOC.TriangleRectangleContact
 import MOC.TwoCircleCover

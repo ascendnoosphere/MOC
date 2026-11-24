@@ -382,6 +382,15 @@ nor that arbitrary complex order-five mixers can be realified.
   one-entry complex pencil, the hull test for every entry is equivalent
   to one law on at most five permutations.
 
+- [OrderFivePairMarkers.lean](MOC/OrderFivePairMarkers.lean) proves
+  that order-five doubleton image masses alone determine every spectral
+  determinant objective for fixed weights. It does not give the weights.
+- [NestedContactObjective.lean](MOC/NestedContactObjective.lean) constructs
+  a nonnegative law when the objective splits into scores on the images
+  of two nested subsets.
+- [TripleFibreContact.lean](MOC/TripleFibreContact.lean) bounds a
+  three-label fibre by four contacts at nonzero height for simple spectra.
+
 The missing Lean step is the geometric construction from Section 3.
 Produce an infinite curve of exact profiles through a strict witness.
 Keep its old complex contact differences and its complex determinant

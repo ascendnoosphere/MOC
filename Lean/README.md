@@ -80,4 +80,5 @@ The [contact reduction notes](OrderFiveContactReduction.md) distinguish
 the formal contact transfer from the geometric step needed to construct
 a curve. The [order-four reduction](MOC/OrderFourIndependent.lean) and
 [second-order test](MOC/OrderFourSecondVariation.lean) give necessary
-conditions on an order-four counterexample.
+conditions on an order-four counterexample. The [reflection test](MOC/OrderFourReflectionTest.lean)
+reduces each real rank-one phase motion to its reflection endpoint.
