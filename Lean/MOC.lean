@@ -53,6 +53,7 @@ import MOC.MobiusStationarity
 import MOC.PolynomialEvaluationHeight
 import MOC.PositiveTwoOutlierBlock
 import MOC.NestedContactObjective
+import MOC.NestedRectangleObstruction
 import MOC.NormalSupportMaximum
 import MOC.Obstruction
 import MOC.OppositePair
@@ -67,6 +68,7 @@ import MOC.OrderFourGivens
 import MOC.OrderFourFlatPlanes
 import MOC.OrderFourColumnReflections
 import MOC.OrderFourIndependent
+import MOC.PhaseHessianReduction
 import MOC.OrderFourReflectionTest
 import MOC.OrderFourReflectionResidue
 import MOC.OrderFourSecondVariation

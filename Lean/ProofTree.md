@@ -48,7 +48,7 @@ flowchart BT
     CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
     TRANSFER["Increase the contact count below 6<br/>on the nonzero chart · checked"]:::checked
     SIX["Support bound at 6 or more contacts<br/>on the nonzero chart · open"]:::open
-    TESTS["Checked witness tests: Hessian,<br/>reflections and flat row planes"]:::checked
+    TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
     WITNESS --> OR4
     NORMAL --> OR4
@@ -80,6 +80,7 @@ flowchart BT
     ANDO{{"AND: orthogonal route"}}
     REAL["Order-five bound for orthogonal mixers · open"]:::open
     MIX["Two-table orthogonal convexification · open"]:::open
+    CHAIN["A single additive column chain<br/>can fail at twelve contacts"]:::blocked
     COST["Checked pair-cost formula<br/>and objective-specific certificates"]:::checked
     DEAD["Universal positive common law<br/>refuted; not an MOC counterexample"]:::blocked
     DENSE --> OR5
@@ -95,6 +96,7 @@ flowchart BT
     ANDO --> OR5
     COST -. can help on each objective .-> DENSE
     COST -. can help on each objective .-> EIGHT
+    CHAIN -. rules out one certificate family .-> EIGHT
     OR5 <-->|iff| FIVE
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
@@ -303,12 +305,20 @@ four and eight in order five. A strict terminal violation would refute MOC.
 
 **Certificate route.** Use the checked subset-event and nested-transport
 results on individual support objectives. A covering theorem for all
-terminal profiles is still open. Failure of a certificate alone does not
-refute MOC. The common pair law already has an order-five obstruction.
+terminal profiles is still open. A
+[rectangle obstruction](MOC/NestedRectangleObstruction.lean) rules out
+a single additive column-prefix chain for some order-five profiles
+with twelve or more contacts. It does not rule out a chain in the
+other orientation or a different certificate. Failure of a certificate
+alone does not refute MOC. The common pair law already has an
+order-five obstruction.
 
 **Order-four backup.** Exclude the regular stationary orthogonal witnesses
-using the second-order, reflection, and flat-plane tests. This is a separate
-exact route. The one-entry law is also an exact reformulation; its five-label
+using the second-order, reflection, and flat-plane tests. The
+[phase Hessian reduction](MOC/PhaseHessianReduction.lean) leaves only
+three free entries in the imaginary symmetric test when an
+order-four orthogonal mixer has a row with no zero entries. This
+does not exclude the resulting witnesses. It is a separate exact route. The one-entry law is also an exact reformulation; its five-label
 bound does not supply the law.
 
 See [Literature.md](Literature.md) for primary sources, DOIs, and the
