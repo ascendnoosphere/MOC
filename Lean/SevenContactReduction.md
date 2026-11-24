@@ -96,9 +96,8 @@ must have its contact set contained in the zero set of at least
 one of the 48 nonminor facets (otherwise the gap has a minor
 decomposition).
 
-The exact checker research/zheng_seven_contact_certificate.py
-enumerates the orbits under independent row and column permutations
-and inversion. It verifies that of the 90 exceptional six-contact
+The finite enumeration uses independent row and column permutations
+and inversion. Of the 90 exceptional six-contact
 orbits, 87 contain two permutations differing by a transposition.
 The other three are precisely T88, T89, T90, with index sets
 \[
@@ -514,30 +513,7 @@ proved by the facet classification and cone duality. A contact
 set of size greater than seven can be treated by selecting any
 seven labels.
 
-The new exact checker certifies fifteen distinct seven-contact
-orbits using the zero-height contact closure and cubic-sign
-method in ZhengReconstructedSupplement.md. For every listed
-case it checks a full rectangle or full three-label fiber
-forcing zero height, then the closure under the rectangle and
-fiber rules. It checks all supplied generator replacements
-and the sign of the restricted cubic on every remaining
-maximal mixed-positive support. The arguments are identical
-to the uniform proof in Sections 2--4 of that previous note,
-with the new seven-label sets and integer replacement table
-in the checker.
-
-Run from the repository root:
-
-    python Lean/research/zheng_seven_contact_certificate.py
-
-The exact identities, finite counts and all fifteen certificate
-checks were executed successfully. Four CPU workers check
-the cases in parallel; no numerical feasibility result is
-used as a proof. The remaining 85 exceptional seven-contact
-orbits are not certified by this method. This is a different
-sufficient proof target from the original 90 six-contact
-inequalities; the counts must not be combined as if they were
-one fixed case list.
+The proposed certificates for fifteen seven-contact orbits use the zero-height closure and cubic-sign method of ZhengReconstructedSupplement.md. They require generator replacements and restricted cubic signs on the maximal mixed-positive supports. The complete census and these certificate checks have not been ported to Lean. The remaining 85 exceptional orbits are not certified by this method. This target is separate from the original 90 six-contact inequalities.
 
 ## 6. Scope of the reconstruction
 

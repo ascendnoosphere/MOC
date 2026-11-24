@@ -353,65 +353,9 @@ The geometric-mean inequality by itself need not exclude all
 complex spectral profiles; it must not be promoted to a universal
 spectral inequality without a proof.
 
-## 7. Exact finite verification of the permutation data
+## 7. Lean verification gap
 
-The following standard-library Python enumeration was executed
-with all assertions passing. It checks the negative set, Latin
-counts, conditional permutation types, and lists the 24 gap
-inequalities using lexicographic permutation indices.
-
-```python
-from itertools import permutations, combinations, product
-from math import prod
-P = list(permutations(range(4)))
-S = ((1,1,1,1),(-1,1,-1,1),(-1,1,1,-1),(-1,-1,1,1))
-def sign(p):
-    return (-1)**sum(p[i]>p[j] for i in range(4)
-                     for j in range(i+1,4))
-N = tuple(p for p in P
-          if sign(p)*prod(S[i][p[i]] for i in range(4))<0)
-assert N == ((0,2,3,1),(1,3,2,0),(2,0,1,3),(3,1,0,2))
-V4 = {(0,1,2,3),(1,0,3,2),(2,3,0,1),(3,2,1,0)}
-assert set(N) == {tuple(N[0][v[i]] for i in range(4)) for v in V4}
-L = [c for c in combinations(P,4)
-     if all(len({p[i] for p in c})==4 for i in range(4))]
-assert len(L)==24
-Lpos = [c for c in L if set(c).isdisjoint(N)]
-assert len(Lpos)==17
-parts = []
-def rec(rest, acc):
-    if not rest:
-        parts.append(acc)
-        return
-    p = min(rest)
-    for l in Lpos:
-        if p in l and set(l)<=rest:
-            rec(rest-set(l), acc+(l,))
-rec(set(P)-set(N), ())
-assert len(parts)==13
-ineq = []
-for i,j in product(range(4),repeat=2):
-    fiber = [p for p in P if p[i]==j]
-    assert len(fiber)==6
-    neg = [p for p in fiber if p in N]
-    assert len(neg)==1
-    if i==j:
-        continue
-    n = neg[0]
-    k, = [k for k in range(4) if n[k]==k]
-    odd = [p for p in fiber if sign(p)<0]
-    t, = [p for p in odd if sum(p[k]!=k for k in range(4))==2]
-    c1,c2 = [p for p in odd if p!=t]
-    assert all(sum(p[k]!=k for k in range(4))==4 for p in (c1,c2))
-    assert t[k]==k and sum(t[l]==n[l] for l in range(4))==2
-    assert all(sum(p[l]==n[l] for l in range(4))==2 for p in (c1,c2))
-    e1,e2 = [p for p in fiber if sign(p)>0 and p!=n]
-    ineq.extend([(P.index(n),P.index(c1),P.index(c2)),
-                 (P.index(t),P.index(e1),P.index(e2))])
-assert len(ineq)==24
-print("Latin partitions:", len(parts))
-print("Strict inequalities g[i] > g[j] + g[k]:", ineq)
-```
+The negative-set census, Latin partitions, and the 24 conditional inequalities have not been certified in Lean.
 
 ## 8. Exact limitation of the geometric-mean condition alone
 
@@ -428,33 +372,7 @@ at permutation 2103. For the negative set \(N\) of Section 2,
 G_N\ge126266249,\qquad
 \max_{\mathcal P}\sum_{L\in\mathcal P}G_L\le114321308.
 \]
-These bounds follow by integer arithmetic: the floor fourth root
-of a product of four nonnegative integer gaps is
-\(\operatorname{isqrt}(\operatorname{isqrt}(\prod g_\sigma))\);
-adding one to it gives an upper bound. They can be checked by
-appending the following code to the enumeration in Section 7:
-
-```python
-from math import isqrt
-a = [(-89,-75),(-5,7),(-17,99),(-76,24)]
-b = [(13,-3),(5,-90),(96,51),(108,135)]
-def cmul(z,w):
-    return (z[0]*w[0]-z[1]*w[1],z[0]*w[1]+z[1]*w[0])
-def score(p):
-    z=(1,0)
-    for i in range(4):
-        z=cmul(z,(a[i][0]+b[p[i]][0],a[i][1]+b[p[i]][1]))
-    return z[0]
-s={p:score(p) for p in P}
-m=max(s.values())
-assert m==32076180 and s[(2,1,0,3)]==m
-g={p:m-v for p,v in s.items()}
-def floor_G(l):
-    return isqrt(isqrt(prod(g[p] for p in l)))
-assert floor_G(N)==126266249
-assert max(sum(floor_G(l)+1 for l in part)
-           for part in parts)==114321308
-```
+These bounds use integer fourth-root lower and upper bounds on the products of four gaps. The numeric certificate has not been checked in Lean.
 
 The maximizing label 2103 is a transposition; it violates (8).
 So this example does not satisfy the complete necessary system
@@ -463,12 +381,4 @@ attempt to prove the geometric-mean inequality in the opposite
 direction for all spectral data, without the other constraints,
 would be false.
 
-Numerical exploratory searches were also made subject to (7)--(8)
-and the hull-edge conditions. They found profiles close to the
-equality boundary in (10), but no certified exclusion or feasible
-point of the full strict system. Such searches are not used in
-any of the proofs. The new finite sign census in Section 7 and
-the previous dense sign census were checked with exact integer
-operations. There is no verified Lean proof of the new results
-in this note.
-
+The finite census and the strict spectral target remain Lean verification gaps.

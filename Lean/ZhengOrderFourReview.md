@@ -51,19 +51,11 @@ next review input is the complete supplement and its verification code.
 
 The independent finite mixture and other cited Lean results are already
 in the repository; the Lean build was not rerun as part of this review.
-The new Python checks are exact computations, not kernel-checked Lean
-theorems.
+The computations below were reproduced outside Lean in the earlier review. They are not kernel-checked Lean theorems.
 
 ## 2. Reproduced exact computations
 
-Run from the repository root:
-
-    python Lean/research/zheng_contact_audit.py
-    python Lean/research/zheng_algebra_audit.py
-
-These scripts require SymPy. They reconstruct the necessary coordinate
-tables independently, rather than assume the missing supplementary
-files. The equivalent local scripts were executed successfully.
+The coordinate tables were reconstructed independently of the missing supplement. The computations remain a Lean verification gap.
 
 ### 2.1 Facets and contacts
 
@@ -154,4 +146,4 @@ as a proof of order five before the hypothesis is certified.
 
 ## 5. Independent supplement reconstruction
 
-Seven of the 90 exceptional cases (T1, T18–T23) now have independent replacement proofs in [ZhengReconstructedSupplement.md](ZhengReconstructedSupplement.md), checked by [research/zheng_reconstructed_cases.py](research/zheng_reconstructed_cases.py). This uses zero-height contact closure and a uniform cubic-sign certificate after minimizing nonminor mass. All seven exact checks passed using four CPU processes. The note also proves that a common law across two disjoint coincidence families can fail, limiting a direct extension of the single-coincidence pole bound. The 83 other exceptional cases are not yet certified. The original external proof status and Lean audit status remain unchanged.
+Seven of the 90 exceptional cases (T1, T18–T23) now have independent replacement proofs in [ZhengReconstructedSupplement.md](ZhengReconstructedSupplement.md). This uses zero-height contact closure and a uniform cubic-sign certificate after minimizing nonminor mass. The full seven-case certificate has not been verified in Lean. The note also proves that a common law across two disjoint coincidence families can fail, limiting a direct extension of the single-coincidence pole bound. The 83 other exceptional cases are not yet certified. The original external proof status and Lean audit status remain unchanged.

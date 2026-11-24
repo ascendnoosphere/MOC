@@ -160,54 +160,9 @@ three or more zeros as strict support violations. It does NOT prove
 MOC for a nonstationary three-zero unitary: the derivative of its
 objective need not vanish and the correction can change the support.
 
-### 4. Reproducible exact coefficient check (Python/SymPy)
+### 4. Lean verification gap
 
-Run this code in an environment with SymPy. It verifies the table,
-normalization identities and (*) as rational-function identities in
-three independent symbols, rather than by numerical sampling.
-
-```python
-import itertools as it
-import sympy as S
-x,y,z = S.symbols('x y z', positive=True)
-X,Y,Z = x*x,y*y,z*z
-rho = X/(Y*Z)
-N1,N2,N3 = 1+X+Y,1+Z+1/Y,1+1/X+1/Z
-D = N1*N2*N3
-T = S.Matrix([[0,x,y,1],[z,0,-1/y,1],[-1/z,-1/x,0,1],
-              [(X+Y+1)/(x*y),-(Y*Z+Y+1)/(y*z),
-               (X*Z+X+Z)/(x*z),x/(y*z)-y*z/x]])
-def zero(q): return S.cancel(q)==0
-assert all(zero(q) for q in T*T.T-S.diag(N1,N2,N3,D))
-assert zero(T.det()-D)
-dT=S.zeros(4)
-dT[0,:]=T[1,:]
-dT[1,:]=-N2/N1*T[0,:]
-E=S.zeros(4)
-E[0,2]=-S.Rational(1,2)
-E[1,2]=S.Rational(1,2)
-E[2,0]=(X*Z+X+Z)/(2*Z*N1)
-E[2,1]=-(X*Y*Z+X*Y+Y*Z)/(2*X*N2*Y)
-table={
-'2143':(X*Z+X+Z,0),'2314':(rho-1,-1),
-'2341':(X/Y+1+1/Y,1),'2413':(X+X/Z+1,0),
-'3124':(1/rho-1,1),'3142':(Y*Z+Y+1,-1),
-'3412':(Y+Y/Z+1/Z,-1/Z),'3421':(1+Y/X+1/X,-1-1/X),
-'4123':(Z+1+Z/X,0),'4312':(1+1/Z+1/(Y*Z),1+1/Z),
-'4321':(1/Y+1/X+1/(X*Y),1/X)}
-for p in it.permutations(range(4)):
-    sign=(-1)**sum(p[i]>p[j] for i in range(4) for j in range(i+1,4))
-    key=''.join(str(i+1) for i in p)
-    w,d=table.get(key,(0,0))
-    assert zero(sign*S.prod(T[i,p[i]] for i in range(4))-w)
-    h=sign*sum(dT[k,p[k]]*S.prod(T[i,p[i]] for i in range(4) if i!=k)
-               for k in range(2))/(2*N2)
-    assert zero(h-d-sign*sum(E[i,p[i]] for i in range(4)))
-assert zero(sum(d for w,d in table.values()))
-assert zero(sum(w for w,d in table.values())-D)
-print("All exact identities verified.")
-```
-
+The exact coefficient table above is a mathematical certificate. Its symbolic verification has not been ported to Lean.
 
 ### 5. Residual problem
 

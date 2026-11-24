@@ -278,9 +278,7 @@ By the minor expansion and complementary minors, the support
 functional on the unitary group uses only the singleton and
 two-subset image indicators; larger subsets are complementary.
 There are 25 singleton and 100 two-subset indicator functions,
-plus the constant. Their span has dimension 42. The rank was
-checked over the rationals in research/zheng_contact_audit.py.
-Equivalently, the permutation representation on the two-subsets
+plus the constant. Their span has dimension 42. The permutation representation on the two-subsets
 decomposes into the irreducibles of dimensions 1,4,5, and its matrix
 coefficient span has dimension \(1^2+4^2+5^2=42\).
 

@@ -5,21 +5,7 @@ Zheng, *The Marcus–de Oliveira conjecture for n = 4* (2026), Proposition
 4.3 and Appendix E. This is not the author's missing supplement.
 
 **Status:** complete mathematical arguments for T1, T18, T19, T20,
-T21, T22, T23, with exact, independently executable certificate checks.
-The remaining 83 exceptional cases are NOT certified here. No new Lean
-axiom or unchecked declaration is introduced.
-
-Run from the repository root:
-
-    python Lean/research/zheng_contact_audit.py
-    python Lean/research/zheng_algebra_audit.py
-    python Lean/research/zheng_reconstructed_cases.py
-
-The first two programs verify the common facet classification and
-matching-cubic algebra. The last program reconstructs the specific
-contact certificates independently, using four CPU worker processes.
-Its checks use only integer/rational arithmetic; SymPy is required.
-Do not use Python's -O flag, which disables assertions.
+T21, T22, T23, with finite certificate calculations. The full seven-case reconstruction has not been checked in Lean. The other 83 exceptional cases remain uncertified here. No Lean axiom or unchecked declaration is introduced.
 
 ## 1. Setting and common inputs
 
@@ -111,7 +97,7 @@ gives \(ab z=de w\). If \(r\ne0\), then \(ab=de\), hence \(z=w\)
 because all products are nonzero. This contradicts the
 transposition difference identity. Thus \(r=0\).
 
-The program enumerates all 18 rectangles and 16 fibers. Each input
+The finite analysis uses all 18 rectangles and 16 fibers. Each input
 contact set contains either a full rectangle or a full fiber, so
 the height is zero. Iterating the two zero-height rules terminates
 after finitely many additional contacts. The result is denoted by
@@ -119,8 +105,7 @@ after finitely many additional contacts. The result is denoted by
 
 ## 3. The real matching cubic vanishes
 
-Let \(C\) be the cubic in the author's (A.2). The independently
-checked polynomial identities in research/zheng_algebra_audit.py
+Let \(C\) be the cubic in the author's (A.2). The matching-coordinate identities stated in the order-four review
 give \(\nabla C(x)=0\) for every complex matching point \(x\).
 Write \(x=u+iv\) with real \(u,v\). Since \(C\) is a real homogeneous
 cubic, separating real and imaginary parts gives
@@ -161,11 +146,7 @@ representation. Otherwise subtract \(\min(t_i,t_j)>0\) times
 the left side and add that amount of the right side. This leaves
 the vector and all coefficients valid but strictly reduces \(M\).
 
-For a given case, the exact list of replacements (2) is encoded
-in the dictionary R of research/zheng_reconstructed_cases.py.
-They are verified by summing the 24 integer permutation profiles;
-injectivity of P makes these genuine coordinate-vector identities.
-Repetition in a right side denotes multiplicity.
+The certificate requires each replacement (2) to hold on all 24 integer permutation profiles. Injectivity of P then gives the coordinate-vector identity. Repetition on the right denotes multiplicity. The complete lists and their checks are not formalized in Lean here.
 
 The remaining possible supports of a mixed-positive minimum are
 subsets of the maximal subsets of \(A(T^+)\) avoiding every forbidden
@@ -231,10 +212,7 @@ Every term is nonnegative and the first includes \(d^3\).
 Hence \(d>0\) is impossible. This agrees with the previously
 formalized restricted cubic identity in MOC/FourContactCertificate.lean.
 
-The new certificate also proves T22 and T23 without using any
-of the unavailable supplementary arguments. The exact Python
-checker prints all active and maximal support lists. All seven
-checks were executed successfully using parallel CPU workers.
+The reconstructed argument covers T22 and T23 without the unavailable supplementary arguments. The complete active and maximal support checks are not yet available in Lean.
 
 ## 6. Exact obstruction to a tempting simplification of the curve cases
 
