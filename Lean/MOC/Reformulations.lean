@@ -1,3 +1,4 @@
+import MOC.Reformulations.Anchored
 import MOC.Reformulations.CStar
 import MOC.Reformulations.Common
 import MOC.Reformulations.Commutant
