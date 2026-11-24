@@ -18,6 +18,7 @@ import MOC.FiniteCurveClosure
 import MOC.FiniteCurveConnected
 import MOC.FiniteCurveFiberSeparation
 import MOC.FiniteCurveBranchValues
+import MOC.FiniteCurveAffineConnected
 import MOC.FiniteCurveGrowth
 import MOC.FiniteCurvePlaneImage
 import MOC.FiniteCurveProperProjection
@@ -61,6 +62,7 @@ import MOC.OrderFourFlatPlanes
 import MOC.OrderFourColumnReflections
 import MOC.OrderFourIndependent
 import MOC.OrderFourReflectionTest
+import MOC.OrderFourReflectionResidue
 import MOC.OrderFourSecondVariation
 import MOC.PairAssignmentObstruction
 import MOC.Pencil
@@ -70,6 +72,7 @@ import MOC.ProjectiveTransport
 import MOC.ProofRoutes
 import MOC.QuaternionParitySharp
 import MOC.QuaternionIntrinsic
+import MOC.QuaternionMixerParity
 import MOC.RankTwoOverlap
 import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels
@@ -77,6 +80,7 @@ import MOC.ReciprocalConjugateSupport
 import MOC.Reformulations
 import MOC.SchurEntryObstruction
 import MOC.SchurQuadraticSupport
+import MOC.SixContactBridge
 import MOC.Source
 import MOC.SparseRow
 import MOC.SparseSpectralCollision

@@ -263,3 +263,21 @@ additional special-case and restricted comparisons are not root branches.
 | Quaternion corrections | The [intrinsic displacement proof](MOC/QuaternionIntrinsic.lean) gives the possible monomial types and their permutation parities. | Connect these to the local signs in the actual quaternion mixer, then prove nonnegativity of its corrected law. |
 | Order-five sparse mixer | A [zero corner](MOC/OrderFiveZeroCorner.lean) forces the opposite block to be nonzero when all row and column degrees are at least three. | Treat the remaining five-edge path mask and the full-support case. |
 | Order-five projected objective | [The strict Gram bound is open-stable](MOC/SpectralGramNeighborhood.lean): both spectra and the support direction can vary in a neighborhood, uniformly over all mixers. | Bound objectives outside this neighborhood. |
+
+Further checked steps narrow the open branches:
+
+- The [finite-affine connectedness theorem](MOC/FiniteCurveAffineConnected.lean)
+  treats a prime finite affine curve whose coordinates can be recovered
+  rationally from a plane model. It includes the previously excluded
+  finite fibres. The required fixed-gap slice is still open.
+- The [near-balanced signed-Klein mixer theorem](MOC/QuaternionMixerParity.lean)
+  proves the hull inclusion for every spectrum pair when its explicit
+  signing, unitary, determinant, and cubic conditions hold. It is a
+  mixer class, not an order-four proof.
+- The [reflection residue](MOC/OrderFourReflectionResidue.lean) checks
+  the scalar cancellation for the two signed reflection directions.
+  It does not force either direction to improve support.
+- The [six-contact bridge](MOC/SixContactBridge.lean) rules out a specific
+  order-four violation: at height zero a contact and five active
+  single-swap neighbors force all matching products onto one line.
+  The theorem assumes simple spectra and nonzero matching products.
