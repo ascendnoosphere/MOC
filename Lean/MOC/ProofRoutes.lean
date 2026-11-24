@@ -37,6 +37,23 @@ theorem any_iff_of_branch {P Q : Prop} {routes : List (Route P)}
     AnyRoute routes ↔ P :=
   ⟨close_any, fun h => ⟨fromIff name e, hm, e.mpr h⟩⟩
 
+def LabelledAt (n : ℕ) (Sample : Type) : Prop :=
+  ∀ (s t : Sample) (f g : Sample → Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ),
+    IsUnitary U → Holds (f s) (g t) U
+
+theorem labelledAt_iff (n : ℕ) (Sample : Type) (sample : Sample) :
+    LabelledAt n Sample ↔ Conjecture (Fin n) :=
+  ⟨fun h a b U hU => h sample sample (fun _ => a) (fun _ => b) U hU,
+   fun h s t f g U hU => h (f s) (g t) U hU⟩
+
+theorem some_labelledAt_iff (n : ℕ) :
+    (∃ Sample : Type, Nonempty Sample ∧ LabelledAt n Sample) ↔ Conjecture (Fin n) := by
+  constructor
+  · rintro ⟨Sample, ⟨sample⟩, h⟩
+    exact (labelledAt_iff n Sample sample).mp h
+  · intro h
+    exact ⟨Unit, ⟨()⟩, (labelledAt_iff n Unit ()).mpr h⟩
+
 /-- Fix one partner entry. The law may depend on all the other input
 coordinates and on the mixer; it need not preserve unrelated spectra. -/
 def OneEntryLaw (n : ℕ) : Prop :=
@@ -84,6 +101,9 @@ def EightContactStep : Prop :=
     (∀ i j, U i j ≠ 0) → ∀ v : StrictMatchingSupport U, v.contacts.card < 8 →
       ∃ v' : StrictMatchingSupport U, v.contacts.card < v'.contacts.card
 
+/-- The universal common-law condition is sufficient but is not an active
+branch: the order-five compound-property obstruction is stronger than a
+pointwise determinant hull failure. -/
 def PositivePairLawFive : Prop :=
   ∀ U : Matrix (Fin 5) (Fin 5) ℂ, IsUnitary U →
     ∃ w : Equiv.Perm (Fin 5) → ℝ, (∀ σ, 0 ≤ w σ) ∧
@@ -126,6 +146,7 @@ def fourRoutes : List (Route (Conjecture (Fin 4))) :=
       conjecture_four_iff_regular_orthogonal_support_maxima.symm,
    fromIff "Normal sum at a support maximizer" conjecture_four_iff_exists_normal_support_maximizer.symm,
    fromIff "One-entry positive laws" (oneEntryLaw_iff 4),
+   fromIff "Evaluated atlas comparison at order four" (some_labelledAt_iff 4),
    fromIff "Principal coisometry of dimension three" (conjecture_iff_principalCoisometry 3).symm,
    of_witness_iff "Exclude all regular stationary orthogonal witnesses"
       not_conjecture_four_iff_regular_stationary_orthogonal_witness,
@@ -140,6 +161,7 @@ def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
    fromIff "Regular spectra and full-support mixers"
       conjecture_iff_regular_spectra_full_support.symm,
    fromIff "One-entry positive laws" (oneEntryLaw_iff 5),
+   fromIff "Evaluated atlas comparison at order five" (some_labelledAt_iff 5),
    fromIff "Principal coisometry of dimension four" (conjecture_iff_principalCoisometry 4).symm,
    fromIff "Three-anchor rank-one kernel"
       (Reformulations.conjecture_iff_three_anchor_kernel (0 : Fin 5) 1 0 (by simp)).symm,
@@ -148,7 +170,6 @@ def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
    ⟨"One-contact transfer AND the eight-contact support test",
       EightContactStep ∧ FullSupportEightContactTest,
       fun h => (conjecture_five_iff_fullSupportEight_of_step h.1).mpr h.2⟩,
-   ⟨"Positive common law of doubleton images", PositivePairLawFive, five_of_positivePairLaw⟩,
    ⟨"Orthogonal minor convexification AND orthogonal order five",
       TwoOrthogonalMinorTables (Fin 5) ∧ OrthogonalConjecture (Fin 5),
       fun h => (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2⟩]

@@ -45,19 +45,25 @@ The checked alternatives include:
 - Prove the hull bound for regular spectra and mixers with no zero entries.
 - Prove the one-entry law separately for each pencil. One law need not
   work for different pencils.
-- Prove order four **AND** existence of a normal sum at every
-  directional order-five maximum.
+- Prove order four **AND** show that each order-five support problem
+  has a maximizer with a normal sum.
 - Prove a one-contact transfer **AND** the support bound at eight or
   more contacts, for mixers with no zero entries.
-- Construct one positive law matching [all doubleton image masses](MOC/OrderFivePairMarkers.lean)
-  for each mixer. This is sufficient and can be stronger than MOC.
-  Alternatively, use [subset assignment certificates](MOC/SubsetAssignmentSupport.lean)
-  on individual support objectives.
+- Use [subset assignment certificates](MOC/SubsetAssignmentSupport.lean)
+  on individual support objectives. The [doubleton image tests](MOC/OrderFivePairMarkers.lean)
+  identify which minor data a fixed law must preserve. A universal
+  positive common law is not an active branch: [Drury's Householder
+  counterexample](https://doi.org/10.1016/S0024-3795(99)00173-1)
+  rules out that stronger property in order five.
   The [explicit pair cost](MOC/OrderFivePairCost.lean) expresses every
   directional order-five objective in these coordinates.
 - Prove orthogonal order five **AND** a two-table orthogonal
   convexification for complex mixers. The library does not supply the
   convexification in order five.
+
+Each inhabited atlas sample also gives an exact evaluated comparison at
+order four and at order five. This stays at the selected order and does
+not imply the corresponding native claim.
 
 An all-order branch can also close either finite-order root. This
 does not reduce an all-order goal to only two orders. A refutation of
@@ -67,9 +73,10 @@ equivalence, proof and refutation both transfer.
 ## Checked steps toward the open branches
 
 - [Local holomorphic root cover](MOC/FiniteCurveRootCover.lean):
-  separable fibres of a monic plane polynomial have exhaustive
-  local holomorphic branches. The global gluing and the curve
-  slice through each witness are separate steps.
+  separable fibres of a monic plane polynomial have complete
+  local holomorphic branches. The [global gluing](MOC/FiniteCurveConnected.lean)
+  proves connectedness for a punctured simple-root cover of an irreducible
+  plane polynomial. The curve slice through each witness is a separate step.
 - [Cross-ratio test](MOC/ContactCrossRatios.lean):
   one four-swap pattern at nonzero height imposes a positive real
   product of two spectral cross ratios.
@@ -79,3 +86,11 @@ equivalence, proof and refutation both transfer.
 - [Sparse geometry](MOC/OrderFiveSparseGeometry.lean):
   a failure with at least eight mixer zeros forces an order-four
   failure. This is a reduction, not an order-five proof on dense mixers.
+- [Spectral collisions on a sparse row](MOC/SparseSpectralCollision.lean):
+  a three-supported row reduces to the preceding order if two of its
+  supported column labels coincide. Unequal labels are not preserved
+  by the same rotation.
+- [Parity repair threshold](MOC/QuaternionParitySharp.lean):
+  the proposed displacement-label repair has an exact scalar feasibility
+  test. This excludes that repair below its threshold, not the hull
+  inclusion or other possible repairs.

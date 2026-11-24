@@ -12,6 +12,7 @@ import MOC.ContactWeightPositivity
 import MOC.DisjointContactRectangle
 import MOC.DiskBoundary
 import MOC.ExtendedCases
+import MOC.FiniteCurveConnected
 import MOC.FiniteCurveGrowth
 import MOC.FiniteCurvePlaneImage
 import MOC.FiniteCurveRootCover
@@ -56,6 +57,7 @@ import MOC.PolydiskContact
 import MOC.PositiveWeightMargin
 import MOC.ProjectiveTransport
 import MOC.ProofRoutes
+import MOC.QuaternionParitySharp
 import MOC.RankTwoOverlap
 import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels
@@ -64,6 +66,7 @@ import MOC.SchurEntryObstruction
 import MOC.SchurQuadraticSupport
 import MOC.Source
 import MOC.SparseRow
+import MOC.SparseSpectralCollision
 import MOC.SpectralAffineContact
 import MOC.SpectralMinorDecomposition
 import MOC.SpectralZeroPadding
