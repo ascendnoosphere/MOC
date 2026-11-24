@@ -84,6 +84,39 @@ theorem hyperbolicQuadratic_matching_bounds (q : QuadraticForm ℝ E) (e x y : E
   rw [hq]
   constructor <;> nlinarith only [hzhi, hzlo, hsx, hsy]
 
+
+/-- The variance condition is equivalent to the actual normalized quadratic
+pencil having two real roots, counted with multiplicity. -/
+theorem quadraticPencil_hasRealRoots_iff (q : QuadraticForm ℝ E) (e x : E)
+    (he : q e = 1) :
+    (∃ a b : ℝ, ∀ t : ℝ, q (t • e - x) = (t - a) * (t - b)) ↔
+      0 ≤ quadraticSpectralVariance q e x := by
+  constructor
+  · rintro ⟨a, b, h⟩
+    have hq (t : ℝ) : q (t • e - x) = t ^ 2 - 2 * t * quadraticSpectralMean q e x + q x := by
+      have hadd : q (t • e + -x) =
+          q (t • e) + q (-x) + QuadraticMap.polar q (t • e) (-x) := by
+        unfold QuadraticMap.polar
+        ring
+      rw [sub_eq_add_neg, hadd, q.map_smul, he, QuadraticMap.polar_smul_left,
+        QuadraticMap.polar_neg_right, ← neg_one_smul ℝ x, q.map_smul]
+      simp only [smul_eq_mul]
+      unfold quadraticSpectralMean
+      ring
+    have hp : q x = a * b := by
+      have hz := (hq 0).symm.trans (h 0)
+      nlinarith only [hz]
+    have hs : 2 * quadraticSpectralMean q e x = a + b := by
+      have ho := (hq 1).symm.trans (h 1)
+      nlinarith only [hp, ho]
+    unfold quadraticSpectralVariance
+    nlinarith only [hp, hs, sq_nonneg (a - b),
+      congrArg (fun z : ℝ => z ^ 2) hs]
+  · intro hx
+    refine ⟨quadraticSpectralMean q e x + Real.sqrt (quadraticSpectralVariance q e x),
+      quadraticSpectralMean q e x - Real.sqrt (quadraticSpectralVariance q e x),
+      quadraticPencil_factor q e he x hx⟩
+
 end
 
 end MOC.Reformulations
