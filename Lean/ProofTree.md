@@ -5,7 +5,7 @@
 Read the arrows from a proof route toward its conclusion.
 **Iff** labels mark checked equivalences. A plain arrow marks a checked
 sufficient implication, not a proof of its premise. Dashed arrows mark
-research dependencies, not proved implications. Orange nodes are open;
+research dependencies or supporting context, not new implications. Orange nodes are open;
 green nodes describe steps that Lean has proved. The diagrams group
 related routes. [ProofRoutes.lean](MOC/ProofRoutes.lean) gives the full list.
 
@@ -108,7 +108,11 @@ flowchart BT
 ```mermaid
 flowchart BT
     TRANSFER["Increase contacts at a strict witness"]:::open
-    BOTH{{"AND: supply the curve and apply transfer"}}
+    ORC{{"OR: use a checked transfer"}}
+    BOTH{{"AND: supply the compact curve and apply transfer"}}
+    PLA{{"AND: supply the plane model and apply transfer"}}
+    MODEL["Fixed-gap plane model with a varying gap<br/>as its base coordinate · open in general"]:::open
+    STEP["Connected-profile transfer<br/>including exceptional fibres · checked"]:::checked
     SLICE["Construct a fixed-gap curve through<br/>each low-contact witness · open in Lean"]:::open
     FIXED["Fixed-gap transfer on a supplied curve<br/>and finite iteration · checked"]:::checked
     PLANE["Connected plane root cover<br/>including exceptional fibres · checked"]:::checked
@@ -117,7 +121,11 @@ flowchart BT
     CHART -. sets up the constraints .-> SLICE
     SLICE --> BOTH
     FIXED --> BOTH
-    BOTH --> TRANSFER
+    BOTH --> ORC
+    MODEL --> PLA
+    STEP --> PLA
+    PLA --> ORC
+    ORC --> TRANSFER
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
 ```
@@ -244,3 +252,14 @@ implies each exact branch in orders four and five. For a one-way
 branch, the proof does not infer its premise from its conclusion.
 The [native audit](MOC/Reformulations/NativeAudit.lean) records which
 additional special-case and restricted comparisons are not root branches.
+
+## Latest checks on the open branches
+
+| Gap | What Lean proves | What remains |
+| --- | --- | --- |
+| Fixed-gap curve | [Connected-profile transfer](MOC/ConnectedContactStep.lean) applies to supplied exact profiles on a monic irreducible plane model, even at an exceptional fibre. [Proper projection](MOC/FiniteCurveProperProjection.lean) controls limits of lifts to the affine curve. | Construct the required slice and show that its profile maps have the needed connected representation through any low-contact witness. |
+| Order-four stationary maximum | [Column reflections](MOC/OrderFourColumnReflections.lean) send a column to a signed coordinate and reduce to order three. Those reflections strictly lose support at a strict witness. | Show that every remaining stationary candidate has an improving or flat direction, or certify it by a different route. |
+| Order-four contact geometry | [Fibre gluing](MOC/ContactFibreGluing.lean) gives a matching-line proof when two full zero-height fibres meet under its spectral conditions. [Triangle closure](MOC/ZeroHeightTriangleClosure.lean) forces missing contacts from four specified contacts at height zero. | Cover profiles outside these patterns. |
+| Quaternion corrections | The [intrinsic displacement proof](MOC/QuaternionIntrinsic.lean) gives the possible monomial types and their permutation parities. | Connect these to the local signs in the actual quaternion mixer, then prove nonnegativity of its corrected law. |
+| Order-five sparse mixer | A [zero corner](MOC/OrderFiveZeroCorner.lean) forces the opposite block to be nonzero when all row and column degrees are at least three. | Treat the remaining five-edge path mask and the full-support case. |
+| Order-five projected objective | [The strict Gram bound is open-stable](MOC/SpectralGramNeighborhood.lean): both spectra and the support direction can vary in a neighborhood, uniformly over all mixers. | Bound objectives outside this neighborhood. |

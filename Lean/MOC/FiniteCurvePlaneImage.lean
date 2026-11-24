@@ -14,12 +14,12 @@ variable {K σ : Type*} [Field K] [IsAlgClosed K] [Finite σ]
 
 set_option maxHeartbeats 800000 in
 /-- Every point of the monic plane model lifts to the finite affine curve. -/
-theorem exists_monic_plane_image_of_finite_projection
+theorem exists_monic_irreducible_plane_image_of_finite_projection
     (Q : Ideal (MvPolynomial σ K)) [Q.IsPrime]
     (f : Polynomial K →ₐ[K] (MvPolynomial σ K ⧸ Q)) (hf : f.Finite)
     (hfi : Function.Injective f)
     (t u : MvPolynomial σ K) (ht : Ideal.Quotient.mk Q t = f Polynomial.X) :
-    ∃ P : Polynomial (Polynomial K), P.Monic ∧ ∀ a b : K,
+    ∃ P : Polynomial (Polynomial K), P.Monic ∧ Irreducible P ∧ ∀ a b : K,
       (P.map (Polynomial.evalRingHom a)).IsRoot b ↔
         ∃ z ∈ zeroLocus Q, eval z t = a ∧ eval z u = b := by
   let A := Polynomial K
@@ -39,7 +39,7 @@ theorem exists_monic_plane_image_of_finite_projection
     (Polynomial.aeval_C (R := A) v c).symm
   letI hInt : Algebra.IsIntegral S B := Algebra.IsIntegral.tower_top (R := A)
   have hinj : Function.Injective (algebraMap S B) := Subtype.val_injective
-  refine ⟨P, minpoly.monic hv, fun a b => ?_⟩
+  refine ⟨P, minpoly.monic hv, minpoly.irreducible hv, fun a b => ?_⟩
   let e₀ := Polynomial.evalRingHom a
   let j₀ : Polynomial A →+* K := (Polynomial.evalRingHom b).comp (Polynomial.mapRingHom e₀)
   constructor
@@ -136,6 +136,19 @@ theorem exists_monic_plane_image_of_finite_projection
       ((congrArg φ.toRingHom hp).trans (map_zero _))
     rw [he', show φ.toRingHom v = eval z u from rfl] at h
     simpa only [Polynomial.IsRoot, Polynomial.eval_map] using h
+
+/-- Every point of the monic plane model lifts to the finite affine curve. -/
+theorem exists_monic_plane_image_of_finite_projection
+    (Q : Ideal (MvPolynomial σ K)) [Q.IsPrime]
+    (f : Polynomial K →ₐ[K] (MvPolynomial σ K ⧸ Q)) (hf : f.Finite)
+    (hfi : Function.Injective f)
+    (t u : MvPolynomial σ K) (ht : Ideal.Quotient.mk Q t = f Polynomial.X) :
+    ∃ P : Polynomial (Polynomial K), P.Monic ∧ ∀ a b : K,
+      (P.map (Polynomial.evalRingHom a)).IsRoot b ↔
+        ∃ z ∈ zeroLocus Q, eval z t = a ∧ eval z u = b := by
+  obtain ⟨P, hP, _, hplane⟩ :=
+    exists_monic_irreducible_plane_image_of_finite_projection Q f hf hfi t u ht
+  exact ⟨P, hP, hplane⟩
 
 end
 

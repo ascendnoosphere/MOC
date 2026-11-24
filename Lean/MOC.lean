@@ -3,9 +3,11 @@ import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
+import MOC.ConnectedContactStep
 import MOC.ContactCrossRatios
 import MOC.ContactCurveGeometry
 import MOC.ContactCurveStep
+import MOC.ContactFibreGluing
 import MOC.ContactIteration
 import MOC.ContactTransfer
 import MOC.ContactWeightPositivity
@@ -14,9 +16,11 @@ import MOC.DiskBoundary
 import MOC.ExtendedCases
 import MOC.FiniteCurveClosure
 import MOC.FiniteCurveConnected
+import MOC.FiniteCurveFiberSeparation
 import MOC.FiniteCurveBranchValues
 import MOC.FiniteCurveGrowth
 import MOC.FiniteCurvePlaneImage
+import MOC.FiniteCurveProperProjection
 import MOC.FiniteCurveRootCover
 import MOC.FiveMatchingLaw
 import MOC.FiveParityCorrection
@@ -51,8 +55,10 @@ import MOC.OrderFiveCommonLawObstruction
 import MOC.OrderFivePairCost
 import MOC.OrderFivePairMarkers
 import MOC.OrderFiveSparseGeometry
+import MOC.OrderFiveZeroCorner
 import MOC.OrderFourGivens
 import MOC.OrderFourFlatPlanes
+import MOC.OrderFourColumnReflections
 import MOC.OrderFourIndependent
 import MOC.OrderFourReflectionTest
 import MOC.OrderFourSecondVariation
@@ -63,6 +69,7 @@ import MOC.PositiveWeightMargin
 import MOC.ProjectiveTransport
 import MOC.ProofRoutes
 import MOC.QuaternionParitySharp
+import MOC.QuaternionIntrinsic
 import MOC.RankTwoOverlap
 import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels
@@ -74,6 +81,7 @@ import MOC.Source
 import MOC.SparseRow
 import MOC.SparseSpectralCollision
 import MOC.SpectralAffineContact
+import MOC.SpectralGramNeighborhood
 import MOC.SpectralMinorDecomposition
 import MOC.SpectralZeroPadding
 import MOC.StationaryFullSupport
@@ -89,6 +97,7 @@ import MOC.TwoCircleCover
 import MOC.TwoFreeRealAnchors
 import MOC.WeightedDiamondAdjacency
 import MOC.WeightedMinor
+import MOC.ZeroHeightTriangleClosure
 
 open Lean Elab Command in
 run_cmd do
