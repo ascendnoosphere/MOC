@@ -261,6 +261,13 @@ most two nonzero entries also reduces to smaller order. Every matrix that
 commutes with both summands must be a scalar multiple of the identity.
 [Block reduction](../Lean/MOC/Claim.lean#L43) · [Least order](../Lean/MOC/Claim.lean#L51) · [Rows](../Lean/MOC/SparseRow.lean#L287) · [Columns](../Lean/MOC/SparseRow.lean#L309) · [Common commutant](../Lean/MOC/ReducingCommutant.lean#L70)
 
+Every counterexample, in any order, needs both a row and a column with
+at least four nonzero entries. This follows from the inclusion for
+arbitrary complex spectra when all rows, or all columns, have at most
+three nonzero entries. In order four, the required row and column
+have no zero entries.
+[Counterexample restriction](../Lean/MOC/SparseUnitary.lean#L54) · [Order four](../Lean/MOC/SparseUnitary.lean#L66) · [Sparse unitary proof](sparse-unitary-proof-map.md)
+
 Let $R$ be a nonempty set of rows with at least two rows outside it.
 A column supports $R$ if it has a nonzero entry in a row of $R$.
 In a least-order counterexample, at least $|R|+2$ columns support $R$.

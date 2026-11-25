@@ -49,6 +49,7 @@ The mixer is the unitary change between the two eigenbases.
 - [Six-dimensional mixer ball](six-dimensional-mixer-ball-proof-map.md)
 - [Six-dimensional rank-two overlap](six-dimensional-rank-two-overlap-proof-map.md)
 - [Small spectral perturbations](small-spectral-perturbation-proof-map.md)
+- [Unitary matrices with at most three nonzero entries per row or per column](sparse-unitary-proof-map.md)
 - [Symmetric cube mixer in order four](order-four-symmetric-cube-mixer-proof-map.md)
 - [Three spectral values with one singleton](three-spectral-values-with-one-singleton-proof-map.md)
 - [Two-by-two tensor mixers](two-by-two-tensor-mixer-proof-map.md)

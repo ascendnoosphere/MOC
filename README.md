@@ -241,6 +241,16 @@ statements and the proof of each connection to its goal.
 
 ## Cases proved in Lean
 
+### At most three nonzero entries per row or per column
+
+In every finite order, the inclusion holds for all complex spectra if
+each row of the unitary matrix $U$ has at most three nonzero entries.
+The same conclusion holds if each column has at most three nonzero entries.
+Thus any counterexample needs both a row and a column with at least four
+nonzero entries. In order four, every entry of this row and this column
+must be nonzero.
+[Row bound](Lean/MOC/SparseUnitary.lean#L27) · [Column bound](Lean/MOC/SparseUnitary.lean#L44) · [Counterexamples](Lean/MOC/SparseUnitary.lean#L54) · [Order four](Lean/MOC/SparseUnitary.lean#L66) · [Proof map](Docs/sparse-unitary-proof-map.md)
+
 ### Mixing blocks with one shared coordinate
 
 Take two unitary matrices that each satisfy the inclusion for all pairs
