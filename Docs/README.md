@@ -1,0 +1,61 @@
+# Proof maps
+
+The Marcus–de Oliveira conjecture states that the determinant of
+the sum of two complex normal matrices is a convex combination of
+products obtained by matching their eigenvalues. Each map states
+its premises and links to the relevant Lean source.
+[Conjecture and proof tree](../README.md)
+
+## General routes
+
+| Map | Coverage |
+| --- | --- |
+| [All orders](all-orders-proof-map.md) | Order split, 71 general routes, and the audit of 243 spectral formulations. |
+| [Order four](order-four-proof-map.md) | Eleven routes, real orthogonal mixers, stationary maxima, and contact patterns. |
+| [Order five](order-five-proof-map.md) | Ten routes, contact thresholds, sparse mixers, and squared-minor tests. |
+| [Contact transfer](contact-transfer-proof-map.md) | Fixed and varying determinant differences, contact counts, rank, moments, and isolation. |
+| [Spectral and support results](spectral-support-proof-map.md) | Spectral families, order-four support tests, and coverage of the research PDFs. |
+
+## Order-four support tests
+
+A support test compares the projection of the determinant in one
+direction with the largest projection of a matching product. A
+contact is a matching that attains that largest projection.
+
+- [Support-cost cone](order-four-support-cost-cone-proof-map.md)
+- [Mixed-ray cancellation](order-four-mixed-ray-cancellation-proof-map.md)
+- [Real spectral lifts](order-four-real-spectral-lift-proof-map.md)
+- [Real matching sums of squares](order-four-real-matching-squares-proof-map.md)
+- [Klein-four matching squares](order-four-klein-four-matching-squares-proof-map.md)
+- [Five-parameter contact family](order-four-five-parameter-contact-proof-map.md)
+- [Symmetric six-contact family](order-four-symmetric-six-contact-proof-map.md)
+- [Opposite eigenvalues](order-four-opposite-eigenvalues-proof-map.md)
+- [Weighted-minor center](order-four-weighted-minor-center-proof-map.md)
+
+## Spectral and mixer cases
+
+The mixer is the unitary change between the two eigenbases.
+
+- [Circle-or-line common weights in order four](order-four-circle-or-line-common-weights-proof-map.md)
+- [Conic spectral reductions](conic-spectral-reductions-proof-map.md)
+- [Equal spectral coefficients](equal-spectral-coefficients-proof-map.md)
+- [One free eigenvalue and exterior shifts](free-eigenvalue-and-exterior-shifts-proof-map.md)
+- [Real-parameter spectra in order four](order-four-real-parameter-spectra-proof-map.md)
+- [Six-dimensional mixer ball](six-dimensional-mixer-ball-proof-map.md)
+- [Six-dimensional rank-two overlap](six-dimensional-rank-two-overlap-proof-map.md)
+- [Small spectral perturbations](small-spectral-perturbation-proof-map.md)
+- [Symmetric cube mixer in order four](order-four-symmetric-cube-mixer-proof-map.md)
+- [Three spectral values with one singleton](three-spectral-values-with-one-singleton-proof-map.md)
+- [Two-by-two tensor mixers](two-by-two-tensor-mixer-proof-map.md)
+
+## Determinant formulas, attainment, and probability
+
+- [Spectral profile determinant](spectral-profile-determinant-proof-map.md)
+- [Attained values from transposition walks](transposition-winding-proof-map.md)
+- [Gaussian spectra and Haar mixers](gaussian-spectra-and-haar-mixers-proof-map.md)
+
+## File names
+
+Each map uses a lowercase, hyphenated subject name ending in
+`-proof-map.md`. Prefixes such as `order-four` and `six-dimensional`
+state the scope of a result.

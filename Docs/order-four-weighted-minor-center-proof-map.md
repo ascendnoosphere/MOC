@@ -1,6 +1,6 @@
 # Order-four weighted-minor center
 
-[Conjecture](../../README.md) · [Order-four proof routes](order-four-proof-maps.md)
+[Proof map index](README.md) · [Conjecture](../README.md) · [Order-four proof routes](order-four-proof-map.md)
 
 Let $U$ be a complex unitary matrix of order four. Let $U^*$ be its
 conjugate transpose. Use the eigenvalue lists
@@ -15,7 +15,7 @@ For a permutation $p$ of the four labels, write
 $P_p=\prod_j(a_j+b_{p(j)})$. The determinant of
 $\mathrm{diag}(a)+U\mathrm{diag}(b)U^*$ belongs to the convex hull of
 the 24 values $P_p$. The theorem applies to every $U$ for these fixed
-lists. [Left list](../../Lean/MOC/FourWeightedMinorCenter.lean#L37) · [Right list](../../Lean/MOC/FourWeightedMinorCenter.lean#L40) · [Hull inclusion](../../Lean/MOC/FourWeightedMinorCenter.lean#L473)
+lists. [Left list](../Lean/MOC/FourWeightedMinorCenter.lean#L37) · [Right list](../Lean/MOC/FourWeightedMinorCenter.lean#L40) · [Hull inclusion](../Lean/MOC/FourWeightedMinorCenter.lean#L473)
 
 ```mermaid
 flowchart TD
@@ -42,7 +42,7 @@ is the oriented area form applied to $P_r-P_l$ and $P_p-P_l$.
 Multiply this cost by the positive scale for the edge. The resulting
 function on permutations is a sum of the terms in the rational table.
 The exact identities use the finite eigenvalue lists in the theorem.
-[Term table](../../Lean/MOC/FourWeightedMinorCenter.lean#L112) · [Edge identities](../../Lean/MOC/FourWeightedMinorCenter.lean#L243)
+[Term table](../Lean/MOC/FourWeightedMinorCenter.lean#L112) · [Edge identities](../Lean/MOC/FourWeightedMinorCenter.lean#L243)
 
 For row and column sets $I,J$, the ordinary indicator is one if
 $p(I)=J$ and zero otherwise. Evaluation at $U$ replaces this indicator
@@ -64,14 +64,14 @@ The arithmetic–geometric mean inequality gives
 $2\sqrt{xy}\le\tau x+\tau^{-1}y$. The squared-minor table of a complex
 unitary matrix is a convex combination of real orthogonal tables.
 Since the expression is linear in this table, the bound holds for
-each complex unitary. [Quaternion and mean inequality](../../Lean/MOC/FourWeightedMinorCenter.lean#L279) · [Unitary evaluation](../../Lean/MOC/FourWeightedMinorCenter.lean#L313)
+each complex unitary. [Quaternion and mean inequality](../Lean/MOC/FourWeightedMinorCenter.lean#L279) · [Unitary evaluation](../Lean/MOC/FourWeightedMinorCenter.lean#L313)
 
 Evaluate the nine identities at the determinant to get the nine
 oriented edge inequalities. Each selected vertex has a positive
 turn. In any projection direction, the two incident edges at a
 maximizing vertex bound the projection of the determinant. This
 proves membership in the hull of the nine selected matching products,
-which is a subset of the full matching hull. [Strict turns](../../Lean/MOC/FourWeightedMinorCenter.lean#L252) · [Edge bounds](../../Lean/MOC/FourWeightedMinorCenter.lean#L420) · [Plane hull criterion](../../Lean/MOC/PlaneHullEdges.lean#L55)
+which is a subset of the full matching hull. [Strict turns](../Lean/MOC/FourWeightedMinorCenter.lean#L252) · [Edge bounds](../Lean/MOC/FourWeightedMinorCenter.lean#L420) · [Plane hull criterion](../Lean/MOC/PlaneHullEdges.lean#L55)
 
 ## Obstruction to an ordinary certificate
 
@@ -85,7 +85,7 @@ $$
 The functional $L$ is nonnegative on every ordinary indicator and
 negative on $g$. Linearity excludes a nonnegative combination of
 ordinary indicators for this edge, with arbitrary finite support.
-[Functional on indicators](../../Lean/MOC/FourWeightedMinorCenter.lean#L266) · [Edge gap](../../Lean/MOC/FourWeightedMinorCenter.lean#L487) · [No ordinary certificate](../../Lean/MOC/FourWeightedMinorCenter.lean#L506)
+[Functional on indicators](../Lean/MOC/FourWeightedMinorCenter.lean#L266) · [Edge gap](../Lean/MOC/FourWeightedMinorCenter.lean#L487) · [No ordinary certificate](../Lean/MOC/FourWeightedMinorCenter.lean#L506)
 
 ## Verification status
 
@@ -95,4 +95,4 @@ independent rational computation checked the Lean table at 216
 edge-permutation pairs, all nine turns, and 256 indicators for the
 separating functional. The Lean source awaits compilation. The
 uniform neighborhood of radius $10^{-17}$ remains a research result
-with an exact arithmetic check. [Neighborhood argument](order-four-proof-maps.md#an-open-set-of-spectra-with-a-uniform-proof)
+with an exact arithmetic check. [Neighborhood argument](order-four-proof-map.md#an-open-set-of-spectra-with-a-uniform-proof)

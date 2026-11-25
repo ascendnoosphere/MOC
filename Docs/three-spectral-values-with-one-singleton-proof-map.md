@@ -1,6 +1,6 @@
 # Three spectral values with one singleton
 
-[Conjecture and proof tree](../../README.md#proof-tree)
+[Proof map index](README.md) · [Conjecture and proof tree](../README.md#proof-tree)
 
 Let $U$ be a complex unitary matrix of order $n$. Partition the
 column labels into a set $J$, a single label $j$ outside $J$, and
@@ -19,7 +19,7 @@ sum is one. The permutation $\sigma$ maps column labels to row labels.
 
 Coincident values and empty repeated parts are allowed. This identity
 gives the determinant convex-hull bound on the stated spectral class.
-[Common permutation law](../../Lean/MOC/ThreeValues.lean#L51)
+[Common permutation law](../Lean/MOC/ThreeValues.lean#L51)
 
 ```mermaid
 flowchart TD
@@ -41,8 +41,8 @@ pairs of row sets $I\subset K$. A pair of positive mass has
 $|I|=|J|$ and $|K|=|J|+1$. Choose a permutation that maps $J$ to
 $I$ and $J\cup\{j\}$ to $K$. Assign the mass of each pair to its
 chosen permutation. This construction uses only $U,J,j$.
-[Adjacent transport](../../Lean/MOC/AdjacentMinorSupport.lean#L63) ·
-[Permutation law from a coupling](../../Lean/MOC/NestedValues.lean#L74) ·
+[Adjacent transport](../Lean/MOC/AdjacentMinorSupport.lean#L63) ·
+[Permutation law from a coupling](../Lean/MOC/NestedValues.lean#L74) ·
 [Finite projection domination, Theorem 6.2](https://arxiv.org/abs/math/0204325)
 
 For singleton value $d$, summing by the first row set gives the
@@ -51,4 +51,4 @@ gives the determinant. Both the determinant and each matching product
 are affine in the singleton value. If $c\ne d$, equality at the
 two values gives equality everywhere. The same weights give equality
 at $c=d$ by continuity.
-[Two-value interpolation](../../Lean/MOC/CommonWeights.lean#L72)
+[Two-value interpolation](../Lean/MOC/CommonWeights.lean#L72)

@@ -2,7 +2,7 @@
 /Temp/
 
 /Docs/*
-!/Docs/Proofs/
+!/Docs/*.md
 
 /Lean/.lake/
 __pycache__/

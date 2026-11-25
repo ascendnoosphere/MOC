@@ -1,6 +1,6 @@
 # One free eigenvalue and exterior shifts
 
-[Conjecture](../../README.md#proof-tree) · [All-order routes](all-order-proof-maps.md) · [Order five](order-five-proof-maps.md)
+[Proof map index](README.md) · [Conjecture](../README.md#proof-tree) · [All-order routes](all-orders-proof-map.md) · [Order five](order-five-proof-map.md)
 
 For two normal matrices, the Marcus–de Oliveira conjecture places the
 determinant of their sum in the real convex hull of all products
@@ -33,7 +33,7 @@ partner entry $w$ is affine in $w$. One probability law for every $w$
 is equivalent to a convex representation of the pair of complex
 coefficients. The existing Lean reduction gives at most five
 assignments when the joint hull test holds.
-[One-entry equivalence](../../Lean/MOC/SpectralMinorDecomposition.lean#L139)
+[One-entry equivalence](../Lean/MOC/SpectralMinorDecomposition.lean#L139)
 
 For two real lists of lengths $n+1$ and $n$, suppose each shorter
 entry lies between consecutive entries of the longer list. The
@@ -42,7 +42,7 @@ space of functions of the entire complex partner list. Thus the
 injection weights are fixed before any partner entry is chosen.
 The result includes equal consecutive endpoints. This is the
 interlacing step used to lift a lower-order law at a real pivot.
-[Uniform interlacing law](../../Lean/MOC/InterlacingCommonLaw.lean#L108) · [Scalar real-pivot case](../../Lean/MOC/HermitianByNormalFourProof.lean#L100)
+[Uniform interlacing law](../Lean/MOC/InterlacingCommonLaw.lean#L108) · [Scalar real-pivot case](../Lean/MOC/HermitianByNormalFourProof.lean#L100)
 
 The joint hull claim for the displayed center still needs the exact
 facet replay. The note gives the size of its certificate as 201
@@ -81,14 +81,14 @@ $R(Y)=Y^2(zI+Y)^{-1}$ gives the exact expansion
 $z^2(zI+Y)^{-1}=zI-Y+R(Y)$. For $\|Y_1\|,\|Y_2\|\le L<|z|$ and
 $d=|z|-L$, its Frobenius variation is bounded by
 $(2L/d+L^2/d^2)\|Y_1-Y_2\|_{\mathrm F}$.
-[Inverse bound](../../Lean/MOC/HermitianExteriorShift.lean#L81) · [Expansion](../../Lean/MOC/HermitianExteriorShift.lean#L120) · [Remainder norm](../../Lean/MOC/HermitianExteriorShift.lean#L143) · [Frobenius estimate](../../Lean/MOC/HermitianExteriorShift.lean#L305)
+[Inverse bound](../Lean/MOC/HermitianExteriorShift.lean#L81) · [Expansion](../Lean/MOC/HermitianExteriorShift.lean#L120) · [Remainder norm](../Lean/MOC/HermitianExteriorShift.lean#L143) · [Frobenius estimate](../Lean/MOC/HermitianExteriorShift.lean#L305)
 
 At a nonsingular support maximum, let $H$ be the Hermitian summand,
 $B$ the partner diagonal, and $Y=H+B$. For direction $\eta$, put
 $v=\eta\det(zI+Y)/z^2$. Then $H$ commutes with the real projected
 diagonal of $vB$ minus the Hermitian part of $vR(Y)$. The term with
 $H$ and the scalar term commute with $H$ and cancel from this
-equation. [Stationarity](../../Lean/MOC/HermitianExteriorShift.lean#L174)
+equation. [Stationarity](../Lean/MOC/HermitianExteriorShift.lean#L174)
 
 For a given partition, let $H_0$ be the part of $H$ inside the blocks
 and $F=H-H_0$. Suppose distinct blocks have projected separation
@@ -105,7 +105,7 @@ Suppose $\|H\|\le M$, $M+\|B\|\le L$, and $d=|z|-L>0$. If
 $2L^2/d+2M(2L/d+L^2/d^2)<g$, then there is a complex number $u$ of
 modulus one for which $H$ preserves every partition with separation
 at least $g$ in the projection $\mathrm{Re}(ub_i)$.
-[Block compression](../../Lean/MOC/HermitianExteriorShift.lean#L399) · [Support maximum](../../Lean/MOC/HermitianExteriorShift.lean#L613)
+[Block compression](../Lean/MOC/HermitianExteriorShift.lean#L399) · [Support maximum](../Lean/MOC/HermitianExteriorShift.lean#L613)
 
 For a noncollinear triangle on partner values $x,y,w$, let $A$ be its
 unsigned area. The gap must satisfy $g(|y-x|+|w-x|)\le 2A$ for each
@@ -115,7 +115,7 @@ Join two labels when their projected values differ by less than $g$.
 Each connected group lies on one affine line. Distinct groups have
 projected separation at least $g$. This construction also covers
 repeated spectral values.
-[Positive gap](../../Lean/MOC/HermitianExteriorShift.lean#L836) · [Altitude bound](../../Lean/MOC/HermitianExteriorShift.lean#L1043) · [Collinear groups](../../Lean/MOC/HermitianExteriorShift.lean#L762)
+[Positive gap](../Lean/MOC/HermitianExteriorShift.lean#L836) · [Altitude bound](../Lean/MOC/HermitianExteriorShift.lean#L1043) · [Collinear groups](../Lean/MOC/HermitianExteriorShift.lean#L762)
 
 Diagonalize the Hermitian summand within each group. The affine-line
 theorem places each block determinant in its matching hull. Products
@@ -125,12 +125,12 @@ the determinant inclusion for every unitary mixer. The exact support
 inequality follows if $|z|>2L+8L^2/g$. Consequently, each fixed pair of
 spectra where one spectrum is real has an exterior disk bound that
 works for every mixer.
-[Affine-line theorem](../../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../../Lean/MOC/HermitianExteriorShift.lean#L987) · [Explicit radius](../../Lean/MOC/HermitianExteriorShift.lean#L1060) · [Uniform radius](../../Lean/MOC/HermitianExteriorShift.lean#L1189)
+[Affine-line theorem](../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../Lean/MOC/HermitianExteriorShift.lean#L987) · [Explicit radius](../Lean/MOC/HermitianExteriorShift.lean#L1060) · [Uniform radius](../Lean/MOC/HermitianExteriorShift.lean#L1189)
 
 For the real spectrum $(-2,-1,0,1,2)$ and the partner spectrum
 $(0,1,-1,i,-i)$ before the shift, take $M=2$, $L=3$, and $g=1/(2\sqrt2)$.
 An exact check covers all ordered triangles. The determinant inclusion
 holds for every unitary mixer when $|z|\ge 123$.
-[Order-five arithmetic](../../Lean/MOC/HermitianExteriorShift.lean#L1090) · [Order-five inclusion](../../Lean/MOC/HermitianExteriorShift.lean#L1168)
+[Order-five arithmetic](../Lean/MOC/HermitianExteriorShift.lean#L1090) · [Order-five inclusion](../Lean/MOC/HermitianExteriorShift.lean#L1168)
 
 The new Lean source awaits kernel verification.

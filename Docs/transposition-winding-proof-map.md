@@ -1,5 +1,7 @@
 # Attained values from transposition walks
 
+[Proof map index](README.md)
+
 Let $a$ and $b$ be two lists of complex eigenvalues with the same finite
 index set. For a permutation $p$, its matching product is
 $z_p=prod_j(a_{p(j)}+b_j)$. The attainable determinant range consists
@@ -13,7 +15,7 @@ segments. For a point $q$ outside this polygonal walk, the winding angle
 is the sum of the principal arguments of
 $(z_{	ext{next}}-q)/(z_{	ext{current}}-q)$ along its edges. A full turn
 has angle $2pi$. If the walk closes and the winding angle is nonzero,
-some unitary matrix attains $q$. [Lean statement](../../Lean/MOC/TranspositionWinding.lean#L600)
+some unitary matrix attains $q$. [Lean statement](../Lean/MOC/TranspositionWinding.lean#L600)
 
 ```mermaid
 flowchart TD
@@ -39,7 +41,7 @@ unitary matrix $sqrt{1-t},I+isqrt{t},P$. Only the identity and the
 transposition have nonzero signed determinant weights. One squared
 matrix entry gives the transposition weight $t$. The two weighted
 matching products therefore trace the entire straight segment. At the
-other endpoint the factor $i$ cancels in conjugation. [Segment identity](../../Lean/MOC/TranspositionWinding.lean#L232)
+other endpoint the factor $i$ cancels in conjugation. [Segment identity](../Lean/MOC/TranspositionWinding.lean#L232)
 
 Compose two rotations with independent parameters to obtain a square in
 the attainable range. At one boundary, conjugation by the first
@@ -49,7 +51,7 @@ continuous logarithm. The proof adds principal logarithms of ratios
 from a sufficiently fine subdivision of every radial segment in the
 square. Their exponentials telescope. On a straight boundary edge, the
 change of imaginary part is its principal change of argument. Summing
-around the square cancels the four endpoint values. [Square construction](../../Lean/MOC/TranspositionWinding.lean#L350) · [Logarithm and angle calculation](../../Lean/MOC/TranspositionWinding.lean#L406)
+around the square cancels the four endpoint values. [Square construction](../Lean/MOC/TranspositionWinding.lean#L350) · [Logarithm and angle calculation](../Lean/MOC/TranspositionWinding.lean#L406)
 
 Summing the square identities along a closed walk shows that its
 winding angle is invariant under translation by a transposition.
@@ -57,7 +59,7 @@ Transpositions generate the permutation group. Averaging over the
 whole group pairs all translated edges with their reversals, and the
 average angle is zero. This contradicts nonzero winding if the range
 omits $q$. Intersections of drawn segments add no edges to the abstract
-walk. [Finite averaging proof](../../Lean/MOC/TranspositionWinding.lean#L63)
+walk. [Finite averaging proof](../Lean/MOC/TranspositionWinding.lean#L63)
 
 See Kovacec for the straight-segment calculation and the graph of
 matching products. The square and averaging proof gives an inner bound

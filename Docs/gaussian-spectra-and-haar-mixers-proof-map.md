@@ -1,6 +1,6 @@
 # Gaussian spectra and Haar mixing
 
-[Unrestricted conjecture](../../README.md) · [All-order proof maps](all-order-proof-maps.md)
+[Proof map index](README.md) · [Unrestricted conjecture](../README.md) · [All-order proof maps](all-orders-proof-map.md)
 
 Fix an order $n$. Let $a$ and $b$ be two lists of $n$ complex numbers.
 Let $U$ be a unitary matrix. Write $d$ for the determinant of
@@ -42,14 +42,14 @@ halves of the squared norm of the direction. These identities give
 a support bound of one half of that norm. The perturbation changes
 each projection by at most $21/100$ of the norm. The proof applies
 the resulting support bound to every direction.
-[Disk inclusion](../../Lean/MOC/GaussianHaarContainment.lean#L140)
+[Disk inclusion](../Lean/MOC/GaussianHaarContainment.lean#L140)
 
 For each pair, put the four disk centers at $0$, $1$, $1$, and
 $(-2+i\sqrt3)/7$ in the order of the two entries of $a$ and the two
 entries of $b$. Take radius $1/200$ at each center. The denominator
 stays nonzero and the ratio is within $1/10$ of $\omega$. Two such
 pairs give a matching triangle block.
-[Ratio estimate](../../Lean/MOC/GaussianHaarContainment.lean#L262) · [Block construction](../../Lean/MOC/GaussianHaarContainment.lean#L425)
+[Ratio estimate](../Lean/MOC/GaussianHaarContainment.lean#L262) · [Block construction](../Lean/MOC/GaussianHaarContainment.lean#L425)
 
 ## Failure bound
 
@@ -61,7 +61,7 @@ $p_0=e^{-5}/200^{16}$. The coordinates in different consecutive
 blocks are disjoint. Their independence makes the block failure
 probabilities multiply. The probability of no good block is at most
 $(1-p_0)^{\lfloor n/4\rfloor}$.
-[One disk](../../Lean/MOC/GaussianHaarContainment.lean#L322) · [Eight disks](../../Lean/MOC/GaussianHaarContainment.lean#L453) · [Consecutive blocks of independent spectra](../../Lean/MOC/GaussianHaarContainment.lean#L623)
+[One disk](../Lean/MOC/GaussianHaarContainment.lean#L322) · [Eight disks](../Lean/MOC/GaussianHaarContainment.lean#L453) · [Consecutive blocks of independent spectra](../Lean/MOC/GaussianHaarContainment.lean#L623)
 
 The sum of two independent spectral entries has density
 $e^{-|z|^2/2}/(2\pi)$. Complete the square in the convolution of the
@@ -71,12 +71,12 @@ Euler gamma function. The finite Bohr–Mollerup comparison at $255$
 and bounds on two reciprocal sums give an upper bound of $e^{-7/2000}$.
 Each sum $a_j+b_j$ uses its own pair of independent entries. The product
 law of the pairs gives independence of these sums.
-[Gaussian convolution](../../Lean/MOC/GaussianHaarContainment.lean#L957) · [Gamma formula](../../Lean/MOC/GaussianHaarContainment.lean#L991) · [Gamma bound](../../Lean/MOC/GaussianHaarContainment.lean#L832)
+[Gaussian convolution](../Lean/MOC/GaussianHaarContainment.lean#L957) · [Gamma formula](../Lean/MOC/GaussianHaarContainment.lean#L991) · [Gamma bound](../Lean/MOC/GaussianHaarContainment.lean#L832)
 
 | Premise | Consequence | Lean source |
 | --- | --- | --- |
-| The spectral entries are independent standard complex Gaussians. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../../Lean/MOC/GaussianHaarContainment.lean#L1066) |
-| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../../Lean/MOC/GaussianHaarContainment.lean#L727) |
+| The spectral entries are independent standard complex Gaussians. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../Lean/MOC/GaussianHaarContainment.lean#L1066) |
+| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../Lean/MOC/GaussianHaarContainment.lean#L727) |
 
 Assume independent standard complex Gaussian spectral entries, a
 measurable determinant magnitude, and the stated determinant second
@@ -91,7 +91,7 @@ $$
 The three events in this union may be correlated. The displayed
 estimate decays exponentially in $n$. Its small value of $p_0$
 gives no useful bound at moderate orders.
-[Failure bound from the determinant moment](../../Lean/MOC/GaussianHaarContainment.lean#L1131)
+[Failure bound from the determinant moment](../Lean/MOC/GaussianHaarContainment.lean#L1131)
 
 ## Remaining Haar input
 

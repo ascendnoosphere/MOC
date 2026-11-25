@@ -1,6 +1,6 @@
 # Real matching sums of squares in order four
 
-[Conjecture and proof tree](../../README.md#proof-tree) · [Order-four routes](order-four-proof-maps.md)
+[Proof map index](README.md) · [Conjecture and proof tree](../README.md#proof-tree) · [Order-four routes](order-four-proof-map.md)
 
 A matching is a permutation of the four eigenvalue labels. The matching
 functions take real values on the 24 permutations.
@@ -10,7 +10,7 @@ functions take real values on the 24 permutations.
 The coordinates index permutations in lexicographic order. The inverse
 gives the index of any permutation. In these coordinates, the reference
 mixed facet has 13 zeros, which give 1716 six-element subsets.
-[Permutation equivalence](../../Lean/MOC/ContactCensus.lean#L62) · [Reference facet](../../Lean/MOC/ContactCensus.lean#L102) · [Six-contact count](../../Lean/MOC/ContactCensus.lean#L120)
+[Permutation equivalence](../Lean/MOC/ContactCensus.lean#L62) · [Reference facet](../Lean/MOC/ContactCensus.lean#L102) · [Six-contact count](../Lean/MOC/ContactCensus.lean#L120)
 
 ## The real auxiliary test
 
@@ -18,14 +18,14 @@ For two subsets of the label set, the subset-image indicator is one
 when a permutation maps the first subset onto the second. It is zero
 otherwise. Let $V$ be the real span of these indicators. The
 noncrossing coordinates give $V$ dimension 14.
-[Indicator span](../../Lean/MOC/RealMatchingSquares.lean#L185) · [Dimension](../../Lean/MOC/RealMatchingSquares.lean#L55)
+[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L185) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L55)
 
 Use the auxiliary values $\beta=(0,1,-1,w)$, with $w$ a real variable.
 For a permutation $\pi$ and a subset $I$, take the constant and
 linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
 matrix that has these 32 coefficients in row $\pi$. Its column space
 is $V$. Write $j_\pi$ for the transpose of that row.
-[Jet definition](../../Lean/MOC/RealMatchingSquares.lean#L29) · [Column space](../../Lean/MOC/RealMatchingSquares.lean#L152)
+[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L29) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L152)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
 directions in each block of the jet. Its two directions, with
@@ -47,7 +47,7 @@ $R=E^\mathsf{T}TE$. The real auxiliary test requires that the range
 of $T$ lie in the row space of $J$ and that the partial transpose of
 $R$ be positive semidefinite. The partial transpose exchanges the
 first tensor index of the row and column.
-[Embedding](../../Lean/MOC/RealMatchingSquares.lean#L236) · [Partial transpose](../../Lean/MOC/RealMatchingSquares.lean#L280) · [Auxiliary test](../../Lean/MOC/RealMatchingSquares.lean#L435)
+[Embedding](../Lean/MOC/RealMatchingSquares.lean#L236) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L280) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L435)
 
 ```mermaid
 flowchart LR
@@ -66,7 +66,7 @@ flowchart LR
 For $g\in V$, the real auxiliary test is equivalent to the existence
 of a finite list of functions $f_k\in V$ with
 $g_\pi=\sum_k f_k(\pi)^2$ for every $\pi$.
-[Lean equivalence](../../Lean/MOC/RealMatchingSquares.lean#L441)
+[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L441)
 
 The sign of a permutation is $1$ for an even permutation and $-1$
 for an odd one. The signed sum of a cost in $V$ is zero. Let
@@ -76,7 +76,7 @@ $K$ and the symmetric corner $R$ is zero. It is twice the difference
 between entries $(00,11)$ and $(01,10)$ of $R$. This difference also
 multiplies $K$ in the partial-transpose defect. Thus the partial
 transpose fixes $R$.
-[Alternating sum](../../Lean/MOC/RealMatchingSquares.lean#L268) · [Gram pairing](../../Lean/MOC/RealMatchingSquares.lean#L357) · [Fixed corner](../../Lean/MOC/RealMatchingSquares.lean#L397)
+[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L268) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L357) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L397)
 
 ## From a positive moment to a support inequality
 
@@ -87,7 +87,7 @@ cost $g$ lies in $V$ and is a sum of matching squares, then
 $\sum_\pi c_\pi g_\pi\ge0$. The added alternating term has zero
 pairing with $g$. The rank-one partial-transpose defect is a separate
 identity that can help construct such a scalar.
-[Positive-moment implication](../../Lean/MOC/RealMatchingSquares.lean#L533) · [Rank-one defect](../../Lean/MOC/RealMatchingSquares.lean#L502)
+[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L533) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L502)
 
 ## Scope
 

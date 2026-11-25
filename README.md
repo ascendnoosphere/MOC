@@ -19,18 +19,10 @@ matching products with nonnegative real weights whose sum is one.
 
 ## Proof tree
 
-[All orders](#all-orders) · [Equivalent formulations](Docs/Proofs/all-order-proof-maps.md#matrix-and-operator-formulations) · [Atlas audit](Docs/Proofs/all-order-proof-maps.md#atlas-realizations-and-implications) · [Order four](#order-four) · [Order five](#order-five) · [Proved cases](#cases-proved-in-lean) · [Counterexamples](#counterexamples-to-stronger-statements)
+[All orders](#all-orders) · [Equivalent formulations](Docs/all-orders-proof-map.md#matrix-and-operator-formulations) · [Atlas audit](Docs/all-orders-proof-map.md#atlas-realizations-and-implications) · [Order four](#order-four) · [Order five](#order-five) · [Proved cases](#cases-proved-in-lean) · [Counterexamples](#counterexamples-to-stronger-statements)
 
-The detailed maps cover every registered Lean route and give the
-premises and source for each branch.
-
-| Detailed map | Coverage |
-| --- | --- |
-| [All-order routes](Docs/Proofs/all-order-proof-maps.md) | The order split, 71 general routes, and the audit of 243 spectral entries. |
-| [Spectral and support results](Docs/Proofs/spectral-support-proof-map.md) | The order-four cone, real lifts, matching squares, spectral families, attainment, and PDF coverage. |
-| [Contact transfer](Docs/Proofs/contact-proof-maps.md) | Fixed and varying determinant differences, terminal counts, rank, moments, and isolation. |
-| [Order four](Docs/Proofs/order-four-proof-maps.md) | Eleven registered routes, orthogonal and stationary restrictions, and named contact patterns. |
-| [Order five](Docs/Proofs/order-five-proof-maps.md) | Ten registered routes, contact thresholds, sparse matrices, and squared-minor tests. |
+The [proof map index](Docs/README.md) lists the general routes and
+restricted results with links to their Lean sources.
 
 The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
 library. Lean proves the unrestricted result through order three.
@@ -38,7 +30,7 @@ library. Lean proves the unrestricted result through order three.
 
 Some historical proofs remain outside the default target. The new
 spectral and support results have source and exact arithmetic checks.
-They await Lean compilation. [Source scope](Docs/Proofs/all-order-proof-maps.md#scope-of-the-lean-source)
+They await Lean compilation. [Source scope](Docs/all-orders-proof-map.md#scope-of-the-lean-source)
 
 Choose a unitary eigenbasis for each matrix. In the basis for $A$, write
 $A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$.
@@ -98,7 +90,7 @@ is in the hull if and only if the bound holds in every direction.
 | --- | --- | --- |
 | Iff | In orders at least four, prove the directional bound for $\eta=1$ if both eigenvalue lists sum to zero and every entry of $U$ is nonzero. | [Traceless form](Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
 | Iff | In each order $n$, prove the directional bound when there are at least $2n-1$ contacts. Another exact test uses at least $2n-2$ contacts and requires every matching product to be nonzero. | [General contact test](Lean/MOC/AffineGapCover.lean#L85) · [Nonzero-product test](Lean/MOC/ProofRoutes.lean#L232) |
-| Iff, new Lean source | At the $2n-1$ threshold, exclude a strict maximum over all relative unitaries in which every nonzero mixer entry lies on an inactive permutation with negative real signed weight. | [Terminal stationary test](Lean/MOC/StationaryPivot.lean#L483) · [Signed score identity](Docs/Proofs/contact-proof-maps.md#complex-stationary-score) |
+| Iff, new Lean source | At the $2n-1$ threshold, exclude a strict maximum over all relative unitaries in which every nonzero mixer entry lies on an inactive permutation with negative real signed weight. | [Terminal stationary test](Lean/MOC/StationaryPivot.lean#L483) · [Signed score identity](Docs/contact-transfer-proof-map.md#complex-stationary-score) |
 | Iff | For every pair of lists and every direction in orders at least four, some maximizing $U$ gives a normal sum. The maximum is over all unitary $U$ for the fixed lists. | [Normal maximizers](Lean/MOC/NormalSupportMaximum.lean#L314) |
 | Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L89) |
 | Iff | Replace the square unitary by a rectangular matrix with at least three orthonormal rows and one extra column. Compare with products that match the shorter list to distinct positions in the longer list. | [Rectangular determinant bound](Lean/MOC/PrincipalCoisometry.lean#L248) |
@@ -153,10 +145,10 @@ of the corresponding real orthogonal tables.
 | Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if $U$ is real orthogonal with zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/FourZeroDiagonal.lean#L342) |
 | Proved | The directional bound holds for specific sets of tied permutations. The pattern labels identify those sets in the linked statements. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) |
 | Partial | It suffices to exclude strict violations at real orthogonal maximizers with at least seven contacts. For each nonzero entry $U_{ij}$, some permutation with $\sigma(j)=i$ does not attain the maximum. Lean proves these restrictions on the same witness. | [Seven-contact reduction](Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary reduction](Lean/MOC/StationaryPivot.lean#L221) |
-| New Lean source | Subtract the smallest directional matching value from each projected product. In the 14-dimensional matching-function space, the cone of nonnegative costs has 34 ordinary and 48 mixed extreme rays. An ordinary ray is a subset assignment indicator. Up to relabeling, a cost outside the ordinary cone uses one mixed ray and at most 13 ordinary rays. | [Cone and cancellation](Docs/Proofs/spectral-support-proof-map.md#order-four-support-costs) |
-| New Lean source | A determinant of size $n-2$ represents the transformed spectral polynomial for $n\ge2$. In order four its quadratic form has complex rank at most four. Its real form has positive and negative indices at most four. | [Spectral determinant and rank](Docs/Proofs/spectral-profile-determinant-map.md) |
-| New Lean source | The four contacts given by the identity and the three products of two disjoint transpositions force an actual spectral cost to be a sum of real matching squares. | [Klein-four contacts](Docs/Proofs/order-four-klein-squares-map.md) |
-| Partial, new Lean source | One five-parameter contact family has eight specified tied permutations. At negative signed height, an actual spectral lift is impossible if the first two ordinary weights are equal. The unequal case reduces to a sign of the spectral Hessian pencil. | [Contact family](Docs/Proofs/order-four-0710-contact-map.md) |
+| New Lean source | Subtract the smallest directional matching value from each projected product. In the 14-dimensional matching-function space, the cone of nonnegative costs has 34 ordinary and 48 mixed extreme rays. An ordinary ray is a subset assignment indicator. Up to relabeling, a cost outside the ordinary cone uses one mixed ray and at most 13 ordinary rays. | [Cone and cancellation](Docs/spectral-support-proof-map.md#order-four-support-costs) |
+| New Lean source | A determinant of size $n-2$ represents the transformed spectral polynomial for $n\ge2$. In order four its quadratic form has complex rank at most four. Its real form has positive and negative indices at most four. | [Spectral determinant and rank](Docs/spectral-profile-determinant-proof-map.md) |
+| New Lean source | The four contacts given by the identity and the three products of two disjoint transpositions force an actual spectral cost to be a sum of real matching squares. | [Klein-four contacts](Docs/order-four-klein-four-matching-squares-proof-map.md) |
+| Partial, new Lean source | One five-parameter contact family has eight specified tied permutations. At negative signed height, an actual spectral lift is impossible if the first two ordinary weights are equal. The unequal case reduces to a sign of the spectral Hessian pencil. | [Contact family](Docs/order-four-five-parameter-contact-proof-map.md) |
 | New Lean source | The real and imaginary parts of an exact spectral bracket profile satisfy two equations. A small integer example passes the cubic and Hessian kernel tests and fails the second equation for every candidate imaginary part. | [Lift equations](Lean/MOC/FourMatchingHessianKernel.lean#L124) · [Exact obstruction](Lean/MOC/FourMatchingHessianKernel.lean#L166) |
 | Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145) · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
 | Open | Prove the bound for every remaining real orthogonal case with at least seven contacts. An alternative is to show that a normal sum occurs at some maximum for every pair of lists and direction. | [Contact endpoint](Lean/MOC/ZhengContactReduction.lean#L14) · [Normal-maximizer equivalence](Lean/MOC/NormalSupportMaximum.lean#L303) |
@@ -236,7 +228,7 @@ four eigenvalues lie on one circle or line. For a Hermitian matrix of
 order four, the law also represents all principal minors together.
 Each real linear objective on those minors attains a maximum at a
 diagonal permutation of the spectrum.
-[Criterion and consequences](Docs/Proofs/circle-line-common-weights-map.md)
+[Criterion and consequences](Docs/order-four-circle-or-line-common-weights-proof-map.md)
 
 ### Matrices and eigenvalues
 
@@ -264,11 +256,11 @@ diagonal permutation of the spectrum.
 - Partition one spectrum into three fixed groups with the last group
   of size one. For a fixed mixer, one law works for all three group
   values and every opposing spectrum.
-  [Common law for three values](Docs/Proofs/three-value-singleton-map.md)
+  [Common law for three values](Docs/three-spectral-values-with-one-singleton-proof-map.md)
 - Under the stated assignment-sum genericity condition, a sufficiently
   small complex spectral parameter gives inclusion uniformly over
   all mixers in the fixed order.
-  [Small-spectrum theorem](Docs/Proofs/small-spectrum-perturbation-map.md)
+  [Small-spectrum theorem](Docs/small-spectral-perturbation-proof-map.md)
 - In order four, the inclusion holds if either list lies on a circle or
   a line. This includes a Hermitian matrix with an arbitrary normal
   partner and the case where either list has a repeated value.
@@ -281,16 +273,16 @@ diagonal permutation of the spectrum.
   for every unitary. A weighted-minor inequality certifies two of the
   nine hull edges. One of those edges has no certificate made only of
   nonnegative coefficients on ordinary minor indicators.
-  [Spectra and proof](Docs/Proofs/order-four-weighted-minor-center-map.md)
+  [Spectra and proof](Docs/order-four-weighted-minor-center-proof-map.md)
 - For an order-four support cost in the symmetric six-contact family,
   the spectral equations force one of three bounds on the minor
   coefficients. Each bound gives the directional determinant inequality
   for every unitary. The proof covers all seven free ordinary coefficients.
-  [Family and proof](Docs/Proofs/order-four-symmetric-six-contact-map.md)
+  [Family and proof](Docs/order-four-symmetric-six-contact-proof-map.md)
 - For every real $t$, the lists $(t+i,-t+i,1,2+i)$ and
   $(-1+i,-2-2i,2-i,1+2i)$ satisfy the inclusion for every unitary.
   The proof uses 89 exact parameter cells.
-  [Parameter family](Docs/Proofs/order-four-real-parameter-map.md)
+  [Parameter family](Docs/order-four-real-parameter-spectra-proof-map.md)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.
   [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)
@@ -332,12 +324,12 @@ diagonal permutation of the spectrum.
   [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal and equal magnitudes](Lean/MOC/ConferenceFive.lean#L260)
 - If $U$ is the tensor product of two order-two unitaries, one
   permutation law works for all pairs of spectra.
-  [Tensor-product law](Docs/Proofs/two-by-two-tensor-permutation-map.md)
+  [Tensor-product law](Docs/two-by-two-tensor-mixer-proof-map.md)
 - A specified rational orthogonal matrix of order six has a closed
   operator-norm ball of radius $1/23083105288$. Every unitary in this
   ball satisfies the inclusion when the second spectrum is constant
   on each of three specified pairs. The first spectrum is arbitrary.
-  [Mixer ball](Docs/Proofs/six-dimensional-mixer-ball-map.md)
+  [Mixer ball](Docs/six-dimensional-mixer-ball-proof-map.md)
 
 ### Determinant and matching products
 
@@ -353,7 +345,7 @@ diagonal permutation of the spectrum.
   shift bound gives inclusion for every mixer outside an explicit
   radius computed from the two lists and a triangle gap of the
   partner spectrum.
-  [Exterior shifts](Docs/Proofs/free-eigenvalue-exterior-map.md#exterior-shifts)
+  [Exterior shifts](Docs/free-eigenvalue-and-exterior-shifts-proof-map.md#exterior-shifts)
 - Fix a complex direction $\eta$. The inclusion holds at a maximum of
   $\mathrm{Re}(\eta\det(A+B))$ over relative unitaries if the sum
   at that maximum is normal and has the largest Frobenius norm among
@@ -368,13 +360,13 @@ diagonal permutation of the spectrum.
   equivalent forms of the conjecture for that order. In order four,
   a cross-ratio inequality characterizes which lists with distinct
   entries can be transformed onto a prescribed ellipse.
-  [Conic tests and ellipse criterion](Docs/Proofs/conic-spectral-reductions-map.md)
+  [Conic tests and ellipse criterion](Docs/conic-spectral-reductions-proof-map.md)
 - Suppose the smaller-order conjecture holds. Choose a row of $U$.
   The inclusion follows if the partner eigenvalues on its nonzero
   columns lie on one circle or line through the negative of the
   corresponding first eigenvalue. The written reduction allows
   repeated values.
-  [Proof map](Docs/Proofs/spectral-support-proof-map.md#deletion-and-padding-tests)
+  [Proof map](Docs/spectral-support-proof-map.md#deletion-and-padding-tests)
 - Apply the same map $f(z)=(\alpha z+\beta)/(\gamma z+\delta)$ to
   $a_i$ and $-b_j$. If $\alpha\delta-\beta\gamma\ne0$ and the denominators
   are nonzero on both lists, the inclusion for the lists $(f(a_i))$ and
@@ -388,19 +380,19 @@ diagonal permutation of the spectrum.
   transposition. If a closed walk avoids a point and has nonzero
   winding about it, some unitary gives that point as its determinant
   value. This result includes repeated eigenvalues.
-  [Transposition winding](Docs/Proofs/transposition-winding-map.md)
+  [Transposition winding](Docs/transposition-winding-proof-map.md)
 - For independent standard complex Gaussian eigenvalues, Lean source
   gives the matching triangle probability and the lower tail of a
   fixed matching product. The exponential containment estimate still
   requires the bound on the Haar determinant second moment.
-  [Gaussian ensemble proof map](Docs/Proofs/gaussian-haar-containment-map.md)
+  [Gaussian ensemble proof map](Docs/gaussian-spectra-and-haar-mixers-proof-map.md)
 
 ## Counterexamples to stronger statements
 
 - In order four, a real orthogonal $U$ and two complex spectra give a
   characteristic polynomial outside the convex hull of the matching
   characteristic polynomials. Each coefficient of the example is in its
-  own matching hull. [Exact arithmetic certificate](Docs/Proofs/all-order-proof-maps.md#counterexample-to-the-common-characteristic-polynomial-law)
+  own matching hull. [Exact arithmetic certificate](Docs/all-orders-proof-map.md#counterexample-to-the-common-characteristic-polynomial-law)
 
 - In order five, let $U=I-2vv^*$ with $v=(1,1,1,1,1)^{\mathsf T}/\sqrt{5}$.
   For this $U$, every pair of lists satisfies the determinant inclusion.
@@ -415,7 +407,7 @@ diagonal permutation of the spectrum.
 - The partner list $(0,1,1+i,2i)$ forms a convex quadrilateral. Every
   dense row with a regular pole gives a nonnormal reciprocal
   compression.
-  [Pole compression obstruction](Docs/Proofs/spectral-support-proof-map.md#deletion-and-padding-tests)
+  [Pole compression obstruction](Docs/spectral-support-proof-map.md#deletion-and-padding-tests)
 
 ## Paper proofs and exact certificates
 
@@ -425,7 +417,7 @@ this table use paper arguments or exact arithmetic certificates.
 
 | Result | Scope |
 | --- | --- |
-| [Smaller overlap reduction](Docs/Proofs/all-order-proof-maps.md#finite-overlap-compression) | The paper reduction uses square order at most $3k^2-k$ for two frames with $k$ columns. At overlap three the bound is 24, compared with 33 in the existing Lean source. Restricted overlap-three cases have a separate direct proof. |
-| [Spectral and mixer families](Docs/Proofs/all-order-proof-maps.md#paper-cases-in-any-order) | A uniformly small summand under a general-position condition, a common law for a normal diagonal-plus-rank-one matrix, and a one-port block factorization. |
-| [Order-four support cases](Docs/Proofs/order-four-proof-maps.md#paper-support-bounds-and-exact-examples) | A global maximizer with a zero entry, specified high-contact patterns, and an open set of complex spectra that needs a weighted minor certificate. |
-| [Exact order-five families](Docs/Proofs/order-five-proof-maps.md#exact-spectral-and-mixer-cases) | An open set of mixers for all real first lists and complex partners, two free complex partner entries at fixed starting spectra, and a complex spectral neighborhood beyond the ordinary minor cone. |
+| [Smaller overlap reduction](Docs/all-orders-proof-map.md#finite-overlap-compression) | The paper reduction uses square order at most $3k^2-k$ for two frames with $k$ columns. At overlap three the bound is 24, compared with 33 in the existing Lean source. Restricted overlap-three cases have a separate direct proof. |
+| [Spectral and mixer families](Docs/all-orders-proof-map.md#paper-cases-in-any-order) | A uniformly small summand under a general-position condition, a common law for a normal diagonal-plus-rank-one matrix, and a one-port block factorization. |
+| [Order-four support cases](Docs/order-four-proof-map.md#paper-support-bounds-and-exact-examples) | A global maximizer with a zero entry, specified high-contact patterns, and an open set of complex spectra that needs a weighted minor certificate. |
+| [Exact order-five families](Docs/order-five-proof-map.md#exact-spectral-and-mixer-cases) | An open set of mixers for all real first lists and complex partners, two free complex partner entries at fixed starting spectra, and a complex spectral neighborhood beyond the ordinary minor cone. |

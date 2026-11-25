@@ -1,6 +1,6 @@
 # Spectral profile determinant
 
-[Main conjecture](../../README.md) · [Order four](order-four-proof-maps.md)
+[Proof map index](README.md) · [Main conjecture](../README.md) · [Order four](order-four-proof-map.md)
 
 Let $a$ and $b$ be two complex spectral lists of length $n$. Each
 permutation contributes the matching product
@@ -8,7 +8,7 @@ $z_\sigma=\prod_j(a_{\sigma(j)}+b_j)$. A balanced matrix has zero row
 sums and zero column sums. Let $S$ be a balanced matrix, and put
 $A=\mathrm{diag}(a)$ and $B=\mathrm{diag}(b)$. The signed evaluation of
 the matching profile at $S$ is $\det(AS+SB)$.
-[Signed evaluation](../../Lean/MOC/SpectralProfileDeterminant.lean#L24)
+[Signed evaluation](../Lean/MOC/SpectralProfileDeterminant.lean#L24)
 
 ```mermaid
 flowchart TD
@@ -47,13 +47,13 @@ $$
 
 The identity uses an invertible $K$. The determinant on the right is
 defined for every $H$. A constant matching function evaluates to zero
-on the balanced embedding. [Inverse-coordinate identity](../../Lean/MOC/SpectralProfileDeterminant.lean#L119) · [Constant matching functions](../../Lean/MOC/SpectralProfileDeterminant.lean#L135)
+on the balanced embedding. [Inverse-coordinate identity](../Lean/MOC/SpectralProfileDeterminant.lean#L119) · [Constant matching functions](../Lean/MOC/SpectralProfileDeterminant.lean#L135)
 
 The smaller determinant follows by pivoting on one nonzero entry in
 each border. The remaining matrix has entries linear in $H$. If
 either border is zero, the original determinant is zero. No assumption
 on the multiplicities of $a$ and $b$ is needed.
-[Smaller determinant](../../Lean/MOC/SpectralProfileDeterminant.lean#L308)
+[Smaller determinant](../Lean/MOC/SpectralProfileDeterminant.lean#L308)
 
 ## Rank and inertia in order four
 
@@ -62,10 +62,10 @@ It gives a polynomial in the nine entries of $H$. Multiply this
 polynomial by any complex number $\eta$. The result is a sum of four
 squares of complex linear functions. The complex symmetric coefficient
 matrix therefore has rank at most four.
-[Tetrahedral basis](../../Lean/MOC/SpectralProfileDeterminant.lean#L464) ·
-[Complex square factorization](../../Lean/MOC/SpectralProfileDeterminant.lean#L329) ·
-[Rank bound for a representing matrix](../../Lean/MOC/SpectralProfileDeterminant.lean#L431) ·
-[Rank-four coefficient matrix](../../Lean/MOC/SpectralProfileDeterminant.lean#L509)
+[Tetrahedral basis](../Lean/MOC/SpectralProfileDeterminant.lean#L464) ·
+[Complex square factorization](../Lean/MOC/SpectralProfileDeterminant.lean#L329) ·
+[Rank bound for a representing matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L431) ·
+[Rank-four coefficient matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L509)
 
 The real part of the square of $p+iq$ is $p^2-q^2$ for real $p,q$.
 On a subspace where the real form is strictly positive on every
@@ -74,8 +74,8 @@ map into $\mathbb R^4$. The same argument with the opposite sign
 bounds the strictly negative dimension. This includes singular cores
 and repeated eigenvalues. For a support cost of the form
 $h-\mathrm{Re}(\eta z_\sigma)$, the constant $h$ contributes zero.
-[Positive dimension](../../Lean/MOC/SpectralProfileDeterminant.lean#L372) ·
-[Negative dimension](../../Lean/MOC/SpectralProfileDeterminant.lean#L390)
+[Positive dimension](../Lean/MOC/SpectralProfileDeterminant.lean#L372) ·
+[Negative dimension](../Lean/MOC/SpectralProfileDeterminant.lean#L390)
 
 The Lean source gives the actual spectral polynomial and its
 coefficient bounds. The universal pencil on all matching functions

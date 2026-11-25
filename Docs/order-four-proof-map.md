@@ -1,6 +1,6 @@
 # Order-four proof maps
 
-[README overview](../../README.md#order-four) · [All-order routes](all-order-proof-maps.md) · [Contact transfer](contact-proof-maps.md) · [Order five](order-five-proof-maps.md) · [Spectral and support results](spectral-support-proof-map.md#order-four-support-costs)
+[Proof map index](README.md) · [README overview](../README.md#order-four) · [All-order routes](all-orders-proof-map.md) · [Contact transfer](contact-transfer-proof-map.md) · [Order five](order-five-proof-map.md) · [Spectral and support results](spectral-support-proof-map.md#order-four-support-costs)
 
 - [Registered routes](#registered-routes)
 - [Real orthogonal and stationary tests](#real-orthogonal-and-stationary-tests)
@@ -12,7 +12,7 @@ pair of complex normal four-by-four matrices. In the eigenvalue
 formulation, $U$ is the unitary change between the eigenbases. The full
 order-four statement remains open in this library. A dagger marks a
 standalone proof source with an absent dependency.
-[Matrix equivalence](../../Lean/MOC/Normal.lean#L280) · [Source scope](all-order-proof-maps.md#scope-of-the-lean-source)
+[Matrix equivalence](../Lean/MOC/Normal.lean#L280) · [Source scope](all-orders-proof-map.md#scope-of-the-lean-source)
 
 ## Registered routes
 
@@ -44,24 +44,24 @@ flowchart BT
 The table covers all eleven registered routes. A **coisometry** here
 is a rectangular matrix with orthonormal rows. A **regular** pair of
 spectra has nonzero pair sums and distinct matching products. The
-[contact map](contact-proof-maps.md) defines contacts and strict
+[contact map](contact-transfer-proof-map.md) defines contacts and strict
 witnesses. The all-order transfer gives the six-contact increase step.
 The six-contact inequality required by this route remains open.
-[Route register](../../Lean/MOC/ProofRoutes.lean#L169) · [Disjunction](../../Lean/MOC/ProofRoutes.lean#L207) · [Contact transfer](../../Lean/MOC/VaryingGapTerminal.lean#L110)
+[Route register](../Lean/MOC/ProofRoutes.lean#L169) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L207) · [Contact transfer](../Lean/MOC/VaryingGapTerminal.lean#L110)
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
-| Normal matrices of order four | Iff | [Statement and proof](../../Lean/MOC/Normal.lean#L280) |
-| Real orthogonal mixers with complex spectra | Iff | [Statement and proof](../../Lean/MOC/FourMinorTransport.lean#L574) |
-| Regular orthogonal support maximizers | Iff | [Statement and proof](../../Lean/MOC/OrderFourIndependent.lean#L90) |
-| Normal sum at a support maximizer | Iff | [Statement and proof](../../Lean/MOC/NormalSupportMaximum.lean#L303) |
-| One-entry positive laws | Iff | [Statement and proof](../../Lean/MOC/ProofRoutes.lean#L89) |
-| Evaluated atlas comparison at order four | Iff | [Statement and proof](../../Lean/MOC/ProofRoutes.lean#L71) |
-| Principal coisometry of dimension three | Iff | [Statement and proof](../../Lean/MOC/PrincipalCoisometry.lean#L140) |
-| Exclude all regular stationary orthogonal witnesses | Iff | [Statement and proof](../../Lean/MOC/OrderFourIndependent.lean#L231) |
-| Nonzero six-contact support bound | Iff | [Statement and proof](../../Lean/MOC/SaturatedContactReduction.lean#L70) |
-| One-contact transfer AND the six-contact support test | If | [Statement and proof](../../Lean/MOC/ProofRoutes.lean#L148) |
-| Three-anchor rank-one kernel | Iff | [Statement and proof](../../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) |
+| Normal matrices of order four | Iff | [Statement and proof](../Lean/MOC/Normal.lean#L280) |
+| Real orthogonal mixers with complex spectra | Iff | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L574) |
+| Regular orthogonal support maximizers | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L90) |
+| Normal sum at a support maximizer | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L303) |
+| One-entry positive laws | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L89) |
+| Evaluated atlas comparison at order four | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L71) |
+| Principal coisometry of dimension three | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L140) |
+| Exclude all regular stationary orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L231) |
+| Nonzero six-contact support bound | Iff | [Statement and proof](../Lean/MOC/SaturatedContactReduction.lean#L70) |
+| One-contact transfer AND the six-contact support test | If | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L148) |
+| Three-anchor rank-one kernel | Iff | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) |
 
 ## Real orthogonal and stationary tests
 
@@ -87,19 +87,19 @@ Lean expresses all squared absolute values of the minors of an order-four
 unitary as one finite convex combination of the corresponding tables of
 real orthogonal matrices. Thus the eigenvalue lists stay complex while
 $U$ can be restricted to real orthogonal matrices.
-[Minor decomposition](../../Lean/MOC/FourMinorTransport.lean#L479) · [Orthogonal equivalence](../../Lean/MOC/FourMinorTransport.lean#L574)
+[Minor decomposition](../Lean/MOC/FourMinorTransport.lean#L479) · [Orthogonal equivalence](../Lean/MOC/FourMinorTransport.lean#L574)
 
 | Exact test | Conditions proved for a counterexample | Lean source |
 | --- | --- | --- |
-| Regular orthogonal maximizers | Nonzero pair sums, distinct products, and at least three nonzero entries in each row and column. The real orthogonal matrix maximizes the determinant projection over all complex unitaries in the chosen direction. | [Regular maximizer](../../Lean/MOC/OrderFourIndependent.lean#L90) |
-| Stationary orthogonal violations | The regular maximizers additionally satisfy the first-order stationarity equations. A further reduction gives one row and one column with no zero entries. | [Stationarity](../../Lean/MOC/OrderFourIndependent.lean#L231) · [Dense row and column](../../Lean/MOC/StationaryDenseCross.lean#L64) |
-| Stationary violations with at least seven contacts | The determinant is nonzero. For each nonzero entry $U_{ij}$, a permutation with $\sigma(j)=i$ has strictly smaller projection than the contacts. | [Seven contacts](../../Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary pivot](../../Lean/MOC/StationaryPivot.lean#L221) |
-| No normal maximizer obstruction | It suffices that for each pair of lists and direction, some maximizer gives a normal sum. | [Exact normal-maximizer test](../../Lean/MOC/NormalSupportMaximum.lean#L303) |
+| Regular orthogonal maximizers | Nonzero pair sums, distinct products, and at least three nonzero entries in each row and column. The real orthogonal matrix maximizes the determinant projection over all complex unitaries in the chosen direction. | [Regular maximizer](../Lean/MOC/OrderFourIndependent.lean#L90) |
+| Stationary orthogonal violations | The regular maximizers additionally satisfy the first-order stationarity equations. A further reduction gives one row and one column with no zero entries. | [Stationarity](../Lean/MOC/OrderFourIndependent.lean#L231) · [Dense row and column](../Lean/MOC/StationaryDenseCross.lean#L64) |
+| Stationary violations with at least seven contacts | The determinant is nonzero. For each nonzero entry $U_{ij}$, a permutation with $\sigma(j)=i$ has strictly smaller projection than the contacts. | [Seven contacts](../Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary pivot](../Lean/MOC/StationaryPivot.lean#L221) |
+| No normal maximizer obstruction | It suffices that for each pair of lists and direction, some maximizer gives a normal sum. | [Exact normal-maximizer test](../Lean/MOC/NormalSupportMaximum.lean#L303) |
 
 The inclusion also holds if either spectrum lies on a circle or line,
 if there is an opposite eigenvalue pair, or if the real orthogonal
 matrix has a zero diagonal.
-[Circle or line](../../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../../Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](../../Lean/MOC/FourZeroDiagonal.lean#L342)
+[Circle or line](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](../Lean/MOC/FourZeroDiagonal.lean#L342)
 
 ## Contact patterns
 
@@ -107,12 +107,12 @@ Each T-label names a set of permutations in the linked Lean statements.
 
 | Status | Named pattern | Bound or reduction |
 | --- | --- | --- |
-| Proof in source | T1 | [Directional bound for the specified contacts](../../Lean/MOC/ZhengT1Circle.lean#L184) |
-| Proof in source | T2, T3, T4, T5, T6 | [T2](../../Lean/MOC/FourT2Minor.lean#L338) · [T3](../../Lean/MOC/FourT3.lean#L25) · [T4](../../Lean/MOC/FourT4.lean#L30) · [T5](../../Lean/MOC/FourT5.lean#L26) · [T6](../../Lean/MOC/FourT6Support.lean#L11) |
-| Proof in source | T15 and T21 | [T15](../../Lean/MOC/FourT15.lean#L14) · [T21](../../Lean/MOC/FourT21ContactCone.lean#L275) |
-| Partial | T34 | The bound holds at zero common projection, or with the additional contact specified in the theorem. [Zero projection](../../Lean/MOC/FourT34MinorBranch.lean#L145) · [Additional contact](../../Lean/MOC/FourT34MinorBranch.lean#L56) |
-| Partial | T85 | The paired branch is excluded. A remaining strict witness reduces to eight or more contacts at positive projection. [Paired branch](../../Lean/MOC/ZhengPairedContacts.lean#L905) · [Positive branch](../../Lean/MOC/ZhengPairedContacts.lean#L915) |
-| Open | General seven-contact test | The bound must hold for every real orthogonal case at the threshold. [Exact endpoint](../../Lean/MOC/ZhengContactReduction.lean#L14) |
+| Proof in source | T1 | [Directional bound for the specified contacts](../Lean/MOC/ZhengT1Circle.lean#L184) |
+| Proof in source | T2, T3, T4, T5, T6 | [T2](../Lean/MOC/FourT2Minor.lean#L338) · [T3](../Lean/MOC/FourT3.lean#L25) · [T4](../Lean/MOC/FourT4.lean#L30) · [T5](../Lean/MOC/FourT5.lean#L26) · [T6](../Lean/MOC/FourT6Support.lean#L11) |
+| Proof in source | T15 and T21 | [T15](../Lean/MOC/FourT15.lean#L14) · [T21](../Lean/MOC/FourT21ContactCone.lean#L275) |
+| Partial | T34 | The bound holds at zero common projection, or with the additional contact specified in the theorem. [Zero projection](../Lean/MOC/FourT34MinorBranch.lean#L145) · [Additional contact](../Lean/MOC/FourT34MinorBranch.lean#L56) |
+| Partial | T85 | The paired branch is excluded. A remaining strict witness reduces to eight or more contacts at positive projection. [Paired branch](../Lean/MOC/ZhengPairedContacts.lean#L905) · [Positive branch](../Lean/MOC/ZhengPairedContacts.lean#L915) |
+| Open | General seven-contact test | The bound must hold for every real orthogonal case at the threshold. [Exact endpoint](../Lean/MOC/ZhengContactReduction.lean#L14) |
 
 ```mermaid
 flowchart BT
@@ -134,17 +134,17 @@ column defined in Lean. The inverse orientation follows by taking
 the adjoint. The proof reduces the branch to that one orientation.
 A separate example refutes a five-event linear weight test on the
 marked assignments.
-[One-orientation implication](../../Lean/MOC/ZhengT81Bypass.lean#L431) · [Refuted linear test](../../Lean/MOC/ZhengStarObstruction.lean#L161)
+[One-orientation implication](../Lean/MOC/ZhengT81Bypass.lean#L431) · [Refuted linear test](../Lean/MOC/ZhengStarObstruction.lean#L161)
 
 ## Paper support bounds and exact examples
 
 | Result | Hypotheses and conclusion |
 | --- | --- |
-| Support at a maximizing unitary with a zero entry | For arbitrary complex lists and any direction, if some global maximizer has a zero entry, a permutation attains the same score. The proof passes to real orthogonal components, each with the same zero. A stationary first-order correction at an admissible pivot makes the singleton table doubly stochastic. In order four, its anchored pair entries and their complements give the same law for the corrected minor table. The proof finds an admissible pivot for every orthogonal matrix with a zero. [Paper proof](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/StationaryPivotReduction.md) · [Lean orthogonal replacement](../../Lean/MOC/OrderFourIndependent.lean#L73) · [Lean correction](../../Lean/MOC/StationaryFullSupport.lean#L211) |
+| Support at a maximizing unitary with a zero entry | For arbitrary complex lists and any direction, if some global maximizer has a zero entry, a permutation attains the same score. The proof passes to real orthogonal components, each with the same zero. A stationary first-order correction at an admissible pivot makes the singleton table doubly stochastic. In order four, its anchored pair entries and their complements give the same law for the corrected minor table. The proof finds an admissible pivot for every orthogonal matrix with a zero. [Paper proof](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/StationaryPivotReduction.md) · [Lean orthogonal replacement](../Lean/MOC/OrderFourIndependent.lean#L73) · [Lean correction](../Lean/MOC/StationaryFullSupport.lean#L211) |
 | High-contact support | For nonzero, distinct products, the paper proofs give the directional bound with at least nine contacts or with at least seven at height zero. They give a nonnegative squared-minor representation with at least ten contacts. The eight-contact ledger records closed families with their coefficient hypotheses. [Proofs and scope](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/geometry/MOC4_Verified_Results.md) · [Exact case ledger](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/data/certificates/research/eight_contact_closure_ledger.json) |
-| The positive-height branch of T85 | The paper comparison uses the five boundary bounds and the transfer to eight contacts. This settles the named branch under the stated hypotheses. The open seven-contact classification still includes cases outside this pattern. [Audit and dependencies](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/ZhengOrderFourReview.md) · [Lean positive branch reduction](../../Lean/MOC/ZhengPairedContacts.lean#L915) |
-| An open set beyond ordinary minor certificates | The Lean source gives the hull inclusion at the explicit center for every unitary. The paper proof permits independent complex perturbations of the eight entries by less than $10^{-17}$. Throughout the neighborhood one direction fails the ordinary squared-minor test. [Lean proof of the center](order-four-weighted-minor-center-map.md) |
-| A complete cross-spectral family | For every real $r\ge1$, the lists $(1,-1,-ir,ir)$ and $(-r,r,-i,i)$ satisfy the inclusion for every unitary. The proof covers each edge of the permutation hull. Common fractional linear transport on the signed spectra extends the result wherever the map has no pole. [Paper proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_moonshot_variational_20261031.txt) · [Lean spectral transport](../../Lean/MOC/ProjectiveTransport.lean#L61) |
+| The positive-height branch of T85 | The paper comparison uses the five boundary bounds and the transfer to eight contacts. This settles the named branch under the stated hypotheses. The open seven-contact classification still includes cases outside this pattern. [Audit and dependencies](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/ZhengOrderFourReview.md) · [Lean positive branch reduction](../Lean/MOC/ZhengPairedContacts.lean#L915) |
+| An open set beyond ordinary minor certificates | The Lean source gives the hull inclusion at the explicit center for every unitary. The paper proof permits independent complex perturbations of the eight entries by less than $10^{-17}$. Throughout the neighborhood one direction fails the ordinary squared-minor test. [Lean proof of the center](order-four-weighted-minor-center-proof-map.md) |
+| A complete cross-spectral family | For every real $r\ge1$, the lists $(1,-1,-ir,ir)$ and $(-r,r,-i,i)$ satisfy the inclusion for every unitary. The proof covers each edge of the permutation hull. Common fractional linear transport on the signed spectra extends the result wherever the map has no pole. [Paper proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_moonshot_variational_20261031.txt) · [Lean spectral transport](../Lean/MOC/ProjectiveTransport.lean#L61) |
 
 ### Complex spectral lift
 
@@ -153,7 +153,7 @@ Let $G$ be the gradient of the matching cubic and let $J(u)$ be its
 Hessian. The complex equation $G(u+iv)=0$ splits into $J(u)v=0$ and
 $G(v)=G(u)$. Both conditions are necessary for an exact bracket lift.
 The new Lean proof expands the quadratic coordinates of $G$.
-[Lean lift equations](../../Lean/MOC/FourMatchingHessianKernel.lean#L124)
+[Lean lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L124)
 
 Take $u=(4,0,12,-18,4,0,0,-12,-4,9,3,3,-3,-11)$ in the bracket order
 of the linked definition. The cubic is zero and its Hessian has a
@@ -163,8 +163,8 @@ $-9(25r^2-14rs+29s^2)/169$. This is nonpositive, while $G(u)_0=72$.
 The example therefore excludes sufficiency of the cubic and Hessian
 kernel tests. It concerns the spectral equations for the profile,
 before comparison with a unitary. The new Lean source awaits compilation.
-[Bracket convention](../../Lean/MOC/FourMatchingPolarization.lean#L18) ·
-[Lean exact example](../../Lean/MOC/FourMatchingHessianKernel.lean#L166)
+[Bracket convention](../Lean/MOC/FourMatchingPolarization.lean#L18) ·
+[Lean exact example](../Lean/MOC/FourMatchingHessianKernel.lean#L166)
 
 ### Other exact obstructions
 
@@ -228,7 +228,7 @@ matching profile of height $h$ is
 $-949585314h+9292385296000$. At its only root the projected Hessian
 has rank fourteen. A spectral lift would require a nonzero Hessian
 kernel. The exact intermediate calculations are in the local Cycle 07
-research note in `Temp/txt/`. [Lean Hessian necessity](../../Lean/MOC/FourMatchingHessianKernel.lean#L45)
+research note in `Temp/txt/`. [Lean Hessian necessity](../Lean/MOC/FourMatchingHessianKernel.lean#L45)
 
 </details>
 
