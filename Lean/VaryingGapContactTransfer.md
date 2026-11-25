@@ -1,6 +1,11 @@
 # Contact transfer with a varying determinant gap
 
-**Status.** Paper proof of a stronger terminal reduction, with an independent adversarial review. The exact affine-line case is Lean-checked in `ContactAffineRigidity.lean`. The compactified-curve argument below is not Lean-checked. The terminal inequality remains open.
+**Status.** The [$2n-1$ contact reduction](MOC/AffineGapCover.lean)
+and the [$2n-2$ functional rank bound](MOC/SharpContactRank.lean) are
+checked in Lean by the [affine-cover route](AffineGapContinuation.md).
+The original compactification argument below is an independent paper
+proof. Its stronger difference-only isolation conclusion is still
+recorded on paper. The terminal support inequality remains open.
 
 ## Statement
 

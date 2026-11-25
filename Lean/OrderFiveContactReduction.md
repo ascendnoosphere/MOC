@@ -3,8 +3,9 @@
 Status: Lean proves the [exact profile locus](MOC/ExactProfileLocus.lean),
 [its dimension](MOC/ProfileDimension.lean) for $n\ge 2$, and
 [global contact transfer and iteration](MOC/GlobalContactSlice.lean),
-including zero products. Any strict witness reaches eight contacts in
-order five. The [balanced reduction](MOC/BalancedContactReduction.lean)
+including zero products. The [new varying-gap reduction](MOC/AffineGapCover.lean)
+reaches nine contacts in order five. The fixed-gap argument below
+reaches eight. The [balanced reduction](MOC/BalancedContactReduction.lean)
 can retain those eight contacts at a nonnormal unitary support maximum.
 No order-four result is needed. Section 5 uses the published
 double-dimer identity and is not a Lean theorem. The order-five terminal

@@ -15,7 +15,7 @@ flowchart BT
     ROUTES{{"OR: choose a complete all-order route"}}
     NATIVE["Native and structural analogies<br/>exact and sufficient routes"]:::open
     SAT["Support bound for isolated, rank- and moment-tested<br/>terminal orbit maximizers"]:::open
-    SIMPLE["Support bound at ≥ 2n-2 contacts<br/>on the full exact profile locus"]:::open
+    SIMPLE["Support bound at ≥ 2n-1 contacts<br/>on the full exact profile locus"]:::open
     ATLAS["243 evaluated atlas forms<br/>each exact, not a native-object proof"]:::open
     SPLIT{{"AND: prove all three order ranges"}}
     FOUR["Order 4 · open"]:::open
@@ -48,8 +48,8 @@ flowchart BT
     NORMAL["A normal sum at some maximizer<br/>of each support problem"]:::open
     PENCIL["A positive law for each<br/>one-entry complex pencil"]:::open
     CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
-    TRANSFER["Increase the contact count below 6<br/>even at zero products · checked"]:::checked
-    SIX["Support bound at 6 or more contacts<br/>· open"]:::open
+    TRANSFER["Increase the contact count below 7<br/>even at zero products · checked"]:::checked
+    SEVEN["Support bound at 7 or more contacts<br/>· open"]:::open
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
@@ -57,11 +57,11 @@ flowchart BT
     NORMAL --> OR4
     PENCIL --> OR4
     CHART --> OR4
-    TRANSFER -. proves the reduction .-> SIX
-    SIX <-->|iff| FOUR
+    TRANSFER -. proves the reduction .-> SEVEN
+    SEVEN <-->|iff| FOUR
     TESTS -. narrow the witness set .-> WITNESS
     ZERO -. excludes a mixer family .-> WITNESS
-    PHASE -. restrict realizable profiles .-> SIX
+    PHASE -. restrict realizable profiles .-> SEVEN
     OR4 <-->|iff| FOUR
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
@@ -79,8 +79,8 @@ flowchart BT
     ANDN{{"AND: normal-maximizer route"}}
     FOUR["Order 4 · open"]:::open
     NORMAL["A normal sum at some maximizer<br/>of each order-five support problem"]:::open
-    TRANSFER["Increase the contact count below 8<br/>even at zero products · checked"]:::checked
-    EIGHT["Support bound at 8 or more contacts<br/>· open"]:::open
+    TRANSFER["Increase the contact count below 9<br/>even at zero products · checked"]:::checked
+    NINE["Support bound at 9 or more contacts<br/>· open"]:::open
     ANDO{{"AND: orthogonal route"}}
     REAL["Order-five bound for orthogonal mixers · open"]:::open
     MIX["Two-table orthogonal convexification · open"]:::open
@@ -92,15 +92,15 @@ flowchart BT
     CHART --> OR5
     FOUR --> ANDN
     NORMAL --> ANDN
-    TRANSFER -. proves the reduction .-> EIGHT
-    EIGHT <-->|iff| FIVE
+    TRANSFER -. proves the reduction .-> NINE
+    NINE <-->|iff| FIVE
     REAL --> ANDO
     MIX --> ANDO
     ANDN --> OR5
     ANDO --> OR5
     COST -. can help on each objective .-> DENSE
-    COST -. can help on each objective .-> EIGHT
-    CHAIN -. rules out one certificate family .-> EIGHT
+    COST -. can help on each objective .-> NINE
+    CHAIN -. rules out one certificate family .-> NINE
     OR5 <-->|iff| FIVE
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
@@ -111,22 +111,25 @@ flowchart BT
 
 ```mermaid
 flowchart BT
-    TRANSFER["Increase contacts at any strict witness<br/>below 2n-2 · checked"]:::checked
+    TRANSFER["Increase contacts at any strict witness<br/>below 2n-1 · checked"]:::checked
     BOTH{{"AND: construct the curve and apply transfer"}}
     CUT["Pinned prime chain leaves a curve after<br/>fixed complex gap and differences · checked"]:::checked
     MODEL["Finite prime affine curve through<br/>the witness · checked"]:::checked
     STEP["Affine transfer by connectedness<br/>and cofinite gap image · checked"]:::checked
     CHART["Exact prime profile locus and<br/>dimension 2n-2 · checked"]:::checked
-    TERMINAL["Support at ≥ 2n-2 contacts<br/>· open"]:::open
+    TERMINAL["Support at ≥ 2n-1 contacts<br/>· open"]:::open
     BALANCE["Keep terminal contacts at a<br/>balanced orbit maximum · checked"]:::checked
     BUDGET["Use independent controlling equations<br/>rather than label count · checked"]:::checked
-    RANK["At least 2n−3 independent<br/>contact differences · checked"]:::checked
+    RANK["At least 2n−2 independent<br/>contact differences · checked"]:::checked
     MOMENT["Centered quartic moment test<br/>at contact-preserving maxima · checked"]:::checked
     NEAR["Near-real spectra cluster at<br/>a balanced antipodal center · checked"]:::checked
     ISOLATE["Maximal contacts isolate<br/>the fixed-gap affine fibre · checked"]:::checked
     LINE["Preserve contacts on an exact affine line<br/>without fixing the gap · checked"]:::checked
     CURVE["Varying-gap compactified curve<br/>2n-1 threshold · paper proof"]:::paper
     LIMIT["Rule out both limits of normalized profiles<br/>at infinity · checked"]:::checked
+    AFFCHART["Regular affine gap charts<br/>from a prime curve · checked"]:::checked
+    HALFRAY["Half-plane lift and contact<br/>transfer from gap cover · checked"]:::checked
+    STAR["Anchored star and rectangle at<br/>full contact rank · checked"]:::checked
     JET["Even corank and exact leading<br/>determinant coefficient · checked"]:::checked
     DESCENT["Arbitrary kernel compression reduces<br/>to smaller order · checked"]:::checked
     LOCAL["Interior leading hull gives actual<br/>local inclusion · checked"]:::checked
@@ -136,7 +139,7 @@ flowchart BT
     CUT --> MODEL
     MODEL --> BOTH
     STEP --> BOTH
-    BOTH --> TRANSFER
+    BOTH -. fixed-gap transfer .-> TERMINAL
     TRANSFER -. reduces MOC to .-> TERMINAL
     BALANCE -. proves refinement .-> TIGHT
     RANK -. restricts contact sets .-> TIGHT
@@ -144,7 +147,11 @@ flowchart BT
     LINE -. strengthens slot rigidity .-> TIGHT
     LINE -. affine case .-> CURVE
     LIMIT -. rules out limiting profiles .-> CURVE
-    CURVE -. sharpens threshold on paper .-> TERMINAL
+    LIMIT --> HALFRAY
+    HALFRAY --> TRANSFER
+    AFFCHART --> HALFRAY
+    STAR -. excludes a full-rank contact pattern .-> TERMINAL
+    CURVE -. independent paper proof .-> TRANSFER
     NEAR --> JET
     JET --> LOCAL
     DESCENT -. handles compressed factors .-> JET
@@ -177,8 +184,10 @@ has proved that it would be enough.
   links uses complex evaluation on labelled finite data. This branch
   does not identify the original native objects with MOC.
 - **OR: The terminal contact bound.** Exclude strict witnesses with at least
-  $2n-2$ contacts in each order, allowing zero products. This is
-  [equivalent to unrestricted MOC](MOC/GlobalContactSlice.lean).
+  $2n-1$ contacts in each order, allowing zero products. This is
+  [equivalent to unrestricted MOC](MOC/AffineGapCover.lean).
+  The [equivalent functional-rank target](MOC/SharpContactRank.lean)
+  requires $2n-2$ independent contact-difference functions.
   The [nonzero-only criterion](MOC/SaturatedContactReduction.lean) is
   also equivalent; it remains an option when a proof uses quotients of
   matching products.
@@ -200,8 +209,8 @@ The checked alternatives include:
   whose sum is normal.
 - Prove the [common law for each one-entry complex pencil](MOC/ProofRoutes.lean),
   or the [three-anchor kernel bound](MOC/Reformulations/ThreeAnchorKernel.lean).
-- Prove the support bound at six or more contacts. Lean proves the
-  [global contact transfer and equivalence](MOC/GlobalContactSlice.lean).
+- Prove the support bound at seven or more contacts. Lean proves the
+  [sharp contact transfer and equivalence](MOC/AffineGapCover.lean).
 
 ## Order five
 
@@ -212,7 +221,7 @@ The checked alternatives include:
   work for different pencils.
 - Prove order four **AND** show that each order-five support problem
   has a maximizer with a normal sum.
-- Prove the support bound at eight or more contacts. The checked global
+- Prove the support bound at nine or more contacts. The checked global
   transfer does not require full mixer support or nonzero matching products.
 - Use [subset assignment certificates](MOC/SubsetAssignmentSupport.lean)
   on individual support objectives. The [doubleton image tests](MOC/OrderFivePairMarkers.lean)
@@ -339,12 +348,12 @@ nonzero when it was nonzero initially.
 The contact strategy follows [Zheng, preprint DOI 10.13140/RG.2.2.36790.25923](https://doi.org/10.13140/RG.2.2.36790.25923);
 the pinned global affine argument is proved here.
 
-**Main target.** Prove the terminal support inequality at $2n-2$
-contact labels. The reduction counts labels, not distinct values.
-It does not prove that signed weights are nonnegative, that all terminal
-profiles admit a chosen certificate, or that a stationary mixer stays
-stationary as its spectra move. Six contacts are enough in order
-four and eight in order five. A strict terminal violation would refute MOC.
+**Main target.** Prove the terminal support inequality at $2n-1$
+contact labels: seven in order four and nine in order five. The
+[affine gap-cover proof](MOC/AffineGapCover.lean) keeps the mixer,
+direction, pivot, and old differences, while allowing the gap to vary.
+The count refers to labels, not distinct product values. A strict
+terminal violation would refute MOC.
 
 **Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)
 uses the number of polynomial observables that determine the old
@@ -354,10 +363,10 @@ always gains another label, even if all six are contacts. The
 alternating identity leaves at most four contact equations and one
 gap equation, below the dimension threshold. This does not extend to
 an arbitrary six-label set without a relation on its exact profiles.
-The [rank reduction](MOC/ContactDifferenceRank.lean) gives at least
-$2n-3$ independent pivot-difference functions, not merely that many
-labels. With exactly $2n-2$ contacts every nonpivot difference is
-independent. The [subset marker test](MOC/ContactMarkerRank.lean)
+The [sharp rank reduction](MOC/SharpContactRank.lean) gives at least
+$2n-2$ independent pivot-difference functions at maximal contact
+count. The same theorem file combines this rank with the balanced
+moment-tested orbit maximum and fixed-gap isolation on one witness. The [subset marker test](MOC/ContactMarkerRank.lean)
 identifies these linear relations with subset-image relations.
 Independence here is on the entire exact profile locus, not the rank
 of a differential at the witness. The same module proves that the
@@ -423,9 +432,13 @@ or that the fibre is globally a singleton. The [affine-line transfer](MOC/Contac
 the earlier [one-entry slope test](MOC/ContactPencilRigidity.lean):
 every free partner slot must change an old complex contact difference,
 even if the determinant gap changes as well. The
-[varying-gap curve argument](VaryingGapContactTransfer.md) raises the
-terminal threshold to $2n-1$ on paper. It uses compactification and
-pole behavior and does not change the checked $2n-2$ threshold.
+[varying-gap curve argument](VaryingGapContactTransfer.md) gives an
+independent paper proof of the count using compactification. Lean
+proves the stronger count by the [affine cover route](AffineGapContinuation.md),
+which does not use a compact model.
+The [anchored star and rectangle](AnchoredStarContact.md) is a checked
+terminal-family exclusion; its full functional rank is proved on paper.
+It is not a classification of terminal contacts.
 
 
 

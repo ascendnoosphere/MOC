@@ -44,6 +44,9 @@ Each result below states an equivalence or gives a restriction that is enough fo
 | If a fixed unitary and direction give a strict violation in the unit spectral polydisk, some maximum of the support excess there has at least three maximizing permutations. | [PolydiskContact.lean](MOC/PolydiskContact.lean) |
 | A nonconstant exact affine profile line that preserves the old complex contact differences must increase the contact count. The determinant gap need not be fixed. | [ContactAffineRigidity.lean](MOC/ContactAffineRigidity.lean) |
 | At a balanced Hermitian involution center, the corank is even. The first possible determinant coefficient is exactly the reduced determinant times the kernel-compression determinant. An interior matching-jet certificate yields actual hull inclusion nearby. | [Singular antipodal jets](AntipodalKernelJets.md) |
+| Lean reduces terminal support to at least $2n-1$ contacts, with at least $2n-2$ independent contact-difference functions. The [affine cover argument](AffineGapContinuation.md) applies even to exceptional initial points. | [AffineGapCover.lean](MOC/AffineGapCover.lean) · [SharpContactRank.lean](MOC/SharpContactRank.lean) |
+| Every violating exact profile is determined by its full vector of pivot differences. Contact differences alone can have another exact point in the same fibre. | [DifferenceProfileReconstruction.lean](MOC/DifferenceProfileReconstruction.lean) |
+| An anchored full-rank contact pattern of terminal size gives hull inclusion for all mixers when the spectra are simple and all matching products are nonzero. | [Anchored star and rectangle](AnchoredStarContact.md) |
 | A one-entry pencil has a common law exactly when conditional slope hulls can meet two complex moment equations. | [GroupedPencil.lean](MOC/GroupedPencil.lean) |
 | The squared Frobenius self-commutator of a principal compression equals eight times a spectral covariance determinant, using the deleted row's weights. An imaginary strip gives a quadratic width bound for this squared norm. This does not provide a hull comparison. | [CompressionDefect.lean](MOC/CompressionDefect.lean) |
 | It suffices to use Gaussian-integer spectra and unitary mixers with Gaussian-rational entries. Cayley density proves the reduction; no finite search is part of it. | [GaussianCayley.lean](MOC/GaussianCayley.lean) |
@@ -92,8 +95,10 @@ Use the [proof tree](ProofTree.md) to compare complete routes to the
 all-order, order-four, and order-five goals. It distinguishes alternative
 proofs from steps that must be proved together.
 
-The [global contact reduction](MOC/GlobalContactSlice.lean) is exact
-in every order. Every strict witness can reach at least $2n-2$ maximal
+The [fixed-gap contact reduction](MOC/GlobalContactSlice.lean) is exact
+in every order. The [varying-gap reduction](MOC/AffineGapCover.lean)
+adds one more contact while preserving the mixer, phase, pivot, and
+old complex differences. Every strict witness can reach at least $2n-2$ maximal
 matching labels without changing the mixer, phase, pivot, complex
 determinant gap, or the original complex contact differences. This
 includes witnesses with zero matching products. The profile ring has
@@ -103,8 +108,8 @@ and cubic moments on unit energy and unit direction. The resulting
 terminal support bound remains open. The [equation budget](MOC/ContactEquationBudget.lean)
 can force a new contact even after the count threshold when the
 active equations are redundant.
-The [joint rank and moment reduction](MOC/ContactDifferenceRank.lean)
-requires at least $2n-3$ independent contact-difference functions and
+The [joint rank and moment reduction](MOC/SharpContactRank.lean)
+requires at least $2n-2$ independent contact-difference functions and
 a quartic spectral bound on the same balanced terminal maximizer.
 [Subset incidences](MOC/ContactMarkerRank.lean) detect the linear
 relations exactly.
