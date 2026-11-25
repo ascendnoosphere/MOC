@@ -1,6 +1,10 @@
+import MOC.DruryHermitianPencil
+import MOC.ExtendedCases
 import MOC.Variational
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Normed.Ring.Units
+import Mathlib.Data.Quot
+import Mathlib.Logic.Relation
 
 /-! Resolvent estimates for a scalar translate of a Hermitian-by-normal
 support problem. Here all matrix operator norms are Euclidean. -/
@@ -686,6 +690,400 @@ theorem exterior_support_maximum_respects_blocks [Nonempty ι]
     (2 * L / d + L ^ 2 / d ^ 2) hgap hg hstation' hE₀ hH₀ hE hchange hsmall
 
 end Blocks
+
+section ProjectedBlocks
+
+variable {ι : Type*}
+
+/-- Signed double area of the triangle with the given complex vertices. -/
+def exteriorTriangleCross (x y z : ℂ) : ℝ := ((y - x) * star (z - x)).im
+
+private theorem exterior_near_triple_on_line (u : ℂ) (hu : ‖u‖ = 1)
+    (g : ℝ) (x y z : ℂ) (hxy : x ≠ y)
+    (hy : |(u * y).re - (u * x).re| < g)
+    (hz : |(u * z).re - (u * x).re| < g)
+    (hcross : exteriorTriangleCross x y z ≠ 0 →
+      g * (‖y - x‖ + ‖z - x‖) ≤ |exteriorTriangleCross x y z|) :
+    ∃ t : ℝ, z = x + (t : ℂ) * (y - x) := by
+  let A := u * (y - x)
+  let B := u * (z - x)
+  have hA : |A.re| < g := by simpa only [A, mul_sub, Complex.sub_re] using hy
+  have hB : |B.re| < g := by simpa only [B, mul_sub, Complex.sub_re] using hz
+  have hg : 0 ≤ g := (abs_nonneg _).trans hA.le
+  have hyx : y - x ≠ 0 := sub_ne_zero.mpr (Ne.symm hxy)
+  have hu₀ : u ≠ 0 := by
+    intro he
+    rw [he, norm_zero] at hu
+    exact zero_ne_one hu
+  have hAn : 0 < ‖A‖ := norm_pos_iff.mpr (mul_ne_zero hu₀ hyx)
+  have hphase : u * star u = 1 := by
+    rw [Complex.star_def, Complex.mul_conj, ← Complex.sq_norm, hu, one_pow, Complex.ofReal_one]
+  have hrotation : A * star B = (y - x) * star (z - x) := by
+    dsimp only [A, B]
+    rw [star_mul]
+    calc
+      _ = (u * star u) * ((y - x) * star (z - x)) := by ring
+      _ = _ := by rw [hphase, one_mul]
+  have himag : (A * star B).im = A.im * B.re - A.re * B.im := by
+    simp only [Complex.mul_im, Complex.star_def, Complex.conj_re, Complex.conj_im]
+    ring
+  have hnormA : ‖A‖ = ‖y - x‖ := by rw [show A = _ from rfl, norm_mul, hu, one_mul]
+  have hnormB : ‖B‖ = ‖z - x‖ := by rw [show B = _ from rfl, norm_mul, hu, one_mul]
+  have hfirst : |A.im| * |B.re| < ‖A‖ * g :=
+    (mul_le_mul_of_nonneg_right (Complex.abs_im_le_norm A) (abs_nonneg _)).trans_lt
+      (mul_lt_mul_of_pos_left hB hAn)
+  have hsecond : |A.re| * |B.im| ≤ g * ‖B‖ :=
+    mul_le_mul hA.le (Complex.abs_im_le_norm B) (abs_nonneg _) hg
+  have hstrict : |exteriorTriangleCross x y z| < g * (‖y - x‖ + ‖z - x‖) := calc
+    _ = |A.im * B.re - A.re * B.im| := by rw [exteriorTriangleCross, ← hrotation, himag]
+    _ ≤ |A.im| * |B.re| + |A.re| * |B.im| := by
+      simpa only [abs_mul] using abs_sub (A.im * B.re) (A.re * B.im)
+    _ < ‖A‖ * g + g * ‖B‖ := add_lt_add_of_lt_of_le hfirst hsecond
+    _ = _ := by rw [hnormA, hnormB]; ring
+  have hzero : exteriorTriangleCross x y z = 0 := by
+    by_contra hne
+    exact (not_lt_of_ge (hcross hne)) hstrict
+  have hcoord : ((z - x) / (y - x)).im = 0 := by
+    rw [Complex.div_im, ← sub_div]
+    have he : (z - x).im * (y - x).re - (z - x).re * (y - x).im = 0 := by
+      simp only [exteriorTriangleCross, Complex.mul_im, Complex.star_def,
+        Complex.conj_re, Complex.conj_im] at hzero
+      linarith only [hzero]
+    rw [he, zero_div]
+  have hreal : ((((z - x) / (y - x)).re : ℝ) : ℂ) = (z - x) / (y - x) :=
+    Complex.ext (Complex.ofReal_re _) ((Complex.ofReal_im _).trans hcoord.symm)
+  refine ⟨((z - x) / (y - x)).re, ?_⟩
+  rw [hreal, div_mul_cancel₀ _ hyx]
+  abel
+
+/-- Join spectral labels whose projections differ by less than the gap.
+If the triangle bound holds, each connected group lies on one affine line. -/
+theorem exterior_projected_affine_partition (b : ι → ℂ) (u : ℂ) (hu : ‖u‖ = 1) (g : ℝ)
+    (harea : ∀ i j k, exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      g * (‖b j - b i‖ + ‖b k - b i‖) ≤ |exteriorTriangleCross (b i) (b j) (b k)|) :
+    ∃ f : ι → ι,
+      (∀ i j, f i ≠ f j → g ≤ |(u * b j).re - (u * b i).re|) ∧
+      (∀ i, ∃ s q : ℂ, ∀ j, f j = f i → ∃ t : ℝ, b j = s + (t : ℂ) * q) := by
+  let near (i j : ι) : Prop := |(u * b j).re - (u * b i).re| < g
+  let reach := Relation.ReflTransGen near
+  have hsym : Symmetric near := by
+    intro i j h
+    change |(u * b i).re - (u * b j).re| < g
+    rw [abs_sub_comm]
+    exact h
+  let classes : Setoid ι := ⟨reach, ⟨fun _ => Relation.ReflTransGen.refl,
+    Relation.ReflTransGen.symmetric hsym, fun h₁ h₂ => h₁.trans h₂⟩⟩
+  let f (i : ι) : ι := (Quotient.mk classes i).out
+  have hclass (i j : ι) : f i = f j ↔ reach i j := by
+    constructor
+    · intro h
+      apply Quotient.exact (s := classes)
+      calc
+        Quotient.mk classes i = Quotient.mk classes (f i) := (Quotient.out_eq _).symm
+        _ = Quotient.mk classes (f j) := congrArg (Quotient.mk classes) h
+        _ = Quotient.mk classes j := Quotient.out_eq _
+    · intro h
+      exact congrArg Quotient.out (Quotient.sound (s := classes) h)
+  have htriple (i j k : ι) (hij : b i ≠ b j) (hnearj : near i j) (hneark : near i k) :
+      ∃ t : ℝ, b k = b i + (t : ℂ) * (b j - b i) :=
+    exterior_near_triple_on_line u hu g (b i) (b j) (b k) hij hnearj hneark (harea i j k)
+  refine ⟨f, ?_, ?_⟩
+  · intro i j hij
+    exact le_of_not_gt (fun h => hij ((hclass i j).mpr (Relation.ReflTransGen.single h)))
+  intro i
+  by_cases hpair : ∃ j, b i ≠ b j ∧ near i j
+  · obtain ⟨j, hj, hnear⟩ := hpair
+    let q := b j - b i
+    have hinv (k : ι) (hk : reach i k) :
+        (∃ t : ℝ, b k = b i + (t : ℂ) * q) ∧
+        ∃ l, b k ≠ b l ∧ near k l ∧ ∃ s : ℝ, b l = b i + (s : ℂ) * q := by
+      induction hk with
+      | refl =>
+        exact ⟨⟨0, by simp only [Complex.ofReal_zero, zero_mul, add_zero]⟩,
+          ⟨j, hj, hnear, ⟨1, by simp only [Complex.ofReal_one, one_mul, q]; abel⟩⟩⟩
+      | @tail k l _ hkl ih =>
+        obtain ⟨⟨a, ha⟩, m, hkm, hnearM, ⟨c, hc⟩⟩ := ih
+        obtain ⟨d, hd⟩ := htriple k m l hkm hnearM hkl
+        have hl : ∃ t : ℝ, b l = b i + (t : ℂ) * q := by
+          refine ⟨a + d * (c - a), ?_⟩
+          rw [hd, ha, hc, Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_sub]
+          ring
+        refine ⟨hl, ?_⟩
+        by_cases he : b k = b l
+        · exact ⟨m, by rw [← he]; exact hkm,
+            by simpa only [near, ← he] using hnearM, ⟨c, hc⟩⟩
+        · exact ⟨k, Ne.symm he, hsym hkl, ⟨a, ha⟩⟩
+    exact ⟨b i, q, fun k hk => (hinv k ((hclass i k).mp hk.symm)).1⟩
+  · have hconst (k : ι) (hk : reach i k) : b k = b i := by
+      induction hk with
+      | refl => rfl
+      | @tail k l _ hkl ih =>
+        by_contra hne
+        exact hpair ⟨l, Ne.symm hne, by simpa only [near, ih] using hkl⟩
+    refine ⟨b i, 0, fun k hk => ⟨0, ?_⟩⟩
+    simpa only [mul_zero, add_zero] using hconst k ((hclass i k).mp hk.symm)
+
+private theorem exterior_triangle_side_sum_pos (x y z : ℂ)
+    (h : exteriorTriangleCross x y z ≠ 0) : 0 < ‖y - x‖ + ‖z - x‖ := by
+  have hne : y - x ≠ 0 := by
+    intro he
+    apply h
+    simp only [exteriorTriangleCross, he, zero_mul, Complex.zero_im]
+  exact add_pos_of_pos_of_nonneg (norm_pos_iff.mpr hne) (norm_nonneg _)
+
+/-- A single positive gap works for all projected directions of any finite spectrum. -/
+theorem exterior_exists_positive_triangle_gap [Fintype ι] (b : ι → ℂ) :
+    ∃ g : ℝ, 0 < g ∧ ∀ i j k, exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      g * (‖b j - b i‖ + ‖b k - b i‖) ≤ |exteriorTriangleCross (b i) (b j) (b k)| := by
+  classical
+  let c (p : ι × ι × ι) := exteriorTriangleCross (b p.1) (b p.2.1) (b p.2.2)
+  let r (p : ι × ι × ι) := if c p = 0 then 1 else
+    |c p| / (‖b p.2.1 - b p.1‖ + ‖b p.2.2 - b p.1‖)
+  let s := insert (1 : ℝ) (Finset.univ.image r)
+  have hs : s.Nonempty := ⟨1, Finset.mem_insert_self _ _⟩
+  let g := s.min' hs
+  have hr (p : ι × ι × ι) : 0 < r p := by
+    by_cases h : c p = 0
+    · simp only [r, if_pos h, zero_lt_one]
+    · rw [show r p = _ from if_neg h]
+      exact div_pos (abs_pos.mpr h) (exterior_triangle_side_sum_pos _ _ _ h)
+  have hg : 0 < g := by
+    have hm : g ∈ s := Finset.min'_mem s hs
+    rcases Finset.mem_insert.mp hm with h | h
+    · exact h.symm ▸ zero_lt_one
+    · obtain ⟨p, _, hp⟩ := Finset.mem_image.mp h
+      exact hp ▸ hr p
+  refine ⟨g, hg, ?_⟩
+  intro i j k hijk
+  let p : ι × ι × ι := (i, j, k)
+  have hp : r p ∈ s := Finset.mem_insert_of_mem (Finset.mem_image.mpr ⟨p, Finset.mem_univ _, rfl⟩)
+  have hle : g ≤ r p := Finset.min'_le s _ hp
+  have hratio : r p = |c p| / (‖b j - b i‖ + ‖b k - b i‖) := if_neg hijk
+  rw [hratio] at hle
+  exact (le_div_iff₀ (exterior_triangle_side_sum_pos _ _ _ hijk)).mp hle
+
+end ProjectedBlocks
+
+/-- In every nonzero support direction the exterior bound provides a partition
+that the maximizer preserves and on which the partner spectrum is collinear. -/
+theorem exterior_support_maximum_has_affine_blocks [Nonempty ι]
+    (z η : ℂ) (b : ι → ℂ) (H : Matrix ι ι ℂ) (M L g : ℝ)
+    (hH : H.IsHermitian) (hη : η ≠ 0) (hM : ‖H‖ ≤ M)
+    (hL : M + ‖diagonal b‖ ≤ L) (hz : L < ‖z‖) (hg : 0 ≤ g)
+    (hsmall : let d := ‖z‖ - L
+      2 * (L ^ 2 / d) + 2 * M * (2 * L / d + L ^ 2 / d ^ 2) < g)
+    (harea : ∀ i j k, exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      g * (‖b j - b i‖ + ‖b k - b i‖) ≤ |exteriorTriangleCross (b i) (b j) (b k)|)
+    (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + V * H * Vᴴ).det).re ≤
+        (η * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + H).det).re) :
+    ∃ f : ι → ι, exteriorOffBlock f H = 0 ∧
+      ∀ i, ∃ s q : ℂ, ∀ j, f j = f i → ∃ t : ℝ, b j = s + (t : ℂ) * q := by
+  obtain ⟨u, hu, hblocks⟩ := exterior_support_maximum_respects_blocks (κ := ι)
+    z η b H M L g hH hη hM hL hz hg hsmall hmax
+  obtain ⟨f, hgap, hline⟩ := exterior_projected_affine_partition b u hu g harea
+  exact ⟨f, hblocks f hgap, hline⟩
+
+private theorem exterior_holds_of_affine_blocks (a : ι → ℝ) (β : ι → ℂ)
+    (V : Matrix ι ι ℂ) (hV : IsUnitary V) (f : ι → ι)
+    (hblock : exteriorOffBlock f (V * diagonal (fun i => (a i : ℂ)) * Vᴴ) = 0)
+    (hline : ∀ i, ∃ s q : ℂ, ∀ j, f j = f i → ∃ t : ℝ, β j = s + (t : ℂ) * q) :
+    Holds β (fun i => (a i : ℂ)) V := by
+  classical
+  let label := Fintype.equivFin ι
+  let classify := label ∘ f
+  let κ (k : Fin (Fintype.card ι)) := {i : ι // classify i = k}
+  let m (k : Fin (Fintype.card ι)) := Fintype.card (κ k)
+  let ef (k : Fin (Fintype.card ι)) : Fin (m k) ≃ κ k := (Fintype.equivFin _).symm
+  let e : (Σ k, Fin (m k)) ≃ ι := (Equiv.sigmaCongrRight ef).trans (Equiv.sigmaFiberEquiv classify)
+  have he (k : Fin (Fintype.card ι)) (i : Fin (m k)) : label (f (e ⟨k, i⟩)) = k :=
+    (ef k i).property
+  let A (i : ι) : ℂ := a i
+  let H := V * diagonal A * Vᴴ
+  have hH : H.IsHermitian := Matrix.isHermitian_mul_mul_conjTranspose V
+    (Matrix.isHermitian_diagonal_iff.mpr fun i => by
+      simp only [A, isSelfAdjoint_iff, Complex.star_def, Complex.conj_ofReal])
+  let Hk (k : Fin (Fintype.card ι)) : Matrix (Fin (m k)) (Fin (m k)) ℂ :=
+    H.submatrix (fun i => e ⟨k, i⟩) (fun i => e ⟨k, i⟩)
+  have hHk (k : Fin (Fintype.card ι)) : (Hk k).IsHermitian := by
+    apply Matrix.IsHermitian.submatrix
+    exact hH
+  let eigenvalues (k : Fin (Fintype.card ι)) (i : Fin (m k)) : ℝ := (hHk k).eigenvalues i
+  let Qk (k : Fin (Fintype.card ι)) : Matrix (Fin (m k)) (Fin (m k)) ℂ := (hHk k).eigenvectorUnitary
+  have hQk (k : Fin (Fintype.card ι)) : IsUnitary (Qk k) :=
+    ⟨Matrix.mem_unitaryGroup_iff.mp (hHk k).eigenvectorUnitary.2,
+      Matrix.mem_unitaryGroup_iff'.mp (hHk k).eigenvectorUnitary.2⟩
+  have hdiag (k : Fin (Fintype.card ι)) :
+      Hk k = Qk k * diagonal (fun i => (eigenvalues k i : ℂ)) * (Qk k)ᴴ := by
+    simpa only [Qk, eigenvalues, Function.comp_apply, Matrix.star_eq_conjTranspose] using
+      (hHk k).spectral_theorem
+  have hsplit : H.submatrix e e = Matrix.blockDiagonal' Hk := by
+    ext i j : 1
+    rcases i with ⟨k, i⟩
+    rcases j with ⟨l, j⟩
+    by_cases hkl : k = l
+    · subst l
+      exact (Matrix.blockDiagonal'_apply_eq Hk k i j).symm
+    · have hne : f (e ⟨k, i⟩) ≠ f (e ⟨l, j⟩) := by
+        intro hh
+        exact hkl ((he k i).symm.trans ((congrArg label hh).trans (he l j)))
+      have hzero := congrArg (fun X : Matrix ι ι ℂ => X (e ⟨k, i⟩) (e ⟨l, j⟩)) hblock
+      have hi : H (e ⟨k, i⟩) (e ⟨l, j⟩) = 0 := by
+        simpa only [exteriorOffBlock, if_neg hne, Matrix.zero_apply] using hzero
+      exact hi.trans (Matrix.blockDiagonal'_apply_ne Hk i j hkl).symm
+  let Q := Matrix.blockDiagonal' Qk
+  let A' (i : Σ k, Fin (m k)) : ℂ := eigenvalues i.1 i.2
+  let B' (i : Σ k, Fin (m k)) : ℂ := β (e i)
+  have hQ : IsUnitary Q := by
+    constructor
+    · simp only [Q, Matrix.blockDiagonal'_conjTranspose, ← Matrix.blockDiagonal'_mul,
+        ← Matrix.blockDiagonal'_one]
+      exact congrArg Matrix.blockDiagonal' (funext fun k => (hQk k).1)
+    · simp only [Q, Matrix.blockDiagonal'_conjTranspose, ← Matrix.blockDiagonal'_mul,
+        ← Matrix.blockDiagonal'_one]
+      exact congrArg Matrix.blockDiagonal' (funext fun k => (hQk k).2)
+  have hHs : H.submatrix e e = Q * diagonal A' * Qᴴ := by
+    rw [hsplit, ← Matrix.blockDiagonal'_diagonal (fun k i => (eigenvalues k i : ℂ))]
+    simp only [Q, Matrix.blockDiagonal'_conjTranspose, ← Matrix.blockDiagonal'_mul]
+    exact congrArg Matrix.blockDiagonal' (funext hdiag)
+  have hlocal (k : Fin (Fintype.card ι)) :
+      Holds (fun i => B' ⟨k, i⟩) (fun i => (eigenvalues k i : ℂ)) (Qk k) := by
+    by_cases hn : Nonempty (Fin (m k))
+    · let i₀ := Classical.choice hn
+      obtain ⟨s, q, hs⟩ := hline (e ⟨k, i₀⟩)
+      have hcoords (i : Fin (m k)) : ∃ t : ℝ, B' ⟨k, i⟩ = q * (t : ℂ) + s := by
+        obtain ⟨t, ht⟩ := hs (e ⟨k, i⟩) (label.injective ((he k i).trans (he k i₀).symm))
+        refine ⟨t, ?_⟩
+        change β (e ⟨k, i⟩) = _
+        rw [ht, add_comm s, mul_comm (t : ℂ) q]
+      choose t ht using hcoords
+      have hB : (fun i => B' ⟨k, i⟩) = fun i => q * (t i : ℂ) + s := funext ht
+      rw [hB]
+      simpa only [one_mul, add_zero] using
+        holds_of_affine_spectral_lines t (eigenvalues k) q 1 s 0 (Qk k) (hQk k)
+    · letI : IsEmpty (Fin (m k)) := ⟨fun i => hn ⟨i⟩⟩
+      exact conjecture_of_subsingleton _ _ _ (hQk k)
+  have hholds : Holds B' A' Q := holds_of_finite_paired_blocks m (Equiv.refl _) (Equiv.refl _)
+    B' A' Q Qk rfl hlocal
+  apply (holds_reindex_iff e e β A V).mp
+  let V' := V.submatrix e e
+  have hV' : IsUnitary V' := unitary_reindex e e hV
+  have hlo : V' * diagonal (A ∘ e) * (V')ᴴ = Q * diagonal A' * Qᴴ := by
+    have hleft : H.submatrix e e = V' * diagonal (A ∘ e) * (V')ᴴ := by
+      simp only [H, Matrix.submatrix_mul_equiv _ _ e e e, Matrix.submatrix_diagonal_equiv,
+        Matrix.conjTranspose_submatrix, V']
+    exact hleft.symm.trans hHs
+  have hb : diagonal (β ∘ e) = (1 : Matrix (Σ k, Fin (m k)) (Σ k, Fin (m k)) ℂ) *
+      diagonal B' * (1 : Matrix (Σ k, Fin (m k)) (Σ k, Fin (m k)) ℂ)ᴴ := by
+    change diagonal B' = 1 * diagonal B' * (1 : Matrix (Σ k, Fin (m k)) (Σ k, Fin (m k)) ℂ)ᴴ
+    rw [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one]
+  apply (holds_iff_relative_to_diagonalizations (β ∘ e) (A ∘ e) B' A'
+    hV' isUnitary_one hQ hb hlo).mpr
+  simpa only [Matrix.conjTranspose_one, Matrix.one_mul] using hholds
+
+/-- The exterior support inequality implies determinant inclusion for a real
+spectrum and any finite partner spectrum under the triangle gap bound. -/
+theorem holds_of_exterior_scalar_shift [Nonempty ι] (a : ι → ℝ) (b : ι → ℂ)
+    (z : ℂ) (M L g : ℝ) (hM : ‖diagonal (fun i => (a i : ℂ))‖ ≤ M)
+    (hL : M + ‖diagonal b‖ ≤ L) (hz : L < ‖z‖) (hg : 0 ≤ g)
+    (hsmall : let d := ‖z‖ - L
+      2 * (L ^ 2 / d) + 2 * M * (2 * L / d + L ^ 2 / d ^ 2) < g)
+    (harea : ∀ i j k, exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      g * (‖b j - b i‖ + ‖b k - b i‖) ≤ |exteriorTriangleCross (b i) (b j) (b k)|)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    Holds (fun i => (a i : ℂ)) (fun i => z + b i) U := by
+  let A (i : ι) : ℂ := a i
+  let β (i : ι) : ℂ := z + b i
+  apply (holds_swap_iff A β hU).mp
+  have hU' : IsUnitary Uᴴ := ⟨by simpa only [Matrix.conjTranspose_conjTranspose] using hU.2,
+    by simpa only [Matrix.conjTranspose_conjTranspose] using hU.1⟩
+  apply (holds_iff_directional β A Uᴴ).mpr
+  intro η
+  by_cases hη : η = 0
+  · exact ⟨1, by simp only [hη, zero_mul, le_refl]⟩
+  obtain ⟨V, hV, hmax⟩ := exists_support_maximizer β A η
+  let H := V * diagonal A * Vᴴ
+  have hB : z • (1 : Matrix ι ι ℂ) + diagonal b = diagonal β := by
+    calc
+      _ = diagonal (fun _ : ι => z) + diagonal b := by rw [Matrix.smul_one_eq_diagonal]
+      _ = _ := (Matrix.diagonal_add (fun _ => z) b).symm
+  have hH : H.IsHermitian := Matrix.isHermitian_mul_mul_conjTranspose V
+    (Matrix.isHermitian_diagonal_iff.mpr fun i => by
+      simp only [A, isSelfAdjoint_iff, Complex.star_def, Complex.conj_ofReal])
+  have hVn : ‖V‖ = 1 := by
+    apply (sq_eq_sq₀ (norm_nonneg V) zero_le_one).mp
+    rw [pow_two, ← Matrix.l2_opNorm_conjTranspose_mul_self, hV.2, norm_one, one_pow]
+  have hHn : ‖H‖ ≤ M := calc
+    _ ≤ ‖V * diagonal A‖ * ‖Vᴴ‖ := norm_mul_le _ _
+    _ = ‖V * diagonal A‖ := by rw [Matrix.l2_opNorm_conjTranspose, hVn, mul_one]
+    _ ≤ ‖V‖ * ‖diagonal A‖ := norm_mul_le _ _
+    _ ≤ M := by rw [hVn, one_mul]; exact hM
+  have hmaxH (X : Matrix ι ι ℂ) (hX : IsUnitary X) :
+      (η * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + X * H * Xᴴ).det).re ≤
+        (η * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + H).det).re := by
+    have hX' : IsUnitary Xᴴ := ⟨by simpa only [Matrix.conjTranspose_conjTranspose] using hX.2,
+      by simpa only [Matrix.conjTranspose_conjTranspose] using hX.1⟩
+    have hXV : IsUnitary (X * V) := by
+      simpa only [Matrix.conjTranspose_conjTranspose] using relative_unitary Xᴴ V hX' hV
+    simpa only [hB, determinantValue, H, Matrix.conjTranspose_mul, Matrix.mul_assoc] using hmax (X * V) hXV
+  obtain ⟨f, hblock, hline⟩ := exterior_support_maximum_has_affine_blocks
+    z η b H M L g hH hη hHn hL hz hg hsmall harea hmaxH
+  have hlineβ (i : ι) : ∃ s q : ℂ, ∀ j, f j = f i → ∃ t : ℝ, β j = s + (t : ℂ) * q := by
+    obtain ⟨s, q, hsq⟩ := hline i
+    refine ⟨z + s, q, fun j hj => ?_⟩
+    obtain ⟨t, ht⟩ := hsq j hj
+    exact ⟨t, by simp only [β, ht, add_assoc]⟩
+  have hhold := exterior_holds_of_affine_blocks a β V hV f hblock hlineβ
+  obtain ⟨σ, hσ⟩ := (holds_iff_directional β A V).mp hhold η
+  exact ⟨σ, (hmax Uᴴ hU').trans hσ⟩
+
+/-- Half of a lower bound on the least altitude of each noncollinear
+triangle is a valid projected gap. -/
+theorem exterior_triangle_gap_of_altitudes (b : ι → ℂ) (w : ℝ) (hw : 0 ≤ w)
+    (hAltitude : ∀ i j k, exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      w * max ‖b j - b i‖ (max ‖b k - b i‖ ‖b k - b j‖) ≤
+        |exteriorTriangleCross (b i) (b j) (b k)|) :
+    ∀ i j k, exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      (w / 2) * (‖b j - b i‖ + ‖b k - b i‖) ≤
+        |exteriorTriangleCross (b i) (b j) (b k)| := by
+  intro i j k hijk
+  let m := max ‖b j - b i‖ (max ‖b k - b i‖ ‖b k - b j‖)
+  have hj : w * ‖b j - b i‖ ≤ w * m := mul_le_mul_of_nonneg_left (le_max_left _ _) hw
+  have hk : w * ‖b k - b i‖ ≤ w * m :=
+    mul_le_mul_of_nonneg_left ((le_max_left _ _).trans (le_max_right _ _)) hw
+  calc
+    _ ≤ w * m := by nlinarith only [hj, hk]
+    _ ≤ _ := hAltitude i j k hijk
+
+/-- The explicit radius (2L+8L^2/g) implies the exterior support inequality. -/
+theorem exterior_bound_of_simple_cutoff (M L g r : ℝ)
+    (hM : 0 ≤ M) (hML : M ≤ L) (hg : 0 < g)
+    (hr : 2 * L + 8 * L ^ 2 / g < r) :
+    L < r ∧ 2 * (L ^ 2 / (r - L)) +
+      2 * M * (2 * L / (r - L) + L ^ 2 / (r - L) ^ 2) < g := by
+  let d := r - L
+  have hL : 0 ≤ L := hM.trans hML
+  have hnonneg : 0 ≤ 8 * L ^ 2 / g := by positivity
+  have hd : 0 < d := by dsimp only [d]; linarith only [hL, hnonneg, hr]
+  have hLd : L ≤ d := by dsimp only [d]; linarith only [hnonneg, hr]
+  have hq : L ^ 2 / d ^ 2 ≤ L / d := by
+    rw [← div_pow, pow_two]
+    exact mul_le_of_le_one_right (div_nonneg hL hd.le) ((div_le_one hd).mpr hLd)
+  have hstep : 2 * L / d + L ^ 2 / d ^ 2 ≤ 3 * L / d := calc
+    _ ≤ 2 * L / d + L / d := add_le_add_left hq _
+    _ = _ := by ring
+  have heta : 0 ≤ 2 * L / d + L ^ 2 / d ^ 2 := by positivity
+  refine ⟨sub_pos.mp hd, ?_⟩
+  change 2 * (L ^ 2 / d) + 2 * M * (2 * L / d + L ^ 2 / d ^ 2) < g
+  calc
+    _ ≤ 2 * (L ^ 2 / d) + 2 * L * (3 * L / d) := by
+      exact add_le_add_left (mul_le_mul (by linarith only [hML]) hstep heta (by positivity)) _
+    _ = 8 * L ^ 2 / d := by ring
+    _ < g := by
+      apply (div_lt_iff₀ hd).mpr
+      rw [mul_comm g d, ← div_lt_iff₀ hg]
+      dsimp only [d]
+      linarith only [hL, hr]
 
 /-- The numerical strict inequality in the order-five exterior example. -/
 theorem exterior_five_threshold_arithmetic (z : ℂ) (hz : 123 ≤ ‖z‖) :

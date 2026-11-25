@@ -59,15 +59,19 @@ flowchart BT
     C["Stationarity for a projected diagonal"]
     K["Operator-norm block compression and block inverse"]
     B["A support maximum preserves every separated partition"]
-    G["Collinear block partition for each direction"]
-    H["Determinant hull within each collinear block"]
-    P["Exterior determinant inclusion"]
+    T["Positive triangle gap for the partner spectrum"]
+    G["Collinear blocks in the projected direction"]
+    H["Affine-line determinant hull within each block"]
+    A["Join the block hulls at a support maximum"]
+    P["Determinant inclusion for each exterior shift"]
     R --> B
     C --> B
     K --> B
-    B --> P
-    G -.->|needs Lean proof| P
-    H --> P
+    T --> G
+    B --> A
+    G --> A
+    H --> A
+    A --> P
 ~~~
 
 Let $Y$ be a complex square matrix. If $\|Y\|<|z|$, where the matrix
@@ -77,14 +81,14 @@ $R(Y)=Y^2(zI+Y)^{-1}$ gives the exact expansion
 $z^2(zI+Y)^{-1}=zI-Y+R(Y)$. For $\|Y_1\|,\|Y_2\|\le L<|z|$ and
 $d=|z|-L$, its Frobenius variation is bounded by
 $(2L/d+L^2/d^2)\|Y_1-Y_2\|_{\mathrm F}$.
-[Inverse bound](../../Lean/MOC/HermitianExteriorShift.lean#L76) · [Expansion](../../Lean/MOC/HermitianExteriorShift.lean#L115) · [Remainder norm](../../Lean/MOC/HermitianExteriorShift.lean#L138) · [Frobenius estimate](../../Lean/MOC/HermitianExteriorShift.lean#L300)
+[Inverse bound](../../Lean/MOC/HermitianExteriorShift.lean#L80) · [Expansion](../../Lean/MOC/HermitianExteriorShift.lean#L119) · [Remainder norm](../../Lean/MOC/HermitianExteriorShift.lean#L142) · [Frobenius estimate](../../Lean/MOC/HermitianExteriorShift.lean#L304)
 
 At a nonsingular support maximum, let $H$ be the Hermitian summand,
 $B$ the partner diagonal, and $Y=H+B$. For direction $\eta$, put
 $v=\eta\det(zI+Y)/z^2$. Then $H$ commutes with the real projected
 diagonal of $vB$ minus the Hermitian part of $vR(Y)$. The term with
 $H$ and the scalar term commute with $H$ and cancel from this
-equation. [Stationarity](../../Lean/MOC/HermitianExteriorShift.lean#L169)
+equation. [Stationarity](../../Lean/MOC/HermitianExteriorShift.lean#L173)
 
 For a given partition, let $H_0$ be the part of $H$ inside the blocks
 and $F=H-H_0$. Suppose distinct blocks have projected separation
@@ -100,10 +104,26 @@ Let $\eta\ne 0$ be the support direction and let $H$ maximize its support.
 Suppose $\|H\|\le M$, $M+\|B\|\le L$, and $d=|z|-L>0$. If
 $2L^2/d+2M(2L/d+L^2/d^2)<g$, then there is a complex number $u$ of
 modulus one for which $H$ preserves every partition with separation
-at least $g$ in the projection $\mathrm{Re}(ub_i)$. The order-five
-scalar inequality at $|z|\ge 123$ is in the source. The full determinant
-conclusion still needs a collinear partition for each projection and
-an application of the affine-line theorem to its blocks.
-[Block compression](../../Lean/MOC/HermitianExteriorShift.lean#L394) · [Support maximum](../../Lean/MOC/HermitianExteriorShift.lean#L608) · [Exact threshold arithmetic](../../Lean/MOC/HermitianExteriorShift.lean#L691) · [Affine-line theorem](../../Lean/MOC/DruryHermitianPencil.lean#L385)
+at least $g$ in the projection $\mathrm{Re}(ub_i)$.
+[Block compression](../../Lean/MOC/HermitianExteriorShift.lean#L398) · [Support maximum](../../Lean/MOC/HermitianExteriorShift.lean#L612)
+
+For a noncollinear triangle on partner values $x,y,w$, let $A$ be its
+unsigned area. The gap must satisfy $g(|y-x|+|w-x|)\le 2A$ for each
+ordered triangle. A positive gap exists for every finite spectrum.
+Half a common lower bound on the triangle altitudes is one choice.
+Join two labels when their projected values differ by less than $g$.
+Each connected group lies on one affine line. Distinct groups have
+projected separation at least $g$. This construction also covers
+repeated spectral values.
+[Positive gap](../../Lean/MOC/HermitianExteriorShift.lean#L835) · [Altitude bound](../../Lean/MOC/HermitianExteriorShift.lean#L1042) · [Collinear groups](../../Lean/MOC/HermitianExteriorShift.lean#L761)
+
+Diagonalize the Hermitian summand within each group. The affine-line
+theorem places each block determinant in its matching hull. Products
+of the block convex weights give one convex representation of the full
+determinant at a support maximum. The directional hull test then gives
+the determinant inclusion for every unitary mixer. The exact support
+inequality follows if $|z|>2L+8L^2/g$. The order-five threshold arithmetic
+at $|z|\ge 123$ is in the source.
+[Affine-line theorem](../../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../../Lean/MOC/HermitianExteriorShift.lean#L986) · [Explicit radius](../../Lean/MOC/HermitianExteriorShift.lean#L1059) · [Order-five arithmetic](../../Lean/MOC/HermitianExteriorShift.lean#L1089)
 
 The new Lean source awaits kernel verification.
