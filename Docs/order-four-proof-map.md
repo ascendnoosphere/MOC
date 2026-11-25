@@ -136,6 +136,24 @@ A separate example refutes a five-event linear weight test on the
 marked assignments.
 [One-orientation implication](../Lean/MOC/ZhengT81Bypass.lean#L431) · [Refuted linear test](../Lean/MOC/ZhengStarObstruction.lean#L161)
 
+### Canonical contact reduction
+
+A strict counterexample yields a real orthogonal witness with at
+least seven contacts. All matching products are nonzero and distinct.
+Normalize the mixed coefficient to one by scaling the support
+direction. Row and column relabeling and matrix transpose preserve
+the strict excess and contact count. At nonzero height, the contact
+set cannot contain the four matchings from two disjoint swaps.
+[Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L110) · [Canonical witness](../Lean/MOC/FourTerminalCoverage.lean#L353) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L387)
+
+The exact Python census gives 90 seven-contact and 58 eight-contact
+classes at nonzero height. Two canonical eleven-contact profiles
+force equality of distinct matching products. For negative height
+the Lean rescaling applies if the normalized external lower bound
+holds. The finite orbit census and universal external lower bound
+remain outside these Lean proofs. This source awaits verification.
+[Eleven-contact exclusion](../Lean/MOC/FourTerminalHeight.lean#L128) · [External-bound rescaling](../Lean/MOC/FourTerminalHeight.lean#L15)
+
 ## Paper support bounds and exact examples
 
 | Result | Hypotheses and conclusion |
