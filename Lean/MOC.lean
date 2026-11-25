@@ -260,6 +260,10 @@ import MOC.FourTerminalHeight
 import MOC.FourInversePencil
 import MOC.FourInversePencilCertificates
 import MOC.FourInversePencilRankLift
+import MOC.GroupedEigenvalueMoments
+import MOC.RankTwoPhaseEscape
+import MOC.SpectralMultiplierRigidity
+import MOC.StationarySpectralExchange
 import MOC.FourOppositePairSupport
 import MOC.FourRealParameterCells
 import MOC.FourSupportConeClassification

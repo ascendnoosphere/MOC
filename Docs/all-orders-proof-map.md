@@ -253,6 +253,35 @@ uses normality at a maximum and the smaller-order results to prove
 the hull bound. The all-order route starts at order four.
 [Conditional equivalence](../Lean/MOC/NormalSupportMaximum.lean#L270) · [All-order equivalence](../Lean/MOC/NormalSupportMaximum.lean#L314)
 
+### Stationary support and spectral exchange
+
+At a unitary support maximum, sum the complex signed determinant
+weights times the real matching score over permutations through a
+fixed entry. The sum equals the support maximum times the squared
+modulus of that entry. In a strict violation, a cancelling pair
+of eigenvalues therefore forces a zero mixer entry.
+[Complex marginal](../Lean/MOC/StationaryPivot.lean#L329) · [Cancelling pairs](../Lean/MOC/SpectralMultiplierRigidity.lean#L187)
+
+An opposite exchange replaces one eigenvalue in each list with the
+negative of the other. The sum of the opposite-exchange determinants
+has a fixed relation to the sum over within-list exchanges. Scalar
+bounds also follow from a stationary quadratic on a disk and from a
+stationary Laurent polynomial. These bounds still require their
+coefficient identities on the corresponding unitary orbits.
+[Exchange identity](../Lean/MOC/StationarySpectralExchange.lean#L75) · [Disk bound](../Lean/MOC/StationarySpectralExchange.lean#L127) · [Laurent bound](../Lean/MOC/StationarySpectralExchange.lean#L146)
+
+The normalized spectral maximizer gives cofactor equations that also
+hold at zero pair sums. This is a separate selection of a witness.
+For one rank-two phase, the support test at a stationary point is a
+two-by-two positivity condition. Two independent phases give a
+different scalar test. A proof must still use the actual cofactor
+data or phase coefficients to exclude a strict witness.
+[Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Rank-two test](../Lean/MOC/RankTwoPhaseEscape.lean#L23) · [Independent phases](../Lean/MOC/RankTwoPhaseEscape.lean#L117)
+
+Exact Python checks covered exchange fixtures with zero pivots,
+singular spectator blocks, and both phase tests. The new Lean source
+awaits verification.
+
 ## Polynomial and coefficient conditions
 
 ```mermaid

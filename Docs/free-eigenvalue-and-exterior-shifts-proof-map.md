@@ -35,6 +35,15 @@ coefficients. The existing Lean reduction gives at most five
 assignments when the joint hull test holds.
 [One-entry equivalence](../Lean/MOC/SpectralMinorDecomposition.lean#L139)
 
+Suppose the conjecture holds in smaller orders. If the mixer column
+for the free eigenvalue meets at most two distinct values in the
+other spectrum, the reciprocal compression is normal at each
+regular parameter. Continuity covers the exceptional values. One
+nonnegative law on at most five permutations then works for every
+value of the free eigenvalue. Exact rational checks included singular
+and repeated free values. The new Lean source awaits verification.
+[Smaller-order reduction](../Lean/MOC/GroupedEigenvalueMoments.lean#L40) · [Common law](../Lean/MOC/GroupedEigenvalueMoments.lean#L88)
+
 For two real lists of lengths $n+1$ and $n$, suppose each shorter
 entry lies between consecutive entries of the longer list. The
 new proof gives a convex combination of injection products in the

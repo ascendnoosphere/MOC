@@ -324,16 +324,15 @@ private theorem weighted_pivot_cofactor (a b : ι → ℂ) (U : Matrix ι ι ℂ
   rw [Matrix.conjTranspose_apply, Complex.normSq_eq_conj_mul_self]
   ring
 
-/-- At a complex unitary support maximum, each signed score marginal
-equals the full directional score times its squared entry modulus. -/
-theorem stationary_realSignedWeight_pivot (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+/-- At a unitary support maximum, the complex signed marginal of the real
+score equals the full score times the squared entry modulus. -/
+theorem stationary_signedWeight_pivot (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (η : ℂ)
     (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
       (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re)
     (i j : ι) :
-    (∑ σ : Equiv.Perm ι, if σ j = i then
-      realSignedWeight U σ * (η * matchingProduct a b σ).re else 0) =
-      Complex.normSq (U i j) * (η * determinantValue a b U).re := by
+    marginal (fun σ => signedWeight U σ * ((η * matchingProduct a b σ).re : ℂ)) i j =
+      (Complex.normSq (U i j) : ℂ) * ((η * determinantValue a b U).re : ℂ) := by
   let A := diagonal a
   let B := U * diagonal b * Uᴴ
   let C := A + B
@@ -375,60 +374,53 @@ theorem stationary_realSignedWeight_pivot (a b : ι → ℂ) (U : Matrix ι ι �
       simp only [T, Matrix.conjTranspose_smul, Matrix.conjTranspose_sub, Matrix.conjTranspose_mul]
     rw [← hT, he, ← smul_neg, neg_sub]
   have hp (σ : Equiv.Perm ι) :
-      (starRingEnd ℂ) (matchingProduct a' b' σ) = matchingProduct a b σ := by
+      star (matchingProduct a b σ) = matchingProduct a' b' σ := by
+    change (starRingEnd ℂ) (matchingProduct a b σ) = matchingProduct a' b' σ
     unfold matchingProduct
     rw [map_prod]
     apply Finset.prod_congr rfl
     intro k _
-    simp only [map_add, a', b', starRingEnd_apply, star_star]
-  have hconj := congrArg (starRingEnd ℂ) (weighted_pivot_cofactor a' b' U hU (star η) i j)
+    simp only [map_add, a', b', starRingEnd_apply]
+  have hconj := weighted_pivot_cofactor a' b' U hU (star η) i j
   dsimp only at hconj
   rw [hc, ha, ht, Matrix.mul_neg, Matrix.neg_apply, mul_neg, sub_neg_eq_add,
     Matrix.det_conjTranspose] at hconj
-  have hm :
-      η * (∑ σ : Equiv.Perm ι, if σ j = i then
-        (starRingEnd ℂ) (signedWeight U σ) * matchingProduct a b σ else 0) =
-      (Complex.normSq (U i j) : ℂ) * (η * C.det) +
-        (starRingEnd ℂ) (U i j * (Uᴴ * T) j i) := by
-    simpa only [marginal, map_sum, apply_ite, map_zero, map_mul, hp, starRingEnd_apply,
-      star_star, Complex.conj_ofReal, map_add] using hconj
   have hbase := weighted_pivot_cofactor a b U hU η i j
-  change η * (∑ σ : Equiv.Perm ι, if σ j = i then
-    signedWeight U σ * matchingProduct a b σ else 0) =
+  change η * marginal (fun σ => signedWeight U σ * matchingProduct a b σ) i j =
     (Complex.normSq (U i j) : ℂ) * (η * C.det) - U i j * (Uᴴ * T) j i at hbase
-  have hsum (w : Equiv.Perm ι → ℂ) :
-      (η * (∑ σ : Equiv.Perm ι, if σ j = i then
-        w σ * matchingProduct a b σ else 0)).re =
-      ∑ σ : Equiv.Perm ι, if σ j = i then (w σ * (η * matchingProduct a b σ)).re else 0 := by
-    rw [Finset.mul_sum, Complex.re_sum]
-    apply Finset.sum_congr rfl
-    intro σ _
-    by_cases h : σ j = i
-    · simp only [if_pos h]
-      rw [mul_left_comm η]
-    · simp [h]
-  have hr := congrArg Complex.re hbase
-  have hs := congrArg Complex.re hm
-  rw [hsum] at hr hs
-  simp only [Complex.sub_re, Complex.add_re, Complex.re_ofReal_mul, starRingEnd_apply,
-    Complex.star_def, Complex.conj_re] at hr hs
+  have hrealPart (z : ℂ) : z + star z = 2 * (z.re : ℂ) := by
+    rw [Complex.star_def, Complex.add_conj, Complex.ofReal_mul, Complex.ofReal_ofNat] <;> ring
   have haverage :
-      2 * (∑ σ : Equiv.Perm ι, if σ j = i then
-        realSignedWeight U σ * (η * matchingProduct a b σ).re else 0) =
-      (∑ σ : Equiv.Perm ι, if σ j = i then
-        (signedWeight U σ * (η * matchingProduct a b σ)).re else 0) +
-      ∑ σ : Equiv.Perm ι, if σ j = i then
-        (star (signedWeight U σ) * (η * matchingProduct a b σ)).re else 0 := by
-    rw [Finset.mul_sum, ← Finset.sum_add_distrib]
+      2 * marginal (fun σ => signedWeight U σ * ((η * matchingProduct a b σ).re : ℂ)) i j =
+      η * marginal (fun σ => signedWeight U σ * matchingProduct a b σ) i j +
+        star η * marginal (fun σ => signedWeight U σ * matchingProduct a' b' σ) i j := by
+    simp only [marginal, Finset.mul_sum, ← Finset.sum_add_distrib]
     apply Finset.sum_congr rfl
     intro σ _
     by_cases h : σ j = i
-    · simp only [if_pos h, realSignedWeight, Complex.mul_re, Complex.star_def,
-        Complex.conj_re, Complex.conj_im]
+    · simp only [if_pos h, ← hp σ]
+      rw [← mul_assoc, mul_comm (2 : ℂ) (signedWeight U σ), mul_assoc, ← hrealPart, star_mul']
       ring
     · simp [h]
-  change _ = Complex.normSq (U i j) * (η * C.det).re
-  linarith only [haverage, hr, hs]
+  change _ = (Complex.normSq (U i j) : ℂ) * ((η * C.det).re : ℂ)
+  apply mul_left_cancel₀ (by norm_num : (2 : ℂ) ≠ 0)
+  rw [haverage, hbase, hconj]
+  have hdet := hrealPart (η * C.det)
+  rw [star_mul'] at hdet
+  linear_combination (Complex.normSq (U i j) : ℂ) * hdet
+
+/-- The real part of the stationary complex marginal uses the real signed weights. -/
+theorem stationary_realSignedWeight_pivot (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) (η : ℂ)
+    (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re)
+    (i j : ι) :
+    (∑ σ : Equiv.Perm ι, if σ j = i then
+      realSignedWeight U σ * (η * matchingProduct a b σ).re else 0) =
+      Complex.normSq (U i j) * (η * determinantValue a b U).re := by
+  have h := congrArg Complex.re (stationary_signedWeight_pivot a b U hU η hmax i j)
+  simpa only [marginal, Complex.re_sum, apply_ite, Complex.zero_re, Complex.mul_re,
+    Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero, realSignedWeight] using h
 
 /-- A nonzero pivot of a strictly violating complex unitary maximum
 lies in an inactive permutation with negative signed weight. -/
