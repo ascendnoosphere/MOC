@@ -20,6 +20,8 @@ linked Lean declaration proves it.
 | G. Lakos, *A short proof of the elliptical range theorem*, [DOI](https://doi.org/10.1007/s00013-023-01957-9), [arXiv:2208.06248](https://arxiv.org/abs/2208.06248) | The numerical range of a complex two-by-two matrix is a possibly degenerate filled ellipse. | [Pair-plane support and optimality](MOC/PairRayleigh.lean) identify the determinant of the pair orbit with a cofactor Rayleigh quotient. The support formula and identity optimality test are proved directly. |
 | R. W. Cottle, *Manifestations of the Schur complement*, [DOI](https://doi.org/10.1016/0024-3795(74)90066-4) | Block elimination via the Schur complement. | The [three-slot expansion](MOC/TripleOrbit.lean) uses an invertible inactive block, then evaluates the mixed determinant of the active triple. |
 | D. Wang, W. Chen, S. Z. Khong and L. Qiu, *On the phases of a complex matrix*, [DOI](https://doi.org/10.1016/j.laa.2020.01.035), [arXiv:1904.07211](https://arxiv.org/abs/1904.07211) | §4, Theorem 4.3 concerns phase interlacing for sectorial Schur complements. | The [flat-pair argument](FlatPairReduction.md) proves the needed strict half-plane inheritance directly and records which local implications are Lean-checked. |
+| S. W. Drury, *Essentially Hermitian matrices revisited*, [DOI](https://doi.org/10.13001/1081-3810.1239) | §1 uses common fractional-linear transport of spectra in the determinantal conjecture. | The [complex tied-swap note](ComplexTiedSwap.md) separates this determinant covariance from the directly proved covariance of inverse-entry zeros. |
+| G. A. Jones, *Automorphisms and regular embeddings of merged Johnson graphs*, [DOI](https://doi.org/10.1016/j.ejc.2004.01.012) | Theorem 2 classifies automorphisms, including the complement symmetry in the middle layer. | The [crossed-cut scope note](DeterministicAndFractional.md) combines the classification on paper with Lean's adjacency and complement-exclusion lemmas. Jones's theorem is not a Lean dependency. |
 
 The [two-outlier block comparison](MOC/PositiveTwoOutlierBlock.lean) uses
 Schur elimination for Hermitian blocks; see E. V. Haynsworth,
@@ -49,3 +51,12 @@ The proof passes through the complex closed points and uses a dense
 principal open of an irreducible affine set. Constructibility, not
 Euclidean closedness alone, is essential. Stacks Project tags identify
 these reference statements; they do not have paper DOIs.
+
+The [isolated-fibre reduction](MOC/ContactFibreIsolation.lean) uses the
+finiteness of the minimal primes of a Noetherian ring
+([Stacks Project, Tag 00FR](https://stacks.math.columbia.edu/tag/00FR))
+and the polynomial separation behind
+[Tag 0BX1](https://stacks.math.columbia.edu/tag/0BX1). It applies the
+fixed-gap contact strategy of Zheng
+([preprint DOI](https://doi.org/10.13140/RG.2.2.36790.25923)) to a strict
+smaller-prime branch even when the contact threshold has been reached.

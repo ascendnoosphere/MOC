@@ -70,23 +70,12 @@ chosen pair and \(k\). This holds for every outside index \(k\). Thus
 \((A+B)^{-1}\), hence \(A+B\) and \(B\), reduce the pair. In order two the
 assertion is vacuous and no third index is needed.
 
-## Complex labels (conditional extension)
+## Complex labels
 
-With three distinct complex labels $a_0,a_1,a_2$, put $T=\operatorname{adj}P$,
-$X=T+a_0 I$, $Y=T+a_1 I$, $d=\xi(a_0-a_2)$ and $e=\xi(a_1-a_2)$.
-At a pair of tied nonsingular stationary endpoints, compare the two
-cofactor equations before and after the swap. For each row the diagonal
-shift of the other active pair label adds a scalar to the corresponding
-row of $T$. The two endpoint equations therefore give
-$$dYu+\bar dY^*v=0,\qquad eXu+\bar eX^*v=0.$$
-Since $X^*$ and $Y^*$ commute, eliminating $v$ gives
-$Qu=0$, where
-$$Q=(\bar d e)Y^*X-\overline{\bar d e}X^*Y.$$
-If $Q$ is invertible, $u=v=0$. No separate invertibility of $X$ or $Y$
-is required. For scalar $T=z$, $Q=0$ is the generalized circle through
-$-a_0,-a_1,-a_2$. The [two elimination theorems](MOC/TripleOrbit.lean)
-are checked for arbitrary complex matrices. The passage from complex
-stationary endpoints to these two vector equations is a paper argument.
+The [complex tied-swap theorem](ComplexTiedSwap.md) now derives the
+two cofactor equations and the resulting circle alternative in Lean,
+including singular active sums. The argument above still supplies the
+ambient strictly dissipative reducing-plane conclusion on paper.
 
 ## Verification and sources
 

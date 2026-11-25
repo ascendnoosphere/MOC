@@ -14,7 +14,7 @@ flowchart BT
     ALL["Unrestricted MOC · open"]:::open
     ROUTES{{"OR: choose a complete all-order route"}}
     NATIVE["Native and structural analogies<br/>exact and sufficient routes"]:::open
-    SAT["Support bound for rank- and moment-tested<br/>terminal orbit maximizers"]:::open
+    SAT["Support bound for isolated, rank- and moment-tested<br/>terminal orbit maximizers"]:::open
     SIMPLE["Support bound at ≥ 2n-2 contacts<br/>on the full exact profile locus"]:::open
     ATLAS["243 evaluated atlas forms<br/>each exact, not a native-object proof"]:::open
     SPLIT{{"AND: prove all three order ranges"}}
@@ -122,7 +122,9 @@ flowchart BT
     BUDGET["Use independent controlling equations<br/>rather than label count · checked"]:::checked
     RANK["At least 2n−3 independent<br/>contact differences · checked"]:::checked
     MOMENT["Centered quartic moment test<br/>at contact-preserving maxima · checked"]:::checked
-    TIGHT["Exclude rank- and moment-tested<br/>terminal orbit maxima · open"]:::open
+    NEAR["Near-real spectra cluster at<br/>a balanced antipodal center · checked"]:::checked
+    ISOLATE["Maximal contacts isolate<br/>the fixed-gap affine fibre · checked"]:::checked
+    TIGHT["Exclude isolated rank- and moment-tested<br/>terminal orbit maxima · open"]:::open
     OUTLIER["Height-zero bound for two imaginary<br/>outliers, arbitrary mixer · checked"]:::checked
     CHART --> CUT
     CUT --> MODEL
@@ -132,7 +134,10 @@ flowchart BT
     TRANSFER -. reduces MOC to .-> TERMINAL
     BALANCE -. proves refinement .-> TIGHT
     RANK -. restricts contact sets .-> TIGHT
+    ISOLATE -. restricts local profile geometry .-> TIGHT
+    MOMENT --> NEAR
     MOMENT -. restricts spectra .-> TIGHT
+    NEAR -. controls near-collinear data .-> TIGHT
     BUDGET -. excludes some contact sets .-> TERMINAL
     TERMINAL <-->|iff| TIGHT
     OUTLIER -. proves a terminal family .-> TERMINAL
@@ -363,6 +368,43 @@ $$|2n h_2-m_2|\le n q-|m_2|^2/2.$$
 This is compatible with contact retention: the [joint equivalence](MOC/ContactDifferenceRank.lean)
 imposes the rank bound, moment bound, and unrestricted mixer maximum
 on the same witness. It does not require unrestricted spectral stationarity.
+The [geometric form](MOC/MobiusRigidity.lean) uses the positive angular
+deficit $d=1-|m_2|$. After one rotation, the total squared imaginary
+part is exactly $d/2$. The signed spectra lie within total squared
+distance $(4n+3/2)d-2d^2$ of entries in $\{\pm1/\sqrt{2n}\}$.
+This does not assert that the remaining spectrum is collinear.
+When that squared-distance bound is less than $1/n^2$, the
+[balanced antipodal theorem](MOC/MobiusAntipodalCount.lean) forces the
+two sign clusters to have equally many entries. In the associated
+two-value center, a matching with a mismatch has at least two zero
+factors, so its matching product under an affine perturbation is
+divisible by the square of the perturbation parameter.
+At a nonsingular center, the [involution trace identity](MOC/AntipodalDeterminantJet.lean)
+also fixes the Jacobi trace factor: commuting perturbations $V,W$
+of the signed involutions $J,K$ give
+$\operatorname{tr}((J+K)^{-1}(V+W))=(\operatorname{tr}(JV)+\operatorname{tr}(KW))/2$.
+The [affine derivative theorem](MOC/AntipodalAffineVariation.lean)
+proves the corresponding determinant derivative, with the existing
+determinant as a factor. It does not control the quadratic terms or
+the singular center.
+
+
+**Isolated fibre.** The [stronger terminal equivalence](MOC/ContactFibreIsolation.lean)
+requires that same profile to be isolated on the affine locus cut out
+by its exact contact differences and complex gap. A strictly smaller
+prime below its evaluation ideal would supply a finite curve and one
+more contact, even above the count threshold. Choose a global maximum
+of the contact count before rebalancing; contact retention keeps that
+count maximal. The evaluation ideal is then a minimal prime and a
+single polynomial excludes the other components locally
+([Stacks Project, Tag 00FR](https://stacks.math.columbia.edu/tag/00FR)).
+This does not imply that the equations have independent differentials
+or that the fibre is globally a singleton. It does give a
+[one-entry slope test](MOC/ContactPencilRigidity.lean): for every
+partner slot, either a complex active difference changes to first
+order or the complex determinant gap changes. A failure of both
+conditions would give an exact affine pencil contained in the fibre.
+
 
 
 
@@ -373,7 +415,15 @@ sum of scores across a flag certifies the objective even when the
 individual scores need not be nonnegative. This is not a law for
 incompatible flags. See [Lyons, DOI 10.1007/s10240-003-0016-0](https://doi.org/10.1007/s10240-003-0016-0)
 for the projection-measure background. A covering theorem for all
-terminal profiles is still open. A
+terminal profiles is still open. [The independent-crossing obstruction](MOC/IndependentCrossingObstruction.lean)
+shows that even all independently marked tests do not give a positive
+common pair law for an actual unitary. The [uniform flat-reflection theorem](MOC/UniformCrossingObstruction.lean)
+proves failure of the positive pair law in every order at least five.
+This is a barrier for the relaxation, not a counterexample to MOC.
+The [synthetic gap](DeterministicAndFractional.md) has a negative
+signed mean even though it is nonnegative at each matching label.
+Lean proves it is not realizable as a spectral objective. Its
+synthetic contact set meets the terminal rank threshold on paper. A
 [rectangle obstruction](MOC/NestedRectangleObstruction.lean) rules out
 a single additive column-prefix chain for some order-five profiles
 with twelve or more contacts. The
@@ -432,8 +482,14 @@ a Schur complement ([Cottle, DOI 10.1016/0024-3795(74)90066-4](https://doi.org/1
 Comparing two tied stationary endpoints forces simultaneous cross-cofactor
 equations. The [flat-pair note](FlatPairReduction.md) uses those equations
 to prove a reducing-pair criterion for strictly dissipative partners.
-The local cofactor and invertible-skew steps are checked; the ambient
-block reconstruction is on paper.
+The [complex tied-swap module](MOC/ComplexTiedSwap.lean) derives the
+cofactor equations directly from optimality, even at singular sums.
+A tied swap on an active triple with invertible inactive block either
+reduces the pair in the Schur complement or forces a singular circle
+matrix. In the noncollinear case the latter specifies a singular value
+of a shifted internal cofactor. See the [scope note](ComplexTiedSwap.md)
+for the covariance of inverse-entry zeros and the paper-only ambient
+implications.
 Optimality in a two-coordinate plane is not global optimality.
 
 

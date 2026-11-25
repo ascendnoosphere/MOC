@@ -124,3 +124,14 @@ support comparison to one smaller order.
 This argument is not a Lean theorem. It concerns a neighborhood of
 one support direction, not a neighborhood in which all support
 directions have been settled.
+
+## Deterministic assignments and the fractional obstruction
+
+The [crossed-cut scope note](DeterministicAndFractional.md) explains
+why these tests recover ordinary permutations from deterministic
+assignments but fail for fractional tables. Lean checks the local
+Johnson adjacency and complement obstruction, the actual
+flat-reflection counterexample to a common positive pair law for
+every order at least five, and a synthetic gap that cannot be
+realized by actual spectra. The full Johnson automorphism step and
+the high-rank calculation for the synthetic contact set are on paper.

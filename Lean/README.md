@@ -105,7 +105,11 @@ The [joint rank and moment reduction](MOC/ContactDifferenceRank.lean)
 requires at least $2n-3$ independent contact-difference functions and
 a quartic spectral bound on the same balanced terminal maximizer.
 [Subset incidences](MOC/ContactMarkerRank.lean) detect the linear
-relations exactly. The [nonzero-chart reduction](MOC/SaturatedContactReduction.lean)
+relations exactly.
+The [isolated-fibre reduction](MOC/ContactFibreIsolation.lean) additionally
+requires the exact matching profile to be locally isolated after fixing
+the active complex differences and the full complex determinant gap.
+This is isolation of the profile, not of the spectra that realize it. The [nonzero-chart reduction](MOC/SaturatedContactReduction.lean)
 is also available when the final argument requires nonzero matching
 products.
 
