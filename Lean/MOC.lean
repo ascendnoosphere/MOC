@@ -5,10 +5,12 @@ import MOC.AntipodalAffineVariation
 import MOC.AntipodalCenterMinor
 import MOC.AntipodalKernelJet
 import MOC.AntipodalCubicEnergy
+import MOC.AntipodalCubicSchur
 import MOC.AntipodalMovingCompression
 import MOC.ContactAffineRigidity
 import MOC.ContactAsymptoticObstruction
 import MOC.PositiveComponentBoundary
+import MOC.PositiveLaurentSector
 import MOC.DeterminantJetNeighborhood
 import MOC.BalancedContactReduction
 import MOC.AnchorMinorGram

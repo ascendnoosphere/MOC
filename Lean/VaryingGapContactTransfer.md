@@ -73,6 +73,14 @@ is the one used in the [fixed-gap rank lemma](MOC/ContactDifferenceRank.lean);
 here there is no extra gap equation. Hence a witness with maximal
 contact count has rank at least \(2n-2\).
 
+At such a maximum, any positive-dimensional component of the fibre of
+the old complex differences through the witness would supply a
+nonconstant affine curve by [the checked curve selection from a smaller
+prime](MOC/FiniteCurveAtPinnedPrime.lean). The argument above would then
+increase contacts. Thus the witness is also isolated in the fibre of
+the old differences alone, without pinning the determinant gap. This
+isolation is a paper consequence, not the checked fixed-gap isolation.
+
 ## Formalization boundary
 
 The existing transfer strategy follows D. Zheng, *The Marcus–de Oliveira conjecture for n = 4*, Theorem 3.6, [DOI 10.13140/RG.2.2.36790.25923](https://doi.org/10.13140/RG.2.2.36790.25923). The varying-gap argument above is separate. The
@@ -80,6 +88,8 @@ The existing transfer strategy follows D. Zheng, *The Marcus–de Oliveira conje
 both cases of the common-coordinate dichotomy from the stated limit inputs.
 The [positive-component lemma](MOC/PositiveComponentBoundary.lean) also
 checks the compactness step conditional on no positive local maximum.
-The remaining Lean inputs are the compactified model and its analytic
-maximum principle, meromorphic pole normalization, and the angular
-comparison. The affine-line specialization is Lean-checked and implies that at a contact-maximal witness any free partner entry changes an old complex contact difference, without a determinant-gap alternative.
+The [angular lemma](MOC/PositiveLaurentSector.lean) checks the exact
+order and coefficient comparison for a nonnegative leading term on the
+pole sector. The remaining Lean inputs are the compactified meromorphic
+model, its analytic maximum principle, local pole normalization, and
+the passage from the meromorphic functions to their sector and ray limits. The affine-line specialization is Lean-checked and implies that at a contact-maximal witness any free partner entry changes an old complex contact difference, without a determinant-gap alternative.

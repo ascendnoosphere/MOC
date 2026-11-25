@@ -1,9 +1,10 @@
 # Corank-two cubic coefficient and limits of the tangent correction
 
 The following is a paper derivation. The corresponding Lean modules
-certify the [matrix correction](MOC/AntipodalMovingCompression.lean)
-and the [signed residual identity](MOC/AntipodalCubicEnergy.lean), not
-the entire coefficient claim.
+certify the [matrix correction](MOC/AntipodalMovingCompression.lean),
+the [signed residual identity](MOC/AntipodalCubicEnergy.lean), and the
+[cubic coefficient formula](MOC/AntipodalCubicSchur.lean). The common
+spectral mixture below is a paper proof.
 
 Let \(J,K\) denote Hermitian involutions of the same sign counts. Suppose
 \(S=J+K\) has a two-dimensional kernel with unit lines \(e_+\) and \(e_-\),

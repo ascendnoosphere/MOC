@@ -109,6 +109,6 @@ hypothetical strict witness to lie in an interior-jet neighborhood.
 
 For corank two, the [cubic analysis](AntipodalCubicAudit.md) proves on
 paper that one mixture matches both the quadratic and cubic coefficients.
-Lean checks the signed residual cancellation used in that proof. The
+Lean checks the cubic Schur formula and signed residual cancellation. The
 same note gives a symbolic obstruction to a direct mixed-term bound for
 moving mixers in corank four. It is not a counterexample to the conjecture.
