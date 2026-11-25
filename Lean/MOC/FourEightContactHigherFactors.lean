@@ -2,6 +2,7 @@ import Mathlib.Tactic
 
 namespace MOC
 
+set_option maxHeartbeats 500000 in
 /-- The determinant factor for the eight-contact family with ordinary rays
 13, 17, 18, 27, and 28 in that order. -/
 def fourEightContactHigherFactor (a b c d e : ℝ) : ℝ :=
@@ -64,7 +65,7 @@ theorem fourEightContactHigherFactor_compensation
     have hNumerator : 0 < a + (b + 1) * (d + 1) := by positivity
     have hProduct : 0 < h * q₃ := by
       simpa only [q₃, ← hCubic] using hNumerator
-    exact pos_of_mul_pos_left hProduct hh.le
+    exact pos_of_mul_pos_right hProduct hh.le
   let remainder : ℝ := 5*b/11 + 5*d/11 + 10*a/11 + 30*a^2/11 +
     a*c + a*e + b*e^2 + a^3*c +
     c^2*d + a^3*e + b^2*e^2 + c^2*d^2 +
@@ -134,7 +135,21 @@ theorem fourEightContactHigherFactor_compensation
   have hw3 : 0 < w3 := by dsimp [w3]; positivity
   have hPositive : 0 < fourEightContactHigherFactor a b c d e := by
     rw [hIdentity]
-    positivity
+    apply add_pos _ (mul_pos hw3 h₃)
+    apply add_pos _ (mul_pos (mul_pos hw23 h₂) h₃)
+    apply add_pos _ (mul_pos (mul_pos hw22 h₂) h₂)
+    apply add_pos _ (mul_pos hw2 h₂)
+    apply add_pos _ (mul_pos (mul_pos hw13 h₁) h₃)
+    apply add_pos _ (mul_pos (mul_pos hw12 h₁) h₂)
+    apply add_pos _ (mul_pos (mul_pos hw11 h₁) h₁)
+    apply add_pos _ (mul_pos hw1 h₁)
+    apply add_pos _ (mul_pos (mul_pos hw03 h₀) h₃)
+    apply add_pos _ (mul_pos (mul_pos hw02 h₀) h₂)
+    apply add_pos _ (mul_pos (mul_pos (mul_pos hw012 h₀) h₁) h₂)
+    apply add_pos _ (mul_pos (mul_pos hw01 h₀) h₁)
+    apply add_pos _ (mul_pos (mul_pos hw00 h₀) h₀)
+    apply add_pos _ (mul_pos hw0 h₀)
+    exact hRemainder
   exact hPositive.ne' hFactor
 
 end MOC
