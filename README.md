@@ -249,6 +249,14 @@ two Householder reflections on such blocks in any order, by
 [Drury's theorem](https://doi.org/10.1016/S0024-3795(99)00173-1).
 [Composition](Lean/MOC/SinglePortComposition.lean#L132) · [Reflections](Lean/MOC/SinglePortComposition.lean#L160)
 
+In any order, take a forest whose vertices are the coordinate labels.
+For each of any number of distinct edges, choose a determinant-one
+unitary matrix on its two endpoints. Extend it by the identity on the
+other coordinates. Multiply these matrices in any order to form $U$.
+One set of nonnegative weights with sum one represents the determinant
+for every pair of complex spectra at this $U$.
+[Common weights](Lean/MOC/ForestGates.lean#L101) · [Inclusion](Lean/MOC/ForestGates.lean#L143) · [Ordered product](Lean/MOC/ForestGates.lean#L167)
+
 ### A common law at small shifted rank sum
 
 Fix the relative unitary and a scalar shift. Fix the allowed nonzero

@@ -279,6 +279,22 @@ One convex law works for this one free entry. Each term from that law
 then uses the inclusion for the right block.
 [Free entry](../Lean/MOC/SpectralMinorDecomposition.lean#L139) · [Composition theorem](../Lean/MOC/SinglePortComposition.lean#L132)
 
+Take a finite forest on the coordinate labels. On distinct edges, apply
+two-by-two unitary gates of determinant one in any order. Each gate
+mixes only the two coordinates of its edge. Write its first row on
+these coordinates as $(c,s)$, with $|c|^2+|s|^2=1$.
+For the resulting unitary, one set of nonnegative permutation weights
+with sum one represents the determinant for every pair of complex
+eigenvalue lists.
+
+For the first gate in the matrix product, remove its edge from the
+forest. Its endpoints lie in different components. Each remaining gate
+stays within one component. The two-row determinant formula gives a
+mixture of the previous law with weight $|c|^2$ and the law after the
+endpoint swap with weight $|s|^2$. The empty product has weight one on
+the identity permutation.
+[Common law](../Lean/MOC/ForestGates.lean#L101) · [Ordered product](../Lean/MOC/ForestGates.lean#L167) · [Two-row formula](../Lean/MOC/OneBridge.lean#L227)
+
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
 $\det(U-\mathrm{diag}(x)U\mathrm{diag}(y))/\det U$. Its vertices are

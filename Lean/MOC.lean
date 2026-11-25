@@ -31,6 +31,7 @@ import MOC.FourMatchingPolarization
 import MOC.FourMatchingHessianKernel
 import MOC.AlternatingMinorLaw
 import MOC.OneBridge
+import MOC.ForestGates
 import MOC.ZhengT85Lift
 import MOC.ZhengT85SecantObstruction
 import MOC.ContactDifferential
