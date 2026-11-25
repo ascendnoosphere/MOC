@@ -68,6 +68,40 @@ finite certificates was unavailable in the workspace.
 
 ## Exterior shifts
 
+### Generic assignment sums
+
+Fix two complex spectral lists $a,b$ of order $n$. For each permutation
+$\sigma$, let $s_\sigma=\sum_j a_{\sigma(j)}b_j$. Suppose these sums
+are distinct and no three lie on one real affine line in the complex
+plane. Then there is one radius $R>0$ such that the determinant inclusion
+holds for the lists $(a_i+z)_i$ and $b$ for every complex $z$ with
+$|z|>R$ and every relative unitary matrix. The radius depends only on
+the two lists.
+[Uniform exterior inclusion](../Lean/MOC/UniformExteriorShift.lean#L67)
+
+Put $t=1/z$. Divide every matching product by $z^n$ to get
+$\prod_j(1+t(a_{\sigma(j)}+b_j))$. The product
+$F(t)=\prod_i(1+ta_i)\prod_j(1+tb_j)$ is the same for all
+permutations. The identity
+$(1+ta)(1+tb)=1+t(a+b)+t^2ab$ gives a polynomial $Q_\sigma$ with
+
+$$
+\prod_j(1+t(a_{\sigma(j)}+b_j))=F(t)-t^2Q_\sigma(t),
+\qquad Q_\sigma(0)=s_\sigma.
+$$
+
+General position bounds the real directional value of the signed
+permutation sum for $Q_\sigma(t)$ by the largest matching value in
+that direction. This bound holds on one open disk around $t=0$ for
+all unitary matrices. The signed weights sum to one, so the common
+term $F(t)$ and the common scale preserve the hull inclusion. If the
+open disk in $t$ has radius $r$, then $R=1/r$ works for the shifts.
+[Polynomial identity](../Lean/MOC/UniformExteriorShift.lean#L47) ·
+[Uniform stability](../Lean/MOC/SmallSpectralPerturbation.lean#L663) ·
+[Affine transfer](../Lean/MOC/SmallSpectralPerturbation.lean#L810)
+
+### One real spectrum
+
 ~~~mermaid
 flowchart BT
     R["Euclidean inverse and remainder bounds"]

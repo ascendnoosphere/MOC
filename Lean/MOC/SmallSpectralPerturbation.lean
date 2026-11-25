@@ -660,7 +660,7 @@ private theorem assignment_matching_polynomials (a b : ι → ℂ) (ha : ∀ i, 
         simp only [mul_inv_cancel₀ (ha (π j)), mul_one]
       _ = _ := by ring
 
-private theorem supported_polynomial_near_zero (x b : ι → ℂ)
+theorem supported_polynomial_near_zero (x b : ι → ℂ)
     (h : ReciprocalAssignmentsInGeneralPosition x b)
     (Q : Equiv.Perm ι → ℂ[X])
     (hQ : ∀ π, (Q π).eval 0 = reciprocalAssignmentSum x b π) :
@@ -803,6 +803,41 @@ theorem holds_small_spectral_parameter (a b : ι → ℂ) (ha : ∀ i, a i ≠ 0
       (η * D).re + ((η * D * t) * z).re := by
     rw [show η * (D * (1 + t * z)) = η * D + (η * D * t) * z by ring, Complex.add_re]
   rw [hf V, hf (P π)]
+  exact add_le_add_left hp _
+
+/-- A unit-direction bound for an affine normalization of the matching
+products implies the determinant inclusion. -/
+theorem holds_of_affine_signed_support (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (offset scale : ℂ) (P : Equiv.Perm ι → ℂ)
+    (hmatch : ∀ π, matchingProduct a b π = offset + scale * P π)
+    (hsupport : ∀ (η : ℂ), ‖η‖ = 1 → ∃ ρ : Equiv.Perm ι,
+      (∑ π, realSignedWeight U π * (η * P π).re) ≤ (η * P ρ).re) :
+    Holds a b U := by
+  let V := ∑ π, (realSignedWeight U π : ℂ) * P π
+  have hcast : (∑ π, (realSignedWeight U π : ℂ)) = 1 := by
+    exact_mod_cast sum_realSignedWeight U hU
+  have hdet : determinantValue a b U = offset + scale * V := by
+    rw [← real_signed_determinant a b U hU]
+    simp_rw [hmatch, mul_add, mul_left_comm _ scale]
+    rw [sum_add_distrib, ← sum_mul, hcast, one_mul, ← mul_sum]
+  have hproject (η : ℂ) : ∃ π : Equiv.Perm ι, (η * V).re ≤ (η * P π).re := by
+    by_cases hη : η = 0
+    · exact ⟨Equiv.refl ι, by simp [hη]⟩
+    obtain ⟨k, hk, hscale⟩ := normalize_support_direction hη
+    obtain ⟨π, hp⟩ := hsupport k hk
+    have hp' : (k * V).re ≤ (k * P π).re := by
+      change (k * ∑ q, (realSignedWeight U q : ℂ) * P q).re ≤ (k * P π).re
+      rw [signed_spectral_sum_real_part (realSignedWeight U) P k]
+      exact hp
+    refine ⟨π, ?_⟩
+    rw [hscale V, hscale (P π)]
+    exact mul_le_mul_of_nonneg_left hp' (norm_nonneg η)
+  apply (holds_iff_directional a b U).mpr
+  intro η
+  obtain ⟨π, hp⟩ := hproject (η * scale)
+  refine ⟨π, ?_⟩
+  rw [hdet, hmatch π]
+  simp only [mul_add, Complex.add_re, ← mul_assoc]
   exact add_le_add_left hp _
 
 end

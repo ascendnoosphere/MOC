@@ -301,6 +301,7 @@ import MOC.RealMatchingSquares
 import MOC.SixDimensionalMixerBall
 import MOC.SmallSpectralPerturbation
 import MOC.ReciprocalSpectralPerturbation
+import MOC.UniformExteriorShift
 import MOC.SpectralProfileDeterminant
 import MOC.SpectralDeterminantStability
 import MOC.TranspositionWinding

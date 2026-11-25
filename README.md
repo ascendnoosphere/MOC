@@ -402,6 +402,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
   holds for the lists $(a_i-z)$ and $(b_j)$ for every complex $z$ of
   sufficiently large modulus. The lower bound can depend on $a$, $b$, and $U$.
   [Proof](Lean/MOC/ExtendedCases.lean#L428)
+- Fix complex eigenvalue lists $a,b$. For each permutation $p$, form
+  the sum $s_p=\sum_j a_{p(j)}b_j$. If the sums are distinct and no
+  three lie on one real affine line, a single $R>0$ gives inclusion for
+  $(a_i+z)_i$ and $b$ for every $|z|>R$ and every unitary change of
+  eigenbasis.
+  [Uniform exterior shift](Lean/MOC/UniformExteriorShift.lean#L67) · [Proof map](Docs/free-eigenvalue-and-exterior-shifts-proof-map.md#generic-assignment-sums)
 - Fix a real spectrum and a complex partner spectrum. The exterior
   shift bound gives inclusion for every mixer outside an explicit
   radius computed from the two lists and a triangle gap of the
