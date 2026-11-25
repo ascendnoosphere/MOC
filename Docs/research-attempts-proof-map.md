@@ -17,6 +17,11 @@ Lean checked both statements about upper half-plane entries in direction
 [Spectral nonvanishing](../Lean/MOC/SpectralDeterminantStability.lean#L37) ·
 [Independent entries](../Lean/MOC/SpectralDeterminantStability.lean#L60)
 
+For direction 10, the nonzero matching test counts each color on both
+sides. The extension theorem proves that each allowed pair belongs to
+a full matching when every color has one unit of slack.
+[Color multiplicities](../Lean/MOC/UnequalColorHall.lean#L102) · [Prescribed pair](../Lean/MOC/UnequalColorHall.lean#L127)
+
 | Direction | Step in Lean | Remaining implication or scope limit |
 | --- | --- | --- |
 | 1. Contact geometry | A strict violation can be transferred to one with at least $2n-1$ contacts in order $n$. The contact differences have a lower bound on the dimension of their span. [Contact threshold](../Lean/MOC/AffineGapCover.lean#L85) · [Difference rank](../Lean/MOC/ContactDifferenceRank.lean#L42) | Exclude every witness at the threshold. The numerical rank census is a separate finite calculation. |
@@ -82,6 +87,7 @@ flowchart BT
   each. Their hypotheses are the three scalar affine evaluations.
   The proof that each original rational pencil imposes those
   evaluations remains in the exact arithmetic replay.
+  [Outer-product identity](../Lean/MOC/InversePencilMoments.lean#L23) ·
   [Moment condition](../Lean/MOC/InversePencilMoments.lean#L51) ·
   [Plane for rays 7, 13, 18, 27, 30, 31](../Lean/MOC/InversePencilMoments.lean#L141) ·
   [Plane for rays 7, 13, 18, 27, 31](../Lean/MOC/InversePencilMoments.lean#L123) ·

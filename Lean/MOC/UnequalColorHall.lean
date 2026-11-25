@@ -120,7 +120,7 @@ private theorem colorMultiplicity_subtype_le {I C : Type*}
     ← Fintype.card_subtype (fun i : I => a i = c)]
   exact Fintype.card_le_of_injective
     (fun x : {i : Subtype p // a i = c} => (⟨x.1.1, x.2⟩ : {i : I // a i = c}))
-    (fun _ _ h => Subtype.ext (Subtype.ext (congrArg Subtype.val h)))
+    (fun _ _ h => Subtype.ext (Subtype.ext (congrArg (fun v : {i : I // a i = c} => (v : I)) h)))
 
 /-- Under one unit of slack in each Hall inequality, every allowed pair
 extends to a perfect unequal-color matching. -/
@@ -148,13 +148,13 @@ theorem exists_unequal_color_perm_at_of_slack {I C : Type*}
   let σ := (Equiv.sumCompl (fun k : I => k = j)).symm.trans
     ((Equiv.sumCongr pivot e).trans (Equiv.sumCompl (fun k : I => k = i)))
   have hj : σ j = i := by
-    simp only [σ, Equiv.trans_apply, Equiv.sumCompl_apply_symm_of_pos _ j rfl,
+    simp only [σ, Equiv.trans_apply, Equiv.sumCompl_apply_symm_of_pos (fun k : I => k = j) j rfl,
       Equiv.sumCongr_apply, Sum.map_inl, Equiv.sumCompl_apply_inl] <;> rfl
   refine ⟨σ, hj, fun k => ?_⟩
   by_cases hk : k = j
   · subst k
     simpa only [hj] using hij
-  · simpa only [σ, Equiv.trans_apply, Equiv.sumCompl_apply_symm_of_neg _ k hk,
+  · simpa only [σ, Equiv.trans_apply, Equiv.sumCompl_apply_symm_of_neg (fun l : I => l = j) k hk,
       Equiv.sumCongr_apply, Sum.map_inr, Equiv.sumCompl_apply_inr] using he ⟨k, hk⟩
 
 /-- A column has at least as many nonzero matching products, counted

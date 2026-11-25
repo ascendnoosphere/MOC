@@ -29,7 +29,7 @@ theorem inversePencilMomentImage_outerProduct
     (∑ i, x i • B i) * D * (∑ j, x j • B j)
   simp only [Finset.sum_mul]
   simp only [inversePencilMomentImage, Matrix.vecMulVec_apply, Finset.mul_sum,
-    Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+    Matrix.smul_mul, Matrix.mul_smul, smul_smul, mul_comm (x _) (x _)]
 
 /-- A feasible quadratic lift supplies a positive semidefinite moment
 matrix for the corresponding linear equations. -/
