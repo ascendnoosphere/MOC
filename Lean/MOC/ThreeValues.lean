@@ -4,7 +4,7 @@ import MOC.Small
 
 /-! A third eigenvalue of multiplicity one is covered by adjacent minor laws. -/
 
-open Matrix
+open BigOperators Matrix
 
 namespace MOC
 
@@ -44,5 +44,18 @@ theorem holds_three_values_one_singleton_fintype {ι : Type*} [Fintype ι] [Deci
   apply hb (e k)
   intro he
   exact hk (e.injective (he.trans (e.apply_symm_apply j).symm))
+
+/-- The mixer and the label partition determine one probability law. It
+works for every opposing spectrum and every choice of the three values,
+including coincidences among the values. -/
+theorem exists_commonWeights_three_values_one_singleton {n : ℕ}
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U)
+    (J : Finset (Fin n)) (j : Fin n) (hj : j ∉ J) :
+    ∃ w : Equiv.Perm (Fin n) → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ = 1) ∧
+      ∀ (a : Fin n → ℂ) (c d t : ℂ),
+        weightedMatchingValue a (Function.update (fun k => if k ∈ J then c else d) j t) w =
+        determinantValue a (Function.update (fun k => if k ∈ J then c else d) j t) U := by
+  obtain ⟨p, hp, hnest, hrow, hcol⟩ := exists_adjacent_minor_transport U hU J j hj
+  exact exists_commonWeights_of_nested_image_coupling J j hj U hU p hp hnest hrow hcol
 
 end MOC
