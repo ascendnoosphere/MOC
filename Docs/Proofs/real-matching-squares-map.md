@@ -78,6 +78,17 @@ multiplies $K$ in the partial-transpose defect. Thus the partial
 transpose fixes $R$.
 [Alternating sum](../../Lean/MOC/RealMatchingSquares.lean#L268) · [Gram pairing](../../Lean/MOC/RealMatchingSquares.lean#L357) · [Fixed corner](../../Lean/MOC/RealMatchingSquares.lean#L397)
 
+## From a positive moment to a support inequality
+
+For signed coefficients $c_pi$, their moment is
+$J^mathsf{T}mathrm{diag}(c)J$. Suppose a real scalar $t$ makes the
+moment of $c_pi+t,mathrm{sign}(pi)$ positive semidefinite. If the
+cost $g$ lies in $V$ and is a sum of matching squares, then
+$sum_pi c_pi g_pige0$. The added alternating term has zero
+pairing with $g$. The rank-one partial-transpose defect is a separate
+identity that can help construct such a scalar.
+[Positive-moment implication](../../Lean/MOC/RealMatchingSquares.lean#L533) · [Rank-one defect](../../Lean/MOC/RealMatchingSquares.lean#L502)
+
 ## Scope
 
 The Lean source uses the real auxiliary triple $(0,1,-1)$. The

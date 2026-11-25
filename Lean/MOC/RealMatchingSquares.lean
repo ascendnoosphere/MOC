@@ -497,4 +497,66 @@ theorem realMatchingAuxiliaryPPT_iff_sos {g : Fin 24 → ℝ}
     simpa only [realMatchingCorner, Matrix.conjTranspose_eq_transpose_of_trivial] using
       hT.conjTranspose_mul_mul_same realMatchingExceptionalEmbedding
 
+/-- Transposing the first tensor index of a rank-one corner changes it
+by the tensor skew form with the indicated two by two determinant. -/
+theorem matchingCorner_rank_one_PT_defect {R : Type*} [CommRing R]
+    (u : MatchingCornerIndex → R) :
+    matchingCornerPartialTranspose (Matrix.of fun a b => u a * u b) -
+      (Matrix.of fun a b => u a * u b) =
+      -(Matrix.of (fun i j : Fin 2 => u (i,j))).det • matchingCornerKernel := by
+  ext a b
+  rcases a with ⟨a₁, a₂⟩
+  rcases b with ⟨b₁, b₂⟩
+  fin_cases a₁ <;> fin_cases a₂ <;> fin_cases b₁ <;> fin_cases b₂ <;>
+    simp [matchingCornerPartialTranspose, matchingCornerKernel, skewEntry,
+      Matrix.det_fin_two, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul] <;> ring
+
+/-- The moment matrix of signed coefficients in the real matching jet. -/
+noncomputable def realMatchingMoment (c : Fin 24 → ℝ) :
+    Matrix MatchingJetIndex MatchingJetIndex ℝ :=
+  realMatchingJetᵀ * diagonal c * realMatchingJet
+
+theorem realMatchingMoment_quadratic (c : Fin 24 → ℝ) (v : MatchingJetIndex → ℝ) :
+    dotProduct v (realMatchingMoment c *ᵥ v) =
+      ∑ p : Fin 24, c p * (realMatchingJet.mulVecLin v p)^2 := by
+  unfold realMatchingMoment
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
+    Matrix.vecMul_transpose]
+  simp only [dotProduct, Matrix.mulVec_diagonal, Matrix.mulVecLin_apply]
+  apply Finset.sum_congr rfl
+  intro p _
+  ring
+
+/-- If adding a multiple of the alternating sign makes the moment
+positive semidefinite, every matching sum-of-squares cost in the
+matching space has nonnegative pairing with the original coefficients. -/
+theorem realMatchingSOS_pairing_nonneg_of_positiveMoment
+    (c : Fin 24 → ℝ) (t : ℝ) {g : Fin 24 → ℝ} (hg : g ∈ realMatchingFunctionSpace)
+    (hsos : IsRealMatchingSOS g)
+    (hM : (realMatchingMoment (fun p => c p + t * matchingSign p)).PosSemidef) :
+    0 ≤ ∑ p : Fin 24, c p * g p := by
+  classical
+  obtain ⟨n, f, hf⟩ := hsos
+  let w (p : Fin 24) := c p + t * matchingSign p
+  have hrep (k : Fin n) :
+      ∃ v : MatchingJetIndex → ℝ, realMatchingJet.mulVecLin v = fourMatchingEvaluation (f k) := by
+    have h : fourMatchingEvaluation (f k) ∈ realMatchingFunctionSpace := ⟨f k, rfl⟩
+    rw [← realMatchingJet_range] at h
+    exact h
+  choose v hv using hrep
+  have hnonneg (k : Fin n) :
+      0 ≤ ∑ p : Fin 24, w p * (fourMatchingEvaluation (f k) p)^2 := by
+    have h := hM.2 (v k)
+    change 0 ≤ dotProduct (star (v k)) (realMatchingMoment w *ᵥ v k) at h
+    simpa only [star_trivial, realMatchingMoment_quadratic, hv] using h
+  calc
+    0 ≤ ∑ k : Fin n, ∑ p : Fin 24, w p * (fourMatchingEvaluation (f k) p)^2 :=
+      Finset.sum_nonneg fun k _ => hnonneg k
+    _ = ∑ p : Fin 24, w p * g p := by
+      rw [Finset.sum_comm]
+      simp_rw [← Finset.mul_sum, ← hf]
+    _ = _ := by
+      simp only [w, add_mul, Finset.sum_add_distrib, mul_assoc, ← Finset.mul_sum,
+        realMatching_alternating_sum_zero hg, mul_zero, add_zero]
+
 end MOC
