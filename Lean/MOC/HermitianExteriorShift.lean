@@ -5,6 +5,7 @@ import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Data.Quot
 import Mathlib.Logic.Relation
+import Mathlib.Tactic.FinCases
 
 /-! Resolvent estimates for a scalar translate of a Hermitian-by-normal
 support problem. Here all matrix operator norms are Euclidean. -/
@@ -1104,6 +1105,83 @@ theorem exterior_five_threshold_arithmetic (z : ℂ) (hz : 123 ≤ ‖z‖) :
       apply (lt_div_iff₀ hpos).mpr
       apply (sq_lt_sq₀ (by positivity) zero_le_one).mp
       nlinarith only [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+
+private theorem exterior_diagonal_norm_bound (a : ι → ℂ) (R : ℝ)
+    (hR : 0 ≤ R) (ha : ∀ i, ‖a i‖ ≤ R) : ‖diagonal a‖ ≤ R := by
+  rw [Matrix.cstar_norm_def]
+  apply ContinuousLinearMap.opNorm_le_bound _ hR
+  intro x
+  let y : EuclideanSpace ℂ ι := (EuclideanSpace.equiv ι ℂ).symm (diagonal a *ᵥ x)
+  change ‖y‖ ≤ R * ‖x‖
+  apply (sq_le_sq₀ (norm_nonneg y) (mul_nonneg hR (norm_nonneg x))).mp
+  simp only [mul_pow, PiLp.norm_sq_eq_of_L2, Finset.mul_sum]
+  apply Finset.sum_le_sum
+  intro i _
+  change ‖(diagonal a *ᵥ x) i‖ ^ 2 ≤ R ^ 2 * ‖x i‖ ^ 2
+  rw [Matrix.mulVec_diagonal, norm_mul, mul_pow]
+  exact mul_le_mul_of_nonneg_right ((sq_le_sq₀ (norm_nonneg _) hR).mpr (ha i)) (sq_nonneg _)
+
+/-- The real spectrum in the order-five exterior example. -/
+def exteriorFiveRealSpectrum : Fin 5 → ℝ := ![-2, -1, 0, 1, 2]
+
+/-- The partner spectrum before the common exterior shift. -/
+def exteriorFivePartnerSpectrum : Fin 5 → ℂ := ![0, 1, -1, Complex.I, -Complex.I]
+
+private theorem exterior_five_triangle_certificate (i j k : Fin 5)
+    (h : exteriorTriangleCross (exteriorFivePartnerSpectrum i) (exteriorFivePartnerSpectrum j)
+      (exteriorFivePartnerSpectrum k) ≠ 0) :
+    Complex.normSq (exteriorFivePartnerSpectrum j - exteriorFivePartnerSpectrum i) +
+      Complex.normSq (exteriorFivePartnerSpectrum k - exteriorFivePartnerSpectrum i) ≤
+        4 * (exteriorTriangleCross (exteriorFivePartnerSpectrum i) (exteriorFivePartnerSpectrum j)
+          (exteriorFivePartnerSpectrum k)) ^ 2 := by
+  fin_cases i <;> fin_cases j <;> fin_cases k <;>
+    norm_num [exteriorFivePartnerSpectrum, Matrix.cons_val, exteriorTriangleCross, Complex.star_def,
+      Complex.mul_im, Complex.conj_re, Complex.conj_im, Complex.sub_re, Complex.sub_im,
+      Complex.neg_re, Complex.neg_im, Complex.normSq_apply] at h ⊢
+
+private theorem exterior_five_triangle_gap (i j k : Fin 5) :
+    let b := exteriorFivePartnerSpectrum
+    exteriorTriangleCross (b i) (b j) (b k) ≠ 0 →
+      (2 * Real.sqrt 2)⁻¹ * (‖b j - b i‖ + ‖b k - b i‖) ≤
+        |exteriorTriangleCross (b i) (b j) (b k)| := by
+  intro b h
+  let a := ‖b j - b i‖
+  let d := ‖b k - b i‖
+  let c := exteriorTriangleCross (b i) (b j) (b k)
+  have hcap : a ^ 2 + d ^ 2 ≤ 4 * c ^ 2 := by
+    simpa only [Complex.normSq_eq_norm_sq] using exterior_five_triangle_certificate i j k h
+  have hsqrt : 0 < 2 * Real.sqrt 2 := by positivity
+  rw [inv_mul_eq_div]
+  apply (div_le_iff₀ hsqrt).mpr
+  change a + d ≤ |c| * (2 * Real.sqrt 2)
+  apply (sq_le_sq₀ (add_nonneg (norm_nonneg _) (norm_nonneg _))
+    (mul_nonneg (abs_nonneg _) hsqrt.le)).mp
+  calc
+    _ ≤ 2 * (a ^ 2 + d ^ 2) := by nlinarith only [sq_nonneg (a - d)]
+    _ ≤ 2 * (4 * c ^ 2) := mul_le_mul_of_nonneg_left hcap (by norm_num)
+    _ = _ := by
+      rw [mul_pow, sq_abs, mul_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+      ring
+
+/-- The order-five exterior example holds for every unitary mixer whenever
+the complex shift has modulus at least 123. -/
+theorem holds_exterior_five (z : ℂ) (hz : 123 ≤ ‖z‖)
+    (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
+    Holds (fun i => (exteriorFiveRealSpectrum i : ℂ)) (fun i => z + exteriorFivePartnerSpectrum i) U := by
+  have ha : ‖diagonal (fun i => (exteriorFiveRealSpectrum i : ℂ))‖ ≤ 2 := by
+    apply exterior_diagonal_norm_bound _ _ (by norm_num)
+    intro i
+    fin_cases i <;> norm_num [exteriorFiveRealSpectrum, Matrix.cons_val, Complex.norm_real, Real.norm_eq_abs]
+  have hb : ‖diagonal exteriorFivePartnerSpectrum‖ ≤ 1 := by
+    apply exterior_diagonal_norm_bound _ _ (by norm_num)
+    intro i
+    fin_cases i <;> norm_num [exteriorFivePartnerSpectrum, Matrix.cons_val, Complex.norm_I]
+  have hnorms : 2 + ‖diagonal exteriorFivePartnerSpectrum‖ ≤ 3 := by linarith only [hb]
+  have hz' : 3 < ‖z‖ := (by norm_num : (3 : ℝ) < 123).trans_le hz
+  refine holds_of_exterior_scalar_shift exteriorFiveRealSpectrum exteriorFivePartnerSpectrum z
+    2 3 ((2 * Real.sqrt 2)⁻¹) ha hnorms hz' (by positivity) ?_ exterior_five_triangle_gap U hU
+  dsimp only
+  convert exterior_five_threshold_arithmetic z hz using 1 <;> ring
 
 end
 
