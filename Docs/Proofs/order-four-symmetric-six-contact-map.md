@@ -24,6 +24,7 @@ flowchart BT
     Lift["Exact lift in fourteen coordinates"]
     Height["Positive mixed weight gives the cubic height formula"]
     Singular["The matching Hessian is singular"]
+    Inverse["The nine-dimensional inverse pencil is singular"]
     Nonic["Projected nonic identity and coefficient signs"]
     Budget["One compensator covers the sum of the other two"]
     Pair["Three relabeled weighted-minor bounds"]
@@ -31,6 +32,7 @@ flowchart BT
     Spectral --> Lift
     Lift --> Height
     Lift --> Singular
+    Spectral --> Inverse
     Height --> Nonic
     Singular --> Nonic
     Nonic -. Paper certificate .-> Budget
@@ -43,6 +45,7 @@ flowchart BT
 | Noncrossing coordinates | The lift evaluates to the prescribed permutation gap minus $h$, for all real coefficients and all permutations. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L52) |
 | Height | If $\lambda>0$, let $e_k$ be the elementary symmetric polynomial of degree $k$ in $(a,b,c,d)$. For actual spectra, the height is $(\lambda^3+e_1\lambda^2+e_2\lambda+e_3+pqr)/(\lambda^2+pq+pr+qr)>0$. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L92) |
 | Hessian obstruction | The Hessian of the matching cubic at the lifted real coordinates is singular. This includes repeated eigenvalues and repeated products. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L123) |
+| Inverse pencil | The same spectral data make a real symmetric matrix of order nine singular. Its coefficients are the nine signed matching evaluations in cofactor coordinates. The complex determinant of order two gives four complex squares, which provide at most eight real linear constraints on its kernel. [Lean source](../../Lean/MOC/FourSymmetricSixContactPencil.lean) |
 | Unitary bound | If $\lambda^2\le p(q+r)$, $\lambda^2\le q(p+r)$, or $\lambda^2\le r(p+q)$, the determinant projection is at least $-h$. Zero $\lambda$ satisfies the first condition. All four singleton coefficients remain independent. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L267) |
 
 For the last step, call the three squared minors $X,Y,Z$ in the order

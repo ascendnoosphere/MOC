@@ -37,14 +37,15 @@ def symmetricSixContactLift (b : Fin 7 → ℝ) (λ h : ℝ) : Fin 14 → ℝ :=
   ![λ + b 5, -b 5 - b 6, b 1, b 6, b 0, -b 4 - b 5, -λ + b 5,
     -b 1 - b 2 - λ, b 2, b 2 + λ, b 4, -b 2 - b 3 - λ, b 3, -h]
 
-private def activeMinors : Fin 24 → Finset (Fin 9) :=
+/-- The squared-minor indicators at each lexicographic permutation. -/
+def symmetricSixContactActiveMinors : Fin 24 → Finset (Fin 9) :=
   ![{0, 2, 5}, {0}, {0, 7}, {0, 3, 6, 7}, {0, 1, 4}, {0, 1, 2, 3, 4, 5, 6},
     {2, 8}, ∅, ∅, {6}, {1}, {1, 2, 6, 8}, {7, 8}, {3, 7}, {5}, ∅,
     {1, 3, 5}, {1, 8}, {4}, {2, 3, 4}, ∅, {2}, {3}, ∅]
 
-private theorem matchingMinorAgreement : ∀ i k,
+theorem symmetricSixContactMinorAgreement : ∀ i k,
     (symmetricSixContactCols k).map (fourPerm i).symm.toEmbedding =
-      symmetricSixContactRows k ↔ k ∈ activeMinors i := by
+      symmetricSixContactRows k ↔ k ∈ symmetricSixContactActiveMinors i := by
   decide +kernel
 
 /-- Evaluating the lift gives the actual affine profile, including on
@@ -52,10 +53,11 @@ all coefficient boundaries. -/
 theorem symmetricSixContactLift_evaluation (b : Fin 7 → ℝ) (λ h : ℝ) (i : Fin 24) :
     fourMatchingEvaluation (symmetricSixContactLift b λ h) i =
       symmetricSixContactProfile b λ i - h := by
-  simp only [symmetricSixContactProfile, matchingMinorAgreement, Fin.sum_univ_succ, Fin.sum_univ_zero]
+  simp only [symmetricSixContactProfile, symmetricSixContactMinorAgreement, Fin.sum_univ_succ,
+    Fin.sum_univ_zero]
   fin_cases i <;>
     norm_num [fourMatchingEvaluation, symmetricSixContactLift, symmetricSixContactWeights,
-      activeMinors] <;>
+      symmetricSixContactActiveMinors] <;>
     ring
 
 /-- The numerator in the spectral height formula. -/
