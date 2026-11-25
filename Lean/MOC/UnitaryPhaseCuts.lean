@@ -17,7 +17,7 @@ noncomputable section
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-private theorem posSemidef_det_re_le_one_of_trace_le_card {A : Matrix ι ι ℂ}
+theorem posSemidef_det_re_le_one_of_trace_le_card {A : Matrix ι ι ℂ}
     (hA : A.PosSemidef) (ht : A.trace.re ≤ Fintype.card ι) : A.det.re ≤ 1 := by
   rcases isEmpty_or_nonempty ι with hι | hι
   · letI := hι
