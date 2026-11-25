@@ -1,5 +1,6 @@
 import MOC.Small
 import MOC.PlaneHullEdges
+import MOC.SparsePolynomialCertificate
 import MOC.TwoValues
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Algebra.Polynomial.Eval.Defs
@@ -8,6 +9,7 @@ import Mathlib.Algebra.Polynomial.Eval.Defs
 Integer-polynomial certificates cover a bounded interval and both tails. -/
 
 open BigOperators Matrix Polynomial
+open MOC.SparsePolynomialCertificate (Univariate)
 open scoped Topology Polynomial
 
 namespace MOC
@@ -68,7 +70,7 @@ private theorem parameterPermutation_surjective : Function.Surjective parameterP
     decide
   exact (Finite.injective_iff_surjective_of_equiv (Fintype.equivOfCardEq hcards)).mp hleft.injective
 
-private abbrev IntegerPlanePolynomial := ℤ[X] × ℤ[X]
+private abbrev IntegerPlanePolynomial := Univariate × Univariate
 
 private def polynomialPlaneMul (a b : IntegerPlanePolynomial) : IntegerPlanePolynomial :=
   (a.1 * b.1 - a.2 * b.2, a.1 * b.2 + a.2 * b.1)
@@ -76,11 +78,10 @@ private def polynomialPlaneMul (a b : IntegerPlanePolynomial) : IntegerPlanePoly
 private def polynomialPlaneSub (a b : IntegerPlanePolynomial) : IntegerPlanePolynomial :=
   (a.1 - b.1, a.2 - b.2)
 
-private def polynomialPlaneCross (a b : IntegerPlanePolynomial) : ℤ[X] :=
+private def polynomialPlaneCross (a b : IntegerPlanePolynomial) : Univariate :=
   a.1 * b.2 - a.2 * b.1
 
-private def evaluateParameterPolynomial (t : ℝ) : ℤ[X] →+* ℝ :=
-  Polynomial.eval₂RingHom (Int.castRingHom ℝ) t
+private abbrev evaluateParameterPolynomial (t : ℝ) : Univariate → ℝ := Univariate.eval t
 
 private def evaluateParameterPlane (t : ℝ) (a : IntegerPlanePolynomial) : ℂ :=
   ⟨evaluateParameterPolynomial t a.1, evaluateParameterPolynomial t a.2⟩
@@ -89,23 +90,27 @@ private theorem evaluateParameterPlane_mul (t : ℝ) (a b : IntegerPlanePolynomi
     evaluateParameterPlane t (polynomialPlaneMul a b) =
       evaluateParameterPlane t a * evaluateParameterPlane t b := by
   apply Complex.ext
-  · simp only [evaluateParameterPlane, polynomialPlaneMul, map_sub, map_mul, Complex.mul_re]
-  · simp only [evaluateParameterPlane, polynomialPlaneMul, map_add, map_mul, Complex.mul_im]
+  · simp only [evaluateParameterPlane, polynomialPlaneMul, Univariate.eval_sub,
+      Univariate.eval_mul, Complex.mul_re]
+  · simp only [evaluateParameterPlane, polynomialPlaneMul, Univariate.eval_add,
+      Univariate.eval_mul, Complex.mul_im]
 
 private theorem evaluateParameterPlane_sub (t : ℝ) (a b : IntegerPlanePolynomial) :
     evaluateParameterPlane t (polynomialPlaneSub a b) =
       evaluateParameterPlane t a - evaluateParameterPlane t b := by
   apply Complex.ext
-  · simp only [evaluateParameterPlane, polynomialPlaneSub, map_sub, Complex.sub_re]
-  · simp only [evaluateParameterPlane, polynomialPlaneSub, map_sub, Complex.sub_im]
+  · simp only [evaluateParameterPlane, polynomialPlaneSub, Univariate.eval_sub, Complex.sub_re]
+  · simp only [evaluateParameterPlane, polynomialPlaneSub, Univariate.eval_sub, Complex.sub_im]
 
 private theorem evaluateParameterPlane_cross (t : ℝ) (a b : IntegerPlanePolynomial) :
     evaluateParameterPolynomial t (polynomialPlaneCross a b) =
       planeCross (evaluateParameterPlane t a) (evaluateParameterPlane t b) := by
-  simp only [evaluateParameterPlane, polynomialPlaneCross, planeCross, map_mul, map_sub]
+  simp only [evaluateParameterPlane, polynomialPlaneCross, planeCross, Univariate.eval_mul,
+    Univariate.eval_sub]
 
 private def parameterPairSum (i j : Fin 4) : IntegerPlanePolynomial :=
-  (![X, -X, 1, 2] i + ![-1, -2, 2, 1] j, ![1, 1, 0, 1] i + ![1, -2, -1, 2] j)
+  let x := Univariate.X
+  (![x, -x, 1, 2] i + ![-1, -2, 2, 1] j, ![1, 1, 0, 1] i + ![1, -2, -1, 2] j)
 
 private theorem evaluateParameterPairSum (t : ℝ) (i j : Fin 4) :
     evaluateParameterPlane t (parameterPairSum i j) =
@@ -134,7 +139,7 @@ private def parameterHullIndex : Fin 9 → Fin 24 := ![16, 22, 15, 21, 0, 6, 7, 
 private def parameterHullVertex (i : Fin 9) : IntegerPlanePolynomial :=
   parameterVertex (parameterPermutation (parameterHullIndex i)).symm
 
-private def parameterEdgePolynomial (i : Fin 9) (p : IntegerPlanePolynomial) : ℤ[X] :=
+private def parameterEdgePolynomial (i : Fin 9) (p : IntegerPlanePolynomial) : Univariate :=
   polynomialPlaneCross
     (polynomialPlaneSub (parameterHullVertex (parameterNext i)) (parameterHullVertex i))
     (polynomialPlaneSub p (parameterHullVertex i))
@@ -148,9 +153,11 @@ private structure ParameterWeight where
   cubic : ℤ
   quartic : ℤ
 
-private def ParameterWeight.polynomial (w : ParameterWeight) : ℤ[X] :=
-  X ^ w.power * (C w.constant + C w.linear * X + C w.quadratic * X ^ 2 +
-    C w.cubic * X ^ 3 + C w.quartic * X ^ 4)
+private def ParameterWeight.polynomial (w : ParameterWeight) : Univariate :=
+  let x := Univariate.X
+  let c := Univariate.ofInt
+  x ^ w.power * (c w.constant + c w.linear * x + c w.quadratic * x ^ 2 +
+    c w.cubic * x ^ 3 + c w.quartic * x ^ 4)
 
 private def ParameterWeight.lowerNumerator (w : ParameterWeight) : ℤ :=
   160000 * w.constant + 8000 * min w.linear 0 + 400 * min w.quadratic 0 +
@@ -175,7 +182,7 @@ private theorem parameterWeight_sign (w : ParameterWeight) (h : 0 < w.lowerNumer
       ((min w.quartic 0 : ℤ) : ℝ) := by
     unfold ParameterWeight.lowerNumerator at h
     exact_mod_cast h
-  norm_num at hm₂ hm₃ hm₄
+  norm_num at hi hm₁ hm₂ hm₃ hm₄
   linarith only [hi, hm₁, hm₂, hm₃, hm₄]
 
 private theorem evaluateParameterWeight (t : ℝ) (w : ParameterWeight) :
@@ -311,15 +318,17 @@ private def parameterTurnWeight : Fin 9 → ParameterWeight :=
     ⟨0, 2200, -280, -84, -256, -12⟩,
     ⟨0, 180, 54, 14, -11, -1⟩]
 
-private def parameterMinorPolynomial (i : Fin 9) (p : ParameterPermutation) : ℤ[X] :=
-  ∑ j : Fin 12,
+private def parameterMinorPolynomial (i : Fin 9) (p : ParameterPermutation) : Univariate :=
+  Univariate.sum fun j : Fin 12 =>
     let term := parameterTerms i j
     if term.columns.map p.toEmbedding = term.rows then term.weight.polynomial else 0
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 5000000 in
-private theorem parameterEdgePolynomial_eq (i : Fin 9) (p : ParameterPermutation) :
-    parameterEdgePolynomial i (parameterVertex p) = parameterMinorPolynomial i p := by
+private theorem parameterEdgePolynomial_eq (t : ℝ) (i : Fin 9) (p : ParameterPermutation) :
+    evaluateParameterPolynomial t (parameterEdgePolynomial i (parameterVertex p)) =
+      evaluateParameterPolynomial t (parameterMinorPolynomial i p) := by
+  apply Univariate.eval_eq
   obtain ⟨j, hj⟩ := parameterPermutation_surjective p.symm
   have hp : p = (parameterPermutation j).symm := by
     rw [hj, Equiv.symm_symm]
@@ -328,11 +337,12 @@ private theorem parameterEdgePolynomial_eq (i : Fin 9) (p : ParameterPermutation
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 1000000 in
-private theorem parameterTurnPolynomial_eq (i : Fin 9) :
-    polynomialPlaneCross
+private theorem parameterTurnPolynomial_eq (t : ℝ) (i : Fin 9) :
+    evaluateParameterPolynomial t (polynomialPlaneCross
         (polynomialPlaneSub (parameterHullVertex i) (parameterHullVertex (parameterPrev i)))
-        (polynomialPlaneSub (parameterHullVertex (parameterNext i)) (parameterHullVertex i)) =
-      (parameterTurnWeight i).polynomial := by
+        (polynomialPlaneSub (parameterHullVertex (parameterNext i)) (parameterHullVertex i))) =
+      evaluateParameterPolynomial t (parameterTurnWeight i).polynomial := by
+  apply Univariate.eval_eq
   fin_cases i <;> decide +kernel
 
 private theorem parameterWeight_lower (i : Fin 9) (j : Fin 12) :
@@ -354,7 +364,7 @@ private theorem evaluateParameterHullVertex (t : ℝ) (i : Fin 9) :
 private theorem parameterHull_turn (t : ℝ) (ht0 : 0 < t) (ht1 : t ≤ 1 / 20) (i : Fin 9) :
     0 < planeCross (parameterHull t i - parameterHull t (parameterPrev i))
       (parameterHull t (parameterNext i) - parameterHull t i) := by
-  have he := congrArg (evaluateParameterPolynomial t) (parameterTurnPolynomial_eq i)
+  have he := parameterTurnPolynomial_eq t i
   simp only [evaluateParameterPlane_cross, evaluateParameterPlane_sub,
     evaluateParameterHullVertex] at he
   rw [he, evaluateParameterWeight]
@@ -379,10 +389,10 @@ private theorem parameterHull_edge (t : ℝ) (ht0 : 0 ≤ t) (ht1 : t ≤ 1 / 20
           (η * l).re =
         ∑ j, if (parameterTerms i j).columns.map p.toEmbedding = (parameterTerms i j).rows
           then w j else 0 := by
-    have hp := congrArg (evaluateParameterPolynomial t) (parameterEdgePolynomial_eq i p)
+    have hp := parameterEdgePolynomial_eq t i p
     simp only [parameterEdgePolynomial, evaluateParameterPlane_cross, evaluateParameterPlane_sub,
-      evaluateParameterHullVertex, evaluateParameterVertex, parameterMinorPolynomial, map_sum,
-      apply_ite, map_zero] at hp
+      evaluateParameterHullVertex, evaluateParameterVertex, parameterMinorPolynomial,
+      Univariate.eval_sum, apply_ite, Univariate.eval_ofNat, Nat.cast_zero] at hp
     rw [← planeCross_edge_direction l r]
     exact hp
   rw [planeCross_edge_direction l r]
@@ -541,12 +551,14 @@ private theorem holds_of_scaled_minor_polygon {ι κ : Type*} [Fintype ι] [None
   rw [← LinearMap.image_convexHull] at he
   obtain ⟨w, hwHull, heq⟩ := he
   change c * w = c * determinantValue a b U at heq
-  exact (mul_left_cancel₀ hc heq) ▸ hwHull
+  change determinantValue a b U ∈ convexHull ℝ (Set.range (matchingProduct a b))
+  rwa [← mul_left_cancel₀ hc heq]
 
 private def parameterTailPairSum (i j : Fin 4) : IntegerPlanePolynomial :=
-  let scale : ℤ[X] := ![X, X, 1, 1] i
-  (![5 - X, X - 5, 1, 2] i + scale * ![-1, -2, 2, 1] j,
-    ![X, X, 0, 1] i + scale * ![1, -2, -1, 2] j)
+  let x := Univariate.X
+  let scale : Univariate := ![x, x, 1, 1] i
+  (![5 - x, x - 5, 1, 2] i + scale * ![-1, -2, 2, 1] j,
+    ![x, x, 0, 1] i + scale * ![1, -2, -1, 2] j)
 
 private def parameterTailScale (s : ℝ) (i : Fin 4) : ℂ :=
   ![(s : ℂ), (s : ℂ), 1, 1] i
@@ -697,18 +709,19 @@ private def parameterTailTurnWeight : Fin 8 → ParameterWeight :=
     ⟨0, 71250, -65250, 24900, -10440, 2160⟩,
     ⟨1, 117000, -41400, -10080, 2736, 0⟩]
 
-private def parameterTailMinorPolynomial (i : Fin 8) (p : ParameterPermutation) : ℤ[X] :=
-  ∑ j : Fin 12,
+private def parameterTailMinorPolynomial (i : Fin 8) (p : ParameterPermutation) : Univariate :=
+  Univariate.sum fun j : Fin 12 =>
     let term := parameterTailTerms i j
     if term.columns.map p.toEmbedding = term.rows then term.weight.polynomial else 0
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 5000000 in
-private theorem parameterTailEdge_eq (i : Fin 8) (p : ParameterPermutation) :
-    polynomialPlaneCross
+private theorem parameterTailEdge_eq (t : ℝ) (i : Fin 8) (p : ParameterPermutation) :
+    evaluateParameterPolynomial t (polynomialPlaneCross
         (polynomialPlaneSub (parameterTailHullVertex (parameterTailNext i)) (parameterTailHullVertex i))
-        (polynomialPlaneSub (parameterTailVertex p) (parameterTailHullVertex i)) =
-      parameterTailMinorPolynomial i p := by
+        (polynomialPlaneSub (parameterTailVertex p) (parameterTailHullVertex i))) =
+      evaluateParameterPolynomial t (parameterTailMinorPolynomial i p) := by
+  apply Univariate.eval_eq
   obtain ⟨j, hj⟩ := parameterPermutation_surjective p.symm
   have hp : p = (parameterPermutation j).symm := by rw [hj, Equiv.symm_symm]
   rw [hp]
@@ -716,18 +729,19 @@ private theorem parameterTailEdge_eq (i : Fin 8) (p : ParameterPermutation) :
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 1000000 in
-private theorem parameterTailTurn_eq (i : Fin 8) :
-    polynomialPlaneCross
+private theorem parameterTailTurn_eq (t : ℝ) (i : Fin 8) :
+    evaluateParameterPolynomial t (polynomialPlaneCross
         (polynomialPlaneSub (parameterTailHullVertex i) (parameterTailHullVertex (parameterTailPrev i)))
-        (polynomialPlaneSub (parameterTailHullVertex (parameterTailNext i)) (parameterTailHullVertex i)) =
-      (parameterTailTurnWeight i).polynomial := by
+        (polynomialPlaneSub (parameterTailHullVertex (parameterTailNext i)) (parameterTailHullVertex i))) =
+      evaluateParameterPolynomial t (parameterTailTurnWeight i).polynomial := by
+  apply Univariate.eval_eq
   fin_cases i <;> decide +kernel
 
 private theorem parameterTailBudget_lower (i : Fin 8) (j : Fin 12) :
-    (parameterTailTerms i j).weight.polynomial = 0 ∨
+    Univariate.same (parameterTailTerms i j).weight.polynomial 0 = true ∨
       0 < (parameterTailTerms i j).weight.lowerNumerator :=
   (by decide +kernel : ∀ k l,
-    (parameterTailTerms k l).weight.polynomial = 0 ∨
+    Univariate.same (parameterTailTerms k l).weight.polynomial 0 = true ∨
       0 < (parameterTailTerms k l).weight.lowerNumerator) i j
 
 private theorem parameterTailTurn_lower (i : Fin 8) :
@@ -749,7 +763,7 @@ private theorem holds_fourRealParameter_positive_tail (t : ℝ) (ht : 99 ≤ t)
     evaluateParameterPolynomial s (parameterTailTerms i j).weight.polynomial
   have hw (i : Fin 8) (j : Fin 12) : 0 ≤ w i j := by
     rcases parameterTailBudget_lower i j with hzero | hpos
-    · simp only [w, hzero, map_zero, le_refl]
+    · simpa [w] using (Univariate.eval_eq s hzero).le
     · dsimp only [w]
       rw [evaluateParameterWeight]
       exact mul_nonneg (pow_nonneg hs0.le _) (parameterWeight_sign (parameterTailTerms i j).weight
@@ -764,16 +778,16 @@ private theorem holds_fourRealParameter_positive_tail (t : ℝ) (ht : 99 ≤ t)
     (by decide +kernel) (fun i j => (parameterTailTerms i j).rows)
     (fun i j => (parameterTailTerms i j).columns) w hw
   · intro i
-    have he := congrArg (evaluateParameterPolynomial s) (parameterTailTurn_eq i)
+    have he := parameterTailTurn_eq s i
     simp only [evaluateParameterPlane_cross, evaluateParameterPlane_sub, hv] at he
     rw [he, evaluateParameterWeight]
     exact mul_pos (pow_pos hs0 _) (parameterWeight_sign (parameterTailTurnWeight i)
       (parameterTailTurn_lower i) s hs0.le hs1)
   · intro i p
-    have he := congrArg (evaluateParameterPolynomial s) (parameterTailEdge_eq i p)
+    have he := parameterTailEdge_eq s i p
     simp only [evaluateParameterPlane_cross, evaluateParameterPlane_sub, hv,
-      evaluateParameterTailVertex s t hst, parameterTailMinorPolynomial, map_sum, apply_ite,
-      map_zero, w] at he
+      evaluateParameterTailVertex s t hst, parameterTailMinorPolynomial, Univariate.eval_sum,
+      apply_ite, Univariate.eval_ofNat, Nat.cast_zero, w] at he
     exact he
 
 /-- Both unbounded tails of the real-parameter family satisfy the

@@ -43,17 +43,17 @@ noncomputable def fourWeightedMinorCenterRight : Fin 4 → ℂ :=
 private theorem centerPointToComplex_add (x y : CenterPoint) :
     centerPointToComplex (centerPointAdd x y) =
       centerPointToComplex x + centerPointToComplex y := by
-  ext <;> simp [centerPointToComplex, centerPointAdd]
+  apply Complex.ext <;> simp [centerPointToComplex, centerPointAdd]
 
 private theorem centerPointToComplex_mul (x y : CenterPoint) :
     centerPointToComplex (centerPointMul x y) =
       centerPointToComplex x * centerPointToComplex y := by
-  ext <;> simp [centerPointToComplex, centerPointMul, Complex.mul_re, Complex.mul_im]
+  apply Complex.ext <;> simp [centerPointToComplex, centerPointMul, Complex.mul_re, Complex.mul_im]
 
 private theorem centerPointToComplex_sub (x y : CenterPoint) :
     centerPointToComplex (centerPointSub x y) =
       centerPointToComplex x - centerPointToComplex y := by
-  ext <;> simp [centerPointToComplex, centerPointSub]
+  apply Complex.ext <;> simp [centerPointToComplex, centerPointSub]
 
 private theorem centerPointCross_cast (x y : CenterPoint) :
     (centerPointCross x y : ℝ) = planeCross (centerPointToComplex x) (centerPointToComplex y) := by
@@ -316,15 +316,13 @@ private theorem centerCompensated_unitary (τ : ℝ) (hτ : 0 < τ)
   obtain ⟨κ, inst, w, O, hw, _, hm⟩ := four_minor_mixture U hU
   letI : Fintype κ := inst
   let m (k : κ) := subsetMinorSq (Complex.ofRealHom.mapMatrix (O k).val)
-  let L : (Finset (Fin 4) → Finset (Fin 4) → ℝ) →ₗ[ℝ] ℝ where
-    toFun := centerCompensated τ
-    map_add' v z := by
-      simp only [centerCompensated, Pi.add_apply]
-      ring
-    map_smul' c v := by
-      change centerCompensated τ (c • v) = c * centerCompensated τ v
-      simp only [centerCompensated, Pi.smul_apply, smul_eq_mul]
-      ring
+  let L : (Finset (Fin 4) → Finset (Fin 4) → ℝ) →ₗ[ℝ] ℝ :=
+    { toFun := centerCompensated τ
+      map_add' := fun v z => by simp only [centerCompensated, Pi.add_apply]; ring
+      map_smul' := fun c v => by
+        change centerCompensated τ (c • v) = c * centerCompensated τ v
+        simp only [centerCompensated, Pi.smul_apply, smul_eq_mul]
+        ring }
   have htable : subsetMinorSq U = ∑ k, w k • m k := by
     funext I J
     simpa only [m, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using hm I J
@@ -404,7 +402,7 @@ private theorem centerTerm_nonneg (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnita
       simp_rw [hb, Rat.cast_mul, hm, mul_assoc]
       rw [← Finset.mul_sum]
       norm_num [b, centerCompensated, centerCanonicalRows, centerCanonicalColumns,
-        Fin.sum_univ_succ, Rat.cast_inv, Rat.cast_add] <;> ring
+        Fin.sum_univ_succ, Rat.cast_inv, Rat.cast_add] <;> ring <;> simp
     change 0 ≤ ∑ k : Fin 5, ((v k).coefficient : ℝ) * subsetMinorSq U (v k).rows (v k).columns
     rw [he]
     exact mul_nonneg hw' (centerCompensated_unitary τ hτ' V (centerTransformMixer_unitary U hU r c tr))
@@ -443,7 +441,7 @@ private theorem centerAllMixer_edges (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUn
     rw [hσ] at hcast
     have hcastGap : (centerGap e p : ℝ) =
         (η * matchingProduct a b σ).re - (η * l).re := by
-      simp only [centerGap, centerPointCross_cast, centerPointToComplex_sub, ← centerHull,
+      simp only [centerGap, centerPointCross_cast, centerPointToComplex_sub,
         centerVertex_toComplex, hσ]
       exact planeCross_edge_direction l r (matchingProduct a b σ)
     rw [hcastGap, mul_comm S] at hcast

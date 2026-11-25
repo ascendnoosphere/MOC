@@ -135,7 +135,7 @@ theorem t34Hessian_pivotBlock (p r a b c q s h : ℝ) :
     simp (config := { decide := true }) only [fourMatchingHessian, gradientTerms,
       Matrix.cons_val, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
       GradientTerm.hessianEntry, t34HeightLift] <;>
-    norm_num <;> ring
+    norm_num [Fin.ext_iff, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
 
 /-- The entries joining the leading pivots and the ninth pivot. -/
 def t34HessianNinthColumn (p b c : ℝ) : Fin 4 ⊕ Fin 4 → ℝ :=
@@ -161,6 +161,6 @@ theorem t34Hessian_ninth_entries (p r a b c q s h : ℝ) :
       simp (config := { decide := true }) only [fourMatchingHessian, gradientTerms,
         Matrix.cons_val, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
         GradientTerm.hessianEntry, t34HeightLift] <;>
-      norm_num <;> ring
+      norm_num [Fin.ext_iff, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
 
 end MOC

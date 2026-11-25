@@ -43,7 +43,9 @@ private theorem ordinary_add {S : Finset (Fin 34)} {x y : Fin 24 → ℝ}
   obtain ⟨a, hapos, hasupp, rfl⟩ := hx
   obtain ⟨b, hbpos, hbsupp, rfl⟩ := hy
   refine ⟨fun k => a k + b k, fun k => add_nonneg (hapos k) (hbpos k), ?_, ?_⟩
-  · exact fun k hk => by rw [hasupp k hk, hbsupp k hk, add_zero]
+  · intro k hk
+    change a k + b k = 0
+    rw [hasupp k hk, hbsupp k hk, add_zero]
   · simp only [add_smul, Finset.sum_add_distrib]
 
 private theorem ordinary_smul {S : Finset (Fin 34)} {x : Fin 24 → ℝ}
@@ -51,7 +53,9 @@ private theorem ordinary_smul {S : Finset (Fin 34)} {x : Fin 24 → ℝ}
     fourOrdinaryCostCone S (t • x) := by
   obtain ⟨c, hpos, hsupp, rfl⟩ := hx
   refine ⟨fun k => t * c k, fun k => mul_nonneg ht (hpos k), ?_, ?_⟩
-  · exact fun k hk => by rw [hsupp k hk, mul_zero]
+  · intro k hk
+    change t * c k = 0
+    rw [hsupp k hk, mul_zero]
   · simp only [Finset.smul_sum, mul_smul]
 
 private theorem ordinary_ray {S : Finset (Fin 34)} {r : Fin 34} (hr : r ∈ S) :
@@ -369,7 +373,7 @@ private theorem mixed_ray_injective : Function.Injective mixedCostRay := by
   intro r s hrs
   apply he r s
   intro p
-  exact Int.cast_injective (R := ℝ) (congrFun hrs p)
+  exact (show Function.Injective (Int.cast : ℤ → ℝ) from Int.cast_injective) (congrFun hrs p)
 
 /-- Every pair of distinct mixed rays cancels into a nonnegative sum of
 ordinary rays with equal coefficients on the two mixed rays. -/

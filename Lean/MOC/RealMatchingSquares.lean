@@ -1,5 +1,6 @@
 import MOC.FourMatchingRelations
 import Mathlib.Data.Matrix.Rank
+import Mathlib.Data.Real.StarOrdered
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Tactic.FinCases
@@ -61,7 +62,7 @@ theorem realMatchingFunctionSpace_finrank :
 
 private theorem evaluation_intCast (m : Fin 14 → ℤ) (p : Fin 24) :
     fourMatchingEvaluation (fun j => (m j : ℝ)) p =
-      (fourMatchingEvaluation m p : ℝ) := by
+      (fourMatchingEvaluation (R := ℤ) m p : ℝ) := by
   fin_cases p <;> simp [fourMatchingEvaluation]
 
 set_option maxRecDepth 12000 in
@@ -84,14 +85,14 @@ private theorem indicatorColumn_int (a b : Fin 16) (p : Fin 24) :
 
 theorem realMatchingIndicator_mem (a b : Fin 16) :
     realMatchingIndicator a b ∈ realMatchingFunctionSpace := by
-  refine ⟨fun k => (fourMatchingCoordinatesOfValues (matchingIndicatorInt a b) k : ℝ), ?_⟩
+  refine ⟨fun k => (fourMatchingCoordinatesOfValues (R := ℤ) (matchingIndicatorInt a b) k : ℝ), ?_⟩
   funext p
   change fourMatchingEvaluation _ p = _
   rw [evaluation_intCast, indicatorColumn_int]
 
 private theorem jetColumn_mem (c : MatchingJetIndex) :
     (fun p => realMatchingJet p c) ∈ realMatchingFunctionSpace := by
-  refine ⟨fun k => (fourMatchingCoordinatesOfValues (fun q => matchingJetInt q c) k : ℝ), ?_⟩
+  refine ⟨fun k => (fourMatchingCoordinatesOfValues (R := ℤ) (fun q => matchingJetInt q c) k : ℝ), ?_⟩
   funext p
   change fourMatchingEvaluation _ p = (matchingJetInt p c : ℝ)
   rw [evaluation_intCast, jetColumn_int]
@@ -127,11 +128,12 @@ private theorem pivotWeight_int :
 
 private theorem realJet_range_generator (k : Fin 14) :
     realMatchingEvaluation (Pi.single k 1) ∈ LinearMap.range realMatchingJet.mulVecLin := by
-  refine ⟨∑ j : Fin 14, ((pivotWeight k j : ℝ) / 2) • Pi.single (pivotColumn j) 1, ?_⟩
+  refine ⟨∑ j : Fin 14, ((pivotWeight k j : ℝ) / 2) •
+    (Pi.single (pivotColumn j) 1 : MatchingJetIndex → ℝ), ?_⟩
   have h p : (∑ j : Fin 14, realMatchingJet p (pivotColumn j) * (pivotWeight k j : ℝ)) =
       2 * fourMatchingEvaluation (Pi.single k (1 : ℝ)) p := by
     have hcast := congrArg (Int.cast : ℤ → ℝ) (pivotWeight_int k p)
-    have hs : (fun j => ((Pi.single k (1 : ℤ) j : ℤ) : ℝ)) = Pi.single k (1 : ℝ) := by
+    have hs : (fun j => (((Pi.single k 1 : Fin 14 → ℤ) j : ℤ) : ℝ)) = Pi.single k (1 : ℝ) := by
       funext j
       by_cases h : j = k <;> simp [Pi.single_apply, h]
     simpa only [Int.cast_sum, Int.cast_mul, Int.cast_ofNat, realMatchingJet, ← evaluation_intCast, hs]
@@ -162,7 +164,7 @@ theorem realMatchingJet_range :
     exact realMatchingFunctionSpace.sum_mem fun c _ =>
       realMatchingFunctionSpace.smul_mem (v c) (jetColumn_mem c)
   · rintro _ ⟨m, rfl⟩
-    have he : m = ∑ k : Fin 14, m k • Pi.single k 1 := by
+    have he : m = ∑ k : Fin 14, m k • (Pi.single k 1 : Fin 14 → ℝ) := by
       funext j
       simp [Finset.sum_apply, Pi.single_apply, eq_comm]
     rw [he, map_sum]
@@ -252,9 +254,11 @@ private theorem signedJetKernel (i j : MatchingJetIndex) :
         realMatchingExceptionalEmbedding i a * realMatchingExceptionalEmbedding j b *
           matchingCornerKernel (R := ℝ) a b := by
   have h := congrArg (Int.cast : ℤ → ℝ) (signedJetKernel_int i j)
+  have hskew (s t : Fin 2) : (skewEntry (R := ℤ) s t : ℝ) = skewEntry s t := by
+    unfold skewEntry
+    split_ifs <;> norm_num
   simpa only [Int.cast_sum, Int.cast_mul, matchingSign, realMatchingJet,
-    realMatchingExceptionalEmbedding, matchingCornerKernel, skewEntry, apply_ite,
-    Int.cast_neg, Int.cast_zero, Int.cast_one] using h
+    realMatchingExceptionalEmbedding, matchingCornerKernel, hskew] using h
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 4000000 in
@@ -292,8 +296,9 @@ private theorem matchingCornerPT_sub (A : Matrix MatchingCornerIndex MatchingCor
   rcases a with ⟨a₁, a₂⟩
   rcases b with ⟨b₁, b₂⟩
   fin_cases a₁ <;> fin_cases a₂ <;> fin_cases b₁ <;> fin_cases b₂ <;>
-    simp [matchingCornerPartialTranspose, matchingCornerKernel, skewEntry] <;>
-    linarith only [hs (0, 0) (1, 1), hs (0, 1) (1, 0)]
+    norm_num [matchingCornerPartialTranspose, matchingCornerKernel, skewEntry, Fin.ext_iff] <;>
+    linarith only [hs (0, 0) (0, 1), hs (0, 0) (1, 0), hs (0, 0) (1, 1),
+      hs (0, 1) (1, 0), hs (0, 1) (1, 1), hs (1, 0) (1, 1)]
 
 private theorem matchingCorner_kernel_pairing (A : Matrix MatchingCornerIndex MatchingCornerIndex ℝ)
     (hA : A.IsHermitian) :
@@ -302,7 +307,7 @@ private theorem matchingCorner_kernel_pairing (A : Matrix MatchingCornerIndex Ma
   have hs (i j : MatchingCornerIndex) : A i j = A j i := by
     have h := congrArg (fun (B : Matrix MatchingCornerIndex MatchingCornerIndex ℝ) => B j i) hA.eq
     simpa only [Matrix.conjTranspose_apply, star_trivial] using h
-  simp [Fintype.sum_prod_type, Fin.sum_univ_two, matchingCornerKernel, skewEntry]
+  norm_num [Fintype.sum_prod_type, Fin.sum_univ_two, matchingCornerKernel, skewEntry, Fin.ext_iff]
   linarith only [hs (0, 0) (1, 1), hs (0, 1) (1, 0)]
 
 theorem matchingCornerPartialTranspose_eq_of_zero_pairing
@@ -467,7 +472,8 @@ theorem realMatchingAuxiliaryPPT_iff_sos {g : Fin 24 → ℝ}
       rw [← realMatchingJet_supported_range] at h
       exact h
     choose Y hY using hrep
-    let B : Matrix (Fin n) MatchingJetIndex ℝ := (Y : Matrix (Fin n) (Fin 24) ℝ) * realMatchingJet
+    let Z : Matrix (Fin n) (Fin 24) ℝ := Matrix.of Y
+    let B : Matrix (Fin n) MatchingJetIndex ℝ := Z * realMatchingJet
     let T : Matrix MatchingJetIndex MatchingJetIndex ℝ := Bᴴ * B
     have hT : T.PosSemidef := Matrix.posSemidef_conjTranspose_mul_self B
     have hB (i : Fin n) : realMatchingJet.mulVecLin (B i) = fourMatchingEvaluation (f i) := by
@@ -479,14 +485,14 @@ theorem realMatchingAuxiliaryPPT_iff_sos {g : Fin 24 → ℝ}
       exact hY i
     have hsupport : LinearMap.range T.mulVecLin ≤ LinearMap.range realMatchingJetᵀ.mulVecLin := by
       rintro _ ⟨x, rfl⟩
-      refine ⟨(Y : Matrix (Fin n) (Fin 24) ℝ)ᵀ *ᵥ (B *ᵥ x), ?_⟩
-      have hBstar : Bᴴ = realMatchingJetᵀ * (Y : Matrix (Fin n) (Fin 24) ℝ)ᵀ := by
+      refine ⟨Zᵀ *ᵥ (B *ᵥ x), ?_⟩
+      have hBstar : Bᴴ = realMatchingJetᵀ * Zᵀ := by
         simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_eq_transpose_of_trivial]
-      change realMatchingJetᵀ *ᵥ ((Y : Matrix (Fin n) (Fin 24) ℝ)ᵀ *ᵥ (B *ᵥ x)) =
+      change realMatchingJetᵀ *ᵥ (Zᵀ *ᵥ (B *ᵥ x)) =
         (Bᴴ * B) *ᵥ x
       calc
-        _ = (realMatchingJetᵀ * (Y : Matrix (Fin n) (Fin 24) ℝ)ᵀ) *ᵥ (B *ᵥ x) :=
-          Matrix.mulVec_mulVec (B *ᵥ x) realMatchingJetᵀ (Y : Matrix (Fin n) (Fin 24) ℝ)ᵀ
+        _ = (realMatchingJetᵀ * Zᵀ) *ᵥ (B *ᵥ x) :=
+          Matrix.mulVec_mulVec (B *ᵥ x) realMatchingJetᵀ Zᵀ
         _ = _ := by rw [← hBstar, Matrix.mulVec_mulVec]
     have hTval (p : Fin 24) : g p = realMatchingGramValue T p := by
       change g p = realMatchingGramValue (Bᴴ * B) p

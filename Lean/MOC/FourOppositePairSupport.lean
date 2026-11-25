@@ -75,7 +75,8 @@ private theorem rebalance_one_negative_row (w : Fin 3 → Fin 3 → ℝ) (i j : 
           dsimp only [p]
           linarith only [hpair i k j₀ l (Ne.symm hk) (Ne.symm hl)]
         simp only [r, c, if_neg hk, if_neg hl, add_zero]
-        linarith only [hbound]
+        rw [show (p + q + (p - q)) / 2 = p by ring]
+        exact sub_nonneg.mpr hbound
 
 /-- Nonnegative sums on pairs in distinct rows and columns allow nonnegative
 row, column, and rebalanced cell coefficients. -/
@@ -148,7 +149,8 @@ private theorem matchingEvaluation_eq_collisionPair (m : Fin 14 → ℝ) (h : �
   have h₅ := hc 5 (by decide)
   simp only [fourMatchingEvaluation, Matrix.cons_val] at h₀ h₁ h₂ h₃ h₄ h₅
   fin_cases k <;>
-    norm_num [collisionPairValue, collisionCells, collisionCellWeights, fourMatchingEvaluation] <;>
+    norm_num [collisionPairValue, collisionCells, collisionCellWeights, fourMatchingEvaluation,
+      Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;>
     linarith only [h₀, h₁, h₂, h₃, h₄, h₅]
 
 set_option maxHeartbeats 3000000 in
@@ -200,7 +202,8 @@ private theorem oppositePairOrdinaryCost_rebalanced (h : ℝ) (r c : Fin 3 → �
   simp only [collision_fixed_mask, collision_row_mask, collision_column_mask, collision_minor_mask,
     Fin.sum_univ_three]
   fin_cases k <;>
-    norm_num [collisionPairValue, collisionCells, rebalancedCell, Fin.sum_univ_three] <;> ring
+    norm_num [collisionPairValue, collisionCells, rebalancedCell, Fin.sum_univ_three,
+      Fin.ext_iff, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
 
 /-- A nonnegative matching cost that is constant on the six permutations
 that fix label zero is a nonnegative combination of ordinary indicators. -/
@@ -220,7 +223,7 @@ theorem fourOppositePair_ordinary_cost (m : Fin 14 → ℝ) (h : ℝ)
     rw [hval] at hnonneg
     unfold collisionPairValue at hnonneg
     cases hslots : collisionCells p with
-    | none => simp only [hslots, Option.map_none, reduceCtorEq] at he
+    | none => exact Option.noConfusion he
     | some t =>
       obtain ⟨s, u, v⟩ := t
       have huv : (u, v) = (x, y) := Option.some.inj (by
@@ -259,9 +262,15 @@ private theorem oppositePairOrdinaryCost_eq_sum (h : ℝ) (r c : Fin 3 → ℝ)
   have h₁ : ({0, 1} : Finset (Fin 4))ᶜ = {2, 3} := by decide
   have h₂ : ({0, 2} : Finset (Fin 4))ᶜ = {1, 3} := by decide
   have h₃ : ({0, 3} : Finset (Fin 4))ᶜ = {1, 2} := by decide
-  norm_num [fourOppositePairOrdinaryCost, collisionIndicatorCoefficients, collisionIndicator,
-    collisionIndicatorRows, collisionIndicatorColumns, Fin.sum_univ_succ, h₁, h₂, h₃,
-    Finset.map_singleton, mul_ite] <;> ring
+  have hs₀ : (0 : Fin 3).succ = 1 := rfl
+  have hs₁ : (1 : Fin 3).succ = 2 := rfl
+  have hs₂ : (2 : Fin 3).succ = 3 := rfl
+  simp only [fourOppositePairOrdinaryCost, collisionIndicatorCoefficients, collisionIndicator,
+    collisionIndicatorRows, collisionIndicatorColumns, Fin.sum_univ_three, Fin.sum_univ_succ,
+    Fin.sum_univ_zero, hs₀, hs₁, hs₂, h₁, h₂, h₃, Matrix.cons_val, Matrix.cons_val_succ,
+    Matrix.cons_val_succ', Matrix.cons_val_zero', Finset.map_singleton, Finset.singleton_inj,
+    mul_ite, mul_one, mul_zero, add_zero, zero_add]
+  ring
 
 private def collisionIndicatorCoordinates (p : Fin 16) : Fin 14 → ℤ :=
   fourMatchingCoordinatesOfValues (fun k => collisionIndicator p (fourPerm k).symm)
@@ -277,13 +286,15 @@ private theorem collisionIndicator_realized (p : Fin 16) (k : Fin 24) :
     decide +kernel
   have hcast :
       fourMatchingEvaluation (fun i => (collisionIndicatorCoordinates p i : ℝ)) k =
-        (fourMatchingEvaluation (collisionIndicatorCoordinates p) k : ℝ) := by
+        (fourMatchingEvaluation (R := ℤ) (collisionIndicatorCoordinates p) k : ℝ) := by
     fin_cases k <;> simp only [fourMatchingEvaluation, Matrix.cons_val, Int.cast_add,
       Int.cast_mul, Int.cast_ofNat]
   rw [hcast, hint]
   unfold collisionIndicator
   split_ifs <;> simp only [Int.cast_one, Int.cast_zero]
 
+set_option maxRecDepth 3000 in
+set_option maxHeartbeats 1500000 in
 private theorem matchingEvaluation_scale_collision (c : ℝ) (m : Fin 14 → ℝ) (k : Fin 24) :
     fourMatchingEvaluation (fun i => c * m i) k = c * fourMatchingEvaluation m k := by
   fin_cases k <;> simp only [fourMatchingEvaluation, Matrix.cons_val] <;> ring
@@ -310,10 +321,13 @@ theorem fourOppositePair_matching_squares (m : Fin 14 → ℝ) (h : ℝ)
   split_ifs <;> simp only [mul_one, mul_zero, zero_pow (by decide : (2 : ℕ) ≠ 0),
     Real.sq_sqrt (ht p)]
 
+set_option maxRecDepth 3000 in
+set_option maxHeartbeats 1500000 in
 private theorem matchingEvaluation_sub_height (m : Fin 14 → ℝ) (h : ℝ) (k : Fin 24) :
     fourMatchingEvaluation (fun i => (if i = 13 then h else 0) - m i) k =
       h - fourMatchingEvaluation m k := by
-  fin_cases k <;> norm_num [fourMatchingEvaluation] <;> ring
+  fin_cases k <;> norm_num [fourMatchingEvaluation, Fin.ext_iff,
+    Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
 
 private theorem collision_label_of_index (k : Fin 24) (hk : k.val < 6) :
     (fourPerm k).symm 0 = 0 := by

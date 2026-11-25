@@ -9,13 +9,14 @@ open scoped Polynomial
 
 namespace MOC
 
+open SparsePolynomialCertificate (Univariate)
+
 private abbrev CellQuartic := Fin 5 → ℤ
 
-private def cellQuartic (a : CellQuartic) : ℤ[X] :=
-  C (a 0) + C (a 1) * X + C (a 2) * X ^ 2 + C (a 3) * X ^ 3 + C (a 4) * X ^ 4
+private def cellQuartic (a : CellQuartic) : Univariate :=
+  Univariate.sum fun j : Fin 5 => Univariate.ofInt (a j) * Univariate.X ^ j.val
 
-private noncomputable def cellEval (x : ℝ) : ℤ[X] →+* ℝ :=
-  Polynomial.eval₂RingHom (Int.castRingHom ℝ) x
+private noncomputable abbrev cellEval (x : ℝ) : Univariate → ℝ := Univariate.eval x
 
 private structure CellBand where
   lo : ℤ
@@ -56,7 +57,7 @@ private instance (z : CellBand) (a : CellQuartic) : Decidable (bandNonnegative z
 
 private theorem cellEval_quartic_neg (x : ℝ) (a : CellQuartic) :
     cellEval x (cellQuartic (fun j => -a j)) = -(cellEval x (cellQuartic a)) := by
-  simp [cellQuartic, cellEval] <;>
+  simp [cellQuartic, Fin.sum_univ_succ] <;>
     ring
 
 private theorem intBernstein_positive (z : CellBand) (a : CellQuartic) (x : ℝ)
@@ -99,7 +100,7 @@ private theorem intBernstein_positive (z : CellBand) (a : CellQuartic) (x : ℝ)
           (a 2 : ℝ) * ((z.den : ℝ) * x) ^ 2 * (z.den : ℝ) ^ 2 +
           (a 3 : ℝ) * ((z.den : ℝ) * x) ^ 3 * (z.den : ℝ) +
           (a 4 : ℝ) * ((z.den : ℝ) * x) ^ 4) := by
-        simp [cellEval, cellQuartic] <;>
+        simp [cellQuartic, Fin.sum_univ_succ] <;>
           ring
       _ = _ := by
         rw [hxy]
@@ -135,7 +136,7 @@ private structure CellPolygon where
   facets : Fin size → ℕ
   turns : Fin size → CellWeight
 
-private abbrev CellPlanePolynomial := ℤ[X] × ℤ[X]
+private abbrev CellPlanePolynomial := Univariate × Univariate
 
 private def cellPlaneMul (a b : CellPlanePolynomial) : CellPlanePolynomial :=
   (a.1 * b.1 - a.2 * b.2, a.1 * b.2 + a.2 * b.1)
@@ -143,7 +144,7 @@ private def cellPlaneMul (a b : CellPlanePolynomial) : CellPlanePolynomial :=
 private def cellPlaneSub (a b : CellPlanePolynomial) : CellPlanePolynomial :=
   (a.1 - b.1, a.2 - b.2)
 
-private def cellPlaneCross (a b : CellPlanePolynomial) : ℤ[X] :=
+private def cellPlaneCross (a b : CellPlanePolynomial) : Univariate :=
   a.1 * b.2 - a.2 * b.1
 
 private noncomputable def cellPlaneEval (x : ℝ) (a : CellPlanePolynomial) : ℂ :=
@@ -152,23 +153,24 @@ private noncomputable def cellPlaneEval (x : ℝ) (a : CellPlanePolynomial) : �
 private theorem cellPlaneEval_mul (x : ℝ) (a b : CellPlanePolynomial) :
     cellPlaneEval x (cellPlaneMul a b) = cellPlaneEval x a * cellPlaneEval x b := by
   apply Complex.ext
-  · simp only [cellPlaneEval, cellPlaneMul, map_sub, map_mul, Complex.mul_re]
-  · simp only [cellPlaneEval, cellPlaneMul, map_add, map_mul, Complex.mul_im]
+  · simp only [cellPlaneEval, cellPlaneMul, Univariate.eval_sub, Univariate.eval_mul, Complex.mul_re]
+  · simp only [cellPlaneEval, cellPlaneMul, Univariate.eval_add, Univariate.eval_mul, Complex.mul_im]
 
 private theorem cellPlaneEval_sub (x : ℝ) (a b : CellPlanePolynomial) :
     cellPlaneEval x (cellPlaneSub a b) = cellPlaneEval x a - cellPlaneEval x b := by
   apply Complex.ext
-  · simp only [cellPlaneEval, cellPlaneSub, map_sub, Complex.sub_re]
-  · simp only [cellPlaneEval, cellPlaneSub, map_sub, Complex.sub_im]
+  · simp only [cellPlaneEval, cellPlaneSub, Univariate.eval_sub, Complex.sub_re]
+  · simp only [cellPlaneEval, cellPlaneSub, Univariate.eval_sub, Complex.sub_im]
 
 private theorem cellPlaneCross_eval (x : ℝ) (a b : CellPlanePolynomial) :
     cellEval x (cellPlaneCross a b) = planeCross (cellPlaneEval x a) (cellPlaneEval x b) := by
-  simp only [cellPlaneEval, cellPlaneCross, planeCross, map_mul, map_sub]
+  simp only [cellPlaneEval, cellPlaneCross, planeCross, Univariate.eval_mul, Univariate.eval_sub]
 
 private def cellPairSum (i j : Fin 4) : CellPlanePolynomial :=
-  let scale : ℤ[X] := ![1 - X, 1 - X, 1, 1] i
-  (![X, -X, 1, 2] i + scale * ![-1, -2, 2, 1] j,
-    ![1 - X, 1 - X, 0, 1] i + scale * ![1, -2, -1, 2] j)
+  let x := Univariate.X
+  let scale : Univariate := ![1 - x, 1 - x, 1, 1] i
+  (![x, -x, 1, 2] i + scale * ![-1, -2, 2, 1] j,
+    ![1 - x, 1 - x, 0, 1] i + scale * ![1, -2, -1, 2] j)
 
 private noncomputable def cellRowScale (x : ℝ) (i : Fin 4) : ℂ :=
   ![((1 - x : ℝ) : ℂ), ((1 - x : ℝ) : ℂ), 1, 1] i
@@ -203,16 +205,10 @@ private def factorQuartic (table : Array CellQuartic) (index : ℕ) : CellQuarti
 private def signedFactorQuartic (table : Array CellQuartic) (f : SignedCellFactor) : CellQuartic :=
   if f.negative then fun j => -(factorQuartic table f.index j) else factorQuartic table f.index
 
-private def cellWeightPolynomial (table : Array CellQuartic) (w : CellWeight) : ℤ[X] :=
-  C (w.content : ℤ) *
-    (w.signed.map (fun f => cellQuartic (signedFactorQuartic table f))).prod *
-    (w.squared.map (fun i => cellQuartic (factorQuartic table i))).prod ^ 2
-
-private theorem cellEval_list_prod {α : Type*} (x : ℝ) (l : List α) (f : α → ℤ[X]) :
-    cellEval x (l.map f).prod = (l.map (fun a => cellEval x (f a))).prod := by
-  induction l with
-  | nil => simp only [List.map_nil, List.prod_nil, map_one]
-  | cons a l ih => simp only [List.map_cons, List.prod_cons, map_mul, ih]
+private def cellWeightPolynomial (table : Array CellQuartic) (w : CellWeight) : Univariate :=
+  Univariate.ofInt (w.content : ℤ) *
+    Univariate.prod (w.signed.map (fun f => cellQuartic (signedFactorQuartic table f))) *
+    Univariate.prod (w.squared.map (fun i => cellQuartic (factorQuartic table i))) ^ 2
 
 private theorem listProd_pos_of_members {α : Type*} (l : List α) (f : α → ℝ)
     (h : ∀ a ∈ l, 0 < f a) : 0 < (l.map f).prod := by
@@ -226,9 +222,8 @@ private theorem listProd_pos_of_members {α : Type*} (l : List α) (f : α → �
 private theorem cellWeight_nonneg (table : Array CellQuartic) (w : CellWeight) (x : ℝ)
     (h : ∀ f ∈ w.signed, 0 < cellEval x (cellQuartic (signedFactorQuartic table f))) :
     0 ≤ cellEval x (cellWeightPolynomial table w) := by
-  simp only [cellWeightPolynomial, map_mul, map_pow, cellEval_list_prod]
-  have hc : cellEval x (C (w.content : ℤ)) = (w.content : ℝ) := by simp [cellEval]
-  rw [hc]
+  simp only [cellWeightPolynomial, Univariate.eval_mul, Univariate.eval_pow, Univariate.eval_prod,
+    Univariate.eval_ofInt, Int.cast_natCast, List.map_map, Function.comp_def]
   exact mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (listProd_pos_of_members w.signed _ h).le)
     (sq_nonneg _)
 
@@ -236,10 +231,9 @@ private theorem cellWeight_positive (table : Array CellQuartic) (w : CellWeight)
     (hc : 0 < w.content) (hno : w.squared = [])
     (h : ∀ f ∈ w.signed, 0 < cellEval x (cellQuartic (signedFactorQuartic table f))) :
     0 < cellEval x (cellWeightPolynomial table w) := by
-  simp only [cellWeightPolynomial, hno, List.map_nil, List.prod_nil, one_pow, mul_one,
-    map_mul, cellEval_list_prod]
-  have hc' : cellEval x (C (w.content : ℤ)) = (w.content : ℝ) := by simp [cellEval]
-  rw [hc']
+  simp only [cellWeightPolynomial, hno, Univariate.eval_mul, Univariate.eval_pow,
+    Univariate.eval_prod, Univariate.eval_ofInt, Int.cast_natCast, List.map_map, Function.comp_def,
+    List.map_nil, List.prod_nil, one_pow, mul_one]
   exact mul_pos (by exact_mod_cast hc) (listProd_pos_of_members w.signed _ h)
 
 private def cellFactorValid (table : Array CellQuartic) (b : CellBand) (negative : Bool)
@@ -1100,35 +1094,37 @@ private def compactPolygon (i : ℕ) : CellPolygon :=
 private def compactVertexByIndex (i : Fin 24) : CellPlanePolynomial :=
   cellVertex (fourPerm i).symm
 
-private def compactFacetPolynomial (f : CellFacet) (p : Equiv.Perm (Fin 4)) : ℤ[X] :=
+private def compactFacetPolynomial (f : CellFacet) (p : Equiv.Perm (Fin 4)) : Univariate :=
   cellPlaneCross
     (cellPlaneSub (compactVertexByIndex f.right) (compactVertexByIndex f.left))
     (cellPlaneSub (cellVertex p) (compactVertexByIndex f.left))
 
-private def compactFacetMinorPolynomial (f : CellFacet) (p : Equiv.Perm (Fin 4)) : ℤ[X] :=
-  ∑ j : Fin 12,
+private def compactFacetMinorPolynomial (f : CellFacet) (p : Equiv.Perm (Fin 4)) : Univariate :=
+  Univariate.sum fun j : Fin 12 =>
     let term := f.terms j
     if term.columns.map p.toEmbedding = term.rows then
       cellWeightPolynomial compactFactorData term.weight else 0
 
-private def compactTurnPolynomial (p : CellPolygon) (i : Fin p.size) : ℤ[X] :=
+private def compactTurnPolynomial (p : CellPolygon) (i : Fin p.size) : Univariate :=
   cellPlaneCross
     (cellPlaneSub (compactVertexByIndex (p.label i)) (compactVertexByIndex (p.label (p.prev i))))
     (cellPlaneSub (compactVertexByIndex (p.label (p.next i))) (compactVertexByIndex (p.label i)))
 
-private def compactGuardPolynomial (z : CellBand) : ℤ[X] :=
+private def compactGuardPolynomial (z : CellBand) : Univariate :=
   cellQuartic (factorQuartic compactFactorData z.guard)
 
 private noncomputable def compactGuardReal (z : CellBand) : ℝ[X] :=
-  (compactGuardPolynomial z).map (Int.castRingHom ℝ)
+  ∑ j : Fin 5, monomial j.val (factorQuartic compactFactorData z.guard j : ℝ)
 
 private def compactWeightValid (b : CellBand) (negative : Bool) (w : CellWeight) : Bool :=
   w.signed.all (fun f => decide (cellFactorValid compactFactorData b negative f))
 
 set_option maxRecDepth 20000 in
 set_option maxHeartbeats 24000000 in
-private theorem compactFacet_check (f : Fin 107) (p : Equiv.Perm (Fin 4)) :
-    compactFacetPolynomial (compactFacet f.val) p = compactFacetMinorPolynomial (compactFacet f.val) p := by
+private theorem compactFacet_check (x : ℝ) (f : Fin 107) (p : Equiv.Perm (Fin 4)) :
+    cellEval x (compactFacetPolynomial (compactFacet f.val) p) =
+      cellEval x (compactFacetMinorPolynomial (compactFacet f.val) p) := by
+  apply Univariate.eval_eq
   obtain ⟨j, hj⟩ := fourPerm_surjective p.symm
   have hp : p = (fourPerm j).symm := by rw [hj, Equiv.symm_symm]
   rw [hp]
@@ -1143,14 +1139,15 @@ private theorem compactPolygon_check (k : Fin 89) :
       (compactFacet (p.facets i)).left = p.label i ∧
       (compactFacet (p.facets i)).right = p.label (p.next i) ∧
       0 < (p.turns i).content ∧ (p.turns i).squared = [] ∧
-      compactTurnPolynomial p i = cellWeightPolynomial compactFactorData (p.turns i) := by
+      Univariate.same (compactTurnPolynomial p i)
+        (cellWeightPolynomial compactFactorData (p.turns i)) = true := by
   fin_cases k <;> decide +kernel
 
 set_option maxRecDepth 20000 in
 set_option maxHeartbeats 3000000 in
 private theorem compactBand_check (i : Fin 173) (negative : Bool) :
     let b := compactBandData i
-    0 < b.den ∧ b.chart negative < 89 ∧ compactGuardPolynomial b ≠ 0 := by
+    0 < b.den ∧ b.chart negative < 89 ∧ ∃ j, factorQuartic compactFactorData b.guard j ≠ 0 := by
   fin_cases i <;> cases negative <;> decide +kernel
 
 set_option maxRecDepth 20000 in
@@ -1174,12 +1171,12 @@ private theorem compactBand_one : (compactBandData 172).right = 1 := by decide +
 
 private theorem compactGuardReal_nonzero (i : Fin 173) :
     compactGuardReal (compactBandData i) ≠ 0 := by
+  obtain ⟨j, hj⟩ := (compactBand_check i false).2.2
   intro h
-  have hp : compactGuardPolynomial (compactBandData i) = 0 :=
-    Polynomial.map_injective (Int.castRingHom ℝ)
-      (show Function.Injective (Int.castRingHom ℝ) from Int.cast_injective)
-      (by simpa only [compactGuardReal, Polynomial.map_zero] using h)
-  exact (compactBand_check i false).2.2 hp
+  have hc := congrArg (fun p : ℝ[X] => p.coeff j.val) h
+  simp only [compactGuardReal, Polynomial.finset_sum_coeff, Polynomial.coeff_monomial,
+    Fin.val_inj, Finset.sum_ite_eq', Finset.mem_univ, if_true, Polynomial.coeff_zero] at hc
+  exact hj (by exact_mod_cast hc)
 
 private def compactCellCuts : Set ℝ :=
   ((Set.range fun i : Fin 173 => ((compactBandData i).left : ℝ)) ∪
@@ -1226,8 +1223,9 @@ private theorem compactGuard_eval_ne (x : ℝ) (hcut : x ∉ compactCellCuts) (i
   apply Set.mem_iUnion.mpr
   refine ⟨i, ?_⟩
   change (compactGuardReal (compactBandData i)).eval x = 0
-  rw [compactGuardReal, Polynomial.eval_map]
-  exact h
+  simpa only [compactGuardReal, Polynomial.eval_finset_sum, Polynomial.eval_monomial,
+    compactGuardPolynomial, cellQuartic, Univariate.eval_sum, Univariate.eval_mul,
+    Univariate.eval_ofInt, Univariate.eval_pow, Univariate.eval_X, mul_comm] using h
 
 private theorem compactMinorChart (x : ℝ) (hx0 : 0 < x) (hx1 : x < 1)
     (hcut : x ∉ compactCellCuts) : Nonempty (FourRealParameterMinorChart x) := by
@@ -1272,15 +1270,15 @@ private theorem compactMinorChart (x : ℝ) (hx0 : 0 < x) (hx1 : x < 1)
   · intro i
     obtain ⟨_, _, _, _, hc, hsq, hid⟩ := facts.2 i
     have ht := cellWeight_positive compactFactorData (p.turns i) x hc hsq (hfactor _ ((hsign i).1))
-    rw [← hid] at ht
+    rw [← Univariate.eval_eq x hid] at ht
     simpa only [compactTurnPolynomial, cellPlaneCross_eval, cellPlaneEval_sub,
       compactVertexByIndex, cellVertex_eval x hx1] using ht
   · intro i σ
     obtain ⟨_, hidx, hlab, hrab, _⟩ := facts.2 i
-    have he := congrArg (cellEval x) (compactFacet_check ⟨p.facets i, hidx⟩ σ)
+    have he := compactFacet_check x ⟨p.facets i, hidx⟩ σ
     simp only [compactFacetPolynomial, hlab, hrab, cellPlaneCross_eval, cellPlaneEval_sub,
       compactVertexByIndex, cellVertex_eval x hx1, compactFacetMinorPolynomial,
-      map_sum, apply_ite, map_zero] at he
+      Univariate.eval_sum, apply_ite, Univariate.eval_ofNat, Nat.cast_zero] at he
     exact he
 
 /-- Every real parameter in the order-four family satisfies the matching

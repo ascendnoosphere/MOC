@@ -125,8 +125,8 @@ theorem confocal_chord_cosine_bound (A B : ℝ) (Z : ℂ) (s t : ℝ)
     · exact hordered s t hs₀ hst ht₁
     · have h := hordered t s ht₀ (le_of_not_ge hst) hs₁
       dsimp only
-      rw [Complex.norm_mul, Complex.star_def, Complex.norm_conj, chordDot_re]
-      rw [Complex.norm_mul, Complex.star_def, Complex.norm_conj, chordDot_re,
+      rw [chordDot_re, Complex.norm_mul, Complex.star_def, Complex.norm_conj]
+      rw [chordDot_re, Complex.norm_mul, Complex.star_def, Complex.norm_conj,
         mul_comm ‖Z - (t : ℂ)‖,
         mul_comm (Z.re - t) (Z.re - s)] at h
       exact h
@@ -161,7 +161,7 @@ theorem confocal_chord_cosine_bound (A B : ℝ) (Z : ℂ) (s t : ℝ)
   let k := (v - u) / 4
   have hk : 0 < k := div_pos (sub_pos.mpr (lt_of_le_of_ne huv he)) (by norm_num)
   have hVre : k * F.re ≤ V.re := by
-    apply (mul_le_mul_right₀ (show 0 < v + 2 by
+    apply (mul_le_mul_right (show 0 < v + 2 by
       linarith only [hu, lt_of_le_of_ne huv he])).mp
     have hfirst := mul_nonneg (by norm_num : 0 ≤ (4 : ℝ)) h₁
     have hsecond := mul_nonneg (sub_nonneg.mpr huv) h₂
@@ -178,23 +178,23 @@ theorem confocal_chord_cosine_bound (A B : ℝ) (Z : ℂ) (s t : ℝ)
     have hh := normalized_re_le_of_im_eq ((k : ℂ) * F) V hVim
       (by simpa only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero] using hVre)
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero,
-      Complex.norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hk] at hh
-    apply (mul_le_mul_left₀ hk).mp
+      Complex.norm_mul (k : ℂ) F, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hk] at hh
+    apply (mul_le_mul_left hk).mp
     nlinarith only [hh]
   change (B ^ 2 - 4) * ‖V‖ ≤ A ^ 2 * V.re
-  apply (mul_le_mul_right₀ hFpos).mp
+  apply (mul_le_mul_right hFpos).mp
   have hfirst := mul_le_mul_of_nonneg_right hFbound (norm_nonneg V)
   have hsecond := mul_le_mul_of_nonneg_left hscale (sq_nonneg A)
   nlinarith only [hfirst, hsecond]
 
 /-- The real and imaginary axes of the confocal ellipse associated
 with the chord factorization. -/
-def confocalPoint (q p : ℂ) : ℂ := p / q + q / p
+noncomputable def confocalPoint (q p : ℂ) : ℂ := p / q + q / p
 
 /-- The map of the unit circle used for the ellipse factorization.
 The real homothety relating this map to the given ellipse cancels
 from its cross ratios. -/
-def ellipseCircleImage (q w : ℂ) : ℂ := w + q / w
+noncomputable def ellipseCircleImage (q w : ℂ) : ℂ := w + q / w
 
 private theorem ellipseCircleImage_sub (q w z : ℂ) (hw : w ≠ 0) (hz : z ≠ 0) :
     ellipseCircleImage q w - ellipseCircleImage q z =
@@ -253,8 +253,7 @@ theorem ellipse_crossRatio_factorization (q p a b c d : ℂ)
     intro he
     exact himage (by rw [hden, he, mul_zero])
   unfold spectralCrossRatio
-  rw [hn, hden]
-  field_simp [div_ne_zero hq hp, hsource, hseg] <;> ring
+  rw [hn, hden, mul_div_mul_comm, mul_div_mul_right _ _ (div_ne_zero hq hp)]
 
 /-- A cross ratio of four unit points has zero imaginary part. -/
 theorem unit_circle_crossRatio_im_zero (a b c d : ℂ)
@@ -354,8 +353,8 @@ theorem ellipse_crossRatio_re_bound (q : ℝ) (a b c d : ℂ)
       (ellipseCircleImage (q : ℂ) b - ellipseCircleImage (q : ℂ) c) ≠ 0)
     (hneg : (spectralCrossRatio a b c d).re < 0) :
     let e := ellipseCircleImage (q : ℂ)
-    let λ := spectralCrossRatio (e a) (e b) (e c) (e d)
-    (q⁻¹ + q) ^ 2 * λ.re ≤ (4 - (q⁻¹ - q) ^ 2) * ‖λ‖ := by
+    let ratio := spectralCrossRatio (e a) (e b) (e c) (e d)
+    (q⁻¹ + q) ^ 2 * ratio.re ≤ (4 - (q⁻¹ - q) ^ 2) * ‖ratio‖ := by
   have hNorm (u : ℂ) (hu : ‖u‖ = 1) : u ≠ 0 := by intro h; simp [h] at hu
   obtain ⟨p, hprod⟩ := IsAlgClosed.exists_pow_nat_eq (a * b * c * d) (n := 2) two_pos
   have hp : ‖p‖ = 1 := by
@@ -390,7 +389,8 @@ theorem ellipse_crossRatio_re_bound (q : ℝ) (a b c d : ℂ)
     have htBound : t ^ 2 ≤ 4 := by
       nlinarith only [mul_nonneg (by linarith : 0 ≤ t + 2) (sub_nonneg.mpr ht₁)]
     change A ^ 2 = B ^ 2 + 4 at hfocus
-    linarith only [htSq, htBound, hfocus, sq_pos_of_pos hB]
+    have hBsq : 0 < B ^ 2 := sq_pos_of_pos hB
+    linarith only [htSq, htBound, hfocus, hBsq]
   let R := (Z - (s : ℂ)) / (Z - (t : ℂ))
   let N := Complex.normSq (Z - (t : ℂ))
   have hN : 0 < N := Complex.normSq_pos.mpr hzn
@@ -401,7 +401,7 @@ theorem ellipse_crossRatio_re_bound (q : ℝ) (a b c d : ℂ)
   have hR : ((q⁻¹ - q) ^ 2 - 4) * ‖R‖ ≤ (q⁻¹ + q) ^ 2 * R.re := by
     rw [hm, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero,
       Complex.norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hN] at hVisual
-    apply (mul_le_mul_left₀ hN).mp
+    apply (mul_le_mul_left hN).mp
     nlinarith only [hVisual]
   have hEq := ellipse_crossRatio_factorization (q : ℂ) p a b c d
     (Complex.ofReal_ne_zero.mpr hq.ne') (hNorm p hp) (hNorm a ha) (hNorm b hb) (hNorm c hc)

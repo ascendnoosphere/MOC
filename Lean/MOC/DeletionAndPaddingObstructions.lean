@@ -25,7 +25,8 @@ def deletionObstructionMixer : Matrix (Fin 3) (Fin 3) ℂ :=
 theorem deletionObstructionMixer_unitary : IsUnitary deletionObstructionMixer := by
   constructor <;> ext i j : 1 <;> fin_cases i <;> fin_cases j <;>
     norm_num [deletionObstructionMixer, Matrix.mul_apply, Matrix.conjTranspose_apply,
-      Matrix.one_apply, Fin.sum_univ_three, Matrix.cons_val, Complex.star_def]
+      Matrix.one_apply, Fin.sum_univ_three, Matrix.cons_val, Matrix.cons_val_two,
+      Complex.star_def, map_ofNat]
 
 /-- Delete the last row and column from the mixer. The lower-order
 similarity term has determinant outside the lower matching hull. -/
@@ -57,7 +58,7 @@ theorem deletionObstruction_outside_matching_hull :
     change (diagonal a + W * diagonal a * W⁻¹).det = _
     rw [hInv, hW]
     norm_num [a, V, Matrix.det_fin_two, Matrix.add_apply, Matrix.diagonal_apply,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val]
+      Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two, Matrix.cons_val]
   refine ⟨hvalue, fun hv => ?_⟩
   have hle : Complex.reLm v ≤ 1 := by
     apply convexHull_min _ ((convex_Iic (𝕜 := ℝ) (1 : ℝ)).linear_preimage Complex.reLm) hv
@@ -118,11 +119,12 @@ theorem paddingThree_original_support_eight :
     generalize p 1 = j at *
     generalize p 2 = k at *
     fin_cases i <;> fin_cases j <;> fin_cases k <;>
-      norm_num [a, b, Matrix.cons_val, Complex.add_re, Complex.add_im, Complex.sub_re,
+      norm_num [a, b, Matrix.cons_val, Matrix.cons_val_two, Complex.add_re, Complex.add_im, Complex.sub_re,
         Complex.sub_im, Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im] at *
   · refine ⟨Equiv.swap (0 : Fin 3) 1, ?_⟩
-    rw [matchingProduct, Fin.prod_univ_three]
-    norm_num [a, b, Matrix.cons_val, Equiv.swap_apply_def, Complex.add_re, Complex.add_im,
+    rw [matchingProduct, Fin.prod_univ_three,
+      show Equiv.swap (0 : Fin 3) 1 2 = 2 by decide]
+    norm_num [a, b, Matrix.cons_val, Matrix.cons_val_two, Equiv.swap_apply_def, Complex.add_re, Complex.add_im,
       Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im]
 
 /-- For the order-three example two new injection values have a fixed
@@ -140,11 +142,13 @@ theorem paddingThree_has_new_support_at_least_twelve (z : ℂ) :
     fin_cases k <;> fin_cases l <;> simp_all [Matrix.cons_val]⟩
   have h₀ : (rectangularMatchingProduct a b e₀).re = 12 - 12 * z.re - 4 * z.im := by
     rw [rectangularMatchingProduct, Fin.prod_univ_three]
-    norm_num [a, b, e₀, Matrix.cons_val, Complex.add_re, Complex.add_im, Complex.sub_re,
+    norm_num [a, b, e₀, Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three,
+      Complex.add_re, Complex.add_im, Complex.sub_re,
       Complex.sub_im, Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im] <;> ring
   have h₁ : (rectangularMatchingProduct a b e₁).re = 12 + 6 * z.re + 2 * z.im := by
     rw [rectangularMatchingProduct, Fin.prod_univ_three]
-    norm_num [a, b, e₁, Matrix.cons_val, Complex.add_re, Complex.add_im, Complex.sub_re,
+    norm_num [a, b, e₁, Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three,
+      Complex.add_re, Complex.add_im, Complex.sub_re,
       Complex.sub_im, Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im] <;> ring
   by_cases h : 12 ≤ (rectangularMatchingProduct a b e₀).re
   · exact ⟨e₀, h⟩

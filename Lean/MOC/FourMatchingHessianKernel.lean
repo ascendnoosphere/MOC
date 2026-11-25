@@ -107,7 +107,8 @@ theorem fourMatchingGradient_eq_zero_iff (y : Fin 14 → ℂ) :
     constructor
     · funext i
       change fourMatchingHessianAction (fun k => (y k).re) (fun k => (y k).im) i = 0
-      rw [← gradient_projection_im y i, hy i, Complex.zero_im]
+      rw [← gradient_projection_im y i]
+      exact congrArg Complex.im (hy i)
     · funext i
       have he := gradient_projection_re y i
       rw [hy i, Complex.zero_re] at he
@@ -156,9 +157,10 @@ private theorem realSecantKernel_coordinates (v : Fin 14 → ℝ)
   have r9 := he 9
   have r10 := he 10
   have r11 := he 11
-  norm_num [fourMatchingHessianAction, fourRealSecantObstruction, cubicGradient] at
-    r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
-  fin_cases i <;> norm_num [realSecantKernelFirst, realSecantKernelSecond] <;>
+  norm_num [fourMatchingHessianAction, fourRealSecantObstruction, cubicGradient,
+    Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] at r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
+  fin_cases i <;> norm_num [realSecantKernelFirst, realSecantKernelSecond,
+    Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;>
     linarith only [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
 
 /-- The cubic and Hessian kernel tests can hold although no real
@@ -169,23 +171,26 @@ theorem fourRealSecantObstruction_checks :
       ¬ ∃ v : Fin 14 → ℝ, fourMatchingHessianAction fourRealSecantObstruction v = 0 ∧
         fourMatchingGradient v = fourMatchingGradient fourRealSecantObstruction := by
   refine ⟨?_, ⟨realSecantKernelFirst, ?_, ?_⟩, ?_⟩
-  · norm_num [fourMatchingCubic, fourRealSecantObstruction]
+  · norm_num [fourMatchingCubic, fourRealSecantObstruction,
+      Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
   · intro h
     have hz : realSecantKernelFirst 12 = 0 := congrFun h 12
-    norm_num [realSecantKernelFirst] at hz
+    norm_num [realSecantKernelFirst, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] at hz
   · funext i
     fin_cases i <;>
       norm_num [fourMatchingHessianAction, fourRealSecantObstruction, realSecantKernelFirst,
-        cubicGradient]
+        cubicGradient, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
   · rintro ⟨v, hv, hg⟩
     have h0 : fourMatchingGradient fourRealSecantObstruction 0 = 72 := by
-      norm_num [fourMatchingGradient, fourRealSecantObstruction, cubicGradient]
+      norm_num [fourMatchingGradient, fourRealSecantObstruction, cubicGradient,
+        Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
     have hp : fourMatchingGradient v 0 =
         -(9 / 169 : ℝ) * (25 * v 12 ^ 2 - 14 * v 12 * v 13 + 29 * v 13 ^ 2) := by
       conv_lhs =>
         rw [show v = (fun i => (realSecantKernelFirst i * v 12 +
           realSecantKernelSecond i * v 13) / 13) from funext (realSecantKernel_coordinates v hv)]
-      simp [fourMatchingGradient, cubicGradient, realSecantKernelFirst, realSecantKernelSecond]
+      simp [fourMatchingGradient, cubicGradient, realSecantKernelFirst, realSecantKernelSecond,
+        Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
       <;> ring
     have he : fourMatchingGradient v 0 = 72 := (congrFun hg 0).trans h0
     rw [he] at hp

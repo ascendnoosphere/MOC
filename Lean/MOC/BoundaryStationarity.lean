@@ -1,3 +1,4 @@
+import MOC.DeterminantSecondVariation
 import MOC.Geometry
 import MOC.Support
 import MOC.Variational
@@ -128,7 +129,20 @@ theorem boundary_inverse_commutator (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     change HasDerivAt (fun t : ℝ => (A + NormedSpace.exp ℝ (t • X) * B *
       NormedSpace.exp ℝ (-(t • X))).det) _ 0
     simp only [← smul_neg]
-    exact hasDerivAt_orbit_determinant A B X hdet
+    let M (t : ℝ) := A + NormedSpace.exp ℝ (t • X) * B * NormedSpace.exp ℝ (t • (-X))
+    have hM₀ : M 0 = C := by simp [M, C, NormedSpace.exp_zero]
+    have hex (Y : Matrix ι ι ℂ) : HasDerivAt (fun t : ℝ => NormedSpace.exp ℝ (t • Y)) Y 0 := by
+      simpa only [zero_smul, NormedSpace.exp_zero, one_mul] using
+        hasDerivAt_exp_smul_const Y (0 : ℝ)
+    have hM : HasDerivAt M (X * B - B * X) 0 := by
+      simpa only [M, zero_smul, NormedSpace.exp_zero, Matrix.one_mul, Matrix.mul_one,
+        Matrix.mul_neg, sub_eq_add_neg, add_comm] using (((hex X).mul_const B).mul (hex (-X))).const_add A
+    have htrace : (C⁻¹ * (X * B - B * X)).trace = ((B * C⁻¹ - C⁻¹ * B) * X).trace := by
+      rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.trace_sub, Matrix.trace_sub,
+        Matrix.trace_mul_cycle' C⁻¹ X B]
+      simp only [Matrix.mul_assoc]
+    have hMdet : (M 0).det ≠ 0 := by simpa only [hM₀] using hdet
+    simpa only [hM₀, htrace] using hasDerivAt_det_of_ne_zero hM hMdet
   rw [he, hline.unique hexp] at hzero
   simpa only [Matrix.smul_mul, Matrix.trace_smul, smul_eq_mul, mul_assoc] using hzero
 

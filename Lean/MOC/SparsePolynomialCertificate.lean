@@ -270,4 +270,83 @@ def sum {n m : ℕ} (p : Fin n → Polynomial m) : Polynomial m :=
   unfold sum
   rw [hflatten, List.map_ofFn, Fin.sum_ofFn] <;> rfl
 
+/-- A computable polynomial in one indeterminate. -/
+structure Univariate where
+  terms : Polynomial 1
+
+namespace Univariate
+
+def ofInt (c : ℤ) : Univariate := ⟨constant 1 c⟩
+
+def X : Univariate := ⟨indeterminate 0⟩
+
+instance (n : ℕ) : OfNat Univariate n := ⟨ofInt n⟩
+instance : Add Univariate := ⟨fun p q => ⟨normalize (p.terms ++ q.terms)⟩⟩
+instance : Neg Univariate := ⟨fun p => ⟨mul (constant 1 (-1)) p.terms⟩⟩
+instance : Sub Univariate := ⟨fun p q => p + -q⟩
+instance : Mul Univariate := ⟨fun p q => ⟨normalize (mul p.terms q.terms)⟩⟩
+instance : Pow Univariate ℕ := ⟨fun p n => ⟨pow p.terms n⟩⟩
+
+def sum {n : ℕ} (p : Fin n → Univariate) : Univariate :=
+  ⟨SparsePolynomialCertificate.sum (fun i => (p i).terms)⟩
+
+def prod (ps : List Univariate) : Univariate := ps.foldr (· * ·) 1
+
+def eval {R : Type*} [CommRing R] (t : R) (p : Univariate) : R :=
+  SparsePolynomialCertificate.eval (fun _ => t) p.terms
+
+@[simp] theorem eval_ofInt {R : Type*} [CommRing R] (t : R) (n : ℤ) :
+    eval t (ofInt n) = n := SparsePolynomialCertificate.eval_constant _ _
+
+@[simp] theorem eval_ofNat {R : Type*} [CommRing R] (t : R) (n : ℕ) :
+    eval t (OfNat.ofNat n : Univariate) = (n : R) := by
+  simpa only [Int.cast_natCast] using eval_ofInt t (n : ℤ)
+
+@[simp] theorem eval_X {R : Type*} [CommRing R] (t : R) : eval t X = t :=
+  SparsePolynomialCertificate.eval_indeterminate _ _
+
+@[simp] theorem eval_add {R : Type*} [CommRing R] (t : R) (p q : Univariate) :
+    eval t (p + q) = eval t p + eval t q := by
+  change SparsePolynomialCertificate.eval _ (normalize (p.terms ++ q.terms)) = _
+  rw [eval_normalize, eval_append]
+  rfl
+
+@[simp] theorem eval_mul {R : Type*} [CommRing R] (t : R) (p q : Univariate) :
+    eval t (p * q) = eval t p * eval t q := by
+  change SparsePolynomialCertificate.eval _ (normalize (mul p.terms q.terms)) = _
+  rw [eval_normalize, SparsePolynomialCertificate.eval_mul]
+  rfl
+
+@[simp] theorem eval_neg {R : Type*} [CommRing R] (t : R) (p : Univariate) :
+    eval t (-p) = -eval t p := by
+  change SparsePolynomialCertificate.eval _ (mul (constant 1 (-1)) p.terms) = _
+  rw [SparsePolynomialCertificate.eval_mul, eval_constant, Int.cast_neg, Int.cast_one, neg_one_mul]
+  rfl
+
+@[simp] theorem eval_sub {R : Type*} [CommRing R] (t : R) (p q : Univariate) :
+    eval t (p - q) = eval t p - eval t q := by
+  change eval t (p + -q) = _
+  rw [eval_add, eval_neg, sub_eq_add_neg]
+
+@[simp] theorem eval_pow {R : Type*} [CommRing R] (t : R) (p : Univariate) (n : ℕ) :
+    eval t (p ^ n) = eval t p ^ n := SparsePolynomialCertificate.eval_pow _ _ _
+
+@[simp] theorem eval_sum {R : Type*} [CommRing R] {n : ℕ} (t : R) (p : Fin n → Univariate) :
+    eval t (sum p) = ∑ i, eval t (p i) := SparsePolynomialCertificate.eval_sum _ _
+
+@[simp] theorem eval_prod {R : Type*} [CommRing R] (t : R) (ps : List Univariate) :
+    eval t (prod ps) = (ps.map (eval t)).prod := by
+  induction ps with
+  | nil => simpa using eval_ofNat t 1
+  | cons p ps ih =>
+    change eval t (p * prod ps) = eval t p * (ps.map (eval t)).prod
+    rw [eval_mul, ih]
+
+def same (p q : Univariate) : Bool := normalizedKeys p.terms == normalizedKeys q.terms
+
+theorem eval_eq {R : Type*} [CommRing R] (t : R) {p q : Univariate} (h : same p q = true) :
+    eval t p = eval t q := eval_eq_of_normalizedKeys_eq (fun _ => t) h
+
+end Univariate
+
 end MOC.SparsePolynomialCertificate

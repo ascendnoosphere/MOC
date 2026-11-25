@@ -38,8 +38,9 @@ structure Checked (old : Fin m → Row) (next : Fin n → Row)
   cutPositive_eq : ∀ k : Fin m, d.positiveMask.testBit k.val = positive (old k j)
   positiveAt_eq : ∀ k : Fin m, ∀ i ∈ s, (d.positiveAt i).testBit k.val = positive (old k i)
   zeroCoordsValid : ∀ k i, i ∈ d.zeroCoords k → i ∈ s ∧ zero (old k i) = true
-  antichainCover : ∀ k : Fin m, maskWithoutBit (2 ^ m - 1) k.val &&&
-      unionMasks ((d.zeroCoords k).map d.positiveAt) = maskWithoutBit (2 ^ m - 1) k.val
+  antichainCover : ∀ k : Fin m,
+    let mask := (2 ^ m - 1).ldiff (2 ^ k.val)
+    mask &&& unionMasks ((d.zeroCoords k).map d.positiveAt) = mask
   witnessesValid : ∀ k r, r ∈ d.witnesses k → r.1 ≠ k ∧
       ∀ i ∈ s, zero (old k i) = true → positive (old r.1 i) = true → i ∈ r.2
   crossingCover : ∀ k, negative (old k j) = true →

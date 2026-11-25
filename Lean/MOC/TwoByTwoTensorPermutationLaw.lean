@@ -40,7 +40,8 @@ private theorem tensor_unitary (A B : Matrix (Fin 2) (Fin 2) ℂ)
   · rw [tensor_adjoint, ← Matrix.mul_kronecker_mul, hA.1, hB.1, Matrix.one_kronecker_one]
   · rw [tensor_adjoint, ← Matrix.mul_kronecker_mul, hA.2, hB.2, Matrix.one_kronecker_one]
 
-private def tensorCoordinate : Fin 4 ≃ Fin 2 × Fin 2 := finProdFinEquiv.symm
+private def tensorCoordinate : Fin 4 ≃ Fin 2 × Fin 2 :=
+  (finProdFinEquiv (m := 2) (n := 2)).symm
 
 private def rotationTensorReal (c s d t : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
   !![c*d, c*t, s*d, s*t;
@@ -55,6 +56,7 @@ private theorem tensor_rotation_entries (c s d t : ℝ) :
   fin_cases i <;> fin_cases j <;>
     norm_num [tensorCoordinate, finProdFinEquiv, Fin.divNat, Fin.modNat, rotation, rotationTensorReal,
       Matrix.submatrix_apply, Matrix.kroneckerMap_apply, Matrix.of_apply, Matrix.cons_val,
+      Matrix.cons_val_two, Matrix.cons_val_three,
       RingHom.mapMatrix_apply, Matrix.map_apply, Complex.ofRealHom_eq_coe,
       Complex.ofReal_mul, Complex.ofReal_neg, neg_mul] <;> ring
 
@@ -92,7 +94,7 @@ private theorem tensorWeight_nonneg {p q : ℝ} (hp : 0 ≤ p) (hpq : p ≤ q) (
   have hx : 0 ≤ 1 - 2*q := by linarith only [hq]
   have hy : 0 ≤ 2*(q-p) := mul_nonneg (by norm_num) (sub_nonneg.mpr hpq)
   have hz : 0 ≤ 2*p := mul_nonneg (by norm_num) hp
-  fin_cases k <;> simp only [tensorWeight, Matrix.cons_val] <;> positivity
+  fin_cases k <;> dsimp [tensorWeight] <;> positivity
 
 private theorem tensorWeight_sum (p q : ℝ) : ∑ k, tensorWeight p q k = 1 := by
   norm_num [tensorWeight, Fin.sum_univ_succ, Matrix.cons_val] <;> ring
@@ -119,7 +121,7 @@ private theorem tensor_singleton_polynomial (c s d t : ℝ)
   fin_cases i <;> fin_cases j
   all_goals
     norm_num [rotationTensorReal, tensorPermImage, tensorWeight, Fin.sum_univ_succ,
-      Matrix.of_apply, Matrix.cons_val] <;> first
+      Matrix.of_apply, Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three, Fin.ext_iff] <;> first
       | ring
       | linear_combination d^2 * hc + (1-s^2) * hd
       | linear_combination t^2 * hc
@@ -140,7 +142,7 @@ private theorem tensor_pair_polynomial (c s d t : ℝ) (hc : c^2+s^2 = 1) (hd : 
   fin_cases i <;> fin_cases j
   all_goals
     norm_num [tensorPair, rotationTensorReal, tensorPermImage, tensorWeight, Fin.sum_univ_succ,
-      Matrix.of_apply, Matrix.cons_val] <;> first
+      Matrix.of_apply, Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three, Fin.ext_iff] <;> first
       | ring
       | linear_combination (-(d^2 + t^2)^2*(-c^2 + s^2 - 1)) * hc + ((s - 1)^2*(s + 1)^2*(d^2 + t^2 + 1)) * hd
       | linear_combination (s^2*(d^2 + t^2)^2) * hc + (-s^2*(s - 1)*(s + 1)*(d^2 + t^2 + 1)) * hd
@@ -367,9 +369,11 @@ private theorem arbitrary_tensor_weights (A B : Matrix (Fin 2) (Fin 2) ℂ)
   let L (ij : Fin 2 × Fin 2) := lA ij.1 * lB ij.2
   let R (ij : Fin 2 × Fin 2) := rA ij.1 * rB ij.2
   have hL (ij : Fin 2 × Fin 2) : Complex.normSq (L ij) = 1 := by
-    rw [L, Complex.normSq_mul, hlA ij.1, hlB ij.2, one_mul]
+    dsimp only [L]
+    rw [Complex.normSq_mul, hlA ij.1, hlB ij.2, one_mul]
   have hR (ij : Fin 2 × Fin 2) : Complex.normSq (R ij) = 1 := by
-    rw [R, Complex.normSq_mul, hrA ij.1, hrB ij.2, one_mul]
+    dsimp only [R]
+    rw [Complex.normSq_mul, hrA ij.1, hrB ij.2, one_mul]
   let V := rotation c s ⊗ₖ rotation d t
   have hv : (A ⊗ₖ B).submatrix (e.prodCongr e) (p.prodCongr q) = diagonal L * V * diagonal R := by
     ext ⟨i, j⟩ ⟨k, m⟩

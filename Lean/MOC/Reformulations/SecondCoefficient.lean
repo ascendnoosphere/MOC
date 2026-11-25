@@ -1,5 +1,7 @@
 import MOC.Reformulations.Common
 import MOC.Weights
+import Mathlib.Algebra.CharZero.Infinite
+import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 
 /-!
@@ -162,7 +164,7 @@ private theorem eval_elementaryGeneratingPolynomial {n : ℕ}
   by_cases hij : i = j
   all_goals
     simp [Matrix.map_apply, Matrix.one_apply, Matrix.sub_apply, Matrix.add_apply,
-      Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul, hij]
+      Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul, hij] <;> exact mul_comm _ _
 
 private theorem eval_elementaryProduct_univ {n : ℕ} (d : Fin n → ℂ) (t : ℂ) :
     (elementaryProduct Finset.univ d).eval t = ∏ j, (1 + t * d j) := by
@@ -211,7 +213,7 @@ private theorem elementaryVertex_singleton {n : ℕ} (a b : Fin n → ℂ)
       (elementaryProduct Finset.univ (fun j => a (σ j) + b j)).coeff k =
         c + ∑ j, f j (σ j) := by
   let s (r : ℕ) : ℂ := (∑ j, a j ^ r) + ∑ j, b j ^ r
-  have h₁ (σ : Equiv.Perm (Fin n)) : (∑ j, a (σ j) + b j) = s 1 := by
+  have h₁ (σ : Equiv.Perm (Fin n)) : (∑ j, (a (σ j) + b j)) = s 1 := by
     simpa only [s, pow_one, Finset.sum_const_zero, add_zero] using
       matchingPowerSum a b σ 1 (fun _ _ => 0) (by intro x y; ring)
   have h₂ (σ : Equiv.Perm (Fin n)) : (∑ j, (a (σ j) + b j) ^ 2) =
@@ -237,7 +239,8 @@ private theorem elementaryVertex_singleton {n : ℕ} (a b : Fin n → ℂ)
       fun j i => -(s 1) * (a i * b j) + (a i ^ 2 * b j + a i * b j ^ 2), fun σ => ?_⟩
     have h := (elementaryProduct_first_coefficients Finset.univ
       (fun j => a (σ j) + b j)).2.2.2
-    rw [h, h₁, h₂, h₃, Finset.sum_add_distrib, ← Finset.mul_sum]
+    rw [h, h₁, h₂, h₃]
+    simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
     ring
 
 /-- A single law depending only on the unitary gives the first three
@@ -254,7 +257,7 @@ theorem firstThreeElementaryCoefficients_weights {n : ℕ}
   have heval (v : Equiv.Perm (Fin n) → ℂ) (hv : ∑ σ, v σ = 1) :
       (∑ σ, v σ * (elementaryProduct Finset.univ (fun j => a (σ j) + b j)).coeff k) =
         c + ∑ j, ∑ i, marginal v i j * f j i := by
-    simp_rw [hf, mul_add, mul_sum]
+    simp_rw [hf, mul_add, Finset.mul_sum]
     rw [Finset.sum_add_distrib, ← Finset.sum_mul, hv, one_mul, Finset.sum_comm]
     simp_rw [sum_weighted_evaluation]
   have hs' : ∑ σ, (w σ : ℂ) = 1 := by exact_mod_cast hs

@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
-import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Positivity
@@ -24,7 +25,7 @@ private theorem binary_form_nonneg (A B C x y : ℝ)
       exact le_antisymm (neg_nonneg.mp hdet) (sq_nonneg B))
     simp only [hz, hB, zero_mul, mul_zero, zero_add]
     exact mul_nonneg hC (sq_nonneg y)
-  · apply nonneg_of_mul_nonneg_left _ hp
+  · apply nonneg_of_mul_nonneg_right _ hp
     rw [show A * (A * x ^ 2 + 2 * B * x * y + C * y ^ 2) =
       (A * x + B * y) ^ 2 + (A * C - B ^ 2) * y ^ 2 by ring]
     exact add_nonneg (sq_nonneg _) (mul_nonneg hdet (sq_nonneg y))
@@ -42,7 +43,7 @@ private theorem binary_form_pos (A B C : ℝ) (x : Fin 2 → ℝ)
       · exact hy
     simpa only [hy, zero_pow (by decide : (2 : ℕ) ≠ 0), mul_zero, add_zero] using
       mul_pos hA (sq_pos_of_ne_zero hx')
-  · apply pos_of_mul_pos_left _ hA.le
+  · apply pos_of_mul_pos_right _ hA.le
     rw [show A * (A * x 0 ^ 2 + 2 * B * x 0 * x 1 + C * x 1 ^ 2) =
       (A * x 0 + B * x 1) ^ 2 + (A * C - B ^ 2) * x 1 ^ 2 by ring]
     exact add_pos_of_nonneg_of_pos (sq_nonneg _) (mul_pos hdet (sq_pos_of_ne_zero hy))
@@ -81,7 +82,7 @@ theorem kleinBudgetForm_negative_plane (a b c t : ℝ) (hb : 0 ≤ b) (hc : 0 �
       have hb0 : b = 0 := le_antisymm (hab.trans ha) hb
       have hc0 : c = 0 := le_antisymm (hac.trans ha) hc
       exact hbc (by rw [hb0, hc0, zero_add])
-    have hbcp := lt_of_le_of_ne (add_nonneg hb hc) hbc.symm
+    have hbcp := lt_of_le_of_ne (add_nonneg hb hc) (Ne.symm hbc)
     let T := a * (b + c) - b * c
     let N00 := (a - b) * (a * b * (a - b) + a ^ 2 * c + 2 * a * b * c + b ^ 2 * c)
     let N11 := (a - c) * (a * c * (a - c) + a ^ 2 * b + 2 * a * b * c + b * c ^ 2)
@@ -121,7 +122,7 @@ theorem kleinBudgetForm_negative_plane (a b c t : ℝ) (hb : 0 ≤ b) (hc : 0 �
       simp only [kleinBudgetForm, B, T, N00, N01, N11, P00, P01, P11,
         Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct, Matrix.of_apply, Fin.sum_univ_two,
         Fin.sum_univ_three, Matrix.cons_val, Matrix.cons_val_zero, Matrix.cons_val_one,
-        Matrix.cons_val_two]
+        Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons]
       ring
     have hn := binary_form_nonneg N00 N01 N11 (x 0) (x 1) hn00 hn11 hnDet
     have hp := binary_form_pos P00 P01 P11 x hp00 hpDet hx

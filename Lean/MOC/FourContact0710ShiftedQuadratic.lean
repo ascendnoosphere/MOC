@@ -2,6 +2,7 @@ import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FunProp
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 import Mathlib.Topology.Order.IntermediateValue
@@ -146,8 +147,8 @@ theorem positiveRoot_spec {a b d : ℝ} (hp : 0 < p a b) (hq : 0 < q a b d)
   · change q a b d * ((B + Real.sqrt D) / (2 * q a b d)) ^ 2 -
       B * ((B + Real.sqrt D) / (2 * q a b d)) - p a b * constantParameter a b d = 0
     field_simp [ne_of_gt hq]
-    dsimp only [D] at hsq
-    linear_combination q a b d * hsq
+    have hsquare : (Real.sqrt D) ^ 2 = B ^ 2 + 4 * q a b d * p a b * constantParameter a b d := hsq
+    linear_combination 2 * q a b d ^ 2 * hsquare
 
 /-- The sign of the quadratic on the positive axis changes at its
 unique positive root. -/
@@ -162,8 +163,14 @@ theorem rootPolynomial_neg_iff_lt_positiveRoot {a b d x : ℝ} (hp : 0 < p a b)
     change rootPolynomial a b d w = 0 at hAw
     unfold rootPolynomial at *
     linear_combination x * hAw
-  have hpos : 0 < q a b d * w * x + p a b * constantParameter a b d := by positivity
-  rw [← mul_neg_iff_of_pos_left hw, hfactor, mul_neg_iff_of_pos_right hpos, sub_neg]
+  have hpos : 0 < q a b d * w * x + p a b * constantParameter a b d :=
+    add_pos (mul_pos (mul_pos hq hw) hx) (mul_pos hp hS)
+  calc
+    _ ↔ w * rootPolynomial a b d x < w * 0 := (mul_lt_mul_left hw).symm
+    _ ↔ (x - w) * (q a b d * w * x + p a b * constantParameter a b d) <
+          0 * (q a b d * w * x + p a b * constantParameter a b d) := by
+      rw [hfactor, mul_zero, zero_mul]
+    _ ↔ _ := (mul_lt_mul_right hpos).trans sub_neg
 
 theorem positive_root_eq {a b d x : ℝ} (hp : 0 < p a b) (hq : 0 < q a b d)
     (hS : 0 < constantParameter a b d) (hx : 0 < x)
@@ -175,7 +182,8 @@ theorem positive_root_eq {a b d x : ℝ} (hp : 0 < p a b) (hq : 0 < q a b d)
     change rootPolynomial a b d w = 0 at hAw
     unfold rootPolynomial at *
     linear_combination w * hA - x * hAw
-  have hpos : 0 < q a b d * w * x + p a b * constantParameter a b d := by positivity
+  have hpos : 0 < q a b d * w * x + p a b * constantParameter a b d :=
+    add_pos (mul_pos (mul_pos hq hw) hx) (mul_pos hp hS)
   exact sub_eq_zero.mp ((mul_eq_zero.mp hfactor).resolve_right (ne_of_gt hpos))
 
 theorem rootPolynomial_comparison (a b d : ℝ) :
@@ -198,7 +206,11 @@ theorem comparisonPolynomial_monotone {a b x y : ℝ} (ha : 0 ≤ a) (hb : 0 ≤
     ring
   have hy : 1 ≤ y := hx.trans hxy
   have hnonneg : 0 ≤ (y - x) * (a * b + a + b + 5 +
-      (a + b + 2) * ((x - 1) + (y - 1))) := by positivity
+      (a + b + 2) * ((x - 1) + (y - 1))) := by
+    have hx₀ := sub_nonneg.mpr hx
+    have hy₀ := sub_nonneg.mpr hy
+    have hxy₀ := sub_nonneg.mpr hxy
+    positivity
   exact sub_nonneg.mp (hsec.symm ▸ hnonneg)
 
 theorem liftedWeight_pos {a b w c : ℝ} (hp : 0 < p a b) (hc : 0 ≤ c) (hw : c < w) :
@@ -214,7 +226,6 @@ theorem branchPolynomial_liftedWeight_eq_zero {a b c d w : ℝ}
   have hrecover : c + p a b * (c + 1) / liftedWeight a b w c = w := by
     unfold liftedWeight
     field_simp [hn, ne_of_gt (sub_pos.mpr hw)]
-    ring
   rw [branchPolynomial_shift he, hrecover, hA, mul_zero]
 
 theorem heightDenominator_liftedWeight {a b c d w : ℝ} (hw : c < w) :
@@ -263,7 +274,9 @@ theorem heightDenominator_neg_at_zero_iff_comparison {a b d : ℝ}
   rw [heightDenominator_liftedWeight hw, divide_neg_iff_of_positive_denominator (sub_pos.mpr hw)]
   simp only [zero_mul, add_zero, sub_neg]
   rw [← rootPolynomial_neg_iff_lt_positiveRoot hp hq hS harg, rootPolynomial_comparison]
-  exact mul_neg_iff_of_pos_left (mul_pos hp (add_pos harg zero_lt_one))
+  simpa only [mul_zero] using
+    (mul_lt_mul_left (mul_pos hp (add_pos harg zero_lt_one))
+      (b := comparisonPolynomial a b d) (c := 0))
 
 private theorem constantParameter_pos_on_lower_interval {a b x y : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hne : a ≠ b) (hx : 0 < x) (hxy : x ≤ y) (hy : y ≤ 1)
@@ -367,11 +380,11 @@ theorem p_gt_four_of_admissible_start {a b c d e : ℝ}
     field_simp [hprod, ne_of_gt hep]
   have hc0 := heightDenominator_neg_on_c_interval hp (le_refl 0) hc hpw (heq.symm ▸ hQ)
   rw [hroot] at hc0
-  have hi : (d ≤ 1 ∧ 1 ≤ 1) ∨ (1 ≤ 1 ∧ 1 ≤ d) := by
+  have hi : (d ≤ 1 ∧ (1 : ℝ) ≤ 1) ∨ ((1 : ℝ) ≤ 1 ∧ 1 ≤ d) := by
     rcases le_total d 1 with h | h
     · exact Or.inl ⟨h, le_refl 1⟩
     · exact Or.inr ⟨le_refl 1, h⟩
-  have h1 := (liftedWeight_feasible_on_d_interval ha hb hne hd hS hc0 hi).1
+  have h1 := (liftedWeight_feasible_on_d_interval (d := 1) ha hb hne hd hS hc0 hi).1
   rw [constantParameter_eq] at h1
   nlinarith only [h1]
 

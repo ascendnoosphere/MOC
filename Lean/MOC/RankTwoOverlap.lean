@@ -427,13 +427,13 @@ private theorem push_permutation_law {κ : Type*} [Fintype κ]
 private theorem support_equal_of_zero_iff (a a₀ : ι → ℂ) (ha : ∀ i, a i = 0 ↔ a₀ i = 0) :
     spectralSupport a = spectralSupport a₀ := by
   ext i
-  simp only [spectralSupport, Finset.mem_filter, Finset.mem_univ, true_and, ha i]
+  simpa only [spectralSupport, Finset.mem_filter, Finset.mem_univ, true_and] using not_congr (ha i)
 
 private theorem covers_of_zero_iff (a b a₀ b₀ : ι → ℂ) (τ : Equiv.Perm ι)
     (ha : ∀ i, a i = 0 ↔ a₀ i = 0) (hb : ∀ j, b j = 0 ↔ b₀ j = 0) :
     CoversSupports a b τ ↔ CoversSupports a₀ b₀ τ := by
   change (∀ j, a (τ j) ≠ 0 ∨ b j ≠ 0) ↔ (∀ j, a₀ (τ j) ≠ 0 ∨ b₀ j ≠ 0)
-  simp only [ha, hb]
+  exact forall_congr' fun j => or_congr (not_congr (ha (τ j))) (not_congr (hb j))
 
 /-- For fixed support sets with total size two above the order, the
 permutation law depends on the mixer and the sets alone. -/
@@ -489,7 +489,7 @@ theorem exists_common_weights_of_support_excess_two (a₀ b₀ : ι → ℂ)
   · have hqzero : (q : ℂ) = 0 :=
       (mul_eq_zero.mp (hGdet.symm.trans hGzero)).resolve_left (pow_ne_zero _ (by norm_num))
     have hqzero' : q = 0 := by exact_mod_cast hqzero
-    obtain ⟨w, hw, hs, hp⟩ := push_permutation_law (fun _ : PUnit => τ₀) (fun _ => 1)
+    obtain ⟨w, hw, hs, hp⟩ := push_permutation_law (fun _ : Unit => τ₀) (fun _ => 1)
       (fun _ => zero_le_one) (by simp)
     refine ⟨w, hw, hs, fun a b ha hb => ?_⟩
     rw [weightedMatchingValue, hp, hdet a b ha hb,
@@ -520,9 +520,9 @@ theorem exists_common_weights_of_support_excess_two (a₀ b₀ : ι → ℂ)
       m.val.1.1.property m.val.2.1.property (hleft m)
       m.val.1.2.property m.val.2.2.property (hright m)
   let pick (m : κ) := Classical.choose (hcomplete m)
-  let p : PUnit ⊕ ↑S → Equiv.Perm ι := Sum.elim (fun _ => τ₀) (fun m => pick m.val)
-  let mass : PUnit ⊕ ↑S → ℝ := Sum.elim (fun _ => 1 - q) (fun m => q * μ m.val)
-  have hmass (k : PUnit ⊕ ↑S) : 0 ≤ mass k := by
+  let p : Unit ⊕ ↑S → Equiv.Perm ι := Sum.elim (fun _ => τ₀) (fun m => pick m.val)
+  let mass : Unit ⊕ ↑S → ℝ := Sum.elim (fun _ => 1 - q) (fun m => q * μ m.val)
+  have hmass (k : Unit ⊕ ↑S) : 0 ≤ mass k := by
     cases k with
     | inl _ => exact sub_nonneg.mpr hq₁
     | inr m => exact mul_nonneg hq₀ (hμ m.val m.property)
@@ -565,8 +565,9 @@ theorem exists_common_weights_of_support_excess_two (a₀ b₀ : ι → ℂ)
       (q : ℂ) * D * ((μ m.val : ℂ) *
         ((x m.val.val.1.1 + y m.val.val.1.2) * (x m.val.val.2.1 + y m.val.val.2.2)))
     from fun m => by ring]
-  rw [← Finset.mul_sum, Finset.sum_coe_sort S, hval x y, hdet a b ha hb, hdet',
-    hGdet, Fintype.card_fin]
+  rw [← Finset.mul_sum, Finset.sum_coe_sort S (fun m =>
+    (μ m : ℂ) * ((x m.val.1.1 + y m.val.1.2) * (x m.val.2.1 + y m.val.2.2))),
+    hval x y, hdet a b ha hb, hdet', hGdet, Fintype.card_fin]
   change (q : ℂ) * D * (Eᴴ * diagonal x * E + Fᴴ * diagonal y * F).det =
     D * ((2 : ℂ) ^ 2 * (q : ℂ) / 2 ^ 2) * (Eᴴ * diagonal x * E + Fᴴ * diagonal y * F).det
   ring

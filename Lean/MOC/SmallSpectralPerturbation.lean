@@ -1,5 +1,6 @@
 import MOC.Support
 import Mathlib.Algebra.Polynomial.Div
+import Mathlib.Topology.Algebra.Polynomial
 
 /-! A small second spectrum under generic first-order assignment data.
 We use the common singleton marginals of the signed determinant law and
@@ -231,7 +232,7 @@ private theorem assignmentFace_offWeight_bound (U : Matrix ι ι ℂ) (hU : IsUn
       intro e
       apply hj
       change τ k = σ j
-      rw [← e, hk]
+      exact (congrArg τ e.symm).trans (hk.symm.trans (congrArg σ e.symm))
     have hστ : σ ≠ τ := by
       intro he
       apply hj
@@ -252,10 +253,8 @@ private theorem assignmentFace_offWeight_bound (U : Matrix ι ι ℂ) (hU : IsUn
     have hnormOff (i l : ι) (ha : σ l ≠ i) (hb : τ l ≠ i) :
         ‖U i l‖ ≤ Real.sqrt mass := by
       have hp := hoff i l ha hb
-      by_contra! hbad
-      have hpositive := mul_pos (sub_pos.mpr hbad)
-        (show 0 < ‖U i l‖ + Real.sqrt mass from by linarith)
-      nlinarith
+      apply (sq_le_sq₀ (norm_nonneg _) hsqrt0).mp
+      rwa [hsqrt]
     have hprodBounds (i : ι) (hi : i ∈ univ.erase p) :
         ‖star (U i j) * U i k‖ ≤ Real.sqrt mass := by
       rw [norm_mul, Complex.star_def, Complex.norm_conj]
@@ -420,12 +419,14 @@ private theorem assignmentFace_variation_bound (U : Matrix ι ι ℂ) (hU : IsUn
         · simpa only [abs_zero] using hB
       rw [sum_split_twoAssignments σ τ he g] at hz
       have heq : d q = -(∑ π ∈ T, g π) := by
-        rcases hq with rfl | rfl
-        · have hgσ : g σ = d σ := if_pos rfl
+        rcases hq with heq | heq
+        · subst q
+          have hgσ : g σ = d σ := if_pos rfl
           have hgτ : g τ = 0 := if_neg (Ne.symm hj)
           rw [hgσ, hgτ, add_zero] at hz
           exact eq_neg_of_add_eq_zero_right hz
-        · have hgσ : g σ = 0 := if_neg hj
+        · subst q
+          have hgσ : g σ = 0 := if_neg hj
           have hgτ : g τ = d τ := if_pos rfl
           rw [hgσ, hgτ, add_zero] at hz
           exact eq_neg_of_add_eq_zero_right hz
@@ -436,8 +437,11 @@ private theorem assignmentFace_variation_bound (U : Matrix ι ι ℂ) (hU : IsUn
     · have hle := hoff π hπ
       nlinarith [mul_nonneg hp hB]
     · have hface' : π = σ ∨ π = τ := by
-        by_contra! hn
-        exact hπ ((mem_offAssignmentFace σ τ π).mpr hn)
+        by_cases h : π = σ
+        · exact Or.inl h
+        · apply Or.inr
+          by_contra h'
+          exact hπ ((mem_offAssignmentFace σ τ π).mpr ⟨h, h'⟩)
       have hle := hface π hface'
       nlinarith
   change (∑ π, |d π|) ≤ _
@@ -639,7 +643,7 @@ private theorem assignment_matching_polynomials (a b : ι → ℂ) (ha : ∀ i, 
       _ = (Q π).coeff 0 := (coeff_zero_eq_eval_zero _).symm
       _ = (X * Q π).coeff 1 := by rw [mul_comm X (Q π), coeff_mul_X] <;> rfl
       _ = (P π - 1).coeff 1 := by rw [← hQ π]
-      _ = _ := by simp [(hc π).2]
+      _ = _ := by simp [(hc π).2, coeff_one]
   · have hPeval : (P π).eval t = 1 + t * (Q π).eval t := by
       have hv := congrArg (eval t) (hQ π)
       simp only [eval_sub, eval_one, eval_mul, eval_X] at hv
@@ -653,7 +657,7 @@ private theorem assignment_matching_polynomials (a b : ι → ℂ) (ha : ∀ i, 
     dsimp [x]
     calc
       _ = a (π j) * 1 + t * (a (π j) * (a (π j))⁻¹) * b j := by
-        rw [mul_inv_cancel₀ (ha (π j)), mul_one, one_mul]
+        simp only [mul_inv_cancel₀ (ha (π j)), mul_one]
       _ = _ := by ring
 
 private theorem supported_polynomial_near_zero (x b : ι → ℂ)
@@ -720,7 +724,7 @@ private theorem supported_polynomial_near_zero (x b : ι → ℂ)
   have hηS : η ∈ S := by simpa only [S, Metric.mem_sphere, dist_zero_right] using hη
   have hηA : η ∈ A := mem_of_mem_nhds (mem_nhdsSet_iff_forall.mp hA η hηS)
   have htB : t ∈ B := hball (by simpa only [Metric.mem_ball, dist_zero_right] using ht)
-  exact hAB ⟨hηA, htB⟩
+  exact hAB (show (η, t) ∈ A ×ˢ B from ⟨hηA, htB⟩)
 
 private theorem signed_spectral_sum_real_part (w : Equiv.Perm ι → ℝ)
     (z : Equiv.Perm ι → ℂ) (η : ℂ) :
@@ -784,7 +788,7 @@ theorem holds_small_spectral_parameter (a b : ι → ℂ) (ha : ∀ i, a i ≠ 0
     obtain ⟨π, hp⟩ := hnear t ht k hk U hU
     change (∑ q, w q * (k * P q).re) ≤ (k * P π).re at hp
     have hp' : (k * V).re ≤ (k * P π).re := by
-      dsimp [V]
+      change (k * ∑ q, (w q : ℂ) * P q).re ≤ (k * P π).re
       rw [signed_spectral_sum_real_part w P k]
       exact hp
     refine ⟨π, ?_⟩

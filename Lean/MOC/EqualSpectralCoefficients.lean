@@ -23,7 +23,7 @@ def spectralSecondElementary (a : Fin n → ℂ) : ℂ :=
   ((∑ i, a i)^2 - ∑ i, a i ^ 2) / 2
 
 private theorem sum_translate_spectrum (a : Fin n → ℂ) (t : ℂ) :
-    (∑ i, a i + t) = (∑ i, a i) + (n : ℂ) * t := by
+    (∑ i, (a i + t)) = (∑ i, a i) + (n : ℂ) * t := by
   simp only [sum_add_distrib, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
 
 private theorem sum_sq_translate_spectrum (a : Fin n → ℂ) (t : ℂ) :
@@ -327,7 +327,7 @@ private theorem holds_of_inverse_variance_pole (a b : Fin n → ℂ)
     (fun i => hden (a i) (hpa i)) (fun j => hden (-b j) (hpb j))).mp
   change Holds (f ∘ a) (fun i => -f (-b i)) U
   rw [ha', hb']
-  have hsum : (∑ i, A i + -m) = ∑ i, -(B i + -m) := by
+  have hsum : (∑ i, (A i + -m)) = ∑ i, -(B i + -m) := by
     rw [sum_neg_distrib, sum_translate_spectrum A, sum_translate_spectrum B]
     change sA + (n : ℂ) * -m = -(sB + (n : ℂ) * -m)
     linear_combination -hm
@@ -467,8 +467,8 @@ theorem conjecture_iff_equal_first_second_elementary :
         · have h₀ : Cₜ 0 i ≠ Cₜ 0 j := by
             rw [hCzero]
             exact hc.ne hij
-          exact ((isOpen_ne_fun (hpoint i) (hpoint j)).mem_nhds h₀).mono
-            fun t ht he => (ht he).elim
+          filter_upwards [(isOpen_ne_fun (hpoint i) (hpoint j)).mem_nhds h₀] with t ht
+          exact fun he => (ht he).elim
       have hcross : ∀ᶠ t in 𝓝 (0 : ℂ), ∀ i j, a i ≠ Cₜ t j := by
         apply Filter.eventually_all.mpr
         intro i

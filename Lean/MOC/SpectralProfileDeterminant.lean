@@ -182,7 +182,7 @@ private def borderMinor (u : Matrix (Fin 1) (Fin 1 ⊕ κ) ℂ)
     ring
   map_smul' c X := by
     ext i j
-    simp only [Matrix.smul_apply, smul_eq_mul]
+    simp only [Matrix.smul_apply, smul_eq_mul, RingHom.id_apply]
     ring
 
 private theorem border_det_at_first_pivots
@@ -199,7 +199,7 @@ private theorem border_det_at_first_pivots
   let Y : Matrix κ (Fin 2) ℂ := fun i j => ![v (.inr i) 0, T (.inr i) (.inl 0)] j
   let D : Matrix κ κ ℂ := T.submatrix Sum.inr Sum.inr
   let e : Fin 2 ⊕ κ ≃ Fin 1 ⊕ (Fin 1 ⊕ κ) :=
-    (Equiv.sumCongr (finSumFinEquiv.symm : Fin 2 ≃ Fin 1 ⊕ Fin 1) (Equiv.refl κ)).trans
+    (Equiv.sumCongr (finSumFinEquiv (m := 1) (n := 1)).symm (Equiv.refl κ)).trans
       (Equiv.sumAssoc (Fin 1) (Fin 1) κ)
   have hp : p ≠ 0 := hu
   have hq : q ≠ 0 := hv
@@ -420,7 +420,7 @@ theorem rank_le_four_of_linear_squares (Q : Matrix κ κ ℂ) (hQ : Qᵀ = Q)
     have h := hL (Pi.single i 1 + Pi.single j 1)
     rw [hexpand, ← hdiag i, ← hdiag j] at h
     simp only [Matrix.mulVec_add, add_dotProduct, dotProduct_add, Matrix.mulVec_single_one,
-      single_dotProduct, one_mul, hsym] at h
+      single_dotProduct, Matrix.transpose_apply, one_mul, hsym] at h
     linear_combination (1 / 2 : ℂ) * h
   rw [heq]
   simpa only [Fintype.card_fin] using
@@ -450,7 +450,7 @@ private theorem exists_symmetric_matrix_of_linear_squares
     rw [LinearMap.pi_apply_eq_sum_univ (L r) x]
     apply Finset.sum_congr rfl
     intro i _
-    have he : Pi.single i (1 : ℂ) = fun j => if i = j then 1 else 0 := by
+    have he : (Pi.single i 1 : κ → ℂ) = fun j => if i = j then 1 else 0 := by
       funext j
       simp [Pi.single_apply, eq_comm]
     simp only [C, he, smul_eq_mul, mul_comm]
@@ -469,7 +469,8 @@ private theorem tetrahedralFrameFin_mul_transpose :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [tetrahedralFrameFin, Matrix.mul_apply, Matrix.transpose_apply,
-      Matrix.smul_apply, smul_eq_mul, Matrix.one_apply, Fin.sum_univ_four, Matrix.cons_val] <;> ring
+      Matrix.smul_apply, smul_eq_mul, Matrix.one_apply, Fin.sum_univ_four, Matrix.cons_val,
+      Matrix.cons_val_two, Matrix.cons_val_three] <;> ring
 
 theorem tetrahedralFrame_mul_transpose : tetrahedralFrame * tetrahedralFrameᵀ = 1 := by
   unfold tetrahedralFrame
@@ -487,6 +488,7 @@ def tetrahedralInverseProfile (a b : Fin 4 → ℂ) (H : Matrix (Fin 3) (Fin 3) 
   let B := Eᵀ * diagonal (b ∘ finSumFinEquiv) * E
   (border A.toBlocks₁₂ B.toBlocks₂₁ (inverseCore A.toBlocks₂₂ B.toBlocks₂₂ H)).det
 
+set_option maxHeartbeats 1000000 in
 theorem tetrahedralInverseProfile_eq_signedEvaluation (a b : Fin 4 → ℂ)
     (K : Matrix (Fin 3) (Fin 3) ℂ) (hK : IsUnit K.det) :
     signedEvaluation (matchingProduct (a ∘ finSumFinEquiv) (b ∘ finSumFinEquiv))
@@ -510,10 +512,10 @@ theorem tetrahedralInverseProfile_exists_rank_four_matrix (a b : Fin 4 → ℂ) 
     ∃ Q : Matrix (Fin 3 × Fin 3) (Fin 3 × Fin 3) ℂ, Qᵀ = Q ∧ Q.rank ≤ 4 ∧
       ∀ x : Fin 3 × Fin 3 → ℂ,
         x ⬝ᵥ (Q *ᵥ x) = η * tetrahedralInverseProfile a b (fun i j => x (i, j)) := by
-  let unvec : (Fin 3 × Fin 3 → ℂ) →ₗ[ℂ] Matrix (Fin 3) (Fin 3) ℂ where
-    toFun x i j := x (i, j)
-    map_add' _ _ := rfl
-    map_smul' _ _ := rfl
+  let unvec : (Fin 3 × Fin 3 → ℂ) →ₗ[ℂ] Matrix (Fin 3) (Fin 3) ℂ :=
+    { toFun := fun x i j => x (i, j)
+      map_add' := fun _ _ => rfl
+      map_smul' := fun _ _ => rfl }
   obtain ⟨L, hL⟩ := tetrahedralInverseProfile_four_squares a b η
   obtain ⟨Q, hQ, hr, hf⟩ := exists_symmetric_matrix_of_linear_squares (fun i => (L i).comp unvec)
   refine ⟨Q, hQ, hr, fun x => (hf x).trans ?_⟩

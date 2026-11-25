@@ -4,6 +4,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Topology.SeparatedMap
 import Mathlib.Topology.UnitInterval
+import Mathlib.Topology.UniformSpace.HeineCantor
 
 /-! Transposition walks for the attainable determinant range. -/
 
@@ -92,7 +93,9 @@ theorem transposition_walk_sum_eq_zero_of_squares
     let f (g : Perm ι) := d (g * p k) (g * p (k + 1))
     have hf (g : Perm ι) : f (g * s) = -f g := by
       have hs : s * p (k + 1) = p k := by
-        rw [hstep, ← mul_assoc, s, swap_mul_swap_self, one_mul]
+        rw [hstep]
+        change Equiv.swap i j * (Equiv.swap i j * p k) = p k
+        rw [← mul_assoc, swap_mul_swap_self, one_mul]
       change d ((g * s) * p k) ((g * s) * p (k + 1)) = _
       rw [mul_assoc, mul_assoc, hs, ← hstep]
       exact hreverse _ _ (transpositionEdge_translate g (hwalk k hk))
@@ -114,8 +117,8 @@ private theorem swapMatrix_apply (i j k l : ι) :
   have he : l = Equiv.swap i j k ↔ k = Equiv.swap i j l := by
     constructor <;> intro h <;>
       simpa [h, Equiv.swap_apply_self]
-  rw [PEquiv.toMatrix_apply, Equiv.toPEquiv_apply, Option.mem_some,
-    eq_comm (Equiv.swap i j k) l, he]
+  have he' : Equiv.swap i j k = l ↔ k = Equiv.swap i j l := eq_comm.trans he
+  simp only [Equiv.Perm.permMatrix, PEquiv.toMatrix_apply, Equiv.toPEquiv_apply, Option.mem_some, he']
 
 /-- A unitary interpolation from the identity to a transposition matrix
 times the scalar `Complex.I`. The scalar cancels in conjugation. -/
@@ -131,7 +134,9 @@ theorem swapRotation_unitary (i j : ι) (t : I) : IsUnitary (swapRotation i j t)
   have hinv : (Equiv.swap i j : Perm ι)⁻¹ = Equiv.swap i j := by
     apply inv_eq_of_mul_eq_one_right
     exact swap_mul_swap_self i j
-  have hPstar : Pᴴ = P := by rw [P, Matrix.conjTranspose_permMatrix, hinv]
+  have hPstar : Pᴴ = P := by
+    dsimp only [P]
+    rw [Matrix.conjTranspose_permMatrix, hinv]
   have hPP : P * P = 1 := by simpa only [hPstar] using hP.1
   have hcD : star c = c := Complex.conj_ofReal _
   have hdD : star d = -d := by simp [d, Complex.star_def]
@@ -163,33 +168,33 @@ theorem swapRotation_unitary (i j : ι) (t : I) : IsUnitary (swapRotation i j t)
       _ = _ := by rw [h₁, h₂, one_smul, zero_smul, add_zero]
   exact ⟨hR, Matrix.mul_eq_one_comm.mp hR⟩
 
-private theorem supported_swap_permutation (i j : ι) (σ : Perm ι)
-    (hs : ∀ k, σ k = k ∨ σ k = Equiv.swap i j k) :
-    σ = 1 ∨ σ = Equiv.swap i j := by
-  have hfix (k : ι) (hki : k ≠ i) (hkj : k ≠ j) : σ k = k :=
+private theorem supported_swap_permutation (i j : ι) (π : Perm ι)
+    (hs : ∀ k, π k = k ∨ π k = Equiv.swap i j k) :
+    π = 1 ∨ π = Equiv.swap i j := by
+  have hfix (k : ι) (hki : k ≠ i) (hkj : k ≠ j) : π k = k :=
     (hs k).elim id fun h => h.trans (Equiv.swap_apply_of_ne_of_ne hki hkj)
-  have hi : σ i = i ∨ σ i = j := by simpa only [Equiv.swap_apply_left] using hs i
-  have hj : σ j = j ∨ σ j = i := by simpa only [Equiv.swap_apply_right] using hs j
+  have hi : π i = i ∨ π i = j := by simpa only [Equiv.swap_apply_left] using hs i
+  have hj : π j = j ∨ π j = i := by simpa only [Equiv.swap_apply_right] using hs j
   by_cases hij : i = j
   · subst j
     left
     ext k
-    change σ k = k
+    change π k = k
     by_cases hk : k = i
     · subst k
       exact hi.elim id id
     · exact hfix k hk hk
   · rcases hi with hi | hi
-    · have hj' : σ j = j := hj.resolve_right fun h => hij (σ.injective (hi.trans h.symm))
+    · have hj' : π j = j := hj.resolve_right fun h => hij (π.injective (hi.trans h.symm))
       left
       ext k
-      change σ k = k
+      change π k = k
       by_cases hki : k = i
       · exact hki ▸ hi
       · by_cases hkj : k = j
         · exact hkj ▸ hj'
         · exact hfix k hki hkj
-    · have hj' : σ j = i := hj.resolve_left fun h => hij (σ.injective (hi.trans h.symm))
+    · have hj' : π j = i := hj.resolve_left fun h => hij (π.injective (hi.trans h.symm))
       right
       ext k
       by_cases hki : k = i
@@ -201,28 +206,32 @@ private theorem supported_swap_permutation (i j : ι) (σ : Perm ι)
         · rw [hfix k hki hkj, Equiv.swap_apply_of_ne_of_ne hki hkj]
 
 private theorem sum_swap_supported {A : Type*} [AddCommMonoid A] (i j : ι) (hij : i ≠ j)
-    (f : Perm ι → A) (hf : ∀ σ, σ ≠ 1 → σ ≠ Equiv.swap i j → f σ = 0) :
-    (∑ σ, f σ) = f 1 + f (Equiv.swap i j) := by
+    (f : Perm ι → A) (hf : ∀ π, π ≠ 1 → π ≠ Equiv.swap i j → f π = 0) :
+    (∑ π, f π) = f 1 + f (Equiv.swap i j) := by
   have hs : (1 : Perm ι) ≠ Equiv.swap i j := by
     intro h
     apply hij
     have e := DFunLike.congr_fun h i
     simpa only [Equiv.Perm.one_apply, Equiv.swap_apply_left] using e
   rw [← Finset.sum_subset (Finset.subset_univ ({1, Equiv.swap i j} : Finset (Perm ι)))
-    (fun σ _ hn => hf σ (fun h => hn (by simp [h])) (fun h => hn (by simp [h])))]
+    (fun π _ hn => hf π (fun h => hn (by simp [h])) (fun h => hn (by simp [h])))]
   rw [Finset.sum_pair hs]
 
-private theorem swapRotation_signedWeight_zero (i j : ι) (t : I) (σ : Perm ι)
-    (h₁ : σ ≠ 1) (h₂ : σ ≠ Equiv.swap i j) :
-    signedWeight (swapRotation i j t) σ = 0 := by
-  have hk : ∃ k, σ k ≠ k ∧ σ k ≠ Equiv.swap i j k := by
+private theorem swapRotation_signedWeight_zero (i j : ι) (t : I) (π : Perm ι)
+    (h₁ : π ≠ 1) (h₂ : π ≠ Equiv.swap i j) :
+    signedWeight (swapRotation i j t) π = 0 := by
+  have hk : ∃ k, π k ≠ k ∧ π k ≠ Equiv.swap i j k := by
     by_contra! h
-    exact (supported_swap_permutation i j σ h).elim h₁ h₂
+    apply (supported_swap_permutation i j π ?_).elim h₁ h₂
+    intro k
+    by_cases he : π k = k
+    · exact Or.inl he
+    · exact Or.inr (h k he)
   obtain ⟨k, hfix, hswap⟩ := hk
-  have hm : swapRotation i j t (σ k) k = 0 := by
-    simp [swapRotation, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_ne hfix,
-      swapMatrix_apply i j, hswap]
-  have hp : (∏ k, swapRotation i j t (σ k) k) = 0 :=
+  have hm : swapRotation i j t (π k) k = 0 := by
+    simp only [swapRotation, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_ne hfix,
+      swapMatrix_apply i j, if_neg hswap, smul_zero, zero_add]
+  have hp : (∏ k, swapRotation i j t (π k) k) = 0 :=
     Finset.prod_eq_zero (Finset.mem_univ k) hm
   rw [signedWeight, leibnizTerm, hp, mul_zero, zero_div]
 
@@ -237,8 +246,8 @@ theorem determinantValue_swapRotation (a b : ι → ℂ) (i j : ι) (hij : i ≠
   let R := swapRotation i j t
   let w := signedWeight R
   have hR := swapRotation_unitary i j t
-  have hzero (σ : Perm ι) (h₁ : σ ≠ 1) (h₂ : σ ≠ Equiv.swap i j) : w σ = 0 :=
-    swapRotation_signedWeight_zero i j t σ h₁ h₂
+  have hzero (π : Perm ι) (h₁ : π ≠ 1) (h₂ : π ≠ Equiv.swap i j) : w π = 0 :=
+    swapRotation_signedWeight_zero i j t π h₁ h₂
   have hsum : w 1 + w (Equiv.swap i j) = 1 :=
     (sum_swap_supported i j hij w hzero).symm.trans
       (sum_signedWeight R (det_ne_zero_of_unitary hR))
@@ -249,12 +258,12 @@ theorem determinantValue_swapRotation (a b : ι → ℂ) (i j : ι) (hij : i ≠
     rw [hentry, Complex.normSq_mul, Complex.normSq_ofReal, Complex.normSq_I, mul_one,
       ← pow_two, Real.sq_sqrt t.property.1]
   have hm := marginal_signedWeight R hR j i
-  rw [marginal, sum_swap_supported i j hij (fun σ => if σ i = j then w σ else 0)
-    (fun σ h₁ h₂ => by rw [hzero σ h₁ h₂]; simp), hnorm] at hm
+  rw [marginal, sum_swap_supported i j hij (fun π => if π i = j then w π else 0)
+    (fun π h₁ h₂ => by simp [hzero π h₁ h₂]), hnorm] at hm
   simp only [Equiv.Perm.one_apply, if_neg hij, Equiv.swap_apply_left, if_true, zero_add] at hm
   have hw : w 1 = 1 - ↑(t : ℝ) := by rw [hm] at hsum; linear_combination hsum
   rw [← signed_determinant a b R hR, sum_swap_supported i j hij
-    (fun σ => w σ * matchingProduct a b σ) (fun σ h₁ h₂ => by rw [hzero σ h₁ h₂, zero_mul]),
+    (fun π => w π * matchingProduct a b π) (fun π h₁ h₂ => by simp [hzero π h₁ h₂]),
     hw, hm]
 
 private theorem continuous_swapRotation (i j : ι) :
@@ -291,7 +300,7 @@ private theorem swapRotation_one (i j : ι) :
   simp [swapRotation]
 
 private theorem permuted_diagonal (b : ι → ℂ) (p : Perm ι) :
-    orbitConj (p.symm.permMatrix ℂ) (diagonal b) = diagonal (b ∘ p.symm) := by
+    orbitConj (Equiv.Perm.permMatrix ℂ p.symm) (diagonal b) = diagonal (b ∘ p.symm) := by
   rw [orbitConj, permMatrix_conjugates, Matrix.submatrix_diagonal_equiv]
 
 private theorem permuted_diagonal_swap (b : ι → ℂ) (p : Perm ι) (x y : ι) :
@@ -311,10 +320,10 @@ private theorem swapRotation_relabel (x y i j : ι) (t : I) :
     rw [show s (s l) = l from Equiv.swap_apply_self x y l] at h
     constructor
     · intro hkl
-      rw [hkl, h, Equiv.swap_apply_self]
+      exact (Equiv.swap_apply_self x y k).symm.trans ((congrArg s hkl).trans h)
     · intro hkl
       apply s.injective
-      rw [hkl, h, Equiv.swap_apply_self]
+      exact (Equiv.swap_apply_self x y k).trans (hkl.trans h.symm)
   change swapRotation i j t (s k) (s l) = swapRotation (s i) (s j) t k l
   simp only [swapRotation, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply,
     swapMatrix_apply, s.injective.eq_iff, he]
@@ -367,7 +376,7 @@ theorem transposition_square_in_determinant_range (a b : ι → ℂ) (p : Perm �
     unfold F orbitConj
     fun_prop
   · intro u
-    let W := (swapRotation x y u.1 * swapRotation i j u.2) * p.symm.permMatrix ℂ
+    let W := (swapRotation x y u.1 * swapRotation i j u.2) * Equiv.Perm.permMatrix ℂ p.symm
     have hW : IsUnitary W := isUnitary_mul_for_winding
       (isUnitary_mul_for_winding (swapRotation_unitary x y u.1) (swapRotation_unitary i j u.2))
       (isUnitary_permMatrix p.symm)
@@ -391,16 +400,16 @@ theorem transposition_square_in_determinant_range (a b : ι → ℂ) (p : Perm �
       have hVR : (orbitConj V R) * V = V * R := by
         rw [orbitConj, Matrix.mul_assoc (V * R), hV.2, Matrix.mul_one]
       rw [orbitConj_mul, orbitConj_mul, hVR]
-    dsimp only [F]
+    dsimp only [F, D]
     rw [swapRotation_one, orbitConj_I_smul, hcomm,
-      swapRotation_relabel, D, permuted_diagonal_swap]
+      swapRotation_relabel, permuted_diagonal_swap]
     have hh := permuted_edge_value a b (r * p) (r i) (r j)
       (fun he => hij (r.injective he)) t
     rw [← mul_assoc, ← mul_swap_eq_swap_mul, mul_assoc] at hh
     exact hh
   · intro t
-    dsimp only [F]
-    rw [swapRotation_one, orbitConj_I_smul, D, permuted_diagonal_swap]
+    dsimp only [F, D]
+    rw [swapRotation_one, orbitConj_I_smul, permuted_diagonal_swap]
     exact permuted_edge_value a b (Equiv.swap i j * p) x y hxy t
 
 private theorem exists_square_log (f : I × I → ℂ) (hf : Continuous f)
@@ -409,7 +418,8 @@ private theorem exists_square_log (f : I × I → ℂ) (hf : Continuous f)
   obtain ⟨u, _, hmin⟩ := isCompact_univ.exists_isMinOn
     (Set.univ_nonempty : (Set.univ : Set (I × I)).Nonempty) hf.norm.continuousOn
   have hmin' (x : I × I) : ‖f u‖ ≤ ‖f x‖ := hmin (Set.mem_univ x)
-  obtain ⟨δ, hδ, hclose⟩ := Metric.uniformContinuous_iff.mp hf.uniformContinuous
+  obtain ⟨δ, hδ, hclose⟩ := Metric.uniformContinuous_iff.mp
+    (CompactSpace.uniformContinuous_of_continuous hf)
     ‖f u‖ (norm_pos_iff.mpr (hnz u))
   obtain ⟨N, hN⟩ := exists_nat_gt (1 / δ)
   let m : ℕ := N + 1
@@ -450,7 +460,7 @@ private theorem exists_square_log (f : I × I → ℂ) (hf : Continuous f)
       change |(r (k + 1) : ℝ) * (t : ℝ) - (r k : ℝ) * (t : ℝ)| < δ
       rw [hcoeff (k + 1) (Nat.succ_le_of_lt hk), hcoeff k hk.le, ← sub_mul, ← sub_div]
       rw [show ((↑(k + 1) : ℝ) - (k : ℝ)) = 1 by push_cast; ring]
-      rw [abs_of_nonneg (by positivity)]
+      rw [abs_of_nonneg (mul_nonneg (div_nonneg zero_le_one hm.le) t.property.1)]
       exact (mul_le_of_le_one_right (by positivity) t.property.2).trans_lt hmδ
     rw [Prod.dist_eq]
     exact max_lt (hcoord x.1) (hcoord x.2)
@@ -462,7 +472,7 @@ private theorem exists_square_log (f : I × I → ℂ) (hf : Continuous f)
       change ‖v (k + 1) x - v k x‖ < ‖f u‖ at h
       exact h.trans_le (hmin' (scale k x))
     rw [show v (k + 1) x / v k x = 1 + (v (k + 1) x - v k x) / v k x by
-      field_simp [hn]; ring]
+      rw [sub_div, div_self hn]; ring]
     apply Complex.mem_slitPlane_of_norm_lt_one
     rw [norm_div, div_lt_one (norm_pos_iff.mpr hn)]
     exact ht
@@ -479,14 +489,16 @@ private theorem exists_square_log (f : I × I → ℂ) (hf : Continuous f)
     | succ n ih =>
       rw [Finset.prod_range_succ, ih]
       have hn : v n x ≠ 0 := hnz (scale n x)
-      field_simp [hn]
+      rw [mul_comm (v n x / v 0 x), div_mul_div_comm, mul_comm (v n x) (v 0 x),
+        mul_div_mul_right _ _ hn]
   have hterms :
       (∏ k ∈ Finset.range m, Complex.exp (v (k + 1) x / v k x).log) =
         ∏ k ∈ Finset.range m, v (k + 1) x / v k x := by
     apply Finset.prod_congr rfl
     intro k _
     exact Complex.exp_log (div_ne_zero (hnz (scale (k + 1) x)) (hnz (scale k x)))
-  rw [L, Complex.exp_add, Complex.exp_sum, Complex.exp_log (hnz (0,0)), hterms,
+  dsimp only [L]
+  rw [Complex.exp_add, Complex.exp_sum, Complex.exp_log (hnz (0,0)), hterms,
     hprod, hv0, hvm, mul_comm (f (0,0)), div_mul_cancel₀ _ (hnz (0,0))]
 
 private theorem edge_ratio_slit {z w : ℂ} (hz : z ≠ 0)
@@ -518,7 +530,7 @@ private theorem edge_ratio_slit {z w : ℂ} (hz : z ≠ 0)
     · left
       simp only [Complex.sub_re, Complex.one_re, Complex.add_re, Complex.ofReal_re,
           Complex.mul_re, Complex.ofReal_im, zero_mul, sub_zero]
-      have hmul : 0 < (t : ℝ) * v.re := mul_pos (lt_of_le_of_ne t.property.1 ht.symm) hpos
+      have hmul : 0 < (t : ℝ) * v.re := mul_pos (lt_of_le_of_ne t.property.1 (Ne.symm ht)) hpos
       linarith only [t.property.2, hmul]
     · right
       simpa only [Complex.add_im, Complex.sub_im, Complex.one_im, Complex.ofReal_im,
@@ -538,12 +550,13 @@ private theorem log_change_along_segment (z w : ℂ) (hz : z ≠ 0)
     (L 1).im - (L 0).im = Complex.arg (w / z) := by
   let K (t : I) := L 0 + Complex.log (straightSegmentPoint z w t / z)
   have hK : Continuous K := by
-    unfold K
-    refine continuous_const.add ((?_.div_const z).clog (edge_ratio_slit hz hseg))
-    unfold straightSegmentPoint
-    fun_prop
+    have hpoint : Continuous (straightSegmentPoint z w) := by
+      unfold straightSegmentPoint
+      fun_prop
+    exact continuous_const.add ((hpoint.div_const z).clog (edge_ratio_slit hz hseg))
   have hKval (t : I) : Complex.exp (K t) = straightSegmentPoint z w t := by
-    rw [K, Complex.exp_add, hval 0, Complex.exp_log (div_ne_zero (hseg t) hz)]
+    dsimp only [K]
+    rw [Complex.exp_add, hval 0, Complex.exp_log (div_ne_zero (hseg t) hz)]
     rw [straightSegmentPoint_zero, mul_comm z, div_mul_cancel₀ _ hz]
   have hK0 : K 0 = L 0 := by simp [K, straightSegmentPoint_zero, hz]
   have he := (T2Space.isSeparatedMap Circle.exp).eq_of_comp_eq
@@ -551,7 +564,8 @@ private theorem log_change_along_segment (z w : ℂ) (hz : z ≠ 0)
     (Complex.continuous_im.comp hK)
     (funext fun t => circle_exp_im_eq ((hval t).trans (hKval t).symm))
     (0 : I) (congrArg Complex.im hK0.symm)
-  rw [congrFun he 1]
+  have he₁ : (L 1).im = (K 1).im := congrFun he 1
+  rw [he₁]
   simp only [K, straightSegmentPoint_one, Complex.add_im, Complex.log_im]
   ring
 

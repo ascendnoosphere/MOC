@@ -452,7 +452,7 @@ theorem not_generalizedCircle_convexQuadrilateral :
   have h2 := h 2
   have h3 := h 3
   norm_num [circleValue, Complex.normSq_apply, Complex.add_re, Complex.add_im,
-    Complex.mul_re, Complex.mul_im] at h0 h1 h2 h3
+    Complex.mul_re, Complex.mul_im, Matrix.cons_val_two, Matrix.cons_val_three] at h0 h1 h2 h3
   have hq : q = 0 := by linarith only [h0, h1, h2, h3]
   have hu : u = 0 := by linarith only [h0, h1, hq]
   have hv : v = 0 := by linarith only [h0, h3, hq]
