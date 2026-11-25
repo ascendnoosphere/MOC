@@ -48,6 +48,7 @@ eigenbases. A matching product is $P_\sigma=\prod_j(a_{\sigma(j)}+b_j)$.
 
 | MOC proved for | Order | Lean proof |
 | --- | --- | --- |
+| Join two covered blocks (each covered for all spectra) by one two-coordinate unitary row gate, one coordinate from each block. The resulting mixer need not itself be block diagonal. | Any finite order | [OneBridge.lean](MOC/OneBridge.lean) |
 | Relative unitary $U=I+(z-1)vv^*$, with $\lVert v\rVert=1$ and $\lvert z\rvert=1$. | Any positive order | [HouseholderSupport.lean](MOC/HouseholderSupport.lean) |
 | A relative unitary with a row or column that has at most two nonzero entries. | Four | [SparseRow.lean](MOC/SparseRow.lean) · [Small.lean](MOC/Small.lean) |
 | An upper Hessenberg relative unitary after independent row and column permutations. Entries below the first subdiagonal are zero. | Any finite order | [SparseRow.lean](MOC/SparseRow.lean) |
@@ -83,3 +84,15 @@ determinant inclusion and keeps the same relative unitary.
 | The relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and has largest Frobenius norm among the maximizing sums. | [NormalOrbit.lean](MOC/NormalOrbit.lean) |
 | In order four, the relative unitary $U$ maximizes the determinant projection in a fixed direction. Its sum is normal and the maximizing projection is nonzero. | [NormalSupportMaximum.lean](MOC/NormalSupportMaximum.lean) |
 | A convex representation of zero gives weights at least $\varepsilon\ge0$ to two matching products $p,q$. Require $\lVert p\rVert+\lVert q\rVert>0$ and $(\lVert p\rVert+\lVert q\rVert)\lvert\det(A+B)\rvert\le\varepsilon\lvert\mathrm{Im}(p\bar q)\rvert$. | [DiskBoundary.lean](MOC/DiskBoundary.lean) |
+
+## All-order mixer classes with paper proofs
+
+The [alternating positive mixer class](AlternatingPositiveMixers.md)
+contains complex-unitary open sets with one common law for all
+spectra. Its determinant interface is checked in Lean; it uses
+Lam's double-dimer theorem
+([DOI 10.1112/jlms/jdv039](https://doi.org/10.1112/jlms/jdv039))
+as an external input.
+The [one-port gate theorem](UnitaryPortGates.md) permits gates of
+arbitrary size when a gate has a common law for the chosen port
+spectrum and all partner spectra. Lean checks the two-port case.

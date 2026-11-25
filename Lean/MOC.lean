@@ -7,6 +7,12 @@ import MOC.FiniteFrameLabels
 import MOC.ZhengContactReduction
 import MOC.ZhengRectangleContact
 import MOC.ZhengPairedContacts
+import MOC.ZhengStarObstruction
+import MOC.FourMatchingPolarization
+import MOC.AlternatingMinorLaw
+import MOC.OneBridge
+import MOC.ZhengT85Lift
+import MOC.ZhengT85SecantObstruction
 import MOC.ContactDifferential
 import MOC.ContactGraphCertificates
 import MOC.GraphEffectIndependence

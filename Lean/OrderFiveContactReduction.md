@@ -266,6 +266,14 @@ needing any order-five realification result.
 
 ## 5. A proved structured class in order five and higher: real Cauchy mixers
 
+The [alternating positive mixer theorem](AlternatingPositiveMixers.md)
+extends the dense class proved below to open neighborhoods in the
+**complex** unitary group and proves a relative-interior statement
+for the determinant. It uses Lam's polynomial identity
+([DOI 10.1112/jlms/jdv039](https://doi.org/10.1112/jlms/jdv039))
+and the same positive real centers.
+
+
 Zheng's Appendix C.5 uses a nonnegative network identity for
 Cauchy-type real orthogonal matrices in order four. The dense
 Cauchy argument extends to all n, without needing order-four MOC.

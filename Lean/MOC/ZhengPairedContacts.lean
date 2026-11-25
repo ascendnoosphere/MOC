@@ -743,6 +743,121 @@ private theorem inner_cross_same_col {f f' g : Bits}
     (h' : innerLow.map (flip f' * cross * flip g).toEmbedding = innerHigh) : f = f' :=
   ((inner_cross_iff f g).mp h).1.trans ((inner_cross_iff f' g).mp h').1.symm
 
+/-- The crossing indicator and the two kinds of crossing marginals use only
+two-subset images. -/
+def crossingEvent (p : Perm) : ℝ :=
+  1 - event block block p - event block blockᶜ p
+
+def rowEvent (f : Bits) (p : Perm) : ℝ := event block (mixedSet f) p
+
+def colEvent (g : Bits) (p : Perm) : ℝ := event (mixedSet g) block p
+
+/-- Up to index relabeling, the only possibly negative signed contribution. -/
+def starObjective (f₀ g₀ : Bits) (p : Perm) : ℝ :=
+  event innerLow innerHigh p + crossingEvent p - rowEvent f₀ p - colEvent g₀ p
+
+/-- Exact decomposition of the whole gap, not just its zero set. Once a
+marked cell is below the block gap, every coefficient in this decomposition
+is nonnegative. Only the indicated star objective may evaluate negatively. -/
+theorem gap_eq_marked_star_sum {U : Matrix (Fin 4) (Fin 4) ℂ}
+    (w : StrictMatchingSupport U) (hT : Pattern w) (f₀ g₀ : Bits)
+    (hm : innerLow.map (flip f₀ * cross * flip g₀).toEmbedding = innerHigh) :
+    let D : Perm → ℝ := fun p => (w.η * matchingProduct w.a w.b w.pivot).re -
+      (w.η * matchingProduct w.a w.b (label.symm.permCongr p)).re
+    let C : Bits → Bits → ℝ := fun f g => D (flip f * cross * flip g)
+    let d := (w.η * matchingProduct w.a w.b w.pivot).re -
+      (w.η * matchingProduct w.a w.b s₂₃).re
+    ∀ p : Perm, D p = C f₀ g₀ * event innerLow innerHigh p +
+      (d - C f₀ g₀) * starObjective f₀ g₀ p +
+      (∑ f : Bits, if f = f₀ then 0 else C f g₀ * rowEvent f p) +
+      (∑ g : Bits, if g = g₀ then 0 else C f₀ g * colEvent g p) := by
+  classical
+  intro D C d p
+  have hD (p : Perm) (hb : within p ∨ across p) : D p = d * event innerLow innerHigh p := by
+    simpa only [D,d,matchingProduct_label] using t85_block_defect w hT p hb
+  have rect (f g : Bits) :
+      C f g - d * event innerLow innerHigh (flip f * cross * flip g) -
+        (C f₀ g - d * event innerLow innerHigh (flip f₀ * cross * flip g)) -
+        (C f g₀ - d * event innerLow innerHigh (flip f * cross * flip g₀)) +
+        (C f₀ g₀ - d * event innerLow innerHigh (flip f₀ * cross * flip g₀)) = 0 := by
+    simpa only [C,D,d,matchingProduct_label] using
+      single_block_defect_rectangle (w.a ∘ label.symm) (w.b ∘ label.symm) w.η
+        ((w.η * matchingProduct w.a w.b w.pivot).re) innerLow innerHigh inner_card d
+        (t85_block_defect w hT) f f₀ g g₀
+  by_cases hb : within p ∨ across p
+  · obtain ⟨hmap,hcol⟩ := map_of_preserves p hb
+    have hrow (f : Bits) : block.map p.toEmbedding ≠ mixedSet f :=
+      hmap.elim (fun h he => mixedSet_ne_block f (he.symm.trans h))
+        (fun h he => mixedSet_ne_compl f (he.symm.trans h))
+    have hX : crossingEvent p = 0 := by
+      rcases hmap with hh | hh
+      · have hne : block.map p.toEmbedding ≠ blockᶜ := by
+          rw [hh]
+          intro he
+          have h₀ : (false, false) ∈ block := by simp [block]
+          exact (Finset.mem_compl.mp (he ▸ h₀)) h₀
+        simp [crossingEvent,event,hh,hne]
+      · have hne : block.map p.toEmbedding ≠ block := by
+          rw [hh]
+          intro he
+          have h₀ : (false, false) ∈ block := by simp [block]
+          exact (Finset.mem_compl.mp (he.symm ▸ h₀)) h₀
+        simp [crossingEvent,event,hh,hne]
+    rw [hD p hb]
+    simp [starObjective,hX,rowEvent,colEvent,event,hrow,hcol]
+    split_ifs <;> ring
+  · obtain ⟨f,g,rfl⟩ := (normal_form p).resolve_left (fun h => hb (Or.inl h)) |>
+      (fun h => h.resolve_left (fun h => hb (Or.inr h)))
+    have hX : crossingEvent (flip f * cross * flip g) = 1 := by
+      simp [crossingEvent,event,map_block_mixed,mixedSet_ne_block,mixedSet_ne_compl]
+    have hrow (j : Bits) : rowEvent j (flip f * cross * flip g) = if f = j then 1 else 0 := by
+      simp [rowEvent,event,map_block_mixed,mixedSet_injective.eq_iff]
+    have hcol (j : Bits) : colEvent j (flip f * cross * flip g) = if j = g then 1 else 0 := by
+      simp [colEvent,event,map_mixed_eq_block_iff]
+    have hs₁ : (∑ j : Bits, if j = f₀ then 0 else C j g₀ * rowEvent j (flip f * cross * flip g)) =
+        if f = f₀ then 0 else C f g₀ := by
+      calc
+        _ = ∑ j : Bits, if f = j then (if j = f₀ then 0 else C j g₀) else 0 := by
+          apply Finset.sum_congr rfl
+          intro j _
+          rw [hrow]
+          by_cases h : f = j <;> by_cases h' : j = f₀ <;> simp [h,h']
+        _ = _ := by simp
+    have hs₂ : (∑ j : Bits, if j = g₀ then 0 else C f₀ j * colEvent j (flip f * cross * flip g)) =
+        if g = g₀ then 0 else C f₀ g := by
+      calc
+        _ = ∑ j : Bits, if j = g then (if j = g₀ then 0 else C f₀ j) else 0 := by
+          apply Finset.sum_congr rfl
+          intro j _
+          rw [hcol]
+          by_cases h : j = g <;> by_cases h' : j = g₀ <;> simp [h,h']
+        _ = _ := by simp
+    rw [hs₁,hs₂]
+    simp only [starObjective,hX,hrow,hcol]
+    change C f g = _
+    by_cases hf : f = f₀ <;> by_cases hg : g = g₀
+    · subst f; subst g
+      simp [event,hm]
+    · subst f
+      have hnot : innerLow.map (flip f₀ * cross * flip g).toEmbedding ≠ innerHigh :=
+        fun h => hg (inner_cross_same_row h hm)
+      simp [event,hnot,hg,Ne.symm hg]
+    · subst g
+      have hnot : innerLow.map (flip f * cross * flip g₀).toEmbedding ≠ innerHigh :=
+        fun h => hf (inner_cross_same_col h hm)
+      simp [event,hnot,hf]
+    · have hnot₁ : innerLow.map (flip f₀ * cross * flip g).toEmbedding ≠ innerHigh :=
+        fun h => hg (inner_cross_same_row h hm)
+      have hnot₂ : innerLow.map (flip f * cross * flip g₀).toEmbedding ≠ innerHigh :=
+        fun h => hf (inner_cross_same_col h hm)
+      have he := rect f g
+      have hE₁ : event innerLow innerHigh (flip f₀ * cross * flip g) = 0 := if_neg hnot₁
+      have hE₂ : event innerLow innerHigh (flip f * cross * flip g₀) = 0 := if_neg hnot₂
+      have hE₀ : event innerLow innerHigh (flip f₀ * cross * flip g₀) = 1 := if_pos hm
+      simp only [hE₁,hE₂,hE₀,mul_zero,mul_one,sub_zero] at he
+      simp only [hf,hg,Ne.symm hg,if_false,sub_zero]
+      linear_combination he
+
 /-- Every remaining T85 witness has a crossing row and column containing
 all its crossing contacts. Off that row and column the gap is bounded
 below by the positive deficit shortfall at their intersection. -/

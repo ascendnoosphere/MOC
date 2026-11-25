@@ -38,6 +38,35 @@ flowchart BT
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
 ```
 
+## An all-order class of mixers with a common law
+
+For every order, the [alternating positive mixer theorem](AlternatingPositiveMixers.md)
+proves the determinant inclusion for every spectral pair throughout
+nonempty open subsets of the complex unitary group. The same
+probability vector works for every spectrum and every squared
+minor, and the determinant lies in the relative interior of the
+matching hull. The proof uses Lam's complementary double-dimer
+identity ([DOI 10.1112/jlms/jdv039](https://doi.org/10.1112/jlms/jdv039)).
+The [Lean interface](MOC/AlternatingMinorLaw.lean) checks the
+determinant and strict-support consequences of that identity and
+the persistence of positivity. Lam's network theorem and the
+complex graph-chart identity are proved or cited on paper, not
+formalized by the interface. The result does not assert that
+arbitrary unitary mixers have a common positive law.
+
+A second construction joins block mixers without assuming anything
+about the relative spectra. [OneBridge](MOC/OneBridge.lean) checks
+that a two-coordinate unitary gate across two blocks interpolates
+exactly between the original block mixer and its port-swapped
+version. If the two child mixers satisfy the inclusion for all
+spectra, so does the joined mixer. The
+[one-port factorization](UnitaryPortGates.md) extends the argument on
+paper to any number of blocks when the gate has a common law for
+the fixed port spectrum and all partners. In particular, iterated
+gates of size at most three give connected all-order classes. The
+determinant weights follow Merikoski and Virtanen
+([DOI 10.1016/0024-3795(89)90709-X](https://doi.org/10.1016/0024-3795(89)90709-X)).
+
 ## Order four: the main proof routes
 
 ```mermaid
@@ -57,7 +86,9 @@ flowchart BT
     T85["T85: close the marked row and column case · open"]:::open
     OTHERS["Other terminal contact patterns · open"]:::open
     COVER{{"AND: cover every terminal pattern"}}
-    STAR["T85: two marked cells; all crossing contacts<br/>on one row and column · checked"]:::checked
+    STAR["T85: one exact signed residual objective<br/>plus nonnegative minor terms · checked"]:::checked
+    NOGO["Linear marked-star comparison is false · checked"]:::blocked
+    SEC["Open sector excluded by secant Hessian<br/>Lean algebra plus geometric rank input"]:::open
     PAIRED["T85 zero-height branch excluded · checked"]:::checked
     WITNESS --> OR4
     NORMAL --> OR4
@@ -71,12 +102,15 @@ flowchart BT
     PHASE -. restrict realizable profiles .-> SEVEN
     PAIRED -. removes the zero-height case .-> T85
     STAR -. identifies the residual case .-> T85
+    NOGO -. exact spectral equations are needed .-> T85
+    SEC -. excludes a neighborhood of the bad ray .-> T85
     T85 -. candidate case split .-> COVER
     OTHERS -. includes coverage of the split .-> COVER
     COVER -. terminal classification and bounds .-> SEVEN
     OR4 <-->|iff| FOUR
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
+    classDef blocked fill:#fae5e5,stroke:#a33434,color:#361010
 ```
 
 ## Order five: the main proof routes
@@ -380,13 +414,22 @@ needs a marked cell with deficit below $d$. All crossing contacts
 then lie on its row or column: each of the other nine cells has a
 gap at least the positive shortfall from $d$.
 
-**Next residual comparison.** Bound the actual unitary evaluation on
-the [marked row and column](ZhengT85Independent.md#one-defect-beyond-the-paired-branch),
-using their matching-product constraints. The additive table after
-subtracting the marked event is a certificate only when it is
-nonnegative; strict witnesses must fail exactly that test at one
-marked cell. Closing this comparison settles $T_{85}$, not the other
-terminal patterns or the all-order conjecture.
+**Next residual comparison.** The [exact gap decomposition](ZhengT85Independent.md#the-linear-marked-star-comparison-is-false)
+separates one signed objective from terms with nonnegative
+squared-minor evaluations. The signed objective alone is negative
+on an explicit open interval of real orthogonal mixers, even
+though every permutation gap is nonnegative. This rules out the
+linear relaxation, not the spectral inequality. Use the nonlinear
+matching-profile equations to compare the positive terms with the
+signed contribution. [FourMatchingPolarization](MOC/FourMatchingPolarization.lean)
+checks the cubic equation on all real supporting projections,
+without assuming the spectra are distinct. The cubic alone accepts the
+pure bad ray. Its Hessian does not: the
+[secant argument](ZhengT85Independent.md#exact-profiles-avoid-an-open-sector-around-the-bad-ray)
+excludes an open neighborhood of that ray, using Lean-checked
+local algebra and the external geometric rank bound. Closing the
+remaining comparison settles $T_{85}$,
+not the other terminal patterns or unrestricted MOC.
 
 **Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)
 uses the number of polynomial observables that determine the old
