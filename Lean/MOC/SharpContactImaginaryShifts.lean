@@ -177,4 +177,66 @@ theorem StrictMatchingSupport.realize_small_imaginary_contact_shifts_of_sharp_co
     rw [hyτ,heval,heval,← hab] at he
     exact he
 
+/-- Collision-freeness of active complex products may be imposed at the
+sharp count, without claiming it at the starting witness. -/
+theorem StrictMatchingSupport.exists_distinct_active_products_of_sharp_count
+    {U : Matrix ι ι ℂ} (hU : IsUnitary U) (w : StrictMatchingSupport U)
+    (hmax : ∀ v : StrictMatchingSupport U, v.contacts.card ≤ w.contacts.card)
+    (hcard : w.contacts.card ≤ 2 * Fintype.card ι - 1)
+    (hpos : 1 < w.contacts.card)
+    {N : Set (Equiv.Perm ι → ℂ)} (hN : N ∈ 𝓝 (matchingProduct w.a w.b)) :
+    ∃ v : StrictMatchingSupport U, v.η = w.η ∧ v.pivot = w.pivot ∧
+      v.contacts = w.contacts ∧ matchingProduct v.a v.b ∈ N ∧
+      Set.InjOn (matchingProduct v.a v.b) (w.contacts : Set (Equiv.Perm ι)) := by
+  classical
+  have hp : w.pivot ∈ w.contacts := by simp [StrictMatchingSupport.contacts]
+  have hother : 0 < (w.contacts.erase w.pivot).card := by
+    rw [Finset.card_erase_of_mem hp]
+    omega
+  obtain ⟨q₀,hq⟩ := Finset.card_pos.mp hother
+  obtain ⟨hqr,hq₀⟩ := Finset.mem_erase.mp hq
+  let e := Fintype.equivFin (Equiv.Perm ι)
+  let u (q : Equiv.Perm ι) : ℝ := ((e q).val : ℝ) - ((e w.pivot).val : ℝ)
+  have hur : u w.pivot = 0 := sub_self _
+  have hu : Function.Injective u := by
+    intro i j h
+    apply e.injective
+    apply Fin.val_injective
+    exact Nat.cast_inj.mp (sub_left_inj.mp h)
+  obtain hshift := w.realize_small_imaginary_contact_shifts_of_sharp_count
+    hU hmax hcard u hur q₀ hq₀ (fun h => hqr (hu (h.trans hur.symm))) hN
+  let f (q : Equiv.Perm ι) (τ : ℝ) : ℂ :=
+    w.η * (matchingProduct w.a w.b w.pivot - matchingProduct w.a w.b q) +
+      (u q : ℂ) * Complex.I * (τ : ℂ)
+  have hδ : ∀ᶠ τ : ℝ in 𝓝 0, ∀ i j, f i 0 ≠ f j 0 → f i τ ≠ f j τ := by
+    rw [Filter.eventually_all]
+    intro i
+    rw [Filter.eventually_all]
+    intro j
+    by_cases hij : f i 0 = f j 0
+    · exact Eventually.of_forall fun _ h => (h hij).elim
+    · have hc : Continuous (fun τ => f i τ - f j τ) := by dsimp [f]; fun_prop
+      exact (hc.continuousAt.eventually_ne (sub_ne_zero.mpr hij)).mono
+        (fun τ h _ => sub_ne_zero.mp h)
+  have hτ : ∃ τ : ℝ, ((∃ v : StrictMatchingSupport U, v.η = w.η ∧
+      v.pivot = w.pivot ∧ v.contacts = w.contacts ∧ matchingProduct v.a v.b ∈ N ∧
+      ∀ q ∈ w.contacts, w.η * (matchingProduct v.a v.b w.pivot -
+        matchingProduct v.a v.b q) = f q τ) ∧
+      (∀ i j, f i 0 ≠ f j 0 → f i τ ≠ f j τ)) ∧ τ ≠ 0 := by
+    exact (mem_closure_iff_nhds.mp ((dense_compl_singleton (0 : ℝ)) 0) _
+      (hshift.and hδ))
+  obtain ⟨τ,⟨⟨v,hη,hp',hS,hNv,hmove⟩,hne⟩,hτne⟩ := hτ
+  refine ⟨v,hη,hp',hS,hNv,?_⟩
+  intro i hi j hj hij
+  have h : f i τ = f j τ := (hmove i hi).symm.trans (by simpa only [← hij] using hmove j hj)
+  by_cases hbase : f i 0 = f j 0
+  · have hbase' : w.η * (matchingProduct w.a w.b w.pivot - matchingProduct w.a w.b i) =
+        w.η * (matchingProduct w.a w.b w.pivot - matchingProduct w.a w.b j) := by
+      simpa only [f,Complex.ofReal_zero,mul_zero,add_zero] using hbase
+    dsimp only [f] at h
+    rw [hbase'] at h
+    exact hu (Complex.ofReal_injective (mul_right_cancel₀ Complex.I_ne_zero
+      (mul_right_cancel₀ (Complex.ofReal_ne_zero.mpr hτne) (add_left_cancel h))))
+  · exact (hne i j hbase h).elim
+
 end MOC

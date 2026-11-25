@@ -52,10 +52,14 @@ rules out $H<0$: both $u$ and $v$ lie on or below the support
 line, and the single-swap difference $u-p$ is nonzero. Hence the
 unpaired branch has strictly positive upper height.
 
-## The paired branch has a minor certificate (paper proof)
+## The paired branch has a Lean-checked minor certificate
 
-The full subgroup argument below is not yet formalized. Lean checks
-the polynomial identity in its main step as mixed_block_rectangle.
+[ZhengPairedContacts.lean](MOC/ZhengPairedContacts.lean) checks the entire argument,
+including the structural normal form, the mixed differences and their
+telescoping, the nonnegative coefficients, and the squared-minor evaluation.
+The two blocks are represented by a first Boolean coordinate and the
+choices within each block by a second Boolean coordinate. The normal
+form uses injectivity, not a list of the 24 permutations.
 
 Let $I=\{1,3\}$ and $I^c=\{2,4\}$ in one-based labels, and let
 $D$ be the group preserving the unordered pair $\{I,I^c\}$.
@@ -113,7 +117,8 @@ Zheng's supplementary proofs.
 
 ## Remaining target
 
-Together these arguments reduce the six-label $T_{85}$ inequality
+The checked theorem [reduce_to_positive_eight](MOC/ZhengPairedContacts.lean)
+reduces the six-label $T_{85}$ inequality
 to strict witnesses with at least eight contacts, label 23 inactive,
 strictly positive upper height, and the collision $p_0=p_7$. They do
 not settle that subcase, nor other terminal patterns in Proposition

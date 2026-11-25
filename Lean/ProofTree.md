@@ -361,7 +361,7 @@ terminal violation would refute MOC.
 [two matching-product identities](MOC/ZhengRectangleContact.lean) reduce
 the number of equations from six to five at seven contacts. Lean
 forces at least eight contacts and splits at zero support height.
-An [independent paper argument](ZhengT85Independent.md) certifies the
+An [independent Lean proof](MOC/ZhengPairedContacts.lean) certifies the
 zero-height paired branch by squared minors; the positive-height
 unpaired branch still needs a support bound.
 
@@ -615,3 +615,18 @@ flowchart BT
 - [Zero-height saturation](MOC/ZeroHeightCycleSaturation.lean)
 - [Fixed-zero profile locus](MOC/FixedZeroProfiles.lean)
 - [Schur disk criterion](MOC/OrbitTargets.lean)
+
+## Cycle 03 and 04 replay and proof updates
+
+The [experiment ledger](research/agenda-2026-11-25-c03-c04/README.md)
+separates checked symbolic results from finite experiment data.
+[Joint frame compression](MOC/FiniteFrameLabels.lean) lowers the
+overlap-$k$ reduction to square order $4k^2-k$, hence 33 at overlap
+three. [Phase loss](MOC/UnitaryPhaseCuts.lean) is nonnegative on every
+phase matrix and gives a finite Gram positivity test.
+[Signed covariance](MOC/RankOneVariance.lean) identifies the physical
+variance on rank-one assignment scores; [threshold variance](MOC/ThresholdVariance.lean)
+proves a separate finite-law lattice bound. [RankOneLattice](MOC/RankOneLattice.lean)
+assembles the unitary projection marginals for nested integral thresholds.
+The [exact combined finite cone separator](research/agenda-2026-11-25-c03-c04/phase/README.md)
+fails a new adaptive square; it excludes no actual unitary.

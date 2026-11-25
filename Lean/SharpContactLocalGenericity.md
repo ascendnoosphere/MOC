@@ -4,7 +4,8 @@
 [GapFreeContactFibre.lean](MOC/GapFreeContactFibre.lean).
 The [one-dimensional local openness](MOC/AffineCurveLocalOpen.lean)
 and [exact small imaginary shifts](MOC/SharpContactImaginaryShifts.lean)
-are also checked. The multidimensional openness, full discriminant
+are also checked. A checked corollary makes all active complex products
+pairwise distinct at the sharp count. The multidimensional openness, full discriminant
 avoidance, and Jacobian conclusions below are paper arguments.
 
 Fix the mixer and nonzero support direction of a strict witness with

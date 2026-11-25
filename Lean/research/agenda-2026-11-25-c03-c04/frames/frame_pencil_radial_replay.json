@@ -1,0 +1,186 @@
+{
+  "joint_frame": [
+    {
+      "k": 3,
+      "input": [
+        20,
+        21
+      ],
+      "output": [
+        19,
+        17
+      ],
+      "exact_moment_rank": 36,
+      "dense": true,
+      "genuinely_complex": true,
+      "spectra_distinct_counts": [
+        5,
+        5
+      ],
+      "old_optional_zero": true,
+      "new_optional_zero": true,
+      "separate_compressions_changed": [
+        true,
+        true
+      ]
+    },
+    {
+      "k": 4,
+      "input": [
+        35,
+        32
+      ],
+      "output": [
+        32,
+        32
+      ],
+      "exact_moment_rank": 40,
+      "dense": true,
+      "genuinely_complex": false,
+      "spectra_distinct_counts": [
+        5,
+        5
+      ],
+      "old_optional_zero": true,
+      "new_optional_zero": true,
+      "separate_compressions_changed": [
+        false,
+        false
+      ]
+    },
+    {
+      "k": 3,
+      "input": [
+        3,
+        36
+      ],
+      "output": [
+        3,
+        33
+      ],
+      "exact_moment_rank": 21,
+      "dense": true,
+      "genuinely_complex": false,
+      "spectra_distinct_counts": [
+        3,
+        5
+      ],
+      "old_optional_zero": false,
+      "new_optional_zero": false,
+      "separate_compressions_changed": [
+        false,
+        false
+      ]
+    }
+  ],
+  "pencil": {
+    "raw_centroid": "76/3",
+    "raw_max": 25,
+    "slope": "164/9",
+    "intercept": "200/9",
+    "eligible_last_coordinate": "Interval(20/3, 61/9)",
+    "alternative": [
+      "49/2",
+      "79/4",
+      "121/8"
+    ]
+  },
+  "radial": [
+    {
+      "n": 4,
+      "repeated": false,
+      "zero_cells": 0,
+      "zero_bearing": false,
+      "shared_first_color": [
+        1,
+        0
+      ],
+      "strict_radial": true,
+      "strict_hadamard": true,
+      "gap_to_cap_float": 0.08110616931441791,
+      "radial_cap_float": 0.12753561173012495,
+      "radial_value_sq_float": 0.04642944241570705,
+      "exact_comparisons": true
+    },
+    {
+      "n": 4,
+      "repeated": false,
+      "zero_cells": 1,
+      "zero_bearing": true,
+      "shared_first_color": [
+        1,
+        1
+      ],
+      "strict_radial": true,
+      "strict_hadamard": true,
+      "gap_to_cap_float": 0.05675905600375654,
+      "radial_cap_float": 0.09714315149898659,
+      "radial_value_sq_float": 0.040384095495230046,
+      "exact_comparisons": true
+    },
+    {
+      "n": 5,
+      "repeated": false,
+      "zero_cells": 1,
+      "zero_bearing": true,
+      "shared_first_color": [
+        1,
+        0
+      ],
+      "strict_radial": true,
+      "strict_hadamard": true,
+      "gap_to_cap_float": 0.1320468582629771,
+      "radial_cap_float": 0.15899253080670586,
+      "radial_value_sq_float": 0.026945672543728746,
+      "exact_comparisons": true
+    },
+    {
+      "n": 5,
+      "repeated": false,
+      "zero_cells": 2,
+      "zero_bearing": true,
+      "shared_first_color": [
+        1,
+        1
+      ],
+      "strict_radial": true,
+      "strict_hadamard": true,
+      "gap_to_cap_float": 0.07474271430012053,
+      "radial_cap_float": 0.14353224872925543,
+      "radial_value_sq_float": 0.0687895344291349,
+      "exact_comparisons": true
+    },
+    {
+      "n": 6,
+      "repeated": false,
+      "zero_cells": 2,
+      "zero_bearing": true,
+      "shared_first_color": [
+        1,
+        0
+      ],
+      "strict_radial": true,
+      "strict_hadamard": true,
+      "gap_to_cap_float": 0.04924351717432576,
+      "radial_cap_float": 0.05294861318624416,
+      "radial_value_sq_float": 0.003705096011918397,
+      "exact_comparisons": true
+    },
+    {
+      "n": 6,
+      "repeated": true,
+      "zero_cells": 3,
+      "zero_bearing": true,
+      "shared_first_color": [
+        1,
+        2
+      ],
+      "strict_radial": true,
+      "strict_hadamard": true,
+      "gap_to_cap_float": 0.007966773430732826,
+      "radial_cap_float": 0.008636646297285245,
+      "radial_value_sq_float": 0.0006698728665524182,
+      "exact_comparisons": true
+    }
+  ]
+}

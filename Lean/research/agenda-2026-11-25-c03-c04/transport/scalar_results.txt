@@ -1,0 +1,22 @@
+verified conditional variance fixture 144/1681 814/123 -10720/15129
+verified rank-one cubic signed obstruction {1: Fraction(4, 27), 2: Fraction(16, 27), 4: Fraction(8, 27), 5: Fraction(-1, 27)}
+verified arbitrary-cost signed obstruction 8/5 0
+verified relaxed support hides strict genuine adjacent bound 23 144 18 0
+scalar 4 dense mixers 4 directions 44 tied_labels 28 boundary 0 strict 0
+scalar 4 near_zero mixers 4 directions 45 tied_labels 33 boundary 0 strict 0
+scalar 4 exact_zero mixers 4 directions 47 tied_labels 32 boundary 0 strict 0
+scalar 4 near_antipodal mixers 4 directions 45 tied_labels 29 boundary 0 strict 0
+scalar 4 repeated mixers 4 directions 34 tied_labels 34 boundary 0 strict 0
+scalar 4 near_commuting mixers 4 directions 46 tied_labels 30 boundary 0 strict 0
+scalar 5 dense mixers 4 directions 54 tied_labels 38 boundary 0 strict 0
+scalar 5 near_zero mixers 4 directions 59 tied_labels 43 boundary 0 strict 0
+scalar 5 exact_zero mixers 4 directions 52 tied_labels 36 boundary 0 strict 0
+scalar 5 near_antipodal mixers 4 directions 59 tied_labels 43 boundary 0 strict 0
+scalar 5 repeated mixers 4 directions 48 tied_labels 48 boundary 0 strict 0
+scalar 5 near_commuting mixers 4 directions 56 tied_labels 40 boundary 0 strict 0
+scalar 6 dense mixers 4 directions 72 tied_labels 57 boundary 0 strict 0
+scalar 6 near_zero mixers 4 directions 71 tied_labels 55 boundary 0 strict 0
+scalar 6 exact_zero mixers 4 directions 68 tied_labels 56 boundary 0 strict 0
+scalar 6 near_antipodal mixers 4 directions 65 tied_labels 49 boundary 0 strict 0
+scalar 6 repeated mixers 4 directions 51 tied_labels 51 boundary 0 strict 0
+scalar 6 near_commuting mixers 4 directions 67 tied_labels 55 boundary 0 strict 0

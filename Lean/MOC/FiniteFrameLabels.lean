@@ -283,5 +283,258 @@ theorem scalar_frame_law_of_bounded_orders
   simp only [Fintype.card_sum, Fintype.card_fin]
   omega
 
+private theorem frameRowTrace_pos {I K : Type} [Fintype K]
+    (F : Matrix I K ℂ) (i : I) (hi : ∃ j, F i j ≠ 0) :
+    0 < realHermTrace K (frameRowGram F i) := by
+  rw [frameRowTrace]
+  obtain ⟨j,hj⟩ := hi
+  exact Finset.sum_pos' (fun l _ => sq_nonneg _)
+    ⟨j,Finset.mem_univ _,sq_pos_of_pos (norm_pos_iff.mpr hj)⟩
+
+private theorem frameRow_support_nonempty {I K : Type} [Fintype I] [Fintype K]
+    [DecidableEq K] [Nonempty K] (F : Matrix I K ℂ) (hF : Fᴴ * F = 1) :
+    Nonempty {i : I // ∃ j, F i j ≠ 0} := by
+  classical
+  by_contra! h
+  have h0 : F = 0 := by
+    ext i j
+    by_contra hn
+    exact h ⟨⟨i,j,hn⟩⟩
+  obtain ⟨j⟩ := ‹Nonempty K›
+  simpa [h0, Matrix.one_apply] using congrFun (congrFun hF j) j
+
+private theorem sum_nonzero_frame_rows
+    {I K : Type} [Fintype I] (F : Matrix I K ℂ) [DecidablePred (fun i => ∃ l, F i l ≠ 0)]
+    (x : I → ℂ) (j k : K) :
+    (∑ i : {i : I // ∃ l, F i l ≠ 0}, x i * (star (F i j) * F i k)) =
+      ∑ i : I, x i * (star (F i j) * F i k) := by
+  classical
+  rw [← Finset.sum_filter_add_sum_filter_not
+    (s := (Finset.univ : Finset I)) (p := fun i => ∃ l, F i l ≠ 0)]
+  have hzero : ∑ i ∈ Finset.univ.filter (fun i => ¬ ∃ l, F i l ≠ 0),
+      x i * (star (F i j) * F i k) = 0 := by
+    apply Finset.sum_eq_zero
+    intro i hi
+    have hf : F i j = 0 :=
+      not_ne_iff.mp (fun hn => (Finset.mem_filter.mp hi).2 ⟨j,hn⟩)
+    simp [hf]
+  rw [hzero,add_zero]
+  exact (Finset.sum_subtype (p := fun i : I => ∃ l, F i l ≠ 0)
+    (Finset.univ.filter (fun i : I => ∃ l, F i l ≠ 0)) (by simp)
+    (fun i : I => x i * (star (F i j) * F i k))).symm
+
+private theorem sqrt_scaled_row_gram (u : ℝ) (hu : 0 ≤ u) (f g : ℂ) :
+    star ((Real.sqrt u : ℂ) * f) * ((Real.sqrt u : ℂ) * g) =
+      (u : ℂ) * (star f * g) := by
+  rw [StarMul.star_mul, Complex.star_def, Complex.conj_ofReal]
+  have hs : (Real.sqrt u : ℂ)^2 = (u : ℂ) := by exact_mod_cast Real.sq_sqrt hu
+  calc
+    _ = (Real.sqrt u : ℂ)^2 * ((starRingEnd ℂ) f * g) := by ring
+    _ = _ := by rw [hs]
+
+set_option maxHeartbeats 500000 in
+/-- Joint compression spends two Hermitian moment constraints on the
+two Gram identities and one full complex matrix constraint on the sum.
+It keeps at most (4k^2) existing labels in total, with weights
+absorbed into row norms. Separate complex compressions need not agree. -/
+theorem exists_joint_sparse_frames_same_sum
+    {I J K : Type} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
+    [Fintype K] [DecidableEq K] [Nonempty K]
+    (x : I → ℂ) (y : J → ℂ) (F : Matrix I K ℂ) (G : Matrix J K ℂ)
+    (hF : Fᴴ * F = 1) (hG : Gᴴ * G = 1) :
+    ∃ (I' J' : Type) (_ : Fintype I') (_ : Fintype J')
+      (_ : DecidableEq I') (_ : DecidableEq J')
+      (e : I' ↪ I) (f : J' ↪ J) (F' : Matrix I' K ℂ) (G' : Matrix J' K ℂ),
+      Fintype.card I' + Fintype.card J' ≤ 4 * Fintype.card K ^ 2 ∧
+      F'ᴴ * F' = 1 ∧ G'ᴴ * G' = 1 ∧
+      F'ᴴ * diagonal (x ∘ e) * F' + G'ᴴ * diagonal (y ∘ f) * G' =
+        Fᴴ * diagonal x * F + Gᴴ * diagonal y * G := by
+  classical
+  let R := {i : I // ∃ l, F i l ≠ 0}
+  let S := {j : J // ∃ l, G j l ≠ 0}
+  let V := Herm K × (Herm K × Matrix K K ℂ)
+  let v : R ⊕ S → V := fun
+    | .inl i => (frameRowGram F i, 0, x i • (frameRowGram F i : Matrix K K ℂ))
+    | .inr j => (0, frameRowGram G j, y j • (frameRowGram G j : Matrix K K ℂ))
+  let L : V →ₗ[ℝ] ℝ :=
+    ((realHermTrace K).comp (LinearMap.fst _ _ _)) +
+      ((realHermTrace K).comp ((LinearMap.fst _ _ _).comp (LinearMap.snd _ _ _)))
+  have hL (i : R ⊕ S) : 0 < L (v i) := by
+    rcases i with i | i
+    · change 0 < realHermTrace K (frameRowGram F i) + realHermTrace K 0
+      simpa using frameRowTrace_pos F i i.property
+    · change 0 < realHermTrace K 0 + realHermTrace K (frameRowGram G i)
+      simpa using frameRowTrace_pos G i i.property
+  letI : Nonempty R := frameRow_support_nonempty F hF
+  have ht : 0 < ∑ i : R ⊕ S, (1 : ℝ) * L (v i) := by
+    simp only [one_mul]
+    exact Finset.sum_pos (fun i _ => hL i) Finset.univ_nonempty
+  obtain ⟨T,hT,q,u,hcard,hu,hsum⟩ :=
+    finite_positive_conic_compression v L hL (fun _ => 1) (fun _ => zero_le_one) ht
+  let A := {i : R // Sum.inl i ∈ Set.range q}
+  let B := {j : S // Sum.inr j ∈ Set.range q}
+  let split : A ⊕ B ≃ T :=
+    Equiv.subtypeSum.symm.trans (Equiv.ofInjective q q.injective).symm
+  have hsplit (i : A ⊕ B) : q (split i) =
+      Sum.map (fun i : A => (i : R)) (fun j : B => (j : S)) i := by
+    have hh := congrArg Subtype.val ((Equiv.ofInjective q q.injective).apply_symm_apply
+      (Equiv.subtypeSum.symm i))
+    rcases i with i | i <;> exact hh
+  let e : A ↪ I := ⟨fun i => i.val.val, Subtype.val_injective.comp Subtype.val_injective⟩
+  let f : B ↪ J := ⟨fun j => j.val.val, Subtype.val_injective.comp Subtype.val_injective⟩
+  let w (i : A) := u (split (.inl i))
+  let z (j : B) := u (split (.inr j))
+  let F' : Matrix A K ℂ := fun i k => (Real.sqrt (w i) : ℂ) * F (e i) k
+  let G' : Matrix B K ℂ := fun j k => (Real.sqrt (z j) : ℂ) * G (f j) k
+  have hF' (i : A) (j k : K) : star (F' i j) * F' i k =
+      (w i : ℂ) * (star (F (e i) j) * F (e i) k) :=
+    sqrt_scaled_row_gram _ (hu _).le _ _
+  have hG' (i : B) (j k : K) : star (G' i j) * G' i k =
+      (z i : ℂ) * (star (G (f i) j) * G (f i) k) :=
+    sqrt_scaled_row_gram _ (hu _).le _ _
+  have hsplitSum :
+      (∑ i : A, w i • v (.inl i.val)) + (∑ j : B, z j • v (.inr j.val)) =
+        (∑ i : R, v (.inl i)) + (∑ j : S, v (.inr j)) := by
+    have hEq : (∑ i : A ⊕ B, u (split i) • v (q (split i))) =
+        ∑ i : T, u i • v (q i) :=
+      Fintype.sum_equiv split _ _ (fun _ => rfl)
+    simp only [one_smul] at hsum
+    have hh := hEq.trans hsum
+    rw [Fintype.sum_sum_type, Fintype.sum_sum_type] at hh
+    simpa only [hsplit,Sum.map_inl,Sum.map_inr,w,z] using hh
+  let ψ (j k : K) : Matrix K K ℂ →ₗ[ℝ] ℂ :=
+    (LinearMap.proj k : (K → ℂ) →ₗ[ℝ] ℂ).comp
+      (show Matrix K K ℂ →ₗ[ℝ] (K → ℂ) from LinearMap.proj j)
+  let φ (j k : K) : Herm K →ₗ[ℝ] ℂ := (ψ j k).comp (Herm K).subtype
+  let P1 : V →ₗ[ℝ] Herm K := LinearMap.fst _ _ _
+  let P2 : V →ₗ[ℝ] Herm K := (LinearMap.fst _ _ _).comp (LinearMap.snd _ _ _)
+  let P3 : V →ₗ[ℝ] Matrix K K ℂ := (LinearMap.snd _ _ _).comp (LinearMap.snd _ _ _)
+  have hψ (j k : K) (M : Matrix K K ℂ) : ψ j k M = M j k := rfl
+  have hφ (j k : K) (M : Herm K) : φ j k M = (M : Matrix K K ℂ) j k := rfl
+  have h1 (p : V) : P1 p = p.1 := rfl
+  have h2 (p : V) : P2 p = p.2.1 := rfl
+  have h3 (p : V) : P3 p = p.2.2 := rfl
+  refine ⟨A,B,inferInstance,inferInstance,inferInstance,inferInstance,e,f,F',G',?_,?_,?_,?_⟩
+  · rw [← Fintype.card_sum, Fintype.card_congr split]
+    have hcomplex : Module.finrank ℝ ℂ = 2 := Module.finrank_eq_card_basis Complex.basisOneI
+    rw [Module.finrank_prod,Module.finrank_prod,herm_finrank,Module.finrank_matrix,hcomplex,
+      ← pow_two] at hcard
+    omega
+  · rw [← hF]
+    ext j k
+    have mom := congrArg ((φ j k).comp P1) hsplitSum
+    simp only [map_add,map_sum,map_smul,LinearMap.comp_apply,h1,v,Prod.fst,
+      map_zero,smul_zero,Finset.sum_const_zero,add_zero,hφ,frameRowGram,
+      Complex.real_smul,Submodule.coe_zero,Matrix.zero_apply] at mom
+    rw [Matrix.mul_apply,Matrix.mul_apply]
+    simp only [Matrix.conjTranspose_apply, hF']
+    have hh := sum_nonzero_frame_rows F (fun _ => 1) j k
+    simp only [one_mul] at hh
+    rw [← hh]
+    exact mom
+  · rw [← hG]
+    ext j k
+    have mom := congrArg ((φ j k).comp P2) hsplitSum
+    simp only [map_add,map_sum,map_smul,LinearMap.comp_apply,h2,v,Prod.fst,Prod.snd,
+      map_zero,smul_zero,Finset.sum_const_zero,zero_add,hφ,frameRowGram,
+      Complex.real_smul,Submodule.coe_zero,Matrix.zero_apply] at mom
+    rw [Matrix.mul_apply,Matrix.mul_apply]
+    simp only [Matrix.conjTranspose_apply,hG']
+    have hh := sum_nonzero_frame_rows G (fun _ => 1) j k
+    simp only [one_mul] at hh
+    rw [← hh]
+    exact mom
+  · ext j k
+    have mom := congrArg ((ψ j k).comp P3) hsplitSum
+    simp only [map_add,map_sum,map_smul,LinearMap.comp_apply,h3,v,Prod.snd,
+      hψ,Matrix.smul_apply,Pi.smul_apply,Complex.real_smul,smul_eq_mul,frameRowGram] at mom
+    have entry {Q : Type} [Fintype Q] [DecidableEq Q] (H : Matrix Q K ℂ) (d : Q → ℂ) :
+        (Hᴴ * diagonal d * H) j k = ∑ i, d i * (star (H i j) * H i k) := by
+      rw [Matrix.mul_apply]
+      simp only [Matrix.mul_diagonal,Matrix.conjTranspose_apply]
+      apply Finset.sum_congr rfl
+      intro i _
+      ring
+    rw [Matrix.add_apply,Matrix.add_apply,entry F' (x ∘ e),entry G' (y ∘ f),
+      entry F x,entry G y,← sum_nonzero_frame_rows F x j k,← sum_nonzero_frame_rows G y j k]
+    calc
+      _ = (∑ i : A, (w i : ℂ) * (x (e i) * (star (F (e i) j) * F (e i) k))) +
+          (∑ i : B, (z i : ℂ) * (y (f i) * (star (G (f i) j) * G (f i) k))) := by
+        congr 1
+        · apply Finset.sum_congr rfl
+          intro i _
+          rw [Function.comp_apply,hF']
+          ring
+        · apply Finset.sum_congr rfl
+          intro i _
+          rw [Function.comp_apply,hG']
+          ring
+      _ = _ := mom
+
+/-- Any strict scalar failure at positive overlap has a failure with at
+most (4k^2) old labels in total and exactly the same determinant. -/
+theorem exists_joint_sparse_scalar_frame_counterexample
+    {I J K : Type} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
+    [Fintype K] [DecidableEq K] [Nonempty K]
+    (x : I → ℂ) (y : J → ℂ) (F : Matrix I K ℂ) (G : Matrix J K ℂ)
+    (hF : Fᴴ * F = 1) (hG : Gᴴ * G = 1)
+    (h : (Fᴴ * diagonal x * F + Gᴴ * diagonal y * G).det ∉
+      convexHull ℝ (partialFrameVertices (κ := K) x y)) :
+    ∃ (I' J' : Type) (_ : Fintype I') (_ : Fintype J')
+      (_ : DecidableEq I') (_ : DecidableEq J')
+      (e : I' ↪ I) (f : J' ↪ J) (F' : Matrix I' K ℂ) (G' : Matrix J' K ℂ),
+      Fintype.card I' + Fintype.card J' ≤ 4 * Fintype.card K ^ 2 ∧
+      F'ᴴ * F' = 1 ∧ G'ᴴ * G' = 1 ∧
+      (F'ᴴ * diagonal (x ∘ e) * F' + G'ᴴ * diagonal (y ∘ f) * G').det =
+        (Fᴴ * diagonal x * F + Gᴴ * diagonal y * G).det ∧
+      (F'ᴴ * diagonal (x ∘ e) * F' + G'ᴴ * diagonal (y ∘ f) * G').det ∉
+        convexHull ℝ (partialFrameVertices (κ := K) (x ∘ e) (y ∘ f)) := by
+  obtain ⟨I',J',hi,hj,di,dj,e,f,F',G',hIJ,hFi,hGj,hSum⟩ :=
+    exists_joint_sparse_frames_same_sum x y F G hF hG
+  refine ⟨I',J',hi,hj,di,dj,e,f,F',G',hIJ,hFi,hGj,congrArg Matrix.det hSum,?_⟩
+  rw [hSum]
+  exact fun hm => h (convexHull_mono (partialFrameVertices_restrict_subset x y e f) hm)
+
+/-- MOC through order (4k^2-k) implies the scalar frame law at positive
+overlap (k), regardless of the starting frame sizes. This is a
+reduction to a bounded order, not an enumeration or a verification of MOC. -/
+theorem scalar_frame_law_of_joint_bounded_orders
+    {I J K : Type} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
+    [Fintype K] [DecidableEq K] [Nonempty K]
+    (x : I → ℂ) (y : J → ℂ) (F : Matrix I K ℂ) (G : Matrix J K ℂ)
+    (hF : Fᴴ * F = 1) (hG : Gᴴ * G = 1)
+    (hMOC : ∀ m ≤ 4 * Fintype.card K ^ 2 - Fintype.card K, Conjecture (Fin m)) :
+    (Fᴴ * diagonal x * F + Gᴴ * diagonal y * G).det ∈
+      convexHull ℝ (partialFrameVertices (κ := K) x y) := by
+  by_contra h
+  obtain ⟨I',J',_,_,_,_,e,f,F',G',hIJ,hF',hG',_,h'⟩ :=
+    exists_joint_sparse_scalar_frame_counterexample x y F G hF hG h
+  apply h'
+  apply det_twoFrame_mem_partialFrameVertices_of_reducedOrder F' G' hF' hG' _ (x ∘ e) (y ∘ f)
+  apply (conjecture_reindex_iff (Fintype.equivFin _)).mpr
+  apply hMOC
+  have hinj : Function.Injective (Matrix.toEuclideanLin G') :=
+    Function.LeftInverse.injective (g := Matrix.toEuclideanLin G'ᴴ) (by
+      intro v
+      apply (WithLp.equiv 2 _).injective
+      simp only [Matrix.piLp_equiv_toEuclideanLin_apply, Matrix.mulVec_mulVec, hG',
+        Matrix.one_mulVec])
+  have hfit : Fintype.card K ≤ Fintype.card J' := by
+    simpa only [finrank_euclideanSpace] using LinearMap.finrank_le_finrank_of_injective hinj
+  simp only [Fintype.card_sum, Fintype.card_fin]
+  omega
+
+/-- Overlap three reduces to MOC through order 33. -/
+theorem scalar_frame_overlap_three_of_orders_le_33
+    {I J : Type} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
+    (x : I → ℂ) (y : J → ℂ) (F : Matrix I (Fin 3) ℂ) (G : Matrix J (Fin 3) ℂ)
+    (hF : Fᴴ * F = 1) (hG : Gᴴ * G = 1)
+    (hMOC : ∀ m ≤ 33, Conjecture (Fin m)) :
+    (Fᴴ * diagonal x * F + Gᴴ * diagonal y * G).det ∈
+      convexHull ℝ (partialFrameVertices (κ := Fin 3) x y) := by
+  exact scalar_frame_law_of_joint_bounded_orders x y F G hF hG (by
+    simpa [Fintype.card_fin] using hMOC)
+
+
 end
 end MOC
