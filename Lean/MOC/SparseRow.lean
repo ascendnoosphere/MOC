@@ -143,6 +143,24 @@ private theorem cofactor_mul_eq_normSq {n : ℕ}
     _ = ((-1 : ℂ) ^ (i + j : ℕ) * (U.submatrix i.succAbove j.succAbove).det) * U i j := by ring
     _ = _ := by rw [h]; ring
 
+/-- Extend a matching of a row and column minor by the deleted pivot. -/
+def extendSparseRowMatching {n : ℕ} (i j : Fin (n + 1)) (σ : Equiv.Perm (Fin n)) :
+    Equiv.Perm (Fin (n + 1)) :=
+  ((finSuccEquiv' j).trans (Equiv.optionCongr σ)).trans (finSuccEquiv' i).symm
+
+theorem matchingProduct_extendSparseRowMatching {n : ℕ} (a b : Fin (n + 1) → ℂ)
+    (i j : Fin (n + 1)) (σ : Equiv.Perm (Fin n)) :
+    matchingProduct a b (extendSparseRowMatching i j σ) =
+      (a i + b j) * matchingProduct (a ∘ i.succAbove) (b ∘ j.succAbove) σ := by
+  let τ := extendSparseRowMatching i j σ
+  have hj : τ j = i := by simp [τ, extendSparseRowMatching, Equiv.optionCongr]
+  have hs (l : Fin n) : τ (j.succAbove l) = i.succAbove (σ l) := by
+    simp [τ, extendSparseRowMatching, Equiv.optionCongr]
+  change matchingProduct a b τ = _
+  unfold matchingProduct
+  rw [Fin.prod_univ_succAbove (fun l => a (τ l) + b l) j, hj]
+  simp_rw [hs, Function.comp_apply]
+
 private theorem mul_mem_matchingHull_of_deleted {n : ℕ} (a b : Fin (n + 1) → ℂ)
     (i j : Fin (n + 1)) {z : ℂ}
     (hz : z ∈ convexHull ℝ (Set.range (matchingProduct (a ∘ i.succAbove) (b ∘ j.succAbove)))) :
@@ -151,20 +169,79 @@ private theorem mul_mem_matchingHull_of_deleted {n : ℕ} (a b : Fin (n + 1) →
   change f z ∈ convexHull ℝ (Set.range (matchingProduct a b))
   apply convexHull_min ?_ ((convex_convexHull ℝ _).linear_preimage f) hz
   rintro _ ⟨σ, rfl⟩
-  let τ : Equiv.Perm (Fin (n + 1)) :=
-    ((finSuccEquiv' j).trans (Equiv.optionCongr σ)).trans (finSuccEquiv' i).symm
-  have hj : τ j = i := by simp [τ, Equiv.optionCongr]
-  have hs (l : Fin n) : τ (j.succAbove l) = i.succAbove (σ l) := by
-    simp [τ, Equiv.optionCongr]
-  have ht : matchingProduct a b τ =
-      (a i + b j) * matchingProduct (a ∘ i.succAbove) (b ∘ j.succAbove) σ := by
-    unfold matchingProduct
-    rw [Fin.prod_univ_succAbove (fun l => a (τ l) + b l) j, hj]
-    simp_rw [hs, Function.comp_apply]
   change (a i + b j) * matchingProduct (a ∘ i.succAbove) (b ∘ j.succAbove) σ ∈
     convexHull ℝ (Set.range (matchingProduct a b))
-  rw [← ht]
-  exact matchingProduct_mem_hull a b τ
+  rw [← matchingProduct_extendSparseRowMatching]
+  exact matchingProduct_mem_hull a b _
+
+/-- The normalized minor at a nonzero pivot in a row supported on two columns is unitary. -/
+theorem unitary_normalizedSparseRowMinor_at_pivot {n : ℕ}
+    {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ} (hU : IsUnitary U)
+    (i j k p : Fin (n + 1)) (hzero : ∀ l, l ≠ j → l ≠ k → U i l = 0)
+    (hp : U i p ≠ 0) :
+    IsUnitary (normalizedSparseRowMinor U i p (if p = j then k else j)) := by
+  apply unitary_normalizedSparseRowMinor hU _ _ _ hp
+  by_cases hpj : p = j
+  · subst p
+    simpa only [if_pos rfl] using hzero
+  · have hpk : p = k := by
+      by_contra hpk
+      exact hp (hzero p hpj hpk)
+    intro l hl hl'
+    exact hzero l (by simpa only [if_neg hpj] using hl') (by simpa only [hpk] using hl)
+
+/-- The squared magnitudes of the nonzero pivots in a unitary row sum to one. -/
+theorem sum_normSq_sparseRow_pivots {n : ℕ}
+    {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ} (hU : IsUnitary U) (i : Fin (n + 1)) :
+    (∑ p ∈ Finset.univ.filter (fun p => U i p ≠ 0), Complex.normSq (U i p)) = 1 := by
+  classical
+  have h := sum_col_of_mem_doublyStochastic (normSq_transpose_doublyStochastic U hU) i
+  change (∑ p, Complex.normSq (U i p)) = 1 at h
+  rw [← h]
+  apply Finset.sum_subset (Finset.subset_univ _)
+  intro p _ hp
+  have hp' : U i p = 0 := by simpa using hp
+  rw [hp', map_zero]
+
+/-- Laplace expansion over the nonzero pivots of a row supported on two columns. -/
+theorem determinantValue_two_supported_row {n : ℕ}
+    (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
+    (hU : IsUnitary U) (i j k : Fin (n + 1)) (hzero : ∀ l, l ≠ j → l ≠ k → U i l = 0) :
+    determinantValue a b U =
+      ∑ p ∈ Finset.univ.filter (fun p => U i p ≠ 0), Complex.normSq (U i p) •
+        ((a i + b p) * determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove)
+          (normalizedSparseRowMinor U i p (if p = j then k else j))) := by
+  classical
+  let S := Finset.univ.filter (fun p => U i p ≠ 0)
+  let other (p : Fin (n + 1)) := if p = j then k else j
+  let V (p : Fin (n + 1)) := normalizedSparseRowMinor U i p (other p)
+  have hmem (p : Fin (n + 1)) : p ∈ S ↔ U i p ≠ 0 := by simp [S]
+  have hLaplace : (weightedEntries a b U).det =
+      ∑ p ∈ S, (-1 : ℂ) ^ (i + p : ℕ) * weightedEntries a b U i p *
+        ((weightedEntries a b U).submatrix i.succAbove p.succAbove).det := by
+    rw [Matrix.det_succ_row _ i]
+    symm
+    apply Finset.sum_subset (Finset.subset_univ _)
+    intro p _ hp
+    have hp' : U i p = 0 := not_ne_iff.mp (fun hn => hp ((hmem p).mpr hn))
+    simp [weightedEntries, hp']
+  change determinantValue a b U = ∑ p ∈ S, Complex.normSq (U i p) •
+    ((a i + b p) * determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove) (V p))
+  apply mul_right_cancel₀ (det_ne_zero_of_unitary hU)
+  rw [← det_weightedEntries _ _ _ hU, hLaplace, Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro p hp
+  have hnz := (hmem p).mp hp
+  have hminor := det_weightedEntries_deleted a b U i p (other p) hnz
+    (unitary_normalizedSparseRowMinor_at_pivot hU i j k p hzero hnz)
+  change _ = determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove) (V p) *
+    (U.submatrix i.succAbove p.succAbove).det at hminor
+  rw [hminor]
+  simp only [weightedEntries, Matrix.of_apply, Complex.real_smul]
+  calc
+    _ = ((-1 : ℂ) ^ (i + p : ℕ) * U i p * (U.submatrix i.succAbove p.succAbove).det) *
+        ((a i + b p) * determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove) (V p)) := by ring
+    _ = _ := by rw [cofactor_mul_eq_normSq hU i p]; ring
 
 /-- A row supported on two columns reduces the determinant inclusion to the
 normalized minors obtained at its nonzero pivots. -/
@@ -176,61 +253,14 @@ theorem holds_of_two_supported_row_of_minors {n : ℕ}
         (normalizedSparseRowMinor U i p (if p = j then k else j))) :
     Holds a b U := by
   classical
-  let S : Finset (Fin (n + 1)) := Finset.univ.filter fun l => U i l ≠ 0
-  let other (p : Fin (n + 1)) := if p = j then k else j
-  let V (p : Fin (n + 1)) := normalizedSparseRowMinor U i p (other p)
-  let x (p : Fin (n + 1)) :=
-    (a i + b p) * determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove) (V p)
-  have hmem (p : Fin (n + 1)) : p ∈ S ↔ U i p ≠ 0 := by simp [S]
-  have hV (p : Fin (n + 1)) (hp : U i p ≠ 0) : IsUnitary (V p) := by
-    apply unitary_normalizedSparseRowMinor hU _ _ _ hp
-    by_cases hpj : p = j
-    · subst p
-      simpa only [other, if_pos rfl] using hzero
-    · have hpk : p = k := by
-        by_contra hpk
-        exact hp (hzero p hpj hpk)
-      intro l hl hl'
-      exact hzero l (by simpa only [other, if_neg hpj] using hl') (by simpa only [hpk] using hl)
-  have hweights : (∑ p ∈ S, Complex.normSq (U i p)) = 1 := by
-    have h := sum_col_of_mem_doublyStochastic (normSq_transpose_doublyStochastic U hU) i
-    change (∑ p, Complex.normSq (U i p)) = 1 at h
-    rw [← h]
-    apply Finset.sum_subset (Finset.subset_univ _)
-    intro p _ hp
-    have hp' : U i p = 0 := not_ne_iff.mp (fun hn => hp ((hmem p).mpr hn))
-    rw [hp', map_zero]
-  have hLaplace : (weightedEntries a b U).det =
-      ∑ p ∈ S, (-1 : ℂ) ^ (i + p : ℕ) * weightedEntries a b U i p *
-        ((weightedEntries a b U).submatrix i.succAbove p.succAbove).det := by
-    rw [Matrix.det_succ_row _ i]
-    symm
-    apply Finset.sum_subset (Finset.subset_univ _)
-    intro p _ hp
-    have hp' : U i p = 0 := not_ne_iff.mp (fun hn => hp ((hmem p).mpr hn))
-    simp [weightedEntries, hp']
-  have hdet : determinantValue a b U = ∑ p ∈ S, Complex.normSq (U i p) • x p := by
-    apply mul_right_cancel₀ (det_ne_zero_of_unitary hU)
-    rw [← det_weightedEntries _ _ _ hU, hLaplace, Finset.sum_mul]
-    apply Finset.sum_congr rfl
-    intro p hp
-    have hnz := (hmem p).mp hp
-    have hminor := det_weightedEntries_deleted a b U i p (other p) hnz (hV p hnz)
-    change _ = determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove) (V p) *
-      (U.submatrix i.succAbove p.succAbove).det at hminor
-    rw [hminor]
-    simp only [weightedEntries, Matrix.of_apply, x, Complex.real_smul]
-    calc
-      _ = ((-1 : ℂ) ^ (i + p : ℕ) * U i p * (U.submatrix i.succAbove p.succAbove).det) *
-          ((a i + b p) * determinantValue (a ∘ i.succAbove) (b ∘ p.succAbove) (V p)) := by ring
-      _ = _ := by rw [cofactor_mul_eq_normSq hU i p]; ring
   unfold Holds
-  rw [hdet]
+  rw [determinantValue_two_supported_row a b hU i j k hzero]
   apply (convex_convexHull ℝ _).sum_mem
-    (fun _ _ => Complex.normSq_nonneg _) hweights
+    (fun _ _ => Complex.normSq_nonneg _) (sum_normSq_sparseRow_pivots hU i)
   intro p hp
-  have hnz := (hmem p).mp hp
-  exact mul_mem_matchingHull_of_deleted a b i p (hSmall p hnz (hV p hnz))
+  have hnz : U i p ≠ 0 := (Finset.mem_filter.mp hp).2
+  exact mul_mem_matchingHull_of_deleted a b i p
+    (hSmall p hnz (unitary_normalizedSparseRowMinor_at_pivot hU i j k p hzero hnz))
 
 /-- A row supported on two columns reduces the determinant inclusion to the
 conjecture in order one smaller. -/
@@ -284,27 +314,34 @@ theorem holds_of_reindexed_upper_hessenberg {ι : Type*} [Fintype ι] [Decidable
   (holds_reindex_iff eRow eCol a b U).mp
     (holds_of_upper_hessenberg _ _ (unitary_reindex eRow eCol hU) hHess)
 
-theorem holds_of_row_degree_le_two {n : ℕ} (hSmall : Conjecture (Fin n))
-    (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
-    (hU : IsUnitary U) (i : Fin (n + 1)) (hc : (supportColumns U {i}).card ≤ 2) :
-    Holds a b U := by
+/-- The support of a row of degree at most two lies in a pair of columns. -/
+theorem exists_row_support_pair {n : ℕ} {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
+    (i : Fin (n + 1)) (hc : (supportColumns U {i}).card ≤ 2) :
+    ∃ j k, ∀ l, l ≠ j → l ≠ k → U i l = 0 := by
   classical
   let S := supportColumns U {i}
   have hmem (l : Fin (n + 1)) : l ∈ S ↔ U i l ≠ 0 := by simp [S, supportColumns]
   by_cases h1 : S.card ≤ 1
   · obtain ⟨j, hj⟩ := Finset.card_le_one_iff_subset_singleton.mp h1
-    apply holds_of_two_supported_row hSmall a b hU i j j
+    refine ⟨j, j, ?_⟩
     intro l hl _
     by_contra hn
     exact hl (Finset.mem_singleton.mp (hj ((hmem l).mpr hn)))
   · have h2 : S.card = 2 := by change S.card ≤ 2 at hc; omega
     obtain ⟨j, k, _, hk⟩ := Finset.card_eq_two.mp h2
-    apply holds_of_two_supported_row hSmall a b hU i j k
+    refine ⟨j, k, ?_⟩
     intro l hlj hlk
     by_contra hn
     have hl := (hmem l).mpr hn
     rw [hk] at hl
     exact (Finset.mem_insert.mp hl).elim hlj (fun h => hlk (Finset.mem_singleton.mp h))
+
+theorem holds_of_row_degree_le_two {n : ℕ} (hSmall : Conjecture (Fin n))
+    (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
+    (hU : IsUnitary U) (i : Fin (n + 1)) (hc : (supportColumns U {i}).card ≤ 2) :
+    Holds a b U := by
+  obtain ⟨j, k, hjk⟩ := exists_row_support_pair i hc
+  exact holds_of_two_supported_row hSmall a b hU i j k hjk
 
 theorem holds_of_column_degree_le_two {n : ℕ} (hSmall : Conjecture (Fin n))
     (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}

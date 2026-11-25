@@ -43,7 +43,7 @@ Use strong induction. The hypothesis gives the inclusion for all spectra and all
 [Normalized minor](../Lean/MOC/SparseRow.lean#L19) · [Degree preservation](../Lean/MOC/SparseDegreeInduction.lean#L39)
 
 The expansion uses the weights $|U_{ip}|^2$, whose sum is one. The term for column $p$ is the smaller determinant times $a_i+b_p$. Each smaller matching product times this factor gives an ambient matching product, by pairing $p$ with $i$. Convexity gives the ambient inclusion. For a low-degree column, exchange the spectra and apply the same expansion to $U^*$. The normalized minors of $U^*$ retain the column bound inherited from $U^*$. Take their adjoints to obtain smaller matrices with the required row bound, then use the induction hypothesis.
-[Expansion and convexity](../Lean/MOC/SparseRow.lean#L171) · [Exchange of spectra](../Lean/MOC/Core.lean#L103) · [Induction](../Lean/MOC/SparseDegreeInduction.lean#L104)
+[Expansion and convexity](../Lean/MOC/SparseRow.lean#L247) · [Exchange of spectra](../Lean/MOC/Core.lean#L103) · [Induction](../Lean/MOC/SparseDegreeInduction.lean#L104)
 
 If no row or column has degree at most two, then each row has degree three and each column has degree at least three. The sum of the row degrees equals the sum of the column degrees because each sum counts every nonzero entry once. The row sum is $3n$, so each column must also have degree three. The case with only the column bound follows by exchanging the spectra and taking the adjoint.
 [Double count](../Lean/MOC/SupportDegreeBalance.lean#L10) · [Exact degrees](../Lean/MOC/SupportDegreeBalance.lean#L28)
@@ -85,3 +85,60 @@ entries. Thus each row has degree three, and the row bound proves the
 claim. At order four, the total bound is twelve in a matrix with
 sixteen positions. Four zeros in any positions therefore suffice.
 [All orders](../Lean/MOC/SparseSupportCardinality.lean#L58) · [Order four](../Lean/MOC/SparseSupportCardinality.lean#L74)
+
+## One probability law for all spectra
+
+Fix $U$. Under any of the three bounds above, there are real numbers
+$w_\sigma\ge 0$ with $\sum_{\sigma\in S_n}w_\sigma=1$ such that, for
+every pair of complex spectra $a,b$,
+
+$$
+\det\bigl(\mathrm{diag}(a)+U\,\mathrm{diag}(b)\,U^*\bigr)
+=\sum_{\sigma\in S_n}w_\sigma\prod_{j=1}^n(a_{\sigma(j)}+b_j).
+$$
+
+[Definition](../Lean/MOC/UniversalMatchingWeights.lean#L13) · [Row bound](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L69) · [Column bound](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L84) · [Total count](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L121)
+
+The induction constructs the law. In orders at most three, one
+permutation law represents the matrix of squared entry magnitudes.
+Its singleton probabilities suffice for every pair of spectra. At a
+row with at most two nonzero entries, choose column $p$ with probability
+$|U_{ip}|^2$. Extend a permutation from its normalized minor by pairing
+$p$ with $i$. For two diagonal blocks, choose their permutations
+independently. These choices use only the entries of $U$. In the
+remaining order-four case, the signed determinant terms already give
+nonnegative weights.
+[Small orders](../Lean/MOC/UniversalMatchingWeights.lean#L133) · [Row deletion](../Lean/MOC/SparseRowUniversalWeights.lean#L11) · [Independent blocks](../Lean/MOC/PairedBlockUniversalWeights.lean#L37) · [Order four](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L17)
+
+## Three zeros in order four
+
+The following real orthogonal matrix has exactly three zero entries.
+Its thirteen nonzero entries exceed the order-four bound by one.
+
+$$
+U=\frac{1}{\sqrt{21}}
+\begin{pmatrix}
+0&4&-1&2\\
+-1&0&4&2\\
+4&-1&0&2\\
+2&2&2&-3
+\end{pmatrix}.
+$$
+
+[Matrix](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L19) · [Unitarity](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L36) · [Zero positions](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L40)
+
+Suppose one law works for all spectra. For sets of labels $I,J$ of
+equal size, choose spectra with entries zero and one to isolate
+the event $\sigma(J)=I$. Its probability must be the squared absolute
+value of the minor with rows $I$ and columns $J$. The three diagonal
+zeros therefore imply that the first three labels have zero probability
+of being fixed.
+[Spectral test](../Lean/MOC/SubsetMarkerTest.lean#L43) · [Minor probabilities](../Lean/MOC/SubsetMarkerTest.lean#L28)
+
+Number the labels from one through four. On permutations of positive
+probability, $\sigma(\{3,4\})=\{1,3\}$ implies
+$\sigma(\{1,3\})=\{1,2\}$. The two minors prescribe probabilities
+$4/441$ and $1/441$, respectively. The first event cannot have the
+larger probability. This refutes one law for all spectra. The
+determinant inclusion allows the weights to depend on the two spectra.
+[Contradictory probabilities](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L65) · [Failure of a common law](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L112)

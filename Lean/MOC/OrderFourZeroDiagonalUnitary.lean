@@ -146,7 +146,7 @@ private theorem four_supportColumns_card_le_two {U : Matrix (Fin 4) (Fin 4) ℂ}
   have hc := Finset.card_le_card hs
   simpa [Finset.card_compl, hij] using hc
 
-private theorem four_realSignedWeight_nonneg_of_zero_diagonal_of_offDiagonal_ne_zero
+theorem four_realSignedWeight_nonneg_of_zero_diagonal_of_offDiagonal_ne_zero
     {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
     (hz : ∀ i, U i i = 0) (hn : ∀ i j, i ≠ j → U i j ≠ 0) :
     ∀ σ, 0 ≤ realSignedWeight U σ := by

@@ -62,11 +62,12 @@ theorem four_holds_of_zero_matching (a b : Fin 4 → ℂ)
   (holds_reindex_iff (Equiv.refl _) σ a b U).mp
     (four_holds_zero_diagonal_unitary _ _ (unitary_reindex (Equiv.refl _) σ hU) hz)
 
-/-- At order four, degree three in every row and column supplies a permutation of zeros. -/
-theorem four_holds_of_support_degrees_three (a b : Fin 4 → ℂ)
-    {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
+/-- In order four, the zeros of a support pattern of degree three form a permutation. -/
+theorem four_exists_zero_permutation_of_support_degrees_three
+    {U : Matrix (Fin 4) (Fin 4) ℂ}
     (hr : ∀ i, (supportColumns U {i}).card = 3)
-    (hc : ∀ j, (supportColumns Uᴴ {j}).card = 3) : Holds a b U := by
+    (hc : ∀ j, (supportColumns Uᴴ {j}).card = 3) :
+    ∃ σ : Equiv.Perm (Fin 4), ∀ i j, U i j = 0 ↔ j = σ i := by
   classical
   have hrone (i : Fin 4) : ∃ j, (supportColumns U {i})ᶜ = {j} := by
     apply Finset.card_eq_one.mp
@@ -87,7 +88,19 @@ theorem four_holds_of_support_degrees_three (a b : Fin 4 → ℂ)
       simp [supportColumns, Matrix.conjTranspose_apply, heq, hz i']
     rw [hr, Finset.mem_singleton] at hm hm'
     exact hm.trans hm'.symm
-  exact four_holds_of_zero_matching a b hU
-    (Equiv.ofBijective f ⟨hinj, Finite.injective_iff_surjective.mp hinj⟩) hz
+  refine ⟨Equiv.ofBijective f ⟨hinj, Finite.injective_iff_surjective.mp hinj⟩, ?_⟩
+  intro i j
+  change U i j = 0 ↔ j = f i
+  calc
+    U i j = 0 ↔ j ∈ (supportColumns U {i})ᶜ := by simp [supportColumns]
+    _ ↔ j = f i := by rw [hf, Finset.mem_singleton]
+
+/-- At order four, degree three in every row and column supplies a permutation of zeros. -/
+theorem four_holds_of_support_degrees_three (a b : Fin 4 → ℂ)
+    {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
+    (hr : ∀ i, (supportColumns U {i}).card = 3)
+    (hc : ∀ j, (supportColumns Uᴴ {j}).card = 3) : Holds a b U := by
+  obtain ⟨σ, hσ⟩ := four_exists_zero_permutation_of_support_degrees_three hr hc
+  exact four_holds_of_zero_matching a b hU σ (fun i => (hσ i _).mpr rfl)
 
 end MOC

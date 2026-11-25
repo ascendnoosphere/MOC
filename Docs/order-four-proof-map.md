@@ -127,11 +127,17 @@ This follows from the all-order bound on the total number of nonzero
 entries. The zero-diagonal case below is a step in that proof.
 [Four arbitrary zeros](../Lean/MOC/SparseSupportCardinality.lean#L74) · [All-order count](sparse-unitary-proof-map.md#total-number-of-nonzero-entries)
 
+Four zeros also suffice for a single probability law that works for
+all spectra. The threshold of four is sharp for this stronger statement.
+An orthogonal matrix with exactly three zeros forces contradictory
+probabilities for two events.
+[Four-zero law](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L138) · [Three-zero obstruction](sparse-unitary-proof-map.md#three-zeros-in-order-four)
+
 Let $U$ be a complex unitary matrix of order four with zero diagonal.
 The inclusion holds for every pair of complex eigenvalue lists. If another
 entry is zero, its row has at most two nonzero entries. Expansion along that
 row reduces the claim to order three.
-[Inclusion](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) · [Row reduction](../Lean/MOC/SparseRow.lean#L171)
+[Inclusion](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) · [Row reduction](../Lean/MOC/SparseRow.lean#L247)
 
 Suppose all off-diagonal entries are nonzero. Only the nine permutations
 with no fixed point contribute to the determinant of $U$. Swaps that

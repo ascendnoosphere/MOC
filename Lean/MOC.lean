@@ -230,6 +230,8 @@ import MOC.Source
 import MOC.SparseRow
 import MOC.SparseUnitary
 import MOC.SparseSupportCardinality
+import MOC.SparseUnitaryUniversalWeights
+import MOC.OrderFourThreeZeroMinorObstruction
 import MOC.SparseSpectralCollision
 import MOC.SpectralAffineContact
 import MOC.SpectralGramNeighborhood
