@@ -77,8 +77,29 @@ $h-\mathrm{Re}(\eta z_\sigma)$, the constant $h$ contributes zero.
 [Positive dimension](../Lean/MOC/SpectralProfileDeterminant.lean#L372) ·
 [Negative dimension](../Lean/MOC/SpectralProfileDeterminant.lean#L390)
 
-The Lean source gives the actual spectral polynomial and its
-coefficient bounds. The universal pencil on all matching functions
-and the separate numerical data for the nonic obstruction require
-their own formalization. These results give necessary conditions on
-actual spectral costs.
+## Order-four inverse pencil certificates
+
+The nine-by-nine inverse pencil is a linear combination of 34 integer
+matrices, one for each ordinary ray. It represents 32 times the
+quadratic form in the tetrahedral coordinates. A gap from actual
+spectra gives a singular real pencil $X$ and admits an imaginary pencil
+$Y$ in the same span with $\mathrm{rank}_{\mathbb C}(X+iY)\le4$.
+If $X$ has rank eight, $Y$ kills its kernel. On an invertible
+eight-dimensional principal block the corresponding matrices satisfy
+$YX^{-1}Y=-X$. All five-by-five lifted minors vanish at every rank.
+These are necessary spectral conditions.
+[Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Rank-eight criterion](../Lean/MOC/FourInversePencilRankLift.lean#L190) · [Minor criterion](../Lean/MOC/FourInversePencilRankLift.lean#L110)
+
+For the canonical cost supported on ordinary rays 7, 13, 18, 28 and
+31, and for its extension by ray 30, the factored determinant has two
+possible zero factors at positive coefficients on the first five
+rays. Each factor gives a square decomposition of the full cost.
+The extended ray has a nonnegative coefficient. Actual spectra
+discharge pencil singularity. A corrected mixer moment then gives
+nonnegative support evaluation. The universal correction is a
+separate open premise of the Lean route.
+[Factorization](../Lean/MOC/FourInversePencilCertificates.lean#L186) · [Spectral square certificate](../Lean/MOC/FourInversePencilCertificates.lean#L524) · [Support implication](../Lean/MOC/FourInversePencilCertificates.lean#L512)
+
+Exact Python checks reproduced all 34 pencil matrices, the two
+determinant branches, and the square identities on all 24 permutations.
+The new Lean source awaits verification.

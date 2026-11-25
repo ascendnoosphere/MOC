@@ -257,6 +257,9 @@ import MOC.FourMatchingPhysicalPositivity
 import MOC.FourEightContactSmallFactors
 import MOC.FourTerminalCoverage
 import MOC.FourTerminalHeight
+import MOC.FourInversePencil
+import MOC.FourInversePencilCertificates
+import MOC.FourInversePencilRankLift
 import MOC.FourOppositePairSupport
 import MOC.FourRealParameterCells
 import MOC.FourSupportConeClassification
