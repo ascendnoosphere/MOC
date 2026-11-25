@@ -232,7 +232,7 @@ private theorem rotation_tensor_weights (c s d t : ℝ)
 private theorem phase_norm (z : ℂ) (h : Complex.normSq z = 1) : star z * z = 1 := by
   rw [Complex.star_def, ← Complex.normSq_eq_conj_mul_self, h, Complex.ofReal_one]
 
-private theorem diagonal_phase_unitary {ι : Type*} [Fintype ι] [DecidableEq ι]
+theorem diagonal_phase_unitary {ι : Type*} [Fintype ι] [DecidableEq ι]
     (f : ι → ℂ) (hf : ∀ i, Complex.normSq (f i) = 1) : IsUnitary (diagonal f) := by
   have hr : (diagonal f : Matrix ι ι ℂ) * (diagonal f)ᴴ = 1 := by
     rw [Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
@@ -251,7 +251,7 @@ private theorem phase_fixes_diagonal {ι : Type*} [Fintype ι] [DecidableEq ι]
   change (f i * a i) * star (f i) = a i
   rw [mul_comm (f i) (a i), mul_assoc, mul_comm (f i) (star (f i)), phase_norm (f i) (hf i), mul_one]
 
-private theorem determinant_two_phases {ι : Type*} [Fintype ι] [DecidableEq ι]
+theorem determinant_two_phases {ι : Type*} [Fintype ι] [DecidableEq ι]
     (a b l r : ι → ℂ) (V : Matrix ι ι ℂ)
     (hl : ∀ i, Complex.normSq (l i) = 1) (hr : ∀ i, Complex.normSq (r i) = 1) :
     determinantValue a b (diagonal l * V * diagonal r) = determinantValue a b V := by
@@ -266,7 +266,7 @@ private theorem determinant_two_phases {ι : Type*} [Fintype ι] [DecidableEq ι
     ← det_unitary_conjugation L (diagonal a + V * diagonal b * Vᴴ)
       (diagonal_phase_unitary l hl), Matrix.mul_add, Matrix.add_mul, phase_fixes_diagonal l a hl]
 
-private theorem scalar_phase (z : ℂ) :
+theorem scalar_phase (z : ℂ) :
     ∃ u : ℂ, Complex.normSq u = 1 ∧ z = (‖z‖ : ℂ) * u := by
   by_cases hz : z = 0
   · exact ⟨1, Complex.normSq_one, by simp [hz]⟩
