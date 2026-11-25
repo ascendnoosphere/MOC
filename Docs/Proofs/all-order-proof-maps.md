@@ -915,4 +915,4 @@ spectral and support modules. It checks the axiom dependencies of
 their safe declarations when Lean runs. The local import paths
 resolve after the restoration of the permutation coordinates and
 the weighted-minor certificates. The new source awaits compilation.
-[Default target](../../lakefile.toml) · [Axiom audit](../../Lean/MOC.lean#L272)
+[Default target](../../lakefile.toml) · [Axiom audit](../../Lean/MOC.lean#L275)

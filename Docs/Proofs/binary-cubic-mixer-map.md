@@ -25,7 +25,7 @@ flowchart BT
     Gate -->|scalar proof| Chart
 ```
 
-The Lean source proves that it suffices to take the real rotation $egin{psmallmatrix}c&s\\-s&cend{psmallmatrix}$ with $c,sge0$ and $c^2+s^2=1$. Diagonal row and column phases preserve the determinant comparison. The symmetric cube of a real rotation is unitary. [Chart equivalence](../../Lean/MOC/BinaryCubicMixerReduction.lean#L148) · [Unitarity](../../Lean/MOC/BinaryCubicMixerReduction.lean#L56)
+The Lean source proves that it suffices to take the real rotation $\begin{pmatrix}c&s\\-s&c\end{pmatrix}$ with $c,s\ge0$ and $c^2+s^2=1$. Diagonal row and column phases preserve the determinant comparison. The symmetric cube of a real rotation is unitary. [Chart equivalence](../../Lean/MOC/BinaryCubicMixerReduction.lean#L148) · [Unitarity](../../Lean/MOC/BinaryCubicMixerReduction.lean#L56)
 
 At $s^2=2/5$, write $m(I,J)$ for the squared modulus of the minor at rows $I$ and columns $J$, with indices from zero. The linear expression
 

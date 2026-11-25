@@ -224,6 +224,16 @@ choice of the values on those labels. The law also permits additional
 zeros. The new source states this common law in orders at least two.
 [Common law](Lean/MOC/RankTwoOverlap.lean#L708) · [Matrix-rank restriction](Lean/MOC/RankTwoOverlap.lean#L723)
 
+### Common weights for all diagonal partners
+
+Fix one list of four eigenvalues. Every normal matrix with this list
+has one law that works for all diagonal partners if and only if the
+four eigenvalues lie on one circle or line. For a Hermitian matrix of
+order four, the law also represents all principal minors together.
+Each real linear objective on those minors attains a maximum at a
+diagonal permutation of the spectrum.
+[Criterion and consequences](Docs/Proofs/circle-line-common-weights-map.md)
+
 ### Matrices and eigenvalues
 
 - The inclusion holds in any order if $A+B$ is singular or if $A$ and $B$
@@ -255,6 +265,16 @@ zeros. The new source states this common law in orders at least two.
   a list paired with its negation. In any order, an opposite pair suffices
   if the sum of its two eigenvalue multiplicities is at least $n-2$.
   [Order four](Lean/MOC/FourCoincidence.lean#L360) · [Negated list](Lean/MOC/FourNegativeCopy.lean#L147) · [Multiplicity bound](Lean/MOC/OppositePair.lean#L25)
+- One fixed pair of complex lists of length four satisfies the inclusion
+  for every unitary. A weighted-minor inequality certifies two of the
+  nine hull edges. One of those edges has no certificate made only of
+  nonnegative coefficients on ordinary minor indicators.
+  [Spectra and proof](Docs/Proofs/order-four-weighted-minor-center-map.md)
+- For an order-four support cost in the symmetric six-contact family,
+  the spectral equations force one of three bounds on the minor
+  coefficients. Each bound gives the directional determinant inequality
+  for every unitary. The proof covers all seven free ordinary coefficients.
+  [Family and proof](Docs/Proofs/order-four-symmetric-six-contact-map.md)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.
   [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)
@@ -315,6 +335,12 @@ zeros. The new source states this common law in orders at least two.
 
 ## Other proved reductions
 
+- Suppose the smaller-order conjecture holds. Choose a row of $U$.
+  The inclusion follows if the partner eigenvalues on its nonzero
+  columns lie on one circle or line through the negative of the
+  corresponding first eigenvalue. The written reduction allows
+  repeated values.
+  [Proof map](Docs/Proofs/spectral-support-proof-map.md#deletion-and-padding-tests)
 - Apply the same map $f(z)=(\alpha z+\beta)/(\gamma z+\delta)$ to
   $a_i$ and $-b_j$. If $\alpha\delta-\beta\gamma\ne0$ and the denominators
   are nonzero on both lists, the inclusion for the lists $(f(a_i))$ and

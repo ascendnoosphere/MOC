@@ -245,11 +245,12 @@ import MOC.WeightedMinor
 import MOC.ZeroHeightTriangleClosure
 
 import MOC.BinaryCubicMixerReduction
+import MOC.CircleLinePoleReduction
 import MOC.ConicSpectralReductions
 import MOC.DeletionAndPaddingObstructions
 import MOC.EqualSpectralCoefficients
 import MOC.FourCircleLineCommonWeights
-import MOC.FourContact0710PencilFactors
+import MOC.FourContact0710HessianPencil
 import MOC.FourKleinSpectralSquares
 import MOC.FourMixedRayCancellation
 import MOC.FourOppositePairSupport
@@ -257,6 +258,8 @@ import MOC.FourRealParameterFamily
 import MOC.FourSupportConeClassification
 import MOC.FourSupportCostRealLift
 import MOC.FourSymmetricSixContact
+import MOC.FourSymmetricSixContactCertificate
+import MOC.FourWeightedMinorCenter
 import MOC.GaussianHaarContainment
 import MOC.HermitianExteriorShift
 import MOC.InterlacingCommonLaw
