@@ -78,6 +78,13 @@ second spectrum. The fixed-curve transport preserves the mixer.
 
 ## Real orthogonal and stationary tests
 
+The inclusion also holds for every complex unitary matrix of order four
+whose entries all have modulus $1/2$. The three partitions of four
+labels into two pairs give a common probability law for all squared
+minors and hence for all pairs of spectra.
+[Common law](../Lean/MOC/OrderFourComplexHadamard.lean#L259) ·
+[Proof map](order-four-complex-hadamard-proof-map.md)
+
 ```mermaid
 flowchart BT
     accTitle: Restricting the orthogonal witness
