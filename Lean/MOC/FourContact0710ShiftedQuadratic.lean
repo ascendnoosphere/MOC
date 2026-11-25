@@ -76,7 +76,7 @@ theorem constantParameter_eq (a b d : ℝ) :
 
 theorem rootPolynomial_at_product_sub_one (a b d : ℝ) :
     rootPolynomial a b d (a * b - 1) = -a * b * d * (a - b) ^ 2 := by
-  unfold rootPolynomial p q linearParameter constantParameter
+  unfold rootPolynomial q p linearParameter constantParameter
   ring
 
 private theorem p_gt_four_of_product_ge_one {a b : ℝ}
@@ -181,7 +181,7 @@ theorem positive_root_eq {a b d x : ℝ} (hp : 0 < p a b) (hq : 0 < q a b d)
 theorem rootPolynomial_comparison (a b d : ℝ) :
     rootPolynomial a b d (p a b * (d - 1)) =
       p a b * (p a b * (d - 1) + 1) * comparisonPolynomial a b d := by
-  unfold rootPolynomial p q linearParameter constantParameter comparisonPolynomial
+  unfold rootPolynomial q p linearParameter constantParameter comparisonPolynomial
   ring
 
 theorem comparisonPolynomial_one (a b : ℝ) :

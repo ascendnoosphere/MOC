@@ -25,15 +25,17 @@ flowchart TD
     E["Contradiction to the radial gradient identity"]
     S["Shifted scalar quadratic and sign constraint"]
     T["Continuous scalar deformation to c = 0 and d = 1"]
-    O["General spectral determinant and sign arguments still to formalize"]
+    P["Positive quadratic term of the unequal factor product"]
+    O["General determinant identification and spectral sign still to formalize"]
     A --> B
     B --> C
     B --> D
     C --> E
     D --> E
     S --> T
+    S --> P
     B -.-> O
-    T -.-> O
+    P -.-> O
 ```
 
 | Step | Statement and scope | Lean source |
@@ -45,14 +47,15 @@ flowchart TD
 | Equal rational anchor | At $(a,b,c,d,e)=(2,2,1,1,9)$ the height is $-36$. The imaginary radial gradient is $(35/27)y_0^2$. The real radial gradient is $-1$. | [Equal anchor exclusion](../../Lean/MOC/FourContact0710SpectralLift.lean#L213) |
 | Shifted quadratic | On the scalar branch, the polynomial in the five weights is $e^2 A(c+p(c+1)/e)$ when $e\ne0$, with $p=(a+1)(b+1)$ and $A$ a quadratic. For unequal nonnegative first weights and $d>0$, a positive root forces the constant term of $A$ to be negative. The root is unique. | [Shift](../../Lean/MOC/FourContact0710ShiftedQuadratic.lean#L57) · [Positive root](../../Lean/MOC/FourContact0710ShiftedQuadratic.lean#L128) |
 | Scalar deformation | For a scalar point with branch polynomial zero and $Q<0$, reduce $c$ to zero at the fixed positive root. On that slice move $d$ to one and choose the positive root at each value of $d$. The reconstruction preserves the branch equation and $Q<0$. At the endpoint, $p>4$. | [Third weight](../../Lean/MOC/FourContact0710ShiftedQuadratic.lean#L238) · [Fourth weight](../../Lean/MOC/FourContact0710ShiftedQuadratic.lean#L292) · [Endpoint condition](../../Lean/MOC/FourContact0710ShiftedQuadratic.lean#L342) · [Continuity of the root](../../Lean/MOC/FourContact0710ShiftedQuadratic.lean#L380) |
+| Scalar pencil sign | At the signed height $t<0$, both scalar pencil factors vanish when the branch polynomial is zero. The slope of the linear factor is positive. The slope of the quadratic factor is negative. Thus the quadratic coefficient of their product multiplied by $-4$ is positive for unequal first weights. | [Height identities](../../Lean/MOC/FourContact0710PencilFactors.lean#L39) · [Slopes](../../Lean/MOC/FourContact0710PencilFactors.lean#L119) · [Quadratic term](../../Lean/MOC/FourContact0710PencilFactors.lean#L169) |
 
-The full paper argument uses a factorization of the actual Hessian
-pencil to put actual spectra on the scalar branch. For unequal weights
-it transports the sign of the quadratic pencil coefficient from the
-rational anchors and compares it with a necessary sign for spectral
-lifts. For equal weights it uses the rank-one restriction of the radial
-form on the Hessian kernel. The general pencil factorization,
-nondegeneracy certificates, necessary pencil sign, and equal-weight
-transport remain outside these Lean modules. The current Lean source
-covers the entire fourth-weight-zero boundary and the stated exact
-anchors. [Full paper argument](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/Docs/research/eight0710_full_closure.txt)
+The full argument uses the actual Hessian pencil determinant to put
+spectra on the scalar branch. The original sign proof then uses
+continuation from rational anchors and polynomial discriminant checks.
+The Lean scalar proof instead compares the two factor slopes directly.
+For equal weights the original proof uses the rank-one restriction of
+the radial form on the Hessian kernel. The general determinant
+identification, necessary spectral pencil sign, and equal-weight
+transport remain outside these Lean modules. The spectral source covers
+the entire fourth-weight-zero boundary and the stated exact anchors.
+[Full paper argument](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/Docs/research/eight0710_full_closure.txt)
