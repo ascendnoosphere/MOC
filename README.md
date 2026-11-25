@@ -21,9 +21,23 @@ matching products with nonnegative real weights whose sum is one.
 
 [All orders](#all-orders) · [Order four](#order-four) · [Order five](#order-five) · [Proved cases](#cases-proved-in-lean) · [Counterexamples](#counterexamples-to-stronger-statements)
 
+The detailed maps cover every registered Lean route and give the
+premises and source for each branch.
+
+| Detailed map | Coverage |
+| --- | --- |
+| [All-order routes](Docs/Proofs/all-order-proof-maps.md) | The order split, 67 general routes, and 243 labelled spectral formulations. |
+| [Contact transfer](Docs/Proofs/contact-proof-maps.md) | Fixed and varying determinant differences, terminal counts, rank, moments, and isolation. |
+| [Order four](Docs/Proofs/order-four-proof-maps.md) | Eleven registered routes, orthogonal and stationary restrictions, and named contact patterns. |
+| [Order five](Docs/Proofs/order-five-proof-maps.md) | Ten registered routes, contact thresholds, sparse matrices, and squared-minor tests. |
+
 The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
 library. Lean proves the unrestricted result through order three.
 [General goal](Lean/MOC/Claim.lean#L9) · [Orders zero through three](Lean/MOC/Small.lean#L68)
+
+Some case proofs are in standalone sources outside the default target.
+A dagger marks a proof source that depends on a module absent from this
+checkout. [Source scope](Docs/Proofs/all-order-proof-maps.md#scope-of-the-lean-source)
 
 Choose a unitary eigenbasis for each matrix. In the basis for $A$, write
 $A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$.
@@ -132,10 +146,10 @@ of the corresponding real orthogonal tables.
 
 | Status | Result | Lean source |
 | --- | --- | --- |
-| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if $U$ is real orthogonal with zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/FourZeroDiagonal.lean#L342) |
-| Proved | The directional bound holds for specific sets of tied permutations. The pattern labels identify those sets in the linked statements. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) |
+| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if $U$ is real orthogonal with zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60)† · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/FourZeroDiagonal.lean#L342) |
+| Proved | The directional bound holds for specific sets of tied permutations. The pattern labels identify those sets in the linked statements. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338)† · [T3](Lean/MOC/FourT3.lean#L25)† · [T4](Lean/MOC/FourT4.lean#L30)† · [T5](Lean/MOC/FourT5.lean#L26)† · [T6](Lean/MOC/FourT6Support.lean#L11)† · [T15](Lean/MOC/FourT15.lean#L14)† · [T21](Lean/MOC/FourT21ContactCone.lean#L275)† |
 | Partial | It suffices to exclude strict violations at real orthogonal maximizers with at least seven contacts. For each nonzero entry $U_{ij}$, some permutation with $\sigma(j)=i$ does not attain the maximum. Lean proves these restrictions on the same witness. | [Seven-contact reduction](Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary reduction](Lean/MOC/StationaryPivot.lean#L219) |
-| Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145) · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
+| Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145)† · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
 | Open | Prove the bound for every remaining real orthogonal case with at least seven contacts. An alternative is to show that a normal sum occurs at some maximum for every pair of lists and direction. | [Contact endpoint](Lean/MOC/ZhengContactReduction.lean#L14) · [Normal-maximizer equivalence](Lean/MOC/NormalSupportMaximum.lean#L303) |
 
 Other exact routes include the test on stationary real orthogonal
@@ -176,7 +190,7 @@ in the all-order table uses the condition on the matching products.
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
-| Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
+| Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100)† |
 | Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L110) |
 | Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
 | Open | Prove the general directional bound on the eight-contact test in the diagram. Another exact test uses at least nine contacts with arbitrary unitary $U$. | [Eight-contact test](Lean/MOC/OrderFiveContact.lean#L51) · [Nine-contact test at $n=5$](Lean/MOC/AffineGapCover.lean#L85) |
@@ -213,7 +227,7 @@ statements and the proof of each connection to its goal.
   in any order if at most four entries $-b_j$, counted with multiplicity,
   lie outside $C$. It also holds if the entries outside $C$ take at most
   three distinct values.
-  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90)
+  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78)† · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90)
 - The inclusion holds in any order if either list has at most two
   distinct values. It also holds if deleting one entry from the second
   list leaves at most two distinct values, or if the first list is
@@ -222,14 +236,14 @@ statements and the proof of each connection to its goal.
 - In order four, the inclusion holds if either list lies on a circle or
   a line. This includes a Hermitian matrix with an arbitrary normal
   partner and the case where either list has a repeated value.
-  [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Hermitian matrix](Lean/MOC/HermitianByNormalFourProof.lean#L55) · [Repeated value](Lean/MOC/TwoExceptions.lean#L287)
+  [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60)† · [Hermitian matrix](Lean/MOC/HermitianByNormalFourProof.lean#L55)† · [Repeated value](Lean/MOC/TwoExceptions.lean#L287)
 - In order four, the inclusion holds if any $a_i+b_j=0$. This includes
   a list paired with its negation. In any order, an opposite pair suffices
   if the sum of its two eigenvalue multiplicities is at least $n-2$.
-  [Order four](Lean/MOC/FourCoincidence.lean#L360) · [Negated list](Lean/MOC/FourNegativeCopy.lean#L147) · [Multiplicity bound](Lean/MOC/OppositePair.lean#L25)
+  [Order four](Lean/MOC/FourCoincidence.lean#L360) · [Negated list](Lean/MOC/FourNegativeCopy.lean#L147)† · [Multiplicity bound](Lean/MOC/OppositePair.lean#L25)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.
-  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)
+  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)†
 - Let $I$ be the identity matrix. The inclusion holds in any order if
   the ranks of $A+tI$ and $B-tI$ sum to at most $n+2$ for some complex $t$.
   [Proof](Lean/MOC/RankTwoOverlap.lean#L481)
@@ -308,4 +322,4 @@ statements and the proof of each connection to its goal.
   products, with eight permutations that attain the directional maximum.
   The eight permutations have no common nonempty proper subset of the
   index set that they all map onto itself.
-  [Proof](Lean/MOC/ContactCountObstruction.lean#L48)
+  [Proof](Lean/MOC/ContactCountObstruction.lean#L48)†
