@@ -74,7 +74,8 @@ private theorem re_diff_zero_iff {U : Matrix (Fin 4) (Fin 4) ℂ}
     (w.η * diff w.a w.b q).re = 0 ↔ q ∈ w.contacts := by
   simp [diff, StrictMatchingSupport.contacts, hp, mul_sub, Complex.sub_re, sub_eq_zero]
 
-private theorem same_projected_gap {U : Matrix (Fin 4) (Fin 4) ℂ}
+/-- The two unpaired block labels have equal projected deficits. -/
+theorem same_projected_gap {U : Matrix (Fin 4) (Fin 4) ℂ}
     (w : StrictMatchingSupport U) (hT : Pattern w) :
     (w.η * diff w.a w.b s₁₆).re = (w.η * diff w.a w.b s₂₃).re := by
   obtain ⟨hp,h₅,h₇,h₉,h₁₄,h₁₈⟩ := hT

@@ -1,7 +1,9 @@
 import MOC.ZhengRectangleContact
 
-/-! A symbolic paired-block support certificate for the eight-label
-branch of Zheng's Section 5 (preprint DOI: 10.13140/RG.2.2.36790.25923).
+/-! Symbolic block certificates and the one-defect reduction for Zheng's
+Section 5 (preprint DOI: 10.13140/RG.2.2.36790.25923).
+Subset-image evaluation uses the squared-minor identity (Merikoski and
+Virtanen, DOI: 10.1016/0024-3795(89)90709-X).
 We use complementary pairs, not a list of facets or permutations. -/
 
 open Matrix BigOperators
@@ -203,29 +205,64 @@ private theorem flip_membership_right (p : Perm) (g : Bits)
   · exact Or.inl (fun x => (h (flip g x)).trans (flip_fst g x))
   · exact Or.inr (fun x => (h (flip g x)).trans (congrArg Bool.not (flip_fst g x)))
 
--- A table entry is indexed by the two independent block flips.
-private def table (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ) (f g : Bits) : ℝ :=
-  H - (η * matchingProduct a b (flip f * cross * flip g)).re
+-- Every matching-product gap obeys the same local relation, including at zero factors.
+private def BlockLaw (F : Perm → ℝ) : Prop :=
+  ∀ f g : Bits, ∀ i j : Bool,
+    F (flip f * cross * flip g) - F (flip (xor f (axis i)) * cross * flip g) -
+      F (flip f * cross * flip (xor (axis j) g)) +
+      F (flip (xor f (axis i)) * cross * flip (xor (axis j) g)) =
+    F (flip f * repair i j * flip g) - F (flip f * flip (axis i) * repair i j * flip g)
 
-private theorem table_adjacent (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
-    (hD : ∀ p : Perm, within p ∨ across p → (η * matchingProduct a b p).re = H)
-    (f g : Bits) (i j : Bool) :
-    table a b η H f g - table a b η H (xor f (axis i)) g -
-      table a b η H f (xor (axis j) g) +
-      table a b η H (xor f (axis i)) (xor (axis j) g) = 0 := by
+private theorem gap_blockLaw (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ) :
+    BlockLaw (fun p => H - (η * matchingProduct a b p).re) := by
+  intro f g i j
   let a' := a ∘ flip f
   let b' := b ∘ (flip g).symm
   have hwrap (p : Perm) : matchingProduct a' b' p =
       matchingProduct a b (flip f * p * flip g) := (matchingProduct_comp a b _ p _).symm
-  have hD' (p : Perm) (hp : within p ∨ across p) : (η * matchingProduct a' b' p).re = H := by
-    rw [hwrap]
-    exact hD _ (flip_membership_right _ _ (flip_membership_left _ _ hp))
-  have hp := repair_block i j
   have h := congrArg (fun z => (η * z).re) (mixed_identity a' b' i j)
-  simp only [mul_sub, mul_add, Complex.sub_re, Complex.add_re,
-    hD' _ hp, hD' _ (flip_membership_left _ _ hp), sub_self] at h
-  simp only [table, ← flip_mul, mul_assoc, hwrap] at *
+  simp only [mul_sub, mul_add, Complex.sub_re, Complex.add_re, hwrap] at h
+  simp only [← flip_mul, mul_assoc] at h ⊢
   linarith
+
+private theorem BlockLaw.sub_mul {F E : Perm → ℝ} (hF : BlockLaw F) (hE : BlockLaw E)
+    (d : ℝ) : BlockLaw (fun p => F p - d * E p) := by
+  intro f g i j
+  dsimp only
+  linear_combination (hF f g i j) - d * (hE f g i j)
+
+def event (K J : Finset Bit4) (p : Perm) : ℝ :=
+  if K.map p.toEmbedding = J then 1 else 0
+
+private theorem event_blockLaw (K J : Finset Bit4) (hcard : K.card = J.card) :
+    BlockLaw (event K J) := by
+  classical
+  let a (i : Bit4) : ℂ := if i ∈ J then 1 else 0
+  let b (j : Bit4) : ℂ := if j ∈ K then 0 else 1
+  have hprod (p : Perm) : (matchingProduct a b p).re = event K J p := by
+    by_cases hp : K.map p.toEmbedding = J
+    · have hmem (j : Bit4) : p j ∈ J ↔ j ∈ K := by
+        rw [← hp, Finset.mem_map_equiv, Equiv.symm_apply_apply]
+      have hone (j : Bit4) : a (p j) + b j = 1 := by
+        by_cases hj : j ∈ K
+        · simp [a,b,hj,(hmem j).mpr hj]
+        · simp [a,b,hj,mt (hmem j).mp hj]
+      simp [matchingProduct, hone, event, hp]
+    · have hmissing : ∃ j ∈ K, p j ∉ J := by
+        by_contra! hn
+        apply hp
+        apply Finset.eq_of_subset_of_card_le
+        · intro i hi
+          obtain ⟨j,hj,rfl⟩ := Finset.mem_map.mp hi
+          exact hn j hj
+        · simp [hcard]
+      obtain ⟨j,hj,hpj⟩ := hmissing
+      have hz : a (p j) + b j = 0 := by simp [a,b,hj,hpj]
+      have hzero : matchingProduct a b p = 0 :=
+        Finset.prod_eq_zero (Finset.mem_univ j) hz
+      simp [hzero,event,hp]
+  have h := gap_blockLaw a b (-1) 0
+  simpa only [neg_one_mul, Complex.neg_re, zero_sub, neg_neg, hprod] using h
 
 private theorem xor_comm (f g : Bits) : xor f g = xor g f := by
   funext i
@@ -260,17 +297,30 @@ private theorem eq_of_flip_invariance {R : Type*} (F : Bits → R)
           simp [m,axis,xor,ha,hb] at he ⊢
   exact h₀.trans h₁
 
-private theorem table_rectangle (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
-    (hD : ∀ p : Perm, within p ∨ across p → (η * matchingProduct a b p).re = H)
+private theorem table_rectangle_of_blockLaw (F : Perm → ℝ) (hF : BlockLaw F)
+    (hD : ∀ p : Perm, within p ∨ across p → F p = 0)
     (f f' g g' : Bits) :
-    table a b η H f g - table a b η H f' g -
-      table a b η H f g' + table a b η H f' g' = 0 := by
-  let C := table a b η H
+    F (flip f * cross * flip g) - F (flip f' * cross * flip g) -
+      F (flip f * cross * flip g') + F (flip f' * cross * flip g') = 0 := by
+  let C (f g : Bits) := F (flip f * cross * flip g)
+  have adjacent (f g : Bits) (i j : Bool) :
+      C f g - C (xor f (axis i)) g - C f (xor (axis j) g) +
+        C (xor f (axis i)) (xor (axis j) g) = 0 := by
+    have hp := repair_block i j
+    have h₁ := hD (flip f * repair i j * flip g)
+      (flip_membership_right _ _ (flip_membership_left _ _ hp))
+    have h₂ := hD (flip f * flip (axis i) * repair i j * flip g)
+      (flip_membership_right _ _ (by
+        rw [mul_assoc]
+        exact flip_membership_left _ _ (flip_membership_left _ _ hp)))
+    have h := hF f g i j
+    rw [h₁,h₂,sub_self] at h
+    exact h
   have hf (f : Bits) (i : Bool) :
       C f g - C (xor (axis i) f) g = C f g' - C (xor (axis i) f) g' := by
     apply eq_of_flip_invariance (fun k => C f k - C (xor (axis i) f) k) _ g g'
     intro k j
-    have h := table_adjacent a b η H hD f k i j
+    have h := adjacent f k i j
     change C f k - C (xor f (axis i)) k -
       C f (xor (axis j) k) + C (xor f (axis i)) (xor (axis j) k) = 0 at h
     rw [xor_comm f (axis i)] at h
@@ -283,6 +333,7 @@ private theorem table_rectangle (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
     linarith [hf k i]
   change C f g - C f' g - C f g' + C f' g' = 0
   linarith
+
 
 def block : Finset Bit4 := {(false,false),(false,true)}
 def mixedSet (f : Bits) : Finset Bit4 := Finset.univ.image (fun i : Bool => (i,f i))
@@ -387,30 +438,28 @@ private theorem map_mixed_eq_block_iff (f g k : Bits) :
     rw [← h]
     simp only [Finset.map_map, hright, Finset.map_refl]
 
-/-- If all block-preserving and block-exchanging assignments are on
-an exposed line, the whole gap function has a nonnegative minor
-decomposition. This statement allows an arbitrary complex unitary. -/
-theorem support_of_block_contacts (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
-    (U : Matrix Bit4 Bit4 ℂ) (hU : IsUnitary U)
-    (hD : ∀ p : Perm, within p ∨ across p → (η * matchingProduct a b p).re = H)
-    (hmax : ∀ p : Perm, (η * matchingProduct a b p).re ≤ H) :
-    (η * determinantValue a b U).re ≤ H := by
+private def blockTarget : Bits ⊕ Bits → Finset Bit4 := Sum.elim mixedSet (fun _ => block)
+private def blockSource : Bits ⊕ Bits → Finset Bit4 := Sum.elim (fun _ => block) mixedSet
+
+private theorem nonnegative_block_decomposition (F : Perm → ℝ) (hF : BlockLaw F)
+    (hD : ∀ p : Perm, within p ∨ across p → F p = 0)
+    (hC : ∀ f g : Bits, 0 ≤ F (flip f * cross * flip g)) :
+    ∃ w : Bits ⊕ Bits → ℝ, (∀ k, 0 ≤ w k) ∧
+      ∀ p : Perm, F p = ∑ k,
+        if (blockSource k).map p.toEmbedding = blockTarget k then w k else 0 := by
   classical
-  let C := table a b η H
-  have hC (f g : Bits) : 0 ≤ C f g := sub_nonneg.mpr (hmax _)
+  let C (f g : Bits) := F (flip f * cross * flip g)
   obtain ⟨m,_,hm⟩ := Finset.exists_min_image (Finset.univ : Finset (Bits × Bits))
     (fun fg => C fg.1 fg.2) ⟨(fun _ => false,fun _ => false),Finset.mem_univ _⟩
   let u (f : Bits) := C f m.2 - C m.1 m.2
   let v (g : Bits) := C m.1 g
-  let I : Bits ⊕ Bits → Finset Bit4 := Sum.elim mixedSet (fun _ => block)
-  let J : Bits ⊕ Bits → Finset Bit4 := Sum.elim (fun _ => block) mixedSet
   let w : Bits ⊕ Bits → ℝ := Sum.elim u v
   have hw (k : Bits ⊕ Bits) : 0 ≤ w k := by
     cases k with
     | inl f => exact sub_nonneg.mpr (hm (f,m.2) (Finset.mem_univ _))
     | inr g => exact hC _ _
-  have hdecomp (p : Perm) : H - (η * matchingProduct a b p).re =
-      ∑ k, if (J k).map p.toEmbedding = I k then w k else 0 := by
+  have hdecomp (p : Perm) : F p =
+      ∑ k, if (blockSource k).map p.toEmbedding = blockTarget k then w k else 0 := by
     rw [Fintype.sum_sum_type]
     change _ = (∑ f, if block.map p.toEmbedding = mixedSet f then u f else 0) +
       ∑ g, if (mixedSet g).map p.toEmbedding = block then v g else 0
@@ -429,14 +478,72 @@ theorem support_of_block_contacts (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
       simp_rw [mixedSet_injective.eq_iff, map_mixed_eq_block_iff]
       simp only [Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
       change C f g = C f m.2 - C m.1 m.2 + C m.1 g
-      have he := table_rectangle a b η H hD f m.1 g m.2
+      have he := table_rectangle_of_blockLaw F hF hD f m.1 g m.2
       change C f g - C m.1 g - C f m.2 + C m.1 m.2 = 0 at he
       linarith
-  have hs := support_of_minor_gap_decomposition a b (-η) (-H) U hU I J w hw (fun p => by
-    simpa only [neg_mul, Complex.neg_re, neg_sub_neg] using hdecomp p)
+  exact ⟨w, hw, hdecomp⟩
+
+/-- A single two-subset image event can account for nonzero block gaps.
+If subtracting it leaves all crossing gaps nonnegative, there is a
+nonnegative minor certificate for the original support direction. -/
+theorem support_of_single_block_defect (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
+    (U : Matrix Bit4 Bit4 ℂ) (hU : IsUnitary U) (K J : Finset Bit4)
+    (hcard : K.card = J.card) (d : ℝ) (hd : 0 ≤ d)
+    (hD : ∀ p : Perm, within p ∨ across p →
+      H - (η * matchingProduct a b p).re = d * event K J p)
+    (hC : ∀ f g : Bits, let p := flip f * cross * flip g
+      d * event K J p ≤ H - (η * matchingProduct a b p).re) :
+    (η * determinantValue a b U).re ≤ H := by
+  classical
+  let F (p : Perm) := H - (η * matchingProduct a b p).re - d * event K J p
+  have hF : BlockLaw F := (gap_blockLaw a b η H).sub_mul (event_blockLaw K J hcard) d
+  obtain ⟨w,hw,hdec⟩ := nonnegative_block_decomposition F hF
+    (fun p hp => sub_eq_zero.mpr (hD p hp)) (fun f g => sub_nonneg.mpr (hC f g))
+  let I : (Bits ⊕ Bits) ⊕ Unit → Finset Bit4 := Sum.elim blockTarget (fun _ => J)
+  let J' : (Bits ⊕ Bits) ⊕ Unit → Finset Bit4 := Sum.elim blockSource (fun _ => K)
+  let w' : (Bits ⊕ Bits) ⊕ Unit → ℝ := Sum.elim w (fun _ => d)
+  have hw' (k : (Bits ⊕ Bits) ⊕ Unit) : 0 ≤ w' k := by
+    cases k with
+    | inl x => exact hw x
+    | inr _ => exact hd
+  have hs := support_of_minor_gap_decomposition a b (-η) (-H) U hU I J' w' hw'
+    (fun p => by
+      simp only [Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, I, J', w',
+        Finset.univ_unique, Finset.sum_singleton, neg_mul, Complex.neg_re, neg_sub_neg]
+      have he := hdec p
+      change H - (η * matchingProduct a b p).re - d * event K J p = _ at he
+      rw [Fintype.sum_sum_type] at he
+      by_cases hm : K.map p.toEmbedding = J
+      · simp only [event, hm, if_true, mul_one] at he ⊢
+        linarith
+      · simp only [event, hm, if_false, mul_zero, sub_zero, add_zero] at he ⊢
+        exact he)
   simpa only [neg_mul, Complex.neg_re, neg_le_neg_iff] using hs
 
-private def label : Fin 4 ≃ Bit4 where
+/-- The gap table after removing the common block defect is additive. -/
+theorem single_block_defect_rectangle (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
+    (K J : Finset Bit4) (hcard : K.card = J.card) (d : ℝ)
+    (hD : ∀ p : Perm, within p ∨ across p →
+      H - (η * matchingProduct a b p).re = d * event K J p) :
+    let R (f g : Bits) := let p := flip f * cross * flip g
+      H - (η * matchingProduct a b p).re - d * event K J p
+    ∀ f f' g g', R f g - R f' g - R f g' + R f' g' = 0 := by
+  exact table_rectangle_of_blockLaw _ ((gap_blockLaw a b η H).sub_mul (event_blockLaw K J hcard) d)
+    (fun p hp => sub_eq_zero.mpr (hD p hp))
+
+/-- If all block-permuting assignments are contacts, take the block defect to be zero. -/
+theorem support_of_block_contacts (a b : Bit4 → ℂ) (η : ℂ) (H : ℝ)
+    (U : Matrix Bit4 Bit4 ℂ) (hU : IsUnitary U)
+    (hD : ∀ p : Perm, within p ∨ across p → (η * matchingProduct a b p).re = H)
+    (hmax : ∀ p : Perm, (η * matchingProduct a b p).re ≤ H) :
+    (η * determinantValue a b U).re ≤ H := by
+  apply support_of_single_block_defect a b η H U hU block block rfl 0 le_rfl
+  · intro p hp
+    simp [hD p hp]
+  · intro f g
+    simpa using sub_nonneg.mpr (hmax (flip f * cross * flip g))
+
+def label : Fin 4 ≃ Bit4 where
   toFun := ![(false,false),(true,false),(false,true),(true,true)]
   invFun x := if x.2 then (if x.1 then 3 else 2) else (if x.1 then 1 else 0)
   left_inv := by intro i; fin_cases i <;> rfl
@@ -466,53 +573,226 @@ private theorem matchingProduct_label (a b : Fin 4 → ℂ) (p : Perm) :
   exact Fintype.prod_equiv label.symm _ _ (fun x => by simp only [Equiv.permCongr_apply,
     Equiv.symm_symm, Equiv.apply_symm_apply])
 
+def innerLow : Finset Bit4 := {(false,false),(true,false)}
+def innerHigh : Finset Bit4 := {(false,true),(true,true)}
+
+private theorem mem_innerLow (x : Bit4) : x ∈ innerLow ↔ x.2 = false := by
+  obtain ⟨i,j⟩ := x
+  cases i <;> cases j <;> simp [innerLow]
+
+private theorem mem_innerHigh (x : Bit4) : x ∈ innerHigh ↔ x.2 = true := by
+  obtain ⟨i,j⟩ := x
+  cases i <;> cases j <;> simp [innerHigh]
+
+private theorem inner_card : innerLow.card = innerHigh.card := by
+  simp [innerLow, innerHigh]
+
+private theorem inner_event_iff (p : Perm) :
+    innerLow.map p.toEmbedding = innerHigh ↔ ∀ x : Bit4, (p x).2 = !x.2 := by
+  constructor
+  · intro h x
+    have hm : (p x).2 = true ↔ x.2 = false := by
+      rw [← mem_innerHigh, ← h, Finset.mem_map_equiv, p.symm_apply_apply, mem_innerLow]
+    cases hx : x.2
+    · exact hm.mpr hx
+    · have hn : (p x).2 ≠ true := fun he => Bool.noConfusion (hx.symm.trans (hm.mp he))
+      cases hy : (p x).2 <;> simp_all
+  · intro h
+    ext x
+    rw [Finset.mem_map_equiv, mem_innerLow, mem_innerHigh]
+    have he := h (p.symm x)
+    rw [p.apply_symm_apply] at he
+    cases hx : (p.symm x).2 <;> simp_all
+
+private theorem inner_flip_iff (f : Bits) :
+    innerLow.map (flip f).toEmbedding = innerHigh ↔ f false = true ∧ f true = true := by
+  rw [inner_event_iff]
+  constructor
+  · intro h
+    have h₀ := h (false,false)
+    have h₁ := h (true,false)
+    simpa [flip] using And.intro h₀ h₁
+  · rintro ⟨h₀,h₁⟩ ⟨i,j⟩
+    cases i <;> simp [flip,h₀,h₁]
+
+private theorem inner_exchange_iff (f : Bits) :
+    innerLow.map (exchange * flip f).toEmbedding = innerHigh ↔ f false = true ∧ f true = true := by
+  rw [inner_event_iff, ← inner_flip_iff, inner_event_iff]
+  rfl
+
+/-- The two inactive block assignments of Zheng's unpaired branch are the
+restriction of a single two-subset image event to the block group. -/
+private theorem t85_block_defect {U : Matrix (Fin 4) (Fin 4) ℂ} (w : StrictMatchingSupport U)
+    (hT : Pattern w) (p : Perm) (hb : within p ∨ across p) :
+    (w.η * matchingProduct w.a w.b w.pivot).re -
+      (w.η * matchingProduct (w.a ∘ label.symm) (w.b ∘ label.symm) p).re =
+      ((w.η * matchingProduct w.a w.b w.pivot).re -
+        (w.η * matchingProduct w.a w.b s₂₃).re) * event innerLow innerHigh p := by
+  classical
+  obtain ⟨hp,h₅,h₇,h₉,h₁₄,h₁₈⟩ := hT
+  have contact (q : Perm4) (hq : q ∈ w.contacts) :
+      (w.η * matchingProduct w.a w.b w.pivot).re -
+        (w.η * matchingProduct w.a w.b q).re = 0 :=
+    sub_eq_zero.mpr (Finset.mem_filter.mp hq).2.symm
+  have h16 : (w.η * matchingProduct w.a w.b s₁₆).re =
+      (w.η * matchingProduct w.a w.b s₂₃).re := by
+    have he := same_projected_gap w ⟨hp,h₅,h₇,h₉,h₁₄,h₁₈⟩
+    simp only [diff, mul_sub, Complex.sub_re] at he
+    linarith
+  have hmul (x y : Perm) :
+      label.symm.permCongr (x*y) = label.symm.permCongr x * label.symm.permCongr y := by
+    apply Equiv.ext
+    intro i
+    simp only [Equiv.permCongr_apply, Equiv.Perm.mul_apply, Equiv.symm_apply_apply]
+  have h7_5 : s₇ * s₅ = s₁₈ := by
+    apply Equiv.ext; intro i; fin_cases i <;> rfl
+  have h7_14 : s₇ * s₁₄ = s₉ := by
+    apply Equiv.ext; intro i; fin_cases i <;> rfl
+  have h7_16 : s₇ * s₁₆ = s₂₃ := by
+    apply Equiv.ext; intro i; fin_cases i <;> rfl
+  rcases hb with hb | hb
+  · obtain ⟨f,rfl⟩ := exists_flip_of_within p hb
+    rw [matchingProduct_label, marked_flip]
+    simp only [event, inner_flip_iff]
+    cases hf : f false <;> cases ht : f true <;>
+      simp only [hf,ht,Bool.false_eq_true,true_and,false_and,if_true,if_false,
+        one_mul,mul_one,mul_zero]
+    · rw [← hp, sub_self]
+    · exact contact _ h₅
+    · exact contact _ h₁₄
+    · change _ - (w.η * matchingProduct w.a w.b s₁₆).re = _
+      rw [h16]
+  · obtain ⟨f,rfl⟩ := exists_exchange_flip_of_across p hb
+    rw [matchingProduct_label, hmul, marked_exchange, marked_flip]
+    simp only [event, inner_exchange_iff]
+    cases hf : f false <;> cases ht : f true <;>
+      simp only [hf,ht,Bool.false_eq_true,true_and,false_and,if_true,if_false,
+        one_mul,mul_one,mul_zero,h7_5,h7_14]
+    · exact contact _ h₇
+    · exact contact _ h₁₈
+    · exact contact _ h₉
+    · change _ - (w.η * matchingProduct w.a w.b (s₇ * s₁₆)).re = _
+      rw [h7_16]
+
+/-- For a strict T85 witness, one of the two crossing assignments of the
+defect event must have a strictly smaller deficit than the block defect. -/
+theorem crossing_below_block_defect {U : Matrix (Fin 4) (Fin 4) ℂ}
+    (hU : IsUnitary U) (w : StrictMatchingSupport U) (hT : Pattern w) :
+    ∃ f g : Bits, let p := flip f * cross * flip g
+      innerLow.map p.toEmbedding = innerHigh ∧
+      (w.η * matchingProduct w.a w.b s₂₃).re <
+        (w.η * matchingProduct w.a w.b (label.symm.permCongr p)).re := by
+  let H := (w.η * matchingProduct w.a w.b w.pivot).re
+  let d := H - (w.η * matchingProduct w.a w.b s₂₃).re
+  by_contra! hn
+  have hs := support_of_single_block_defect (w.a ∘ label.symm) (w.b ∘ label.symm) w.η H
+    (U.submatrix label.symm label.symm) (unitary_reindex label.symm label.symm hU)
+    innerLow innerHigh inner_card d (sub_nonneg.mpr (w.maximal _)) (t85_block_defect w hT)
+    (fun f g => by
+      dsimp only
+      rw [matchingProduct_label]
+      by_cases he : innerLow.map (flip f * cross * flip g).toEmbedding = innerHigh
+      · simp only [event, he, if_true, mul_one, d]
+        exact sub_le_sub_left (le_of_not_gt (fun hlt => hn f g ⟨he,hlt⟩)) _
+      · simp only [event, he, if_false, mul_zero]
+        exact sub_nonneg.mpr (w.maximal _))
+  rw [determinantValue_reindex] at hs
+  exact (not_lt_of_ge hs) w.strict
+
+/-- In the crossing table the defect event selects exactly two cells,
+in different rows and different columns. -/
+theorem inner_cross_iff (f g : Bits) :
+    innerLow.map (flip f * cross * flip g).toEmbedding = innerHigh ↔
+      f = axis (g false) ∧ g true = !(g false) := by
+  rw [inner_event_iff]
+  constructor
+  · intro h
+    have h₀ := h (false,false)
+    have h₁ := h (false,true)
+    have h₂ := h (true,false)
+    have ha : f = axis (g false) := by
+      funext i
+      cases hg : g false <;> cases i
+      · simpa [flip, cross, Equiv.Perm.mul_apply, axis, hg] using h₀
+      · simpa [flip, cross, Equiv.Perm.mul_apply, axis, hg] using h₁
+      · simpa [flip, cross, Equiv.Perm.mul_apply, axis, hg] using h₁
+      · simpa [flip, cross, Equiv.Perm.mul_apply, axis, hg] using h₀
+    refine ⟨ha,?_⟩
+    rw [ha] at h₂
+    cases hg : g false <;> cases ht : g true <;>
+      simp_all [flip, cross, Equiv.Perm.mul_apply, axis]
+  · rintro ⟨rfl,ht⟩ ⟨i,j⟩
+    cases hg : g false <;> cases i <;> cases j <;>
+      simp_all [flip,cross,Equiv.Perm.mul_apply,axis]
+
+private theorem inner_cross_same_row {f g g' : Bits}
+    (h : innerLow.map (flip f * cross * flip g).toEmbedding = innerHigh)
+    (h' : innerLow.map (flip f * cross * flip g').toEmbedding = innerHigh) : g = g' := by
+  obtain ⟨hf,ht⟩ := (inner_cross_iff f g).mp h
+  obtain ⟨hf',ht'⟩ := (inner_cross_iff f g').mp h'
+  have he : g false = g' false := by
+    have he := congrFun (hf.symm.trans hf') false
+    cases h₀ : g false <;> cases h₁ : g' false <;> simp_all [axis]
+  funext i
+  cases i
+  · exact he
+  · rw [ht,ht',he]
+
+private theorem inner_cross_same_col {f f' g : Bits}
+    (h : innerLow.map (flip f * cross * flip g).toEmbedding = innerHigh)
+    (h' : innerLow.map (flip f' * cross * flip g).toEmbedding = innerHigh) : f = f' :=
+  ((inner_cross_iff f g).mp h).1.trans ((inner_cross_iff f' g).mp h').1.symm
+
+/-- Every remaining T85 witness has a crossing row and column containing
+all its crossing contacts. Off that row and column the gap is bounded
+below by the positive deficit shortfall at their intersection. -/
+theorem crossing_contacts_confined {U : Matrix (Fin 4) (Fin 4) ℂ}
+    (hU : IsUnitary U) (w : StrictMatchingSupport U) (hT : Pattern w) :
+    let gap := fun f g : Bits => (w.η * matchingProduct w.a w.b w.pivot).re -
+      (w.η * matchingProduct w.a w.b (label.symm.permCongr (flip f * cross * flip g))).re
+    let d := (w.η * matchingProduct w.a w.b w.pivot).re -
+      (w.η * matchingProduct w.a w.b s₂₃).re
+    ∃ f₀ g₀ : Bits, innerLow.map (flip f₀ * cross * flip g₀).toEmbedding = innerHigh ∧
+      gap f₀ g₀ < d ∧
+      ∀ f g : Bits, f ≠ f₀ → g ≠ g₀ → d - gap f₀ g₀ ≤ gap f g := by
+  dsimp only
+  obtain ⟨f₀,g₀,hm,hlt⟩ := crossing_below_block_defect hU w hT
+  let H := (w.η * matchingProduct w.a w.b w.pivot).re
+  let d := H - (w.η * matchingProduct w.a w.b s₂₃).re
+  let z (f g : Bits) := (w.η * matchingProduct w.a w.b
+     (label.symm.permCongr (flip f * cross * flip g))).re
+  let E (f g : Bits) := event innerLow innerHigh (flip f * cross * flip g)
+  have hz (f g : Bits) : z f g ≤ H := w.maximal _
+  have hd : 0 ≤ d := sub_nonneg.mpr (w.maximal _)
+  refine ⟨f₀,g₀,hm,?_,?_⟩
+  · exact sub_lt_sub_left hlt _
+  intro f g hf hg
+  have hm₁ : innerLow.map (flip f * cross * flip g₀).toEmbedding ≠ innerHigh :=
+    fun h => hf (inner_cross_same_col h hm)
+  have hm₂ : innerLow.map (flip f₀ * cross * flip g).toEmbedding ≠ innerHigh :=
+    fun h => hg (inner_cross_same_row h hm)
+  have hr := single_block_defect_rectangle (w.a ∘ label.symm) (w.b ∘ label.symm) w.η H
+    innerLow innerHigh inner_card d (t85_block_defect w hT) f f₀ g g₀
+  simp only [matchingProduct_label] at hr
+  change H - z f g - d * E f g - (H - z f₀ g - d * E f₀ g) -
+    (H - z f g₀ - d * E f g₀) + (H - z f₀ g₀ - d * E f₀ g₀) = 0 at hr
+  have hE : 0 ≤ E f g := by dsimp [E,event]; split_ifs <;> positivity
+  have hE₁ : E f g₀ = 0 := if_neg hm₁
+  have hE₂ : E f₀ g = 0 := if_neg hm₂
+  have hE₀ : E f₀ g₀ = 1 := if_pos hm
+  simp only [hE₁,hE₂,hE₀,mul_zero,mul_one,sub_zero] at hr
+  change d - (H - z f₀ g₀) ≤ H - z f g
+  linarith [hz f g₀, hz f₀ g, mul_nonneg hd hE]
+
 /-- The paired branch of Zheng's T85 pattern cannot be a strict witness.
 The certificate uses only the eight supporting labels and works for
 complex unitary mixers as well as real orthogonal ones. -/
 theorem not_paired_witness {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
     (w : StrictMatchingSupport U) (hT : Pattern w) (h₂₃ : s₂₃ ∈ w.contacts) : False := by
-  classical
-  have ⟨hp,h₅,h₇,h₉,h₁₄,h₁₈⟩ := hT
-  have h₁₆ := ((collision_or_paired_contact w hT).resolve_left (fun h => h.1 h₂₃)).2
-  have hid : (1 : Perm4) ∈ w.contacts := by simp [StrictMatchingSupport.contacts,hp]
-  have hm (p : Perm) (h : within p ∨ across p) : label.symm.permCongr p ∈ w.contacts := by
-    have hmul (x y : Perm) :
-        label.symm.permCongr (x*y) =
-          label.symm.permCongr x * label.symm.permCongr y := by
-      apply Equiv.ext
-      intro i
-      simp only [Equiv.permCongr_apply, Equiv.Perm.mul_apply, Equiv.symm_apply_apply]
-    have h7_5 : s₇ * s₅ = s₁₈ := by
-      apply Equiv.ext; intro i; fin_cases i <;> rfl
-    have h7_14 : s₇ * s₁₄ = s₉ := by
-      apply Equiv.ext; intro i; fin_cases i <;> rfl
-    have h7_16 : s₇ * s₁₆ = s₂₃ := by
-      apply Equiv.ext; intro i; fin_cases i <;> rfl
-    rcases h with h | h
-    · obtain ⟨f,rfl⟩ := exists_flip_of_within p h
-      rw [marked_flip]
-      cases hf : f false <;> cases ht : f true <;>
-        simp only [hf,ht,Bool.false_eq_true,if_false,if_true,mul_one,one_mul]
-      · exact hid
-      · exact h₅
-      · exact h₁₄
-      · exact h₁₆
-    · obtain ⟨f,rfl⟩ := exists_exchange_flip_of_across p h
-      rw [hmul, marked_exchange, marked_flip]
-      cases hf : f false <;> cases ht : f true <;>
-        simp only [hf,ht,Bool.false_eq_true,if_false,if_true,mul_one,one_mul,
-          h7_5,h7_14]
-      · exact h₇
-      · exact h₁₈
-      · exact h₉
-      · exact h7_16.symm ▸ h₂₃
-  have hs := support_of_block_contacts (w.a ∘ label.symm) (w.b ∘ label.symm) w.η
-    (w.η * matchingProduct w.a w.b w.pivot).re
-    (U.submatrix label.symm label.symm) (unitary_reindex label.symm label.symm hU)
-    (fun p h => by rw [matchingProduct_label]; exact (Finset.mem_filter.mp (hm p h)).2)
-    (fun p => by rw [matchingProduct_label]; exact w.maximal _)
-  rw [determinantValue_reindex] at hs
-  exact (not_lt_of_ge hs) w.strict
+  obtain ⟨f,g,hm,hlt⟩ := crossing_below_block_defect hU w hT
+  have hheight := (Finset.mem_filter.mp h₂₃).2
+  rw [hheight] at hlt
+  exact (not_lt_of_ge (w.maximal _)) hlt
 
 /-- The entire six-label problem reduces to at least eight contacts at
 positive upper height. The branch reduction makes no conditional use

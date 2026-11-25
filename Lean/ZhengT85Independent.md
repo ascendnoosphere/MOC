@@ -129,3 +129,48 @@ excludes simultaneous contacts at labels 1 and 6 in the positive-height
 branch. [The normal form and further circle tests](GapFreeTerminalGeometry.md)
 are paper arguments. [The alternating moment](AlternatingGapMoments.md)
 gives a quadratic spectral invariant on that branch, not yet a support bound.
+
+
+## One defect beyond the paired branch
+
+Use the same two blocks and give each entry a coordinate `(block, bit)`
+as in [ZhengPairedContacts.lean](MOC/ZhengPairedContacts.lean).
+Let $K$ contain the two bit-zero positions and let $J$ contain the two
+bit-one positions. The event $E(p)=1_{p(K)=J}$ says that $p$ flips the
+bit at all four positions. On the block group $D$, this picks exactly
+labels 16 and 23. Their common gap is $d$ by the linear identity above.
+Thus every gap on $D$ is $dE(p)$, not just a bound by $d$.
+
+For a crossing assignment $p=f\cdot\mathrm{cross}\cdot g$, the event
+holds exactly when $f(i)=1_{i=g(0)}$ and $g(1)=1-g(0)$.
+Consequently it marks two crossing cells, in different rows and columns.
+Write $C$ for the crossing gap table and $R=C-dE$. The local mixed
+difference identity applies to $E$ itself: take a matching product
+with first spectrum $1_J$ and second spectrum $1_{K^c}$. Failure to
+map $K$ onto $J$ makes one factor zero; a match makes all factors one.
+The mixed identity therefore applies to the difference, whose
+restriction to $D$ vanishes. In Lean, `single_block_defect_rectangle`
+checks that $R$ is additive in its two indices.
+
+If $R\geq0$, the minimum argument from the paired proof expresses $R$
+as nonnegative row and column terms. Adding $dE$ then gives a
+nonnegative subset-image certificate for every unitary; its evaluation
+uses the squared-minor identity (Merikoski and Virtanen,
+[DOI 10.1016/0024-3795(89)90709-X](https://doi.org/10.1016/0024-3795(89)90709-X)).
+Lean checks this in `support_of_single_block_defect`. Consequently a
+strict witness must have $R(f_0,g_0)<0$ at a marked cell. Put
+$t=d-C(f_0,g_0)>0$. If $f\ne f_0$ and $g\ne g_0$, the two crossed cells
+$(f,g_0)$ and $(f_0,g)$ are unmarked and have nonnegative gaps. The
+exact identity is
+$$
+C(f,g)=C(f,g_0)+C(f_0,g)+t+dE(f,g).
+$$
+In particular all nine cells outside the marked row and column are
+strictly inactive, including the second marked cell. The Lean theorem
+`crossing_contacts_confined` checks the support-gap lower bound $t$
+on those nine cells. At eight or more total contacts at least two
+crossing contacts must therefore come from the one row and column.
+
+The remaining task for [Zheng's $T_{85}$ case, Section 5](https://doi.org/10.13140/RG.2.2.36790.25923)
+is to bound the actual determinant in this marked-star case. The
+negative entry of $R$ does not imply a negative determinant gap.

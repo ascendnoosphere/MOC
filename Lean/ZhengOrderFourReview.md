@@ -18,5 +18,8 @@ mixtures. See [the proof tree](ProofTree.md) for the remaining implication.
 [Independent progress on Section 5](ZhengT85Independent.md): Lean forces
 eight contacts on the six-label pattern and proves the support-height
 split. A symbolic two-minor decomposition now rules out the
-[paired-contact branch in Lean](MOC/ZhengPairedContacts.lean). The unpaired positive-height branch
-at eight or more contacts remains open.
+[paired-contact branch in Lean](MOC/ZhengPairedContacts.lean). In the
+positive-height branch, Lean [confines all crossing contacts to one
+marked row and column](ZhengT85Independent.md#one-defect-beyond-the-paired-branch),
+with a positive lower bound on each of the other nine gaps. The
+determinant comparison on that remaining case is open.

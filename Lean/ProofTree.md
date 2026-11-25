@@ -54,6 +54,11 @@ flowchart BT
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
+    T85["T85: close the marked row and column case · open"]:::open
+    OTHERS["Other terminal contact patterns · open"]:::open
+    COVER{{"AND: cover every terminal pattern"}}
+    STAR["T85: two marked cells; all crossing contacts<br/>on one row and column · checked"]:::checked
+    PAIRED["T85 zero-height branch excluded · checked"]:::checked
     WITNESS --> OR4
     NORMAL --> OR4
     PENCIL --> OR4
@@ -64,6 +69,11 @@ flowchart BT
     TESTS -. narrow the witness set .-> WITNESS
     ZERO -. excludes a mixer family .-> WITNESS
     PHASE -. restrict realizable profiles .-> SEVEN
+    PAIRED -. removes the zero-height case .-> T85
+    STAR -. identifies the residual case .-> T85
+    T85 -. candidate case split .-> COVER
+    OTHERS -. includes coverage of the split .-> COVER
+    COVER -. terminal classification and bounds .-> SEVEN
     OR4 <-->|iff| FOUR
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
@@ -361,9 +371,22 @@ terminal violation would refute MOC.
 [two matching-product identities](MOC/ZhengRectangleContact.lean) reduce
 the number of equations from six to five at seven contacts. Lean
 forces at least eight contacts and splits at zero support height.
-An [independent Lean proof](MOC/ZhengPairedContacts.lean) certifies the
-zero-height paired branch by squared minors; the positive-height
-unpaired branch still needs a support bound.
+The [squared-minor proof](MOC/ZhengPairedContacts.lean) excludes the
+zero-height paired branch for every unitary. For the positive-height
+branch, the two inactive block labels have the same deficit $d>0$.
+One two-subset image event accounts for both and marks exactly two
+cells of the $4×4$ crossing table. Lean shows that a strict witness
+needs a marked cell with deficit below $d$. All crossing contacts
+then lie on its row or column: each of the other nine cells has a
+gap at least the positive shortfall from $d$.
+
+**Next residual comparison.** Bound the actual unitary evaluation on
+the [marked row and column](ZhengT85Independent.md#one-defect-beyond-the-paired-branch),
+using their matching-product constraints. The additive table after
+subtracting the marked event is a certificate only when it is
+nonnegative; strict witnesses must fail exactly that test at one
+marked cell. Closing this comparison settles $T_{85}$, not the other
+terminal patterns or the all-order conjecture.
 
 **Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)
 uses the number of polynomial observables that determine the old
