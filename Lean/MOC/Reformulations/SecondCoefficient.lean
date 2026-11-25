@@ -245,14 +245,14 @@ private theorem elementaryVertex_singleton {n : ℕ} (a b : Fin n → ℂ)
 
 /-- A single law depending only on the unitary gives the first three
 elementary coefficients. The law is the Birkhoff law for singleton entries. -/
-theorem firstThreeElementaryCoefficients_weights {n : ℕ}
-    (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
+theorem firstThreeElementaryCoefficients_uniform_weights {n : ℕ}
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
     ∃ w : Equiv.Perm (Fin n) → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ = 1) ∧
-      ∀ k : ℕ, 1 ≤ k → k ≤ 3 →
+      ∀ (a b : Fin n → ℂ) (k : ℕ), 1 ≤ k → k ≤ 3 →
         (∑ σ, (w σ : ℂ) * elementaryCoefficient (diagonal fun j => a (σ j) + b j) k) =
           elementaryCoefficient (diagonal a + U * diagonal b * Uᴴ) k := by
   obtain ⟨w, hw, hs, hm⟩ := exists_singleton_weights U hU
-  refine ⟨w, hw, hs, fun k hlo hhi => ?_⟩
+  refine ⟨w, hw, hs, fun a b k hlo hhi => ?_⟩
   obtain ⟨c, f, hf⟩ := elementaryVertex_singleton a b k hlo hhi
   have heval (v : Equiv.Perm (Fin n) → ℂ) (hv : ∑ σ, v σ = 1) :
       (∑ σ, v σ * (elementaryProduct Finset.univ (fun j => a (σ j) + b j)).coeff k) =
@@ -266,6 +266,15 @@ theorem firstThreeElementaryCoefficients_weights {n : ℕ}
     Polynomial.coeff_C_mul]
   rw [heval _ hs', heval _ (sum_signedWeight U (det_ne_zero_of_unitary hU))]
   simp only [hm, marginal_signedWeight U hU]
+
+theorem firstThreeElementaryCoefficients_weights {n : ℕ}
+    (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
+    ∃ w : Equiv.Perm (Fin n) → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ = 1) ∧
+      ∀ k : ℕ, 1 ≤ k → k ≤ 3 →
+        (∑ σ, (w σ : ℂ) * elementaryCoefficient (diagonal fun j => a (σ j) + b j) k) =
+          elementaryCoefficient (diagonal a + U * diagonal b * Uᴴ) k := by
+  obtain ⟨w, hw, hs, h⟩ := firstThreeElementaryCoefficients_uniform_weights U hU
+  exact ⟨w, hw, hs, h a b⟩
 
 theorem firstThreeElementaryCoefficient_hull {n : ℕ}
     (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U)

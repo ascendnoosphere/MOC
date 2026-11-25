@@ -381,24 +381,24 @@ coefficients through order three.
 [Pointwise characteristic comparison](../Lean/MOC/Reformulations/CStar.lean#L95) · [Separate mixed coefficients](../Lean/MOC/Reformulations/NativeLinksA.lean#L192) · [Small-order proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L210)
 
 Let $M=A+UBU^*$. Its elementary coefficient $e_k(M)$ is the
-coefficient of $x^k$ in $det(I+xM)$. For C11, the separate coefficient
+coefficient of $x^k$ in $\det(I+xM)$. For C11, the separate coefficient
 form allows new weights for each $k$. The first three bounds use the
-same weights. The proof writes each of their matching values as a
+same weights for all spectra at a fixed unitary $U$. The proof writes each of their matching values as a
 constant plus a sum of functions of individual matched pairs.
 Birkhoff weights preserve that sum. The top coefficient is the
-determinant. The remaining indices $4le k<n$ are open here.
-[Lean coefficient definition](../Lean/MOC/Reformulations/SecondCoefficient.lean#L64) · [First three coefficients](../Lean/MOC/Reformulations/SecondCoefficient.lean#L245) · [Original low-degree result](https://doi.org/10.21136/CMJ.1992.128332)
+determinant. The remaining indices $4\le k<n$ are open here.
+[Lean coefficient definition](../Lean/MOC/Reformulations/SecondCoefficient.lean#L66) · [First three coefficients](../Lean/MOC/Reformulations/SecondCoefficient.lean#L248) · [Original low-degree result](https://doi.org/10.21136/CMJ.1992.128332)
 
 The all-order separate coefficient form is equivalent to the
-conjunction of MOC and the bounds for $4le k<n$. Thus only the
+conjunction of MOC and the bounds for $4\le k<n$. Thus only the
 determinant bound is needed for the separate form through order four.
-[Exact split](../Lean/MOC/Reformulations/SecondCoefficient.lean#L281)
+[Exact split](../Lean/MOC/Reformulations/SecondCoefficient.lean#L293)
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
 | Pointwise characteristic polynomial of the spectral sum | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L145) |
-| Separate elementary coefficients | If | [New Lean source](../Lean/MOC/Reformulations/SecondCoefficient.lean#L89) |
-| Simultaneous characteristic hull | Refuted sufficient condition | [Implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L52) · [Exact counterexample](#counterexample-to-the-common-characteristic-polynomial-law) |
+| Separate elementary coefficients | If | [New Lean source](../Lean/MOC/Reformulations/SecondCoefficient.lean#L91) |
+| Simultaneous characteristic hull | Refuted sufficient condition | [Implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L54) · [Exact counterexample](#counterexample-to-the-common-characteristic-polynomial-law) |
 | Simultaneous mixed-pencil coefficients | If | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
 
 ### Counterexample to the common characteristic-polynomial law
