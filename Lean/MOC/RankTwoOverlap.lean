@@ -1,7 +1,10 @@
 import MOC.RankSum
+import MOC.CommonWeights
 import MOC.TwoFrame
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.Topology.Algebra.Module.Cardinality
+import Mathlib.Topology.Instances.Matrix
 
 /-! Complementary-block compression of a sum supported on two frames. -/
 
@@ -223,33 +226,46 @@ private theorem matchingProduct_supportIndicator (a b : ι → ℂ) (τ : Equiv.
     have hz : a (τ j) = 0 ∧ b j = 0 := by simpa using hj
     exact Finset.prod_eq_zero (Finset.mem_univ j) (by simp [supportIndicator, hz.1, hz.2])
 
+private theorem determinantValue_supportIndicator_cover (a b : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (k : ℕ) (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + k) :
+    ∃ q : ℝ, 0 ≤ q ∧ q ≤ 1 ∧ (q = 1 ∨ ∃ τ, ¬ CoversSupports a b τ) ∧
+      determinantValue (supportIndicator a) (supportIndicator b) U = (2 : ℂ) ^ k * (q : ℂ) := by
+  classical
+  obtain ⟨q, hq₀, hq₁, hq⟩ := signed_cover_mass_le_one a b U hU
+  refine ⟨q, hq₀, hq₁, ?_, ?_⟩
+  · by_cases hcov : ∀ τ, CoversSupports a b τ
+    · left
+      apply Complex.ofReal_injective
+      rw [← hq, Complex.ofReal_one]
+      calc
+        _ = ∑ τ, signedWeight U τ := Finset.sum_congr rfl (fun τ _ => if_pos (hcov τ))
+        _ = 1 := sum_signedWeight U (det_ne_zero_of_unitary hU)
+    · exact Or.inr (not_forall.mp hcov)
+  · rw [← signed_determinant _ _ U hU, ← hq, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro τ _
+    rw [matchingProduct_supportIndicator a b τ k h]
+    split_ifs <;> ring
+
+private theorem supportNoncover_matchingProduct_eq_zero (a b : ι → ℂ)
+    (τ : Equiv.Perm ι) (h : ¬ CoversSupports a b τ) : matchingProduct a b τ = 0 := by
+  obtain ⟨j, hj⟩ := not_forall.mp
+    (show ¬ ∀ j, a (τ j) ≠ 0 ∨ b j ≠ 0 from h)
+  have hz : a (τ j) = 0 ∧ b j = 0 := by simpa only [not_or, not_not] using hj
+  unfold matchingProduct
+  exact Finset.prod_eq_zero (Finset.mem_univ j) (by rw [hz.1, hz.2, add_zero])
+
 /-- The determinant of the sum of the support projections is the signed
 cover mass scaled by two for every edge inside both supports. -/
 theorem determinantValue_supportIndicator (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
     (k : ℕ) (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + k) :
     ∃ q : ℝ, 0 ≤ q ∧ q ≤ 1 ∧ (q = 1 ∨ (0 : ℂ) ∈ Set.range (matchingProduct a b)) ∧
       determinantValue (supportIndicator a) (supportIndicator b) U = (2 : ℂ) ^ k * (q : ℂ) := by
-  classical
-  obtain ⟨q, hq₀, hq₁, hq⟩ := signed_cover_mass_le_one a b U hU
-  refine ⟨q, hq₀, hq₁, ?_, ?_⟩
-  · by_cases hz : (0 : ℂ) ∈ Set.range (matchingProduct a b)
-    · exact Or.inr hz
-    left
-    have hcov (τ : Equiv.Perm ι) : CoversSupports a b τ := by
-      intro j
-      by_contra hj
-      obtain ⟨ha, hb⟩ : a (τ j) = 0 ∧ b j = 0 := by simpa using hj
-      exact hz (zero_mem_matching_range a b (by rw [ha, hb, add_zero]))
-    apply Complex.ofReal_injective
-    rw [← hq, Complex.ofReal_one]
-    calc
-      _ = ∑ τ, signedWeight U τ := Finset.sum_congr rfl (fun τ _ => if_pos (hcov τ))
-      _ = 1 := sum_signedWeight U (det_ne_zero_of_unitary hU)
-  · rw [← signed_determinant _ _ U hU, ← hq, Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro τ _
-    rw [matchingProduct_supportIndicator a b τ k h]
-    split_ifs <;> ring
+  obtain ⟨q, hq₀, hq₁, hcover, hq⟩ := determinantValue_supportIndicator_cover a b U hU k h
+  refine ⟨q, hq₀, hq₁, hcover.imp_right ?_, hq⟩
+  rintro ⟨τ, hτ⟩
+  exact ⟨τ, supportNoncover_matchingProduct_eq_zero a b τ hτ⟩
 
 private theorem exists_cover_with_two_edges (a b : ι → ℂ)
     (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + 2)
@@ -306,25 +322,16 @@ private theorem exists_cover_with_two_edges (a b : ι → ℂ)
   · exact (hf y₀).trans (congrArg Subtype.val h₂)
   · exact (hf y₁).trans (congrArg Subtype.val h₁)
 
-private theorem two_edge_reciprocal_vertex (a b : ι → ℂ)
+private theorem matchingProduct_eq_reciprocal_two_edges (a b : ι → ℂ)
     (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + 2)
-    (m : TwoEdgeMatching {i // a i ≠ 0} {j // b j ≠ 0}) :
+    (τ : Equiv.Perm ι) (hcov : CoversSupports a b τ)
+    {i₀ i₁ j₀ j₁ : ι} (ha₀ : a i₀ ≠ 0) (ha₁ : a i₁ ≠ 0)
+    (hb₀ : b j₀ ≠ 0) (hb₁ : b j₁ ≠ 0) (hj : j₀ ≠ j₁)
+    (hτ₀ : τ j₀ = i₀) (hτ₁ : τ j₁ = i₁) :
     let D := (∏ i : {i // a i ≠ 0}, a i) * ∏ j : {j // b j ≠ 0}, b j
-    D * (((a m.val.1.1)⁻¹ + (b m.val.1.2)⁻¹) * ((a m.val.2.1)⁻¹ + (b m.val.2.2)⁻¹)) ∈
-      Set.range (matchingProduct a b) := by
+    matchingProduct a b τ = D * (((a i₀)⁻¹ + (b j₀)⁻¹) * ((a i₁)⁻¹ + (b j₁)⁻¹)) := by
   classical
   dsimp only
-  let i₀ : ι := m.val.1.1
-  let i₁ : ι := m.val.2.1
-  let j₀ : ι := m.val.1.2
-  let j₁ : ι := m.val.2.2
-  have hi : i₀ ≠ i₁ := fun he => m.property.1 (Subtype.ext he)
-  have hj : j₀ ≠ j₁ := fun he => m.property.2 (Subtype.ext he)
-  have ha₀ : a i₀ ≠ 0 := m.val.1.1.property
-  have ha₁ : a i₁ ≠ 0 := m.val.2.1.property
-  have hb₀ : b j₀ ≠ 0 := m.val.1.2.property
-  have hb₁ : b j₁ ≠ 0 := m.val.2.2.property
-  obtain ⟨τ, hcov, hτ₀, hτ₁⟩ := exists_cover_with_two_edges a b h ha₀ ha₁ hi hb₀ hb₁ hj
   let J := spectralSupport (a ∘ τ) ∩ spectralSupport b
   have hJ₀ : j₀ ∈ J := by simp [J, spectralSupport, hτ₀, ha₀, hb₀]
   have hJ₁ : j₁ ∈ J := by simp [J, spectralSupport, hτ₁, ha₁, hb₁]
@@ -368,7 +375,6 @@ private theorem two_edge_reciprocal_vertex (a b : ι → ℂ)
         intro j _ hj'
         simp [g, hj']
       _ = _ := by rw [hJ, Finset.prod_pair hj]; simp [g, hJ₀, hJ₁, hτ₀, hτ₁]
-  refine ⟨τ, ?_⟩
   unfold matchingProduct
   simp_rw [hv, Finset.prod_mul_distrib, hf, hg] <;> rfl
 
@@ -399,83 +405,295 @@ theorem det_support_sum_eq_zero_of_gram (X : Matrix ι ρ ℂ) (Y : Matrix ι σ
   refine ⟨v, hv, ?_⟩
   rw [← hsum, ← Matrix.mulVec_mulVec, hperp, Matrix.mulVec_zero]
 
-/-- When the two support sizes exceed the matrix order by two, the
-reciprocal compression has two columns and admits a two-edge matching law. -/
-theorem holds_of_support_excess_two (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
-    (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + 2) : Holds a b U := by
+private theorem push_permutation_law {κ : Type*} [Fintype κ]
+    (p : κ → Equiv.Perm ι) (mass : κ → ℝ)
+    (hm : ∀ k, 0 ≤ mass k) (hs : ∑ k, mass k = 1) :
+    ∃ w : Equiv.Perm ι → ℝ, (∀ τ, 0 ≤ w τ) ∧ (∑ τ, w τ = 1) ∧
+      ∀ f : Equiv.Perm ι → ℂ, (∑ τ, (w τ : ℂ) * f τ) =
+        ∑ k, (mass k : ℂ) * f (p k) := by
   classical
-  let ρ := {i // a i ≠ 0}
-  let σ := {j // b j ≠ 0}
+  let w (τ : Equiv.Perm ι) := ∑ k ∈ Finset.univ.filter (fun k => p k = τ), mass k
+  refine ⟨w, fun τ => Finset.sum_nonneg (fun k _ => hm k), ?_, fun f => ?_⟩
+  · exact (Finset.sum_fiberwise Finset.univ p mass).trans hs
+  · rw [← Finset.sum_fiberwise Finset.univ p]
+    apply Finset.sum_congr rfl
+    intro τ _
+    dsimp only [w]
+    rw [Complex.ofReal_sum, Finset.sum_mul]
+    apply Finset.sum_congr rfl
+    intro k hk
+    rw [(Finset.mem_filter.mp hk).2]
+
+private theorem support_equal_of_zero_iff (a a₀ : ι → ℂ) (ha : ∀ i, a i = 0 ↔ a₀ i = 0) :
+    spectralSupport a = spectralSupport a₀ := by
+  ext i
+  simp only [spectralSupport, Finset.mem_filter, Finset.mem_univ, true_and, ha i]
+
+private theorem covers_of_zero_iff (a b a₀ b₀ : ι → ℂ) (τ : Equiv.Perm ι)
+    (ha : ∀ i, a i = 0 ↔ a₀ i = 0) (hb : ∀ j, b j = 0 ↔ b₀ j = 0) :
+    CoversSupports a b τ ↔ CoversSupports a₀ b₀ τ := by
+  change (∀ j, a (τ j) ≠ 0 ∨ b j ≠ 0) ↔ (∀ j, a₀ (τ j) ≠ 0 ∨ b₀ j ≠ 0)
+  simp only [ha, hb]
+
+/-- For fixed support sets with total size two above the order, the
+permutation law depends on the mixer and the sets alone. -/
+theorem exists_common_weights_of_support_excess_two (a₀ b₀ : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (h : (spectralSupport a₀).card + (spectralSupport b₀).card = Fintype.card ι + 2) :
+    ∃ w : Equiv.Perm ι → ℝ, (∀ τ, 0 ≤ w τ) ∧ (∑ τ, w τ = 1) ∧
+      ∀ a b : ι → ℂ, (∀ i, a i = 0 ↔ a₀ i = 0) → (∀ j, b j = 0 ↔ b₀ j = 0) →
+        weightedMatchingValue a b w = determinantValue a b U := by
+  classical
+  let ρ := {i // a₀ i ≠ 0}
+  let σ := {j // b₀ j ≠ 0}
   let X : Matrix ι ρ ℂ := (1 : Matrix ι ι ℂ).submatrix id Subtype.val
   let Y : Matrix ι σ ℂ := U.submatrix id Subtype.val
-  let a' : ρ → ℂ := fun i => a i
-  let b' : σ → ℂ := fun j => b j
-  let D := (∏ i, a' i) * ∏ j, b' j
   let G := X * Xᴴ + Y * Yᴴ
-  let Hull := convexHull ℝ (Set.range (matchingProduct a b))
-  have hdet : determinantValue a b U = (X * diagonal a' * Xᴴ + Y * diagonal b' * Yᴴ).det := by
+  have hdet (a b : ι → ℂ) (ha : ∀ i, a i = 0 ↔ a₀ i = 0)
+      (hb : ∀ j, b j = 0 ↔ b₀ j = 0) :
+      determinantValue a b U =
+        (X * diagonal (fun i : ρ => a i) * Xᴴ + Y * diagonal (fun j : σ => b j) * Yᴴ).det := by
     unfold determinantValue
-    rw [weighted_support_columns 1 a a (fun _ h₀ => h₀),
-      weighted_support_columns U b b (fun _ h₀ => h₀), Matrix.one_mul,
-      Matrix.conjTranspose_one, Matrix.mul_one]
+    rw [weighted_support_columns 1 a₀ a (fun i hi => (ha i).mpr hi),
+      weighted_support_columns U b₀ b (fun j hj => (hb j).mpr hj),
+      Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one]
   have hflag (c : ι → ℂ) :
       diagonal (fun i : {i // c i ≠ 0} => supportIndicator c i) = 1 := by
     rw [← Matrix.diagonal_one]
     apply congrArg Matrix.diagonal
     funext i
-    simp [supportIndicator, i.property]
-  have hGram : G = diagonal (supportIndicator a) + U * diagonal (supportIndicator b) * Uᴴ := by
+    simp only [supportIndicator, if_neg i.property]
+  have hGram : G = diagonal (supportIndicator a₀) + U * diagonal (supportIndicator b₀) * Uᴴ := by
     calc
-      _ = X * diagonal (fun i : ρ => supportIndicator a i) * Xᴴ +
-          Y * diagonal (fun j : σ => supportIndicator b j) * Yᴴ := by
+      _ = X * diagonal (fun i : ρ => supportIndicator a₀ i) * Xᴴ +
+          Y * diagonal (fun j : σ => supportIndicator b₀ j) * Yᴴ := by
         rw [hflag, hflag, Matrix.mul_one, Matrix.mul_one]
       _ = _ := by
-        rw [weighted_support_columns 1 a (supportIndicator a) (by simp [supportIndicator]),
-          weighted_support_columns U b (supportIndicator b) (by simp [supportIndicator]),
+        rw [weighted_support_columns 1 a₀ (supportIndicator a₀) (by simp [supportIndicator]),
+          weighted_support_columns U b₀ (supportIndicator b₀) (by simp [supportIndicator]),
           Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one]
-  obtain ⟨q, hq₀, hq₁, hqvertex, hq⟩ := determinantValue_supportIndicator a b U hU 2 h
+  obtain ⟨q, hq₀, hq₁, hqcover, hq⟩ := determinantValue_supportIndicator_cover a₀ b₀ U hU 2 h
   have hGdet : G.det = (2 : ℂ) ^ 2 * (q : ℂ) := by rw [hGram]; exact hq
+  obtain ⟨τ₀, hτ₀⟩ : ∃ τ : Equiv.Perm ι, q = 1 ∨ ¬ CoversSupports a₀ b₀ τ := by
+    rcases hqcover with hqone | ⟨τ, hτ⟩
+    · exact ⟨1, Or.inl hqone⟩
+    · exact ⟨τ, Or.inr hτ⟩
+  have hresidual (a b : ι → ℂ) (ha : ∀ i, a i = 0 ↔ a₀ i = 0)
+      (hb : ∀ j, b j = 0 ↔ b₀ j = 0) :
+      ((1 - q : ℝ) : ℂ) * matchingProduct a b τ₀ = 0 := by
+    rcases hτ₀ with hqone | hmiss
+    · simp only [hqone, sub_self, Complex.ofReal_zero, zero_mul]
+    · rw [supportNoncover_matchingProduct_eq_zero a b τ₀
+        (fun hc => hmiss ((covers_of_zero_iff a b a₀ b₀ τ₀ ha hb).mp hc)), mul_zero]
   by_cases hGzero : G.det = 0
   · have hqzero : (q : ℂ) = 0 :=
       (mul_eq_zero.mp (hGdet.symm.trans hGzero)).resolve_left (pow_ne_zero _ (by norm_num))
     have hqzero' : q = 0 := by exact_mod_cast hqzero
-    have hz := hqvertex.resolve_left (by simp [hqzero'])
-    unfold Holds
-    rw [hdet, det_support_sum_eq_zero_of_gram X Y a' b' hGzero]
-    exact subset_convexHull ℝ _ hz
-  have hρ : Fintype.card ρ = (spectralSupport a).card := Fintype.card_of_subtype _ (by
-    simp [spectralSupport])
-  have hσ : Fintype.card σ = (spectralSupport b).card := Fintype.card_of_subtype _ (by
-    simp [spectralSupport])
+    obtain ⟨w, hw, hs, hp⟩ := push_permutation_law (fun _ : PUnit => τ₀) (fun _ => 1)
+      (fun _ => zero_le_one) (by simp)
+    refine ⟨w, hw, hs, fun a b ha hb => ?_⟩
+    rw [weightedMatchingValue, hp, hdet a b ha hb,
+      det_support_sum_eq_zero_of_gram X Y _ _ hGzero]
+    simpa only [Fintype.sum_unique, Complex.ofReal_one, one_mul] using
+      (by simpa only [hqzero', sub_zero, Complex.ofReal_one, one_mul] using hresidual a b ha hb :
+        matchingProduct a b τ₀ = 0)
+  have hρ : Fintype.card ρ = (spectralSupport a₀).card :=
+    Fintype.card_of_subtype _ (by simp [spectralSupport])
+  have hσ : Fintype.card σ = (spectralSupport b₀).card :=
+    Fintype.card_of_subtype _ (by simp [spectralSupport])
   let e : ι ⊕ Fin 2 ≃ ρ ⊕ σ := Fintype.equivOfCardEq (by
     rw [Fintype.card_sum, Fintype.card_sum, Fintype.card_fin, hρ, hσ, h])
-  have hX : Xᴴ * X = 1 := support_columns_isometry 1 isUnitary_one a
-  have hY : Yᴴ * Y = 1 := support_columns_isometry U hU b
+  have hX : Xᴴ * X = 1 := support_columns_isometry 1 isUnitary_one a₀
+  have hY : Yᴴ * Y = 1 := support_columns_isometry U hU b₀
   have hGun : IsUnit G.det := isUnit_iff_ne_zero.mpr hGzero
   obtain ⟨E, F, hE, hF, hcommon⟩ := exists_overlap_frames e X Y hX hY hGun
-  let x : ρ → ℂ := fun i => (a' i)⁻¹
-  let y : σ → ℂ := fun j => (b' j)⁻¹
-  let z := (Eᴴ * diagonal x * E + Fᴴ * diagonal y * F).det
-  have hprod := det_support_frames e X Y E F hE hF hcommon hGun a' b'
-    (fun i => i.property) (fun j => j.property)
-  change (X * diagonal a' * Xᴴ + Y * diagonal b' * Yᴴ).det =
-    D * (G.det / (2 : ℂ) ^ Fintype.card (Fin 2)) * z at hprod
-  have hscaled : determinantValue a b U = q • (D * z) := by
-    rw [hdet, hprod, hGdet, Fintype.card_fin, Complex.real_smul]
-    field_simp <;> ring
-  have hz := det_twoFrame_compression_mem_hull E F hE hF x y
-  have hm : D * z ∈ Hull := by
-    change z ∈ (LinearMap.mulLeft ℝ D) ⁻¹' Hull
-    apply convexHull_min _ ((convex_convexHull ℝ _).linear_preimage (LinearMap.mulLeft ℝ D)) hz
-    rintro _ ⟨m, rfl⟩
-    exact subset_convexHull ℝ _ (two_edge_reciprocal_vertex a b h m)
-  unfold Holds
-  rw [hscaled]
-  rcases hqvertex with rfl | hzero
-  · simpa using hm
-  · have hmem := (convex_convexHull ℝ (Set.range (matchingProduct a b)))
-      (subset_convexHull ℝ _ hzero) hm (sub_nonneg.mpr hq₁) hq₀ (sub_add_cancel 1 q)
-    simpa using hmem
+  obtain ⟨S, μ, hμ, hS, hval⟩ := exists_twoFrame_compression_weights E F hE hF
+  let κ := TwoEdgeMatching ρ σ
+  have hleft (m : κ) : (m.val.1.1 : ι) ≠ m.val.2.1 :=
+    fun he => m.property.1 (Subtype.ext he)
+  have hright (m : κ) : (m.val.1.2 : ι) ≠ m.val.2.2 :=
+    fun he => m.property.2 (Subtype.ext he)
+  have hcomplete (m : κ) :
+      ∃ τ : Equiv.Perm ι, CoversSupports a₀ b₀ τ ∧
+        τ m.val.1.2 = (m.val.1.1 : ι) ∧ τ m.val.2.2 = (m.val.2.1 : ι) :=
+    exists_cover_with_two_edges a₀ b₀ h
+      m.val.1.1.property m.val.2.1.property (hleft m)
+      m.val.1.2.property m.val.2.2.property (hright m)
+  let pick (m : κ) := Classical.choose (hcomplete m)
+  let p : PUnit ⊕ ↑S → Equiv.Perm ι := Sum.elim (fun _ => τ₀) (fun m => pick m.val)
+  let mass : PUnit ⊕ ↑S → ℝ := Sum.elim (fun _ => 1 - q) (fun m => q * μ m.val)
+  have hmass (k : PUnit ⊕ ↑S) : 0 ≤ mass k := by
+    cases k with
+    | inl _ => exact sub_nonneg.mpr hq₁
+    | inr m => exact mul_nonneg hq₀ (hμ m.val m.property)
+  have htotal : ∑ k, mass k = 1 := by
+    rw [Fintype.sum_sum_type]
+    simp only [mass, Sum.elim_inl, Sum.elim_inr, Fintype.sum_unique, ← Finset.mul_sum]
+    rw [Finset.sum_coe_sort S μ, hS, mul_one, sub_add_cancel]
+  obtain ⟨w, hw, hs, hp⟩ := push_permutation_law p mass hmass htotal
+  refine ⟨w, hw, hs, fun a b ha hb => ?_⟩
+  let x : ρ → ℂ := fun i => (a i)⁻¹
+  let y : σ → ℂ := fun j => (b j)⁻¹
+  let D := (∏ i : ρ, a i) * ∏ j : σ, b j
+  have hprod_eq (c c₀ : ι → ℂ) (hc : ∀ i, c i = 0 ↔ c₀ i = 0) :
+      (∏ i : {i // c i ≠ 0}, c i.val) = ∏ i : {i // c₀ i ≠ 0}, c i.val := by
+    let e := Equiv.subtypeEquivRight (fun i => not_congr (hc i))
+    exact Equiv.prod_comp e (fun i : {i // c₀ i ≠ 0} => c i.val)
+  have hpoint (m : κ) :
+      matchingProduct a b (pick m) =
+        D * ((x m.val.1.1 + y m.val.1.2) * (x m.val.2.1 + y m.val.2.2)) := by
+    obtain ⟨hc, hfirst, hsecond⟩ := Classical.choose_spec (hcomplete m)
+    have hsupp : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + 2 := by
+      rw [support_equal_of_zero_iff a a₀ ha, support_equal_of_zero_iff b b₀ hb]
+      exact h
+    have hd := matchingProduct_eq_reciprocal_two_edges a b hsupp (pick m)
+      ((covers_of_zero_iff a b a₀ b₀ (pick m) ha hb).mpr hc)
+      (fun hi => m.val.1.1.property ((ha _).mp hi))
+      (fun hi => m.val.2.1.property ((ha _).mp hi))
+      (fun hi => m.val.1.2.property ((hb _).mp hi))
+      (fun hi => m.val.2.2.property ((hb _).mp hi)) (hright m) hfirst hsecond
+    simpa only [D, x, y, hprod_eq a a₀ ha, hprod_eq b b₀ hb] using hd
+  have hdet' := det_support_frames e X Y E F hE hF hcommon hGun
+    (fun i : ρ => a i) (fun j : σ => b j)
+    (fun i hi => i.property ((ha _).mp hi)) (fun j hj => j.property ((hb _).mp hj))
+  rw [weightedMatchingValue, hp, Fintype.sum_sum_type]
+  simp only [p, mass, Sum.elim_inl, Sum.elim_inr, Fintype.sum_unique, hresidual a b ha hb,
+    zero_add, Complex.ofReal_mul, hpoint]
+  simp_rw [show ∀ m : ↑S,
+    ((q : ℂ) * (μ m.val : ℂ)) *
+        (D * ((x m.val.val.1.1 + y m.val.val.1.2) * (x m.val.val.2.1 + y m.val.val.2.2))) =
+      (q : ℂ) * D * ((μ m.val : ℂ) *
+        ((x m.val.val.1.1 + y m.val.val.1.2) * (x m.val.val.2.1 + y m.val.val.2.2)))
+    from fun m => by ring]
+  rw [← Finset.mul_sum, Finset.sum_coe_sort S, hval x y, hdet a b ha hb, hdet',
+    hGdet, Fintype.card_fin]
+  change (q : ℂ) * D * (Eᴴ * diagonal x * E + Fᴴ * diagonal y * F).det =
+    D * ((2 : ℂ) ^ 2 * (q : ℂ) / 2 ^ 2) * (Eᴴ * diagonal x * E + Fᴴ * diagonal y * F).det
+  ring
+
+private theorem common_weights_on_allowed_supports (a₀ b₀ : ι → ℂ)
+    (U : Matrix ι ι ℂ) (w : Equiv.Perm ι → ℝ)
+    (h : ∀ a b : ι → ℂ, (∀ i, a i = 0 ↔ a₀ i = 0) → (∀ j, b j = 0 ↔ b₀ j = 0) →
+      weightedMatchingValue a b w = determinantValue a b U)
+    (a b : ι → ℂ) (ha : spectralSupport a ⊆ spectralSupport a₀)
+    (hb : spectralSupport b ⊆ spectralSupport b₀) :
+    weightedMatchingValue a b w = determinantValue a b U := by
+  classical
+  have zero_outside (c c₀ : ι → ℂ) (hc : spectralSupport c ⊆ spectralSupport c₀)
+      (i : ι) (hi : c₀ i = 0) : c i = 0 := by
+    by_contra hne
+    have hm := hc (show i ∈ spectralSupport c by simp [spectralSupport, hne])
+    simpa [spectralSupport, hi] using hm
+  let A (t : ℂ) (i : ι) := if a₀ i = 0 then 0 else a i + t
+  let B (t : ℂ) (j : ι) := if b₀ j = 0 then 0 else b j + t
+  let K : Set ℂ := Set.range (fun i => -a i) ∪ Set.range (fun j => -b j)
+  have hdense : Dense Kᶜ := ((Set.finite_range _).union (Set.finite_range _)).countable.dense_compl ℂ
+  have hA : Continuous A := continuous_pi fun i => by
+    by_cases hi : a₀ i = 0
+    · simpa only [A, if_pos hi] using (continuous_const : Continuous (fun _ : ℂ => (0 : ℂ)))
+    · simpa only [A, if_neg hi] using (continuous_const.add continuous_id :
+        Continuous (fun t : ℂ => a i + t))
+  have hB : Continuous B := continuous_pi fun j => by
+    by_cases hj : b₀ j = 0
+    · simpa only [B, if_pos hj] using (continuous_const : Continuous (fun _ : ℂ => (0 : ℂ)))
+    · simpa only [B, if_neg hj] using (continuous_const.add continuous_id :
+        Continuous (fun t : ℂ => b j + t))
+  have hclosed : IsClosed {t : ℂ | weightedMatchingValue (A t) (B t) w =
+      determinantValue (A t) (B t) U} := by
+    apply isClosed_eq
+    · unfold weightedMatchingValue matchingProduct
+      fun_prop
+    · unfold determinantValue
+      fun_prop
+  have hreg : Kᶜ ⊆ {t : ℂ | weightedMatchingValue (A t) (B t) w =
+      determinantValue (A t) (B t) U} := by
+    intro t ht
+    apply h
+    · intro i
+      by_cases hi : a₀ i = 0
+      · simp only [A, if_pos hi, hi]
+      · have hn : a i + t ≠ 0 := by
+          intro hz
+          have he : -a i = t := by linear_combination -hz
+          exact ht (Or.inl ⟨i, he⟩)
+        simp only [A, if_neg hi, hi, hn]
+    · intro j
+      by_cases hj : b₀ j = 0
+      · simp only [B, if_pos hj, hj]
+      · have hn : b j + t ≠ 0 := by
+          intro hz
+          have he : -b j = t := by linear_combination -hz
+          exact ht (Or.inr ⟨j, he⟩)
+        simp only [B, if_neg hj, hj, hn]
+  have hzero := closure_minimal hreg hclosed (hdense 0)
+  have ha₀ : A 0 = a := funext fun i => by
+    by_cases hi : a₀ i = 0
+    · rw [show A 0 i = 0 by simp only [A, if_pos hi], zero_outside a a₀ ha i hi]
+    · simp only [A, if_neg hi, add_zero]
+  have hb₀ : B 0 = b := funext fun j => by
+    by_cases hj : b₀ j = 0
+    · rw [show B 0 j = 0 by simp only [B, if_pos hj], zero_outside b b₀ hb j hj]
+    · simp only [B, if_neg hj, add_zero]
+  change weightedMatchingValue (A 0) (B 0) w = determinantValue (A 0) (B 0) U at hzero
+  rwa [ha₀, hb₀] at hzero
+
+/-- One probability law works for all spectra supported on the two specified
+label sets when their total size is at most two above the matrix order. -/
+theorem exists_common_weights_of_support_le_card_add_two (a₀ b₀ : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) (hn : 2 ≤ Fintype.card ι)
+    (h : (spectralSupport a₀).card + (spectralSupport b₀).card ≤ Fintype.card ι + 2) :
+    ∃ w : Equiv.Perm ι → ℝ, (∀ τ, 0 ≤ w τ) ∧ (∑ τ, w τ = 1) ∧
+      ∀ a b : ι → ℂ, spectralSupport a ⊆ spectralSupport a₀ →
+        spectralSupport b ⊆ spectralSupport b₀ →
+          weightedMatchingValue a b w = determinantValue a b U := by
+  classical
+  let A := spectralSupport a₀
+  let B := spectralSupport b₀
+  let r := max A.card 2
+  let s := Fintype.card ι + 2 - r
+  have hA : A.card ≤ Fintype.card ι := Finset.card_le_univ A
+  have hB : B.card ≤ Fintype.card ι := Finset.card_le_univ B
+  have hr₁ : A.card ≤ r := le_max_left _ _
+  have hr₂ : r ≤ Fintype.card ι := max_le hA hn
+  have hr₀ : 2 ≤ r := le_max_right _ _
+  have hrs : r + B.card ≤ Fintype.card ι + 2 := by
+    by_cases hA₂ : A.card ≤ 2
+    · change max A.card 2 + B.card ≤ _
+      rw [max_eq_right hA₂]
+      omega
+    · change max A.card 2 + B.card ≤ _
+      rw [max_eq_left (by omega : 2 ≤ A.card)]
+      exact h
+  have hs₁ : B.card ≤ s := by dsimp only [s]; omega
+  have hs₂ : s ≤ Fintype.card ι := by dsimp only [s]; omega
+  obtain ⟨P, hP, _, hPr⟩ := Finset.exists_subsuperset_card_eq
+    (Finset.subset_univ A) hr₁ (by simpa only [Finset.card_univ] using hr₂)
+  obtain ⟨Q, hQ, _, hQs⟩ := Finset.exists_subsuperset_card_eq
+    (Finset.subset_univ B) hs₁ (by simpa only [Finset.card_univ] using hs₂)
+  let a₁ (i : ι) : ℂ := if i ∈ P then 1 else 0
+  let b₁ (j : ι) : ℂ := if j ∈ Q then 1 else 0
+  have ha₁ : spectralSupport a₁ = P := by
+    ext i
+    by_cases hi : i ∈ P <;> simp [spectralSupport, a₁, hi]
+  have hb₁ : spectralSupport b₁ = Q := by
+    ext j
+    by_cases hj : j ∈ Q <;> simp [spectralSupport, b₁, hj]
+  have hcard : (spectralSupport a₁).card + (spectralSupport b₁).card = Fintype.card ι + 2 := by
+    rw [ha₁, hb₁, hPr, hQs]
+    dsimp only [s]
+    omega
+  obtain ⟨w, hw, hsum, he⟩ := exists_common_weights_of_support_excess_two a₁ b₁ U hU hcard
+  refine ⟨w, hw, hsum, fun a b ha hb => common_weights_on_allowed_supports a₁ b₁ U w he a b ?_ ?_⟩
+  · rw [ha₁]
+    exact ha.trans hP
+  · rw [hb₁]
+    exact hb.trans hQ
+
+/-- The reciprocal two-edge law gives scalar containment at excess two. -/
+theorem holds_of_support_excess_two (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (h : (spectralSupport a).card + (spectralSupport b).card = Fintype.card ι + 2) : Holds a b U := by
+  obtain ⟨w, hw, hs, he⟩ := exists_common_weights_of_support_excess_two a b U hU h
+  exact holds_of_weights w hw hs (he a b (fun _ => Iff.rfl) (fun _ => Iff.rfl))
 
 /-- Opposite scalar shifts preserve the rank-two-overlap reduction. -/
 theorem holds_of_shifted_support_le_card_add_two (a b : ι → ℂ) (U : Matrix ι ι ℂ)
@@ -485,6 +703,30 @@ theorem holds_of_shifted_support_le_card_add_two (a b : ι → ℂ) (U : Matrix 
   rcases lt_or_eq_of_le h with hlt | heq
   · exact holds_of_shifted_support_le_card_add_one a b U hU t (by omega)
   · exact (holds_shift_iff a b hU t).mp (holds_of_support_excess_two _ _ U hU heq)
+
+/-- The fixed-support law also works before the two opposite scalar shifts. -/
+theorem exists_common_weights_of_shifted_support_le_card_add_two
+    (a₀ b₀ : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (hn : 2 ≤ Fintype.card ι) (t : ℂ)
+    (h : (spectralSupport a₀).card + (spectralSupport b₀).card ≤ Fintype.card ι + 2) :
+    ∃ w : Equiv.Perm ι → ℝ, (∀ τ, 0 ≤ w τ) ∧ (∑ τ, w τ = 1) ∧
+      ∀ a b : ι → ℂ, spectralSupport (fun i => a i + t) ⊆ spectralSupport a₀ →
+        spectralSupport (fun j => b j - t) ⊆ spectralSupport b₀ →
+          weightedMatchingValue a b w = determinantValue a b U := by
+  obtain ⟨w, hw, hs, he⟩ := exists_common_weights_of_support_le_card_add_two a₀ b₀ U hU hn h
+  refine ⟨w, hw, hs, fun a b ha hb => ?_⟩
+  have hshift := he (fun i => a i + t) (fun j => b j - t) ha hb
+  rw [determinantValue_shift a b hU t] at hshift
+  simpa only [weightedMatchingValue, matchingProduct_shift] using hshift
+
+/-- The scalar rank-sum condition with a fixed relative eigenbasis. -/
+theorem holds_of_shifted_rank_le_card_add_two (a b : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) (t : ℂ)
+    (h : (diagonal (fun i => a i + t)).rank +
+      (U * diagonal (fun i => b i - t) * Uᴴ).rank ≤ Fintype.card ι + 2) : Holds a b U := by
+  apply holds_of_shifted_support_le_card_add_two a b U hU t
+  simpa only [← spectralSupport_card_eq_rank_diagonal,
+    ← spectralSupport_card_eq_rank_conjugated_diagonal _ U hU] using h
 
 end
 

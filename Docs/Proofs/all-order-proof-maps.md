@@ -10,6 +10,7 @@
 - [Atlas realizations and implications](#atlas-realizations-and-implications)
 - [Labelled spectral formulations](#labelled-spectral-formulations)
 - [Finite overlap compression](#finite-overlap-compression)
+- [Common weights at small shifted rank sum](#common-weights-at-small-shifted-rank-sum)
 - [Paper cases in any order](#paper-cases-in-any-order)
 - [Scope of the Lean source](#scope-of-the-lean-source)
 
@@ -308,12 +309,12 @@ determinant bound is needed for the separate form through order four.
 Take the orthogonal matrix
 
 $$
-U=rac17egin{pmatrix}
-1&4&4&4\
--4&1&4&-4\
--4&-4&1&4\
+U=\frac{1}{7}\begin{pmatrix}
+1&4&4&4\\
+-4&1&4&-4\\
+-4&-4&1&4\\
 -4&4&-4&1
-end{pmatrix}.
+\end{pmatrix}.
 $$
 
 Divide all entries of the following lists by $10^4$.
@@ -324,15 +325,15 @@ Divide all entries of the following lists by $10^4$.
 | $b$ | $10341+21575i$, $-15084-9084i$, $-5643-34138i$, $10386+21647i$ |
 | $(c_2,c_3,c_4)$ | $4970-2858i$, $-11115+829i$, $-24243-13124i$ |
 
-Define $L(M)=mathrm{Re}sum_{k=2}^4 c_k e_k(M)$. Compute each $e_k$
+Define $L(M)=\mathrm{Re}\sum_{k=2}^4 c_k e_k(M)$. Compute each $e_k$
 by summing the principal minors of size $k$. For
-$M=mathrm{diag}(a)+Umathrm{diag}(b)U^{mathsf T}$ this gives
+$M=\mathrm{diag}(a)+U\mathrm{diag}(b)U^{\mathsf T}$ this gives
 
 $$
-L(M)=rac{276551869758667259929}{1200500000000000000000}.
+L(M)=\frac{276551869758667259929}{1200500000000000000000}.
 $$
 
-On the 24 matched lists $a_j+b_{sigma(j)}$, the largest value is
+On the 24 matched lists $a_j+b_{\sigma(j)}$, the largest value is
 $3457447314302311469/20000000000000000000$. This value is less than
 $18/100$. The value at $M$ is greater than $23/100$. The three
 permutations $(1,2,3,4)$, $(1,2,4,3)$ and $(1,3,4,2)$ give a triangle
@@ -406,8 +407,8 @@ so taking the closed hull preserves the strict separation.
 | 119 | If observables admit complex functions, use a finite disjoint union of points as a zero-dimensional symplectic manifold. Its quantization has one line per point. Multiplication by two complex functions gives arbitrary diagonal spectra. Self-adjoint observables alone give the proved real restriction. | Paper realization |
 | 130 | Use the two line bundles obtained from the two copies of projective space of dimension $n-1$ in a product. Their coordinate sections give the two lists. Add two projective line factors and twist each linearization by a character on a different extra factor. The two twists give independent scales. An opposite spectral shift removes zeros. | [Lean section-weight model](../../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
 | 131 | Two big line bundles on one projective variety give arbitrary evaluated valuation lists at degree one. The construction uses a common flag and a common real-linear evaluation. | [Paper proof](#newtonokounkov-valuation-realization) |
-| 134 | On a point, the zero map from $mathbb C^n$ in degree $-1$ to the cotangent complex is a perfect obstruction theory. The degree-zero cohomology is zero on both sides. The map in degree $-1$ surjects onto zero. Every endomorphism of the obstruction space is compatible. The degree $-1$ hull recovers MOC. | [Definition of perfect obstruction theory](https://arxiv.org/abs/alg-geom/9601010) |
-| 137 | With continuous $ell$-adic coefficients and a complex scalar embedding, use unramified characters of the absolute Galois group of a finite field. A local unit can have any prescribed value in the dense set of Gaussian rationals that are local units. Usual complex continuity instead forces unit-circle spectra. | [Paper proof](#galois-scalar-realization) |
+| 134 | On a point, the zero map from $\mathbb C^n$ in degree $-1$ to the cotangent complex is a perfect obstruction theory. The degree-zero cohomology is zero on both sides. The map in degree $-1$ surjects onto zero. Every endomorphism of the obstruction space is compatible. The degree $-1$ hull recovers MOC. | [Definition of perfect obstruction theory](https://arxiv.org/abs/alg-geom/9601010) |
+| 137 | With continuous $\ell$-adic coefficients and a complex scalar embedding, use unramified characters of the absolute Galois group of a finite field. A local unit can have any prescribed value in the dense set of Gaussian rationals that are local units. Usual complex continuity instead forces unit-circle spectra. | [Paper proof](#galois-scalar-realization) |
 | 175 | Require normal adjacency matrices of loopless directed graphs with complex edge weights. Conjugate each traceless spectrum by the discrete Fourier matrix. Each resulting diagonal entry is the mean of that spectrum and is zero. The traceless spectral test is exact. | [New Lean adjacency equivalence](../../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) · [Traceless test](../../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) |
 
 For 130, choose the effective torus on the two projective spaces and the
@@ -419,19 +420,19 @@ they give any two lists of nonzero values independently.
 #### Newton–Okounkov valuation realization
 
 Fix $nge3$ and put $d=n-1$. For a large integer $q$, choose a smooth
-irreducible hypersurface of degree $q$ in $mathbb P^d$. Its equation
+irreducible hypersurface of degree $q$ in $\mathbb P^d$. Its equation
 spans the kernel of restriction of degree-$q$ forms to the hypersurface.
-Choose $s=inom{q+d}{d}-1$ distinct points on the hypersurface that
+Choose $s=\binom{q+d}{d}-1$ distinct points on the hypersurface that
 impose independent conditions on the quotient space of forms. To
 choose each point, take a nonzero class in the current kernel and a
 point where its restriction is nonzero.
 
 Blow up the $s$ points to obtain $Y$. Write $H$ for the pullback of a
 hyperplane and $E$ for the sum of the exceptional divisors. The line
-bundle $L=mathcal O(H)$ has $n$ independent sections. The bundle
-$M=mathcal O(qH-E)$ has one section. For the $k$th power of $M$,
+bundle $L=\mathcal O(H)$ has $n$ independent sections. The bundle
+$M=\mathcal O(qH-E)$ has one section. For the $k$th power of $M$,
 the dimension of the section space is at least
-$inom{kq+d}{d}-sinom{k-1+d}{d}$. Its leading coefficient as a function
+$\binom{kq+d}{d}-s\binom{k-1+d}{d}$. Its leading coefficient as a function
 of $k$ is positive because $q^d>s$ for large $q$ and $dge2$. Thus $M$
 is big. The bundle $L$ is big because it is the pullback by a
 birational map of an ample line bundle.
@@ -461,17 +462,17 @@ holds. [Flag valuation definition](https://www.numdam.org/articles/10.24033/asen
 #### Galois scalar realization
 
 Use the absolute Galois group of a finite field. It is the profinite
-completion of $mathbb Z$ with Frobenius as a topological generator.
+completion of $\mathbb Z$ with Frobenius as a topological generator.
 Fix an embedding of the Gaussian rationals into a finite extension of
-$mathbb Q_ell$ and a complex scalar embedding extending the usual
+$\mathbb Q_\ell$ and a complex scalar embedding extending the usual
 Gaussian embedding. Every unit of the local ring defines a continuous
 character by sending Frobenius to that unit. Indeed, the powers of a
 unit have finite image in every finite congruence quotient, and the
 resulting maps from the profinite completion are compatible.
 
-Gaussian rational local units are dense in $mathbb C$. To approximate
+Gaussian rational local units are dense in $\mathbb C$. To approximate
 a complex number, use large positive integer denominators prime to
-$ell$ and Gaussian integer numerators congruent to $1$ modulo $ell$.
+$\ell$ and Gaussian integer numerators congruent to $1$ modulo $\ell$.
 Take direct sums of these characters to realize a dense set of spectral
 pairs in each order. The hull of the finite list of matching products
 varies continuously, so the restricted bound extends to all pairs.
@@ -506,6 +507,36 @@ The registered list spans [001 through 243](../../Lean/MOC/ProofRoutes.lean#L324
 fixed order, the evaluated form is equivalent to the fixed-order
 conjecture when the sample type is nonempty.
 [Fixed-order form](../../Lean/MOC/ProofRoutes.lean#L71)
+
+## Common weights at small shifted rank sum
+
+Fix the relative unitary and the allowed nonzero labels of two
+spectra after opposite scalar shifts. Write $n$ for the matrix
+order. If the label counts sum to at most $n+2$, one probability
+law on permutations represents the determinant for all allowed
+values. The common law applies for $n\ge2$.
+
+```mermaid
+flowchart LR
+    S["Fixed supports of total size at most n + 2"]
+    E["Extend the allowed labels to total size n + 2"]
+    F["Two frames on the overlap"]
+    W["One law on two-edge matchings"]
+    P["One law on permutations"]
+    S --> E --> F --> W --> P
+    Z["Noncovering permutation with product zero"] --> P
+```
+
+At excess two, compress to the intersection of the two support
+spaces and take the determinant of order two on reciprocal
+spectra. The two-frame law fixes all weights before any spectrum
+is evaluated. Complete each two-edge matching to a permutation.
+The completion depends only on the labels. If the support
+projections do not span the whole space, the determinant is zero
+for every set of values. In the spanning case, assign the remaining
+mass to a fixed permutation that pairs two zero labels. An extension
+of the allowed supports and continuity include smaller supports.
+[Two-frame law](../../Lean/MOC/TwoFrame.lean#L1016) · [Exact excess two](../../Lean/MOC/RankTwoOverlap.lean#L440) · [Common shifted law](../../Lean/MOC/RankTwoOverlap.lean#L708)
 
 ## Finite overlap compression
 

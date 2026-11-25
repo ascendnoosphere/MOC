@@ -214,6 +214,15 @@ statements and the proof of each connection to its goal.
 
 ## Cases proved in Lean
 
+### A common law at small shifted rank sum
+
+Fix the relative unitary and a scalar shift. Fix the allowed nonzero
+labels in both shifted spectra. If their total number is at most
+two above the matrix order, one permutation law works for every
+choice of the values on those labels. The law also permits additional
+zeros. The new source states this common law in orders at least two.
+[Common law](Lean/MOC/RankTwoOverlap.lean#L708) · [Matrix-rank restriction](Lean/MOC/RankTwoOverlap.lean#L723)
+
 ### Matrices and eigenvalues
 
 - The inclusion holds in any order if $A+B$ is singular or if $A$ and $B$
