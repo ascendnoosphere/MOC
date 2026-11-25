@@ -1,10 +1,11 @@
-import MOC.PhaseDiskSextic
+import MOC.RankOneSupportDisk
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-! Exact scalar support tests for a stationary degree-two phase and for
 two independent degree-one phases. -/
 
 open Filter
+open BigOperators Matrix
 open scoped Topology
 
 namespace MOC
@@ -128,5 +129,49 @@ theorem independentPhaseSupport_iff (C A B : ℝ → ℝ → ℝ) (H : ℝ) :
     have hi := (phase_linear_support_iff (A u v) (B u v) (H - C u v)).mpr
       (h u v huv) x y hxy
     linarith only [hi]
+
+/-- Test two sequential rank-one phases on an actual determinant orbit.
+For each outer phase, the base determinant for the inner phase must be
+nonzero. Four inner phase evaluations give the coefficients of the test. -/
+theorem sequentialRankOnePhase_support_iff {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A B : Matrix ι ι ℂ) (u v : ι → ℂ) (hu : ∑ i, star (u i) * u i = 1)
+    (η : ℂ) (H : ℝ) :
+    let G (w : ℂ) := rankOnePhase v w * A * (rankOnePhase v w)ᴴ
+    let f (w z : ℂ) := (rankOnePhase u z * G w * (rankOnePhase u z)ᴴ - B).det
+    let P (w : ℂ) := (f w Complex.I - f w (-Complex.I)) / 2
+    let R (w : ℂ) := (f w (-1) - f w 1) / 2
+    let C (w : ℂ) := (η * (f w 1 + R w)).re
+    (∀ w : ℂ, Complex.normSq w = 1 → IsUnit (G w - B).det) →
+      ((∀ w z : ℂ, Complex.normSq w = 1 → Complex.normSq z = 1 → (η * f w z).re ≤ H) ↔
+        ∀ w : ℂ, Complex.normSq w = 1 →
+          0 ≤ H - C w ∧ (η * R w).re ^ 2 + (η * P w).re ^ 2 ≤ (H - C w)^2) := by
+  intro G f P R C hG
+  have hphase (w z : ℂ) (hw : Complex.normSq w = 1) (hz : Complex.normSq z = 1) :
+      (η * f w z).re = C w - (η * R w).re * z.re + (η * P w).re * z.im := by
+    have hf : f w z = f w 1 + (z.im : ℂ) * P w + ((1 - z.re : ℝ) : ℂ) * R w :=
+      rankOnePhaseLeft_harmonics (G w) B u hu (hG w hw) z hz
+    rw [hf]
+    simp only [C, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im,
+      Complex.ofReal_re, Complex.ofReal_im, mul_zero, zero_mul, sub_zero, zero_add]
+    ring
+  constructor
+  · intro h w hw
+    have ht := (phase_linear_support_iff (-(η * R w).re) (η * P w).re (H - C w)).mp
+    have hlin (x y : ℝ) (hxy : x^2 + y^2 = 1) :
+        -(η * R w).re * x + (η * P w).re * y ≤ H - C w := by
+      let z : ℂ := ⟨x, y⟩
+      have hz : Complex.normSq z = 1 := by
+        simpa only [Complex.normSq_apply, z, pow_two] using hxy
+      have he := (hphase w z hw hz).symm.trans_le (h w z hw hz)
+      change C w - (η * R w).re * x + (η * P w).re * y ≤ H at he
+      linarith only [he]
+    simpa only [neg_pow_two] using ht hlin
+  · intro h w z hw hz
+    have hc : z.re^2 + z.im^2 = 1 := by
+      simpa only [Complex.normSq_apply, pow_two] using hz
+    have hh := (phase_linear_support_iff (-(η * R w).re) (η * P w).re (H - C w)).mpr
+      (by simpa only [neg_pow_two] using h w hw) z.re z.im hc
+    rw [hphase w z hw hz]
+    linarith only [hh]
 
 end MOC

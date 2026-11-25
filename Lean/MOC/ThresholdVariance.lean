@@ -136,5 +136,48 @@ theorem independent_threshold_variance_lower_bound
     _ ≤ _ := sum_le_sum fun e _ =>
       mul_le_mul_of_nonneg_left (sum_threshold_sq_le_sq_sum _ d hd) (hc e)
 
+private theorem weighted_quadratic_shift {κ : Type*} [Fintype κ]
+    (w s : κ → ℝ) (hw : ∑ k, w k = 1) (m l h : ℝ)
+    (hm : ∑ k, w k * s k = m) :
+    (∑ k, w k * ((s k - l) * (s k - h))) =
+      (∑ k, w k * (s k - m)^2) - (m - l) * (h - m) := by
+  have hcenter : ∑ k, w k * (s k - m) = 0 := by
+    simp only [mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul, hw, one_mul, hm, sub_self]
+  have he (k : κ) :
+      w k * ((s k - l) * (s k - h)) =
+        w k * (s k - m)^2 + (2*m - l - h) * (w k * (s k - m)) -
+          w k * ((m - l) * (h - m)) := by ring
+  simp only [he, Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.mul_sum,
+    hcenter, mul_zero, add_zero, ← Finset.sum_mul, hw, one_mul]
+
+/-- Nonnegative weights on finite scores force two variance bounds.
+The open interval between `l` and `h` must contain no score, and every
+score must lie between `L` and `H`. -/
+theorem weighted_score_variance_bounds {κ : Type*} [Fintype κ]
+    (w s : κ → ℝ) (hw : ∀ k, 0 ≤ w k) (hsum : ∑ k, w k = 1)
+    (m l h L H : ℝ) (hm : ∑ k, w k * s k = m) (hlh : l ≤ h)
+    (hgap : ∀ k, s k ≤ l ∨ h ≤ s k) (hrange : ∀ k, L ≤ s k ∧ s k ≤ H) :
+    (m - l) * (h - m) ≤ (∑ k, w k * (s k - m)^2) ∧
+      (∑ k, w k * (s k - m)^2) ≤ (m - L) * (H - m) := by
+  constructor
+  · have hnonneg : 0 ≤ ∑ k, w k * ((s k - l) * (s k - h)) := by
+      apply Finset.sum_nonneg
+      intro k _
+      apply mul_nonneg (hw k)
+      rcases hgap k with hk | hk
+      · exact mul_nonneg_of_nonpos_of_nonpos (sub_nonpos.mpr hk)
+          (sub_nonpos.mpr (hk.trans hlh))
+      · exact mul_nonneg (sub_nonneg.mpr (hlh.trans hk)) (sub_nonneg.mpr hk)
+    rw [weighted_quadratic_shift w s hsum m l h hm] at hnonneg
+    exact sub_nonneg.mp hnonneg
+  · have hnonpos : (∑ k, w k * ((s k - L) * (s k - H))) ≤ 0 := by
+      apply Finset.sum_nonpos
+      intro k _
+      exact mul_nonpos_of_nonneg_of_nonpos (hw k)
+        (mul_nonpos_of_nonneg_of_nonpos (sub_nonneg.mpr (hrange k).1)
+          (sub_nonpos.mpr (hrange k).2))
+    rw [weighted_quadratic_shift w s hsum m L H hm] at hnonpos
+    exact sub_nonpos.mp hnonpos
+
 end
 end MOC

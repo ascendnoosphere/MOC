@@ -159,6 +159,44 @@ theorem real_signed_unitary_phase_cut_nonneg (U : Matrix ι ι ℂ) (hU : IsUnit
     sub_nonneg] using real_signed_polydisc_phase_support U hU z (fun i j => (hz i j).le)
       (star (matchingPhase z r)) hξ.le
 
+/-- Grouped signed masses are nonnegative if a single phase test aligns
+their signs. The phase projection must be constant on each group. -/
+theorem grouped_realSignedWeight_nonneg_of_phase_alignment
+    {κ : Type*} [Fintype κ] [DecidableEq κ]
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (label : Equiv.Perm ι → κ) (χ : κ → ℝ) (z : ι → ι → ℂ) (ξ : ℂ)
+    (hz : ∀ i j, Complex.normSq (z i j) ≤ 1) (hξ : Complex.normSq ξ ≤ 1)
+    (hχ : ∀ σ, (ξ * matchingPhase z σ).re = χ (label σ)) :
+    let mass (k : κ) := ∑ σ ∈ Finset.univ.filter (fun σ => label σ = k), realSignedWeight U σ
+    (∀ k, mass k * χ k = |mass k|) → ∀ k, 0 ≤ mass k := by
+  classical
+  intro mass halign
+  have hmass : (∑ k, mass k) = 1 := by
+    dsimp only [mass]
+    rw [Finset.sum_fiberwise, sum_realSignedWeight U hU]
+  have hbound := real_signed_polydisc_phase_support U hU z hz ξ hξ
+  simp only [hχ] at hbound
+  have hgroup :
+      (∑ σ, realSignedWeight U σ * χ (label σ)) = ∑ k, mass k * χ k := by
+    rw [← Finset.sum_fiberwise Finset.univ label]
+    apply Finset.sum_congr rfl
+    intro k _
+    dsimp only [mass]
+    rw [Finset.sum_mul]
+    apply Finset.sum_congr rfl
+    intro σ hσ
+    rw [(Finset.mem_filter.mp hσ).2]
+  simp only [hgroup, halign] at hbound
+  have hnonneg (k : κ) : 0 ≤ |mass k| - mass k := sub_nonneg.mpr (le_abs_self _)
+  have hzero : (∑ k, (|mass k| - mass k)) = 0 := by
+    apply le_antisymm _ (Finset.sum_nonneg (fun k _ => hnonneg k))
+    rw [Finset.sum_sub_distrib, hmass]
+    exact sub_nonpos.mpr hbound
+  intro k
+  have he := (Finset.sum_eq_zero_iff_of_nonneg (fun k _ => hnonneg k)).mp hzero
+    k (Finset.mem_univ k)
+  exact abs_eq_self.mp (sub_eq_zero.mp he)
+
 /-- Any finite phase grid gives a positive semidefinite Gram matrix
 from the signed phase losses. With characters as test vectors this is
 the finite analogue of the Toeplitz test. It does not claim nonnegative

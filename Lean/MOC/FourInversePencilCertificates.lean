@@ -1,6 +1,6 @@
 import MOC.FourInversePencil
 import MOC.FourMixedRayCancellation
-import MOC.RealMatchingSquares
+import MOC.FourSevenContactAffineElimination
 import MOC.SparsePolynomialCertificate
 import Mathlib.Tactic
 
@@ -260,12 +260,6 @@ private def exceptionalInt (p : Fin 24) : ℤ := if p = 5 then 1 else 0
 
 private def exceptional (p : Fin 24) : ℝ := exceptionalInt p
 
-private theorem ray_square (i : Fin 34) (p : Fin 24) : ray i p ^ 2 = ray i p := by
-  have h : ∀ i : Fin 34, ∀ p : Fin 24,
-      ordinaryCostRayInt i p ^ 2 = ordinaryCostRayInt i p := by decide +kernel
-  change (ordinaryCostRayInt i p : ℝ) ^ 2 = (ordinaryCostRayInt i p : ℝ)
-  exact_mod_cast h i p
-
 private theorem seed_square (p : Fin 24) : seed p ^ 2 = seed p + 2 * exceptional p := by
   have h : ∀ p : Fin 24,
       mixedCostSeedInt p ^ 2 = mixedCostSeedInt p + 2 * exceptionalInt p := by
@@ -295,12 +289,6 @@ private theorem gram_product (p : Fin 24) :
     (ordinaryCostRayInt 13 p : ℝ) * (ordinaryCostRayInt 31 p : ℝ) = (exceptionalInt p : ℝ)
   exact_mod_cast h p
 
-private theorem ray_mem (i : Fin 34) : ray i ∈ realMatchingFunctionSpace := by
-  change ordinaryCostRay i ∈ Set.range
-    (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ))
-  rw [four_matching_space_eq_ordinary_span]
-  exact Submodule.subset_span ⟨i, rfl⟩
-
 private theorem seed_mem : seed ∈ realMatchingFunctionSpace := by
   have h : seed = ray 10 + ray 7 + ray 17 - ray 25 := by
     funext p
@@ -308,21 +296,10 @@ private theorem seed_mem : seed ∈ realMatchingFunctionSpace := by
   rw [h]
   exact realMatchingFunctionSpace.sub_mem
     (realMatchingFunctionSpace.add_mem
-      (realMatchingFunctionSpace.add_mem (ray_mem 10) (ray_mem 7)) (ray_mem 17)) (ray_mem 25)
-
-private theorem weighted_squares {n : ℕ} (w : Fin n → ℝ) (f : Fin n → Fin 24 → ℝ)
-    (hw : ∀ i, 0 ≤ w i) (hf : ∀ i, f i ∈ realMatchingFunctionSpace) :
-    IsRealMatchingSOS (fun p => ∑ i, w i * f i p ^ 2) := by
-  have hx (i : Fin n) : ∃ x : Fin 14 → ℝ, fourMatchingEvaluation x = f i := hf i
-  choose x hxe using hx
-  refine ⟨n, fun i => Real.sqrt (w i) • x i, fun p => ?_⟩
-  apply Finset.sum_congr rfl
-  intro i _
-  have he : fourMatchingEvaluation (Real.sqrt (w i) • x i) p =
-      Real.sqrt (w i) * f i p := by
-    rw [← hxe i]
-    fin_cases p <;> simp [fourMatchingEvaluation, Pi.smul_apply, smul_eq_mul] <;> ring
-  rw [he, mul_pow, Real.sq_sqrt (hw i)]
+      (realMatchingFunctionSpace.add_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 10)
+        (ordinaryCostRay_mem_realMatchingFunctionSpace 7))
+      (ordinaryCostRay_mem_realMatchingFunctionSpace 17))
+    (ordinaryCostRay_mem_realMatchingFunctionSpace 25)
 
 /-- The mixed ray plus ordinary rays 7, 13, 18, 28, 30 and 31 in that order. -/
 def fourTwoFactorCost (a b c d f e : ℝ) (p : Fin 24) : ℝ :=
@@ -342,12 +319,12 @@ theorem fourTwoFactorCost_mem (a b c d f e : ℝ) :
   apply realMatchingFunctionSpace.add_mem (realMatchingFunctionSpace.add_mem
     (realMatchingFunctionSpace.add_mem (realMatchingFunctionSpace.add_mem
       (realMatchingFunctionSpace.add_mem (realMatchingFunctionSpace.add_mem seed_mem
-        (realMatchingFunctionSpace.smul_mem a (ray_mem 7)))
-          (realMatchingFunctionSpace.smul_mem b (ray_mem 13)))
-          (realMatchingFunctionSpace.smul_mem c (ray_mem 18)))
-          (realMatchingFunctionSpace.smul_mem d (ray_mem 28)))
-          (realMatchingFunctionSpace.smul_mem f (ray_mem 30)))
-          (realMatchingFunctionSpace.smul_mem e (ray_mem 31))
+        (realMatchingFunctionSpace.smul_mem a (ordinaryCostRay_mem_realMatchingFunctionSpace 7)))
+          (realMatchingFunctionSpace.smul_mem b (ordinaryCostRay_mem_realMatchingFunctionSpace 13)))
+          (realMatchingFunctionSpace.smul_mem c (ordinaryCostRay_mem_realMatchingFunctionSpace 18)))
+          (realMatchingFunctionSpace.smul_mem d (ordinaryCostRay_mem_realMatchingFunctionSpace 28)))
+          (realMatchingFunctionSpace.smul_mem f (ordinaryCostRay_mem_realMatchingFunctionSpace 30)))
+          (realMatchingFunctionSpace.smul_mem e (ordinaryCostRay_mem_realMatchingFunctionSpace 31))
 
 private theorem gram_square_completion (a b e m x y w : ℝ)
     (ha : a ≠ 0) (hab : a * b - 1 ≠ 0) :
@@ -385,12 +362,12 @@ theorem fourMatchingSOS_of_gram_budget {a b e : ℝ}
   have hfeat : ∀ i, features i ∈ realMatchingFunctionSpace := by
     intro i
     fin_cases i
-    · exact realMatchingFunctionSpace.sub_mem seed_mem (ray_mem 31)
-    · exact realMatchingFunctionSpace.add_mem (ray_mem 7) (realMatchingFunctionSpace.smul_mem _
-        (realMatchingFunctionSpace.sub_mem (ray_mem 31) (ray_mem 13)))
-    · exact realMatchingFunctionSpace.add_mem (ray_mem 13)
-        (realMatchingFunctionSpace.smul_mem _ (ray_mem 31))
-    · exact ray_mem 31
+    · exact realMatchingFunctionSpace.sub_mem seed_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 31)
+    · exact realMatchingFunctionSpace.add_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 7) (realMatchingFunctionSpace.smul_mem _
+        (realMatchingFunctionSpace.sub_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 31) (ordinaryCostRay_mem_realMatchingFunctionSpace 13)))
+    · exact realMatchingFunctionSpace.add_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 13)
+        (realMatchingFunctionSpace.smul_mem _ (ordinaryCostRay_mem_realMatchingFunctionSpace 31))
+    · exact ordinaryCostRay_mem_realMatchingFunctionSpace 31
   have hcost : (fun p => mixedCostRay 0 p + a * ray 7 p + b * ray 13 p + e * ray 31 p) =
       (fun p => ∑ i, w i * features i p ^ 2) := by
     funext p
@@ -398,7 +375,7 @@ theorem fourMatchingSOS_of_gram_budget {a b e : ℝ}
       mixedCostRay 0 p + a * ray 7 p + b * ray 13 p + e * ray 31 p =
           seed p^2 + a*(ray 7 p)^2 + b*(ray 13 p)^2 + e*(ray 31 p)^2 -
             2*(seed p*ray 31 p+ray 7 p*ray 13 p-ray 7 p*ray 31 p-ray 13 p*ray 31 p) := by
-        rw [mixed_seed, seed_square, ray_square, ray_square, ray_square, gram_product]
+        rw [mixed_seed, seed_square, ordinaryCostRay_sq, ordinaryCostRay_sq, ordinaryCostRay_sq, gram_product]
         ring
       _ = _ := by
         rw [gram_square_completion a b e (seed p) (ray 7 p) (ray 13 p) (ray 31 p)
@@ -407,21 +384,13 @@ theorem fourMatchingSOS_of_gram_budget {a b e : ℝ}
           smul_eq_mul,one_div,div_eq_mul_inv]
         <;> ring
   rw [hcost]
-  exact weighted_squares w features hw hfeat
+  exact isRealMatchingSOS_weighted w features hw hfeat
 
 /-- A nonnegative ordinary coefficient adds one square to a certificate. -/
 theorem fourMatchingSOS_add_ordinaryRay {g : Fin 24 → ℝ} (hs : IsRealMatchingSOS g)
     (r : Fin 34) {c : ℝ} (hc : 0 ≤ c) :
-    IsRealMatchingSOS (fun p => g p + c * ordinaryCostRay r p) := by
-  have hr : IsRealMatchingSOS (fun p => c * ordinaryCostRay r p) := by
-    have h := weighted_squares (n := 1) (fun _ => c) (fun _ => ray r)
-      (fun _ => hc) (fun _ => ray_mem r)
-    simpa only [Fin.sum_univ_one, ray_square] using h
-  obtain ⟨n, x, hx⟩ := hs
-  obtain ⟨m, y, hy⟩ := hr
-  refine ⟨n+m, Fin.addCases x y, fun p => ?_⟩
-  rw [hx p, hy p, Fin.sum_univ_add]
-  simp only [Fin.addCases_left, Fin.addCases_right]
+    IsRealMatchingSOS (fun p => g p + c * ordinaryCostRay r p) :=
+  realMatchingSOS_add_ordinaryCostRay hs r c hc
 
 /-- A singular pencil yields a matching square certificate on either
 factor branch. The ordinary coefficient on the extension may vanish. -/
@@ -459,13 +428,13 @@ theorem fourTwoFactorCost_sos_of_det_eq_zero {a b c d f e : ℝ}
       intro i
       fin_cases i
       · exact seed_mem
-      · exact realMatchingFunctionSpace.sub_mem (ray_mem 18)
-          (realMatchingFunctionSpace.smul_mem _ (ray_mem 28))
-      · exact ray_mem 28
-      · exact ray_mem 7
-      · exact ray_mem 13
-      · exact ray_mem 31
-      · exact ray_mem 30
+      · exact realMatchingFunctionSpace.sub_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 18)
+          (realMatchingFunctionSpace.smul_mem _ (ordinaryCostRay_mem_realMatchingFunctionSpace 28))
+      · exact ordinaryCostRay_mem_realMatchingFunctionSpace 28
+      · exact ordinaryCostRay_mem_realMatchingFunctionSpace 7
+      · exact ordinaryCostRay_mem_realMatchingFunctionSpace 13
+      · exact ordinaryCostRay_mem_realMatchingFunctionSpace 31
+      · exact ordinaryCostRay_mem_realMatchingFunctionSpace 30
     have heq : fourTwoFactorCost a b c d f e =
         (fun p => ∑ i, w i * features i p ^ 2) := by
       funext p
@@ -474,15 +443,15 @@ theorem fourTwoFactorCost_sos_of_det_eq_zero {a b c d f e : ℝ}
             seed p^2 + a*(ray 7 p)^2 + b*(ray 13 p)^2 + c*(ray 18 p)^2 +
               d*(ray 28 p)^2 + e*(ray 31 p)^2 + f*(ray 30 p)^2 -
               2*(ray 18 p * ray 28 p) := by
-          rw [seed_square, ray_square, ray_square, ray_square, ray_square, ray_square,
-            ray_square, pair_product]
+          rw [seed_square, ordinaryCostRay_sq, ordinaryCostRay_sq, ordinaryCostRay_sq, ordinaryCostRay_sq, ordinaryCostRay_sq,
+            ordinaryCostRay_sq, pair_product]
           unfold fourTwoFactorCost
           ring
         _ = _ := by
           simp [w, features, Fin.sum_univ_succ, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, one_div]
           field_simp [hc.ne'] <;> ring
     rw [heq]
-    exact weighted_squares w features hw hfeat
+    exact isRealMatchingSOS_weighted w features hw hfeat
   · unfold factorZ at hz
     have hpos : 0 < (a+1)*(b+1)*(1+c+d)+(a+b+1)*c*d := by positivity
     have hprod : e*(a*b-(c+1)*(d+1)) =

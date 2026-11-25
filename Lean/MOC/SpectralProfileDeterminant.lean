@@ -1,10 +1,12 @@
 import MOC.Core
 import Mathlib.Data.Matrix.Rank
+import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Logic.Equiv.Fin.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.LinearCombination
+import Lean.Elab.Tactic.Omega
 
 /-! The inverse-coordinate determinant of a spectral matching profile. -/
 
@@ -31,6 +33,43 @@ theorem signedEvaluation_matchingProduct (a b : κ → ℂ) (S : Matrix κ κ �
     simp only [Matrix.add_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
     ring
   simp only [hentry, Finset.prod_mul_distrib, matchingProduct]
+  ring
+
+/-- A singular probe with only two nonzero Leibniz matching terms
+measures their difference in the matching profile. -/
+theorem signedEvaluation_two_matching_probe
+    (g : Equiv.Perm κ → ℂ) (S : Matrix κ κ ℂ) (p q : Equiv.Perm κ) (hpq : p ≠ q)
+    (hdet : S.det = 0)
+    (hsupport : ∀ σ : Equiv.Perm κ, σ ≠ p → σ ≠ q → (∏ j, S (σ j) j) = 0) :
+    signedEvaluation g S =
+      (((Equiv.Perm.sign p : ℤ) : ℂ) * ∏ j, S (p j) j) * (g p - g q) := by
+  classical
+  let w (σ : Equiv.Perm κ) := ((Equiv.Perm.sign σ : ℤ) : ℂ) * ∏ j, S (σ j) j
+  have hsum (x : Equiv.Perm κ → ℂ) :
+      (∑ σ, w σ * x σ) = w p * x p + w q * x q := by
+    calc
+      _ = ∑ σ ∈ ({p, q} : Finset (Equiv.Perm κ)), w σ * x σ := by
+        symm
+        apply Finset.sum_subset (Finset.subset_univ _)
+        intro σ _ hσ
+        have hn : σ ≠ p ∧ σ ≠ q := by simpa only [Finset.mem_insert, Finset.mem_singleton,
+          not_or] using hσ
+        simp only [w, hsupport σ hn.1 hn.2, mul_zero, zero_mul]
+      _ = _ := by
+        have hnot : p ∉ ({q} : Finset (Equiv.Perm κ)) := by
+          simpa only [Finset.mem_singleton] using hpq
+        rw [Finset.sum_insert hnot, Finset.sum_singleton]
+  have hz : w p + w q = 0 := by
+    have he : S.det = ∑ σ, w σ := by simp only [Matrix.det_apply', w]
+    simpa only [mul_one, ← he, hdet] using (hsum (fun _ => 1)).symm
+  have hEval : signedEvaluation g S = ∑ σ, w σ * g σ := by
+    unfold signedEvaluation
+    apply Finset.sum_congr rfl
+    intro σ _
+    dsimp [w]
+    ring
+  rw [hEval, hsum, eq_neg_of_add_eq_zero_right hz]
+  change w p * g p + -w p * g q = w p * (g p - g q)
   ring
 
 /-- The bordered matrix used after removing the constant coordinate. -/
@@ -317,6 +356,32 @@ theorem actualInverseProfile_small {n : ℕ}
   obtain ⟨c, F, h⟩ := border_det_small A.toBlocks₁₂ B.toBlocks₂₁
   exact ⟨c, F.comp (inverseCore A.toBlocks₂₂ B.toBlocks₂₂),
     fun H => h (inverseCore A.toBlocks₂₂ B.toBlocks₂₂ H)⟩
+
+/-- For a spectral source of order `n + 2`, at least `2*n + 1` independent
+inverse-coordinate directions leave the bordered polynomial unchanged. -/
+theorem actualInverseProfile_large_invariance_space {n : ℕ}
+    (a b : Fin 1 ⊕ Fin (n + 1) → ℂ)
+    (E C : Matrix (Fin 1 ⊕ Fin (n + 1)) (Fin 1 ⊕ Fin (n + 1)) ℂ) :
+    let A := C * diagonal a * E
+    let B := C * diagonal b * E
+    let P (H : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) :=
+      (border A.toBlocks₁₂ B.toBlocks₂₁ (inverseCore A.toBlocks₂₂ B.toBlocks₂₂ H)).det
+    ∃ K : Submodule ℂ (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ),
+      2*n + 1 ≤ Module.finrank ℂ K ∧ ∀ H Z, Z ∈ K → P (H + Z) = P H := by
+  intro A B P
+  obtain ⟨c, F, hF⟩ := actualInverseProfile_small a b E C
+  have hrange : Module.finrank ℂ (LinearMap.range F) ≤ n * n := by
+    simpa only [Module.finrank_matrix, Fintype.card_fin, Module.finrank_self, mul_one]
+      using (LinearMap.range F).finrank_le
+  have hdim := F.finrank_range_add_finrank_ker
+  simp only [Module.finrank_matrix, Fintype.card_fin, Module.finrank_self, mul_one] at hdim
+  have hsize : (n + 1) * (n + 1) = n*n + (2*n + 1) := by ring
+  rw [hsize] at hdim
+  refine ⟨LinearMap.ker F, by omega, ?_⟩
+  intro H Z hZ
+  change P (H + Z) = P H
+  rw [show P (H + Z) = c * (F (H + Z)).det from hF (H + Z),
+    show P H = c * (F H).det from hF H, map_add, LinearMap.mem_ker.mp hZ, add_zero]
 
 private def matrixEntry {V : Type*} [AddCommGroup V] [Module ℂ V]
     (T : V →ₗ[ℂ] Matrix (Fin 2) (Fin 2) ℂ) (i j : Fin 2) : V →ₗ[ℂ] ℂ where

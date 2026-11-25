@@ -116,20 +116,16 @@ theorem rankOnePhase_disk_iff (ξ P R : ℂ) (hP : (ξ * P).re = 0) :
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-/-- The exact disk criterion for a rank-one conjugation orbit. Each complex
-coefficient is determined by two special phases of the determinant. -/
-theorem rankOnePhaseLeft_disk_iff (A B : Matrix ι ι ℂ) (u : ι → ℂ)
-    (hu : ∑ i, star (u i) * u i = 1) (hT : IsUnit (A - B).det) (ξ : ℂ) :
+/-- Recover the first sine and cosine changes of a rank-one phase orbit
+from four phase evaluations at a nonsingular base point. -/
+theorem rankOnePhaseLeft_harmonics (A B : Matrix ι ι ℂ) (u : ι → ℂ)
+    (hu : ∑ i, star (u i) * u i = 1) (hT : IsUnit (A - B).det) :
     let f (z : ℂ) := (rankOnePhase u z * A * (rankOnePhase u z)ᴴ - B).det
     let P := (f Complex.I - f (-Complex.I)) / 2
     let R := (f (-1) - f 1) / 2
-    let L := -(ξ * R).re
-    let a := L - 2 * Complex.normSq P
-    let b := L - 2 * Complex.normSq R
-    (ξ * P).re = 0 →
-      ((∀ z : ℂ, Complex.normSq z = 1 → (ξ * (f z - f 1)).re ≤ -Complex.normSq (f z - f 1)) ↔
-        0 ≤ a ∧ 0 ≤ b ∧ (2 * (P * star R).re) ^ 2 ≤ a * b) := by
-  intro f P R L a b hP
+    ∀ z : ℂ, Complex.normSq z = 1 →
+      f z = f 1 + (z.im : ℂ) * P + ((1 - z.re : ℝ) : ℂ) * R := by
+  intro f P R
   let T := A - B
   let C : Matrix ι Unit ℂ := fun i _ => u i
   let E := (Cᴴ * A * T⁻¹ * C) () () + (Cᴴ * T⁻¹ * (-(B * C))) () () - 1
@@ -159,9 +155,27 @@ theorem rankOnePhaseLeft_disk_iff (A B : Matrix ι ι ℂ) (u : ι → ℂ)
     dsimp only [R]
     rw [hf (-1) (by simp), hf₁]
     simp <;> ring
+  intro z hz
+  rw [hf z hz, hf₁, hPf, hRf]
+
+/-- The exact disk criterion for a rank-one conjugation orbit. -/
+theorem rankOnePhaseLeft_disk_iff (A B : Matrix ι ι ℂ) (u : ι → ℂ)
+    (hu : ∑ i, star (u i) * u i = 1) (hT : IsUnit (A - B).det) (ξ : ℂ) :
+    let f (z : ℂ) := (rankOnePhase u z * A * (rankOnePhase u z)ᴴ - B).det
+    let P := (f Complex.I - f (-Complex.I)) / 2
+    let R := (f (-1) - f 1) / 2
+    let L := -(ξ * R).re
+    let a := L - 2 * Complex.normSq P
+    let b := L - 2 * Complex.normSq R
+    (ξ * P).re = 0 →
+      ((∀ z : ℂ, Complex.normSq z = 1 → (ξ * (f z - f 1)).re ≤ -Complex.normSq (f z - f 1)) ↔
+        0 ≤ a ∧ 0 ≤ b ∧ (2 * (P * star R).re) ^ 2 ≤ a * b) := by
+  intro f P R L a b hP
   have hδ (z : ℂ) (hz : Complex.normSq z = 1) :
       f z - f 1 = rankTwoPhaseChange P R 0 0 z := by
-    rw [hf z hz, hf₁, hPf, hRf]
+    have hf : f z = f 1 + (z.im : ℂ) * P + ((1 - z.re : ℝ) : ℂ) * R :=
+      rankOnePhaseLeft_harmonics A B u hu hT z hz
+    rw [hf]
     simp only [rankTwoPhaseChange, mul_zero, add_zero]
     ring
   have hc :

@@ -344,14 +344,17 @@ coefficient identities on the corresponding unitary orbits.
 The normalized spectral maximizer gives cofactor equations that also
 hold at zero pair sums. This is a separate selection of a witness.
 For one rank-two phase, the support test at a stationary point is a
-two-by-two positivity condition. Two independent phases give a
-different scalar test. A proof must still use the actual cofactor
-data or phase coefficients to exclude a strict witness.
-[Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Rank-two test](../Lean/MOC/RankTwoPhaseEscape.lean#L23) · [Independent phases](../Lean/MOC/RankTwoPhaseEscape.lean#L117)
+two-by-two positivity condition. For two sequential rank-one phases,
+four inner phase evaluations give a scalar test for each outer phase.
+The test requires a nonzero base determinant at each outer phase.
+A proof must still use the actual cofactor data or phase coefficients
+to exclude a strict witness.
+[Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Rank-two test](../Lean/MOC/RankTwoPhaseEscape.lean#L24) · [Two-phase determinant test](../Lean/MOC/RankTwoPhaseEscape.lean#L136)
 
 Exact Python checks covered exchange fixtures with zero pivots,
 singular spectator blocks, and both phase tests. The new Lean source
 awaits verification.
+[Research attempts](research-attempts-proof-map.md)
 
 ## Polynomial and coefficient conditions
 
@@ -1017,15 +1020,15 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L202) · [Axiom audit](../Lean/MOC.lean#L302)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L203) · [Axiom audit](../Lean/MOC.lean#L306)
 
-The source audit found 709 Lean modules. Starting at the default target
-reaches 583, including the target itself. The other 126 resolve their
+The source audit found 713 Lean modules. Starting at the default target
+reaches 588, including the target itself. The other 125 resolve their
 local imports as separate modules. The import graph has no cycles.
 A previous build reported failures in the Gaussian and Haar measure module.
 The source now qualifies the closed-ball and product-integral lemmas.
 The earlier log also reports unresolved algebraic proof steps.
-The nine new modules have complete source scripts and are in the
-default import graph. Their present status is static review and exact
-example checks.
-[Gaussian disk argument](../Lean/MOC/GaussianHaarContainment.lean#L322) · [New proof routes](determinant-inclusion-certificates-proof-map.md)
+The determinant inclusion certificates and the research-attempt scripts
+are in the default import graph. Their present status is static review
+and exact example checks.
+[Gaussian disk argument](../Lean/MOC/GaussianHaarContainment.lean#L322) · [Determinant certificates](determinant-inclusion-certificates-proof-map.md) · [Research attempts](research-attempts-proof-map.md)

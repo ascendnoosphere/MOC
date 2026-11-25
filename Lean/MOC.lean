@@ -45,6 +45,7 @@ import MOC.ThresholdVariance
 import MOC.SignedPairMoments
 import MOC.RankOneVariance
 import MOC.RankOneLattice
+import MOC.AssignmentScoreThirdMoment
 import MOC.GroupedMomentElimination
 import MOC.CollisionSplitSupport
 import MOC.AlternatingGapMoments
@@ -272,6 +273,8 @@ import MOC.FourTerminalHeight
 import MOC.FourInversePencil
 import MOC.FourInversePencilCertificates
 import MOC.FourInversePencilRankLift
+import MOC.FourMatchingCompensation
+import MOC.InversePencilMoments
 import MOC.GroupedEigenvalueMoments
 import MOC.RankTwoPhaseEscape
 import MOC.SpectralMultiplierRigidity
@@ -291,6 +294,7 @@ import MOC.RealMatchingSquares
 import MOC.SixDimensionalMixerBall
 import MOC.SmallSpectralPerturbation
 import MOC.SpectralProfileDeterminant
+import MOC.SpectralDeterminantStability
 import MOC.TranspositionWinding
 import MOC.TwoByTwoTensorPermutationLaw
 import MOC.ForcedSpectralMultiplicity

@@ -18,14 +18,14 @@ For two subsets of the label set, the subset-image indicator is one
 when a permutation maps the first subset onto the second. It is zero
 otherwise. Let $V$ be the real span of these indicators. The
 noncrossing coordinates give $V$ dimension 14.
-[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L185) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L56)
+[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L188) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L57)
 
 Use the auxiliary values $\beta=(0,1,-1,w)$, with $w$ a real variable.
 For a permutation $\pi$ and a subset $I$, take the constant and
 linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
 matrix that has these 32 coefficients in row $\pi$. Its column space
 is $V$. Write $j_\pi$ for the transpose of that row.
-[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L33) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L152)
+[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L155)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
 directions in each block of the jet. Its two directions, with
@@ -47,7 +47,7 @@ $R=E^\mathsf{T}TE$. The real auxiliary test requires that the range
 of $T$ lie in the row space of $J$ and that the partial transpose of
 $R$ be positive semidefinite. The partial transpose exchanges the
 first tensor index of the row and column.
-[Embedding](../Lean/MOC/RealMatchingSquares.lean#L236) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L280) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L435)
+[Embedding](../Lean/MOC/RealMatchingSquares.lean#L258) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L304) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L460)
 
 ```mermaid
 flowchart LR
@@ -66,7 +66,7 @@ flowchart LR
 For $g\in V$, the real auxiliary test is equivalent to the existence
 of a finite list of functions $f_k\in V$ with
 $g_\pi=\sum_k f_k(\pi)^2$ for every $\pi$.
-[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L441)
+[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L466)
 
 The sign of a permutation is $1$ for an even permutation and $-1$
 for an odd one. The signed sum of a cost in $V$ is zero. Let
@@ -76,7 +76,7 @@ $K$ and the symmetric corner $R$ is zero. It is twice the difference
 between entries $(00,11)$ and $(01,10)$ of $R$. This difference also
 multiplies $K$ in the partial-transpose defect. Thus the partial
 transpose fixes $R$.
-[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L268) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L357) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L397)
+[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L292) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L382) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L422)
 
 ## From a positive moment to a support inequality
 
@@ -87,7 +87,7 @@ cost $g$ lies in $V$ and is a sum of matching squares, then
 $\sum_\pi c_\pi g_\pi\ge0$. The added alternating term has zero
 pairing with $g$. The rank-one partial-transpose defect is a separate
 identity that can help construct such a scalar.
-[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L533) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L502)
+[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L559) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L528)
 
 Suppose the real moment is the sum of a positive semidefinite matrix
 and the embedded partial transpose of $uu^\mathsf T$, for a real
@@ -103,6 +103,22 @@ this Lean route. The archived argument supplies it in mathematics.
 Exact Python checks used five rational orthogonal mixers and one
 complex unitary minor mixture. The new Lean source awaits verification.
 [Archived Clifford argument](https://github.com/AscendNoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_intrinsic_matching_sos_20261031.txt#L99)
+
+### Wall cost
+
+Let $r_i$ be the ordinary matching indicator of index $i$. Define
+$h=1-r_0-r_1-r_4+r_{10}+r_{16}-r_{23}$. For all real $c,q>0$ and
+$a\ge 1/c+1/q$, the cost $h+a r_{27}+c r_{29}+q r_5$ is a sum
+of real matching squares.
+[Ordinary indicators](../Lean/MOC/FourSupportCostProfiles.lean#L76) · [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94)
+
+Let $L_U$ be the signed evaluation at an order-four unitary $U$.
+Put $A=\sqrt{L_U(r_{27})}$, $B=\sqrt{L_U(r_{29})}$, and
+$C=\sqrt{L_U(r_5)}$. The three radicands are squared minor moduli.
+If a multiple of the alternating sign makes the moment of the
+signed weights positive semidefinite, then
+$L_U(h)+2A(B+C)\ge0$. The bound includes zero radicands.
+[Signed evaluation](../Lean/MOC/FourMixedRayCancellation.lean#L544) · [Amplitude certificate](../Lean/MOC/FourMatchingCompensation.lean#L168)
 
 ## Scope
 

@@ -91,7 +91,7 @@ $(7,10,13,17,27,30)$ and $(7,10,13,20,23,30)$.
 For $(7,17,18,23,27,30)$ the factor equation forces the product of the
 coefficients on rays 18 and 23 to be at least one. The formal factor
 links remain separate from these Lean square lemmas.
-[Inheritance and pair certificate](../Lean/MOC/FourSevenContactAffineElimination.lean#L45) · [Archived threshold-rectangle proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_threshold_rectangle_closure_20261031.txt)
+[Inheritance and pair certificate](../Lean/MOC/FourSevenContactAffineElimination.lean#L47) · [Archived threshold-rectangle proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_threshold_rectangle_closure_20261031.txt)
 
 ### Remaining coefficient tests
 

@@ -1,5 +1,6 @@
 import MOC.FourMatchingRelations
 import Mathlib.Data.Matrix.Rank
+import Mathlib.Data.Real.Sqrt
 import Mathlib.Data.Real.StarOrdered
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Matrix.PosDef
@@ -210,6 +211,25 @@ theorem realMatchingFunctionSpace_eq_indicator_span :
 def IsRealMatchingSOS (g : Fin 24 → ℝ) : Prop :=
   ∃ n : ℕ, ∃ f : Fin n → Fin 14 → ℝ,
     ∀ p, g p = ∑ k, (fourMatchingEvaluation (f k) p)^2
+
+/-- Nonnegative weights on squares can be absorbed into the matching functions. -/
+theorem isRealMatchingSOS_weighted {n : ℕ} (w : Fin n → ℝ)
+    (f : Fin n → Fin 24 → ℝ) (hw : ∀ i, 0 ≤ w i)
+    (hf : ∀ i, f i ∈ realMatchingFunctionSpace) :
+    IsRealMatchingSOS (fun p => ∑ i, w i * f i p ^ 2) := by
+  classical
+  have hx (i : Fin n) : ∃ x : Fin 14 → ℝ, fourMatchingEvaluation x = f i := hf i
+  choose x he using hx
+  refine ⟨n, fun i => Real.sqrt (w i) • x i, fun p => ?_⟩
+  apply Finset.sum_congr rfl
+  intro i _
+  have hs : fourMatchingEvaluation (Real.sqrt (w i) • x i) p =
+      Real.sqrt (w i) * f i p := by
+    have h := congrFun (realMatchingEvaluation.map_smul (Real.sqrt (w i)) (x i)) p
+    change fourMatchingEvaluation (Real.sqrt (w i) • x i) p =
+      Real.sqrt (w i) * fourMatchingEvaluation (x i) p at h
+    exact h.trans (congrArg (fun y : ℝ => Real.sqrt (w i) * y) (congrFun (he i) p))
+  rw [hs, mul_pow, Real.sq_sqrt (hw i)]
 
 private def matchingSignInt (p : Fin 24) : ℤ :=
   ↑(Equiv.Perm.sign (fourPerm p))

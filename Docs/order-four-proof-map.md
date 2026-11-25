@@ -172,6 +172,14 @@ holds. The finite orbit census and universal external lower bound
 remain outside these Lean proofs. This source awaits verification.
 [Eleven-contact exclusion](../Lean/MOC/FourTerminalHeight.lean#L128) · [External-bound rescaling](../Lean/MOC/FourTerminalHeight.lean#L15)
 
+The wall cost has a matching-square certificate under a reciprocal
+weight bound. A corrected mixer moment gives the associated minor
+amplitude inequality. The replay ledger also gives a seven-contact
+certificate from a nonpositive determinant factor and four
+contradictions to affine moment equations. Each application still
+requires the stated link from the spectral data.
+[Wall and replay premises](research-attempts-proof-map.md#further-steps-from-the-replay-bundles)
+
 ### Signed weights and the bilinear spectral chart
 
 The fourteen-term formula expresses the determinant as a signed sum
@@ -209,7 +217,7 @@ Let $G$ be the gradient of the matching cubic and let $J(u)$ be its
 Hessian. The complex equation $G(u+iv)=0$ splits into $J(u)v=0$ and
 $G(v)=G(u)$. Both conditions are necessary for an exact bracket lift.
 The new Lean proof expands the quadratic coordinates of $G$.
-[Lean lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L124)
+[Lean lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L125)
 
 Take $u=(4,0,12,-18,4,0,0,-12,-4,9,3,3,-3,-11)$ in the bracket order
 of the linked definition. The cubic is zero and its Hessian has a

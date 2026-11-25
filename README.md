@@ -35,6 +35,12 @@ source and example checks. They await kernel checking. Some historical
 modules remain outside the default target.
 [Certificate statements and hypotheses](Docs/determinant-inclusion-certificates-proof-map.md) · [Source scope](Docs/all-orders-proof-map.md#scope-of-the-lean-source)
 
+The research-attempt map records the Lean steps and remaining
+implications for the fifteen research directions. The new scripts
+cover the order-four wall and moment-plane tests, and extend several
+reductions that apply in every order. Kernel verification is pending.
+[Research attempts](Docs/research-attempts-proof-map.md)
+
 Choose a unitary eigenbasis for each matrix. In the basis for $A$, write
 $A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$.
 Here $\mathrm{diag}(a)$ is the diagonal matrix with entries $a_i$.
@@ -163,7 +169,7 @@ of the corresponding real orthogonal tables.
 | Partial, new Lean source | Exact factor arguments supply matching squares in several canonical contact families. Other families have explicit height, rank, or coefficient restrictions. | [Canonical contact certificates](Docs/order-four-mixed-ray-cancellation-proof-map.md#canonical-contact-certificates) |
 | Partial, new Lean source | The order-four inclusion holds at a mixer where each mixed ray evaluates nonnegatively. A separate bilinear spectral chart retains the full support test. | [Signed formula and spectral chart](Docs/order-four-proof-map.md#signed-weights-and-the-bilinear-spectral-chart) |
 | Partial, new Lean source | One five-parameter contact family has eight specified tied permutations. At negative signed height, an actual spectral lift is impossible if the first two ordinary weights are equal. The unequal case reduces to a sign of the spectral Hessian pencil. | [Contact family](Docs/order-four-five-parameter-contact-proof-map.md) |
-| New Lean source | The real and imaginary parts of an exact spectral bracket profile satisfy two equations. A small integer example passes the cubic and Hessian kernel tests and fails the second equation for every candidate imaginary part. | [Lift equations](Lean/MOC/FourMatchingHessianKernel.lean#L124) · [Exact obstruction](Lean/MOC/FourMatchingHessianKernel.lean#L166) |
+| New Lean source | The real and imaginary parts of an exact spectral bracket profile satisfy two equations. A small integer example passes the cubic and Hessian kernel tests and fails the second equation for every candidate imaginary part. | [Lift equations](Lean/MOC/FourMatchingHessianKernel.lean#L125) · [Exact obstruction](Lean/MOC/FourMatchingHessianKernel.lean#L166) |
 | Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145) · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
 | Open | Prove the bound for every remaining real orthogonal case with at least seven contacts. An alternative is to show that a normal sum occurs at some maximum for every pair of lists and direction. | [Contact endpoint](Lean/MOC/ZhengContactReduction.lean#L14) · [Normal-maximizer equivalence](Lean/MOC/NormalSupportMaximum.lean#L303) |
 

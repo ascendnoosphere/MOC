@@ -112,6 +112,74 @@ theorem exists_nonzero_matching_iff_colorMultiplicity {I : Type*}
     exact ⟨e, fun i h => he i (eq_neg_iff_add_eq_zero.mpr h).symm⟩
 
 
+private theorem colorMultiplicity_subtype_le {I C : Type*}
+    [Fintype I] [DecidableEq C] (a : I → C) (p : I → Prop) [DecidablePred p] (c : C) :
+    colorMultiplicity (fun i : Subtype p => a i) c ≤ colorMultiplicity a c := by
+  unfold colorMultiplicity
+  rw [← Fintype.card_subtype (fun i : Subtype p => a i = c),
+    ← Fintype.card_subtype (fun i : I => a i = c)]
+  exact Fintype.card_le_of_injective
+    (fun x : {i : Subtype p // a i = c} => (⟨x.1.1, x.2⟩ : {i : I // a i = c}))
+    (fun _ _ h => Subtype.ext (Subtype.ext (congrArg Subtype.val h)))
+
+/-- Under one unit of slack in each Hall inequality, every allowed pair
+extends to a perfect unequal-color matching. -/
+theorem exists_unequal_color_perm_at_of_slack {I C : Type*}
+    [Fintype I] [DecidableEq I] [DecidableEq C] (a b : I → C) (j i : I)
+    (hij : a j ≠ b i)
+    (hslack : ∀ c, colorMultiplicity a c + colorMultiplicity b c < Fintype.card I) :
+    ∃ σ : Equiv.Perm I, σ j = i ∧ ∀ k, a k ≠ b (σ k) := by
+  classical
+  have hc (k : I) : Fintype.card {x : I // x ≠ k} = Fintype.card I - 1 := by
+    rw [Fintype.card_subtype_compl (fun x : I => x = k), Fintype.card_subtype_eq]
+  obtain ⟨e, he⟩ := (exists_unequal_color_equiv_iff
+    (fun x : {k : I // k ≠ j} => a x) (fun x : {k : I // k ≠ i} => b x)
+    ((hc j).trans (hc i).symm)).mpr (fun c => by
+      have ha := colorMultiplicity_subtype_le a (fun k => k ≠ j) c
+      have hb := colorMultiplicity_subtype_le b (fun k => k ≠ i) c
+      have hs := hslack c
+      rw [hc j]
+      omega)
+  let pivot : {k : I // k = j} ≃ {k : I // k = i} :=
+    { toFun := fun _ => ⟨i, rfl⟩
+      invFun := fun _ => ⟨j, rfl⟩
+      left_inv := fun k => Subtype.ext k.property.symm
+      right_inv := fun k => Subtype.ext k.property.symm }
+  let σ := (Equiv.sumCompl (fun k : I => k = j)).symm.trans
+    ((Equiv.sumCongr pivot e).trans (Equiv.sumCompl (fun k : I => k = i)))
+  have hj : σ j = i := by
+    simp only [σ, Equiv.trans_apply, Equiv.sumCompl_apply_symm_of_pos _ j rfl,
+      Equiv.sumCongr_apply, Sum.map_inl, Equiv.sumCompl_apply_inl] <;> rfl
+  refine ⟨σ, hj, fun k => ?_⟩
+  by_cases hk : k = j
+  · subst k
+    simpa only [hj] using hij
+  · simpa only [σ, Equiv.trans_apply, Equiv.sumCompl_apply_symm_of_neg _ k hk,
+      Equiv.sumCongr_apply, Sum.map_inr, Equiv.sumCompl_apply_inr] using he ⟨k, hk⟩
+
+/-- A column has at least as many nonzero matching products, counted
+with their permutations, as allowed rows when all Hall inequalities have slack. -/
+theorem nonzero_matching_count_ge_allowed_partners {I : Type*}
+    [Fintype I] [DecidableEq I] (a b : I → ℂ) (j : I)
+    (hslack : ∀ c, colorMultiplicity (fun k => -b k) c + colorMultiplicity a c < Fintype.card I) :
+    Fintype.card {i : I // a i + b j ≠ 0} ≤
+      Fintype.card {σ : Equiv.Perm I // matchingProduct a b σ ≠ 0} := by
+  classical
+  have hp {σ : Equiv.Perm I} (hσ : matchingProduct a b σ ≠ 0) (k : I) :
+      a (σ k) + b k ≠ 0 := fun hk =>
+    hσ (Finset.prod_eq_zero (Finset.mem_univ k) hk)
+  let partner (σ : {σ : Equiv.Perm I // matchingProduct a b σ ≠ 0}) :
+      {i : I // a i + b j ≠ 0} := ⟨σ.1 j, hp σ.2 j⟩
+  apply Fintype.card_le_of_surjective partner
+  intro i
+  have hij : -b j ≠ a i := fun h => i.2 (eq_neg_iff_add_eq_zero.mp h.symm)
+  obtain ⟨σ, hσ, hmatch⟩ := exists_unequal_color_perm_at_of_slack
+    (fun k => -b k) a j i hij hslack
+  have hn : matchingProduct a b σ ≠ 0 := by
+    unfold matchingProduct
+    exact Finset.prod_ne_zero_iff.mpr (fun k _ h => hmatch k (eq_neg_iff_add_eq_zero.mpr h).symm)
+  exact ⟨⟨σ, hn⟩, Subtype.ext hσ⟩
+
 /-- Every MOC counterexample has at least three units of Hall slack at
 every color, including colors which occur in just one spectrum. -/
 theorem not_holds_colorMultiplicity_le_card_sub_three {I : Type*}

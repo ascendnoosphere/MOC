@@ -14,14 +14,16 @@ private theorem evaluation_smul (a : ℝ) (v : Fin 14 → ℝ) (p : Fin 24) :
     fourMatchingEvaluation (a • v) p = a * fourMatchingEvaluation v p := by
   fin_cases p <;> simp [fourMatchingEvaluation, Pi.smul_apply, smul_eq_mul] <;> ring
 
-private theorem ordinary_mem (r : Fin 34) :
+/-- Each ordinary ray is a real matching function. -/
+theorem ordinaryCostRay_mem_realMatchingFunctionSpace (r : Fin 34) :
     ordinaryCostRay r ∈ realMatchingFunctionSpace := by
   change ordinaryCostRay r ∈ Set.range
     (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ))
   rw [four_matching_space_eq_ordinary_span]
   exact Submodule.subset_span ⟨r, rfl⟩
 
-private theorem ordinary_sq (r : Fin 34) (p : Fin 24) :
+/-- Ordinary rays are indicator functions. -/
+theorem ordinaryCostRay_sq (r : Fin 34) (p : Fin 24) :
     ordinaryCostRay r p ^ 2 = ordinaryCostRay r p := by
   unfold ordinaryCostRay
   rw [ordinaryCostRayInt_indicator]
@@ -33,12 +35,12 @@ theorem realMatchingSOS_add_ordinaryCostRay {g : Fin 24 → ℝ}
     IsRealMatchingSOS (fun p => g p + a * ordinaryCostRay r p) := by
   obtain ⟨n, v, hv⟩ := h
   have hmem : ∃ x : Fin 14 → ℝ, fourMatchingEvaluation x = ordinaryCostRay r :=
-    ordinary_mem r
+    ordinaryCostRay_mem_realMatchingFunctionSpace r
   obtain ⟨x, hx⟩ := hmem
   refine ⟨n + 1, Fin.cons (Real.sqrt a • x) v, fun p => ?_⟩
   rw [Fin.sum_univ_succ, hv p]
   simp only [Fin.cons_zero, Fin.cons_succ]
-  rw [evaluation_smul, hx, mul_pow, Real.sq_sqrt ha, ordinary_sq, add_comm]
+  rw [evaluation_smul, hx, mul_pow, Real.sq_sqrt ha, ordinaryCostRay_sq, add_comm]
 
 /-- If an added ray only increases a determinant factor, a nonpositive
 factor value implies the base factor is nonpositive. -/
@@ -116,9 +118,9 @@ theorem realMatchingSOS_of_pair_capacity {c d : ℝ}
   have hf (i : Fin 3) : f i ∈ realMatchingFunctionSpace := by
     fin_cases i
     · exact seed_mem
-    · exact realMatchingFunctionSpace.sub_mem (ordinary_mem 18)
-        (realMatchingFunctionSpace.smul_mem _ (ordinary_mem 23))
-    · exact ordinary_mem 23
+    · exact realMatchingFunctionSpace.sub_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 18)
+        (realMatchingFunctionSpace.smul_mem _ (ordinaryCostRay_mem_realMatchingFunctionSpace 23))
+    · exact ordinaryCostRay_mem_realMatchingFunctionSpace 23
   have hcoords (i : Fin 3) : ∃ x : Fin 14 → ℝ, fourMatchingEvaluation x = f i := hf i
   choose v hv using hcoords
   refine ⟨3, fun i => Real.sqrt (w i) • v i, fun p => ?_⟩
@@ -133,7 +135,7 @@ theorem realMatchingSOS_of_pair_capacity {c d : ℝ}
   calc
     _ = seed p ^ 2 + c * ordinaryCostRay 18 p ^ 2 +
         d * ordinaryCostRay 23 p ^ 2 - 2 * ordinaryCostRay 18 p * ordinaryCostRay 23 p := by
-      rw [ordinary_sq, ordinary_sq]
+      rw [ordinaryCostRay_sq, ordinaryCostRay_sq]
       linarith only [pair_correction p]
     _ = _ := by
       have hcancel :
