@@ -17,3 +17,27 @@ products for every complex list (b).
 The equivalent formulation with (b) fixed swaps the two lists and
 uses the adjoint of (U). The weights are indexed by inverse
 permutations after this swap.
+
+## Two free diagonal entries
+
+The fixed spectrum is ((1,-i,-2,-2i)). The diagonal partner is
+((x,y,0,1+i)), for complex (x,y). The mixer in the eigenbasis of the
+diagonal partner is (1/14) times the real matrix
+[
+egin{pmatrix}
+-5&-11&1&-7\
+-1&-5&-11&7\
+7&-7&7&7\
+-11&1&5&7
+end{pmatrix}.
+]
+Its rows have squared norm (196) and are orthogonal before division
+by (14). [Unitary proof](../../Lean/MOC/FourCircleLineCommonWeights.lean#L107)
+
+For each determinant or matching product, evaluate at
+((x,y)=(0,0),(1,0),(1,1)). Use the real part of the linear combination
+with coefficients (1+3i,2-i,-4+2i) on these three values. Every
+permutation gives a value at most (-4). The matrix gives
+(-769/196), which is strictly greater than (-4).
+Thus no probability law gives all three evaluations at once.
+[Obstruction](../../Lean/MOC/FourCircleLineCommonWeights.lean#L205)
