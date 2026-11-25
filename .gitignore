@@ -1,6 +1,8 @@
 /AGENTS.md
-/Code/
-/Docs/
-/data/
-/temp/
-/Lean/__pycache__/
+/Temp/
+
+/Docs/*
+!/Docs/Proofs/
+
+/Lean/.lake/
+__pycache__/

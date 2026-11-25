@@ -1,5 +1,0 @@
-generator counts {'square': 8401, 'phase': 32847, 'combined': 41056}
-square: 8401 exact columns, min 12, objective -13610681254740
-phase: 32847 exact columns, min 10, objective -11850472096560
-phase padded: 65536 masks, both orientations and all subset events; mass 157453007
-combined: 41056 exact columns, min 10, objective -10193549372564

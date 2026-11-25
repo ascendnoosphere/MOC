@@ -1,3 +1,0 @@
-4 {'solved': 24, 'outside_1e-8': 0} max normalized outward residual 7.28583859910259e-17
-5 {'solved': 24, 'outside_1e-8': 0} max normalized outward residual 0
-6 {'solved': 24, 'outside_1e-8': 0} max normalized outward residual 0
