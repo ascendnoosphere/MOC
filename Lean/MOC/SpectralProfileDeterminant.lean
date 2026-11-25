@@ -68,7 +68,7 @@ private theorem det_inverse_border
       add_zero, zero_add]
     congr 1
     rw [Matrix.mul_add, ← Matrix.mul_assoc K Hᵀ A, hKH, Matrix.one_mul,
-      Matrix.add_mul, Matrix.mul_assoc (K * B) Hᵀ K, hHK, Matrix.mul_one]
+      Matrix.add_mul, ← Matrix.mul_assoc K B Hᵀ, Matrix.mul_assoc (K * B) Hᵀ K, hHK, Matrix.mul_one]
   rw [← hM, Matrix.det_mul, Matrix.det_mul, hD]
   ring
 
