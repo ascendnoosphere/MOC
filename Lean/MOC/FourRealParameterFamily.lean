@@ -5,7 +5,7 @@ import Mathlib.Data.Fintype.Perm
 import Mathlib.Algebra.Polynomial.Eval.Defs
 
 /-! An order-four spectral family with a free real parameter.
-The nine-edge certificate is checked with integer polynomials. -/
+Integer-polynomial certificates cover a bounded interval and both tails. -/
 
 open BigOperators Matrix Polynomial
 open scoped Topology Polynomial
@@ -787,6 +787,80 @@ theorem holds_fourRealParameter_of_ninetyNine_le_abs (t : ℝ) (ht : 99 ≤ |t|)
       (fun V hV => holds_fourRealParameter_positive_tail (-t) htail V hV)
   · have htail : 99 ≤ t := by simpa only [abs_of_nonneg (le_of_not_gt hn)] using ht
     exact holds_fourRealParameter_positive_tail t htail U hU
+
+/-- A polynomial written in the unnormalized Bernstein basis is strictly
+positive inside the interval if its coefficients are nonnegative and at
+least one is positive. A rational coefficient identity can be cast to this
+statement. -/
+theorem polynomial_eval_pos_of_open_bernstein {d : ℕ} (p : ℝ[X]) (b : Fin (d + 1) → ℝ)
+    (l r x : ℝ) (hl : l < x) (hr : x < r)
+    (hb : ∀ j, 0 ≤ b j) (hpos : ∃ j, 0 < b j)
+    (hp : p = ∑ j : Fin (d + 1), C (b j) * (X - C l) ^ j.val * (C r - X) ^ (d - j.val)) :
+    0 < p.eval x := by
+  rw [hp]
+  simp only [eval_finset_sum, eval_mul, eval_C, eval_pow, eval_sub, eval_X]
+  have hleft := sub_pos.mpr hl
+  have hright := sub_pos.mpr hr
+  apply Finset.sum_pos' (fun j _ => mul_nonneg
+    (mul_nonneg (hb j) (pow_nonneg hleft.le _)) (pow_nonneg hright.le _))
+  obtain ⟨j, hj⟩ := hpos
+  exact ⟨j, Finset.mem_univ j, mul_pos (mul_pos hj (pow_pos hleft _)) (pow_pos hright _)⟩
+
+/-- Matching vertices after the compact substitution, scaled by
+the two varying row factors. -/
+def fourRealParameterCompactVertex (x : ℝ) (σ : Equiv.Perm (Fin 4)) : ℂ :=
+  ((1 - x : ℝ) : ℂ) ^ 2 *
+    matchingProduct (fourRealParameterLeft (x / (1 - x))) fourRealParameterRight σ
+
+/-- Data and sign conditions for one finite polygon in the compact
+parameter. The identities are on permutations and the coefficients
+need only be nonnegative at the parameter of the chart. -/
+structure FourRealParameterMinorChart (x : ℝ) where
+  vertices : ℕ
+  vertices_pos : 0 < vertices
+  label : Fin vertices → Equiv.Perm (Fin 4)
+  prev : Fin vertices → Fin vertices
+  next : Fin vertices → Fin vertices
+  incident : ∀ i, next (prev i) = i
+  terms : ℕ
+  rows : Fin vertices → Fin terms → Finset (Fin 4)
+  columns : Fin vertices → Fin terms → Finset (Fin 4)
+  weights : Fin vertices → Fin terms → ℝ
+  weights_nonneg : ∀ i j, 0 ≤ weights i j
+  turn_pos : ∀ i, 0 < planeCross
+    (fourRealParameterCompactVertex x (label i) - fourRealParameterCompactVertex x (label (prev i)))
+    (fourRealParameterCompactVertex x (label (next i)) - fourRealParameterCompactVertex x (label i))
+  edge_identity : ∀ i σ, planeCross
+    (fourRealParameterCompactVertex x (label (next i)) - fourRealParameterCompactVertex x (label i))
+    (fourRealParameterCompactVertex x σ - fourRealParameterCompactVertex x (label i)) =
+      ∑ j, if (columns i j).map σ.toEmbedding = rows i j then weights i j else 0
+
+/-- Compact charts away from finitely many cut points imply the whole
+real-line theorem. No unitary-dependent test is required in each chart. -/
+theorem holds_fourRealParameter_of_compact_minor_cells
+    (cuts : Set ℝ) (hfin : cuts.Finite)
+    (charts : ∀ x : ℝ, 0 < x → x < 1 → x ∉ cuts → Nonempty (FourRealParameterMinorChart x))
+    (t : ℝ) (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    Holds (fourRealParameterLeft t) fourRealParameterRight U := by
+  let exceptional := (fun x : ℝ => x / (1 - x)) '' cuts
+  have hf : exceptional.Finite := hfin.image _
+  apply holds_fourRealParameter_of_positive_cells exceptional hf ?_ t U hU
+  intro r hr hcut V hV
+  let x := r / (1 + r)
+  have hden : 0 < 1 + r := by linarith only [hr]
+  have hx0 : 0 < x := div_pos hr hden
+  have hx1 : x < 1 := (div_lt_one hden).mpr (by linarith)
+  have hquotient : x / (1 - x) = r := by
+    have he : x * (1 + r) = r := div_mul_cancel₀ r hden.ne'
+    exact (div_eq_iff (sub_ne_zero.mpr (ne_of_gt hx1))).mpr (by nlinarith only [he])
+  obtain ⟨chart⟩ := charts x hx0 hx1 (fun hx => hcut ⟨x, hx, hquotient⟩)
+  letI : Nonempty (Fin chart.vertices) := ⟨⟨0, chart.vertices_pos⟩⟩
+  have hc : ((1 - x : ℝ) : ℂ) ^ 2 ≠ 0 :=
+    pow_ne_zero 2 (Complex.ofReal_ne_zero.mpr (sub_ne_zero.mpr (ne_of_gt hx1)))
+  have h := holds_of_scaled_minor_polygon (fourRealParameterLeft (x / (1 - x)))
+    fourRealParameterRight V hV _ hc chart.label chart.prev chart.next chart.incident
+    chart.rows chart.columns chart.weights chart.weights_nonneg chart.turn_pos chart.edge_identity
+  simpa only [hquotient] using h
 
 end
 
