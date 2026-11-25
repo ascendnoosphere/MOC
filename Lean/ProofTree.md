@@ -88,7 +88,8 @@ flowchart BT
     SECB["Secant sign and weighted rotation<br/>comparisons · Lean checked"]:::checked
     T40OVER["Both T40 center-and-split overlaps<br/>closed on paper; weighted comparison checked"]
     BYPASS["T81 not needed for T85<br/>eight contacts force an arm contact · checked"]:::checked
-    OTHERS["Other terminal contact patterns · open"]:::open
+    EARLY["Groups I, II and IV, plus T3 and T15: eleven support cases closed<br/>T1 end-to-end Lean; others paper plus Lean algebra"]
+    OTHERS["Other terminal contact patterns in Groups III, V, VI · open"]:::open
     COVER{{"AND: cover every terminal pattern"}}
     STAR["T85: one exact signed residual objective<br/>plus nonnegative minor terms · checked"]:::checked
     NOGO["Linear marked-star comparison is false · checked"]:::blocked
@@ -112,7 +113,8 @@ flowchart BT
     BYPASS -. removes the central-only dependency .-> T85
     NOGO -. exact spectral equations are needed .-> T85
     SEC -. excludes a neighborhood of the bad ray .-> T85
-    T85 -. candidate case split .-> COVER
+    T85 -. established case .-> COVER
+    EARLY -. establishes eleven cases .-> COVER
     OTHERS -. includes coverage of the split .-> COVER
     COVER -. terminal classification and bounds .-> SEVEN
     OR4 <-->|iff| FOUR
@@ -120,6 +122,29 @@ flowchart BT
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
     classDef blocked fill:#fae5e5,stroke:#a33434,color:#361010
 ```
+
+### Named coverage in Zheng's order-four argument
+
+The [order-four audit](ZhengOrderFourReview.md) distinguishes a complete
+support bound for a named pattern from an implication that only adds
+contacts. Lean's [T1 support theorem](MOC/ZhengT1Circle.lean) proves all of
+Group I. [T2](ZhengT2MinorCone.md), [T7](ZhengT7Direct.md), and
+[T18–T20](ZhengEarlyRectangles.md) prove all of Group II on paper with
+checked algebraic certificates. The direct [Group IV proof](ZhengGroupIV.md)
+covers T21–T23 via zero-height cubic signs and explicit minor
+coefficients. These arguments do not assume the missing supplement or
+the full facet table of [Zheng, DOI 10.13140/RG.2.2.36790.25923](https://doi.org/10.13140/RG.2.2.36790.25923).
+
+[T3](ZhengT3Support.md) and [T15](ZhengT15Support.md) close two
+Group III cases using the Lean-checked paired-cofactor bound; T3
+uses a cleared residue identity, and T15 uses a chart strip.
+For the later groups, the separate progress is [T34 at zero height
+or with contact 13](ZhengT34Partial.md), [two standalone T40 boundaries](ZhengT40Standalone.md),
+and [three standalone T55 boundaries](StandaloneT55.md), including
+the earlier T55+20 overlap. The full [T85 comparison](ZhengT85Independent.md)
+remains independent of these standalone cases. The exact seven-contact
+reduction still does not imply that the 27 auxiliary propositions listed
+in Appendix G exhaust every remaining terminal contact set.
 
 ## Order five: the main proof routes
 

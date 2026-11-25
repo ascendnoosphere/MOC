@@ -34,3 +34,25 @@ completes the support comparison for T85 using the five boundary
 bounds in [ZhengT85ArmBounds.md](ZhengT85ArmBounds.md). This is a
 repair of Section 5, not a verification of Proposition 4.4 or a proof of
 the full order-four conjecture.
+
+## Independent coverage of the missing cases
+
+The following is coverage of named contact sets, not an exhaustive
+classification of all possible seven-contact supports. The auxiliary
+seven-label propositions in Appendix G are dependencies of the original
+six-label strategy; they are not stated as a complete seven-contact
+catalogue.
+
+| Group in [Appendix G](https://doi.org/10.13140/RG.2.2.36790.25923) | Independently covered | Verification scope |
+| --- | --- | --- |
+| I | [T1](ZhengT1Stabilizer.md) | Entire support theorem checked in [MOC.ZhengT1.support](MOC/ZhengT1Circle.lean), through an exact pole-free real-spectator chart and a common anchored law. |
+| II | [T2](ZhengT2MinorCone.md), [T7](ZhengT7Direct.md), [T18–T20](ZhengEarlyRectangles.md) | All five support inequalities on paper. Lean checks chart identities or cubic signs and the nonnegative coefficients. |
+| IV | [T21–T23](ZhengGroupIV.md) | All three support inequalities on paper, with checked cubic signs and constructive minor coefficients. |
+| III | [T3](ZhengT3Support.md) and [T15](ZhengT15Support.md) | Both comparisons are proved on paper. Lean checks the paired-cofactor bound, the T3 cleared residue identity, and its scalar compensation. |
+| V, VI | [T34 at zero height and label 13](ZhengT34Partial.md), [two standalone T40 boundaries](ZhengT40Standalone.md), [T55 with extra contact 0, 4, or 20](StandaloneT55.md), and [full T85](ZhengT85Independent.md) | Symbolic case arguments. The listed T34, T40 and T55 results do not close their entire cases. |
+
+The [matching Hessian kernel](MOC/FourMatchingHessianKernel.lean) is now checked directly on real projections of exact bracket profiles; the individual symbolic factorizations used in the case proofs are separate.
+
+The full order-four conjecture still needs the uncovered terminal bounds
+in Groups III, V and VI, or a proof that bypasses them. Nothing in this
+table settles unrestricted order.

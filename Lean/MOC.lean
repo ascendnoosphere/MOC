@@ -5,6 +5,18 @@ import MOC.TransportGapCertificate
 import MOC.OrbitTargets
 import MOC.FiniteFrameLabels
 import MOC.ZhengContactReduction
+import MOC.ZhengT1Circle
+import MOC.ZhengT15Gram
+import MOC.ZhengT3Compensation
+import MOC.ZhengT1ProjectiveSupport
+import MOC.ZhengEarlyRectangles
+import MOC.ZhengGroupIV
+import MOC.ZhengStageOneCharts
+import MOC.ZhengT2MinorCone
+import MOC.ZhengT7Comparison
+import MOC.ZhengT34Contact
+import MOC.ZhengT40Standalone
+import MOC.ZhengT55SignedStar
 import MOC.ZhengRectangleContact
 import MOC.ZhengPairedContacts
 import MOC.ZhengT40Support
@@ -16,6 +28,7 @@ import MOC.ZhengT55Chart
 import MOC.ZhengT81Bypass
 import MOC.ZhengStarObstruction
 import MOC.FourMatchingPolarization
+import MOC.FourMatchingHessianKernel
 import MOC.AlternatingMinorLaw
 import MOC.OneBridge
 import MOC.ZhengT85Lift

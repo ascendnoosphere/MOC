@@ -73,7 +73,7 @@ A rotated bracket lift $x=u+iv$ has zero cubic gradient. The
 gradient is quadratic with real coefficients, so taking its imaginary
 part gives $J(u)v=0$. If $v=0$ and $u\ne0$, homogeneity instead gives
 $J(u)u=2\nabla C(u)=0$; if $u=0$, $J(u)$ itself is zero.
-Thus $\det J=0$ by elementary polarization. The same source checks
+Thus $\det J=0$ by elementary polarization. The nonzero kernel\nvector is checked in [FourMatchingHessianKernel.lean](MOC/FourMatchingHessianKernel.lean).\nThe polarization source also checks
 $C(u)=0$. This uses only the determinant-zero consequence of the
 stronger secant rank theorem in
 [Zheng, Corollary C.5](https://doi.org/10.13140/RG.2.2.36790.25923)
@@ -200,7 +200,7 @@ for every real orthogonal mixer (row signs do not change squared
 minors). The [order-four minor transport theorem](MOC/FourMinorTransport.lean)
 expresses the whole squared-minor table of each complex unitary as a
 convex mixture of two real orthogonal tables. It extends this
-inequality to all complex unitary mixers. The Hessian kernel argument and symbolic determinant identity above
-remain paper arguments, not kernel-checked. No numerical positivity test or finite mixer search
+inequality to all complex unitary mixers. The symbolic Hessian determinant factorization above remains a paper
+argument; Lean checks the nontrivial kernel of the polarized action. No numerical positivity test or finite mixer search
 is used.
 

@@ -87,8 +87,8 @@ set_option maxHeartbeats 1600000 in
 /-- The difference of the (2,1) entries is controlled by the available
 positive two-minor terms. The constant `T` includes the unit contribution
 already present in the mixed ray. -/
-theorem rotation_bound (L R : Entries) {T m : ℝ}
-    (hm : 0 < m) (hT : 2 + 1/m ≤ T) :
+theorem rotation_bound_sharp (L R : Entries) {T m : ℝ}
+    (hm : 0 < m) (hT : (5 + 1/m)/4 ≤ T) :
     (L.b-R.b)^2 ≤ (L.l-R.l)^2 + 2*(L.p^2+R.p^2) +
       T*(L.w-R.w)^2 + 2*m*(L.u^2+R.u^2) := by
   let l := (L.l+R.l)/2
@@ -99,22 +99,26 @@ theorem rotation_bound (L R : Entries) {T m : ℝ}
   let b := L.b-R.b
   let B₀ := (L.v^2+R.v^2)/2+a^2/4
   let e := (L.j*L.v+R.j*R.v)/2-a*b/4
-  let θ := -l/T
+  let K := 1+1/T+1/m
+  let θ := -l*(2-1/T)/K
   have hT₀ : 0 < T := by linarith [one_div_pos.mpr hm]
   have hT₁ : 1 ≤ T := by linarith [one_div_pos.mpr hm]
+  have hK : 0 < K := by
+    dsimp [K]
+    positivity
   have hB₀ : 0 ≤ B₀ := by dsimp [B₀]; positivity
   have heq₀ : B₀ = 1-w^2-(L.z^2+R.z^2)/2 := by
     dsimp [B₀,w,a]; nlinarith only [L.column2,R.column2]
   have heq₁ : w*B = -l+e := by
     dsimp [w,B,e,l,a,b]; nlinarith only [L.cofactor00,R.cofactor00]
-  have hJ : (L.j^2+R.j^2)/2+b^2/4 ≤ 1 := by
-    dsimp [b]
-    nlinarith only [L.column1,R.column1,sq_nonneg (L.b+R.b)]
+  have hJ : (L.j^2+R.j^2)/2+b^2/4 ≤ 1-B^2 := by
+    dsimp [b,B]
+    nlinarith only [L.column1,R.column1]
   have hB₂ : B^2 ≤ 1 := by
     dsimp [B]
     nlinarith only [L.column1,R.column1,sq_nonneg L.j,sq_nonneg R.j,
       sq_nonneg (L.b-R.b)]
-  have he : e^2 ≤ B₀ := by
+  have he : e^2 ≤ (1-B^2)*B₀ := by
     have hCS : e^2 ≤ ((L.j^2+R.j^2)/2+b^2/4)*B₀ := by
       dsimp [e,B₀]
       have hs : 0 ≤ (L.j*R.v-R.j*L.v)^2/4 +
@@ -124,7 +128,7 @@ theorem rotation_bound (L R : Entries) {T m : ℝ}
           (L.j*R.v-R.j*L.v)^2/4 + (L.j*a+b*L.v)^2/8 + (R.j*a+b*R.v)^2/8 := by
         ring
       linarith only [hs,heq]
-    exact hCS.trans (by simpa using mul_le_mul_of_nonneg_right hJ hB₀)
+    exact hCS.trans (mul_le_mul_of_nonneg_right hJ hB₀)
   have hb₁ : b = L.z*L.p-R.z*R.p-w*d-l*a := by
     dsimp [b,w,d,l,a]
     nlinarith only [L.cofactor21,R.cofactor21]
@@ -148,26 +152,36 @@ theorem rotation_bound (L R : Entries) {T m : ℝ}
     have hm' : m ≠ 0 := ne_of_gt hm
     field_simp [hm']
     nlinarith only [L.row2,R.row2]
-  have hcross : -B₀-θ^2 ≤ 2*θ*e := by nlinarith only [he,sq_nonneg (θ+e)]
-  have hcoeff : 0 ≤ 3*T-4-1/T-1/m := by
-    have ht : 1/T ≤ 1 := (div_le_iff₀ hT₀).2 (by simpa using hT₁)
-    linarith [one_div_pos.mpr hm]
+  have hcross : -B₀-θ^2*(1-B^2) ≤ 2*θ*e := by
+    have hnn : 0 ≤ B₀+θ^2*(1-B^2) :=
+      add_nonneg hB₀ (mul_nonneg (sq_nonneg θ) (sub_nonneg.mpr hB₂))
+    have hsq : (-2*θ*e)^2 ≤ (B₀+θ^2*(1-B^2))^2 := by
+      have hf := mul_nonneg (sq_nonneg θ) (sub_nonneg.mpr he)
+      nlinarith only [hf, sq_nonneg (B₀-θ^2*(1-B^2))]
+    linarith only [le_of_sq_le_sq hsq hnn]
+  have hcoeff : 0 ≤ (2-1/T)^2/K-1/T := by
+    have heq : (2-1/T)^2/K-1/T = (4*T-5-1/m)/(K*T) := by
+      dsimp [K]
+      have hk : 1+1/T+1/m ≠ 0 := ne_of_gt hK
+      field_simp [hk,ne_of_gt hT₀,ne_of_gt hm]
+      ring
+    rw [heq]
+    exact div_nonneg (by linarith only [hT]) (mul_nonneg hK.le hT₀.le)
   have hN : N ≤ (1-θ*l)^2 := by
-    have hq : -(1+1/T+1/m) ≤ l^2-B^2-1/T-(L.c^2+R.c^2)/(2*m) := by
-      linarith [sq_nonneg l]
+    have hq : -(B^2+1/T+1/m) ≤ l^2-B^2-1/T-(L.c^2+R.c^2)/(2*m) := by
+      linarith only [hrow,sq_nonneg l]
     have hqb := mul_le_mul_of_nonneg_left hq (sq_nonneg θ)
-    have hlow : (l/T)^2*(3*T-4-1/T-1/m) ≤ (1-θ*l)^2-N := by
-      have heq : -l^2/T + 2*θ*(-(2-1/T)*l) -
-          θ^2*(2+1/T+1/m) = (l/T)^2*(3*T-4-1/T-1/m) := by
+    have hlow : l^2*((2-1/T)^2/K-1/T) ≤ (1-θ*l)^2-N := by
+      have heq : -l^2/T+2*θ*(-(2-1/T)*l)-θ^2*K = l^2*((2-1/T)^2/K-1/T) := by
         dsimp [θ]
-        have hne : T ≠ 0 := ne_of_gt hT₀
-        field_simp [hne]
+        field_simp [ne_of_gt hK, ne_of_gt hT₀]
         ring
       rw [← heq, hnorm]
       have hs := add_le_add hcross hqb
       have hshift := add_le_add_left hs (B₀-l^2/T+2*θ*(-(2-1/T)*l))
+      dsimp only [K]
       convert hshift using 1 <;> ring
-    exact sub_nonneg.mp ((mul_nonneg (sq_nonneg (l/T)) hcoeff).trans hlow)
+    exact sub_nonneg.mp ((mul_nonneg (sq_nonneg l) hcoeff).trans hlow)
   let s₂ := Real.sqrt 2
   let sT := Real.sqrt T
   let sm := Real.sqrt (2*m)
@@ -195,12 +209,23 @@ theorem rotation_bound (L R : Entries) {T m : ℝ}
     ring
   rw [hx,hy,hz,mul_pow] at hcs
   have hp : 0 < (1-θ*l)^2 := by
-    have hp' : 0 ≤ l^2/T := div_nonneg (sq_nonneg _) hT₀.le
-    have heq : 1-θ*l = 1+l^2/T := by dsimp [θ]; ring
-    rw [heq]; positivity
+    have hsign : 0 ≤ 2-1/T := by
+      have ht : 1/T ≤ 1 := (div_le_iff₀ hT₀).2 (by simpa using hT₁)
+      linarith only [ht]
+    have heq : 1-θ*l = 1+l^2*(2-1/T)/K := by dsimp [θ]; ring
+    rw [heq]
+    positivity
   have h := hcs.trans (mul_le_mul_of_nonneg_right hN (by positivity :
     0 ≤ d^2 + 2*(L.p^2+R.p^2)+T*a^2+2*m*(L.u^2+R.u^2)))
   exact (mul_le_mul_left hp).1 h
+
+/-- The original, stronger hypothesis follows from the
+optimized weighted coefficient bound. -/
+theorem rotation_bound (L R : Entries) {T m : ℝ}
+    (hm : 0 < m) (hT : 2 + 1/m ≤ T) :
+    (L.b-R.b)^2 ≤ (L.l-R.l)^2 + 2*(L.p^2+R.p^2) +
+      T*(L.w-R.w)^2 + 2*m*(L.u^2+R.u^2) :=
+  rotation_bound_sharp L R hm (by linarith [one_div_pos.mpr hm])
 
 /-- The signed two-minor expression after the self-dual and anti-self-dual
 decomposition, multiplied by four. Its nonnegativity retains all five
