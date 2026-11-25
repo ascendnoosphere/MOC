@@ -153,6 +153,9 @@ of the corresponding real orthogonal tables.
 | Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if $U$ is real orthogonal with zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/FourZeroDiagonal.lean#L342) |
 | Proved | The directional bound holds for specific sets of tied permutations. The pattern labels identify those sets in the linked statements. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) |
 | Partial | It suffices to exclude strict violations at real orthogonal maximizers with at least seven contacts. For each nonzero entry $U_{ij}$, some permutation with $\sigma(j)=i$ does not attain the maximum. Lean proves these restrictions on the same witness. | [Seven-contact reduction](Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary reduction](Lean/MOC/StationaryPivot.lean#L221) |
+| New Lean source | Subtract the smallest directional matching value from each projected product. In the 14-dimensional matching-function space, the cone of nonnegative costs has 34 ordinary and 48 mixed extreme rays. An ordinary ray is a subset assignment indicator. Up to relabeling, a cost outside the ordinary cone uses one mixed ray and at most 13 ordinary rays. | [Cone and cancellation](Docs/Proofs/spectral-support-proof-map.md#order-four-support-costs) |
+| New Lean source | A determinant of size $n-2$ represents the transformed spectral polynomial for $n\ge2$. In order four its quadratic form has complex rank at most four. Its real form has positive and negative indices at most four. | [Spectral determinant and rank](Docs/Proofs/spectral-profile-determinant-map.md) |
+| New Lean source | The four contacts given by the identity and the three products of two disjoint transpositions force an actual spectral cost to be a sum of real matching squares. | [Klein-four contacts](Docs/Proofs/order-four-klein-squares-map.md) |
 | New Lean source | The real and imaginary parts of an exact spectral bracket profile satisfy two equations. A small integer example passes the cubic and Hessian kernel tests and fails the second equation for every candidate imaginary part. | [Lift equations](Lean/MOC/FourMatchingHessianKernel.lean#L124) · [Exact obstruction](Lean/MOC/FourMatchingHessianKernel.lean#L166) |
 | Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145) · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
 | Open | Prove the bound for every remaining real orthogonal case with at least seven contacts. An alternative is to show that a normal sum occurs at some maximum for every pair of lists and direction. | [Contact endpoint](Lean/MOC/ZhengContactReduction.lean#L14) · [Normal-maximizer equivalence](Lean/MOC/NormalSupportMaximum.lean#L303) |
@@ -257,6 +260,14 @@ diagonal permutation of the spectrum.
   list leaves at most two distinct values, or if the first list is
   constant except at up to two positions.
   [Two distinct values in the second list](Lean/MOC/TwoValues.lean#L317) · [Two distinct values in the first list](Lean/MOC/TwoValues.lean#L331) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247)
+- Partition one spectrum into three fixed groups with the last group
+  of size one. For a fixed mixer, one law works for all three group
+  values and every opposing spectrum.
+  [Common law for three values](Docs/Proofs/three-value-singleton-map.md)
+- Under the stated assignment-sum genericity condition, a sufficiently
+  small complex spectral parameter gives inclusion uniformly over
+  all mixers in the fixed order.
+  [Small-spectrum theorem](Docs/Proofs/small-spectrum-perturbation-map.md)
 - In order four, the inclusion holds if either list lies on a circle or
   a line. This includes a Hermitian matrix with an arbitrary normal
   partner and the case where either list has a repeated value.
@@ -314,6 +325,14 @@ diagonal permutation of the spectrum.
   It also holds for each unitary with zero diagonal and off-diagonal
   entries of absolute value $1/2$.
   [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal and equal magnitudes](Lean/MOC/ConferenceFive.lean#L260)
+- If $U$ is the tensor product of two order-two unitaries, one
+  permutation law works for all pairs of spectra.
+  [Tensor-product law](Docs/Proofs/two-by-two-tensor-permutation-map.md)
+- A specified rational orthogonal matrix of order six has a closed
+  operator-norm ball of radius $1/23083105288$. Every unitary in this
+  ball satisfies the inclusion when the second spectrum is constant
+  on each of three specified pairs. The first spectrum is arbitrary.
+  [Mixer ball](Docs/Proofs/six-dimensional-mixer-ball-map.md)
 
 ### Determinant and matching products
 
@@ -325,6 +344,11 @@ diagonal permutation of the spectrum.
   holds for the lists $(a_i-z)$ and $(b_j)$ for every complex $z$ of
   sufficiently large modulus. The lower bound can depend on $a$, $b$, and $U$.
   [Proof](Lean/MOC/ExtendedCases.lean#L428)
+- Fix a real spectrum and a complex partner spectrum. The exterior
+  shift bound gives inclusion for every mixer outside an explicit
+  radius computed from the two lists and a triangle gap of the
+  partner spectrum.
+  [Exterior shifts](Docs/Proofs/free-eigenvalue-exterior-map.md#exterior-shifts)
 - Fix a complex direction $\eta$. The inclusion holds at a maximum of
   $\mathrm{Re}(\eta\det(A+B))$ over relative unitaries if the sum
   at that maximum is normal and has the largest Frobenius norm among
@@ -350,6 +374,11 @@ diagonal permutation of the spectrum.
   only if the convex hulls of the lists $(a_i,|a_i|^2)$ and
   $(-b_j,|b_j|^2)$ intersect.
   [Proof](Lean/MOC/Singular.lean#L496)
+- Join matching products when their permutations differ by a
+  transposition. If a closed walk avoids a point and has nonzero
+  winding about it, some unitary gives that point as its determinant
+  value. This result includes repeated eigenvalues.
+  [Transposition winding](Docs/Proofs/transposition-winding-map.md)
 
 ## Counterexamples to stronger statements
 
