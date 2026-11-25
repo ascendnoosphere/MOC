@@ -47,7 +47,7 @@ private theorem commonWeights_of_swapped_right {a : Fin 4 → ℂ}
   refine ⟨fun σ => w σ.symm, fun σ => hw σ.symm, (Equiv.sum_comp rev w).trans hs, ?_⟩
   intro b
   rw [weightedMatchingValue_swap, he]
-  rw [← determinantValue_left_conjugation a b U hU, determinantValue, add_comm]
+  rw [← determinantValue_left_conjugation b a U hU, determinantValue, add_comm]
 
 /-- Four real eigenvalues admit one law for every complex diagonal partner.
 For repeated eigenvalues an adjacent two-minor coupling gives the law directly. -/
@@ -603,7 +603,7 @@ private theorem injective_of_no_generalized_circle_four {a : Fin 4 → ℂ}
     · exact ⟨⟨k, Finset.mem_erase.mpr ⟨hk, Finset.mem_univ _⟩⟩, rfl⟩
   rw [Nat.card_eq_fintype_card]
   apply (Fintype.card_le_of_surjective f hf).trans
-  simp [S]
+  simp [S, Fintype.card_coe]
 
 /-- For a fixed spectrum off every circle and line, agreement for all
 diagonal partners forces agreement on every squared minor of the mixer. -/
