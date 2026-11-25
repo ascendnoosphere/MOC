@@ -62,6 +62,14 @@ private theorem exteriorHermitianPart_diagonal (c : ℂ) (b : ι → ℂ) :
   rw [Complex.star_def, Complex.add_conj, Complex.ofReal_mul, Complex.ofReal_ofNat]
   ring
 
+private theorem exteriorHermitianPart_opNorm (X : Matrix ι ι ℂ) :
+    ‖exteriorHermitianPart X‖ ≤ ‖X‖ := by
+  have hhalf : ‖(1 / 2 : ℂ)‖ = 1 / 2 := by norm_num [norm_div]
+  rw [exteriorHermitianPart, norm_smul, hhalf]
+  calc
+    _ ≤ (1 / 2) * (‖X‖ + ‖Xᴴ‖) := mul_le_mul_of_nonneg_left (norm_add_le _ _) (by norm_num)
+    _ = ‖X‖ := by rw [Matrix.l2_opNorm_conjTranspose]; ring
+
 /-- A scalar translate is nonsingular if the modulus of the translate
 is larger than the operator norm of the summand. The inverse bound
 uses the gap to that norm. -/
@@ -235,6 +243,21 @@ private theorem exteriorFrobenius_conjTranspose (A : Matrix ι ι ℂ) :
   letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
   exact Matrix.frobenius_norm_conjTranspose A
 
+private theorem exteriorFrobenius_smul (c : ℂ) (X : Matrix ι ι ℂ) :
+    exteriorFrobenius (c • X) = ‖c‖ * exteriorFrobenius X := by
+  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
+  letI : NormedSpace ℂ (Matrix ι ι ℂ) := Matrix.frobeniusNormedSpace
+  exact norm_smul c X
+
+private theorem exteriorHermitianPart_frobenius (X : Matrix ι ι ℂ) :
+    exteriorFrobenius (exteriorHermitianPart X) ≤ exteriorFrobenius X := by
+  have hhalf : ‖(1 / 2 : ℂ)‖ = 1 / 2 := by norm_num [norm_div]
+  rw [exteriorHermitianPart, exteriorFrobenius_smul, hhalf]
+  calc
+    _ ≤ (1 / 2) * (exteriorFrobenius X + exteriorFrobenius Xᴴ) :=
+      mul_le_mul_of_nonneg_left (exteriorFrobenius_add _ _) (by norm_num)
+    _ = _ := by rw [exteriorFrobenius_conjTranspose]; ring
+
 private theorem exteriorFrobenius_mul_left (A B : Matrix ι ι ℂ) :
     exteriorFrobenius (A * B) ≤ ‖A‖ * exteriorFrobenius B := by
   let column (X : Matrix ι ι ℂ) (j : ι) : EuclideanSpace ℂ ι :=
@@ -367,6 +390,68 @@ private theorem exteriorOffBlock_frobenius (f : ι → κ) (A : Matrix ι ι ℂ
       sq_nonneg ‖A i j‖
   · simp only [exteriorOffBlock, h, if_false, le_refl]
 
+/-- Keeping only the diagonal blocks is a contraction in Euclidean operator norm. -/
+theorem exterior_block_compression_opNorm (f : ι → κ) (A : Matrix ι ι ℂ) :
+    ‖A - exteriorOffBlock f A‖ ≤ ‖A‖ := by
+  let A₀ := A - exteriorOffBlock f A
+  let s := Finset.univ.image f
+  have hgroup (w : ι → ℝ) :
+      (∑ k ∈ s, ∑ i, if f i = k then w i else 0) = ∑ i, w i := by
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro i _
+    have hi : f i ∈ s := Finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩
+    rw [Finset.sum_eq_single_of_mem (f i) hi (fun k _ hk => if_neg (Ne.symm hk)), if_pos rfl]
+  rw [Matrix.cstar_norm_def (A - exteriorOffBlock f A)]
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg A)
+  intro x
+  let xk (k : κ) : EuclideanSpace ℂ ι :=
+    (EuclideanSpace.equiv ι ℂ).symm (fun i => if f i = k then x i else 0)
+  let y (B : Matrix ι ι ℂ) (v : EuclideanSpace ℂ ι) : EuclideanSpace ℂ ι :=
+    (EuclideanSpace.equiv ι ℂ).symm (B *ᵥ v)
+  have hy (i : ι) : y A₀ x i = y A (xk (f i)) i := by
+    change (A₀ *ᵥ x) i = (A *ᵥ xk (f i)) i
+    simp only [Matrix.mulVec, dotProduct]
+    apply Finset.sum_congr rfl
+    intro j _
+    change (A i j - (if f i = f j then 0 else A i j)) * x j =
+      A i j * (if f j = f i then x j else 0)
+    by_cases hij : f i = f j
+    · rw [if_pos hij, if_pos hij.symm, sub_zero]
+    · rw [if_neg hij, if_neg (Ne.symm hij), sub_self, zero_mul, mul_zero]
+  have hinput (k : κ) : ‖xk k‖ ^ 2 = ∑ i, if f i = k then ‖x i‖ ^ 2 else 0 := by
+    rw [PiLp.norm_sq_eq_of_L2]
+    apply Finset.sum_congr rfl
+    intro i _
+    change ‖(if f i = k then x i else 0 : ℂ)‖ ^ 2 = _
+    by_cases hi : f i = k
+    · rw [if_pos hi, if_pos hi]
+    · rw [if_neg hi, if_neg hi, norm_zero, zero_pow two_ne_zero]
+  have houtput (k : κ) :
+      (∑ i, if f i = k then ‖y A₀ x i‖ ^ 2 else 0) ≤ ‖y A (xk k)‖ ^ 2 := by
+    rw [PiLp.norm_sq_eq_of_L2]
+    apply Finset.sum_le_sum
+    intro i _
+    by_cases hi : f i = k
+    · rw [if_pos hi, hy i, hi]
+    · rw [if_neg hi]
+      exact sq_nonneg _
+  change ‖y A₀ x‖ ≤ ‖A‖ * ‖x‖
+  apply (sq_le_sq₀ (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))).mp
+  calc
+    ‖y A₀ x‖ ^ 2 = ∑ k ∈ s, ∑ i, if f i = k then ‖y A₀ x i‖ ^ 2 else 0 := by
+      rw [PiLp.norm_sq_eq_of_L2]
+      exact (hgroup _).symm
+    _ ≤ ∑ k ∈ s, (‖A‖ * ‖xk k‖) ^ 2 := by
+      apply Finset.sum_le_sum
+      intro k _
+      apply (houtput k).trans
+      exact (sq_le_sq₀ (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))).mpr
+        (A.l2_opNorm_mulVec (xk k))
+    _ = (‖A‖ * ‖x‖) ^ 2 := by
+      simp only [mul_pow, ← Finset.mul_sum, hinput, hgroup]
+      rw [PiLp.norm_sq_eq_of_L2]
+
 private theorem exteriorComm_frobenius_le (A B : Matrix ι ι ℂ) :
     exteriorFrobenius (exteriorComm A B) ≤ 2 * ‖A‖ * exteriorFrobenius B := by
   change exteriorFrobenius (A * B + -(B * A)) ≤ _
@@ -395,6 +480,41 @@ private theorem exterior_block_mul_zero (f : ι → κ) (A B : Matrix ι ι ℂ)
   by_cases hik : f i = f k
   · rw [hB k j (fun h => hij (hik.trans h)), mul_zero]
   · rw [hA i k hik, zero_mul]
+
+private theorem exterior_block_inverse_zero (f : ι → κ) (A : Matrix ι ι ℂ)
+    (hdet : IsUnit A.det) (hA : ∀ i j, f i ≠ f j → A i j = 0)
+    (i j : ι) (hij : f i ≠ f j) : A⁻¹ i j = 0 := by
+  let p : ι → ℂ := fun k => if f i = f k then 1 else 0
+  let P := diagonal p
+  have hAP : A * P = P * A := by
+    ext k l : 1
+    change (A * diagonal p) k l = (diagonal p * A) k l
+    rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
+    by_cases hkl : f k = f l
+    · rw [show p l = p k by simp only [p, hkl], mul_comm]
+    · rw [hA k l hkl, zero_mul, mul_zero]
+  have hPi : P * A⁻¹ = A⁻¹ * P := calc
+    _ = (A⁻¹ * (A * P)) * A⁻¹ := by rw [A.nonsing_inv_mul_cancel_left P hdet]
+    _ = (A⁻¹ * (P * A)) * A⁻¹ := by rw [hAP]
+    _ = _ := by rw [← Matrix.mul_assoc A⁻¹ P A, A.mul_nonsing_inv_cancel_right _ hdet]
+  have hentry := congrArg (fun X : Matrix ι ι ℂ => X i j) hPi
+  change (diagonal p * A⁻¹) i j = (A⁻¹ * diagonal p) i j at hentry
+  simpa only [Matrix.diagonal_mul, Matrix.mul_diagonal, p, if_pos rfl, if_neg hij,
+    one_mul, mul_zero] using hentry
+
+private theorem exterior_block_remainder_zero [Nonempty ι] (f : ι → κ) (z : ℂ)
+    (Y : Matrix ι ι ℂ) (hY : ‖Y‖ < ‖z‖)
+    (hblock : ∀ i j, f i ≠ f j → Y i j = 0)
+    (i j : ι) (hij : f i ≠ f j) : exteriorRemainder z Y i j = 0 := by
+  let C := z • (1 : Matrix ι ι ℂ) + Y
+  obtain ⟨hdet, _⟩ := exterior_resolvent_bound z Y hY
+  have hC (k l : ι) (hkl : f k ≠ f l) : C k l = 0 := by
+    have hne : k ≠ l := fun h => hkl (congrArg f h)
+    simp only [C, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_ne hne,
+      hblock k l hkl, smul_zero, add_zero]
+  exact exterior_block_mul_zero f (Y * Y) C⁻¹
+    (exterior_block_mul_zero f Y Y hblock hblock)
+    (exterior_block_inverse_zero f C hdet hC) i j hij
 
 private theorem exterior_diag_gap_lower (f : ι → κ) (H : Matrix ι ι ℂ)
     (p : ι → ℝ) (g : ℝ) (hg : 0 ≤ g)
@@ -482,6 +602,88 @@ theorem exterior_offBlock_eq_zero (f : ι → κ) (H E E₀ : Matrix ι ι ℂ)
     exact (not_lt_of_ge hbound) (mul_lt_mul_of_pos_right hsmall (lt_of_le_of_ne hFn (Ne.symm hne)))
   letI : NormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusNormedAddCommGroup
   exact norm_eq_zero.mp hFzero
+
+/-- At an exterior support maximum, each partition separated in the normalized
+projected direction is preserved exactly when the exterior bound holds. -/
+theorem exterior_support_maximum_respects_blocks [Nonempty ι]
+    (z η : ℂ) (b : ι → ℂ) (H : Matrix ι ι ℂ) (M L g : ℝ)
+    (hH : H.IsHermitian) (hη : η ≠ 0) (hM : ‖H‖ ≤ M)
+    (hL : M + ‖diagonal b‖ ≤ L) (hz : L < ‖z‖) (hg : 0 ≤ g)
+    (hsmall : let d := ‖z‖ - L
+      2 * (L ^ 2 / d) + 2 * M * (2 * L / d + L ^ 2 / d ^ 2) < g)
+    (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + V * H * Vᴴ).det).re ≤
+        (η * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + H).det).re) :
+    ∃ u : ℂ, ‖u‖ = 1 ∧ ∀ f : ι → κ,
+      (∀ i j, f i ≠ f j → g ≤ |(u * b j).re - (u * b i).re|) →
+      exteriorOffBlock f H = 0 := by
+  let Y := H + diagonal b
+  let C := z • (1 : Matrix ι ι ℂ) + Y
+  let v := η * C.det / z ^ 2
+  let c : ℝ := ‖v‖⁻¹
+  let η' : ℂ := (c : ℂ) * η
+  let u : ℂ := η' * C.det / z ^ 2
+  let d := ‖z‖ - L
+  have hY : ‖Y‖ ≤ L := (norm_add_le _ _).trans ((add_le_add_right hM _).trans hL)
+  have hz0 : z ≠ 0 := norm_pos_iff.mp ((norm_nonneg Y).trans_lt (hY.trans_lt hz))
+  obtain ⟨hC, _⟩ := exterior_resolvent_bound z Y (hY.trans_lt hz)
+  have hv : v ≠ 0 := div_ne_zero (mul_ne_zero hη hC.ne_zero) (pow_ne_zero 2 hz0)
+  have hcn : 0 ≤ c := (inv_pos.mpr (norm_pos_iff.mpr hv)).le
+  have hnorm : ‖u‖ = 1 := by
+    have he : u = (c : ℂ) * v := by
+      dsimp only [u, η', v]
+      rw [mul_assoc, mul_div_assoc]
+    rw [he, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hcn]
+    exact inv_mul_cancel₀ (norm_pos_iff.mpr hv).ne'
+  have hmax' (V : Matrix ι ι ℂ) (hV : IsUnitary V) :
+      (η' * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + V * H * Vᴴ).det).re ≤
+        (η' * ((z • (1 : Matrix ι ι ℂ) + diagonal b) + H).det).re := by
+    simp only [η', mul_assoc (c : ℂ), Complex.re_ofReal_mul]
+    exact mul_le_mul_of_nonneg_left (hmax V hV) hcn
+  have hstation := exterior_stationary_commute z η' b H hH hz0 hC hmax'
+  change Commute H (diagonal (fun i => ((u * b i).re : ℂ)) -
+    exteriorHermitianPart (u • exteriorRemainder z Y)) at hstation
+  refine ⟨u, hnorm, ?_⟩
+  intro f hgap
+  let H₀ := H - exteriorOffBlock f H
+  let Y₀ := H₀ + diagonal b
+  let E := exteriorHermitianPart ((-u) • exteriorRemainder z Y)
+  let E₀ := exteriorHermitianPart ((-u) • exteriorRemainder z Y₀)
+  let p (i : ι) := (u * b i).re
+  have hH₀ : ‖H₀‖ ≤ M := (exterior_block_compression_opNorm f H).trans hM
+  have hY₀ : ‖Y₀‖ ≤ L := (norm_add_le _ _).trans ((add_le_add_right hH₀ _).trans hL)
+  have hstation' : Commute H (diagonal (fun i => (p i : ℂ)) + E) := by
+    simpa only [p, E, neg_smul, exteriorHermitianPart_neg, ← sub_eq_add_neg] using hstation
+  have hY₀block (i j : ι) (hij : f i ≠ f j) : Y₀ i j = 0 := by
+    have hne : i ≠ j := fun h => hij (congrArg f h)
+    simp only [Y₀, H₀, Matrix.add_apply, Matrix.sub_apply, exteriorOffBlock, if_neg hij,
+      Matrix.diagonal_apply_ne _ hne, sub_self, add_zero]
+  have hE₀ (i j : ι) (hij : f i ≠ f j) : E₀ i j = 0 := by
+    have hR := exterior_block_remainder_zero f z Y₀ (hY₀.trans_lt hz) hY₀block
+    simp only [E₀, exteriorHermitianPart, Matrix.smul_apply, Matrix.add_apply,
+      Matrix.conjTranspose_apply, hR i j hij, hR j i (Ne.symm hij), smul_zero, star_zero, add_zero]
+  have hE : ‖E‖ ≤ L ^ 2 / d := calc
+    _ ≤ ‖(-u) • exteriorRemainder z Y‖ := exteriorHermitianPart_opNorm _
+    _ = ‖exteriorRemainder z Y‖ := by rw [norm_smul, norm_neg, hnorm, one_mul]
+    _ ≤ _ := exterior_remainder_bound z Y L hY hz
+  have hdiff : Y - Y₀ = exteriorOffBlock f H := by
+    dsimp only [Y, Y₀, H₀]
+    abel
+  have hchange : exteriorFrobenius (E - E₀) ≤
+      (2 * L / d + L ^ 2 / d ^ 2) * exteriorFrobenius (exteriorOffBlock f H) := by
+    have he : E - E₀ = exteriorHermitianPart
+        ((-u) • (exteriorRemainder z Y - exteriorRemainder z Y₀)) := by
+      rw [smul_sub, exteriorHermitianPart_sub]
+    rw [he]
+    calc
+      _ ≤ exteriorFrobenius ((-u) • (exteriorRemainder z Y - exteriorRemainder z Y₀)) :=
+        exteriorHermitianPart_frobenius _
+      _ = exteriorFrobenius (exteriorRemainder z Y - exteriorRemainder z Y₀) := by
+        rw [exteriorFrobenius_smul, norm_neg, hnorm, one_mul]
+      _ ≤ _ := by
+        simpa only [hdiff] using exterior_remainder_frobenius_lipschitz z Y Y₀ L hY hY₀ hz
+  exact exterior_offBlock_eq_zero f H E E₀ p g M (L ^ 2 / d)
+    (2 * L / d + L ^ 2 / d ^ 2) hgap hg hstation' hE₀ hH₀ hE hchange hsmall
 
 end Blocks
 

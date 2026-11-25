@@ -57,13 +57,17 @@ finite certificates was unavailable in the workspace.
 flowchart BT
     R["Euclidean inverse and remainder bounds"]
     C["Stationarity for a projected diagonal"]
-    B["Exact vanishing between separated blocks"]
+    K["Operator-norm block compression and block inverse"]
+    B["A support maximum preserves every separated partition"]
     G["Collinear block partition for each direction"]
+    H["Determinant hull within each collinear block"]
     P["Exterior determinant inclusion"]
     R --> B
     C --> B
-    G --> B
+    K --> B
     B --> P
+    G -.->|needs Lean proof| P
+    H --> P
 ~~~
 
 Let $Y$ be a complex square matrix. If $\|Y\|<|z|$, where the matrix
@@ -73,25 +77,33 @@ $R(Y)=Y^2(zI+Y)^{-1}$ gives the exact expansion
 $z^2(zI+Y)^{-1}=zI-Y+R(Y)$. For $\|Y_1\|,\|Y_2\|\le L<|z|$ and
 $d=|z|-L$, its Frobenius variation is bounded by
 $(2L/d+L^2/d^2)\|Y_1-Y_2\|_{\mathrm F}$.
-[Inverse bound](../../Lean/MOC/HermitianExteriorShift.lean#L68) · [Expansion](../../Lean/MOC/HermitianExteriorShift.lean#L107) · [Remainder norm](../../Lean/MOC/HermitianExteriorShift.lean#L130) · [Frobenius estimate](../../Lean/MOC/HermitianExteriorShift.lean#L277)
+[Inverse bound](../../Lean/MOC/HermitianExteriorShift.lean#L76) · [Expansion](../../Lean/MOC/HermitianExteriorShift.lean#L115) · [Remainder norm](../../Lean/MOC/HermitianExteriorShift.lean#L138) · [Frobenius estimate](../../Lean/MOC/HermitianExteriorShift.lean#L300)
 
 At a nonsingular support maximum, let $H$ be the Hermitian summand,
 $B$ the partner diagonal, and $Y=H+B$. For direction $\eta$, put
 $v=\eta\det(zI+Y)/z^2$. Then $H$ commutes with the real projected
 diagonal of $vB$ minus the Hermitian part of $vR(Y)$. The term with
 $H$ and the scalar term commute with $H$ and cancel from this
-equation. [Stationarity](../../Lean/MOC/HermitianExteriorShift.lean#L161)
+equation. [Stationarity](../../Lean/MOC/HermitianExteriorShift.lean#L169)
 
 For a given partition, let $H_0$ be the part of $H$ inside the blocks
 and $F=H-H_0$. Suppose distinct blocks have projected separation
 at least $g$. If the perturbation has operator norm at most $K$,
 $\|H_0\|\le M$, and its Frobenius variation from a block-diagonal
 reference is at most $J\|F\|_{\mathrm F}$, then
-$2K+2MJ<g$ forces $F=0$. This is the quantitative block step. The
-order-five scalar inequality at $|z|\ge 123$ is also in the source.
-The full determinant conclusion additionally needs the partition
-by the smallest triangle altitude for each direction and the
-use of the collinear theorem on its blocks.
-[Exact block step](../../Lean/MOC/HermitianExteriorShift.lean#L425) · [Exact threshold arithmetic](../../Lean/MOC/HermitianExteriorShift.lean#L489)
+$2K+2MJ<g$ forces $F=0$. Keeping only diagonal blocks does not increase
+the operator norm. The inverse of an invertible block-diagonal matrix
+has the same block partition, so the Hermitian part of the reference
+remainder has zero entries between distinct blocks.
+
+Let $\eta\ne 0$ be the support direction and let $H$ maximize its support.
+Suppose $\|H\|\le M$, $M+\|B\|\le L$, and $d=|z|-L>0$. If
+$2L^2/d+2M(2L/d+L^2/d^2)<g$, then there is a complex number $u$ of
+modulus one for which $H$ preserves every partition with separation
+at least $g$ in the projection $\mathrm{Re}(ub_i)$. The order-five
+scalar inequality at $|z|\ge 123$ is in the source. The full determinant
+conclusion still needs a collinear partition for each projection and
+an application of the affine-line theorem to its blocks.
+[Block compression](../../Lean/MOC/HermitianExteriorShift.lean#L394) · [Support maximum](../../Lean/MOC/HermitianExteriorShift.lean#L608) · [Exact threshold arithmetic](../../Lean/MOC/HermitianExteriorShift.lean#L691) · [Affine-line theorem](../../Lean/MOC/DruryHermitianPencil.lean#L385)
 
 The new Lean source awaits kernel verification.
