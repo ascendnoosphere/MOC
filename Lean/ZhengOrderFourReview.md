@@ -14,3 +14,9 @@ check the terminal support bound in Proposition 4.4.
 The [technical audit](research/agenda-2026-11-25/OrderFourTwoEndpointAudit.md)
 explains why the two ends of the effect line are both bases rather than further
 mixtures. See [the proof tree](ProofTree.md) for the remaining implication.
+
+[Independent progress on Section 5](ZhengT85Independent.md): Lean forces
+eight contacts on the six-label pattern and proves the support-height
+split. A separate symbolic two-minor decomposition rules out the
+paired-contact branch on paper. The unpaired positive-height branch
+at eight or more contacts remains open.

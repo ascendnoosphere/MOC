@@ -5,6 +5,7 @@ import MOC.TransportGapCertificate
 import MOC.OrbitTargets
 import MOC.FiniteFrameLabels
 import MOC.ZhengContactReduction
+import MOC.ZhengRectangleContact
 import MOC.FixedMassGroupedSupport
 import MOC.ZeroTranspositionDegree
 import MOC.FixedZeroProfiles

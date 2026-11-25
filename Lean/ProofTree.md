@@ -357,6 +357,14 @@ direction, pivot, and old differences, while allowing the gap to vary.
 The count refers to labels, not distinct product values. A strict
 terminal violation would refute MOC.
 
+**Order-four branch.** For [Zheng’s Section 5 pattern](https://doi.org/10.13140/RG.2.2.36790.25923),
+[two matching-product identities](MOC/ZhengRectangleContact.lean) reduce
+the number of equations from six to five at seven contacts. Lean
+forces at least eight contacts and splits at zero support height.
+An [independent paper argument](ZhengT85Independent.md) certifies the
+zero-height paired branch by squared minors; the positive-height
+unpaired branch still needs a support bound.
+
 **Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)
 uses the number of polynomial observables that determine the old
 complex differences and gap, not the number of labels. In order at
