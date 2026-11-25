@@ -254,6 +254,7 @@ import MOC.FourContact0710EqualWeights
 import MOC.FourKleinSpectralSquares
 import MOC.FourMixedRayCancellation
 import MOC.FourMatchingPhysicalPositivity
+import MOC.FourEightContactSmallFactors
 import MOC.FourOppositePairSupport
 import MOC.FourRealParameterCells
 import MOC.FourSupportConeClassification

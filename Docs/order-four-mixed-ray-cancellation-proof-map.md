@@ -48,3 +48,21 @@ absorption identities over integer permutation profiles. An independent
 exact replay also checked closure of the ordinary rays under the 48
 relabelings used here. The new Lean source was written without a build.
 [Archived certificate source](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/data/certificates/geometry/mixed_cancellation_graph.json)
+
+## Canonical contact certificates
+
+Write a normalized cost as the canonical mixed ray plus a sum of
+ordinary rays with nonnegative coefficients. Each tuple specifies the
+ordinary ray indices and the order of their coefficients. The premises
+use the mixed-sign factors of the inverse-pencil determinants. Each
+factor has a positive constant term.
+
+| Ordinary ray indices | Premise and conclusion |
+| --- | --- |
+| $(13,17,18,27,30)$ | If the first determinant factor is nonpositive, the coefficients on rays 13, 18 and 27 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L167) |
+| $(7,13,20,27,31)$ | If the second determinant factor is nonpositive, the coefficients on rays 7, 13 and 31 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L213) |
+
+Both certificates allow zero coefficients. Exact Python checks expanded
+both pencil determinants and checked the square identities on all 24
+permutations. The new Lean source awaits verification.
+[Archived proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_nonlinear_capacity_20261031.txt)
