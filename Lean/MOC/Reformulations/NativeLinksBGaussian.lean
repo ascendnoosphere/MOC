@@ -23,7 +23,7 @@ private theorem denseRange_rationalComplex : DenseRange rationalComplex := by
     Complex.equivRealProdCLM.symm.surjective.denseRange.comp (hq.prodMap hq)
       Complex.equivRealProdCLM.symm.continuous
 
-private theorem exists_common_denominator {ι : Type*} [Fintype ι] (q : ι → ℚ) :
+theorem exists_common_denominator {ι : Type*} [Fintype ι] (q : ι → ℚ) :
     ∃ d : ℕ, d ≠ 0 ∧ ∀ i, ∃ z : ℤ, (d : ℚ) * q i = z := by
   classical
   let d := ∏ i, (q i).den

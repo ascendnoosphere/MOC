@@ -16,7 +16,7 @@ The one-entry route to the full conjecture requires a law for every
 choice of the fixed entries and every mixer. The exterior shift theorem
 gives pointwise inclusion for a fixed pair of lists outside a disk in
 the shift parameter.
-[Exact one-entry route at a fixed order](../Lean/MOC/ProofRoutes.lean#L108) · [Exterior radius](../Lean/MOC/HermitianExteriorShift.lean#L1188)
+[Exact one-entry route at a fixed order](../Lean/MOC/ProofRoutes.lean#L113) · [Exterior radius](../Lean/MOC/HermitianExteriorShift.lean#L1188)
 
 ## One law for a free eigenvalue
 

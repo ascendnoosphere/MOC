@@ -322,7 +322,7 @@ lower bound on its Gaussian mass. -/
 theorem standardComplexGaussian_closedBall_lower (c : ℂ) (r : ℝ) (hr : 0 ≤ r) :
     ENNReal.ofReal (r ^ 2 * Real.exp (-((‖c‖ + r) ^ 2))) ≤
       standardComplexGaussian (Metric.closedBall c r) := by
-  have hmeas : MeasurableSet (Metric.closedBall c r) := isClosed_closedBall.measurableSet
+  have hmeas : MeasurableSet (Metric.closedBall c r) := Metric.isClosed_closedBall.measurableSet
   rw [standardComplexGaussian, withDensity_apply _ hmeas]
   have hbound : ∀ z ∈ Metric.closedBall c r,
       ENNReal.ofReal (Real.exp (-((‖c‖ + r) ^ 2)) / Real.pi) ≤ standardComplexGaussianDensity z := by
@@ -471,7 +471,7 @@ theorem gaussianTriangleBlock_measure_ge {Ω : Type*} [MeasurableSpace Ω] (μ :
   have hW (j) : 0 ≤ W j := mul_nonneg (sq_nonneg r) (Real.exp_pos _).le
   have hmass (j : Fin 2 × Fin 4) : ENNReal.ofReal (W j) ≤ μ (E j) := by
     change ENNReal.ofReal (W j) ≤ μ ((X j) ⁻¹' Metric.closedBall (gaussianTriangleDiskCenters j.2) r)
-    rw [← Measure.map_apply (hX j) isClosed_closedBall.measurableSet, hLaw j]
+    rw [← Measure.map_apply (hX j) Metric.isClosed_closedBall.measurableSet, hLaw j]
     apply le_trans _ (standardComplexGaussian_closedBall_lower (gaussianTriangleDiskCenters j.2) r
       (by norm_num [r]))
     apply ENNReal.ofReal_le_ofReal
@@ -489,7 +489,7 @@ theorem gaussianTriangleBlock_measure_ge {Ω : Type*} [MeasurableSpace Ω] (μ :
     simp only [W, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ← Real.exp_sum,
       hsum, ← pow_mul, Fintype.card_prod, Fintype.card_fin]
   change ENNReal.ofReal gaussianTriangleBlockMass ≤ μ (⋂ j, E j)
-  rw [hind.meas_iInter (s := E) (fun j => ⟨_, isClosed_closedBall.measurableSet, rfl⟩)]
+  rw [hind.meas_iInter (s := E) (fun j => ⟨_, Metric.isClosed_closedBall.measurableSet, rfl⟩)]
   refine le_trans ?_ (Finset.prod_le_prod' fun j _ => hmass j)
   rw [← ofReal_prod_nonneg Finset.univ W hW, hrealprod]
   apply ENNReal.ofReal_le_ofReal
@@ -532,7 +532,7 @@ private theorem matchingTriangle_diskBlock_independent {Ω : Type*} [MeasurableS
       Metric.closedBall (gaussianTriangleDiskCenters p.2.2) (1 / 200)
   let E (i : Fin m) := matchingTriangleDiskBlockEvent a b (labels i)
   have hm (i : Fin m) : MeasurableSet (E i) :=
-    MeasurableSet.iInter (fun j => hmeas i j isClosed_closedBall.measurableSet)
+    MeasurableSet.iInter (fun j => hmeas i j Metric.isClosed_closedBall.measurableSet)
   have hw (i : Fin m) : ProbabilityTheory.iIndepFun (fun j x =>
       matchingTriangleBlockCoordinates (a x) (b x) (labels i) j) μ :=
     ProbabilityTheory.iIndepFun.precomp (g := fun j : Fin 2 × Fin 4 => (i, j))
@@ -540,7 +540,7 @@ private theorem matchingTriangle_diskBlock_independent {Ω : Type*} [MeasurableS
   have hsingle (i : Fin m) : μ (E i) = ∏ j, μ (D (i, j)) :=
     (hw i).meas_iInter (s := fun j => D (i, j))
       (fun j => ⟨Metric.closedBall (gaussianTriangleDiskCenters j.2) (1 / 200),
-        isClosed_closedBall.measurableSet, rfl⟩)
+        Metric.isClosed_closedBall.measurableSet, rfl⟩)
   have hs : ProbabilityTheory.iIndepSet E μ := by
     apply (ProbabilityTheory.iIndepSet_iff_meas_biInter hm).mpr
     intro T
@@ -556,7 +556,7 @@ private theorem matchingTriangle_diskBlock_independent {Ω : Type*} [MeasurableS
         exact h (i, j) hi
     rw [hset, hind.meas_biInter (S := T.product Finset.univ) (s := D)
       (fun p _ => ⟨Metric.closedBall (gaussianTriangleDiskCenters p.2.2) (1 / 200),
-        isClosed_closedBall.measurableSet, rfl⟩), Finset.prod_product]
+        Metric.isClosed_closedBall.measurableSet, rfl⟩), Finset.prod_product]
     exact Finset.prod_congr rfl (fun i _ => (hsingle i).symm)
   have hg := (ProbabilityTheory.iIndepSet_iff_iIndep E μ).mp hs
   apply (ProbabilityTheory.iIndepSet_iff_iIndep _ μ).mpr
@@ -588,7 +588,7 @@ theorem gaussianTriangle_no_block_measure_le {Ω : Type*} [MeasurableSpace Ω]
     (matchingTriangle_diskBlock_independent μ a b labels hmeas hind)
   · intro i
     have hm : MeasurableSet (matchingTriangleDiskBlockEvent a b (labels i)) :=
-      MeasurableSet.iInter (fun j => hmeas i j isClosed_closedBall.measurableSet)
+      MeasurableSet.iInter (fun j => hmeas i j Metric.isClosed_closedBall.measurableSet)
     have hp := gaussianTriangleBlock_measure_ge μ
       (fun j x => matchingTriangleBlockCoordinates (a x) (b x) (labels i) j)
       (hmeas i) (hlaw i)
@@ -709,7 +709,7 @@ theorem matchingProduct_lower_tail_of_independent_negative_moments {Ω : Type*}
   have hT : 0 < T := Real.exp_pos _
   have hexp : (∫⁻ x, ∏ j, F j x ∂μ) ≤
       ENNReal.ofReal (Real.exp (-(n : ℝ) * 7 / 2000)) := by
-    rw [lintegral_prod_eq_prod_lintegral_of_indepFun Finset.univ F hind hmeas]
+    rw [ProbabilityTheory.lintegral_prod_eq_prod_lintegral_of_indepFun Finset.univ F hind hmeas]
     have h := Finset.prod_le_prod' (s := (Finset.univ : Finset (Fin n))) (fun j _ => hmoment j)
     refine h.trans_eq ?_
     rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin,

@@ -65,7 +65,7 @@ matrix therefore has rank at most four.
 [Tetrahedral basis](../Lean/MOC/SpectralProfileDeterminant.lean#L464) ·
 [Complex square factorization](../Lean/MOC/SpectralProfileDeterminant.lean#L329) ·
 [Rank bound for a representing matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L431) ·
-[Rank-four coefficient matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L509)
+[Rank-four coefficient matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L511)
 
 The real part of the square of $p+iq$ is $p^2-q^2$ for real $p,q$.
 On a subspace where the real form is strictly positive on every

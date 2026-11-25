@@ -15,7 +15,7 @@ the test over all unitary mixers is equivalent to the conjecture at
 that order. The order-four and order-five registries use this implication
 for each conic below. The registered hyperbola has perpendicular
 asymptotes and the product parameter is one.
-[Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27) · [Order four](../Lean/MOC/ProofRoutes.lean#L268) · [Order five](../Lean/MOC/ProofRoutes.lean#L286)
+[Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27) · [Order four](../Lean/MOC/ProofRoutes.lean#L280) · [Order five](../Lean/MOC/ProofRoutes.lean#L298)
 
 ## Order-four equivalences
 

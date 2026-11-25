@@ -61,7 +61,7 @@ then subtract $p$ from each cell. The resulting table is nonnegative.
 For each pair of selected cells, adding the singleton coefficients
 for the missing row and column preserves the original matching cost.
 Transposition gives the same construction when the negative entries
-lie on a column. [Lean decomposition](../Lean/MOC/FourOppositePairSupport.lean#L207)
+lie on a column. [Lean decomposition](../Lean/MOC/FourOppositePairSupport.lean#L210)
 
 Each indicator $I$ belongs to the matching-function space. For its
 coefficient $t\ge0$, the function $tI$ equals $(\sqrt{t}I)^2$.

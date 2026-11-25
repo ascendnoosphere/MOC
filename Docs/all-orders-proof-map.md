@@ -20,11 +20,11 @@ two complex normal matrices lies in the real convex hull of the products
 formed by matching their eigenvalues. See the [exact statement](../README.md).
 For fixed eigenvalue lists, $U$ is the unitary change between the eigenbases.
 
-The tables cover the 85 general routes recorded in Lean. The
+The tables cover the 86 general routes recorded in Lean. The
 [labelled formulations](#labelled-spectral-formulations) cover the
 additional 243 indexed routes. A proof of an implication or equivalence
 establishes its arrow. The tables give the status of each premise.
-[General route list](../Lean/MOC/ProofRoutes.lean#L324) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L689)
+[General route list](../Lean/MOC/ProofRoutes.lean#L337) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L704)
 
 ## How routes connect
 
@@ -59,7 +59,7 @@ the disjunction of the registered routes by choosing an exact route.
 Each registered all-order route supplies its implication back to MOC.
 For the order split, choose one route at order four, one at order five,
 and one at each order at least six. The choice can depend on the order.
-[Small orders](../Lean/MOC/Small.lean#L68) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L689)
+[Small orders](../Lean/MOC/Small.lean#L68) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L704)
 
 For a proof of a named test, apply its implication to `MOCIsTrue` or
 `Conjecture (Fin n)`, the inclusion at order $n$. For example, if
@@ -69,7 +69,7 @@ The selected proof supplies the only premise in this application.
 In the registry, `AnyRoute` means that one member has a proof of its
 goal. `close_any` applies that member's implication. A route with a
 conjunctive premise needs a proof of each conjunct.
-[Normal matrix equivalence](../Lean/MOC/Reformulations/FirstMatrix.lean#L46) · [Route disjunction](../Lean/MOC/ProofRoutes.lean#L69) · [Closure](../Lean/MOC/ProofRoutes.lean#L72)
+[Normal matrix equivalence](../Lean/MOC/Reformulations/FirstMatrix.lean#L46) · [Route disjunction](../Lean/MOC/ProofRoutes.lean#L74) · [Closure](../Lean/MOC/ProofRoutes.lean#L77)
 
 ```mermaid
 flowchart LR
@@ -84,11 +84,11 @@ flowchart LR
 
 | Relation | Consequence | Lean source |
 | --- | --- | --- |
-| Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../Lean/MOC/ProofRoutes.lean#L60) |
-| A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../Lean/MOC/ProofRoutes.lean#L55) |
-| Refutation of an exact route | The parent is false. | [Transfer of refutation](../Lean/MOC/ProofRoutes.lean#L65) |
-| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../Lean/MOC/ProofRoutes.lean#L713) |
-| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../Lean/MOC/ProofRoutes.lean#L703) · [Order five](../Lean/MOC/ProofRoutes.lean#L708) |
+| Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../Lean/MOC/ProofRoutes.lean#L65) |
+| A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../Lean/MOC/ProofRoutes.lean#L60) |
+| Refutation of an exact route | The parent is false. | [Transfer of refutation](../Lean/MOC/ProofRoutes.lean#L70) |
+| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../Lean/MOC/ProofRoutes.lean#L728) |
+| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../Lean/MOC/ProofRoutes.lean#L718) · [Order five](../Lean/MOC/ProofRoutes.lean#L723) |
 
 ## Tests at each order
 
@@ -98,13 +98,16 @@ and [order-five](order-five-proof-map.md#registered-routes) lists add
 tests specific to their orders. A contact is a permutation that attains
 the largest matching projection in a given direction. A strict witness
 has a determinant projection larger than that maximum.
-[Common tests](../Lean/MOC/ProofRoutes.lean#L201) · [Fixed-order disjunction](../Lean/MOC/ProofRoutes.lean#L238)
+[Common tests](../Lean/MOC/ProofRoutes.lean#L206) · [Fixed-order disjunction](../Lean/MOC/ProofRoutes.lean#L248)
 
 | Exact test at order $n$ | Lean source |
 | --- | --- |
 | Normal complex matrices | [Normal matrix form](../Lean/MOC/Normal.lean#L280) |
-| One set of weights for one free partner eigenvalue | [One-entry law](../Lean/MOC/ProofRoutes.lean#L108) |
-| Evaluated spectral test on a nonempty set of labels | [Labelled test](../Lean/MOC/ProofRoutes.lean#L90) |
+| One set of weights for one free partner eigenvalue | [One-entry law](../Lean/MOC/ProofRoutes.lean#L113) |
+| A planar intercept hull for one free partner eigenvalue | [Finite test](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L205) · [Equivalence](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L282) |
+| Distance from $-1$ when both spectra are in the open unit disk | [Disk test](../Lean/MOC/TranslatedDeterminantPowers.lean#L40) |
+| Every translated power sum on spectra in the open unit disk | [Power test](../Lean/MOC/TranslatedDeterminantPowers.lean#L112) |
+| Evaluated spectral test on a nonempty set of labels | [Labelled test](../Lean/MOC/ProofRoutes.lean#L95) |
 | Equal traces | [Trace condition](../Lean/MOC/Core.lean#L167) |
 | Equal second elementary coefficients | [Second coefficient](../Lean/MOC/EqualSpectralCoefficients.lean#L91) |
 | Equal first and second elementary coefficients | [Both coefficients](../Lean/MOC/EqualSpectralCoefficients.lean#L428) |
@@ -198,6 +201,7 @@ degrees. Degree one supplies the reverse implication.
 | Joint Hermitian integrals | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L83) |
 | Gaussian integer spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
 | Gaussian integer spectra and Gaussian rational mixers | Iff | [Statement and proof](../Lean/MOC/GaussianCayley.lean#L306) |
+| Gaussian integer spectra and an integral matrix with $V^*V=d^2I$, $d>0$, with division-free comparisons | Iff | [Exact integer test](../Lean/MOC/GaussianIntegerDeterminantTest.lean#L181) |
 | Newton monomials | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L64) |
 | Projective toric section weights | Iff | [New Lean source](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
 | Loopless complex directed adjacency | Iff | [New Lean source](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
@@ -275,7 +279,7 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Traceless real-part bound | Iff | [Statement and proof](../Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
 | Regular anchored spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/Anchored.lean#L70) |
 | Three-anchor rank-one kernel in all orders | Iff | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
-| Nonzero contact-saturated support bounds in every order | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L320) |
+| Nonzero contact-saturated support bounds in every order | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L333) |
 | Normal maximizers in every order | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L314) |
 | Principal coisometries in all orders | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L248) |
 | No paired block split | Iff | [Statement and proof](../Lean/MOC/Claim.lean#L63) |
@@ -292,7 +296,7 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Terminal matching chart with constraint rank | Iff | [Statement and proof](../Lean/MOC/MatchingContactRank.lean#L111) |
 | Terminal matching chart with minimal prime isolation | Iff | [Statement and proof](../Lean/MOC/IsolatedContactFiber.lean#L61) |
 | Regular contact covers AND the terminal chart bound | If | [Statement and proof](../Lean/MOC/HighContact.lean#L276) |
-| All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L302) |
+| All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L315) |
 
 ## Induction through normal maximizers
 
@@ -600,10 +604,10 @@ connection to these spectra.
 | 001–133 | Each entry is equivalent to unrestricted MOC. | [001 through 133](../Lean/MOC/Reformulations/FirstAtlas.lean#L22-L837) |
 | 134–243 | Each entry is equivalent to unrestricted MOC. | [134 through 243](../Lean/MOC/Reformulations/SecondAtlas.lean#L22-L697) |
 
-The registered list spans [001 through 243](../Lean/MOC/ProofRoutes.lean#L435). At a
+The registered list spans [001 through 243](../Lean/MOC/ProofRoutes.lean#L450). At a
 fixed order, the evaluated form is equivalent to the fixed-order
 conjecture when the sample type is nonempty.
-[Fixed-order form](../Lean/MOC/ProofRoutes.lean#L90)
+[Fixed-order form](../Lean/MOC/ProofRoutes.lean#L95)
 
 ## Common weights at small shifted rank sum
 
@@ -1013,4 +1017,15 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L202) · [Axiom audit](../Lean/MOC.lean#L298)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L202) · [Axiom audit](../Lean/MOC.lean#L302)
+
+The source audit found 709 Lean modules. Starting at the default target
+reaches 583, including the target itself. The other 126 resolve their
+local imports as separate modules. The import graph has no cycles.
+A previous build reported failures in the Gaussian and Haar measure module.
+The source now qualifies the closed-ball and product-integral lemmas.
+The earlier log also reports unresolved algebraic proof steps.
+The nine new modules have complete source scripts and are in the
+default import graph. Their present status is static review and exact
+example checks.
+[Gaussian disk argument](../Lean/MOC/GaussianHaarContainment.lean#L322) · [New proof routes](determinant-inclusion-certificates-proof-map.md)

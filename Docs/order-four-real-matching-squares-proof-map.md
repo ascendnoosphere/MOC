@@ -18,14 +18,14 @@ For two subsets of the label set, the subset-image indicator is one
 when a permutation maps the first subset onto the second. It is zero
 otherwise. Let $V$ be the real span of these indicators. The
 noncrossing coordinates give $V$ dimension 14.
-[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L185) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L55)
+[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L185) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L56)
 
 Use the auxiliary values $\beta=(0,1,-1,w)$, with $w$ a real variable.
 For a permutation $\pi$ and a subset $I$, take the constant and
 linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
 matrix that has these 32 coefficients in row $\pi$. Its column space
 is $V$. Write $j_\pi$ for the transpose of that row.
-[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L29) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L152)
+[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L33) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L152)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
 directions in each block of the jet. Its two directions, with

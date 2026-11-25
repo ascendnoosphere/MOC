@@ -34,7 +34,7 @@ absorption identity puts the paired part in that set. The procedure
 uses the smaller of the two coefficients at each step. If the mixed
 coefficient becomes zero, the result is in the ordinary cone. Otherwise
 the final profile has the canonical mixed ray and ordinary coefficients
-on the thirteen-ray set. [Absorption identities](../Lean/MOC/FourMixedRayCancellation.lean#L180) · [Support bound](../Lean/MOC/FourMixedRayCancellation.lean#L26) · [Normal form](../Lean/MOC/FourMixedRayCancellation.lean#L511)
+on the thirteen-ray set. [Absorption identities](../Lean/MOC/FourMixedRayCancellation.lean#L180) · [Support bound](../Lean/MOC/FourMixedRayCancellation.lean#L26) · [Normal form](../Lean/MOC/FourMixedRayCancellation.lean#L515)
 
 Signed determinant weights evaluate a cost profile at a fixed mixer by
 a linear map. An ordinary ray evaluates to the squared modulus of its

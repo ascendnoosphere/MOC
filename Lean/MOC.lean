@@ -293,6 +293,10 @@ import MOC.SmallSpectralPerturbation
 import MOC.SpectralProfileDeterminant
 import MOC.TranspositionWinding
 import MOC.TwoByTwoTensorPermutationLaw
+import MOC.ForcedSpectralMultiplicity
+import MOC.FourCanonicalZeroHeight
+import MOC.FourMixedRaySupportBound
+import MOC.PermutationPathComposition
 
 open Lean Elab Command in
 run_cmd do

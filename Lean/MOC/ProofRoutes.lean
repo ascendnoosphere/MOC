@@ -5,8 +5,11 @@ import MOC.EqualSpectralCoefficients
 import MOC.Extremal
 import MOC.FourContactRay
 import MOC.FourDirectSupportCertificate
+import MOC.FourAntipodalSpectra
 import MOC.FourTerminalCoverage
+import MOC.FreeEigenvalueSlopeSlice
 import MOC.GaussianCayley
+import MOC.GaussianIntegerDeterminantTest
 import MOC.HermitianByNormalFourProof
 import MOC.HighContact
 import MOC.IsolatedContactFiber
@@ -16,6 +19,7 @@ import MOC.NormalSupportMaximum
 import MOC.NonnormalPoleReduction
 import MOC.OrderFourIndependent
 import MOC.OrderFiveContact
+import MOC.OrderFiveDisjointPairSupport
 import MOC.OrderFiveCommonLawObstruction
 import MOC.OrderFivePairMarkers
 import MOC.PrincipalCoisometry
@@ -27,6 +31,7 @@ import MOC.SpectralMinorDecomposition
 import MOC.StationaryDenseCross
 import MOC.StationaryPivot
 import MOC.TerminalActiveEdges
+import MOC.TranslatedDeterminantPowers
 
 /-! A branch belongs here only if there is a Lean proof that it closes its
 parent. Open premises within one branch are joined by AND, not OR. -/
@@ -203,6 +208,11 @@ be fixed before a proof chooses a test. -/
   letI : Nontrivial (Fin n) := Fin.nontrivial_iff_two_le.mpr (by omega)
   exact [fromIff "Normal complex matrices" conjecture_iff_normalConjecture.symm,
     fromIff "One-entry positive laws" (oneEntryLaw_iff n),
+    fromIff "One free eigenvalue with at most three slopes" (freeEigenvalueSlopeSliceTest_iff n),
+    fromIff "Translated distance for spectra in the open unit disk"
+      (conjecture_iff_local_translated_normSq 1 zero_lt_one).symm,
+    fromIff "Translated power sums for spectra in the open unit disk"
+      (conjecture_iff_local_translated_power_sums 1 zero_lt_one).symm,
     fromIff "Evaluated atlas comparison" (some_labelledAt_iff n),
     fromIff "Equal traces" conjecture_iff_equal_trace.symm,
     fromIff "Equal second elementary coefficients" conjecture_iff_equal_second_elementary.symm,
@@ -265,6 +275,8 @@ def fourRoutes : List (Route (Conjecture (Fin 4))) :=
       ⟨conjecture_of_contact_step (show SixContactStep from
         contact_step_of_le_sharp_threshold (n := 4) (k := 6) (by decide)), Reformulations.contactForm_of_conjecture⟩,
    fromIff "Distinct spectra outside circles and lines" conjecture_four_iff_noncircular.symm,
+   fromIff "Antipodal half-disk with real orthogonal mixers"
+     conjecture_four_iff_antipodal_halfDisk_orthogonal.symm,
    fromIff "First spectrum on the standard parabola"
       (conjecture_iff_spectralCurveTest four_spectralParabola_test_iff).symm,
    fromIff "First spectrum on the standard hyperbola"
@@ -287,6 +299,7 @@ def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
       (conjecture_iff_spectralCurveTest five_spectralParabola_test_iff).symm,
    fromIff "First spectrum on the standard hyperbola"
       (conjecture_iff_spectralCurveTest (five_spectralHyperbola_test_iff Complex.I 1 (by simp))).symm,
+   sufficient "Disjoint-pair transport certificates" conjecture_five_of_disjoint_pair_dual_test,
    sufficient "Orthogonal minor convexification AND orthogonal order five"
       (fun h : TwoOrthogonalMinorTables (Fin 5) ∧ OrthogonalConjecture (Fin 5) =>
         (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2)] ++
@@ -355,6 +368,8 @@ theorem moc_iff_contact_saturated_bounds :
    fromIff "Actual integral torus characters" NativeLinksB.torusCharacterForm_iff,
    fromIff "Joint Hermitian integrals" NativeLinksB.quantumIntegralsForm_iff,
    fromIff "Gaussian integer spectra" NativeLinksB.gaussianSpectrumForm_iff,
+   fromIff "Division-free Gaussian integer determinant comparisons"
+     mocIsTrue_iff_gaussianIntegerDeterminantTest.symm,
    fromIff "Gaussian integer spectra and Gaussian rational mixers"
       mocIsTrue_iff_gaussian_spectra_rational_mixer.symm,
    fromIff "Affine linear parts" moc_iff_affineLinearParts.symm,

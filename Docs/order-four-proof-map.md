@@ -10,8 +10,9 @@
 The order-four conjecture asks for the determinant inclusion for every
 pair of complex normal four-by-four matrices. In the eigenvalue
 formulation, $U$ is the unitary change between the eigenbases. The full
-order-four statement remains open in this library. A dagger marks a
-standalone proof source with an absent dependency.
+order-four statement remains open in this library. The antipodal spectral
+test and the width bound have complete proof scripts awaiting kernel checking.
+[Certificates](determinant-inclusion-certificates-proof-map.md)
 [Matrix equivalence](../Lean/MOC/Normal.lean#L280) · [Source scope](all-orders-proof-map.md#scope-of-the-lean-source)
 
 ## Registered routes
@@ -47,7 +48,7 @@ spectra has nonzero pair sums and distinct matching products. The
 [contact map](contact-transfer-proof-map.md) defines contacts and strict
 witnesses. The all-order transfer gives the six-contact increase step.
 The six-contact inequality required by this route remains open.
-[Route register](../Lean/MOC/ProofRoutes.lean#L244) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L295) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L188)
+[Route register](../Lean/MOC/ProofRoutes.lean#L254) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L308) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L193)
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
@@ -63,7 +64,8 @@ The six-contact inequality required by this route remains open.
 | Exclude stationary orthogonal witnesses with at least seven contacts and the inactive pivot constraints | Iff | [Statement and proof](../Lean/MOC/StationaryPivot.lean#L221) |
 | Exclude regular terminal orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L110) |
 | Exclude regular terminal orthogonal witnesses with canonical mixed cost | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L387) |
-| Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L264) |
+| Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L274) |
+| First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | Iff | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L208) |
 | Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L124) |
 | Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L318) |
 | Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L375) |
@@ -156,6 +158,11 @@ direction. Row and column relabeling and matrix transpose preserve
 the strict excess and contact count. At nonzero height, the contact
 set cannot contain the four matchings from two disjoint swaps.
 [Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L110) · [Canonical witness equivalence](../Lean/MOC/FourTerminalCoverage.lean#L387) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L403)
+
+At zero height a regular witness in this canonical form has exactly seven
+contacts. The script uses the cubic identity for projected matching products
+and six disjoint-swap rectangles. It leaves the seven-contact case open.
+[Count at zero height](../Lean/MOC/FourCanonicalZeroHeight.lean#L305) · [Coefficient constraints](../Lean/MOC/FourCanonicalZeroHeight.lean#L117)
 
 The exact Python census gives 90 seven-contact and 58 eight-contact
 classes at nonzero height. Two canonical eleven-contact profiles

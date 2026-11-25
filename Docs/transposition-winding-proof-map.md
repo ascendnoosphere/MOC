@@ -36,7 +36,7 @@ flowchart TD
     Zero --> Range
 ```
 
-For a transposition matrix $P$ and a parameter $0le tle1$, use the
+For a transposition matrix $P$ and a parameter $0\le t\le1$, use the
 unitary matrix $sqrt{1-t},I+isqrt{t},P$. Only the identity and the
 transposition have nonzero signed determinant weights. One squared
 matrix entry gives the transposition weight $t$. The two weighted
