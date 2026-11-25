@@ -74,15 +74,37 @@ definite matrices between the roots. A negative discriminant excludes the
 lift. At discriminant zero, use the non-strict trace test.
 [Discriminant formula](../../Lean/MOC/FourSupportCostRealLift.lean#L320)
 
+## Compatibility and finite labels
+
+Let $u+iy$ and $v-iy$ be two complex critical profiles with real
+midpoint $f=(u+v)/2$. Put $z=(u-v)/2$. Both $y$ and $z$ lie in
+the kernel of $H(f)$, and $G(f)=G(y)-G(z)$. On a two-vector kernel
+basis, each term on the right is the image of a rank-one moment.
+Their difference gives a particular real moment solution. This
+proves compatibility for an actual midpoint of two critical profiles,
+including when this particular solution is indefinite.
+[Real secant compatibility](../../Lean/MOC/FourSupportCostRealLift.lean#L493)
+
+Suppose a profile is given by the bracket products of eight nonzero
+vectors $(p_i,q_i)$ in $\mathbb C^2$. Choose a complex number $t$
+so that each $h_i=q_i+tp_i$ is nonzero. The excluded set is finite.
+Put $z_i=p_i/h_i$. Each bracket becomes
+$(z_i-z_j)h_ih_j$. Every matching uses all eight indices exactly once,
+so all its bracket products have the same factor $\prod_i h_i$.
+Use the first four $z_i$ as one spectrum and the negatives of the
+last four as the other. This supplies finite labels and a nonzero
+common factor. Repeated labels are allowed.
+[Finite labels from bracket data](../../Lean/MOC/FourSupportCostRealLift.lean#L437)
+
 ## Scope of the chart
 
 The Lean source gives the feasibility test under the stated ranks.
 The geometric restriction-rank result on the complex secant variety
 uses the polar-map contraction of the eight-point cubic and a tangent
 space argument. It remains a paper argument here. The Lean test decides
-the critical equation. Realization of every accepted critical lift by
-eight finite spectral labels also uses a separate geometric result.
-[Polar map, Theorem 3.4](https://arxiv.org/abs/1103.5255) · [Paper restriction-rank proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/CORANK_TWO_LIFT_EXACTNESS.md)
+the critical equation. The quotient result that supplies bracket data
+for each nonzero complex critical vector also remains a paper argument.
+[Polar map, Theorem 3.4](https://arxiv.org/abs/1103.5255) · [Critical cone, Theorem 1.1](https://arxiv.org/abs/0809.1233) · [Paper restriction-rank proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/CORANK_TWO_LIFT_EXACTNESS.md)
 
 An infeasible line excludes an actual spectral profile. The determinant
 support inequality remains a separate proof obligation. The new Lean
