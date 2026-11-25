@@ -50,6 +50,7 @@ The mixer is the unitary change between the two eigenbases.
 - [Symmetric cube mixer in order four](order-four-symmetric-cube-mixer-proof-map.md)
 - [Three spectral values with one singleton](three-spectral-values-with-one-singleton-proof-map.md)
 - [Two-by-two tensor mixers](two-by-two-tensor-mixer-proof-map.md)
+- [Weighted permutation cycles](weighted-permutation-cycles-proof-map.md)
 
 ## Determinant formulas, attainment, and probability
 

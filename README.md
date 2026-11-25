@@ -278,6 +278,13 @@ diagonal permutation of the spectrum.
 
 ### Matrices and eigenvalues
 
+Suppose one matrix is diagonal. In that basis, let the other matrix
+be a block sum of normal weighted permutation cycles. Each cycle can
+have its own scalar shift. Within each block the determinant equals
+the uniform mean of the matching products, for every diagonal partner.
+Combining the blocks proves the convex-hull inclusion in every order.
+[Uniform mean](Lean/MOC/WeightedPermutationCycle.lean#L148) · [Block theorem](Lean/MOC/WeightedPermutationCycle.lean#L191) · [Proof map](Docs/weighted-permutation-cycles-proof-map.md)
+
 - The inclusion holds in any order if $A+B$ is singular or if $A$ and $B$
   have a common unitary eigenbasis.
   [Singular sum](Lean/MOC/Singular.lean#L417) · [Common eigenbasis](Lean/MOC/Normal.lean#L240)
