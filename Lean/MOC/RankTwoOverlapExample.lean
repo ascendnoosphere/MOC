@@ -58,6 +58,9 @@ private def secondCommonFrame : Matrix (Fin 4) (Fin 2) ℂ :=
   (1 / 6 : ℂ) • !![3 + 2 * I, -1 - 2 * I; 1 + 4 * I, I;
     -1 + 2 * I, -3 + 2 * I; 1, -4 - I]
 
+private def commonCoordinateFrame : Matrix (Fin 6) (Fin 2) ℂ :=
+  !![1, 0; 0, 1; 0, 0; 0, 0; 0, 0; 0, 0]
+
 private def gramUpperFactor : Matrix (Fin 6) (Fin 6) ℂ :=
   !![1, 0, 0, 0, 0, 0; 0, 1, 0, 0, 0, 0;
      0, 0, 1, 0, 12 / 41, 0; 0, 0, 0, 1, 0, 30 / 97;
@@ -168,14 +171,70 @@ private theorem secondCommonFrame_isometry : secondCommonFrameᴴ * secondCommon
       Complex.div_re, Complex.div_im, Complex.normSq_apply, Complex.add_re, Complex.add_im,
       Complex.sub_re, Complex.sub_im]
 
-private theorem common_frame : firstFrame * firstCommonFrame = secondFrame * secondCommonFrame := by
+private theorem first_frame_values :
+    firstFrame * firstCommonFrame = commonCoordinateFrame := by
   ext i j : 1
   fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
-    norm_num [firstFrame, secondFrame, firstCommonFrame, secondCommonFrame,
-      firstBasis, secondBasis, Matrix.submatrix_apply, Matrix.smul_apply, smul_eq_mul,
+    norm_num [firstFrame, firstCommonFrame, commonCoordinateFrame, firstBasis,
+      Matrix.submatrix_apply, Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply,
+      Matrix.cons_val, Fin.castAdd, Fin.sum_univ_succ, Complex.mul_re, Complex.mul_im,
+      Complex.div_re, Complex.div_im, Complex.normSq_apply, Complex.add_re, Complex.add_im]
+
+private theorem second_frame_values :
+    secondFrame * secondCommonFrame = commonCoordinateFrame := by
+  ext i j : 1
+  fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+    norm_num [secondFrame, secondCommonFrame, commonCoordinateFrame, secondBasis,
+      Matrix.submatrix_apply, Matrix.smul_apply, smul_eq_mul,
       Matrix.mul_apply, Matrix.cons_val, Fin.castAdd, Fin.sum_univ_succ,
       Complex.mul_re, Complex.mul_im, Complex.div_re, Complex.div_im,
       Complex.normSq_apply, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im]
+
+private theorem common_frame :
+    firstFrame * firstCommonFrame = secondFrame * secondCommonFrame :=
+  first_frame_values.trans second_frame_values.symm
+
+/-- The column spaces intersect only on the first two coordinate axes. -/
+theorem common_plane (v : Fin 6 → ℂ) :
+    ((∃ x, firstFrame *ᵥ x = v) ∧ (∃ y, secondFrame *ᵥ y = v)) ↔
+      ∃ z, commonCoordinateFrame *ᵥ z = v := by
+  constructor
+  · rintro ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
+    have first_zero (j : Fin 4) : firstFrame 4 j = 0 ∧ firstFrame 5 j = 0 := by
+      fin_cases j <;>
+        norm_num [firstFrame, firstBasis, Matrix.submatrix_apply, Matrix.smul_apply,
+          smul_eq_mul, Matrix.cons_val, Fin.castAdd]
+    have second_row_two (j : Fin 4) : secondFrame 2 j = (4 / 3) * secondFrame 4 j := by
+      fin_cases j <;> apply Complex.ext <;>
+        norm_num [secondFrame, secondBasis, Matrix.submatrix_apply, Matrix.smul_apply,
+          smul_eq_mul, Matrix.cons_val, Fin.castAdd, Complex.mul_re, Complex.mul_im,
+          Complex.div_re, Complex.div_im, Complex.normSq_apply]
+    have second_row_three (j : Fin 4) : secondFrame 3 j = (5 / 12) * secondFrame 5 j := by
+      fin_cases j <;> apply Complex.ext <;>
+        norm_num [secondFrame, secondBasis, Matrix.submatrix_apply, Matrix.smul_apply,
+          smul_eq_mul, Matrix.cons_val, Fin.castAdd, Complex.mul_re, Complex.mul_im,
+          Complex.div_re, Complex.div_im, Complex.normSq_apply]
+    have hv₄ : v 4 = 0 := by rw [← hx]; simp [Matrix.mulVec, dotProduct, fun j => (first_zero j).1]
+    have hv₅ : v 5 = 0 := by rw [← hx]; simp [Matrix.mulVec, dotProduct, fun j => (first_zero j).2]
+    have hv₂ : v 2 = 0 := by
+      calc
+        v 2 = (4 / 3) * v 4 := by
+          rw [← hy]
+          simp only [Matrix.mulVec, dotProduct, second_row_two, Finset.mul_sum, mul_assoc]
+        _ = 0 := by rw [hv₄, mul_zero]
+    have hv₃ : v 3 = 0 := by
+      calc
+        v 3 = (5 / 12) * v 5 := by
+          rw [← hy]
+          simp only [Matrix.mulVec, dotProduct, second_row_three, Finset.mul_sum, mul_assoc]
+        _ = 0 := by rw [hv₅, mul_zero]
+    refine ⟨![v 0, v 1], funext fun i => ?_⟩
+    fin_cases i <;>
+      simp [commonCoordinateFrame, Matrix.mulVec, dotProduct, Fin.sum_univ_two,
+        Matrix.cons_val, hv₂, hv₃, hv₄, hv₅]
+  · rintro ⟨z, rfl⟩
+    exact ⟨⟨firstCommonFrame *ᵥ z, by rw [Matrix.mulVec_mulVec, first_frame_values]⟩,
+      ⟨secondCommonFrame *ᵥ z, by rw [Matrix.mulVec_mulVec, second_frame_values]⟩⟩
 
 private theorem gram_factorization :
     firstFrame * firstFrameᴴ + secondFrame * secondFrameᴴ =
