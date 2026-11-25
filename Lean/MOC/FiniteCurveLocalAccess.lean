@@ -23,7 +23,7 @@ private theorem exists_polynomial_separating_point_from_finite_set
     by_contra! h
     exact w.property.2 (mem_singleton_iff.mpr (funext h).symm)
   choose i hi using hdiff
-  let u := ∏ w : W, X (i w) - C (w.val (i w))
+  let u := ∏ w : W, (X (i w) - C (w.val (i w)))
   refine ⟨u, fun w hw hwu => ?_⟩
   by_contra hne
   let w' : W := ⟨w, hw, Set.not_mem_singleton_iff.mpr hne⟩
@@ -81,7 +81,8 @@ theorem eventually_lift_near_point_of_finite_projection
   refine ⟨w, ?_, hw, hwt⟩
   by_contra hwV
   apply hUW (show (a, b) ∈ U ×ˢ W from ⟨haU, hbW⟩)
-  exact ⟨w, ⟨⟨hw, hwt.symm ▸ haD⟩, hwV⟩, Prod.ext hwt hwu⟩
+  have hwD : eval w t ∈ D := hwt.symm ▸ haD
+  exact ⟨w, ⟨⟨hw, hwD⟩, hwV⟩, Prod.ext hwt hwu⟩
 
 /-- Every open neighborhood of a point on a finite affine curve contains a
 point whose value under a nonscalar polynomial avoids any finite set. -/

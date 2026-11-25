@@ -36,8 +36,8 @@ private theorem unitarySpectrum {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ)
       _ = 1 := by rw [hV.1, Matrix.mul_one, hA.2, Matrix.mul_one, hV.2]
   rw [hd, Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal] at hunit
   have hi := congrArg (fun M : Matrix (Fin n) (Fin n) ℂ => (M i i).re) hunit
-  simpa only [Matrix.diagonal_apply_eq, Matrix.one_apply_eq, Function.comp_apply, Complex.star_def,
-    ← Complex.normSq_eq_conj_mul_self, Complex.ofReal_re, Complex.one_re] using hi
+  simpa only [Matrix.diagonal_apply_eq, Matrix.one_apply_eq, Function.comp_apply, Pi.star_apply,
+    Complex.star_def, ← Complex.normSq_eq_conj_mul_self, Complex.ofReal_re, Complex.one_re] using hi
 
 /-- Atlas 005 for actual unitary inputs and any relative unitary position. -/
 theorem unitaryMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)

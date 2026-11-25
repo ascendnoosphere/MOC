@@ -1,9 +1,11 @@
 import MOC.SpectralProfileDeterminant
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic.Abel
 
 /-! Rank constraints for the real and imaginary parts of the order-four inverse pencil. -/
 
 open Matrix
+open scoped ComplexOrder
 
 namespace MOC
 namespace SpectralProfile
@@ -38,6 +40,7 @@ private theorem range_inter_eq_bot_of_rank_add_le (A B : Matrix ι ι ℂ)
   have hbudget := rank_add_range_inter_le A B
   omega
 
+omit [DecidableEq ι] in
 private theorem rank_smul_ne_zero (X : Matrix ι ι ℂ) {c : ℂ} (hc : c ≠ 0) :
     (c • X).rank = X.rank := by
   have heq : (c • X).mulVecLin = c • X.mulVecLin := by
@@ -45,8 +48,11 @@ private theorem rank_smul_ne_zero (X : Matrix ι ι ℂ) {c : ℂ} (hc : c ≠ 0
     intro v
     rw [Matrix.mulVecLin_apply, LinearMap.smul_apply, Matrix.mulVecLin_apply,
       Matrix.smul_mulVec_assoc]
-  simp only [Matrix.rank, heq, LinearMap.range_smul _ _ hc]
+  change Module.finrank ℂ (LinearMap.range (c • X).mulVecLin) =
+    Module.finrank ℂ (LinearMap.range X.mulVecLin)
+  rw [heq, LinearMap.range_smul X.mulVecLin c hc]
 
+omit [Fintype ι] [DecidableEq ι] in
 private theorem complex_lift_conjTranspose (X Y : Matrix ι ι ℂ)
     (hX : X.IsHermitian) (hY : Y.IsHermitian) :
     (X + Complex.I • Y)ᴴ = X - Complex.I • Y := by
@@ -91,9 +97,10 @@ theorem rank_eight_lift_common_kernel (X Y : Matrix ι ι ℂ)
   have hi : Complex.I • (Y *ᵥ v) ∈ LinearMap.range (X + Complex.I • Y).mulVecLin ⊓
       LinearMap.range (X - Complex.I • Y).mulVecLin := ⟨hl, hr⟩
   rw [hb] at hi
-  have hz := Submodule.mem_bot.mp hi
+  have hz := (Submodule.mem_bot ℂ).mp hi
   exact LinearMap.mem_ker.mpr ((smul_eq_zero.mp hz).resolve_left Complex.I_ne_zero)
 
+omit [DecidableEq κ] in
 private theorem rank_submatrix_le (A : Matrix ι ι ℂ) (r c : κ → ι) :
     (A.submatrix r c).rank ≤ A.rank := by
   let L : Matrix κ ι ℂ := (1 : Matrix ι ι ℂ).submatrix r id
@@ -120,9 +127,10 @@ private theorem opposite_lifts_mul_inverse (X Y : Matrix ι ι ℂ) (hunit : IsU
     (X + Complex.I • Y) * X⁻¹ * (X - Complex.I • Y) = X + Y * X⁻¹ * Y := by
   have hY : (Y * X⁻¹) * X = Y := by
     rw [Matrix.mul_assoc, X.nonsing_inv_mul hunit, Matrix.mul_one]
-  simp only [Matrix.add_mul, Matrix.mul_sub, Matrix.smul_mul, Matrix.mul_smul,
-    X.mul_nonsing_inv hunit, Matrix.one_mul, hY, smul_sub, smul_smul, Complex.I_mul_I,
-    neg_one_smul, sub_neg_eq_add]
+  have hleft : (X + Complex.I • Y) * X⁻¹ = 1 + Complex.I • (Y * X⁻¹) := by
+    rw [Matrix.add_mul, Matrix.smul_mul, X.mul_nonsing_inv hunit]
+  rw [hleft, Matrix.add_mul, Matrix.one_mul, Matrix.smul_mul, Matrix.mul_sub, hY,
+    Matrix.mul_smul, smul_sub, smul_smul, Complex.I_mul_I, neg_one_smul, sub_neg_eq_add]
   abel
 
 /-- With eight coordinates and invertible real part, complex rank at most
@@ -160,7 +168,7 @@ theorem rank_eight_lift_inverse_identity (X Y : Matrix ι ι ℂ)
     have hv : (A * X⁻¹ * B) *ᵥ v ∈
         LinearMap.range A.mulVecLin ⊓ LinearMap.range B.mulVecLin := ⟨hl, hr⟩
     rw [hbot] at hv
-    exact Submodule.mem_bot.mp hv
+    exact (Submodule.mem_bot ℂ).mp hv
   have hmul : A * X⁻¹ * B = 0 := by
     apply Matrix.ext_of_mulVec_single
     intro i

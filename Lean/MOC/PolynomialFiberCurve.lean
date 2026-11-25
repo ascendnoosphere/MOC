@@ -2,6 +2,7 @@ import MOC.IntegralGoingDown
 import MOC.PolynomialFiberComponents
 import Mathlib.RingTheory.NoetherNormalization
 import Mathlib.RingTheory.Polynomial.RationalRoot
+import Mathlib.RingTheory.Polynomial.UniqueFactorization
 
 /-! An irreducible affine curve through a point of a positive-dimensional fiber. -/
 
@@ -25,8 +26,8 @@ private theorem exists_finite_curve_quotient
       letI : Algebra A B := g.toRingHom.toAlgebra
       letI : Module.Finite A B := hgf
       have hA : IsField A :=
-        (MvPolynomial.isEmptyAlgEquiv K (Fin 0)).symm.toRingEquiv.toMulEquiv.isField
-          (Field.toIsField K)
+        (MvPolynomial.isEmptyAlgEquiv K (Fin 0)).toRingEquiv.toMulEquiv.isField
+          K (Field.toIsField K)
       have hB : IsField B := isField_of_isIntegral_of_isField' hA
       exact (Ring.not_isField_iff_exists_prime.mpr ⟨_, hφ, RingHom.ker_isPrime φ⟩ hB).elim
   | succ d =>
@@ -34,6 +35,8 @@ private theorem exists_finite_curve_quotient
       letI : Algebra A B := g.toRingHom.toAlgebra
       letI : Module.Finite A B := hgf
       letI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).mpr hgi
+      letI : UniqueFactorizationMonoid A := MvPolynomial.uniqueFactorizationMonoid (Fin (d + 1))
+      letI : IsIntegrallyClosed A := UniqueFactorizationMonoid.instIsIntegrallyClosed
       letI : CharZero (FractionRing A) := charZero_of_injective_algebraMap (IsFractionRing.injective A _)
       letI : Algebra.HasGoingDown A B := finite_domain_goingDown_of_normal_base A B
       let M : Ideal B := RingHom.ker φ
@@ -41,6 +44,9 @@ private theorem exists_finite_curve_quotient
       let a : Fin (d + 1) → K := fun i => φ (g (X i))
       let h : A →ₐ[K] Polynomial K := MvPolynomial.aeval (Fin.cases Polynomial.X
         (fun i : Fin d => Polynomial.C (a i.succ)))
+      have hzero : h (X 0) = Polynomial.X := by
+        dsimp only [h]
+        rw [MvPolynomial.aeval_X, Fin.cases_zero]
       let J : Ideal A := RingHom.ker h
       letI : J.IsPrime := RingHom.ker_isPrime h
       have hsurj : Function.Surjective h := by
@@ -48,7 +54,7 @@ private theorem exists_finite_curve_quotient
         have hu : h.comp u = AlgHom.id K (Polynomial K) := by
           apply Polynomial.algHom_ext
           change h (u Polynomial.X) = Polynomial.X
-          simp [h, u, Polynomial.aeval_X, MvPolynomial.aeval_X]
+          rw [show u Polynomial.X = X 0 from Polynomial.aeval_X _, hzero]
         intro p
         exact ⟨u p, AlgHom.congr_fun hu p⟩
       have hcomp : (Polynomial.aeval (a 0)).comp h = φ.comp g := by
@@ -70,18 +76,19 @@ private theorem exists_finite_curve_quotient
           simp [a]
         · change h (X 0 - C (a 0)) ≠ 0
           have hX : h (X 0 - C (a 0)) = Polynomial.X - Polynomial.C (a 0) := by
-            simp [h, map_sub, MvPolynomial.aeval_X, MvPolynomial.aeval_C]
+            rw [map_sub, hzero]
+            exact congrArg (Polynomial.X - ·) (h.commutes (a 0))
           simpa [hX, sub_ne_zero] using Polynomial.X_ne_C (a 0)
       obtain ⟨R, hRM, hR, hRover⟩ :=
         M.exists_ideal_lt_liesOver_of_lt (p := J) (q := M.under A) hJ
       have hcomap : R.comap g = J := hRover.over.symm
       let g' : A ⧸ J →ₐ[K] B ⧸ R := Ideal.quotientMapₐ R g hcomap.ge
-      have hg'i : Function.Injective g' := Ideal.quotientMap_injective' hcomap.le
+      have hg'i : Function.Injective g' := Ideal.quotientMap_injective' (H := hcomap.ge) hcomap.le
       have hg'f : g'.Finite := by
         apply AlgHom.Finite.of_comp_finite (f := Ideal.Quotient.mkₐ K J)
         rw [Ideal.quotient_map_comp_mkₐ]
         exact (AlgHom.Finite.of_surjective _ (Ideal.Quotient.mkₐ_surjective K R)).comp hgf
-      let e : A ⧸ J ≃ₐ[K] Polynomial K := Ideal.quotientKerAlgEquivOfSurjective hsurj
+      let e : (A ⧸ J) ≃ₐ[K] Polynomial K := Ideal.quotientKerAlgEquivOfSurjective hsurj
       exact ⟨R, hR, hRM, g'.comp e.symm.toAlgHom, hg'i.comp e.symm.injective,
         hg'f.comp (AlgHom.Finite.of_surjective _ e.symm.surjective)⟩
 
@@ -134,7 +141,7 @@ theorem exists_finite_curve_of_polynomial_fiber_of_prime
       exact hxR
   have hsurj : Function.Surjective (q'.comp q) :=
     (Ideal.Quotient.mkₐ_surjective K R).comp hq
-  let e : MvPolynomial σ K ⧸ Q ≃ₐ[K] B ⧸ R :=
+  let e : (MvPolynomial σ K ⧸ Q) ≃ₐ[K] (B ⧸ R) :=
     Ideal.quotientKerAlgEquivOfSurjective (f := q'.comp q) hsurj
   refine ⟨Q, hQ, ?_, hQP, e.symm.toAlgHom.comp g, e.symm.injective.comp hgi,
     (AlgHom.Finite.of_surjective _ e.symm.surjective).comp hgf⟩

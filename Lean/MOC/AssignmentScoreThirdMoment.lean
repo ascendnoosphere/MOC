@@ -33,10 +33,9 @@ theorem exists_negative_rankOne_assignment_cubic :
         (((orderThreeAssignmentScore σ : ℝ) - 1) *
           ((orderThreeAssignmentScore σ : ℝ) - 2) * ((orderThreeAssignmentScore σ : ℝ) - 4))) =
         -4 / 9 := by
-  let U : Matrix (Fin 3) (Fin 3) ℂ :=
-    !![((1 / 3 : ℝ) : ℂ), ((-2 / 3 : ℝ) : ℂ), ((-2 / 3 : ℝ) : ℂ);
-      ((-2 / 3 : ℝ) : ℂ), ((1 / 3 : ℝ) : ℂ), ((-2 / 3 : ℝ) : ℂ);
-      ((-2 / 3 : ℝ) : ℂ), ((-2 / 3 : ℝ) : ℂ), ((1 / 3 : ℝ) : ℂ)]
+  let R : Matrix (Fin 3) (Fin 3) ℝ :=
+    !![1 / 3, -2 / 3, -2 / 3; -2 / 3, 1 / 3, -2 / 3; -2 / 3, -2 / 3, 1 / 3]
+  let U := R.map Complex.ofRealHom
   let g (σ : Equiv.Perm (Fin 3)) : ℝ :=
     ((orderThreeAssignmentScore σ : ℝ) - 1) *
       ((orderThreeAssignmentScore σ : ℝ) - 2) * ((orderThreeAssignmentScore σ : ℝ) - 4)
@@ -51,15 +50,27 @@ theorem exists_negative_rankOne_assignment_cubic :
       dsimp only [thirdMomentCostInt] at h
       dsimp only [g]
       exact_mod_cast h
-  have hU : IsUnitary U := by
-    constructor <;> ext i j : 1 <;> fin_cases i <;> fin_cases j <;>
-      apply Complex.ext <;>
-      norm_num [U, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply,
-        Fin.sum_univ_succ, Complex.star_def, Complex.mul_re, Complex.mul_im]
+  have hR : R * Rᵀ = 1 := by
+    ext i j : 1
+    fin_cases i <;> fin_cases j <;>
+      norm_num [R, Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply, Fin.sum_univ_succ]
+  have hUt : Uᴴ = Rᵀ.map Complex.ofRealHom := by
+    ext i j : 1
+    simp [U, Matrix.conjTranspose_apply, Complex.star_def]
+  have hUU : U * Uᴴ = 1 := by
+    rw [hUt]
+    change R.map Complex.ofRealHom * Rᵀ.map Complex.ofRealHom = 1
+    rw [← Matrix.map_mul, hR, Matrix.map_one _ (map_zero _) (map_one _)]
+  have hU : IsUnitary U := ⟨hUU, Matrix.mul_eq_one_comm.mp hUU⟩
+  have hdR : R.det = -1 := by
+    rw [Matrix.det_fin_three]
+    change (1 / 3 : ℝ) * (1 / 3) * (1 / 3) - (1 / 3) * (-2 / 3) * (-2 / 3)
+      - (-2 / 3) * (-2 / 3) * (1 / 3) + (-2 / 3) * (-2 / 3) * (-2 / 3)
+      + (-2 / 3) * (-2 / 3) * (-2 / 3) - (-2 / 3) * (1 / 3) * (-2 / 3) = -1
+    norm_num
   have hd : U.det = -1 := by
-    apply Complex.ext <;>
-      norm_num [U, Matrix.det_fin_three, Complex.add_re, Complex.add_im, Complex.sub_re,
-        Complex.sub_im, Complex.mul_re, Complex.mul_im]
+    change (Complex.ofRealHom.mapMatrix R).det = -1
+    rw [← RingHom.map_det, hdR, map_neg, map_one]
   refine ⟨U, hU, ?_, ?_⟩
   · intro σ
     change 0 ≤ g σ
@@ -67,9 +78,9 @@ theorem exists_negative_rankOne_assignment_cubic :
     split <;> norm_num
   · change (∑ σ, realSignedWeight U σ * g σ) = -4 / 9
     rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin 3))]
-    · rw [hg, if_pos rfl]
-      norm_num [realSignedWeight, signedWeight, leibnizTerm, hd, Equiv.Perm.sign_one,
-        U, Fin.prod_univ_succ, Complex.mul_re, Complex.mul_im, Complex.div_re,
+    · rw [hg, if_pos rfl, realSignedWeight, signedWeight, hd]
+      norm_num [leibnizTerm, Equiv.Perm.sign_one,
+        U, R, Fin.prod_univ_succ, Complex.mul_re, Complex.mul_im, Complex.div_re,
         Complex.normSq_apply]
     · intro σ _ hσ
       rw [hg, if_neg hσ, mul_zero]

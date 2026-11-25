@@ -16,13 +16,13 @@ def kleinPrismOff (p x : Fin 3 → ℝ) : ℝ :=
 /-- The chart's symmetric pencil, in its three diagonal and two
 three-cycle coordinate groups. This scalar convention represents eight
 times the inverse quadratic pencil in the research note. -/
-def kleinPrismForm (β p q : Fin 3 → ℝ) (c₋ : ℝ) (x : KleinPrismSpace) : ℝ :=
+def kleinPrismForm (β p q : Fin 3 → ℝ) (cMinus : ℝ) (x : KleinPrismSpace) : ℝ :=
   let w := x.1
   let r := x.2.1
   let s := x.2.2
-  let c₊ := (∑ i, β i) - c₋
+  let cPlus := (∑ i, β i) - cMinus
   (∑ i, (-β i * w i ^ 2 - 2 * q i * w i * r i - 2 * p i * w i * s i +
-    (c₊ - β i) * r i ^ 2 + (c₋ - β i) * s i ^ 2)) +
+    (cPlus - β i) * r i ^ 2 + (cMinus - β i) * s i ^ 2)) +
     2 * kleinPrismOff p r + 2 * kleinPrismOff q s
 
 private def kleinInverseMix : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ) :=
@@ -47,7 +47,7 @@ private theorem kleinBilinear_mixed_reverse (u x : Fin 3 → ℝ) (t : ℝ) :
       kleinBudgetForm u t x / 2 := by
   simp only [kleinInverseMix, kleinPrismOff, kleinBudgetForm,
     Matrix.mulVecLin_apply, Matrix.mulVec, Matrix.of_apply, dotProduct, Fin.sum_univ_three,
-    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.cons_val]
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons]
   ring
 
 private theorem kleinSquareComplete (β p q c z r : ℝ) (hβ : β ≠ 0) :
@@ -64,14 +64,14 @@ theorem kleinPrism_negative_five (a b c t : ℝ) (β q : Fin 3 → ℝ)
     (hβ : ∀ i, (t + (![a ^ 2, b ^ 2, c ^ 2] : Fin 3 → ℝ) i) / 2 + |q i| ≤ β i) :
     let u : Fin 3 → ℝ := ![a ^ 2, b ^ 2, c ^ 2]
     let p := fun i => (t + u i) / 2
-    let c₊ := (t + ∑ i, u i) / 2
-    let c₋ := (∑ i, β i) - c₊
+    let cPlus := (t + ∑ i, u i) / 2
+    let cMinus := (∑ i, β i) - cPlus
     ∃ L : (Fin 5 → ℝ) →ₗ[ℝ] KleinPrismSpace,
-      ∀ x ≠ 0, kleinPrismForm β p q c₋ (L x) < 0 := by
+      ∀ x ≠ 0, kleinPrismForm β p q cMinus (L x) < 0 := by
   let u : Fin 3 → ℝ := ![a ^ 2, b ^ 2, c ^ 2]
   let p := fun i => (t + u i) / 2
-  let c₊ := (t + ∑ i, u i) / 2
-  let c₋ := (∑ i, β i) - c₊
+  let cPlus := (t + ∑ i, u i) / 2
+  let cMinus := (∑ i, β i) - cPlus
   have hu (i : Fin 3) : 0 ≤ u i := by
     fin_cases i <;> exact sq_nonneg _
   have hp (i : Fin 3) : 0 < p i := div_pos (add_pos_of_pos_of_nonneg ht (hu i)) (by norm_num)
@@ -106,15 +106,15 @@ theorem kleinPrism_negative_five (a b c t : ℝ) (β q : Fin 3 → ℝ)
   have hW (i : Fin 3) : W x i = z i - q i / β i * r i := by
     simp only [W, LinearMap.sub_apply, LinearMap.comp_apply, Pi.sub_apply, diagonalMap,
       Matrix.mulVecLin_apply, Matrix.mulVec_diagonal, z, r]
-  have hsum : (∑ i, β i) - c₋ = c₊ := by simp only [c₋, sub_sub_cancel]
-  have hcomp (i : Fin 3) := kleinSquareComplete (β i) (p i) (q i) c₊ (z i) (r i) (hβpos i).ne'
+  have hsum : (∑ i, β i) - cMinus = cPlus := by simp only [cMinus, sub_sub_cancel]
+  have hcomp (i : Fin 3) := kleinSquareComplete (β i) (p i) (q i) cPlus (z i) (r i) (hβpos i).ne'
   have hcong := kleinBilinear_mixed_reverse u (B y) t
-  change (∑ i, (c₊ - p i) * r i ^ 2) + 2 * kleinPrismOff p r =
+  change (∑ i, (cPlus - p i) * r i ^ 2) + 2 * kleinPrismOff p r =
     kleinBudgetForm u t (B y) / 2 at hcong
-  have heq : kleinPrismForm β p q c₋ (L x) =
+  have heq : kleinPrismForm β p q cMinus (L x) =
       -(∑ i, β i * z i ^ 2) + kleinBudgetForm u t (B y) / 2 -
         ∑ i, (β i - p i - q i ^ 2 / β i) * r i ^ 2 := by
-    change kleinPrismForm β p q c₋ (W x, r, 0) = _
+    change kleinPrismForm β p q cMinus (W x, r, 0) = _
     simp only [kleinPrismForm, hsum, hW, Pi.zero_apply, zero_pow (by decide : (2 : ℕ) ≠ 0),
       mul_zero, sub_zero, add_zero, kleinPrismOff, zero_add]
     simp only [Fin.sum_univ_three, kleinPrismOff] at hcong ⊢

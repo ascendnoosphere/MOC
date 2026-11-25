@@ -97,7 +97,7 @@ If $X$ has rank eight, $Y$ kills its kernel. On an invertible
 eight-dimensional principal block the corresponding matrices satisfy
 $YX^{-1}Y=-X$. All five-by-five lifted minors vanish at every rank.
 These are necessary spectral conditions.
-[Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Rank-eight criterion](../Lean/MOC/FourInversePencilRankLift.lean#L190) · [Minor criterion](../Lean/MOC/FourInversePencilRankLift.lean#L110)
+[Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight criterion](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor criterion](../Lean/MOC/FourInversePencilRankLift.lean#L117)
 
 Write the compressed imaginary part as $Y=\sum_i x_i B_i$, where
 the $B_i$ are real matrices and the $x_i$ are real coefficients.

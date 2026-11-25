@@ -128,6 +128,15 @@ polynomial constraints, rather than the number of tied permutations.
 | Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) |
 | The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) |
 
+Two curve results support the local argument. Over an algebraically
+closed field of characteristic zero, fix the values of fewer
+polynomials than there are variables. Through each point of that
+fiber there is an irreducible affine curve with a finite projection
+to the affine line. Over the complex numbers, every neighborhood of
+a point on such a curve contains a point where a given nonconstant
+polynomial avoids any prescribed finite set of values.
+[Curve in the fiber](../Lean/MOC/PolynomialFiberCurve.lean#L155) · [Local projection](../Lean/MOC/FiniteCurveLocalAccess.lean#L41) · [Avoiding finite sets](../Lean/MOC/FiniteCurveLocalAccess.lean#L89)
+
 ## Complex stationary score
 
 ```mermaid
