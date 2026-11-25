@@ -251,6 +251,11 @@ nonzero entries. In order four, every entry of this row and this column
 must be nonzero.
 [Row bound](Lean/MOC/SparseUnitary.lean#L27) · [Column bound](Lean/MOC/SparseUnitary.lean#L44) · [Counterexamples](Lean/MOC/SparseUnitary.lean#L54) · [Order four](Lean/MOC/SparseUnitary.lean#L66) · [Proof map](Docs/sparse-unitary-proof-map.md)
 
+A separate count also suffices. In order $n$, the inclusion holds if $U$
+has at most $n+8$ nonzero entries in total. In order four, four zeros
+in any positions suffice for all complex spectra.
+[Total count](Lean/MOC/SparseSupportCardinality.lean#L58) · [Four zeros](Lean/MOC/SparseSupportCardinality.lean#L74)
+
 ### Mixing blocks with one shared coordinate
 
 Take two unitary matrices that each satisfy the inclusion for all pairs

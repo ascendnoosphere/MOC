@@ -40,10 +40,10 @@ flowchart TD
 ```
 
 Use strong induction. The hypothesis gives the inclusion for all spectra and all smaller unitary matrices with the row degree bound. Order zero starts the induction. When a row has degree at most two, expand along that row. For each supported column $p$, a normalized minor deletes the row and column $p$ and scales the remaining columns to obtain a unitary matrix. Deleting entries and scaling columns preserve the bound because neither operation creates a nonzero entry from a zero.
-[Normalized minor](../Lean/MOC/SparseRow.lean#L19) · [Degree preservation](../Lean/MOC/SparseDegreeInduction.lean#L56)
+[Normalized minor](../Lean/MOC/SparseRow.lean#L19) · [Degree preservation](../Lean/MOC/SparseDegreeInduction.lean#L39)
 
 The expansion uses the weights $|U_{ip}|^2$, whose sum is one. The term for column $p$ is the smaller determinant times $a_i+b_p$. Each smaller matching product times this factor gives an ambient matching product, by pairing $p$ with $i$. Convexity gives the ambient inclusion. For a low-degree column, exchange the spectra and apply the same expansion to $U^*$. The normalized minors of $U^*$ retain the column bound inherited from $U^*$. Take their adjoints to obtain smaller matrices with the required row bound, then use the induction hypothesis.
-[Expansion and convexity](../Lean/MOC/SparseRow.lean#L171) · [Exchange of spectra](../Lean/MOC/Core.lean#L103) · [Induction](../Lean/MOC/SparseDegreeInduction.lean#L102)
+[Expansion and convexity](../Lean/MOC/SparseRow.lean#L171) · [Exchange of spectra](../Lean/MOC/Core.lean#L103) · [Induction](../Lean/MOC/SparseDegreeInduction.lean#L104)
 
 If no row or column has degree at most two, then each row has degree three and each column has degree at least three. The sum of the row degrees equals the sum of the column degrees because each sum counts every nonzero entry once. The row sum is $3n$, so each column must also have degree three. The case with only the column bound follows by exchanging the spectra and taking the adjoint.
 [Double count](../Lean/MOC/SupportDegreeBalance.lean#L10) · [Exact degrees](../Lean/MOC/SupportDegreeBalance.lean#L28)
@@ -69,3 +69,19 @@ Without a proper paired block split, a nonempty proper row set has strictly more
 
 The inclusion holds for all unitary matrices of orders zero through three. At order four, exact degree three gives one zero in each row and one zero in each column. These zeros form a permutation. Relabel the columns to put the zeros on the diagonal, and apply the zero-diagonal unitary theorem. Relabeling also permutes the second spectrum and preserves the ambient matching hull.
 [Small orders](../Lean/MOC/Small.lean#L68) · [Zero matching](../Lean/MOC/SparsePairedBlocks.lean#L66) · [Zero-diagonal unitary theorem](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) · [Relabeling invariance](../Lean/MOC/Small.lean#L41)
+
+## Total number of nonzero entries
+
+Suppose $U$ has order $n$ and at most $n+8$ nonzero entries. The
+inclusion holds for all pairs of spectra. For a row of degree at
+most two, each normalized minor removes at least its nonzero pivot.
+The order also drops by one, so the smaller matrix satisfies the
+same bound.
+[Count by matrix positions](../Lean/MOC/SparseSupportCardinality.lean#L12) · [Deletion](../Lean/MOC/SupportCardinalityDeletion.lean#L19)
+
+Now suppose $n\ge 4$ and each row has at least three nonzero entries.
+If one row has four or more, there are at least $3n+1>n+8$ nonzero
+entries. Thus each row has degree three, and the row bound proves the
+claim. At order four, the total bound is twelve in a matrix with
+sixteen positions. Four zeros in any positions therefore suffice.
+[All orders](../Lean/MOC/SparseSupportCardinality.lean#L58) · [Order four](../Lean/MOC/SparseSupportCardinality.lean#L74)

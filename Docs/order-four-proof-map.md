@@ -122,6 +122,11 @@ or if there is an opposite eigenvalue pair.
 
 ### Complex unitary matrices with zero diagonal
 
+Four zeros in any positions suffice for the order-four inclusion.
+This follows from the all-order bound on the total number of nonzero
+entries. The zero-diagonal case below is a step in that proof.
+[Four arbitrary zeros](../Lean/MOC/SparseSupportCardinality.lean#L74) · [All-order count](sparse-unitary-proof-map.md#total-number-of-nonzero-entries)
+
 Let $U$ be a complex unitary matrix of order four with zero diagonal.
 The inclusion holds for every pair of complex eigenvalue lists. If another
 entry is zero, its row has at most two nonzero entries. Expansion along that

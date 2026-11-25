@@ -35,14 +35,15 @@ private theorem normalizedSparseRowMinor_entry_eq_zero {n : ℕ}
   rw [normalizedSparseRowMinor, Matrix.mul_diagonal, Matrix.submatrix_apply]
   exact mul_eq_zero_of_left hz _
 
-private theorem rowSupportDegree_normalizedSparseRowMinor_le {n : ℕ}
+/-- Deleting a row and a pivot column cannot increase the degree of a surviving row. -/
+theorem rowSupportDegree_normalizedSparseRowMinor_le {n : ℕ}
     {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ} (i j k : Fin (n + 1)) (r : Fin n) :
     (supportColumns (normalizedSparseRowMinor U i j k) {r}).card ≤
       (supportColumns U {i.succAbove r}).card :=
   supportColumns_singleton_card_le_of_embed r (i.succAbove r) j.succAboveEmb
     (fun s hn hz => hn (normalizedSparseRowMinor_entry_eq_zero i j k r s hz))
 
-private theorem columnSupportDegree_normalizedSparseRowMinor_le {n : ℕ}
+theorem columnSupportDegree_normalizedSparseRowMinor_le {n : ℕ}
     {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ} (i j k : Fin (n + 1)) (s : Fin n) :
     (supportColumns (normalizedSparseRowMinor U i j k)ᴴ {s}).card ≤
       (supportColumns Uᴴ {j.succAbove s}).card := by
@@ -64,10 +65,11 @@ def SupportDegreeLEThreeConjecture (n : ℕ) : Prop :=
   ∀ (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ),
     IsUnitary U → SupportDegreeLEThree U → Holds a b U
 
-private theorem holds_of_row_degree_le_two_of_minors {n : ℕ}
+/-- A row of degree at most two reduces the inclusion to its nonzero-pivot minors. -/
+theorem holds_of_row_degree_le_two_of_minors {n : ℕ}
     (a b : Fin (n + 1) → ℂ) {U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ}
     (hU : IsUnitary U) (i : Fin (n + 1)) (hc : (supportColumns U {i}).card ≤ 2)
-    (hSmall : ∀ p q, IsUnitary (normalizedSparseRowMinor U i p q) →
+    (hSmall : ∀ p q, U i p ≠ 0 → IsUnitary (normalizedSparseRowMinor U i p q) →
       Holds (a ∘ i.succAbove) (b ∘ p.succAbove) (normalizedSparseRowMinor U i p q)) :
     Holds a b U := by
   classical
@@ -76,7 +78,7 @@ private theorem holds_of_row_degree_le_two_of_minors {n : ℕ}
   have hpair (j k : Fin (n + 1)) (hzero : ∀ l, l ≠ j → l ≠ k → U i l = 0) :
       Holds a b U :=
     holds_of_two_supported_row_of_minors a b hU i j k hzero
-      (fun p _ hV => hSmall p _ hV)
+      (fun p hp hV => hSmall p _ hp hV)
   by_cases h1 : S.card ≤ 1
   · obtain ⟨j, hj⟩ := Finset.card_le_one_iff_subset_singleton.mp h1
     apply hpair j j
@@ -116,14 +118,14 @@ theorem holds_of_rowSupportDegreeLEThree_of_exact_three
       by_cases hrow : ∃ i, (supportColumns U {i}).card ≤ 2
       · obtain ⟨i, hi⟩ := hrow
         apply holds_of_row_degree_le_two_of_minors a b hU i hi
-        intro p q hV
+        intro p q _ hV
         exact ih n (Nat.lt_succ_self n) _ _ _ hV fun r =>
           (rowSupportDegree_normalizedSparseRowMinor_le i p q r).trans (hdeg _)
       by_cases hcol : ∃ j, (supportColumns Uᴴ {j}).card ≤ 2
       · obtain ⟨j, hj⟩ := hcol
         apply (holds_swap_iff a b hU).mp
         apply holds_of_row_degree_le_two_of_minors b a (unitary_adjoint hU) j hj
-        intro p q hV
+        intro p q _ hV
         apply (holds_swap_iff _ _ hV).mp
         apply ih n (Nat.lt_succ_self n) _ _ _ (unitary_adjoint hV)
         intro s
