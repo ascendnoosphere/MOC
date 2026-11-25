@@ -7,7 +7,8 @@ zero otherwise. The two subsets have the same size. The noncrossing
 matching evaluation gives 14 coordinates for the space of profiles that
 these indicators span. A support cost is a profile in this space whose
 entries are nonnegative. [Matching evaluation](../../Lean/MOC/FourMatchingRelations.lean#L196)
-[Support cost](../../Lean/MOC/FourSupportConeClassification.lean#L471)
+[Equality of spans](../../Lean/MOC/FourSupportConeClassification.lean#L617)
+[Support cost](../../Lean/MOC/FourSupportConeClassification.lean#L472)
 
 The cone has 34 ordinary rays and 48 mixed rays. The ordinary rays are the
 16 singleton-image indicators and the 18 pair-image indicators with source
@@ -53,7 +54,7 @@ retained rays until the residual is zero. Its soundness proof uses only
 those arithmetic operations. The 10 steps give 2,261 candidates to check.
 The last list consists of the named ordinary and mixed profiles.
 [Checker](../../Lean/MOC/FourSupportConeClassification.lean#L239)
-[Decomposition](../../Lean/MOC/FourSupportConeClassification.lean#L489)
+[Decomposition](../../Lean/MOC/FourSupportConeClassification.lean#L490)
 
 The listed profiles have different supports, and none of these supports
 is a proper subset of another. If two support costs sum to a listed
@@ -62,7 +63,7 @@ decomposition, only the listed profile can have positive weight. Thus
 each listed profile spans an extreme ray. Conversely, in a decomposition
 of any nonzero extreme cost, each positive-weight summand lies on that
 ray. The two indexed families therefore account for all the extreme rays.
-[Extremality](../../Lean/MOC/FourSupportConeClassification.lean#L507)
+[Extremality](../../Lean/MOC/FourSupportConeClassification.lean#L508)
 
 The published note used a closed oriented chain in the boundary of the
 matching polytope. This Lean source uses successive intersections

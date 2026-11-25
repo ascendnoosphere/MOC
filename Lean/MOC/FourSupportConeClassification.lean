@@ -321,19 +321,20 @@ private def stage : ℕ → List IntegerProfile
 
 set_option maxRecDepth 32768 in
 set_option maxHeartbeats 3000000 in
+private theorem basis_evaluation (m : Fin 14 → ℝ) :
+    (∑ i, fourMatchingEvaluation m (baseLabels i) • castProfile (baseRay i)) =
+      fourMatchingEvaluation m := by
+  funext k
+  fin_cases k <;>
+    simp [Fin.sum_univ_succ, Pi.smul_apply, smul_eq_mul, Finset.sum_apply,
+      baseRay, baseLabels, castProfile, fourMatchingCoordinatesOfValues, fourMatchingEvaluation] <;>
+    ring
+
 private theorem basis_representation (m : Fin 14 → ℝ)
     (hn : ∀ i, 0 ≤ fourMatchingEvaluation m i) :
-    generated (ray base) (fourMatchingEvaluation m) := by
-  classical
-  have hg : generated (fun i => castProfile (baseRay i)) (fourMatchingEvaluation m) := by
-    refine ⟨fun i => fourMatchingEvaluation m (baseLabels i), fun i => hn _, ?_⟩
-    funext k
-    fin_cases k <;>
-      simp [Fin.sum_univ_succ, Pi.smul_apply, smul_eq_mul, Finset.sum_apply,
-        baseRay, baseLabels, castProfile, fourMatchingCoordinatesOfValues, fourMatchingEvaluation] <;>
-      ring
-  exact generated_mono
-    (fun i => generated_of_mem (List.mem_ofFn'.mpr ⟨i, rfl⟩)) hg
+    generated (ray base) (fourMatchingEvaluation m) :=
+  generated_mono (fun i => generated_of_mem (List.mem_ofFn'.mpr ⟨i, rfl⟩))
+    ⟨fun i => fourMatchingEvaluation m (baseLabels i), fun i => hn _, basis_evaluation m⟩
 
 private def stepCheck (t : ℕ) : Bool :=
   (candidates (cuts[t]?.getD 0) (stage t)).all (reduces (stage (t + 1)) (active (t + 1)) 24)
@@ -577,5 +578,60 @@ theorem four_cost_cone_ray_index_unique (i j : Fin 34 ⊕ Fin 48) {a : ℝ}
   intro k hk
   change listed j = a • listed i at hf
   rw [hf, Pi.smul_apply, hk, smul_zero]
+
+private def ordinaryBasisIndices : Fin 14 → Fin 34 :=
+  ![0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 16, 17, 22, 23]
+
+-- Row i expresses baseRay i in the selected ordinary indicators.
+private def ordinaryBasisCoefficients : Fin 14 → Fin 14 → ℤ :=
+  ![![0, 0, -1, -1, 1, 1, 0, 0, 0, 0, -1, 0, 0, 1],
+    ![0, 0, 1, 1, -1, 0, 0, 0, 0, 0, 1, 0, 0, -1],
+    ![-1, 0, 1, 2, -2, -1, 0, -1, 0, 0, 2, 1, 1, 0],
+    ![1, 0, -1, -1, 1, 0, 0, 1, 0, 0, -1, 0, -1, 0],
+    ![1, 0, 0, -1, 1, 0, 0, 0, 0, 0, -1, -1, 0, 0],
+    ![0, 0, 1, 1, -1, -1, 0, 0, 0, 1, 1, 0, 0, -1],
+    ![0, 0, -1, -1, 1, 0, 0, 0, 0, -1, 0, 0, 0, 1],
+    ![0, -1, -1, -2, 2, 1, 1, 1, 0, 0, -1, -1, 0, 0],
+    ![0, 1, 1, 1, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0],
+    ![0, 1, 0, 1, -1, 0, -1, 0, 0, 0, 0, 1, 0, 0],
+    ![0, 0, -1, -2, 1, 1, 0, 1, 1, 0, -1, 0, -1, 0],
+    ![0, 0, 1, 1, 0, 0, 0, -1, -1, 0, 0, 0, 1, 0],
+    ![0, 0, 1, 1, -1, -1, 0, 0, 0, 0, 1, 0, 0, 0],
+    ![0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+set_option maxHeartbeats 3000000 in
+private theorem ordinary_basis_relation (i : Fin 14) :
+    castProfile (baseRay i) =
+      ∑ j, (ordinaryBasisCoefficients i j : ℝ) • ordinaryCostRay (ordinaryBasisIndices j) := by
+  have he : ∀ (i : Fin 14) (k : Fin 24), baseRay i k =
+      ∑ j, ordinaryBasisCoefficients i j * ordinaryCostRayInt (ordinaryBasisIndices j) k := by
+    decide
+  funext k
+  change (baseRay i k : ℝ) = _
+  rw [he i k]
+  simp only [Int.cast_sum, Int.cast_mul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
+    ordinaryCostRay]
+
+/-- The evaluated matching space is exactly the real span of the
+ordinary graded-minor indicators. -/
+theorem four_matching_space_eq_ordinary_span :
+    Set.range (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ)) =
+      (Submodule.span ℝ (Set.range ordinaryCostRay) : Set (Fin 24 → ℝ)) := by
+  let W := Submodule.span ℝ (Set.range ordinaryCostRay)
+  have hm (i : Fin 14) : castProfile (baseRay i) ∈ W := by
+    rw [ordinary_basis_relation]
+    exact W.sum_mem (fun j _ => W.smul_mem _ (Submodule.subset_span ⟨ordinaryBasisIndices j, rfl⟩))
+  ext x
+  constructor
+  · rintro ⟨m, rfl⟩
+    change fourMatchingEvaluation m ∈ W
+    rw [← basis_evaluation m]
+    exact W.sum_mem (fun i _ => W.smul_mem _ (hm i))
+  · intro hx
+    have hle : W ≤ evaluation.range := by
+      apply Submodule.span_le.mpr
+      rintro _ ⟨j, rfl⟩
+      exact ⟨fun k => (listedCoordinates (Sum.inl j) k : ℝ), listed_evaluation (Sum.inl j)⟩
+    exact hle hx
 
 end MOC
