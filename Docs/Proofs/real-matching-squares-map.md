@@ -20,11 +20,11 @@ otherwise. Let $V$ be the real span of these indicators. The
 noncrossing coordinates give $V$ dimension 14.
 [Indicator span](../../Lean/MOC/RealMatchingSquares.lean#L185) · [Dimension](../../Lean/MOC/RealMatchingSquares.lean#L55)
 
-Use the auxiliary values $eta=(0,1,-1,w)$, with $w$ a real variable.
-For a permutation $pi$ and a subset $I$, take the constant and
-linear coefficients of $prod_{iin I}eta_{pi(i)}$. Let $J$ be the
-matrix that has these 32 coefficients in row $pi$. Its column space
-is $V$. Write $j_pi$ for the transpose of that row.
+Use the auxiliary values $\beta=(0,1,-1,w)$, with $w$ a real variable.
+For a permutation $\pi$ and a subset $I$, take the constant and
+linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
+matrix that has these 32 coefficients in row $\pi$. Its column space
+is $V$. Write $j_\pi$ for the transpose of that row.
 [Jet definition](../../Lean/MOC/RealMatchingSquares.lean#L29) · [Column space](../../Lean/MOC/RealMatchingSquares.lean#L152)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
@@ -32,7 +32,7 @@ directions in each block of the jet. Its two directions, with
 coordinates given by subsets, are
 
 $$
-u_1(01)=u_1(23)=1,quad u_1(02)=u_1(13)=-1,
+u_1(01)=u_1(23)=1,\quad u_1(02)=u_1(13)=-1,
 $$
 
 $$
@@ -41,9 +41,9 @@ u_2(03)=u_2(12)=-2 .
 $$
 
 Their other coordinates are zero. Here $01$ means the subset
-${0,1}$. For a real positive semidefinite matrix $T$, the cost is
-$g_pi=j_pi^mathsf{T}Tj_pi$ and its corner is
-$R=E^mathsf{T}TE$. The real auxiliary test requires that the range
+$\{0,1\}$. For a real positive semidefinite matrix $T$, the cost is
+$g_\pi=j_\pi^\mathsf{T}Tj_\pi$ and its corner is
+$R=E^\mathsf{T}TE$. The real auxiliary test requires that the range
 of $T$ lie in the row space of $J$ and that the partial transpose of
 $R$ be positive semidefinite. The partial transpose exchanges the
 first tensor index of the row and column.
@@ -63,15 +63,15 @@ flowchart LR
     Fixed --> Gram
 ```
 
-For $gin V$, the real auxiliary test is equivalent to the existence
-of a finite list of functions $f_kin V$ with
-$g_pi=sum_k f_k(pi)^2$ for every $pi$.
+For $g\in V$, the real auxiliary test is equivalent to the existence
+of a finite list of functions $f_k\in V$ with
+$g_\pi=\sum_k f_k(\pi)^2$ for every $\pi$.
 [Lean equivalence](../../Lean/MOC/RealMatchingSquares.lean#L441)
 
 The sign of a permutation is $1$ for an even permutation and $-1$
 for an odd one. The signed sum of a cost in $V$ is zero. Let
-$K=egin{pmatrix}0&1\\-1&0end{pmatrix}^{\otimes 2}$. The signed sum of
-the jet products equals $EKE^mathsf{T}$. The resulting pairing of
+$K=\begin{pmatrix}0&1\\-1&0\end{pmatrix}^{\otimes 2}$. The signed sum of
+the jet products equals $EKE^\mathsf{T}$. The resulting pairing of
 $K$ and the symmetric corner $R$ is zero. It is twice the difference
 between entries $(00,11)$ and $(01,10)$ of $R$. This difference also
 multiplies $K$ in the partial-transpose defect. Thus the partial
@@ -80,11 +80,11 @@ transpose fixes $R$.
 
 ## From a positive moment to a support inequality
 
-For signed coefficients $c_pi$, their moment is
-$J^mathsf{T}mathrm{diag}(c)J$. Suppose a real scalar $t$ makes the
-moment of $c_pi+t,mathrm{sign}(pi)$ positive semidefinite. If the
+For signed coefficients $c_\pi$, their moment is
+$J^\mathsf{T}\mathrm{diag}(c)J$. Suppose a real scalar $t$ makes the
+moment of $c_\pi+t\,\mathrm{sign}(\pi)$ positive semidefinite. If the
 cost $g$ lies in $V$ and is a sum of matching squares, then
-$sum_pi c_pi g_pige0$. The added alternating term has zero
+$\sum_\pi c_\pi g_\pi\ge0$. The added alternating term has zero
 pairing with $g$. The rank-one partial-transpose defect is a separate
 identity that can help construct such a scalar.
 [Positive-moment implication](../../Lean/MOC/RealMatchingSquares.lean#L533) · [Rank-one defect](../../Lean/MOC/RealMatchingSquares.lean#L502)

@@ -40,7 +40,7 @@ Multiply by the covering mass and by the product $-504-168i$ of all
 eight nonzero spectral values. The result is
 
 $$
-det(A+B)=rac{-225594+186786i}{4225}.
+\det(A+B)=\frac{-225594+186786i}{4225}.
 $$
 
 The proof uses an upper triangular factorization for the Gram matrix

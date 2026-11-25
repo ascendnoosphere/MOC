@@ -1,6 +1,6 @@
 # All-order proof maps
 
-[Conjecture and overview](../../README.md#proof-tree) · [Contact transfer](contact-proof-maps.md) · [Order four](order-four-proof-maps.md) · [Order five](order-five-proof-maps.md)
+[Conjecture and overview](../../README.md#proof-tree) · [Spectral and support results](spectral-support-proof-map.md) · [Contact transfer](contact-proof-maps.md) · [Order four](order-four-proof-maps.md) · [Order five](order-five-proof-maps.md)
 
 - [How routes connect](#how-routes-connect)
 - [Matrix and operator formulations](#matrix-and-operator-formulations)
@@ -910,12 +910,9 @@ $U$ has a radius that can depend on $U$.
 
 ## Scope of the Lean source
 
-The default MOC target imports the route registries. Its axiom audit
-checks the safe project declarations in its imports. The checkout lacks
-five modules referenced by standalone files outside that import graph.
-The maps identify when a cited proof source depends on an absent module.
-[Default target](../../lakefile.toml) · [Axiom audit](../../Lean/MOC.lean#L247)
-
-The absent modules are MOC.ContactCensus, MOC.WeightedDiamondCensusPath,
-MOC.WeightedDiamondChart, MOC.WeightedDiamondLowerInitial, and
-MOC.WeightedDiamondWitnessMasks.
+The default MOC target imports the route registries and the new
+spectral and support modules. It checks the axiom dependencies of
+their safe declarations when Lean runs. The local import paths
+resolve after the restoration of the permutation coordinates and
+the weighted-minor certificates. The new source awaits compilation.
+[Default target](../../lakefile.toml) · [Axiom audit](../../Lean/MOC.lean#L272)

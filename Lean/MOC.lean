@@ -244,6 +244,30 @@ import MOC.WeightedDiamondAdjacency
 import MOC.WeightedMinor
 import MOC.ZeroHeightTriangleClosure
 
+import MOC.BinaryCubicMixerReduction
+import MOC.ConicSpectralReductions
+import MOC.DeletionAndPaddingObstructions
+import MOC.EqualSpectralCoefficients
+import MOC.FourCircleLineCommonWeights
+import MOC.FourContact0710PencilFactors
+import MOC.FourKleinSpectralSquares
+import MOC.FourMixedRayCancellation
+import MOC.FourOppositePairSupport
+import MOC.FourRealParameterFamily
+import MOC.FourSupportConeClassification
+import MOC.FourSupportCostRealLift
+import MOC.FourSymmetricSixContact
+import MOC.GaussianHaarContainment
+import MOC.HermitianExteriorShift
+import MOC.InterlacingCommonLaw
+import MOC.RankTwoOverlapExample
+import MOC.RealMatchingSquares
+import MOC.SixDimensionalMixerBall
+import MOC.SmallSpectralPerturbation
+import MOC.SpectralProfileDeterminant
+import MOC.TranspositionWinding
+import MOC.TwoByTwoTensorPermutationLaw
+
 open Lean Elab Command in
 run_cmd do
   let env ← getEnv

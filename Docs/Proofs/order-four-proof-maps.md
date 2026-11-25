@@ -1,6 +1,6 @@
 # Order-four proof maps
 
-[README overview](../../README.md#order-four) · [All-order routes](all-order-proof-maps.md) · [Contact transfer](contact-proof-maps.md) · [Order five](order-five-proof-maps.md)
+[README overview](../../README.md#order-four) · [All-order routes](all-order-proof-maps.md) · [Contact transfer](contact-proof-maps.md) · [Order five](order-five-proof-maps.md) · [Spectral and support results](spectral-support-proof-map.md#order-four-support-costs)
 
 - [Registered routes](#registered-routes)
 - [Real orthogonal and stationary tests](#real-orthogonal-and-stationary-tests)
@@ -99,7 +99,7 @@ $U$ can be restricted to real orthogonal matrices.
 The inclusion also holds if either spectrum lies on a circle or line,
 if there is an opposite eigenvalue pair, or if the real orthogonal
 matrix has a zero diagonal.
-[Circle or line](../../Lean/MOC/HermitianByNormalFourProof.lean#L60)† · [Opposite pair](../../Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](../../Lean/MOC/FourZeroDiagonal.lean#L342)
+[Circle or line](../../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../../Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](../../Lean/MOC/FourZeroDiagonal.lean#L342)
 
 ## Contact patterns
 
@@ -108,9 +108,9 @@ Each T-label names a set of permutations in the linked Lean statements.
 | Status | Named pattern | Bound or reduction |
 | --- | --- | --- |
 | Proof in source | T1 | [Directional bound for the specified contacts](../../Lean/MOC/ZhengT1Circle.lean#L184) |
-| Proof in source | T2, T3, T4, T5, T6 | [T2](../../Lean/MOC/FourT2Minor.lean#L338)† · [T3](../../Lean/MOC/FourT3.lean#L25)† · [T4](../../Lean/MOC/FourT4.lean#L30)† · [T5](../../Lean/MOC/FourT5.lean#L26)† · [T6](../../Lean/MOC/FourT6Support.lean#L11)† |
-| Proof in source | T15 and T21 | [T15](../../Lean/MOC/FourT15.lean#L14)† · [T21](../../Lean/MOC/FourT21ContactCone.lean#L275)† |
-| Partial | T34 | The bound holds at zero common projection, or with the additional contact specified in the theorem. [Zero projection](../../Lean/MOC/FourT34MinorBranch.lean#L145)† · [Additional contact](../../Lean/MOC/FourT34MinorBranch.lean#L56)† |
+| Proof in source | T2, T3, T4, T5, T6 | [T2](../../Lean/MOC/FourT2Minor.lean#L338) · [T3](../../Lean/MOC/FourT3.lean#L25) · [T4](../../Lean/MOC/FourT4.lean#L30) · [T5](../../Lean/MOC/FourT5.lean#L26) · [T6](../../Lean/MOC/FourT6Support.lean#L11) |
+| Proof in source | T15 and T21 | [T15](../../Lean/MOC/FourT15.lean#L14) · [T21](../../Lean/MOC/FourT21ContactCone.lean#L275) |
+| Partial | T34 | The bound holds at zero common projection, or with the additional contact specified in the theorem. [Zero projection](../../Lean/MOC/FourT34MinorBranch.lean#L145) · [Additional contact](../../Lean/MOC/FourT34MinorBranch.lean#L56) |
 | Partial | T85 | The paired branch is excluded. A remaining strict witness reduces to eight or more contacts at positive projection. [Paired branch](../../Lean/MOC/ZhengPairedContacts.lean#L905) · [Positive branch](../../Lean/MOC/ZhengPairedContacts.lean#L915) |
 | Open | General seven-contact test | The bound must hold for every real orthogonal case at the threshold. [Exact endpoint](../../Lean/MOC/ZhengContactReduction.lean#L14) |
 

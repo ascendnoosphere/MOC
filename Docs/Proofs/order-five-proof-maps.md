@@ -1,6 +1,6 @@
 # Order-five proof maps
 
-[README overview](../../README.md#order-five) · [All-order routes](all-order-proof-maps.md) · [Contact transfer](contact-proof-maps.md) · [Order four](order-four-proof-maps.md)
+[README overview](../../README.md#order-five) · [All-order routes](all-order-proof-maps.md) · [Contact transfer](contact-proof-maps.md) · [Order four](order-four-proof-maps.md) · [Spectral and support results](spectral-support-proof-map.md#spectra-mixers-and-attainable-values)
 
 - [Registered routes](#registered-routes)
 - [Contact thresholds](#contact-thresholds)
@@ -151,7 +151,7 @@ induced by a permutation of the individual indices.
 Lean also gives inclusion for the order-five Fourier matrix, the
 unitary matrices with zero diagonal and off-diagonal magnitudes $1/2$,
 and pairs with one real list and at least one real entry in the other.
-[Fourier matrix](../../Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal](../../Lean/MOC/ConferenceFive.lean#L260) · [Real entry](../../Lean/MOC/HermitianByNormalFourProof.lean#L100)†
+[Fourier matrix](../../Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal](../../Lean/MOC/ConferenceFive.lean#L260) · [Real entry](../../Lean/MOC/HermitianByNormalFourProof.lean#L100)
 
 ## Exact spectral and mixer cases
 
