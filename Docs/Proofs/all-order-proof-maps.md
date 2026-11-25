@@ -8,6 +8,8 @@
 - [Induction through normal maximizers](#induction-through-normal-maximizers)
 - [Polynomial and coefficient conditions](#polynomial-and-coefficient-conditions)
 - [Labelled spectral formulations](#labelled-spectral-formulations)
+- [Finite overlap compression](#finite-overlap-compression)
+- [Paper cases in any order](#paper-cases-in-any-order)
 - [Scope of the Lean source](#scope-of-the-lean-source)
 
 The conjecture, denoted by MOC, states that the determinant of the sum of
@@ -298,6 +300,376 @@ The registered list spans [001 through 243](../../Lean/MOC/ProofRoutes.lean#L320
 fixed order, the evaluated form is equivalent to the fixed-order
 conjecture when the sample type is nonempty.
 [Fixed-order form](../../Lean/MOC/ProofRoutes.lean#L71)
+
+## Finite overlap compression
+
+```mermaid
+flowchart BT
+    Scalar["Scalar frame inclusion at overlap k"]
+    Lean["Square MOC through 4k² − k<br/>Lean reduction"]
+    Paper["Square MOC through 3k² − k<br/>Paper reduction"]
+    Restricted["Restriction on one reciprocal list<br/>Direct paper proof at k = 3"]
+    Lean -->|if| Scalar
+    Paper -->|if| Scalar
+    Restricted -->|if| Scalar
+```
+
+A frame here is a finite matrix with orthonormal columns. At overlap
+$k$, the two frames compress their diagonal spectral lists to $k$ by
+$k$ matrices. The scalar comparison uses products over matchings of
+size $k$ and the zero vertex in the stated square reduction. The paper
+argument reduces a strict violation to at most $3k^2$ row labels, so
+square orders through $3k^2-k$ suffice. At $k=3$, the bound is 24. The
+Lean bound is 33. [Lean frame bound](../../Lean/MOC/FiniteFrameLabels.lean#L501) ·
+[Square bridge](../../Lean/MOC/ReducedTwoFrame.lean#L382)
+
+
+
+<details>
+<summary>Proof of the smaller label bound</summary>
+
+#### Proof
+
+Discard zero rows. Write $A_i=e_i^*e_i$ and $B_j=f_j^*f_j$ for the
+outer products of the remaining rows of $E$ and $F$. The nonnegative
+row weights $r_i,s_j$ that satisfy
+$\sum_i r_i A_i=I_k$ and $\sum_j s_j B_j=I_k$ form a compact
+polytope. The original weights are all one. Each $A_i,B_j$ has
+positive trace, so the trace equation bounds each weight.
+
+Put $T(r,s)=\sum_i r_i x_i A_i+\sum_j s_j y_j B_j$.
+Choose a real support direction that strictly separates the starting
+determinant from the original hull. Maximize the directional determinant
+on the polytope. Among the maximizers, take one with the least number
+$m$ of positive weights.
+
+Let $W$ be the real space of weight variations supported on these $m$
+coordinates that preserve both identity constraints. Each constraint
+takes values in a Hermitian matrix space of real dimension $k^2$.
+Thus $\dim_{\mathbb R}W\ge m-2k^2$. The linear map $T$ is injective
+on $W$. A nonzero vector in its kernel would allow a move along the
+weight line until the first positive coordinate became zero. Compactness
+guarantees a finite endpoint. The determinant would stay fixed and the
+support of the weights would decrease.
+
+Suppose $\dim_{\mathbb R} T(W)>k^2$. The real dimension of the space of
+complex $k$ by $k$ matrices is $2k^2$, so $T(W)$ contains both
+$Z\ne 0$ and $iZ$. The corresponding two real weight variations are
+feasible near the maximizer because all their coordinates were positive.
+Thus the real part of the holomorphic function
+$z\mapsto\eta\det(T_0+zZ)$ has a local maximum at zero. Here $T_0$ is
+the maximizing matrix and $\eta$ is the separating direction. The
+maximum principle and the identity theorem make the polynomial constant.
+Follow the real variation for $Z$ to the first zero weight. This
+contradicts the minimum support.
+
+Thus $\dim_{\mathbb R}W\le k^2$, so $m\le 3k^2$. Scale the selected
+rows by the square roots of their weights. The identity constraints
+keep the frames isometric. The new comparison products are a subset of
+the original ones, so the strict inequality is preserved.
+
+#### Limit of the argument
+
+For $k\ge 2$, the real space of matrices $H+itI_k$ with $H$ Hermitian,
+$\mathrm{tr}(H)=0$, and $t$ real has dimension $k^2$. It contains no
+complex line and no nonzero matrix of rank one. At $I_k$ the first
+variation of the real determinant vanishes. The quadratic term is
+$-\mathrm{tr}(H^2)/2-k(k-1)t^2/2$, which is strictly negative away
+from zero. A further reduction must use restrictions on weight spaces of
+actual frames.
+
+</details>
+
+The restricted overlap-three theorem starts with positive ranks $r,s$
+after opposite scalar shifts of the two normal matrices of order $n$.
+Assume $r+s=n+3$. In one list of reciprocals of the nonzero shifted
+eigenvalues, require at most two distinct values, or require collinearity
+with both endpoints repeated. The other list is arbitrary. Interlacing
+samples distinct scalar labels for one compression. Endpoint
+interpolation reduces to a triple with a repeated value. A coupling of
+adjacent minor laws then gives a three-edge matching.
+[Paper proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/MOC_Overlap_Three_Supplement.md)
+
+## Paper cases in any order
+
+| Premise | Conclusion and proof |
+| --- | --- |
+| A normal matrix differs from a diagonal matrix by rank at most one. | One probability law on its eigenvalue labels represents every principal minor and works for every complex diagonal partner in the same basis. The Hermitian case uses the secular equation on a fixed-spectrum interlacing chamber. The normal case uses a common fractional linear map that preserves the rank-one difference. |
+| One summand has fixed nonzero eigenvalues $a_i$. The other has eigenvalues $t\beta_j$. The values $\sum_i a_i^{-1}\beta_{\pi(i)}$ are distinct with no three collinear. | For all sufficiently small complex $t$, the inclusion holds uniformly over all relative unitaries. The proof classifies maximizers of the leading assignment score and controls the normal second derivative. [Full paper argument, §2](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/early/latex/MOC_Research_Results.tex#L160) |
+| Form a block diagonal unitary. Apply a unitary gate on one row from each block. Each block satisfies the inclusion for all lists. At the chosen port spectrum, one law for the gate works for all partners. | The new matrix satisfies the inclusion for that port spectrum and all partners. The signed determinant coefficients factor through a port permutation and independent in-block permutations. [Paper factorization](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/UnitaryPortGates.md) · [Lean two-port case](../../Lean/MOC/OneBridge.lean#L307) |
+| Use nested column sets of a unitary with a one-column difference. | The positive full-flag law gives the same covariance of the two subset scores as the signed law. Their separate second moments agree by the minor law. The increment selects a single row with the diagonal distribution of the rank-one projection difference. Polarization therefore gives the covariance identity. For a real spectrum with three levels and a singleton class, put that class between the two prefixes. The resulting positive score law matches the signed mean and variance. The variance is at least the product of the distances from the mean to the nearest attainable scores below and above it. [Lean flag law](../../Lean/MOC/FullFlagLaw.lean#L209) · [Lean single-assignment moment](../../Lean/MOC/SignedPairMoments.lean#L16) |
+
+
+
+<details>
+<summary>Normal and Hermitian rank-one perturbations</summary>
+
+#### A single permutation law for the principal minors of a diagonal plus a rank-one matrix
+
+The Marcus–de Oliveira conjecture asks whether the determinant of the sum of two normal matrices lies in the convex hull of the products obtained by pairing their eigenvalues. Diagonalize the normal partner and use this basis throughout. The following result permits any normal eigenvalues, any dimension, and a Hermitian matrix of full rank with simple spectrum.
+
+**Theorem.** Let $D$ be a real diagonal matrix of any order, $u$ a complex vector, $s$ real, and $H=D+suu^*$. Denote the eigenvalues of $H$, with labels and multiplicities, by $h_1,\ldots,h_n$. There is a probability distribution on the permutations of these labels such that
+$$
+ \det H[S]=\mathbb E\prod_{i\in S} h_{\sigma(i)}
+ \qquad\hbox{for every }S\subseteq[n]. \tag{1}
+$$
+Consequently, for every complex diagonal matrix $B=\mathrm{diag}(b_1,\dots,b_n)$,
+$$
+ \det(H+B)=\mathbb E\prod_i(b_i+h_{\sigma(i)}).
+$$
+The same probability law works for all complex partner entries simultaneously. There is no bound on the number of distinct entries of $D$.
+
+#### Proof
+
+For a real multiaffine polynomial $p(x)=\sum_S a_S\prod_{i\in S}x_i$, define its principal-minor evaluation by
+$$
+ P(H)=\sum_S a_S\det H[S].
+$$
+It is enough to prove
+$$
+ P(H)\le M=\max_{\sigma\in S_n}p(h_{\sigma(1)},\dots,h_{\sigma(n)}) \tag{2}
+$$
+for every $p$. In fact, a point outside the finite convex hull of the vectors $(\prod_{i\in S}h_{\sigma(i)})_S$ has a strictly separating real linear functional, whose coefficients would give a violation of (2).
+
+For $s>0$, absorb $\sqrt{s}$ into $u$. For $s<0$ apply the positive case to $-H$ and use the same labels, since every minor and every eigenvalue monomial of degree $k$ acquires the common factor $(-1)^k$. The case $s=0$ is diagonal. A diagonal unitary conjugation makes the entries of $u$ nonnegative without changing the principal minors.
+
+Proceed by induction on $n$. Order one is immediate. Within order $n$, first suppose all $d_i$ are distinct and all $u_i$ are nonzero. Relabel the coordinates so that $d_1<\dots<d_n$. The characteristic identity
+$$
+ \det(xI-H)=\prod_i(x-d_i)\left(1-\sum_i\frac{|u_i|^2}{x-d_i}\right)
+$$
+and strict monotonicity of the secular function on each gap yield
+$$
+ d_1<h_1<d_2<h_2<\cdots<d_n<h_n .
+$$
+In particular the eigenvalues are distinct. Hold $h$ fixed. Allow $d$ to range throughout the connected open chamber
+$$
+ \Omega=(-\infty,h_1)\times(h_1,h_2)\times\cdots\times(h_{n-1},h_n).
+$$
+At every point in it set
+$$
+ r_i=-\frac{\prod_m(d_i-h_m)}{\prod_{j\ne i}(d_i-d_j)}.
+$$
+The signs of the factors give $r_i>0$. Interpolating the characteristic polynomial at the $n$ points $d_i$ shows that $H(d)=\mathrm{diag}d+\sqrt r\,\sqrt r^{\,T}$ has characteristic polynomial $\prod_m(x-h_m)$. Here the vector square root is componentwise. In particular $\sum_i r_i=\sum_i(h_i-d_i)$. The original matrix, after the diagonal phase conjugation, occurs in this family.
+
+The determinant expansion of a rank-one perturbation gives
+$$
+ F(d)=P(H(d))=p(d)+\sum_i r_i\,p_i(d),\qquad p_i=\partial_i p. \tag{3}
+$$
+This identity follows by checking monomials and requires no $d_i$ to be nonzero. The fixed spectrum bounds $\|H(d)\|$ throughout $\Omega$, hence $F$ is bounded there.
+
+For $i\ne j$ define
+$$
+ L_{ij}=\frac{p(d)-p((ij)d)}{d_i-d_j}.
+$$
+In the two coordinates, $p=A+B d_i+C d_j+E d_i d_j$, where the coefficients depend on the other coordinates only. Therefore $L_{ij}=B-C$ is independent of $d_i,d_j$, $L_{ji}=-L_{ij}$, and $p_i-p_j+(d_i-d_j)p_{ij}=L_{ij}$. For $j\ne i$, the residue formula gives $\partial_i r_j=-r_j/(d_i-d_j)$, while differentiating the trace gives $\sum_j\partial_i r_j=-1$. Use these identities and $p_{ii}=0$ in (3) to obtain
+$$
+ \partial_i F=\sum_{j\ne i}\frac{r_j L_{ij}}{d_i-d_j},\qquad
+ \partial_{ii}F=-2\sum_{j\ne i}\frac{r_jL_{ij}}{(d_i-d_j)^2}.
+$$
+The terms for $(i,j)$ and $(j,i)$ then cancel in the weighted sum.
+$$
+ \boxed{\displaystyle \sum_i r_i\,\partial_{ii}F=0.} \tag{4}
+$$
+
+**The finite boundary.** Consider a sequence $d^{(m)}$ in $\Omega$ tending to its finite boundary, and pass to a subsequence along which the matrices converge. This is possible because their spectra are fixed. Their limit has the form $H_*=\mathrm{diag}d^*+ww^*$ with nonnegative $w$. The trace bounds each $r_i$ along this finite sequence, so the rank-one vectors also have a convergent subsequence. Its spectrum is $h$.
+
+If two entries of $d^*$ coincide, partition the coordinates by equal diagonal entries. In each group with diagonal value $\delta_a$, let $c_a$ be the norm of the corresponding part of $w$ and let $v_a$ be its unit direction, chosen arbitrarily if $c_a=0$. The matrix on their active unit directions is $A=\mathrm{diag}(\delta_a)+cc^*$ of order strictly below $n$. Orthogonal to its active direction in group $a$, the local matrix is the scalar $\delta_a$. By induction $A$ has a law. Its law extends to one for $H_*$. To see this directly, put $Z_a=\mathrm{diag}(z_i:i\in G_a)$. For each core eigenvalue $x$ assigned to group $a$, the group polynomial equals
+$$
+ \det(Z_a+\delta_a I+(x-\delta_a)v_av_a^*)
+ =\sum_{j\in G_a}|v_{aj}|^2(z_j+x)\prod_{i\ne j,\ i\in G_a}(z_i+\delta_a).
+$$
+Independently choose a representative in each group with these probabilities; assign its core eigenvalue there and the fixed copies of $\delta_a$ elsewhere. This produces the full determinant polynomial. For a direct factorization check, write $W=\mathrm{diag}(z_i+\delta_{g(i)})$, $V=[v_a]$, $K=A-\mathrm{diag}(\delta_a)$. Then $H_*+\mathrm{diag}z=W+VKV^*$. After factoring out $\det W$, the determinant is $\det(I+K\mathrm{diag}(v_a^*W_a^{-1}v_a))$. This last expression is affine in each diagonal entry separately and therefore equals its expectation when each entry is replaced by $(z_{J_a}+\delta_a)^{-1}$ for the independently chosen representatives. Multiplying back gives the idle factors times the core determinant at the representative positions. Apply the core law. Polynomial continuity removes any zero denominator. Thus (2) holds at this limit.
+
+If all entries of $d^*$ are distinct, at least one equals an endpoint $h_j$ of a gap. Its residue tends to zero by the explicit formula, so this coordinate decouples as a scalar. The remainder is again a diagonal matrix plus a positive rank-one matrix of lower order. Apply induction and attach the fixed scalar label. This proves $P(H_*)\le M$ at every finite boundary limit.
+
+**The unbounded chamber.** Since $n\ge2$, define
+$$
+ \phi(d)=d_1-h_1+(d_2-h_1)^2-(h_2-h_1)^2.
+$$
+It is nonpositive on $\Omega$ and tends uniformly to $-\infty$ as $d_1\to-\infty$. Moreover $\sum_i r_i\partial_{ii}\phi=2r_2>0$. For any $\varepsilon>0$, $F+\varepsilon\phi$ cannot have a local maximum in $\Omega$ because at such a point every pure second derivative is nonpositive, contradicting (4) and this strict inequality. A maximizing sequence cannot escape to infinity because $F$ is bounded. If its supremum exceeded $M$, after a subsequence it would either attain an interior maximum or tend to a finite boundary where $\limsup(F+\varepsilon\phi)\le M$. Both alternatives are impossible. Thus $F+\varepsilon\phi\le M$ throughout $\Omega$. Taking $\varepsilon\downarrow0$ proves (2).
+
+This proves the generic order-$n$ assertion using the full lower-order assertion. Approximate arbitrary real $D$ and $u$ by distinct diagonal entries and vectors with no zero entries. Principal minors, ordered eigenvalues, and the maximum of the finitely many permutation evaluations are continuous. Inequality (2) passes to the limit for every $p$, establishing the full order-$n$ result and completing induction. Separation gives (1). ∎
+
+#### Consequences and scope
+
+The theorem also holds for a Hermitian arrowhead matrix in the partner basis. After coordinate phases write its first diagonal entry as $a$, its remaining diagonal block as $D'$, and the coupling vector as $w$. For $L>0$ take the vector $(\sqrt L,w/\sqrt L)$ and the diagonal matrix $\mathrm{diag}(a-L,D')$. Their diagonal-plus-rank-one sum has the desired first row and column and lower block $D'+ww^*/L$. It converges to the arrowhead matrix. Pass to the limit in (2).
+
+The hypothesis on $H$ concerns the basis in which the partner is diagonal. Every complex diagonal partner is covered in that basis. A general Hermitian matrix in a prescribed basis can have off-diagonal entries incompatible with any rank-one matrix. For example, a necessary condition for a diagonal-plus-rank-one representation at four distinct indices is $H_{ij}H_{k\ell}=H_{i\ell}H_{kj}$. The proof establishes no reduction of an arbitrary Hermitian matrix to this class.
+
+#### Strict positivity of a single law
+
+If $D$ has distinct entries, $s\ne0$ and every $u_i\ne0$, there is a law satisfying (1) which gives strictly positive probability to **every** labeled permutation. Thus for every complex diagonal partner the determinant is in the relative interior of the permutation hull, including when that hull is a segment or a singleton.
+
+To prove this, take $s>0$ as above. Suppose equality in (2) holds for $p$ at the given matrix. The rational function $F$ has a maximum at an interior point of $\Omega$. It is constant there by the strong maximum principle applied to (4). One can also see this without invoking that principle. If the analytic function $F$ were nonconstant, let $T_m$ be its first nonconstant homogeneous Taylor term about the maximizing point. A maximum forces $m\ge2$ and $T_m\le0$ in every real direction. The term of degree $m-2$ in (4) says $\sum_i r_i(d)\partial_{ii}T_m=0$, with the positive coefficients frozen at that point. A linear rescaling of the coordinates makes $T_m$ harmonic. The spherical mean-value identity for a harmonic polynomial would give mean $T_m(0)=0$, impossible for a nonzero nonpositive polynomial on the sphere. Thus $F$ is locally constant.
+
+The residues are rational functions of the independent variables $d_i$. Local constancy therefore makes $F=M$ an identity wherever the $d_i$ are distinct. For any labeled permutation $\pi$, substitute $d_i=h_{\pi(i)}$ in this rational identity. The eigenvalues $h_i$ are distinct, so the denominators remain nonzero; every $r_i$ vanishes. Formula (3) yields $p(h_{\pi(1)},\ldots,h_{\pi(n)})=M$ for **every** $\pi$. Thus every linear functional supporting the moment vector is constant on the entire moment polytope. The vector lies in its relative interior.
+
+For completeness, let $m$ denote this vector and $\bar v$ the uniform average of all permutation moment vectors. For sufficiently small $\delta>0$, the point $y=(m-\delta\bar v)/(1-\delta)$ is in the polytope by relative interior. Mix any law representing $y$ with total weight $1-\delta$ and the uniform law with weight $\delta$. This gives all permutations positive probability. The negative-$s$ case follows as before. A strictly positive combination of all the projected permutation products is in the relative interior of their convex hull.
+
+**Stability under arbitrary small Hermitian perturbations.** Let \(v_\pi(h)\) have coordinates \(\prod_{i\in S}h_{\pi(i)}\) for all subsets \(S\), and write \(m(H)=(\det H[S])_S\). For every simple real spectrum \(h\), the differences of its permutation vectors span the same linear space
+\[
+ W=\{z:\sum_{|S|=k} z_S=0\text{ for }0\le k\le n\}.
+\]
+Indeed, if a multiaffine polynomial \(p\) is constant on all permutations of \(h\), its difference under swapping \(i,j\) equals \((x_i-x_j)q\), where \(q\) depends only on the other variables. It follows that \(q\) vanishes on all ordered choices of \(n-2\) distinct nodes from the \(n\) distinct eigenvalues. A multiaffine polynomial in \(k\) variables vanishing on all injections from a set of at least \(k+1\) nodes is identically zero. Fix \(k-1\) inputs, vary the last between two unused nodes, and apply induction to its coefficients. Hence all transpositions leave \(p\) unchanged. A symmetric multiaffine polynomial is a linear combination of the elementary symmetric polynomials. These give exactly the displayed equations for differences. The affine dimension is \(2^n-n-1\).
+
+Let \(h^0\) be the spectrum of a strict center \(H_0\) above. Inside the affine hull of its permutation vectors let \(r>0\) be the radius of any ball about \(m(H_0)\) contained in the hull. For a nearby Hermitian matrix \(H\) with ordered eigenvalues \(h\), suppose that in the Euclidean norm
+\[
+ \|m(H)-m(H_0)\|+\max_\pi \|v_\pi(h)-v_\pi(h^0)\|<r .
+\]
+The support gap is then positive for every unit direction in \(W\), by the triangle inequality. Both \(m(H)\) and the permutation vectors have rank-wise sums equal to the elementary symmetric functions of \(h\), as seen by expanding the characteristic polynomial. Thus they lie in the same affine translate of \(W\). Separation gives relative interior there. For all sufficiently small perturbations the spectrum stays simple and the norm condition holds by continuity. This proves one strictly positive law for each Hermitian matrix in a full open neighborhood of \(H_0\), valid for all diagonal partners simultaneously. It allows perturbations of any rank. Every prescribed simple spectrum admits such a center. Choose one real \(d_i\) in each of the interlacing intervals and use the positive residues in the proof.
+
+#### Strict laws for arrowhead matrices
+
+The strict conclusion extends to a Hermitian arrowhead with distinct leaf diagonals and all center-to-leaf couplings nonzero. After diagonal phase conjugation and relabeling let $d_2,\ldots,d_n$ be its increasing leaf diagonals. The arrowhead characteristic polynomial, or ordinary strict interlacing at a cyclic coordinate, gives $h_{j-1}<d_j<h_j$. Fix the $h_i$. The squared magnitudes of the couplings are
+$$
+ C_j=-\frac{\prod_m(d_j-h_m)}{\prod_{k\ge2,\,k\ne j}(d_j-d_k)}>0,
+$$
+and the central diagonal entry is $\sum_i h_i-\sum_{j\ge2}d_j$. These statements follow by evaluating the characteristic polynomial at $d_j$ and comparing its coefficient of degree $n-1$.
+
+Put $d_1=-1/y$ in (3). Then $r_j=yC_j/(1+yd_j)$ for $j\ge2$ and $r_1=1/y+\sum_i h_i-\sum_{j\ge2}(d_j+r_j)$. Since $p$ is affine in $d_1$, its simple pole cancels the pole of $r_1p_1$. Each $r_j p_j$ for $j\ge2$ is also analytic in $y$ near zero. The resulting analytic limit $F_*(d_2,\ldots,d_n)$ is the principal-minor evaluation on the arrowhead; the off-diagonal entries $\sqrt{r_1r_j}$ tend to $\sqrt{C_j}$ and all couplings between distinct leaves tend to zero. Divide (4) by $y$ and tend to zero. The first term vanishes since $\partial_{d_1d_1}=y^4\partial_{yy}+2y^3\partial_y$ and $r_1=O(y^{-1})$. This proves
+$$
+ \sum_{j=2}^n C_j\,\partial_{jj} F_*=0
+$$
+throughout the product of open finite gaps. The function $F_*$ is rational in the leaf diagonals and bounded above by $M$. If it attains $M$ in the interior, the Taylor-term argument makes it rationally constant. For any permutation $\pi$ substitute $d_j=h_{\pi(j)}$ for all $j\ge2$ in that rational identity. The denominators remain nonzero, every $C_j$ vanishes and the center becomes $h_{\pi(1)}$. Thus all permutations attain $M$. It follows as above that a law with strictly positive mass on every permutation exists.
+
+#### The common law for a normal rank-one perturbation of a complex diagonal
+
+Suppose \(N\) is normal and \(D\) is diagonal in the prescribed basis. If \(\mathrm{rank}(N-D)\le1\), then there is one probability law on the eigenvalues \(a_1,\ldots,a_n\) assigned to the coordinates such that
+\[
+ \det(N+\mathrm{diag} b)=\mathbb E\prod_i(b_i+a_{\pi(i)})
+ \qquad(b\in\mathbb C^n).
+\]
+The dimension and the possible diagonal partners are arbitrary. Equivalently, every principal minor of \(N\) is the corresponding expected spectral product under this law.
+
+**Proof.** The diagonal case is immediate. Write \(N=D+xy^*\), with both vectors nonzero, and rescale them by reciprocal positive factors so that \(\|x\|=\|y\|\). The diagonal entries of \(NN^*-N^*N=0\) give \(|x_i|=|y_i|\). A coordinate where both vanish is a common eigenline. Delete all such coordinates and adjoin their fixed assignments at the end.
+
+On the remaining coordinates put \(x_i=\xi_i y_i\), \(|\xi_i|=1\), and \(q=\|y\|^2\). Let \(d_i=D_{ii}\) and \(w_i=d_i+q\xi_i/2\). The off-diagonal normality equation, divided by \(y_i\overline{y_j}\) and multiplied by \(\xi_j\), gives
+\[
+ d_i-d_j+q(\xi_i-\xi_j)
+       =(\bar d_i-\bar d_j)\xi_i\xi_j ,
+ \qquad
+ w_i-w_j=(\bar w_i-\bar w_j)\xi_i\xi_j .
+\]
+If every phase equals \(\xi\), all differences \(d_i-d_j\) lie in the line \(\xi\mathbb R\). Both \(D\) and \(N=D+\xi yy^*\) become Hermitian after the same rotation and translation.
+
+Otherwise, for two different phases, \(w_i-w_j\) is a purely imaginary multiple of \(\xi_i-\xi_j\). For equal phases \(\xi_i=\xi_j=\xi\), their difference \(w_i-w_j\) lies on the line \(\xi\mathbb R\). Comparing both points with a third index of different phase also puts this difference on a line with direction whose ratio to its conjugate is \(\xi\xi_k\ne\xi^2\). The two lines intersect only at zero. Thus equal phases have equal \(w\).
+
+It follows that \(w_i=c+is\xi_i\) with \(s\) real. For two distinct phases this follows from the purely imaginary multiple already proved. For three distinct phases the triangle of phases is noncollinear. Summing the three differences, each a real multiple of the corresponding edge rotated through a right angle, forces the three multipliers to coincide by independence of two edges. Keep two distinct phases fixed and apply the same argument to every additional phase. Hence
+\[
+ D-cI=(is-q/2)D_\xi,\qquad
+ N-cI=D_\xi\big[(is-q/2)I+yy^*\big].
+\]
+The last bracket acts by \(is+q/2\) on \(y\) and by \(is-q/2\) on its orthogonal complement. These numbers have equal nonzero absolute value. Both matrices therefore have spectra on the same circle.
+
+Choose a fractional linear function \(g(z)=(az+b)/(cz+d)\) carrying the resulting circle or line to the real line with pole off both finite spectra. Then \(g(N)\) is Hermitian, \(g(D)\) is real diagonal, and the difference still has rank at most one. Indeed
+\[
+ (cN+dI)\,[g(N)-g(D)]\,(cD+dI)=(ad-bc)(N-D).
+\]
+Apply the Hermitian rank-one theorem to \(g(N)\) in this basis. For any diagonal matrix \(T\) whose entries avoid the pole, apply that law to \(g(N)-g(T)\). The same difference identity shows that the actual determinant and every permutation product acquire one common scalar, since the factors involving \(N\) and \(T\) depend only on their eigenvalues. Cancel it and set \(T=-\mathrm{diag} b\). The resulting probabilities are independent of \(b\). Equality of polynomials extends the result to all diagonal values. ∎
+
+</details>
+
+
+<details>
+<summary>Uniform spectral perturbation arguments</summary>
+
+For a complex list $a=(a_i)$, let $D_a$ be its diagonal matrix.
+Let $U$ be a relative unitary matrix. A permutation product pairs the
+entries of the two eigenvalue lists. It is enough to bound each real
+projection of $\det(D_a+UD_bU^*)$ by the largest projection of the
+permutation products. [Directional equivalence](../../Lean/MOC/Support.lean#L52)
+
+#### Small summands
+
+**Paper theorem.** Take $n\ge 2$ and fix two complex lists $a,\beta$ of
+length $n$. Assume each $a_i$ is nonzero. Suppose the values
+
+$$
+s_\pi=\sum_i a_i^{-1}\beta_{\pi(i)}
+$$
+
+are distinct and no three are collinear. There is a number $\epsilon>0$
+such that for all complex $t$ with $|t|<\epsilon$ and all $U$, the
+determinant of $D_a+tUD_\beta U^*$ belongs to the hull of
+$\prod_i(a_i+t\beta_{\pi(i)})$.
+
+Let $d=\prod_i a_i$. Subtract 1 from the determinant divided by $d$ and
+divide by $t$. This gives a polynomial $G_t(U)$ that at $t=0$ equals
+$\sum_{i,j} a_i^{-1}\beta_j |U_{ij}|^2$. Apply the same normalization to
+the comparison products. The value $t=0$ in the original problem is a
+singleton hull. [Minor expansion](../../Lean/MOC/TwoValues.lean)
+
+Fix a unit complex direction $\eta$. The limit score is
+$\mathrm{Re}(\eta G_0(U))$. The entry squares of $U$ are doubly
+stochastic, so the Birkhoff theorem bounds this score by the maximum of
+the permutation scores. At most two permutations attain that maximum.
+If two attain it, their quotient has one nontrivial cycle. Splitting two
+disjoint cycles would give more maximizing permutations, since neither
+partial swap can improve the maximum and their score differences sum
+to zero.
+
+Let $S$ be the set of unitary maximizers of the limit score. For one
+maximizing permutation it is the set of matrices on that permutation
+pattern with arbitrary entry phases. For a tied transposition, it has
+one full two-by-two unitary block and phases elsewhere. If the cycle is
+longer, $S$ consists of the two permutation patterns with arbitrary
+phases. An intermediate doubly stochastic matrix on the longer cycle
+would give two rows that share exactly one nonzero column. Such rows
+cannot be orthogonal.
+
+Let $E$ be the union of the maximizing permutation patterns and $L_E(U)$
+the sum of the squared entries outside $E$. If $\delta$ is the least
+positive permutation deficit, a Birkhoff decomposition bounds the
+limit deficit below by $\delta L_E(U)/n$. If there is no positive
+deficit, the order is two and the exact two-by-two law applies.
+At $U_0\in S$ the quadratic part of $L_E(e^K U_0)$ is the sum of
+$|(KU_0)_{ij}|^2$ outside $E$, with $K$ skew-Hermitian. Its kernel is
+the tangent space to $S$. For a permutation pattern a longer cycle gives
+no allowed off-diagonal pair in both orientations. For a transposition
+the only off-diagonal pairs in the kernel belong to its block. Compactness
+of $S$ gives a uniform strictly negative Hessian of the limit score in
+the remaining directions.
+
+For every $t$, the sum matrix at $U_0$ is block diagonal. A derivative
+across blocks has zero trace against its block diagonal adjugate. The
+normal derivative of $G_t$ therefore vanishes, including at singular
+sums and, by continuity, at $t=0$. Taylor's theorem in a small normal
+tube gives a decrease at least $c\|K\|^2$ for the limit score, for
+some $c>0$. The perturbation changes the difference by at most
+$C(|t|+|\eta'-\eta|)\|K\|^2$ for some $C$, because the first normal
+derivative still vanishes and the coefficients depend smoothly on the
+parameters. For sufficiently small parameters the perturbed score is
+bounded by its value at $U_0$. At that point it is a permutation score
+or a convex average of the two block endpoints.
+
+On the compact complement of a smaller tube the limit score has a
+positive gap, so continuity preserves the bound for close parameters.
+The unit circle of directions has a finite cover by the resulting open
+phase intervals. Use the smallest of the corresponding positive radii
+for $t$.
+
+The hypotheses hold on an open dense set. Distinct permutations give
+distinct bilinear polynomials in the inverse entries of $a$ and in
+$\beta$. If three were identically collinear, the ratio of two
+differences would be a real-valued holomorphic function on an open
+set, hence constant. The coefficient matrices of the three polynomials
+would then be three collinear permutation matrices. Each is a vertex
+of the doubly stochastic polytope, which excludes collinearity.
+
+#### Large shifts
+
+The same proof applies to $\det(z I+D_a+UD_bU^*)$ for all sufficiently
+large $|z|$, uniformly in $U$, if the hull of the sums $\sum_i a_i
+b_{\pi(i)}$ is two-dimensional, each hull vertex has a unique label,
+and each hull edge has only its endpoint labels. Divide by $z^n$,
+subtract the first three common Taylor terms in $t=1/z$, and divide
+by $t^2$. The limit score then comes from
+$-\mathrm{tr}(D_aUD_bU^*)$. The argument above applies to this
+assignment score. The existing Lean theorem for fixed, fully supported
+$U$ has a radius that can depend on $U$.
+[Fixed-mixer Lean theorem](../../Lean/MOC/ExtendedCases.lean#L428)
+
+</details>
 
 ## Scope of the Lean source
 

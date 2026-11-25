@@ -3,6 +3,8 @@ import MOC.Variational
 import MOC.ZhengContactReduction
 import MOC.OrderFourIndependent
 import MOC.Singular
+import MOC.ComplexTiedSwap
+import MOC.AffineGapCover
 
 /-!
 # Stationary signed determinant marginals
@@ -250,6 +252,258 @@ theorem conjecture_four_iff_terminal_stationary_pivots :
     obtain ⟨q, hq, hlt⟩ := exists_inactive_of_stationary_pivot v.a v.b V hV hreal v.η
       hvd hmaxP v.pivot v.maximal v.strict hpivot
     exact ⟨q, hq, by simpa [StrictMatchingSupport.contacts] using hlt.ne⟩
+
+end
+end MOC
+
+namespace MOC
+
+noncomputable section
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+private theorem weighted_pivot_cofactor (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) (η : ℂ) (i j : ι) :
+    let A := diagonal a
+    let B := U * diagonal b * Uᴴ
+    let C := A + B
+    let T := η • (A * C.adjugate - C.adjugate * A)
+    η * marginal (fun σ => signedWeight U σ * matchingProduct a b σ) i j =
+      (Complex.normSq (U i j) : ℂ) * (η * C.det) - U i j * (Uᴴ * T) j i := by
+  intro A B C T
+  let W := Matrix.of fun r s => (a r + b s) * U r s
+  have hBU : B * U = U * diagonal b := by
+    simp only [B, Matrix.mul_assoc, hU.2, Matrix.mul_one]
+  have hUB : Uᴴ * B = diagonal b * Uᴴ := by
+    dsimp only [B]
+    rw [← Matrix.mul_assoc Uᴴ (U * diagonal b), ← Matrix.mul_assoc Uᴴ U,
+      hU.2, Matrix.one_mul]
+  have hW : W = C * U := by
+    rw [show C * U = A * U + U * diagonal b by dsimp only [C]; rw [Matrix.add_mul, hBU]]
+    ext r s
+    simp only [W, A, Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.of_apply, Matrix.add_apply]
+    ring
+  have hscore : marginal (fun σ => signedWeight U σ * matchingProduct a b σ) i j =
+      marginal (leibnizTerm W) i j / U.det := by
+    rw [marginal, marginal, Finset.sum_div]
+    apply Finset.sum_congr rfl
+    intro σ _
+    split_ifs
+    · simp only [signedWeight, leibnizTerm, matchingProduct, W, Matrix.of_apply,
+        Finset.prod_mul_distrib]
+      ring
+    · simp
+  have hWadj : W.adjugate j i = U.det * (Uᴴ * C.adjugate) j i := by
+    rw [hW, Matrix.adjugate_mul_distrib, adjugate_unitary U hU, Matrix.smul_mul,
+      Matrix.smul_apply, smul_eq_mul]
+  have hK : Matrix.of (fun s r => (a r + b s) * (Uᴴ * C.adjugate) s r) =
+      C.det • Uᴴ - Uᴴ * (A * C.adjugate - C.adjugate * A) := by
+    calc
+      _ = (Uᴴ * C.adjugate) * A + diagonal b * (Uᴴ * C.adjugate) := by
+        ext s r
+        simp only [Matrix.of_apply, Matrix.add_apply, A, Matrix.diagonal_mul, Matrix.mul_diagonal]
+        ring
+      _ = Uᴴ * (C.adjugate * A + B * C.adjugate) := by
+        rw [Matrix.mul_add, ← Matrix.mul_assoc (diagonal b), ← hUB]
+        simp only [Matrix.mul_assoc]
+      _ = _ := by
+        rw [show B = C - A by dsimp [C]; abel, Matrix.sub_mul, Matrix.mul_adjugate]
+        simp only [Matrix.mul_add, Matrix.mul_sub, Matrix.mul_smul, Matrix.mul_one]
+        abel
+  have hk := congrArg (fun M : Matrix ι ι ℂ => M j i) hK
+  simp only [Matrix.of_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul] at hk
+  have hcancel : W i j * (U.det * (Uᴴ * C.adjugate) j i) / U.det =
+      U i j * ((a i + b j) * (Uᴴ * C.adjugate) j i) := by
+    change (a i + b j) * U i j * (U.det * (Uᴴ * C.adjugate) j i) / U.det = _
+    field_simp [det_ne_zero_of_unitary hU]
+    ring
+  rw [hscore, marginal_leibnizTerm, hWadj, hcancel, hk]
+  rw [show (Uᴴ * T) j i =
+      η * (Uᴴ * (A * C.adjugate - C.adjugate * A)) j i by
+    simp only [T, Matrix.mul_smul, Matrix.smul_apply, smul_eq_mul]]
+  rw [Matrix.conjTranspose_apply, Complex.normSq_eq_conj_mul_self]
+  ring
+
+/-- At a complex unitary support maximum, each signed score marginal
+equals the full directional score times its squared entry modulus. -/
+theorem stationary_realSignedWeight_pivot (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) (η : ℂ)
+    (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re)
+    (i j : ι) :
+    (∑ σ : Equiv.Perm ι, if σ j = i then
+      realSignedWeight U σ * (η * matchingProduct a b σ).re else 0) =
+      Complex.normSq (U i j) * (η * determinantValue a b U).re := by
+  let A := diagonal a
+  let B := U * diagonal b * Uᴴ
+  let C := A + B
+  let T := η • (A * C.adjugate - C.adjugate * A)
+  have hleft (R : Matrix ι ι ℂ) (hR : IsUnitary R) :
+      (η * (R * A * Rᴴ + B).det).re ≤ (η * C.det).re := by
+    have hrel := determinantValue_relative a b R U hR
+    change (η * (R * diagonal a * Rᴴ + U * diagonal b * Uᴴ).det).re ≤ _
+    rw [hrel]
+    exact hmax _ (relative_unitary R U hR hU)
+  have hentry (r s : ι) :
+      T r s = (η * (a r - a s)) * C.adjugate r s := by
+    simp only [T, A, Matrix.smul_apply, smul_eq_mul, Matrix.sub_apply,
+      Matrix.diagonal_mul, Matrix.mul_diagonal]
+    ring
+  have hT : Tᴴ = T := by
+    ext r s
+    rw [Matrix.conjTranspose_apply, hentry, hentry]
+    by_cases hrs : r = s
+    · subst s
+      simp
+    · have hs := adjugate_cross_of_complex_diagonal_support_max a B η hrs hleft
+      change (η * (a r - a s)) * C.adjugate r s +
+        star ((η * (a r - a s)) * C.adjugate s r) = 0 at hs
+      rw [show a s - a r = -(a r - a s) by ring, mul_neg, neg_mul, star_neg]
+      linear_combination -hs
+  let a' : ι → ℂ := fun k => star (a k)
+  let b' : ι → ℂ := fun k => star (b k)
+  have ha : diagonal a' = Aᴴ := (Matrix.diagonal_conjTranspose a).symm
+  have hb : U * diagonal b' * Uᴴ = Bᴴ := by
+    simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
+      Matrix.diagonal_conjTranspose, Matrix.mul_assoc, b']
+  have hc : diagonal a' + U * diagonal b' * Uᴴ = Cᴴ := by
+    rw [ha, hb, C, Matrix.conjTranspose_add]
+  have ht :
+      star η • (Aᴴ * Cᴴ.adjugate - Cᴴ.adjugate * Aᴴ) = -T := by
+    rw [← Matrix.adjugate_conjTranspose]
+    have he : Tᴴ = star η • (C.adjugateᴴ * Aᴴ - Aᴴ * C.adjugateᴴ) := by
+      simp only [T, Matrix.conjTranspose_smul, Matrix.conjTranspose_sub, Matrix.conjTranspose_mul]
+    rw [← hT, he, ← smul_neg, neg_sub]
+  have hp (σ : Equiv.Perm ι) :
+      (starRingEnd ℂ) (matchingProduct a' b' σ) = matchingProduct a b σ := by
+    unfold matchingProduct
+    rw [map_prod]
+    apply Finset.prod_congr rfl
+    intro k _
+    simp only [map_add, a', b', starRingEnd_apply, star_star]
+  have hconj := congrArg (starRingEnd ℂ) (weighted_pivot_cofactor a' b' U hU (star η) i j)
+  dsimp only at hconj
+  rw [hc, ha, ht, Matrix.mul_neg, Matrix.neg_apply, mul_neg, sub_neg_eq_add,
+    Matrix.det_conjTranspose] at hconj
+  have hm :
+      η * (∑ σ : Equiv.Perm ι, if σ j = i then
+        (starRingEnd ℂ) (signedWeight U σ) * matchingProduct a b σ else 0) =
+      (Complex.normSq (U i j) : ℂ) * (η * C.det) +
+        (starRingEnd ℂ) (U i j * (Uᴴ * T) j i) := by
+    simpa only [marginal, map_sum, apply_ite, map_zero, map_mul, hp, starRingEnd_apply,
+      star_star, Complex.conj_ofReal, map_add] using hconj
+  have hbase := weighted_pivot_cofactor a b U hU η i j
+  change η * (∑ σ : Equiv.Perm ι, if σ j = i then
+    signedWeight U σ * matchingProduct a b σ else 0) =
+    (Complex.normSq (U i j) : ℂ) * (η * C.det) - U i j * (Uᴴ * T) j i at hbase
+  have hsum (w : Equiv.Perm ι → ℂ) :
+      (η * (∑ σ : Equiv.Perm ι, if σ j = i then
+        w σ * matchingProduct a b σ else 0)).re =
+      ∑ σ : Equiv.Perm ι, if σ j = i then (w σ * (η * matchingProduct a b σ)).re else 0 := by
+    rw [Finset.mul_sum, Complex.re_sum]
+    apply Finset.sum_congr rfl
+    intro σ _
+    by_cases h : σ j = i
+    · simp only [if_pos h]
+      rw [mul_left_comm η]
+    · simp [h]
+  have hr := congrArg Complex.re hbase
+  have hs := congrArg Complex.re hm
+  rw [hsum] at hr hs
+  simp only [Complex.sub_re, Complex.add_re, Complex.re_ofReal_mul, starRingEnd_apply,
+    Complex.star_def, Complex.conj_re] at hr hs
+  have haverage :
+      2 * (∑ σ : Equiv.Perm ι, if σ j = i then
+        realSignedWeight U σ * (η * matchingProduct a b σ).re else 0) =
+      (∑ σ : Equiv.Perm ι, if σ j = i then
+        (signedWeight U σ * (η * matchingProduct a b σ)).re else 0) +
+      ∑ σ : Equiv.Perm ι, if σ j = i then
+        (star (signedWeight U σ) * (η * matchingProduct a b σ)).re else 0 := by
+    rw [Finset.mul_sum, ← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro σ _
+    by_cases h : σ j = i
+    · simp only [if_pos h, realSignedWeight, Complex.mul_re, Complex.star_def,
+        Complex.conj_re, Complex.conj_im]
+      ring
+    · simp [h]
+  change _ = Complex.normSq (U i j) * (η * C.det).re
+  linarith only [haverage, hr, hs]
+
+/-- A nonzero pivot of a strictly violating complex unitary maximum
+lies in an inactive permutation with negative signed weight. -/
+theorem exists_negative_inactive_of_stationary_pivot (a b : ι → ℂ) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) (η : ℂ)
+    (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
+      (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re)
+    (p : Equiv.Perm ι)
+    (hp : ∀ σ : Equiv.Perm ι, (η * matchingProduct a b σ).re ≤
+      (η * matchingProduct a b p).re)
+    (hstrict : (η * matchingProduct a b p).re < (η * determinantValue a b U).re)
+    {i j : ι} (hij : U i j ≠ 0) :
+    ∃ σ : Equiv.Perm ι, σ j = i ∧ realSignedWeight U σ < 0 ∧
+      (η * matchingProduct a b σ).re < (η * matchingProduct a b p).re := by
+  classical
+  let H := (η * matchingProduct a b p).re
+  let F := (η * determinantValue a b U).re
+  let score (σ : Equiv.Perm ι) := (η * matchingProduct a b σ).re
+  have hpos : 0 < Complex.normSq (U i j) :=
+    lt_of_le_of_ne (Complex.normSq_nonneg _) (Ne.symm (mt Complex.normSq_eq_zero.mp hij))
+  have hid :
+      (∑ σ : Equiv.Perm ι, if σ j = i then
+        realSignedWeight U σ * (H - score σ) else 0) =
+      Complex.normSq (U i j) * (H - F) := by
+    have hterm (σ : Equiv.Perm ι) :
+        (if σ j = i then realSignedWeight U σ * (H - score σ) else 0) =
+        (if σ j = i then realSignedWeight U σ else 0) * H -
+        (if σ j = i then realSignedWeight U σ * score σ else 0) := by
+      by_cases hs : σ j = i <;> simp [hs, mul_sub]
+    simp_rw [hterm]
+    rw [Finset.sum_sub_distrib, ← Finset.sum_mul, marginal_realSignedWeight U hU,
+      mul_sub, stationary_realSignedWeight_pivot a b U hU η hmax]
+  by_contra h
+  have hnonnegative : 0 ≤ ∑ σ : Equiv.Perm ι, if σ j = i then
+      realSignedWeight U σ * (H - score σ) else 0 := by
+    apply Finset.sum_nonneg
+    intro σ _
+    by_cases hs : σ j = i
+    · rw [if_pos hs]
+      by_cases hlt : score σ < H
+      · have hw : 0 ≤ realSignedWeight U σ :=
+          le_of_not_gt fun hn => h ⟨σ, hs, hn, hlt⟩
+        exact mul_nonneg hw (sub_nonneg.mpr (hp σ))
+      · have he : score σ = H := le_antisymm (hp σ) (le_of_not_gt hlt)
+        rw [he, sub_self, mul_zero]
+    · rw [if_neg hs]
+  rw [hid] at hnonnegative
+  exact (not_lt_of_ge hnonnegative) (mul_neg_of_pos_of_neg hpos (sub_neg.mpr hstrict))
+
+/-- The terminal contact bound can require both orbit maximality and a
+negative inactive weight through every nonzero entry of the mixer. -/
+theorem conjecture_iff_terminal_negative_pivots :
+    Conjecture ι ↔ ¬ ∃ (U : Matrix ι ι ℂ), IsUnitary U ∧
+      ∃ w : StrictMatchingSupport U,
+        2 * Fintype.card ι - 1 ≤ w.contacts.card ∧
+        (∀ V : Matrix ι ι ℂ, IsUnitary V →
+          (w.η * determinantValue w.a w.b V).re ≤
+            (w.η * determinantValue w.a w.b U).re) ∧
+        ∀ i j, U i j ≠ 0 → ∃ σ : Equiv.Perm ι,
+          σ j = i ∧ realSignedWeight U σ < 0 ∧ σ ∉ w.contacts := by
+  classical
+  rw [conjecture_iff_sharp_terminal_contact_bound]
+  constructor
+  · rintro h ⟨U, hU, w, hcard, _⟩
+    exact h ⟨U, hU, w, hcard⟩
+  · rintro h ⟨U, hU, w, hcard⟩
+    obtain ⟨V, hV, hmax⟩ := exists_support_maximizer w.a w.b w.η
+    let v : StrictMatchingSupport V :=
+      ⟨w.a, w.b, w.η, w.pivot, w.maximal, w.strict.trans_le (hmax U hU)⟩
+    apply h
+    refine ⟨V, hV, v, hcard, hmax, ?_⟩
+    intro i j hij
+    obtain ⟨σ, hσ, hw, hlt⟩ := exists_negative_inactive_of_stationary_pivot v.a v.b V hV
+      v.η hmax v.pivot v.maximal v.strict hij
+    exact ⟨σ, hσ, hw, by simpa [StrictMatchingSupport.contacts] using hlt.ne⟩
 
 end
 end MOC

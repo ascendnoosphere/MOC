@@ -82,4 +82,113 @@ theorem fourMatchingHessian_has_kernel (z : Fin 8 → ℂ) (η : ℂ) :
     change fourMatchingHessianAction u v i = 0
     rw [← gradient_projection_im y i, hy i, Complex.zero_im]
 
+/-- The quadratic gradient of the matching cubic. -/
+abbrev fourMatchingGradient {R : Type*} [CommRing R] (u : Fin 14 → R) : Fin 14 → R :=
+  cubicGradient u
+
+private theorem gradient_projection_re (y : Fin 14 → ℂ) (i : Fin 14) :
+    (fourMatchingGradient y i).re =
+      fourMatchingGradient (fun k => (y k).re) i -
+        fourMatchingGradient (fun k => (y k).im) i := by
+  fin_cases i <;>
+    simp [fourMatchingGradient, cubicGradient, Complex.add_re, Complex.sub_re,
+      Complex.mul_re, Complex.mul_im, pow_two] <;> ring
+
+/-- The singularity equation for a complex lift splits into the real
+Hessian kernel equation and equality of the two real gradients. -/
+theorem fourMatchingGradient_eq_zero_iff (y : Fin 14 → ℂ) :
+    fourMatchingGradient y = 0 ↔
+      fourMatchingHessianAction (fun k => (y k).re) (fun k => (y k).im) = 0 ∧
+      fourMatchingGradient (fun k => (y k).im) =
+        fourMatchingGradient (fun k => (y k).re) := by
+  constructor
+  · intro h
+    have hy (i : Fin 14) : fourMatchingGradient y i = 0 := congrFun h i
+    constructor
+    · funext i
+      change fourMatchingHessianAction (fun k => (y k).re) (fun k => (y k).im) i = 0
+      rw [← gradient_projection_im y i, hy i, Complex.zero_im]
+    · funext i
+      have he := gradient_projection_re y i
+      rw [hy i, Complex.zero_re] at he
+      exact (sub_eq_zero.mp he.symm).symm
+  · rintro ⟨hessian, gradient⟩
+    funext i
+    apply Complex.ext
+    · change (fourMatchingGradient y i).re = 0
+      rw [gradient_projection_re, congrFun gradient i, sub_self]
+    · change (fourMatchingGradient y i).im = 0
+      simp only [gradient_projection_im, hessian, Pi.zero_apply]
+
+/-- A scaled exact bracket profile satisfies both real lift equations. -/
+theorem fourMatching_real_lift_equations (z : Fin 8 → ℂ) (η : ℂ) :
+    let u := fun k => (η * fourBracketLift z k).re
+    let v := fun k => (η * fourBracketLift z k).im
+    fourMatchingHessianAction u v = 0 ∧ fourMatchingGradient v = fourMatchingGradient u := by
+  apply (fourMatchingGradient_eq_zero_iff (fun k => η * fourBracketLift z k)).mp
+  funext i
+  exact scaled_gradient_zero z η i
+
+/-- A real secant profile that fails the real lift equations. -/
+noncomputable def fourRealSecantObstruction : Fin 14 → ℝ :=
+  ![4, 0, 12, -18, 4, 0, 0, -12, -4, 9, 3, 3, -3, -11]
+
+private noncomputable def realSecantKernelFirst : Fin 14 → ℝ :=
+  ![-15, 0, -3, 33, -11, -21, 0, 24, 8, -18, 15, -6, 13, 0]
+
+private noncomputable def realSecantKernelSecond : Fin 14 → ℝ :=
+  ![-1, 0, -21, -3, 27, 9, 0, 12, 4, -9, -12, -3, 0, 13]
+
+private theorem realSecantKernel_coordinates (v : Fin 14 → ℝ)
+    (hv : fourMatchingHessianAction fourRealSecantObstruction v = 0) (i : Fin 14) :
+    v i = (realSecantKernelFirst i * v 12 + realSecantKernelSecond i * v 13) / 13 := by
+  have he (j : Fin 14) : fourMatchingHessianAction fourRealSecantObstruction v j = 0 :=
+    congrFun hv j
+  have r0 := he 0
+  have r1 := he 1
+  have r2 := he 2
+  have r3 := he 3
+  have r4 := he 4
+  have r5 := he 5
+  have r6 := he 6
+  have r7 := he 7
+  have r8 := he 8
+  have r9 := he 9
+  have r10 := he 10
+  have r11 := he 11
+  norm_num [fourMatchingHessianAction, fourRealSecantObstruction, cubicGradient] at
+    r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
+  fin_cases i <;> norm_num [realSecantKernelFirst, realSecantKernelSecond] <;>
+    linarith only [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
+
+/-- The cubic and Hessian kernel tests can hold although no real
+imaginary part satisfies the gradient equation. -/
+theorem fourRealSecantObstruction_checks :
+    fourMatchingCubic fourRealSecantObstruction = 0 ∧
+      (∃ v : Fin 14 → ℝ, v ≠ 0 ∧ fourMatchingHessianAction fourRealSecantObstruction v = 0) ∧
+      ¬ ∃ v : Fin 14 → ℝ, fourMatchingHessianAction fourRealSecantObstruction v = 0 ∧
+        fourMatchingGradient v = fourMatchingGradient fourRealSecantObstruction := by
+  refine ⟨?_, ⟨realSecantKernelFirst, ?_, ?_⟩, ?_⟩
+  · norm_num [fourMatchingCubic, fourRealSecantObstruction]
+  · intro h
+    have hz : realSecantKernelFirst 12 = 0 := congrFun h 12
+    norm_num [realSecantKernelFirst] at hz
+  · funext i
+    fin_cases i <;>
+      norm_num [fourMatchingHessianAction, fourRealSecantObstruction, realSecantKernelFirst,
+        cubicGradient]
+  · rintro ⟨v, hv, hg⟩
+    have h0 : fourMatchingGradient fourRealSecantObstruction 0 = 72 := by
+      norm_num [fourMatchingGradient, fourRealSecantObstruction, cubicGradient]
+    have hp : fourMatchingGradient v 0 =
+        -(9 / 169 : ℝ) * (25 * v 12 ^ 2 - 14 * v 12 * v 13 + 29 * v 13 ^ 2) := by
+      conv_lhs =>
+        rw [show v = (fun i => (realSecantKernelFirst i * v 12 +
+          realSecantKernelSecond i * v 13) / 13) from funext (realSecantKernel_coordinates v hv)]
+      simp [fourMatchingGradient, cubicGradient, realSecantKernelFirst, realSecantKernelSecond]
+      <;> ring
+    have he : fourMatchingGradient v 0 = 72 := (congrFun hg 0).trans h0
+    rw [he] at hp
+    nlinarith only [hp, sq_nonneg (5 * v 12 - (7 / 5 : ℝ) * v 13), sq_nonneg (v 13)]
+
 end MOC

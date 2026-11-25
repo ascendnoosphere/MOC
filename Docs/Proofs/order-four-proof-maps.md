@@ -5,6 +5,7 @@
 - [Registered routes](#registered-routes)
 - [Real orthogonal and stationary tests](#real-orthogonal-and-stationary-tests)
 - [Contact patterns](#contact-patterns)
+- [Paper support bounds and exact examples](#paper-support-bounds-and-exact-examples)
 
 The order-four conjecture asks for the determinant inclusion for every
 pair of complex normal four-by-four matrices. In the eigenvalue
@@ -92,7 +93,7 @@ $U$ can be restricted to real orthogonal matrices.
 | --- | --- | --- |
 | Regular orthogonal maximizers | Nonzero pair sums, distinct products, and at least three nonzero entries in each row and column. The real orthogonal matrix maximizes the determinant projection over all complex unitaries in the chosen direction. | [Regular maximizer](../../Lean/MOC/OrderFourIndependent.lean#L90) |
 | Stationary orthogonal violations | The regular maximizers additionally satisfy the first-order stationarity equations. A further reduction gives one row and one column with no zero entries. | [Stationarity](../../Lean/MOC/OrderFourIndependent.lean#L231) · [Dense row and column](../../Lean/MOC/StationaryDenseCross.lean#L64) |
-| Stationary violations with at least seven contacts | The determinant is nonzero. For each nonzero entry $U_{ij}$, a permutation with $\sigma(j)=i$ has strictly smaller projection than the contacts. | [Seven contacts](../../Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary pivot](../../Lean/MOC/StationaryPivot.lean#L219) |
+| Stationary violations with at least seven contacts | The determinant is nonzero. For each nonzero entry $U_{ij}$, a permutation with $\sigma(j)=i$ has strictly smaller projection than the contacts. | [Seven contacts](../../Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary pivot](../../Lean/MOC/StationaryPivot.lean#L221) |
 | No normal maximizer obstruction | It suffices that for each pair of lists and direction, some maximizer gives a normal sum. | [Exact normal-maximizer test](../../Lean/MOC/NormalSupportMaximum.lean#L303) |
 
 The inclusion also holds if either spectrum lies on a circle or line,
@@ -134,3 +135,155 @@ the adjoint. The proof reduces the branch to that one orientation.
 A separate example refutes a five-event linear weight test on the
 marked assignments.
 [One-orientation implication](../../Lean/MOC/ZhengT81Bypass.lean#L431) · [Refuted linear test](../../Lean/MOC/ZhengStarObstruction.lean#L161)
+
+## Paper support bounds and exact examples
+
+| Result | Hypotheses and conclusion |
+| --- | --- |
+| Support at a maximizing unitary with a zero entry | For arbitrary complex lists and any direction, if some global maximizer has a zero entry, a permutation attains the same score. The proof passes to real orthogonal components, each with the same zero. A stationary first-order correction at an admissible pivot makes the singleton table doubly stochastic. In order four, its anchored pair entries and their complements give the same law for the corrected minor table. The proof finds an admissible pivot for every orthogonal matrix with a zero. [Paper proof](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/StationaryPivotReduction.md) · [Lean orthogonal replacement](../../Lean/MOC/OrderFourIndependent.lean#L73) · [Lean correction](../../Lean/MOC/StationaryFullSupport.lean#L211) |
+| High-contact support | For nonzero, distinct products, the paper proofs give the directional bound with at least nine contacts or with at least seven at height zero. They give a nonnegative squared-minor representation with at least ten contacts. The eight-contact ledger records closed families with their coefficient hypotheses. [Proofs and scope](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/geometry/MOC4_Verified_Results.md) · [Exact case ledger](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/data/certificates/research/eight_contact_closure_ledger.json) |
+| The positive-height branch of T85 | The paper comparison uses the five boundary bounds and the transfer to eight contacts. This settles the named branch under the stated hypotheses. The open seven-contact classification still includes cases outside this pattern. [Audit and dependencies](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/ZhengOrderFourReview.md) · [Lean positive branch reduction](../../Lean/MOC/ZhengPairedContacts.lean#L915) |
+| An open set beyond ordinary minor certificates | At the explicit center below, the determinant lies in the hull for every unitary. This also holds for independent complex perturbations of the eight entries by less than $10^{-17}$. Throughout the neighborhood one direction fails the ordinary squared-minor test. [Lean weighted-minor inequality](../../Lean/MOC/WeightedMinor.lean#L157) |
+| A complete cross-spectral family | For every real $r\ge1$, the lists $(1,-1,-ir,ir)$ and $(-r,r,-i,i)$ satisfy the inclusion for every unitary. The proof covers each edge of the permutation hull. Common fractional linear transport on the signed spectra extends the result wherever the map has no pole. [Paper proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_moonshot_variational_20261031.txt) · [Lean spectral transport](../../Lean/MOC/ProjectiveTransport.lean#L61) |
+
+### Complex spectral lift
+
+Write a scaled exact bracket profile as $u+iv$, with $u,v$ real.
+Let $G$ be the gradient of the matching cubic and let $J(u)$ be its
+Hessian. The complex equation $G(u+iv)=0$ splits into $J(u)v=0$ and
+$G(v)=G(u)$. Both conditions are necessary for an exact bracket lift.
+The new Lean proof expands the quadratic coordinates of $G$.
+[Lean lift equations](../../Lean/MOC/FourMatchingHessianKernel.lean#L124)
+
+Take $u=(4,0,12,-18,4,0,0,-12,-4,9,3,3,-3,-11)$ in the bracket order
+of the linked definition. The cubic is zero and its Hessian has a
+two-dimensional kernel. If $r=v_{12}$ and $s=v_{13}$, every vector
+in that kernel has first gradient coordinate
+$-9(25r^2-14rs+29s^2)/169$. This is nonpositive, while $G(u)_0=72$.
+The example therefore excludes sufficiency of the cubic and Hessian
+kernel tests. It concerns the spectral equations for the profile,
+before comparison with a unitary. The new Lean source awaits compilation.
+[Bracket convention](../../Lean/MOC/FourMatchingPolarization.lean#L18) ·
+[Lean exact example](../../Lean/MOC/FourMatchingHessianKernel.lean#L166)
+
+### Other exact obstructions
+
+- A rational orthogonal mixer and a fourteen-dimensional minor cost
+  give seven contacts and negative signed value $-4800/79$. The cost
+  obeys stationarity and every real rank-one reflection test. Its cubic
+  equation forces one height and the Hessian is invertible there.
+  This excludes a proof based on the relaxed cost space, stationarity,
+  and real rank-one reflections alone. The related generic reflection
+  test uses a three-by-three positive semidefinite matrix.
+  The mixer, cost, and rational tests are recorded below.
+- Integer complex spectra give an actual gap that fails the proposed
+  triangle certificate. The gap has a sum-of-squares certificate in the
+  larger space. [Integer spectra and certificate](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_actual_triangle_failure_integer_20261031.txt)
+- Rational spectra and a rational unitary give a determinant outside
+  the original polygon of Kovačec's Conjecture 7. The determinant lies
+  strictly inside a triangle of matching products. [Exact polygon example](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/kovacec_polygon_counterexample_tenths.txt)
+
+<details>
+<summary>Stationary cost with seven contacts and no spectral lift</summary>
+
+Use the real orthogonal matrix
+
+$$
+U=\frac1{79}\begin{pmatrix}
+-29&-6&42&60\\
+30&-51&-38&36\\
+-66&-30&-27&-16\\
+12&-52&48&-33
+\end{pmatrix}.
+$$
+
+In zero-based lexicographic order of row-to-column permutations, the
+cost table is
+
+```text
+13696, 0, 49680, 31830, 4290, 136, 0, 8035, 12184, 15924, 12325, 8030,
+23800, 33345, 0, 9404, 141, 0, 0, 1510, 0, 23100, 0, 21590
+```
+
+For a real cost $g$ in the span of subset indicators, let $L_U(g)$
+denote its expectation under the real signed determinant weights.
+The table above belongs to that span. Its sixteen pivot score
+equations hold and $L_U(g)=-4800/79$.
+
+For $x\ne0$, put $R_x=I-2xx^{\mathsf T}/(x^{\mathsf T}x)$.
+Multiply the reflected score difference by $(x^{\mathsf T}x)^2$.
+For a minor with row set $I$ and column set $J$, put
+$d=\det U[I,J]$ and $y=U^{\mathsf T}x$. Its reflected determinant
+multiplied by $x^{\mathsf T}x$ is
+$(x^{\mathsf T}x)d-2y_J^{\mathsf T}\mathrm{adj}(U[I,J])x_I$.
+Taking the specified linear combination of squares gives a quartic.
+The rational calculation represents this quartic by a symmetric
+$3$ by $3$ Gram matrix on the quadrics through the four coordinate
+axes and the four columns of $U$. Its principal minors are positive
+and its determinant is $8309494356029153280000/3077056399$. Hence
+every real reflection passes the score test.
+
+In the bracket coordinates, the cubic applied to the projected
+matching profile of height $h$ is
+$-949585314h+9292385296000$. At its only root the projected Hessian
+has rank fourteen. A spectral lift would require a nonzero Hessian
+kernel. The exact intermediate calculations are in the local Cycle 07
+research note in `Temp/txt/`. [Lean Hessian necessity](../../Lean/MOC/FourMatchingHessianKernel.lean#L45)
+
+</details>
+
+
+<details>
+<summary>Explicit spectra and proof of the weighted-minor neighborhood</summary>
+
+A matching product pairs the two eigenvalue lists by a permutation. The Marcus–de Oliveira inclusion places the determinant in their convex hull. This example gives an open set of pairs with that inclusion for every unitary.
+
+#### A complete order-four result for explicit spectra
+
+Take $u=3-2i$, $v=(61-43i)/16$, $x=(1-12i)/5$, $y=(-8-24i)/5$, and $z=(89+22i)/15$. These give $(r,s,t,\ell)=(-3,2,-2,2)$. For ordinary finite spectra let $T(w)=1/(w-2)$ and $T(\infty)=0$. Use
+$$
+a=(0,T(x),T(y),T(z)),\qquad b=-(T(0),T(1),T(u),T(v)).
+$$
+All eight signed marks are distinct. The imaginary parts of the two circle tests $(z-x)/(y-x)$ and $u(v-1)/(v(u-1))$ are $34/45$ and $577/11140$. A common projective change preserves generalized circles. Consequently neither spectral list is concyclic or collinear.
+
+**Theorem for this spectral pair.** For every $U\in U(4)$, its determinant belongs to the permutation hull. In the normalized chart the nine hull vertices, in counterclockwise order, have labels
+$$
+0,\ 6,\ 18,\ 12,\ 11,\ 17,\ 4,\ 10,\ 2 .
+$$
+For each oriented edge $(i,j)$, form its 24 signed area determinants $g_k=\det_{\mathbb R}(P_j-P_i,P_k-P_i)$. All are nonnegative. For seven edges the supplied rational identities express this area function as a nonnegative sum of subset markers. For the other two edges, $(10,2)$ and $(2,0)$, the certificates also use a weighted inequality from the repository.
+
+In its canonical labelling let $Q_0=M_{23,23}$, $Q_1=M_{12,12}$, and $R=M_{1,2}+M_{2,1}+Q_0-M_{13,02}$. Here $23$ denotes the subset $\{2,3\}$. For every $\tau>0$ the cost
+$$
+R+\tau Q_0+(1+1/\tau)Q_1
+$$
+evaluates nonnegatively on real orthogonal mixers. The quaternion inequality bounds $L(R)+L(Q_1)+2\sqrt{L(Q_0)L(Q_1)}$ below by zero. Apply the arithmetic–geometric mean inequality. Row signs, permutations and transposition preserve the comparison. The two-real-table theorem transports these *linear* costs to every complex unitary. The certificates give a nonnegative evaluation on every hull edge, which proves inclusion. The change to finite spectra multiplies every vertex and the determinant by the same nonzero scalar.
+
+**Why this example tests the missing technique.** For $\eta=-i/d$, the upper height is $24/5$. Exactly $0,1,2,7,8,13,19$ are contacts and the smallest positive gap is $1224/4321$. For each ordinary marker that vanishes at all seven contacts, $M(10)-M(4)\geq0$. Yet the actual gap gives $g_{10}-g_4=-2352/4321$. Positivity forces every marker in an ordinary certificate to vanish at those contacts. This proves that such a certificate is impossible. The weighted certificate proves the desired inequality for this same example.
+
+[Weighted-minor inequality](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/MOC/WeightedMinor.lean#L157) · [Quaternion representation](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/MOC/FourQuaternionRotation.lean#L170) · [Two real tables](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/MOC/FourMinorTransport.lean#L550)
+
+
+#### An open set of spectra with a uniform proof
+
+**Theorem.** Change each entry of the two finite lists on the preceding page independently by less than $10^{-17}$ in complex modulus. Every resulting pair satisfies MOC for every relative unitary. For each pair, some direction still admits no certificate made only of ordinary subset markers. The radius is a sufficient bound.
+
+**A local test for any contact set.** Let $V$ be the 14-dimensional marker span and $S$ the zeros of a gap $g$. Suppose $g$ is a strictly positive combination of valid costs spanning $V_S=\{v\in V:v|_S=0\}$. For each $k\in S$, suppose an ordinary marker $E_k$ is one at $k$ and zero on the other contacts. Given a nearby nonnegative $g'\in V$, subtract $\sum_{k\in S}g'_k E_k$. The remainder belongs to $V_S$ and tends to $g$. A basis of the original costs absorbs the change with positive coefficients. Adding the markers back proves support for $g'$.
+
+**All support directions pass this test.** The costs in each edge certificate span its full $V_S$. At a vertex, each interior normal direction has gap $\alpha G_e+\beta G_f$, where $G_e,G_f$ are the adjacent edge gaps and $\alpha,\beta>0$. The combined costs span the space for their common contacts. The checker verifies the ranks and finds all the required $E_k$ for the nine edges and nine vertices. This also covers changes that split a repeated vertex or a seven-contact edge.
+
+**Uniform radius.** The smallest coefficient in the edge identities, in signed-area units, is $c=1231421/376740$. Across the 18 bases the largest inverse row-sum norm times $1+|S|$ is $288$. Thus $h=c/288$ is a valid local gap radius for an edge. At a vertex, $\min(\alpha,\beta)h$ suffices. For a unit direction, $\max(\alpha,\beta)\geq\sigma=1/(2N)$, with $N=38173/150$ an upper bound on the edge lengths. Let $G=105907043/7200$ be the maximum edge-gap entry. If the smaller coefficient is below $\sigma h/(2G)$, the gap is within $\sigma h/2$ of the larger scaled edge. Otherwise the vertex bound applies. In both cases the following uniform gap radius suffices:
+$$
+\rho=(\sigma h/2)\min(1,h/G).
+$$
+For the finite lists write $f$ for the common chart factor. Changing each input by $\epsilon<1$ changes each normalized gap by at most $16(2622/793)^3\epsilon/|f|$. This follows by telescoping the four factors and also bounding the change in their maximum projection. The checker gives $|f|\geq362198/399969375$. These constants permit $\epsilon=10^{-17}$.
+
+**Persistence of the obstruction.** For the original seven labels $S$, the functional $v_{10}-v_4+\sum_{k\in S}v_k$ is nonnegative on every ordinary marker. At the central gap it equals $-2352/4321$ in the direction $-i/d$. Its possible change in the unit direction is at most nine times the gap perturbation. The exact bound keeps this value negative throughout the stated neighbourhood.
+
+</details>
+
+### Exact verification
+
+The exact replay checked the nine edge identities on all 24
+permutations, every required face rank, and the rational perturbation
+bound. The replay inputs and checkers are kept in the local text
+bundle under `Temp/txt/`.

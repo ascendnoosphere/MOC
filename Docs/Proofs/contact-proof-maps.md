@@ -5,6 +5,7 @@
 - [Growing the contact set](#growing-the-contact-set)
 - [Restrictions on one terminal witness](#restrictions-on-one-terminal-witness)
 - [Polynomial coordinate tests](#polynomial-coordinate-tests)
+- [Complex stationary score](#complex-stationary-score)
 
 For eigenvalue lists $a,b$ of length $n$, let $P_\sigma$ be the matching
 product for permutation $\sigma$. Fix a complex number $\eta$ and let
@@ -126,3 +127,47 @@ polynomial constraints, rather than the number of tied permutations.
 | Rank at least $2n-2$ for the old matching differences alone. | [Old-difference rank](../../Lean/MOC/DeficitContactTransfer.lean#L328) |
 | Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../../Lean/MOC/TerminalActiveEdges.lean#L27) |
 | The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../../Lean/MOC/IsolatedContactFiber.lean#L61) |
+
+## Complex stationary score
+
+```mermaid
+flowchart BT
+    Goal["MOC in order n"]:::goal
+    Terminal["Exclude strict maxima with ≥ 2n − 1 contacts<br/>and a negative-weight inactive permutation<br/>through every nonzero mixer entry"]:::open
+    Transfer["Increase the contact count"]:::proved
+    Pivot["Complex signed score identity<br/>at an orbit maximum"]:::source
+    Terminal <-->|iff| Goal
+    Transfer -. used in .-> Terminal
+    Pivot -. used in .-> Terminal
+    classDef goal fill:#18344b,stroke:#18344b,color:#fff
+    classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
+    classDef proved fill:#e3f4e8,stroke:#41905b,color:#163c24
+    classDef source fill:#e7f0fa,stroke:#52779d,color:#142e47
+```
+
+Let $w_\sigma$ be the real part of the signed determinant coefficient
+of $U$ at permutation $\sigma$. Let $F=\mathrm{Re}(\eta\det(A+B))$.
+If $U$ maximizes $F$ for the fixed lists and direction, then
+
+$$
+\sum_{\sigma(j)=i}w_\sigma\,\mathrm{Re}(\eta P_\sigma)
+= |U_{ij}|^2 F.
+$$
+
+This statement includes complex unitaries, zero entries and singular
+sums. The proof expands a cofactor in column $j$. The cofactor
+stationarity equations make a matrix commutator Hermitian. Averaging
+the expansions for the spectra and their conjugates cancels the real
+part of the correction.
+[Signed weight](../../Lean/MOC/Weights.lean#L52) ·
+[Cofactor stationarity](../../Lean/MOC/ComplexTiedSwap.lean#L75) ·
+[New Lean identity](../../Lean/MOC/StationaryPivot.lean#L329)
+
+If $F>H$, the same sum with the gaps $H-\mathrm{Re}(\eta P_\sigma)$
+is negative whenever $U_{ij}\ne0$. Thus a negative-weight inactive
+permutation uses that entry. For the equivalence, first increase the
+number of contacts and then maximize over $U$ with the new lists fixed.
+This last step preserves every contact. The exclusion in the diagram
+remains open. The new Lean source awaits compilation.
+[Negative weight](../../Lean/MOC/StationaryPivot.lean#L435) ·
+[Terminal equivalence](../../Lean/MOC/StationaryPivot.lean#L483)
