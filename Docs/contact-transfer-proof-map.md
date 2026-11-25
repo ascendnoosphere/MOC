@@ -137,6 +137,11 @@ a point on such a curve contains a point where a given nonconstant
 polynomial avoids any prescribed finite set of values.
 [Curve in the fiber](../Lean/MOC/PolynomialFiberCurve.lean#L155) · [Local projection](../Lean/MOC/FiniteCurveLocalAccess.lean#L41) · [Avoiding finite sets](../Lean/MOC/FiniteCurveLocalAccess.lean#L89)
 
+For a finite projection of an irreducible complex affine curve, one
+can remove finitely many values from the target line so that the
+remaining projection is a covering map with local holomorphic sections.
+[Projection and sections](../Lean/MOC/FiniteCurvePlaneCover.lean#L205) · [Covering map](../Lean/MOC/FiniteCurvePlaneCover.lean#L267)
+
 ## Complex stationary score
 
 ```mermaid

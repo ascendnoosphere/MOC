@@ -6,7 +6,7 @@ import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
 
 namespace MOC
 
-variable {K B : Type u} [Field K] [CommRing B] [IsDomain B] [Algebra K B]
+variable {K : Type u} {B : Type v} [Field K] [CommRing B] [IsDomain B] [Algebra K B]
 
 /-- A nonscalar element over an algebraically closed field is transcendental. -/
 theorem aeval_injective_of_not_scalar [IsAlgClosed K] (x : B)
@@ -29,26 +29,26 @@ theorem algebraic_of_reprojecting_finite_curve
     (hgi : Function.Injective g) :
     letI := g.toRingHom.toAlgebra
     Algebra.IsAlgebraic (Polynomial K) B := by
-  have hdim : Algebra.trdeg K B = 1 := by
+  have hdim : Cardinal.lift.{u} (Algebra.trdeg K B) = 1 := by
     letI : Algebra (Polynomial K) B := f.toRingHom.toAlgebra
     letI : Module.Finite (Polynomial K) B := hf
     letI : FaithfulSMul (Polynomial K) B :=
       (faithfulSMul_iff_algebraMap_injective _ _).mpr hfi
     letI : IsScalarTower K (Polynomial K) B :=
       IsScalarTower.of_algebraMap_eq fun c => (f.commutes c).symm
-    rw [← trdeg_add_eq (A := B) K (Polynomial K), Polynomial.trdeg_of_isDomain,
-      trdeg_eq_zero (R := Polynomial K), add_zero]
+    rw [← lift_trdeg_add_eq K (Polynomial K) B, Polynomial.trdeg_of_isDomain,
+      trdeg_eq_zero (R := Polynomial K), Cardinal.lift_one, Cardinal.lift_zero, add_zero]
   letI : Algebra (Polynomial K) B := g.toRingHom.toAlgebra
   letI : FaithfulSMul (Polynomial K) B :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hgi
   letI : IsScalarTower K (Polynomial K) B :=
     IsScalarTower.of_algebraMap_eq fun c => (g.commutes c).symm
-  have hadd := trdeg_add_eq (A := B) K (Polynomial K)
-  rw [Polynomial.trdeg_of_isDomain, hdim] at hadd
+  have hadd := lift_trdeg_add_eq K (Polynomial K) B
+  rw [Polynomial.trdeg_of_isDomain, Cardinal.lift_one, hdim] at hadd
   apply trdeg_eq_zero_iff.mp
   by_contra h
-  have hle : (1 : Cardinal) + 1 ≤ 1 + Algebra.trdeg (Polynomial K) B :=
-    add_le_add_left (Cardinal.one_le_iff_ne_zero.mpr h) 1
+  have hle : (1 : Cardinal) + 1 ≤ 1 + Cardinal.lift.{u} (Algebra.trdeg (Polynomial K) B) :=
+    add_le_add_left (Cardinal.one_le_iff_ne_zero.mpr (by simpa using h)) 1
   rw [hadd, one_add_one_eq_two] at hle
   exact (not_le_of_gt Cardinal.one_lt_two) hle
 

@@ -49,14 +49,15 @@ private theorem exists_plane_chart_of_algebraic_projection {σ : Type*} [Fintype
     obtain ⟨p, hp⟩ := (AdjoinRoot.mk_surjective (g := P)) a
     subst hp
     have hap : Polynomial.aeval y p = 0 := by simpa [i] using ha
-    exact (AdjoinRoot.mk_eq_zero P).2 (minpoly.isIntegrallyClosed_dvd hyi hap)
+    exact (AdjoinRoot.mk_eq_zero (f := P)).2 (minpoly.isIntegrallyClosed_dvd hyi hap)
   have hiOf (a : R) : i (AdjoinRoot.of P a) = g a := by
     change AdjoinRoot.liftHom P y (minpoly.aeval R y) (AdjoinRoot.of P a) = g a
     rw [AdjoinRoot.liftHom_of]
     rfl
-  have hiRoot : i (AdjoinRoot.root P) = y := AdjoinRoot.liftHom_root
+  have hiRoot : i (AdjoinRoot.root P) = y :=
+    AdjoinRoot.liftHom_root P (minpoly.aeval R y)
   have hiMk (p : R[X]) : i (AdjoinRoot.mk P p) = Polynomial.aeval y p :=
-    AdjoinRoot.liftHom_mk
+    AdjoinRoot.liftHom_mk P (minpoly.aeval R y)
   let d : A := AdjoinRoot.of P D
   let L := Localization.Away d
   let l := algebraMap A L
@@ -94,6 +95,7 @@ private theorem exists_plane_chart_of_algebraic_projection {σ : Type*} [Fintype
     · intro a
       change k (MvPolynomial.eval₂Hom c q (MvPolynomial.X a)) = _
       rw [MvPolynomial.eval₂Hom_X', hkq]
+      rfl
   have hψ' (p : MvPolynomial σ ℂ) : k (ψ p) = j (Ideal.Quotient.mk Q p) :=
     RingHom.congr_fun hψ p
   have hψzero (p : MvPolynomial σ ℂ) (hp : p ∈ Q) : ψ p = 0 := by
@@ -120,8 +122,9 @@ private theorem exists_plane_chart_of_algebraic_projection {σ : Type*} [Fintype
       planePolynomialEval p (MvPolynomial.eval z.val x, MvPolynomial.eval z.val yPoly) := by
     have hbase : (pointEval z).toRingHom.comp (algebraMap R B) =
         Polynomial.evalRingHom (MvPolynomial.eval z.val x) := congrArg AlgHom.toRingHom (hpointBase z)
-    have hyz : pointEval z y = MvPolynomial.eval z.val yPoly := hyPoly ▸ hpointEval z yPoly
-    change _ = (p.map (Polynomial.evalRingHom (MvPolynomial.eval z.val x))).eval
+    have hyz : (pointEval z).toRingHom y = MvPolynomial.eval z.val yPoly := hyPoly ▸ hpointEval z yPoly
+    change (pointEval z).toRingHom (Polynomial.aeval y p) =
+      (p.map (Polynomial.evalRingHom (MvPolynomial.eval z.val x))).eval
       (MvPolynomial.eval z.val yPoly)
     rw [Polynomial.aeval_def, Polynomial.hom_eval₂ (p := p) (f := algebraMap R B)
       (g := (pointEval z).toRingHom) y, hbase, hyz, Polynomial.eval_map]
@@ -213,7 +216,7 @@ theorem exists_curve_projection_covering_and_holomorphic_sections {σ : Type*} [
         (∀ t ∈ W, MvPolynomial.eval (z t) x = t) →
         ∀ p : MvPolynomial σ ℂ, DifferentiableOn ℂ (fun t => MvPolynomial.eval (z t) p) W := by
   let g : ℂ[X] →ₐ[ℂ] MvPolynomial σ ℂ ⧸ Q := Polynomial.aeval (Ideal.Quotient.mk Q x)
-  have hgi : Function.Injective g := aeval_injective_of_not_scalar _ hx
+  have hgi : Function.Injective g := aeval_injective_of_not_scalar (K := ℂ) (Ideal.Quotient.mk Q x) hx
   obtain ⟨P, D, yPoly, N, hP, hD, hsep, hchart⟩ := exists_plane_chart_of_algebraic_projection Q x g hgi
     (Polynomial.aeval_X _) (algebraic_of_reprojecting_finite_curve f g hf hfi hgi)
   obtain ⟨S, hS, hTS, hdeg, hsep'⟩ := exists_finite_planePolynomial_exceptional_set P hP hsep
