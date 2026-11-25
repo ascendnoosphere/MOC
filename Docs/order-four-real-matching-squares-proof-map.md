@@ -89,6 +89,21 @@ pairing with $g$. The rank-one partial-transpose defect is a separate
 identity that can help construct such a scalar.
 [Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L533) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L502)
 
+Suppose the real moment is the sum of a positive semidefinite matrix
+and the embedded partial transpose of $uu^\mathsf T$, for a real
+four-vector $u$. Reshape $u$ as a two-by-two matrix. Its determinant
+gives the scalar correction $t$. The corrected moment is positive
+semidefinite. If each real orthogonal mixer admits such a corrected
+moment, the common squared-minor mixture gives the support inequality
+for every complex unitary mixer and every matching sum of squares in $V$.
+[Correction](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L76) · [Unitary transport](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L148)
+
+The universal orthogonal Clifford decomposition remains a premise of
+this Lean route. The archived argument supplies it in mathematics.
+Exact Python checks used five rational orthogonal mixers and one
+complex unitary minor mixture. The new Lean source awaits verification.
+[Archived Clifford argument](https://github.com/AscendNoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_intrinsic_matching_sos_20261031.txt#L99)
+
 ## Scope
 
 The Lean source uses the real auxiliary triple $(0,1,-1)$. The
