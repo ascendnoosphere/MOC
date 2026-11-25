@@ -162,6 +162,7 @@ import MOC.IdentityPadding
 import MOC.KrullHeightChain
 import MOC.LexicographicScores
 import MOC.MarkedPadding
+import MOC.ModulusOrderTransfer
 import MOC.MatchingProfileClosed
 import MOC.MatchingRectangleSupport
 import MOC.MobiusStationarity

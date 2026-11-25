@@ -12,7 +12,7 @@ noncomputable section
 variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
 
 omit [DecidableEq ι] [DecidableEq κ] in
-private theorem matchingProduct_reindex (eRow eCol : κ ≃ ι) (a b : ι → ℂ)
+theorem matchingProduct_reindex (eRow eCol : κ ≃ ι) (a b : ι → ℂ)
     (σ : Equiv.Perm κ) :
     matchingProduct (a ∘ eRow) (b ∘ eCol) σ =
       matchingProduct a b ((eCol.symm.trans σ).trans eRow) := by

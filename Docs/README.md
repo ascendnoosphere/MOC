@@ -16,6 +16,7 @@ its premises and links to the relevant Lean source.
 | [Order five](order-five-proof-map.md) | Fixed conics, contact thresholds, two-by-two zero submatrices, and squared-minor tests. |
 | [Determinant inclusion certificates](determinant-inclusion-certificates-proof-map.md) | Integer and power comparisons, a finite free-entry test, spectral multiplicities, composition of mixers, and support bounds in orders four and five. |
 | [Contact transfer](contact-transfer-proof-map.md) | Fixed and varying determinant differences, contact counts, rank, moments, and isolation. |
+| [Modulus and matrix order](modulus-order-transfer-proof-map.md) | A modulus bound at one order implies the bound at each smaller order. |
 | [Spectral and support results](spectral-support-proof-map.md) | Spectral families, order-four support tests, and coverage of the research PDFs. |
 
 ## Order-four support tests

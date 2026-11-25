@@ -129,6 +129,12 @@ Open route goals are propositions in the registry. A successful build
 of the default target checks the imported implications and their axiom dependencies.
 [Transfer between routes](Lean/MOC/ProofRoutes.lean#L60) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L728)
 
+The modulus bound compares $|\det(A+B)|$ with the largest $|P_\sigma|$.
+A modulus bound at order $n$ implies the bound at every order $m\leq n$.
+Consequently, convex-hull inclusion on any unbounded set of orders would
+give the modulus bound at every order.
+[Order transfer](Lean/MOC/ModulusOrderTransfer.lean#L120) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
+
 ### Order four
 
 ```mermaid
