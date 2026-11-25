@@ -61,7 +61,7 @@ private theorem exteriorHermitianPart_diagonal (c : ℂ) (b : ι → ℂ) :
     rfl
   rw [hd, exteriorHermitianPart, Matrix.diagonal_conjTranspose, Matrix.diagonal_add,
     ← Matrix.diagonal_smul]
-  congr 1
+  apply congrArg diagonal
   funext i
   change (1 / 2 : ℂ) * (c * b i + star (c * b i)) = ((c * b i).re : ℂ)
   rw [Complex.star_def, Complex.add_conj, Complex.ofReal_mul, Complex.ofReal_ofNat]
@@ -111,7 +111,7 @@ theorem exterior_resolvent_bound [Nonempty ι] (z : ℂ) (Y : Matrix ι ι ℂ)
     _ ≤ _ := by rw [norm_one]; exact add_le_add_left (norm_mul_le Y C⁻¹) 1
   have hd : 0 < ‖z‖ - ‖Y‖ := sub_pos.mpr h
   refine ⟨hC, ?_⟩
-  rw [← one_div]
+  rw [← one_div (‖z‖ - ‖Y‖)]
   apply (le_div_iff₀ hd).mpr
   rw [mul_comm ‖C⁻¹‖, sub_mul]
   linarith only [hnorm]
@@ -127,7 +127,7 @@ theorem exterior_resolvent_expansion (z : ℂ) (Y : Matrix ι ι ℂ)
   have hcomm : Z * Y = Y * Z := by
     simp only [Z, Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
   have hsq : Z * Z = (z ^ 2) • (1 : Matrix ι ι ℂ) := by
-    simp only [Z, Matrix.smul_mul, Matrix.mul_one, smul_smul, pow_two]
+    simp only [Z, Matrix.smul_mul, Matrix.one_mul, smul_smul, pow_two]
   have he : (Z - Y) * C = (z ^ 2) • 1 - Y * Y := by
     change (Z - Y) * (Z + Y) = _
     rw [Matrix.mul_add, Matrix.sub_mul, Matrix.sub_mul, hcomm, hsq]
@@ -136,7 +136,7 @@ theorem exterior_resolvent_expansion (z : ℂ) (Y : Matrix ι ι ℂ)
   simp only [Matrix.mul_assoc, hc, Matrix.mul_one, Matrix.sub_mul, Matrix.smul_mul,
     Matrix.one_mul] at hp
   change (z ^ 2) • C⁻¹ = Z - Y + (Y * Y) * C⁻¹
-  exact eq_add_of_sub_eq hp.symm
+  exact eq_add_of_sub_eq (by simpa only [Matrix.mul_assoc] using hp.symm)
 
 /-- The quadratic remainder has the operator norm bound used in the
 exterior support comparison. -/
@@ -223,36 +223,32 @@ theorem exterior_stationary_commute (z η : ℂ) (b : ι → ℂ) (H : Matrix ι
 
 /-- Frobenius norm, kept separate from the Euclidean operator norm. -/
 def exteriorFrobenius (A : Matrix ι ι ℂ) : ℝ :=
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-  ‖A‖
+  @Norm.norm _ (@SeminormedAddCommGroup.toNorm _ Matrix.frobeniusSeminormedAddCommGroup) A
 
 private theorem exteriorFrobenius_nonneg (A : Matrix ι ι ℂ) : 0 ≤ exteriorFrobenius A := by
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-  exact norm_nonneg A
+  exact @norm_nonneg _
+    (@SeminormedAddCommGroup.toSeminormedAddGroup _ Matrix.frobeniusSeminormedAddCommGroup) A
 
 private theorem exteriorFrobenius_sq (A : Matrix ι ι ℂ) :
     exteriorFrobenius A ^ 2 = ∑ i, ∑ j, ‖A i j‖ ^ 2 := by
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-  change ‖A‖ ^ 2 = _
-  rw [Matrix.frobenius_norm_def]
+  rw [exteriorFrobenius, Matrix.frobenius_norm_def]
   simp only [Real.rpow_two, ← Real.sqrt_eq_rpow]
   exact Real.sq_sqrt (Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => sq_nonneg _)
 
 private theorem exteriorFrobenius_add (A B : Matrix ι ι ℂ) :
     exteriorFrobenius (A + B) ≤ exteriorFrobenius A + exteriorFrobenius B := by
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-  exact norm_add_le A B
+  exact @norm_add_le _
+    (@SeminormedAddCommGroup.toSeminormedAddGroup _ Matrix.frobeniusSeminormedAddCommGroup) A B
 
 private theorem exteriorFrobenius_conjTranspose (A : Matrix ι ι ℂ) :
     exteriorFrobenius Aᴴ = exteriorFrobenius A := by
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
   exact Matrix.frobenius_norm_conjTranspose A
 
 private theorem exteriorFrobenius_smul (c : ℂ) (X : Matrix ι ι ℂ) :
     exteriorFrobenius (c • X) = ‖c‖ * exteriorFrobenius X := by
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-  letI : NormedSpace ℂ (Matrix ι ι ℂ) := Matrix.frobeniusNormedSpace
-  exact norm_smul c X
+  exact @norm_smul ℂ _ _
+    (@SeminormedAddCommGroup.toSeminormedAddGroup _ Matrix.frobeniusSeminormedAddCommGroup)
+    _ Matrix.frobeniusIsBoundedSMul c X
 
 private theorem exteriorHermitianPart_frobenius (X : Matrix ι ι ℂ) :
     exteriorFrobenius (exteriorHermitianPart X) ≤ exteriorFrobenius X := by
@@ -323,9 +319,9 @@ theorem exterior_remainder_frobenius_lipschitz [Nonempty ι]
   have hD' : ‖D⁻¹‖ ≤ d⁻¹ := hDbound.trans
     (inv_anti₀ hd (sub_le_sub_left hZ _))
   have hCD : D - C = -(Y - Z) := by dsimp only [C, D]; abel
-  have hneg : exteriorFrobenius (-(Y - Z)) = p := by
-    letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-    exact norm_neg _
+  have hneg : exteriorFrobenius (-(Y - Z)) = p :=
+    @norm_neg _
+      (@SeminormedAddCommGroup.toSeminormedAddGroup _ Matrix.frobeniusSeminormedAddCommGroup) (Y - Z)
   have hinv : exteriorFrobenius (C⁻¹ - D⁻¹) ≤ d⁻¹ * p * d⁻¹ := by
     rw [exterior_inverse_sub C D hC hD, hCD]
     calc
@@ -379,8 +375,8 @@ private def exteriorComm (A B : Matrix ι ι ℂ) : Matrix ι ι ℂ := A * B - 
 
 private theorem exteriorFrobenius_neg (A : Matrix ι ι ℂ) :
     exteriorFrobenius (-A) = exteriorFrobenius A := by
-  letI : SeminormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusSeminormedAddCommGroup
-  exact norm_neg A
+  exact @norm_neg _
+    (@SeminormedAddCommGroup.toSeminormedAddGroup _ Matrix.frobeniusSeminormedAddCommGroup) A
 
 private theorem exteriorOffBlock_frobenius (f : ι → κ) (A : Matrix ι ι ℂ) :
     exteriorFrobenius (exteriorOffBlock f A) ≤ exteriorFrobenius A := by
@@ -504,7 +500,7 @@ private theorem exterior_block_inverse_zero (f : ι → κ) (A : Matrix ι ι �
     _ = _ := by rw [← Matrix.mul_assoc A⁻¹ P A, A.mul_nonsing_inv_cancel_right _ hdet]
   have hentry := congrArg (fun X : Matrix ι ι ℂ => X i j) hPi
   change (diagonal p * A⁻¹) i j = (A⁻¹ * diagonal p) i j at hentry
-  simpa only [Matrix.diagonal_mul, Matrix.mul_diagonal, p, if_pos rfl, if_neg hij,
+  simpa only [Matrix.diagonal_mul, Matrix.mul_diagonal, p, if_pos rfl, if_true, if_neg hij,
     one_mul, mul_zero] using hentry
 
 private theorem exterior_block_remainder_zero [Nonempty ι] (f : ι → κ) (z : ℂ)
@@ -605,8 +601,8 @@ theorem exterior_offBlock_eq_zero (f : ι → κ) (H E E₀ : Matrix ι ι ℂ)
   have hFzero : exteriorFrobenius F = 0 := by
     by_contra hne
     exact (not_lt_of_ge hbound) (mul_lt_mul_of_pos_right hsmall (lt_of_le_of_ne hFn (Ne.symm hne)))
-  letI : NormedAddCommGroup (Matrix ι ι ℂ) := Matrix.frobeniusNormedAddCommGroup
-  exact norm_eq_zero.mp hFzero
+  exact (@norm_eq_zero _
+    (@NormedAddCommGroup.toNormedAddGroup _ Matrix.frobeniusNormedAddCommGroup) F).mp hFzero
 
 /-- At an exterior support maximum, each partition separated in the normalized
 projected direction is preserved exactly when the exterior bound holds. -/
@@ -721,7 +717,7 @@ private theorem exterior_near_triple_on_line (u : ℂ) (hu : ‖u‖ = 1)
     rw [Complex.star_def, Complex.mul_conj, ← Complex.sq_norm, hu, one_pow, Complex.ofReal_one]
   have hrotation : A * star B = (y - x) * star (z - x) := by
     dsimp only [A, B]
-    rw [star_mul]
+    rw [StarMul.star_mul]
     calc
       _ = (u * star u) * ((y - x) * star (z - x)) := by ring
       _ = _ := by rw [hphase, one_mul]
@@ -742,8 +738,9 @@ private theorem exterior_near_triple_on_line (u : ℂ) (hu : ‖u‖ = 1)
     _ < ‖A‖ * g + g * ‖B‖ := add_lt_add_of_lt_of_le hfirst hsecond
     _ = _ := by rw [hnormA, hnormB]; ring
   have hzero : exteriorTriangleCross x y z = 0 := by
-    by_contra hne
-    exact (not_lt_of_ge (hcross hne)) hstrict
+    by_cases hne : exteriorTriangleCross x y z = 0
+    · exact hne
+    · exact ((not_lt_of_ge (hcross hne)) hstrict).elim
   have hcoord : ((z - x) / (y - x)).im = 0 := by
     rw [Complex.div_im, ← sub_div]
     have he : (z - x).im * (y - x).re - (z - x).re * (y - x).im = 0 := by
@@ -773,7 +770,7 @@ theorem exterior_projected_affine_partition (b : ι → ℂ) (u : ℂ) (hu : ‖
     rw [abs_sub_comm]
     exact h
   let classes : Setoid ι := ⟨reach, ⟨fun _ => Relation.ReflTransGen.refl,
-    Relation.ReflTransGen.symmetric hsym, fun h₁ h₂ => h₁.trans h₂⟩⟩
+    fun h => Relation.ReflTransGen.symmetric hsym h, fun h₁ h₂ => h₁.trans h₂⟩⟩
   let f (i : ι) : ι := (Quotient.mk classes i).out
   have hclass (i j : ι) : f i = f j ↔ reach i j := by
     constructor
@@ -819,8 +816,9 @@ theorem exterior_projected_affine_partition (b : ι → ℂ) (u : ℂ) (hu : ‖
       induction hk with
       | refl => rfl
       | @tail k l _ hkl ih =>
-        by_contra hne
-        exact hpair ⟨l, Ne.symm hne, by simpa only [near, ih] using hkl⟩
+        by_cases hne : b l = b i
+        · exact hne
+        · exact (hpair ⟨l, Ne.symm hne, by simpa only [near, ih] using hkl⟩).elim
     refine ⟨b i, 0, fun k hk => ⟨0, ?_⟩⟩
     simpa only [mul_zero, add_zero] using hconst k ((hclass i k).mp hk.symm)
 
@@ -971,7 +969,7 @@ private theorem exterior_holds_of_affine_blocks (a : ι → ℝ) (β : ι → �
   have hV' : IsUnitary V' := unitary_reindex e e hV
   have hlo : V' * diagonal (A ∘ e) * (V')ᴴ = Q * diagonal A' * Qᴴ := by
     have hleft : H.submatrix e e = V' * diagonal (A ∘ e) * (V')ᴴ := by
-      simp only [H, Matrix.submatrix_mul_equiv _ _ e e e, Matrix.submatrix_diagonal_equiv,
+      simp only [H, ← Matrix.submatrix_mul_equiv _ _ e e e, Matrix.submatrix_diagonal_equiv,
         Matrix.conjTranspose_submatrix, V']
     exact hleft.symm.trans hHs
   have hb : diagonal (β ∘ e) = (1 : Matrix (Σ k, Fin (m k)) (Σ k, Fin (m k)) ℂ) *
@@ -1007,7 +1005,7 @@ theorem holds_of_exterior_scalar_shift [Nonempty ι] (a : ι → ℝ) (b : ι �
   have hB : z • (1 : Matrix ι ι ℂ) + diagonal b = diagonal β := by
     calc
       _ = diagonal (fun _ : ι => z) + diagonal b := by rw [Matrix.smul_one_eq_diagonal]
-      _ = _ := (Matrix.diagonal_add (fun _ => z) b).symm
+      _ = _ := Matrix.diagonal_add (fun _ => z) b
   have hH : H.IsHermitian := Matrix.isHermitian_mul_mul_conjTranspose V
     (Matrix.isHermitian_diagonal_iff.mpr fun i => by
       simp only [A, isSelfAdjoint_iff, Complex.star_def, Complex.conj_ofReal])
