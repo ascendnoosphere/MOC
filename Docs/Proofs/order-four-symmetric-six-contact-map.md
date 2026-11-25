@@ -25,7 +25,7 @@ flowchart BT
     Height["Positive mixed weight gives the cubic height formula"]
     Singular["The matching Hessian is singular"]
     Inverse["The nine-dimensional inverse pencil is singular"]
-    Nonic["Projected nonic identity and coefficient signs"]
+    Nonic["Degree-nine determinant and exact coefficient signs"]
     Budget["One compensator covers the sum of the other two"]
     Pair["Three relabeled weighted-minor bounds"]
     Cut["Lower determinant support bound for every order-four unitary"]
@@ -33,20 +33,20 @@ flowchart BT
     Lift --> Height
     Lift --> Singular
     Spectral --> Inverse
-    Height --> Nonic
-    Singular --> Nonic
-    Nonic -. Paper certificate .-> Budget
+    Inverse --> Nonic
+    Nonic --> Budget
     Budget --> Cut
     Pair --> Cut
 ```
 
 | Step | Scope |
 | --- | --- |
-| Noncrossing coordinates | The lift evaluates to the prescribed permutation gap minus $h$, for all real coefficients and all permutations. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L52) |
-| Height | If $\lambda>0$, let $e_k$ be the elementary symmetric polynomial of degree $k$ in $(a,b,c,d)$. For actual spectra, the height is $(\lambda^3+e_1\lambda^2+e_2\lambda+e_3+pqr)/(\lambda^2+pq+pr+qr)>0$. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L92) |
-| Hessian obstruction | The Hessian of the matching cubic at the lifted real coordinates is singular. This includes repeated eigenvalues and repeated products. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L123) |
-| Inverse pencil | The same spectral data make a real symmetric matrix of order nine singular. Its coefficients are the nine signed matching evaluations in cofactor coordinates. The complex determinant of order two gives four complex squares, which provide at most eight real linear constraints on its kernel. [Lean source](../../Lean/MOC/FourSymmetricSixContactPencil.lean) |
-| Unitary bound | If $\lambda^2\le p(q+r)$, $\lambda^2\le q(p+r)$, or $\lambda^2\le r(p+q)$, the determinant projection is at least $-h$. Zero $\lambda$ satisfies the first condition. All four singleton coefficients remain independent. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L267) |
+| Noncrossing coordinates | The lift evaluates to the prescribed permutation gap minus $h$, for all real coefficients and all permutations. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L54) |
+| Height | If $\lambda>0$, let $e_k$ be the elementary symmetric polynomial of degree $k$ in $(a,b,c,d)$. For actual spectra, the height is $(\lambda^3+e_1\lambda^2+e_2\lambda+e_3+pqr)/(\lambda^2+pq+pr+qr)>0$. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L94) |
+| Hessian obstruction | The Hessian of the matching cubic at the lifted real coordinates is singular. This includes repeated eigenvalues and repeated products. [Lean source](../../Lean/MOC/FourSymmetricSixContact.lean#L125) |
+| Inverse pencil | The spectral data make a real symmetric matrix of order nine singular. Its entries represent the nine signed minor evaluations in cofactor coordinates. The complex determinant of order two gives four complex squares. Their real and imaginary linear forms have a common nonzero zero in dimension nine. [Lean source](../../Lean/MOC/FourSymmetricSixContactPencil.lean#L273) |
+| Compensator budget | An actual spectral gap satisfies $\lambda^2\le p(q+r)$, $\lambda^2\le q(p+r)$, or $\lambda^2\le r(p+q)$. Zero $\lambda$ satisfies the first condition. All four singleton coefficients remain independent. [Lean source](../../Lean/MOC/FourSymmetricSixContactCertificate.lean#L355) |
+| Unitary bound | For all seven independent ordinary coefficients, the determinant projection is at least $-h$. Coincident eigenvalues and coefficient boundaries are included. [Lean source](../../Lean/MOC/FourSymmetricSixContactCertificate.lean#L384) |
 
 For the last step, call the three squared minors $X,Y,Z$ in the order
 $p,q,r$. The two-budget inequality bounds the mixed ray together with
@@ -58,11 +58,17 @@ weights $q/(q+r)$ and $r/(q+r)$. The remaining coefficient of $X$ and
 the first four ordinary terms are nonnegative.
 [Weighted-minor theorem](../../Lean/MOC/FourTwoBudgetMinor.lean#L32) · [Permutation and unitary relabeling](../../Lean/MOC/FourSymmetricSixContact.lean#L153-L228)
 
-The full paper closure obtains a compensator inequality from Hessian
-singularity for every actual gap with positive mixed coefficient. It
-uses a projected degree-nine polynomial with 2,285 terms and
-coefficient signs in a cube and three other parameter regions. The
-paper note and its independent audit record the certificate result.
-The Lean source here does not yet contain the polynomial table,
-determinant identity, or those coefficient-sign proofs.
+For $\lambda>0$, divide the coefficients by $\lambda$ so that the mixed
+coefficient is one. Write $P$ for the determinant of the resulting
+order-nine pencil. The code expands $P$ by the determinant recurrence,
+collects equal monomials, and checks the resulting coefficients after
+four substitutions. It uses $u/(1+u)$ for each compensator in the
+region where all three are less than one. In the region where $p\ge1$
+and $p(q+r)<1$, take $p=1+s$, $q=x/((1+s)(1+x+y))$, and
+$r=y/((1+s)(1+x+y))$ with $s,x,y\ge0$. The other two substitutions
+put $q$ and $r$ in the leading position. After multiplication by the
+positive denominators, all coefficients are nonnegative and the
+constant coefficient is positive. Thus $P>0$ in any region where all
+three compensator inequalities fail. Actual spectra force $P=0$.
+[Lean source](../../Lean/MOC/FourSymmetricSixContactCertificate.lean) ·
 [Full paper closure](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/six_symmetric_general_closure.txt) · [Independent paper audit](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/six_symmetric_general_independent_review.txt)
