@@ -339,4 +339,76 @@ theorem exists_strictly_violating_profile_with_more_contacts_of_infinite_image
   exact exists_strictly_violating_profile_with_more_contacts_on_curve hS hconn P U hU η r J
     hexact hhol hx₀ hold hold₀ hgap hstrict hstart hvar
 
+
+open Filter
+
+private theorem tendsto_matching_first_order_prod
+    {α κ : Type*} {l : Filter α} (s : Finset κ)
+    (ε : α → ℂ) (he : Tendsto ε l (𝓝 0)) (hne : ∀ᶠ x in l, ε x ≠ 0)
+    (f : α → κ → ℂ) (c : κ → ℂ) (hf : ∀ k, Tendsto (fun x => f x k) l (𝓝 (c k))) :
+    Tendsto (fun x => ((∏ i ∈ s, (1 + ε x * f x i)) - 1) / ε x) l (𝓝 (∑ i ∈ s, c i)) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simpa using (tendsto_const_nhds : Tendsto (fun _ : α => (0 : ℂ)) l (𝓝 0))
+  | @insert i s hi ih =>
+    simp only [Finset.sum_insert hi, Finset.prod_insert hi]
+    have h1 : Tendsto (fun x => 1 + ε x * f x i) l (𝓝 1) := by
+      simpa only [zero_mul, add_zero] using
+        ((tendsto_const_nhds : Tendsto (fun _ : α => (1 : ℂ)) l (𝓝 1)).add (he.mul (hf i)))
+    have hh := (h1.mul ih).add (hf i)
+    rw [one_mul, add_comm] at hh
+    apply hh.congr'
+    filter_upwards [hne] with x hx
+    field_simp [hx]
+    ring
+
+/-- At the constant profile, every first-order limit lies in the complex
+span of singleton assignment scores. The parameter may follow an arbitrary
+filter, so a meromorphic branch approaching infinity need not have a
+single differentiable lift of its spectra. -/
+theorem singleton_expansion_of_matching_profile_tangent_at_one [Nonempty ι]
+    {α : Type*} {l : Filter α} [l.NeBot]
+    (ε : α → ℂ) (he : Tendsto ε l (𝓝 0)) (hne : ∀ᶠ t in l, ε t ≠ 0)
+    (v : α → Equiv.Perm ι → ℂ) (d : Equiv.Perm ι → ℂ)
+    (hd : ∀ q, Tendsto (fun t => v t q) l (𝓝 (d q)))
+    (hex : ∀ᶠ t in l, ∃ a b : ι → ℂ, matchingProduct a b = fun q => 1 + ε t * v t q) :
+    ∃ c : ℂ, ∃ Q : ι → ι → ℂ, ∀ q, d q = c + ∑ j, Q j (q j) := by
+  classical
+  let o : ι := Classical.choice inferInstance
+  let A := anchorPlus o
+  let B := anchorMinus o
+  let Q (j i : ι) : ℂ := d (A j i) - d (B j i)
+  have hnz : ∀ᶠ t in l, ∀ q, 1 + ε t * v t q ≠ 0 := by
+    apply Filter.eventually_all.mpr
+    intro q
+    have hlim : Tendsto (fun t => 1 + ε t * v t q) l (𝓝 1) := by
+      simpa only [zero_mul, add_zero] using
+        ((tendsto_const_nhds : Tendsto (fun _ : α => (1 : ℂ)) l (𝓝 1)).add (he.mul (hd q)))
+    exact hlim.eventually_ne one_ne_zero
+  refine ⟨d 1 - ∑ j, Q j j, Q, fun q => ?_⟩
+  let aL : Unit ⊕ (ι ⊕ ι) → Equiv.Perm ι :=
+    Sum.elim (fun _ => q) (Sum.elim (fun j => B j (q j)) (fun j => A j j))
+  let aR : Unit ⊕ (ι ⊕ ι) → Equiv.Perm ι :=
+    Sum.elim (fun _ => 1) (Sum.elim (fun j => A j (q j)) (fun j => B j j))
+  have hL := tendsto_matching_first_order_prod Finset.univ ε he hne
+    (fun t i => v t (aL i)) (fun i => d (aL i)) (fun i => hd (aL i))
+  have hR := tendsto_matching_first_order_prod Finset.univ ε he hne
+    (fun t i => v t (aR i)) (fun i => d (aR i)) (fun i => hd (aR i))
+  have hEq :
+      (fun t => ((∏ i, (1 + ε t * v t (aL i))) - 1) / ε t) =ᶠ[l]
+      (fun t => ((∏ i, (1 + ε t * v t (aR i))) - 1) / ε t) := by
+    filter_upwards [hex, hnz] with t ht hz
+    obtain ⟨a,b,hab⟩ := ht
+    have hn (σ : Equiv.Perm ι) : matchingProduct a b σ ≠ 0 := by
+      rw [congrFun hab σ]
+      exact hz σ
+    have hp := translation_eval_relation a b o hn q
+    simp_rw [congrFun hab] at hp
+    simpa only [aL, aR, A, B, Fintype.prod_sum_type, Sum.elim_inl, Sum.elim_inr,
+      Fintype.prod_unique] using congrArg (fun z : ℂ => (z - 1) / ε t) hp
+  have heq := tendsto_nhds_unique_of_eventuallyEq hL hR hEq
+  simp only [aL, aR, Fintype.sum_sum_type, Fintype.sum_unique, Sum.elim_inl, Sum.elim_inr] at heq
+  simp only [Q, Finset.sum_sub_distrib]
+  linear_combination heq
+
 end MOC

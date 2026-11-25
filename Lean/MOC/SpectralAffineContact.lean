@@ -11,7 +11,8 @@ namespace MOC
 
 noncomputable section
 
-private theorem affine_margin_of_zero_mem_interior {J : Type*} [Fintype J] [Nonempty J]
+/-- An interior complex convex hull contains a uniform directional margin. -/
+theorem affine_margin_of_zero_mem_interior {J : Type*} [Fintype J] [Nonempty J]
     (s : J → ℂ) (hs : (0 : ℂ) ∈ interior (convexHull ℝ (Set.range s))) :
     ∃ δ : ℝ, 0 < δ ∧ ∀ v : ℂ, ∃ j, δ * ‖v‖ ≤ (s j * v).re := by
   classical

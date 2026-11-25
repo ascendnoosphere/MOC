@@ -22,6 +22,19 @@ private theorem linearFunctional_eq (f : ℂ →L[ℝ] ℝ) (z : ℂ) :
       simp [Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im, smul_eq_mul]
       ring
 
+/-- For finitely many complex vertices, support in every complex direction
+is sufficient for membership in the real convex hull. -/
+theorem mem_hull_of_directional_bound {J : Type*} [Finite J] (f : J → ℂ) (z : ℂ)
+    (h : ∀ k : ℂ, ∃ j, (k * z).re ≤ (k * f j).re) :
+    z ∈ convexHull ℝ (Set.range f) := by
+  by_contra hn
+  obtain ⟨L, _, hf, hz⟩ :=
+    geometric_hahn_banach_closed_point (convex_convexHull ℝ _)
+      (Set.finite_range f).isClosed_convexHull hn
+  obtain ⟨j, hj⟩ := h ((L 1 : ℂ) - (L Complex.I : ℂ) * Complex.I)
+  rw [← linearFunctional_eq, ← linearFunctional_eq] at hj
+  exact (lt_irrefl _) ((hf (f j) (subset_convexHull ℝ _ ⟨j, rfl⟩)).trans (hz.trans_le hj))
+
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 omit [DecidableEq ι] in
@@ -49,16 +62,7 @@ theorem holds_iff_directional (a b : ι → ℂ) (U : Matrix ι ι ℂ) :
     apply convexHull_min ?_ (convex_halfSpace_le f.isLinear _) h
     rintro _ ⟨τ, rfl⟩
     exact hσ τ
-  · intro h
-    by_contra hn
-    unfold Holds at hn
-    have hc : IsClosed (convexHull ℝ (Set.range (matchingProduct a b))) :=
-      Set.finite_range (matchingProduct a b) |>.isClosed_convexHull
-    obtain ⟨f, t, ht, hd⟩ :=
-      geometric_hahn_banach_closed_point (convex_convexHull ℝ _) hc hn
-    obtain ⟨σ, hσ⟩ := h ((f 1 : ℂ) - (f Complex.I : ℂ) * Complex.I)
-    rw [← linearFunctional_eq, ← linearFunctional_eq] at hσ
-    exact (lt_irrefl _) ((ht _ (matchingProduct_mem_hull a b σ)).trans (hd.trans_le hσ))
+  · exact mem_hull_of_directional_bound (matchingProduct a b) (determinantValue a b U)
 
 omit [DecidableEq ι] in
 theorem matchingProduct_scale (a b : ι → ℂ) (c : ℂ) (σ : Equiv.Perm ι) :

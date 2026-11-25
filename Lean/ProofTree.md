@@ -124,6 +124,12 @@ flowchart BT
     MOMENT["Centered quartic moment test<br/>at contact-preserving maxima · checked"]:::checked
     NEAR["Near-real spectra cluster at<br/>a balanced antipodal center · checked"]:::checked
     ISOLATE["Maximal contacts isolate<br/>the fixed-gap affine fibre · checked"]:::checked
+    LINE["Preserve contacts on an exact affine line<br/>without fixing the gap · checked"]:::checked
+    CURVE["Varying-gap compactified curve<br/>2n-1 threshold · paper proof"]:::paper
+    LIMIT["Rule out both limits of normalized profiles<br/>at infinity · checked"]:::checked
+    JET["Even corank and exact leading<br/>determinant coefficient · checked"]:::checked
+    DESCENT["Arbitrary kernel compression reduces<br/>to smaller order · checked"]:::checked
+    LOCAL["Interior leading hull gives actual<br/>local inclusion · checked"]:::checked
     TIGHT["Exclude isolated rank- and moment-tested<br/>terminal orbit maxima · open"]:::open
     OUTLIER["Height-zero bound for two imaginary<br/>outliers, arbitrary mixer · checked"]:::checked
     CHART --> CUT
@@ -135,12 +141,21 @@ flowchart BT
     BALANCE -. proves refinement .-> TIGHT
     RANK -. restricts contact sets .-> TIGHT
     ISOLATE -. restricts local profile geometry .-> TIGHT
+    LINE -. strengthens slot rigidity .-> TIGHT
+    LINE -. affine case .-> CURVE
+    LIMIT -. rules out limiting profiles .-> CURVE
+    CURVE -. sharpens threshold on paper .-> TERMINAL
+    NEAR --> JET
+    JET --> LOCAL
+    DESCENT -. handles compressed factors .-> JET
+    LOCAL -. excludes interior-jet paths .-> TIGHT
     MOMENT --> NEAR
     MOMENT -. restricts spectra .-> TIGHT
     NEAR -. controls near-collinear data .-> TIGHT
     BUDGET -. excludes some contact sets .-> TERMINAL
     TERMINAL <-->|iff| TIGHT
     OUTLIER -. proves a terminal family .-> TERMINAL
+    classDef paper fill:#e9e8fa,stroke:#5d4e96,color:#241c46
     classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
     classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
 ```
@@ -385,8 +400,13 @@ of the signed involutions $J,K$ give
 $\operatorname{tr}((J+K)^{-1}(V+W))=(\operatorname{tr}(JV)+\operatorname{tr}(KW))/2$.
 The [affine derivative theorem](MOC/AntipodalAffineVariation.lean)
 proves the corresponding determinant derivative, with the existing
-determinant as a factor. It does not control the quadratic terms or
-the singular center.
+determinant as a factor. At a singular center, the [kernel coefficient theorem](MOC/AntipodalKernelJet.lean)
+proves even corank and gives the first possible determinant coefficient
+exactly. An [interior leading-coefficient hull](MOC/DeterminantJetNeighborhood.lean)
+excludes strict violations along the actual affine path near the center.
+See the [singular-jet note](AntipodalKernelJets.md) for the moving-mixer
+tangent and the smaller-order comparison, with the checked and paper
+steps separated.
 
 
 **Isolated fibre.** The [stronger terminal equivalence](MOC/ContactFibreIsolation.lean)
@@ -399,11 +419,13 @@ count maximal. The evaluation ideal is then a minimal prime and a
 single polynomial excludes the other components locally
 ([Stacks Project, Tag 00FR](https://stacks.math.columbia.edu/tag/00FR)).
 This does not imply that the equations have independent differentials
-or that the fibre is globally a singleton. It does give a
-[one-entry slope test](MOC/ContactPencilRigidity.lean): for every
-partner slot, either a complex active difference changes to first
-order or the complex determinant gap changes. A failure of both
-conditions would give an exact affine pencil contained in the fibre.
+or that the fibre is globally a singleton. The [affine-line transfer](MOC/ContactAffineRigidity.lean) strengthens
+the earlier [one-entry slope test](MOC/ContactPencilRigidity.lean):
+every free partner slot must change an old complex contact difference,
+even if the determinant gap changes as well. The
+[varying-gap curve argument](VaryingGapContactTransfer.md) raises the
+terminal threshold to $2n-1$ on paper. It uses compactification and
+pole behavior and does not change the checked $2n-2$ threshold.
 
 
 

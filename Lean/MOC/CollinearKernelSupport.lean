@@ -201,4 +201,28 @@ theorem holds_of_all_collinear_matching_products {n : ℕ} (a b : Fin n → ℂ)
 
 end
 
+section
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- The collinear matching-profile bound on any finite label type. -/
+theorem holds_of_collinear_matching_profile (a b : ι → ℂ)
+    (η : ℂ) (hη : η ≠ 0) (H : ℝ)
+    (hline : ∀ σ : Equiv.Perm ι, (η * matchingProduct a b σ).re = H)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) : Holds a b U := by
+  let e : Fin (Fintype.card ι) ≃ ι := (Fintype.equivFin ι).symm
+  apply (holds_reindex_iff e e a b U).mp
+  refine holds_of_all_collinear_matching_products (a ∘ e) (b ∘ e) η hη H ?_ _
+    (unitary_reindex e e hU)
+  intro σ
+  have he : matchingProduct (a ∘ e) (b ∘ e) σ =
+      matchingProduct a b ((e.symm.trans σ).trans e) := by
+    unfold matchingProduct
+    rw [← Equiv.prod_comp e (fun j => a (((e.symm.trans σ).trans e) j) + b j)]
+    simp
+  rw [he]
+  exact hline _
+
+end
+
 end MOC

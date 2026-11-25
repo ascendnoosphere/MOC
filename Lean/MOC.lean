@@ -2,6 +2,14 @@ import MOC.AffineContactStep
 import MOC.AffineContactCurve
 import MOC.AntipodalDeterminantJet
 import MOC.AntipodalAffineVariation
+import MOC.AntipodalCenterMinor
+import MOC.AntipodalKernelJet
+import MOC.AntipodalCubicEnergy
+import MOC.AntipodalMovingCompression
+import MOC.ContactAffineRigidity
+import MOC.ContactAsymptoticObstruction
+import MOC.PositiveComponentBoundary
+import MOC.DeterminantJetNeighborhood
 import MOC.BalancedContactReduction
 import MOC.AnchorMinorGram
 import MOC.Claim
@@ -117,6 +125,7 @@ import MOC.QuaternionIdenticalSpectra
 import MOC.QuaternionMixerParity
 import MOC.QuaternionBinaryNormalize
 import MOC.RankTwoOverlap
+import MOC.ReducedTwoFrame
 import MOC.RadialExternalCertificates
 import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels

@@ -67,6 +67,41 @@ theorem profile_normalization_lower_bound [Nontrivial ι] {d : ℕ}
   rw [card_varLocalized hi.symm, Fintype.card_fin, show B.card = 1 by simp [B]] at h
   omega
 
+/-- Fewer than $2n-2$ pinned polynomial observables leave a prime affine
+curve of exact profiles through the specified profile. In particular the
+determinant gap need not be among the cuts. -/
+theorem exists_prime_profile_curve_fixing_observables
+    (z : Equiv.Perm ι → ℂ) (hz : z ∈ zeroLocus (profileIdeal ι))
+    (E : Finset (ProfileRing ι)) (hk : E.card < 2 * Fintype.card ι - 2) :
+    ∃ Q : Ideal (ProfileRing ι), profileIdeal ι ≤ Q ∧ z ∈ zeroLocus Q ∧ Q.IsPrime ∧
+      (∀ y : zeroLocus Q, ∀ p ∈ E, eval y.val p = eval z p) ∧
+      ∃ F : Polynomial ℂ →ₐ[ℂ] (ProfileRing ι ⧸ Q),
+        F.Finite ∧ Function.Injective F ∧
+        ∃ t : ProfileRing ι, Ideal.Quotient.mk Q t = F Polynomial.X := by
+  classical
+  letI : Nontrivial ι := Fintype.one_lt_card_iff_nontrivial.mp (by omega)
+  let R := ProfileRing ι
+  let I := profileIdeal ι
+  let B := R ⧸ I
+  have hz : z ∈ zeroLocus I := hz
+  letI : I.IsPrime := profileIdeal_prime
+  letI : Algebra.FiniteType ℂ B := Algebra.FiniteType.of_surjective inferInstance (Ideal.Quotient.mkₐ ℂ I)
+    (Ideal.Quotient.mkₐ_surjective _ _)
+  obtain ⟨d, f, hfi, hf⟩ := exists_finite_inj_algHom_of_fg ℂ B
+  have hd := profile_normalization_lower_bound f hf
+  let pinned (p : R) : R := p - C (eval z p)
+  let cuts := E.image pinned
+  have hcuts (p : R) (hp : p ∈ cuts) : eval z p = 0 := by
+    obtain ⟨q, _, rfl⟩ := Finset.mem_image.mp hp
+    simp [pinned]
+  obtain ⟨Q, hIQ, hQz, hQprime, hmem, F, hF, hFi, t, ht⟩ :=
+    exists_finite_curve_at_prime_affine_after_equations I f hf hfi ⟨z, hz⟩ cuts hcuts
+      (Finset.card_image_le.trans_lt (hk.trans_le hd))
+  have hpin (y : zeroLocus Q) (p : R) (hp : p ∈ E) : eval y.val p = eval z p := by
+    have he := y.property _ (hmem _ (Finset.mem_image_of_mem pinned hp))
+    simpa only [pinned, map_sub, eval_C, sub_eq_zero] using he
+  exact ⟨Q, hIQ, fun p hp => hQz hp, hQprime, hpin, F, hF, hFi, t, ht⟩
+
 /-- When fewer than $2n-2$ observables determine the old differences and gap
 on the exact profile locus, another contact can be forced, irrespective of
 the number of old labels. The observables need not be linear. -/
@@ -82,38 +117,20 @@ theorem global_contact_transfer_of_controlling_observables {U : Matrix ι ι ℂ
     ∃ v : StrictMatchingSupport U, w.contacts ⊂ v.contacts ∧ w.PreservesContactData v ∧
       ∀ p ∈ E, eval (matchingProduct v.a v.b) p = eval (matchingProduct w.a w.b) p := by
   classical
-  letI : Nontrivial ι := Fintype.one_lt_card_iff_nontrivial.mp (by omega)
-  let R := ProfileRing ι
-  let I := profileIdeal ι
-  let B := R ⧸ I
   let z := matchingProduct w.a w.b
-  have hz : z ∈ zeroLocus I := (profileIdeal_exact (ι := ι)) ▸ ⟨w.a, w.b, rfl⟩
-  letI : I.IsPrime := profileIdeal_prime
-  letI : Algebra.FiniteType ℂ B := Algebra.FiniteType.of_surjective inferInstance (Ideal.Quotient.mkₐ ℂ I)
-    (Ideal.Quotient.mkₐ_surjective _ _)
-  obtain ⟨d, f, hfi, hf⟩ := exists_finite_inj_algHom_of_fg ℂ B
-  have hd := profile_normalization_lower_bound f hf
-  let pinned (p : R) : R := p - C (eval z p)
-  let cuts := E.image pinned
-  have hcuts (p : R) (hp : p ∈ cuts) : eval z p = 0 := by
-    obtain ⟨q, _, rfl⟩ := Finset.mem_image.mp hp
-    simp [pinned]
-  obtain ⟨Q, hIQ, hQz, hQprime, hmem, F, hF, hFi, t, ht⟩ :=
-    exists_finite_curve_at_prime_affine_after_equations I f hf hfi ⟨z, hz⟩ cuts hcuts
-      (Finset.card_image_le.trans_lt (hk.trans_le hd))
+  have hz : z ∈ zeroLocus (profileIdeal ι) := (profileIdeal_exact (ι := ι)) ▸ ⟨w.a, w.b, rfl⟩
+  obtain ⟨Q, hIQ, hQz, hQprime, hpin, F, hF, hFi, t, ht⟩ :=
+    exists_prime_profile_curve_fixing_observables z hz E hk
   letI : Q.IsPrime := hQprime
-  let z₀ : zeroLocus Q := ⟨z, fun p hp => hQz hp⟩
+  let z₀ : zeroLocus Q := ⟨z, hQz⟩
   letI : Infinite (zeroLocus Q) := Infinite.of_surjective _
     (surjective_finite_affine_projection Q F hF hFi t ht)
   have heval (x : Equiv.Perm ι → ℂ) : (fun q => eval x (X q)) = x := by
     funext q
     exact eval_X q
   have hexact (y : zeroLocus Q) : ∃ a b : ι → ℂ, matchingProduct a b = y.val := by
-    have hy : y.val ∈ zeroLocus I := fun p hp => y.property p (hIQ hp)
+    have hy : y.val ∈ zeroLocus (profileIdeal ι) := fun p hp => y.property p (hIQ hp)
     rwa [← profileIdeal_exact] at hy
-  have hpin (y : zeroLocus Q) (p : R) (hp : p ∈ E) : eval y.val p = eval z p := by
-    have he := y.property _ (hmem _ (Finset.mem_image_of_mem pinned hp))
-    simpa only [pinned, map_sub, eval_C, sub_eq_zero] using he
   have hfixed (y : zeroLocus Q) :
       (∀ q ∈ w.contacts, y.val w.pivot - y.val q = z w.pivot - z q) ∧
       matchingProfileDetGap U w.η w.pivot y.val = matchingProfileDetGap U w.η w.pivot z := by
