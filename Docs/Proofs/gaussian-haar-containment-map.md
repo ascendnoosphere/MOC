@@ -17,7 +17,9 @@ the matching hull. It concerns this specified ensemble.
 flowchart BT
     A["Two exchanges on disjoint pairs"] --> S["Three products surround a disk"]
     G["Eight disk masses and independence of disjoint coordinates"] --> B["Probability of no good block"]
-    N["Gaussian negative moment<br/>Ensemble evaluation pending in Lean"] --> P["Lower tail of the identity product"]
+    C["Gaussian convolution"] --> N["Gamma formula for the negative moment"]
+    L["Finite Bohr–Mollerup bound"] --> P["Lower tail of the identity product"]
+    N --> P
     H["Haar determinant second moment<br/>Ensemble evaluation pending in Lean"] --> D["Upper tail of the determinant"]
     S --> U["Failure is in the union of three events"]
     B --> U
@@ -40,14 +42,14 @@ halves of the squared norm of the direction. These identities give
 a support bound of one half of that norm. The perturbation changes
 each projection by at most $21/100$ of the norm. The proof applies
 the resulting support bound to every direction.
-[Disk inclusion](../../Lean/MOC/GaussianHaarContainment.lean#L135)
+[Disk inclusion](../../Lean/MOC/GaussianHaarContainment.lean#L140)
 
 For each pair, put the four disk centers at $0$, $1$, $1$, and
 $(-2+i\sqrt3)/7$ in the order of the two entries of $a$ and the two
 entries of $b$. Take radius $1/200$ at each center. The denominator
 stays nonzero and the ratio is within $1/10$ of $\omega$. Two such
 pairs give a matching triangle block.
-[Ratio estimate](../../Lean/MOC/GaussianHaarContainment.lean#L257) · [Block construction](../../Lean/MOC/GaussianHaarContainment.lean#L420)
+[Ratio estimate](../../Lean/MOC/GaussianHaarContainment.lean#L262) · [Block construction](../../Lean/MOC/GaussianHaarContainment.lean#L425)
 
 ## Failure bound
 
@@ -59,17 +61,26 @@ $p_0=e^{-5}/200^{16}$. The coordinates in different consecutive
 blocks are disjoint. Their independence makes the block failure
 probabilities multiply. The probability of no good block is at most
 $(1-p_0)^{\lfloor n/4\rfloor}$.
-[One disk](../../Lean/MOC/GaussianHaarContainment.lean#L317) · [Eight disks](../../Lean/MOC/GaussianHaarContainment.lean#L448) · [Consecutive blocks of independent spectra](../../Lean/MOC/GaussianHaarContainment.lean#L618)
+[One disk](../../Lean/MOC/GaussianHaarContainment.lean#L322) · [Eight disks](../../Lean/MOC/GaussianHaarContainment.lean#L453) · [Consecutive blocks of independent spectra](../../Lean/MOC/GaussianHaarContainment.lean#L623)
 
-The remaining two bounds have different premises.
+The sum of two independent spectral entries has density
+$e^{-|z|^2/2}/(2\pi)$. Complete the square in the convolution of the
+two original densities. Polar integration gives the expectation of
+$|z|^{-1/10}$ as $2^{-1/20}\Gamma(19/20)$, where $\Gamma$ is the
+Euler gamma function. The finite Bohr–Mollerup comparison at $255$
+and bounds on two reciprocal sums give an upper bound of $e^{-7/2000}$.
+Each sum $a_j+b_j$ uses its own pair of independent entries. The product
+law of the pairs gives independence of these sums.
+[Gaussian convolution](../../Lean/MOC/GaussianHaarContainment.lean#L957) · [Gamma formula](../../Lean/MOC/GaussianHaarContainment.lean#L991) · [Gamma bound](../../Lean/MOC/GaussianHaarContainment.lean#L832)
 
 | Premise | Consequence | Lean source |
 | --- | --- | --- |
-| The independent negative moments of the pair sums are each at most $e^{-7/2000}$ at exponent $-1/10$. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Negative-moment proof](../../Lean/MOC/GaussianHaarContainment.lean#L674) |
-| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Second-moment proof](../../Lean/MOC/GaussianHaarContainment.lean#L722) |
+| The spectral entries are independent standard complex Gaussians. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../../Lean/MOC/GaussianHaarContainment.lean#L1066) |
+| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../../Lean/MOC/GaussianHaarContainment.lean#L727) |
 
-If these bounds hold and there are $\lfloor n/4\rfloor$ independent
-blocks, the union bound gives
+Assume independent standard complex Gaussian spectral entries, a
+measurable determinant magnitude, and the stated determinant second
+moment bound. The union bound gives
 
 $$
 \Pr(d\text{ is outside the matching hull})
@@ -80,19 +91,9 @@ $$
 The three events in this union may be correlated. The displayed
 estimate decays exponentially in $n$. Its small value of $p_0$
 gives no useful bound at moderate orders.
-[Conditional failure bound](../../Lean/MOC/GaussianHaarContainment.lean#L759)
+[Failure bound from the determinant moment](../../Lean/MOC/GaussianHaarContainment.lean#L1131)
 
-## Remaining ensemble inputs
-
-The Lean source gives the block estimate from the independent Gaussian
-spectral entries. The failure bound also uses the two estimates in the
-table above.
-
-The paper argument evaluates the pair negative moment by the Mellin
-transform of an exponential variable. It uses the series for the
-logarithm of the gamma function to give the numerical upper bound.
-The Lean source starts at the resulting negative-moment inequality.
-[Log-gamma series](https://dlmf.nist.gov/5.7.E3)
+## Remaining Haar input
 
 The paper argument evaluates the determinant second moment by
 orthogonality of the spectral monomials in the expansion by squared

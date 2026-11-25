@@ -1,6 +1,11 @@
 import MOC.ContactCrossRatios
 import MOC.Support
+import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.MeasureTheory.Group.LIntegral
+import Mathlib.MeasureTheory.Integral.Gamma
 import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
 import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.MeasureTheory.Measure.WithDensity
@@ -772,6 +777,375 @@ theorem gaussianHaar_failure_bound_of_estimates {Ω : Type*} [MeasurableSpace Ω
         ENNReal.ofReal ((8 / 3) * ((n : ℝ) + 2) * ((n : ℝ) + 3) * Real.exp (-(n : ℝ) / 50)) :=
   (matchingTriangle_failure_measure_le μ a b U (Real.exp ((n : ℝ) / 100))).trans
     (add_le_add (add_le_add hblock hbaseline) (determinant_second_moment_tail μ n a b U hmeas hmoment))
+
+private theorem neg_log_one_sub_le_linear_quadratic {v : ℝ} (hv : 0 ≤ v) (hv' : v < 1) :
+    -Real.log (1 - v) ≤ v + v ^ 2 / (2 * (1 - v)) := by
+  let f (j : ℕ) := v ^ (j + 1) / ((j : ℝ) + 1)
+  have hsum : HasSum f (-Real.log (1 - v)) :=
+    Real.hasSum_pow_div_log_of_abs_lt_one (by rwa [abs_of_nonneg hv])
+  have htail : HasSum (fun j : ℕ => f (j + 1)) (-Real.log (1 - v) - v) := by
+    have h := (hasSum_nat_add_iff' (f := f) 1).2 hsum
+    simpa only [Finset.sum_range_one, f, Nat.cast_zero, zero_add, pow_one, div_one] using h
+  have hgeom : HasSum (fun j : ℕ => (v ^ 2 / 2) * v ^ j) ((v ^ 2 / 2) * (1 - v)⁻¹) :=
+    (hasSum_geometric_of_lt_one hv hv').mul_left _
+  have hterm (j : ℕ) : f (j + 1) ≤ (v ^ 2 / 2) * v ^ j := by
+    dsimp only [f]
+    rw [show j + 1 + 1 = 2 + j by omega, pow_add, Nat.cast_add, Nat.cast_one]
+    have hd : (2 : ℝ) ≤ ((j : ℝ) + 1) + 1 := by linarith only [Nat.cast_nonneg j]
+    calc
+      _ ≤ (v ^ 2 * v ^ j) / 2 :=
+        div_le_div_of_nonneg_left (mul_nonneg (sq_nonneg v) (pow_nonneg hv j)) (by norm_num) hd
+      _ = _ := by ring
+  have hle := hasSum_le hterm htail hgeom
+  rw [← div_eq_mul_inv, div_div] at hle
+  linarith only [hle]
+
+private theorem log_factorial_eq_sum_log_succ (n : ℕ) :
+    Real.log (n.factorial : ℝ) = ∑ j ∈ Finset.range n, Real.log ((j : ℝ) + 1) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [Nat.factorial_succ, Nat.cast_mul, Real.log_mul (by positivity) (by positivity),
+      Finset.sum_range_succ, ← ih, Nat.cast_succ, add_comm]
+
+private theorem log_two_lower_for_gaussian : (69313 : ℝ) / 100000 < Real.log 2 := by
+  let f (k : ℕ) : ℝ := 2 * (1 / (2 * (k : ℝ) + 1)) * (1 / 3) ^ (2 * k + 1)
+  have hs : HasSum f (Real.log 2) := by
+    simpa [f] using Real.hasSum_log_one_add_inv (a := 1) zero_lt_one
+  have hle : (∑ k ∈ Finset.range 4, f k) ≤ Real.log 2 := by
+    rw [← hs.tsum_eq]
+    exact hs.summable.sum_le_tsum (Finset.range 4) (fun k _ => by dsimp only [f]; positivity)
+  refine lt_of_lt_of_le ?_ hle
+  norm_num [f, Finset.sum_range_succ]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 4000000 in
+private theorem gaussian_reciprocal_sums :
+    (∑ j ∈ Finset.range 256, (1 : ℝ) / ((j : ℝ) + 1)) < 612435 / 100000 ∧
+      (∑ j ∈ Finset.range 256, (1 : ℝ) / (((j : ℝ) + 1) ^ 2)) < 16411 / 10000 := by
+  have hh : (∑ j ∈ Finset.range 256, (1 : ℚ) / ((j : ℚ) + 1)) < 612435 / 100000 := by decide
+  have hs : (∑ j ∈ Finset.range 256, (1 : ℚ) / (((j : ℚ) + 1) ^ 2)) < 16411 / 10000 := by decide
+  exact ⟨by exact_mod_cast hh, by exact_mod_cast hs⟩
+
+/-- The finite Bohr–Mollerup comparison bounds the Gamma factor in the
+negative moment of a pair of standard complex Gaussian variables. -/
+theorem gaussianPairNegativeMoment_gamma_bound :
+    (2 : ℝ) ^ (-(1 / 20 : ℝ)) * Real.Gamma (19 / 20) ≤ Real.exp (-(7 / 2000 : ℝ)) := by
+  let v (j : ℕ) : ℝ := (1 / 20) / ((j : ℝ) + 1)
+  have hpos (j : ℕ) : 0 < (j : ℝ) + 1 := by positivity
+  have hv (j : ℕ) : 0 ≤ v j := by dsimp only [v]; positivity
+  have hsmall (j : ℕ) : v j ≤ 1 / 20 := by
+    dsimp only [v]
+    apply (div_le_iff₀ (hpos j)).mpr
+    linarith only [Nat.cast_nonneg j]
+  have hg :
+      Real.log (Real.Gamma (19 / 20)) ≤ (19 / 20) * Real.log 256 +
+        Real.log ((255 : ℕ).factorial : ℝ) -
+        ∑ j ∈ Finset.range 256, Real.log (19 / 20 + (j : ℝ)) := by
+    have h := Real.BohrMollerup.le_logGammaSeq (x := (19 / 20 : ℝ)) Real.convexOn_log_Gamma
+      (fun {y} hy => by
+        simp only [Function.comp_apply]
+        rw [Real.Gamma_add_one hy.ne', Real.log_mul hy.ne' (Real.Gamma_pos_of_pos hy).ne', add_comm])
+      (by norm_num) (by norm_num) 255
+    simp only [Function.comp_apply, Real.Gamma_one, Real.log_one, zero_add,
+      Real.BohrMollerup.logGammaSeq] at h
+    simp only [Nat.cast_ofNat, Nat.cast_succ, show (255 : ℝ) + 1 = 256 by norm_num] at h
+    linarith only [h]
+  have hsplit (j : ℕ) : Real.log (19 / 20 + (j : ℝ)) =
+      Real.log ((j : ℝ) + 1) + Real.log (1 - v j) := by
+    have hne := (hpos j).ne'
+    have he : (19 / 20 : ℝ) + (j : ℝ) = ((j : ℝ) + 1) * (1 - v j) := by
+      dsimp only [v]
+      field_simp [hne] <;> ring
+    rw [he, Real.log_mul hne (sub_pos.mpr (lt_of_le_of_lt (hsmall j) (by norm_num))).ne']
+  simp only [hsplit, Finset.sum_add_distrib, ← log_factorial_eq_sum_log_succ] at hg
+  have hf : ((256 : ℕ).factorial : ℝ) = 256 * ((255 : ℕ).factorial : ℝ) := by
+    rw [show (256 : ℕ) = (255 : ℕ).succ by rfl, Nat.factorial_succ, Nat.cast_mul] <;> rfl
+  rw [hf, Real.log_mul (by norm_num) (by positivity)] at hg
+  have hlocal (j : ℕ) : -Real.log (1 - v j) ≤
+      (1 / 20 : ℝ) * (1 / ((j : ℝ) + 1)) +
+        ((1 / 20 : ℝ) ^ 2 / (2 * (1 - 1 / 20))) * (1 / (((j : ℝ) + 1) ^ 2)) := by
+    have hs := neg_log_one_sub_le_linear_quadratic (hv j)
+      (lt_of_le_of_lt (hsmall j) (by norm_num))
+    have hden : 2 * (1 - (1 / 20 : ℝ)) ≤ 2 * (1 - v j) := by
+      linarith only [hsmall j]
+    calc
+      _ ≤ v j + (v j) ^ 2 / (2 * (1 - v j)) := hs
+      _ ≤ v j + (v j) ^ 2 / (2 * (1 - 1 / 20)) :=
+        add_le_add_left (div_le_div_of_nonneg_left (sq_nonneg _) (by norm_num) hden) _
+      _ = _ := by
+        dsimp only [v]
+        field_simp [(hpos j).ne'] <;> ring
+  have htot := Finset.sum_le_sum (s := Finset.range 256) (fun j _ => hlocal j)
+  simp only [Finset.sum_neg_distrib, Finset.sum_add_distrib, ← Finset.mul_sum] at htot
+  have hlog256 : Real.log 256 = 8 * Real.log 2 := by
+    rw [show (256 : ℝ) = 2 ^ (8 : ℕ) by norm_num, Real.log_pow] <;> norm_num
+  have hgamma : 0 < Real.Gamma (19 / 20) := Real.Gamma_pos_of_pos (by norm_num)
+  have hpow : 0 < (2 : ℝ) ^ (-(1 / 20 : ℝ)) := Real.rpow_pos_of_pos (by norm_num) _
+  apply (Real.log_le_iff_le_exp (mul_pos hpow hgamma)).mp
+  rw [Real.log_mul hpow.ne' hgamma.ne', Real.rpow_def_of_pos (by norm_num), Real.log_exp]
+  rw [hlog256] at hg
+  obtain ⟨hh, hh'⟩ := gaussian_reciprocal_sums
+  linarith only [hg, htot, hh, hh', log_two_lower_for_gaussian]
+
+private def complexGaussianRadialWeight (rate : ℝ) (z : ℂ) : ℝ≥0∞ :=
+  ENNReal.ofReal (Real.exp (-rate * ‖z‖ ^ 2))
+
+private theorem measurable_complexGaussianRadialWeight (rate : ℝ) :
+    Measurable (complexGaussianRadialWeight rate) := by
+  unfold complexGaussianRadialWeight
+  fun_prop
+
+private theorem complexGaussianRadialWeight_integral {rate : ℝ} (hr : 0 < rate) :
+    (∫⁻ z, complexGaussianRadialWeight rate z) = ENNReal.ofReal (Real.pi / rate) := by
+  let f (z : ℂ) := Real.exp (-rate * ‖z‖ ^ 2)
+  have he : (∫ z, f z) = Real.pi / rate := by
+    have hΓ : Real.Gamma 2 = 1 := by
+      rw [show (2 : ℝ) = 1 + 1 by norm_num, Real.Gamma_add_one one_ne_zero, Real.Gamma_one, mul_one]
+    have h := Complex.integral_exp_neg_mul_rpow (p := 2) (by norm_num) hr
+    rw [show (-2 / 2 : ℝ) = -1 by norm_num, Real.rpow_neg_one,
+      show (2 / 2 + 1 : ℝ) = 2 by norm_num, hΓ, mul_one, ← div_eq_mul_inv] at h
+    simpa only [f, Real.rpow_two] using h
+  have hf : Integrable f := by
+    by_contra h
+    rw [integral_undef h] at he
+    exact (div_pos Real.pi_pos hr).ne' he.symm
+  rw [← he, ofReal_integral_eq_lintegral_ofReal hf
+    (Filter.Eventually.of_forall fun z => (Real.exp_pos _).le)] <;> rfl
+
+private theorem standardComplexGaussianDensity_measurable :
+    Measurable standardComplexGaussianDensity := by
+  unfold standardComplexGaussianDensity
+  fun_prop
+
+private theorem gaussian_pair_complete_square (x z : ℂ) :
+    ‖x‖ ^ 2 + ‖z - x‖ ^ 2 = 2 * ‖x - z / 2‖ ^ 2 + ‖z‖ ^ 2 / 2 := by
+  simp only [Complex.sq_norm, Complex.normSq_apply, Complex.sub_re, Complex.sub_im,
+    Complex.div_ofNat_re, Complex.div_ofNat_im]
+  ring
+
+/-- The law of the sum of two independent standard complex Gaussian variables. -/
+def pairedComplexGaussian : Measure ℂ :=
+  volume.withDensity (fun z => ENNReal.ofReal (Real.exp (-(‖z‖ ^ 2 / 2)) / (2 * Real.pi)))
+
+private theorem gaussian_density_convolution (z : ℂ) :
+    (∫⁻ x, standardComplexGaussianDensity x * standardComplexGaussianDensity (z - x)) =
+      ENNReal.ofReal (Real.exp (-(‖z‖ ^ 2 / 2)) / (2 * Real.pi)) := by
+  let c := Real.exp (-(‖z‖ ^ 2 / 2)) / Real.pi ^ 2
+  have hc : 0 ≤ c := by dsimp only [c]; positivity
+  have hpoint (x : ℂ) : standardComplexGaussianDensity x * standardComplexGaussianDensity (z - x) =
+      ENNReal.ofReal c * complexGaussianRadialWeight 2 (x - z / 2) := by
+    unfold standardComplexGaussianDensity complexGaussianRadialWeight
+    rw [← ENNReal.ofReal_mul (div_nonneg (Real.exp_pos _).le Real.pi_pos.le),
+      ← ENNReal.ofReal_mul hc, div_mul_div_comm, ← pow_two, ← Real.exp_add,
+      show -(‖x‖ ^ 2) + -(‖z - x‖ ^ 2) = -(‖z‖ ^ 2 / 2) + -2 * ‖x - z / 2‖ ^ 2 by
+        linarith only [gaussian_pair_complete_square x z], Real.exp_add]
+    congr 1
+    dsimp only [c]
+    ring
+  simp_rw [hpoint]
+  rw [lintegral_const_mul (ENNReal.ofReal c) ((measurable_complexGaussianRadialWeight 2).comp
+      (measurable_id.sub_const (z / 2))),
+    lintegral_sub_right_eq_self (complexGaussianRadialWeight 2) (z / 2),
+    complexGaussianRadialWeight_integral (by norm_num), ← ENNReal.ofReal_mul hc]
+  congr 1
+  dsimp only [c]
+  field_simp [Real.pi_pos.ne'] <;> ring
+
+/-- Addition sends the product of two standard complex Gaussian laws to the
+paired complex Gaussian law. -/
+theorem standardComplexGaussian_add_map :
+    (standardComplexGaussian.prod standardComplexGaussian).map (fun p : ℂ × ℂ => p.1 + p.2) =
+      pairedComplexGaussian := by
+  let g := standardComplexGaussianDensity
+  let h (z : ℂ) := ENNReal.ofReal (Real.exp (-(‖z‖ ^ 2 / 2)) / (2 * Real.pi))
+  have hg : Measurable g := standardComplexGaussianDensity_measurable
+  have hh : Measurable h := by dsimp only [h]; fun_prop
+  refine Measure.ext_of_lintegral _ fun f hf => ?_
+  change (∫⁻ z, f z ∂((volume.withDensity g).prod (volume.withDensity g)).map
+      (fun p : ℂ × ℂ => p.1 + p.2)) = ∫⁻ z, f z ∂volume.withDensity h
+  have hadd : Measurable (fun p : ℂ × ℂ => p.1 + p.2) := by fun_prop
+  rw [lintegral_map hf hadd, prod_withDensity hg hg,
+    lintegral_withDensity_eq_lintegral_mul _ ((hg.comp measurable_fst).mul (hg.comp measurable_snd))
+      (hf.comp hadd),
+    lintegral_withDensity_eq_lintegral_mul _ hh hf]
+  change (∫⁻ p : ℂ × ℂ, g p.1 * g p.2 * f (p.1 + p.2) ∂volume.prod volume) =
+    ∫⁻ z, h z * f z
+  rw [lintegral_prod_of_measurable _ (((hg.comp measurable_fst).mul (hg.comp measurable_snd)).mul
+    (hf.comp hadd))]
+  calc
+    _ = ∫⁻ x : ℂ, ∫⁻ z : ℂ, g x * g (z - x) * f z := by
+      refine lintegral_congr fun x => ?_
+      simpa only [add_sub_cancel_left] using
+        (lintegral_add_left_eq_self (μ := (volume : Measure ℂ))
+          (fun z => g x * g (z - x) * f z) x)
+    _ = ∫⁻ z : ℂ, ∫⁻ x : ℂ, g x * g (z - x) * f z :=
+      lintegral_lintegral_swap (((hg.comp measurable_fst).mul (hg.comp
+        (measurable_snd.sub measurable_fst))).mul (hf.comp measurable_snd)).aemeasurable
+    _ = ∫⁻ z, h z * f z := by
+      refine lintegral_congr fun z => ?_
+      rw [lintegral_mul_const _ (hg.mul (hg.comp (measurable_const.sub measurable_id))),
+        gaussian_density_convolution z] <;> rfl
+
+/-- The paired complex Gaussian negative moment is an Euler Gamma value. -/
+theorem pairedComplexGaussian_negative_moment :
+    (∫⁻ z, matchingNegativeMoment z ∂pairedComplexGaussian) =
+      ENNReal.ofReal ((2 : ℝ) ^ (-(1 / 20 : ℝ)) * Real.Gamma (19 / 20)) := by
+  let q : ℝ := -(1 / 10)
+  let c : ℝ := 1 / (2 * Real.pi)
+  let f (z : ℂ) := ‖z‖ ^ q * Real.exp (-(1 / 2 : ℝ) * ‖z‖ ^ 2)
+  have hc : 0 < c := by dsimp only [c]; positivity
+  have he : (∫ z, f z) = 2 * Real.pi * ((2 : ℝ) ^ (-(1 / 20 : ℝ)) * Real.Gamma (19 / 20)) := by
+    have hp : ((1 / 2 : ℝ) ^ (-(19 / 20 : ℝ))) = 2 * (2 : ℝ) ^ (-(1 / 20 : ℝ)) := by
+      rw [one_div, Real.inv_rpow (by norm_num), ← Real.rpow_neg (by norm_num : (0 : ℝ) ≤ 2),
+        show -(-(19 / 20 : ℝ)) = 1 + (-(1 / 20 : ℝ)) by norm_num,
+        Real.rpow_add (by norm_num), Real.rpow_one]
+    have h := Complex.integral_rpow_mul_exp_neg_mul_rpow (p := 2) (q := q) (b := 1 / 2)
+      (by norm_num) (by dsimp only [q]; norm_num) (by norm_num)
+    rw [show (q + 2) / 2 = 19 / 20 by dsimp only [q]; norm_num,
+      show -(q + 2) / 2 = -(19 / 20) by dsimp only [q]; norm_num, hp] at h
+    simp only [Real.rpow_two, ← f] at h
+    rw [h]
+    ring
+  have hi : Integrable f := by
+    by_contra h
+    rw [integral_undef h] at he
+    exact (by positivity : 0 < 2 * Real.pi * ((2 : ℝ) ^ (-(1 / 20 : ℝ)) *
+      Real.Gamma (19 / 20))).ne' he.symm
+  have ha : ∀ᵐ z : ℂ ∂volume, z ≠ 0 := by
+    rw [ae_iff, show {z : ℂ | ¬ z ≠ 0} = {0} by ext z; simp]
+    exact measure_singleton 0
+  unfold pairedComplexGaussian
+  rw [lintegral_withDensity_eq_lintegral_mul _ (by fun_prop) (by
+    unfold matchingNegativeMoment
+    exact ENNReal.continuous_rpow_const.measurable.comp (by fun_prop))]
+  calc
+    _ = ∫⁻ z : ℂ, ENNReal.ofReal c * ENNReal.ofReal (f z) := by
+      refine lintegral_congr_ae ?_
+      filter_upwards [ha] with z hz
+      unfold matchingNegativeMoment
+      rw [ENNReal.ofReal_rpow_of_pos (norm_pos_iff.mpr hz),
+        ← ENNReal.ofReal_mul (div_nonneg (Real.exp_pos _).le (by positivity)),
+        ← ENNReal.ofReal_mul hc.le]
+      congr 1
+      dsimp only [c, f, q]
+      rw [show -((1 / 2 : ℝ)) * ‖z‖ ^ 2 = -(‖z‖ ^ 2 / 2) by ring]
+      ring
+    _ = _ := by
+      rw [lintegral_const_mul'' _ hi.aestronglyMeasurable.aemeasurable.ennreal_ofReal,
+        ← ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall fun z => by
+          dsimp only [f]
+          exact mul_nonneg (Real.rpow_nonneg (norm_nonneg z) q) (Real.exp_pos _).le),
+        he, ← ENNReal.ofReal_mul hc.le]
+      congr 1
+      dsimp only [c]
+      field_simp [Real.pi_pos.ne'] <;> ring
+
+private instance : IsProbabilityMeasure standardComplexGaussian := by
+  let c : ℝ := 1 / Real.pi
+  have hc : 0 ≤ c := by dsimp only [c]; positivity
+  constructor
+  rw [standardComplexGaussian, withDensity_apply _ MeasurableSet.univ, setLIntegral_univ]
+  have h (z : ℂ) : standardComplexGaussianDensity z =
+      ENNReal.ofReal c * complexGaussianRadialWeight 1 z := by
+    unfold standardComplexGaussianDensity complexGaussianRadialWeight
+    rw [← ENNReal.ofReal_mul hc]
+    congr 1
+    dsimp only [c]
+    ring_nf
+  simp_rw [h]
+  rw [lintegral_const_mul _ (measurable_complexGaussianRadialWeight 1),
+    complexGaussianRadialWeight_integral zero_lt_one, ← ENNReal.ofReal_mul hc,
+    ← ENNReal.ofReal_one]
+  congr 1
+  dsimp only [c]
+  field_simp [Real.pi_pos.ne'] <;> ring
+
+/-- The identity matching product has the exponential lower tail under
+independent standard complex Gaussian spectral entries. -/
+theorem gaussianMatchingProduct_lower_tail {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (n : ℕ) (X : Fin 2 × Fin n → Ω → ℂ)
+    (hmeas : ∀ j, Measurable (X j))
+    (hlaw : ∀ j, μ.map (X j) = standardComplexGaussian)
+    (hind : ProbabilityTheory.iIndepFun X μ) :
+    μ {x | ‖matchingProduct (fun j => X (0, j) x) (fun j => X (1, j) x) 1‖ <
+      Real.exp ((n : ℝ) / 100)} ≤ ENNReal.ofReal (Real.exp (-(n : ℝ) / 400)) := by
+  classical
+  let idx : Fin n ⊕ Fin n → Fin 2 × Fin n := Sum.elim (fun j => (0, j)) (fun j => (1, j))
+  have hinj : Function.Injective idx := by
+    intro i j h
+    cases i <;> cases j
+    · exact congrArg Sum.inl (congrArg Prod.snd h)
+    · exact False.elim ((by decide : (0 : Fin 2) ≠ 1) (congrArg Prod.fst h))
+    · exact False.elim ((by decide : (1 : Fin 2) ≠ 0) (congrArg Prod.fst h))
+    · exact congrArg Sum.inr (congrArg Prod.snd h)
+  let F (x : Ω) (i : Fin n ⊕ Fin n) := X (idx i) x
+  let P (j : Fin n) (x : Ω) := (X (0, j) x, X (1, j) x)
+  let ν := standardComplexGaussian
+  have hF : Measurable F := measurable_pi_iff.mpr fun i => hmeas (idx i)
+  have hmap : μ.map F = Measure.pi (fun _ : Fin n ⊕ Fin n => ν) := by
+    have h := (ProbabilityTheory.iIndepFun_iff_map_fun_eq_pi_map
+      (fun i => (hmeas (idx i)).aemeasurable)).mp (hind.precomp hinj)
+    simpa only [F, ν, hlaw] using h
+  let e := MeasurableEquiv.sumPiEquivProdPi (fun _ : Fin n ⊕ Fin n => ℂ)
+  let E := MeasurableEquiv.arrowProdEquivProdArrow ℂ ℂ (Fin n)
+  have he : MeasurePreserving e (Measure.pi (fun _ => ν))
+      ((Measure.pi fun _ => ν).prod (Measure.pi fun _ => ν)) :=
+    measurePreserving_sumPiEquivProdPi (fun _ => ν)
+  have hE : MeasurePreserving E.symm ((Measure.pi fun _ => ν).prod (Measure.pi fun _ => ν))
+      (Measure.pi fun _ => ν.prod ν) :=
+    (measurePreserving_arrowProdEquivProdArrow ℂ ℂ (Fin n) (fun _ => ν) (fun _ => ν)).symm E
+  have hPmeas (j : Fin n) : Measurable (P j) := (hmeas (0, j)).prodMk (hmeas (1, j))
+  have hPlaw (j : Fin n) : μ.map (P j) = ν.prod ν := by
+    have hne : ((0, j) : Fin 2 × Fin n) ≠ (1, j) :=
+      fun heq => (by decide : (0 : Fin 2) ≠ 1) (congrArg Prod.fst heq)
+    have hi := (ProbabilityTheory.indepFun_iff_map_prod_eq_prod_map_map
+      (hmeas (0, j)).aemeasurable (hmeas (1, j)).aemeasurable).mp (hind.indepFun hne)
+    simpa only [P, ν, hlaw] using hi
+  have hPind : ProbabilityTheory.iIndepFun P μ := by
+    apply (ProbabilityTheory.iIndepFun_iff_map_fun_eq_pi_map
+      (fun j => (hPmeas j).aemeasurable)).mpr
+    change μ.map (E.symm ∘ e ∘ F) = _
+    rw [← Measure.map_map hE.measurable (he.measurable.comp hF),
+      ← Measure.map_map he.measurable hF, hmap, he.map_eq, hE.map_eq]
+    simp only [hPlaw]
+  let Q (p : ℂ × ℂ) := matchingNegativeMoment (p.1 + p.2)
+  have hneg : Measurable matchingNegativeMoment := by
+    unfold matchingNegativeMoment
+    exact ENNReal.continuous_rpow_const.measurable.comp (by fun_prop)
+  have hQ : Measurable Q := hneg.comp (by fun_prop)
+  apply matchingProduct_lower_tail_of_independent_negative_moments μ n
+    (fun x j => X (0, j) x) (fun x j => X (1, j) x)
+  · exact fun j => hQ.comp (hPmeas j)
+  · exact hPind.comp (fun _ => Q) (fun _ => hQ)
+  · intro j
+    change (∫⁻ x, Q (P j x) ∂μ) ≤ _
+    rw [← lintegral_map hQ (hPmeas j), hPlaw j]
+    change (∫⁻ p, matchingNegativeMoment (p.1 + p.2) ∂ν.prod ν) ≤ _
+    rw [← lintegral_map hneg (by fun_prop), show ν = standardComplexGaussian from rfl,
+      standardComplexGaussian_add_map, pairedComplexGaussian_negative_moment]
+    exact ENNReal.ofReal_le_ofReal gaussianPairNegativeMoment_gamma_bound
+
+/-- For the Gaussian spectral ensemble, only the determinant second moment
+is needed in addition to measurability to get the exponential failure bound. -/
+theorem gaussianHaar_failure_bound_of_second_moment {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (n : ℕ) (X : Fin 2 × Fin n → Ω → ℂ)
+    (U : Ω → Matrix (Fin n) (Fin n) ℂ)
+    (hmeas : ∀ j, Measurable (X j))
+    (hlaw : ∀ j, μ.map (X j) = standardComplexGaussian)
+    (hind : ProbabilityTheory.iIndepFun X μ)
+    (hdet : AEMeasurable (fun x => ENNReal.ofReal (‖determinantValue
+      (fun j => X (0, j) x) (fun j => X (1, j) x) (U x)‖ ^ 2)) μ)
+    (hmoment : (∫⁻ x, ENNReal.ofReal (‖determinantValue
+      (fun j => X (0, j) x) (fun j => X (1, j) x) (U x)‖ ^ 2) ∂μ) ≤
+        ENNReal.ofReal (((n : ℝ) + 2) * ((n : ℝ) + 3) / 6)) :
+    μ {x | ¬ Holds (fun j => X (0, j) x) (fun j => X (1, j) x) (U x)} ≤
+      ENNReal.ofReal ((1 - gaussianTriangleBlockMass) ^ (n / 4)) +
+        ENNReal.ofReal (Real.exp (-(n : ℝ) / 400)) +
+        ENNReal.ofReal ((8 / 3) * ((n : ℝ) + 2) * ((n : ℝ) + 3) * Real.exp (-(n : ℝ) / 50)) :=
+  gaussianHaar_failure_bound_of_estimates μ n (fun x j => X (0, j) x)
+    (fun x j => X (1, j) x) U (gaussianTriangle_no_block_measure_le_of_iid_spectra μ n X hmeas hlaw hind)
+    (gaussianMatchingProduct_lower_tail μ n X hmeas hlaw hind) hdet hmoment
 
 end
 
