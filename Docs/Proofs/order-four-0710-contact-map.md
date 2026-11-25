@@ -31,6 +31,8 @@ flowchart TD
     O["Positive Hessian second difference for unequal weights"]
     N["Open Lean premise: the necessary spectral sign is nonpositive"]
     X["Exclude the unequal branch when the signed height is negative"]
+    F["Equal first weights and negative signed height"]
+    R["The imaginary radial gradient is nonnegative"]
     A --> B
     B --> C
     B --> D
@@ -44,6 +46,9 @@ flowchart TD
     P --> O
     O --> X
     N -.-> X
+    J --> F
+    F --> R
+    R --> E
 ```
 
 | Step | Statement and scope | Lean source |
@@ -58,11 +63,10 @@ flowchart TD
 | Scalar pencil sign | At the signed height $t<0$, both scalar pencil factors vanish when the branch polynomial is zero. The slope of the linear factor is positive. The slope of the quadratic factor is negative. Thus the quadratic coefficient of their product multiplied by $-4$ is positive for unequal first weights. | [Height identities](../../Lean/MOC/FourContact0710PencilFactors.lean#L39) · [Slopes](../../Lean/MOC/FourContact0710PencilFactors.lean#L119) · [Quadratic term](../../Lean/MOC/FourContact0710PencilFactors.lean#L169) |
 | Actual determinant | For $c\ge0$ and $d>0$, the leading eight rows and columns have determinant $d^2(c+1)^2$. The remaining six rows and columns give a Schur complement. This is the matrix after elimination of the first eight variables. Its rescaled determinant gives the exact product of the two scalar factors multiplied by $-4$. An actual lift forces the branch polynomial to vanish. | [Determinant](../../Lean/MOC/FourContact0710HessianPencil.lean#L197) · [Branch equation](../../Lean/MOC/FourContact0710HessianPencil.lean#L232) |
 | Unequal spectral branch | Let $D(t)$ be the Hessian determinant at signed height $t$. If $a\ne b$, $d>0$, and $Q<0$, an actual lift would give $D(t+1)+D(t-1)-2D(t)>0$. The unequal branch is excluded if this second difference is nonpositive. | [Strict sign](../../Lean/MOC/FourContact0710HessianPencil.lean#L250) · [Conditional exclusion](../../Lean/MOC/FourContact0710HessianPencil.lean#L273) |
+| Equal spectral branch | If $a=b$ and $t<0$, the branch polynomial gives $(a+1)^2(c+1)+e(c+1-a^2)=0$ when $d>0$. A linear combination of the Hessian rows shows that two factors of the imaginary radial gradient have the same sign. The other terms are nonnegative squares. The real radial gradient is $Q<0$, so an actual lift is impossible. The theorem also covers $d=0$. | [Row identity](../../Lean/MOC/FourContact0710EqualWeights.lean#L59) · [Equal-weight exclusion](../../Lean/MOC/FourContact0710EqualWeights.lean#L126) |
 
-The full argument requires a nonpositive second difference for actual
-spectra. Its proof uses the positive and negative directions of the
-Hessian and the radial form. For equal weights the full argument uses
-the rank-one restriction of the radial form to the Hessian kernel.
-The necessary spectral sign, the general equal-weight exclusion, and
+The unequal branch requires a nonpositive second difference for actual
+spectra. The archived proof uses the positive and negative directions
+of the Hessian and the radial form. The necessary spectral sign and
 the support inequality for positive signed height remain open in Lean.
 [Full paper argument](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/Docs/research/eight0710_full_closure.txt)
