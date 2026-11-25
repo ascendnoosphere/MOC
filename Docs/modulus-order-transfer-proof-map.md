@@ -55,6 +55,30 @@ other orders remains open.
 flowchart TD
     Hull["Hull inclusion on an unbounded set of orders"] -->|implies| Sub["Modulus bound on that set"]
     Sub <-->|equivalent| All["Modulus bound at every order"]
-    Larger["Modulus bound at order n"] -->|"if m ≤ n"| Smaller["Modulus bound at order m"]
-    Larger -->|"take m = n − 1 when n > 0"| Step["One scalar block suffices"]
+    All -->|"at each order n"| Larger["Modulus bound at order n"]
+    Larger -->|"if m ≤ n"| Smaller["Modulus bound at order m"]
 ```
+
+## Failure of duplicate anchors in order four
+
+Let $i^2=-1$. Take the two eigenvalue lists
+
+$$
+a=(2+i,2i,-2+2i,2-2i),\qquad b=(1,1-2i,-1-i,-2).
+$$
+
+Among the 24 matching products, the largest real part is five. The
+reverse permutation attains it. Choose any entry $c$ from $a$ and any
+entry $d$ from $b$. Append these entries to the corresponding lists.
+For each of the 16 choices, $c+d\ne 0$ and some enlarged matching
+product $Q$ satisfies $\mathrm{Re}(Q/(c+d))>5$.
+[Lists](../Lean/MOC/DuplicateAnchorObstruction.lean#L29) ·
+[Upper bound](../Lean/MOC/DuplicateAnchorObstruction.lean#L97) ·
+[Attainment](../Lean/MOC/DuplicateAnchorObstruction.lean#L104) ·
+[Enlarged matchings](../Lean/MOC/DuplicateAnchorObstruction.lean#L112)
+
+The enlarged determinant is $(c+d)D$. Division recovers $D$, but the
+enlarged matching hull extends past the original supporting line.
+This refutes the duplicate-anchor criterion for transferring the
+convex-hull bound from order five to order four. The order-four
+conjecture remains open.

@@ -442,6 +442,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
 
 ## Counterexamples to stronger statements
 
+- Duplicating an eigenvalue from each list can increase directional
+  support even after division by the appended scalar sum. For one
+  order-four pair, all 16 choices increase the maximum real part above
+  its original value of five.
+  [Original maximum](Lean/MOC/DuplicateAnchorObstruction.lean#L104) · [All duplicate pairs](Lean/MOC/DuplicateAnchorObstruction.lean#L112) · [Proof map](Docs/modulus-order-transfer-proof-map.md#failure-of-duplicate-anchors-in-order-four)
+
 - In order four, a real orthogonal $U$ and two complex spectra give a
   characteristic polynomial outside the convex hull of the matching
   characteristic polynomials. Each coefficient of the example is in its
