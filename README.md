@@ -262,6 +262,13 @@ Four zeros suffice for this stronger statement in order four. An exact
 orthogonal matrix with three zeros has no such law.
 [Row bound](Lean/MOC/SparseUnitaryUniversalWeights.lean#L69) · [Column bound](Lean/MOC/SparseUnitaryUniversalWeights.lean#L84) · [Total count](Lean/MOC/SparseUnitaryUniversalWeights.lean#L121) · [Four zeros](Lean/MOC/SparseUnitaryUniversalWeights.lean#L138) · [Three-zero obstruction](Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L112)
 
+For every $n\ge 4$, $n+8$ is the exact total count that guarantees
+one probability law for all spectra. To see why the next count fails,
+place the order-four example beside an identity block of order $n-4$.
+The resulting unitary has exactly $n+9$ nonzero entries. Any common
+law would restrict to a common law on the order-four block.
+[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L89) · [Counterexample at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction to a block](Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
+
 ### Mixing blocks with one shared coordinate
 
 Take two unitary matrices that each satisfy the inclusion for all pairs

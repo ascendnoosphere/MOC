@@ -232,6 +232,7 @@ import MOC.SparseUnitary
 import MOC.SparseSupportCardinality
 import MOC.SparseUnitaryUniversalWeights
 import MOC.OrderFourThreeZeroMinorObstruction
+import MOC.SparseSupportThreshold
 import MOC.SparseSpectralCollision
 import MOC.SpectralAffineContact
 import MOC.SpectralGramNeighborhood

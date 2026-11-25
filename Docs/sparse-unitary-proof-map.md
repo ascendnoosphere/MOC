@@ -142,3 +142,19 @@ $4/441$ and $1/441$, respectively. The first event cannot have the
 larger probability. This refutes one law for all spectra. The
 determinant inclusion allows the weights to depend on the two spectra.
 [Contradictory probabilities](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L65) · [Failure of a common law](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L112)
+
+## Exact threshold in each order
+
+Fix an order $n\ge 4$ and a nonnegative integer $t$. Every unitary of
+order $n$ with at most $t$ nonzero entries has a common probability law
+for all complex spectra if and only if $t\le n+8$.
+[Exact threshold](../Lean/MOC/SparseSupportThreshold.lean#L89)
+
+For the upper bound, put the preceding order-four matrix and the
+identity matrix of order $n-4$ on the diagonal. This unitary has
+$13+(n-4)=n+9$ nonzero entries. A common law would give probability
+zero to every permutation that sends a label across the two blocks,
+because each such matrix entry is zero. The restriction to the first
+block would give a law for the order-four example. Its two minor
+probabilities contradict that conclusion.
+[Construction](../Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction of a law to a block](../Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)

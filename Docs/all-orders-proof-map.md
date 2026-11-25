@@ -268,6 +268,12 @@ three nonzero entries. In order four, the required row and column
 have no zero entries.
 [Counterexample restriction](../Lean/MOC/SparseUnitary.lean#L54) · [Order four](../Lean/MOC/SparseUnitary.lean#L66) · [Sparse unitary proof](sparse-unitary-proof-map.md)
 
+In each order $n\ge 4$, the largest total count of nonzero entries that
+guarantees one matching law for all spectra is $n+8$. At $n+9$ there
+is a unitary for which the common law fails. The unrestricted conjecture
+allows a separate law for each pair of spectra.
+[Exact support threshold](../Lean/MOC/SparseSupportThreshold.lean#L89) · [Witness in each order](../Lean/MOC/SparseSupportThreshold.lean#L72)
+
 Let $R$ be a nonempty set of rows with at least two rows outside it.
 A column supports $R$ if it has a nonzero entry in a row of $R$.
 In a least-order counterexample, at least $|R|+2$ columns support $R$.
