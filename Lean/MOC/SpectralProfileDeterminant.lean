@@ -558,10 +558,10 @@ theorem tetrahedralInverseProfile_eq_signedEvaluation (a b : Fin 4 → ℂ)
     (K : Matrix (Fin 3) (Fin 3) ℂ) (hK : IsUnit K.det) :
     signedEvaluation (matchingProduct (a ∘ finSumFinEquiv) (b ∘ finSumFinEquiv))
       (centeredEmbed tetrahedralFrame tetrahedralFrameᵀ K) / K.det ^ 2 =
-      tetrahedralInverseProfile a b ((K⁻¹)ᵀ) :=
-  signedEvaluation_inverse (a ∘ finSumFinEquiv) (b ∘ finSumFinEquiv)
-    tetrahedralFrame tetrahedralFrameᵀ tetrahedralFrame_mul_transpose
-    tetrahedralFrame_transpose_mul K hK
+      tetrahedralInverseProfile a b ((K⁻¹)ᵀ) := by
+  simpa only [tetrahedralInverseProfile] using
+    (signedEvaluation_inverse (a ∘ finSumFinEquiv) (b ∘ finSumFinEquiv)
+      tetrahedralFrame tetrahedralFrameᵀ tetrahedralFrame_mul_transpose tetrahedralFrame_transpose_mul K hK)
 
 theorem tetrahedralInverseProfile_four_squares (a b : Fin 4 → ℂ) (η : ℂ) :
     ∃ L : Fin 4 → Matrix (Fin 3) (Fin 3) ℂ →ₗ[ℂ] ℂ,

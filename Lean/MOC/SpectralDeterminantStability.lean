@@ -68,7 +68,7 @@ theorem exists_independent_entry_halfPlane_zero :
   · constructor <;> ext i j : 1 <;> fin_cases i <;> fin_cases j <;>
       apply Complex.ext <;>
       norm_num [U, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply,
-        Fin.sum_univ_two, Complex.star_def, Complex.mul_re, Complex.mul_im]
+        Fin.sum_univ_two, Complex.star_def, Complex.conj_ofNat, Complex.mul_re, Complex.mul_im]
   · intro i j
     fin_cases i <;> fin_cases j <;> norm_num [Z, Complex.add_im, Complex.mul_im]
   · apply Complex.ext <;>

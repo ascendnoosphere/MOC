@@ -12,6 +12,11 @@ permutation that attains that largest projection.
 
 ## Research plan
 
+Lean checked both statements about upper half-plane entries in direction
+14, including the exact order-two counterexample for independent entries.
+[Spectral nonvanishing](../Lean/MOC/SpectralDeterminantStability.lean#L37) ·
+[Independent entries](../Lean/MOC/SpectralDeterminantStability.lean#L60)
+
 | Direction | Step in Lean | Remaining implication or scope limit |
 | --- | --- | --- |
 | 1. Contact geometry | A strict violation can be transferred to one with at least $2n-1$ contacts in order $n$. The contact differences have a lower bound on the dimension of their span. [Contact threshold](../Lean/MOC/AffineGapCover.lean#L85) · [Difference rank](../Lean/MOC/ContactDifferenceRank.lean#L42) | Exclude every witness at the threshold. The numerical rank census is a separate finite calculation. |

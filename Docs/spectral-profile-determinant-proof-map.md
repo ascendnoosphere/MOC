@@ -71,6 +71,7 @@ polynomial by any complex number $\eta$. The result is a sum of four
 squares of complex linear functions. The complex symmetric coefficient
 matrix therefore has rank at most four.
 [Tetrahedral basis](../Lean/MOC/SpectralProfileDeterminant.lean#L529) ·
+[Signed evaluation in this basis](../Lean/MOC/SpectralProfileDeterminant.lean#L557) ·
 [Complex square factorization](../Lean/MOC/SpectralProfileDeterminant.lean#L394) ·
 [Rank bound for a representing matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L496) ·
 [Rank-four coefficient matrix](../Lean/MOC/SpectralProfileDeterminant.lean#L576)
