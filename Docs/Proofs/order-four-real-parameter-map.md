@@ -6,35 +6,41 @@ $$
 a(t)=(t+i,-t+i,1,2+i), \qquad b=(-1+i,-2-2i,2-i,1+2i).
 $$
 
-The determinant of $\mathrm{diag}(a(t))+U\mathrm{diag}(b)U^*$ is in the convex hull of the 24 matching products $\prod_j(a(t)_{\sigma(j)}+b_j)$ when $|t|\le 1/20$ or $|t|\ge 99$. Each permutation $\sigma$ sends a column label to a row label. The statement covers every relative unitary. [Bounded interval](../../Lean/MOC/FourRealParameterFamily.lean#L452) · [Unbounded tails](../../Lean/MOC/FourRealParameterFamily.lean#L781)
+For every $t$ and $U$, the determinant of $\mathrm{diag}(a(t))+U\mathrm{diag}(b)U^*$ is in the convex hull of the 24 matching products $\prod_j(a(t)_{\sigma(j)}+b_j)$. The permutation $\sigma$ sends a column index to a row index. The Lean source gives the full argument. Kernel verification is pending. [Full theorem](../../Lean/MOC/FourRealParameterCells.lean#L1288)
 
 ```mermaid
 flowchart TD
-    A["Exact polynomial identities for nine edges"]
-    B["Nonnegative coefficients on the interval"]
-    C["Squared minors give edge inequalities"]
-    D["Strict turn at each selected vertex"]
-    E["Matching hull for 0 < t ≤ 1/20"]
-    F["Closedness at zero and spectral relabeling"]
-    G["Matching hull for |t| ≤ 1/20"]
-    A --> C
-    B --> C
-    C --> E
-    D --> E
-    E --> G
-    F --> G
+    G["Matching hull for every real t and every unitary U"]
+    P["Matching hull on the open rational bands"]
+    C["Closedness at finitely many cuts"]
+    S["Swap the first two rows for negative t"]
+    B["Adjacent bands cover the compact interval"]
+    F["107 oriented edge identities on all 24 matchings"]
+    W["Nonnegative minor weights and positive turns"]
+    T["Squared-minor transport and plane hull inequalities"]
+    B --> P
+    F --> T
+    W --> T
+    T --> P
+    P --> G
+    C --> G
+    S --> G
 ```
 
-For each edge, an integer polynomial identity expresses its oriented gap at each matching product as a sum of subset-image indicators. The same weights express the gap at the determinant as a sum of squared minors. Factor the lowest power of the parameter out of each weight. A bound on the negative terms proves the required signs. [Polynomial identities](../../Lean/MOC/FourRealParameterFamily.lean#L321) · [Coefficient bounds](../../Lean/MOC/FourRealParameterFamily.lean#L165) · [Minor transport](../../Lean/MOC/TwoValues.lean#L182)
+## Compact parameter and band coverage
 
-For a chosen real projection, select a maximizing vertex of the nine-edge list. Its two incident edge inequalities bound the projection of the determinant. The positive turn makes the two adjacent edge directions independent. [Plane hull proof](../../Lean/MOC/PlaneHullEdges.lean#L55)
+For $t>0$, set $x=t/(1+t)$. This change of variable gives $0<x<1$ and $t=x/(1-x)$. Multiply the first two row factors of each matching product by $1-x$. This multiplies the product by $(1-x)^2$ and gives a polynomial in $x$. Cancel the same positive factor after the hull calculation. [Scaled vertex](../../Lean/MOC/FourRealParameterFamily.lean#L811) · [Compact chart theorem](../../Lean/MOC/FourRealParameterFamily.lean#L840)
 
-For $t \ge 99$, set $s=5/(1+t)$. Multiply the first two row factors of every matching product by $s$. This multiplies the product by $s^2$ and gives integer polynomials in $s$. The last cell supplies eight oriented edges. The same coefficient bound applies since $0<s\le 1/20$. Evaluate the weighted minor identity at the scaled determinant and cancel $s^2$. A row swap gives the negative tail. [Scaled hull proof](../../Lean/MOC/FourRealParameterFamily.lean#L505) · [Tail identities](../../Lean/MOC/FourRealParameterFamily.lean#L707)
+The certificate uses 89 polygon charts on 173 rational bands. There are 89 inner bands and 84 brackets around algebraic transitions. In a bracket, the sign of a specified polynomial selects one of the two adjacent charts. The endpoints of adjacent bands agree. Their union covers $[0,1]$. The band endpoints and the roots of the specified nonzero polynomials form a finite set. Closedness covers those cut points at finite $t$. Swapping the first two entries of $a(t)$ sends $t$ to $-t$. [Band adjacency](../../Lean/MOC/FourRealParameterCells.lean#L1167) · [Closedness and row swap](../../Lean/MOC/FourRealParameterFamily.lean#L478)
 
-## Full real-line certificate
+## Edge and turn certificates
 
-The research notes use 89 open cells with exact algebraic endpoints after $x=t/(1+t)$. The interval $1/20<|t|<99$ still needs Lean proofs of the cell identities, coefficient signs, and coverage. The compact chart theorem transports their minor identities and turns to hull membership. It covers the finite cut points by closedness and the negative parameters by a row swap. [Compact chart theorem](../../Lean/MOC/FourRealParameterFamily.lean#L840)
+For an oriented edge, its gap at a matching product is the signed cross product with the edge direction. Each of the 107 distinct edge identities expresses this gap as a weighted sum of subset-image indicators on all 24 permutations. The same weights express the gap at the scaled determinant as a sum of squared minors of $U$. Nonnegative weights place the determinant on the inner side of each edge. Strict turns at the selected vertices then give membership in their convex hull. [Edge identities](../../Lean/MOC/FourRealParameterCells.lean#L1130) · [Minor transport](../../Lean/MOC/TwoValues.lean#L182) · [Plane hull proof](../../Lean/MOC/PlaneHullEdges.lean#L55)
 
-The sign check can use rational intervals. Around each nonrational cut choose a rational bracket and a rational polynomial factor that changes sign at the cut. In that bracket, the sign of the factor selects the adjacent certificate. Remove its powers from the coefficient polynomials. For nonnegative weights, remove square factors as well. Express the remaining signed factors in the Bernstein basis on the rational interval. An independent rational computation checked the sign bounds on 89 inner intervals and 168 bracket branches. The factor and branch data still require Lean certificates. [Bernstein sign proof](../../Lean/MOC/FourRealParameterFamily.lean#L795)
+Write each weight as a product of signed integer polynomials and squares. A square contributes a nonnegative factor. Use the sign of the chart-selection polynomial for its own factor. For every other signed factor, use the quartic Bernstein basis on the rational band. Nonnegative Bernstein coefficients with at least one positive coefficient give a positive value in the open band. Strict turns have no unchecked square factors. [Bernstein sign proof](../../Lean/MOC/FourRealParameterCells.lean#L62) · [Turn identities](../../Lean/MOC/FourRealParameterCells.lean#L1139) · [Band sign checks](../../Lean/MOC/FourRealParameterCells.lean#L1158)
 
-The certificates are recoverable from repository history. Exact arithmetic checks 216 bounded facet identities, 108 bounded coefficient bounds, and nine bounded turn bounds. It also checks 192 tail facet identities, 95 tail coefficient bounds, and eight tail turn bounds. Lean compilation was omitted. [Historical bounded certificate](https://github.com/ascendnoosphere/MOC/blob/6fa170647b8e111ef388ba95d50e4196960d9c22/data/certificates/early/moc4_full_family_certificate.json) · [Historical all-real certificate](https://github.com/ascendnoosphere/MOC/blob/6fa170647b8e111ef388ba95d50e4196960d9c22/data/certificates/categorical/category_moc4_all_real_certificate.json)
+Independent rational arithmetic checked all 257 chart-selection cases that can occur and all 107 edge identities on the 24 permutations. [Historical certificate](https://github.com/ascendnoosphere/MOC/blob/6fa170647b8e111ef388ba95d50e4196960d9c22/data/certificates/categorical/category_moc4_all_real_certificate.json)
+
+## Direct interval proofs
+
+Two smaller certificates give independent routes on parts of the real line. The bounded proof uses nine edges for $|t|\le 1/20$. The tail proof uses eight edges for $|t|\ge 99$ after the substitution $s=5/(1+|t|)$. Both use a coefficient bound for polynomials on $0<s\le 1/20$, with $s=|t|$ in the bounded proof. [Bounded interval](../../Lean/MOC/FourRealParameterFamily.lean#L452) · [Unbounded tails](../../Lean/MOC/FourRealParameterFamily.lean#L781)

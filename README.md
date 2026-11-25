@@ -156,6 +156,7 @@ of the corresponding real orthogonal tables.
 | New Lean source | Subtract the smallest directional matching value from each projected product. In the 14-dimensional matching-function space, the cone of nonnegative costs has 34 ordinary and 48 mixed extreme rays. An ordinary ray is a subset assignment indicator. Up to relabeling, a cost outside the ordinary cone uses one mixed ray and at most 13 ordinary rays. | [Cone and cancellation](Docs/Proofs/spectral-support-proof-map.md#order-four-support-costs) |
 | New Lean source | A determinant of size $n-2$ represents the transformed spectral polynomial for $n\ge2$. In order four its quadratic form has complex rank at most four. Its real form has positive and negative indices at most four. | [Spectral determinant and rank](Docs/Proofs/spectral-profile-determinant-map.md) |
 | New Lean source | The four contacts given by the identity and the three products of two disjoint transpositions force an actual spectral cost to be a sum of real matching squares. | [Klein-four contacts](Docs/Proofs/order-four-klein-squares-map.md) |
+| Partial, new Lean source | One five-parameter contact family has eight specified tied permutations. At negative signed height, an actual spectral lift is impossible if the first two ordinary weights are equal. The unequal case reduces to a sign of the spectral Hessian pencil. | [Contact family](Docs/Proofs/order-four-0710-contact-map.md) |
 | New Lean source | The real and imaginary parts of an exact spectral bracket profile satisfy two equations. A small integer example passes the cubic and Hessian kernel tests and fails the second equation for every candidate imaginary part. | [Lift equations](Lean/MOC/FourMatchingHessianKernel.lean#L124) · [Exact obstruction](Lean/MOC/FourMatchingHessianKernel.lean#L166) |
 | Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145) · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
 | Open | Prove the bound for every remaining real orthogonal case with at least seven contacts. An alternative is to show that a normal sum occurs at some maximum for every pair of lists and direction. | [Contact endpoint](Lean/MOC/ZhengContactReduction.lean#L14) · [Normal-maximizer equivalence](Lean/MOC/NormalSupportMaximum.lean#L303) |
@@ -286,6 +287,10 @@ diagonal permutation of the spectrum.
   coefficients. Each bound gives the directional determinant inequality
   for every unitary. The proof covers all seven free ordinary coefficients.
   [Family and proof](Docs/Proofs/order-four-symmetric-six-contact-map.md)
+- For every real $t$, the lists $(t+i,-t+i,1,2+i)$ and
+  $(-1+i,-2-2i,2-i,1+2i)$ satisfy the inclusion for every unitary.
+  The proof uses 89 exact parameter cells.
+  [Parameter family](Docs/Proofs/order-four-real-parameter-map.md)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.
   [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)
@@ -359,6 +364,11 @@ diagonal permutation of the spectrum.
 
 ## Other proved reductions
 
+- In orders four and five, fixed parabola and hyperbola tests give
+  equivalent forms of the conjecture for that order. In order four,
+  a cross-ratio inequality characterizes which lists with distinct
+  entries can be transformed onto a prescribed ellipse.
+  [Conic tests and ellipse criterion](Docs/Proofs/conic-spectral-reductions-map.md)
 - Suppose the smaller-order conjecture holds. Choose a row of $U$.
   The inclusion follows if the partner eigenvalues on its nonzero
   columns lie on one circle or line through the negative of the

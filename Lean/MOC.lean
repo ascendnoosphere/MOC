@@ -250,11 +250,11 @@ import MOC.ConicSpectralReductions
 import MOC.DeletionAndPaddingObstructions
 import MOC.EqualSpectralCoefficients
 import MOC.FourCircleLineCommonWeights
-import MOC.FourContact0710HessianPencil
+import MOC.FourContact0710EqualWeights
 import MOC.FourKleinSpectralSquares
 import MOC.FourMixedRayCancellation
 import MOC.FourOppositePairSupport
-import MOC.FourRealParameterFamily
+import MOC.FourRealParameterCells
 import MOC.FourSupportConeClassification
 import MOC.FourSupportCostRealLift
 import MOC.FourSymmetricSixContact
