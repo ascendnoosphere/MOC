@@ -389,6 +389,11 @@ diagonal permutation of the spectrum.
   winding about it, some unitary gives that point as its determinant
   value. This result includes repeated eigenvalues.
   [Transposition winding](Docs/Proofs/transposition-winding-map.md)
+- For independent standard complex Gaussian eigenvalues, Lean source
+  gives the matching triangle probability and the lower tail of a
+  fixed matching product. The exponential containment estimate still
+  requires the bound on the Haar determinant second moment.
+  [Gaussian ensemble proof map](Docs/Proofs/gaussian-haar-containment-map.md)
 
 ## Counterexamples to stronger statements
 
