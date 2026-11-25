@@ -168,6 +168,7 @@ import MOC.MarkedPadding
 import MOC.ModulusOrderTransfer
 import MOC.RealOrthogonalModulus
 import MOC.DuplicateAnchorObstruction
+import MOC.ScalarAnchorObstruction
 import MOC.MatchingProfileClosed
 import MOC.MatchingRectangleSupport
 import MOC.MobiusStationarity

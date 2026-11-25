@@ -444,11 +444,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
 
 ## Counterexamples to stronger statements
 
-- Duplicating an eigenvalue from each list can increase directional
-  support even after division by the appended scalar sum. For one
-  order-four pair, all 16 choices increase the maximum real part above
-  its original value of five.
-  [Original maximum](Lean/MOC/DuplicateAnchorObstruction.lean#L104) · [All duplicate pairs](Lean/MOC/DuplicateAnchorObstruction.lean#L112) · [Proof map](Docs/modulus-order-transfer-proof-map.md#failure-of-duplicate-anchors-in-order-four)
+- For one pair of order-four eigenvalue lists, the largest real part of a
+  matching product is five. Append any complex scalars $c,d$ with
+  $c+d\ne0$. Some enlarged matching product has real part greater than
+  five after division by $c+d$. Thus no choice of one scalar block
+  preserves this supporting line.
+  [Original maximum](Lean/MOC/DuplicateAnchorObstruction.lean#L104) · [Duplicate labels](Lean/MOC/DuplicateAnchorObstruction.lean#L112) · [Arbitrary scalars](Lean/MOC/ScalarAnchorObstruction.lean#L851) · [Proof map](Docs/order-four-scalar-padding-proof-map.md)
 
 - In order four, a real orthogonal $U$ and two complex spectra give a
   characteristic polynomial outside the convex hull of the matching

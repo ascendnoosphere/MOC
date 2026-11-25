@@ -136,3 +136,9 @@ enlarged matching hull extends past the original supporting line.
 This refutes the duplicate-anchor criterion for transferring the
 convex-hull bound from order five to order four. The order-four
 conjecture remains open.
+
+The same two lists exclude every pair of complex scalars $c,d$ with
+$c+d\ne0$. The proof uses 29 enlarged matchings and a polynomial
+identity for their real parts.
+[Arbitrary scalar padding](../Lean/MOC/ScalarAnchorObstruction.lean#L851) ·
+[Order-four proof map](order-four-scalar-padding-proof-map.md)

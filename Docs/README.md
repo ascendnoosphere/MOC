@@ -33,6 +33,7 @@ contact is a matching that attains that largest projection.
 - [Five-parameter contact family](order-four-five-parameter-contact-proof-map.md)
 - [Symmetric six-contact family](order-four-symmetric-six-contact-proof-map.md)
 - [Opposite eigenvalues](order-four-opposite-eigenvalues-proof-map.md)
+- [Failure of scalar padding](order-four-scalar-padding-proof-map.md)
 - [Weighted-minor center](order-four-weighted-minor-center-proof-map.md)
 
 ## Spectral and mixer cases
