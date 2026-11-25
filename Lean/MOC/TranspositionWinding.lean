@@ -114,7 +114,8 @@ private theorem swapMatrix_apply (i j k l : ι) :
   have he : l = Equiv.swap i j k ↔ k = Equiv.swap i j l := by
     constructor <;> intro h <;>
       simpa [h, Equiv.swap_apply_self]
-  simp [PEquiv.toMatrix_apply, Equiv.toPEquiv_apply, he, eq_comm]
+  rw [PEquiv.toMatrix_apply, Equiv.toPEquiv_apply, Option.mem_some,
+    eq_comm (Equiv.swap i j k) l, he]
 
 /-- A unitary interpolation from the identity to a transposition matrix
 times the scalar `Complex.I`. The scalar cancels in conjugation. -/
@@ -152,8 +153,10 @@ theorem swapRotation_unitary (i j : ι) (t : I) : IsUnitary (swapRotation i j t)
   have hR : swapRotation i j t * (swapRotation i j t)ᴴ = 1 := by
     change (c • (1 : Matrix ι ι ℂ) + d • P) * (c • (1 : Matrix ι ι ℂ) + d • P)ᴴ = _
     rw [hconj, Matrix.add_mul, Matrix.mul_add, Matrix.mul_add]
-    simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, Matrix.one_mul,
-      Matrix.mul_one, hPP]
+    have hsmul (a b : ℂ) (V W : Matrix ι ι ℂ) :
+        (a • V) * (b • W) = (a * b) • (V * W) := by
+      rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+    simp only [hsmul, Matrix.one_mul, Matrix.mul_one, hPP]
     calc
       _ = (c * c + d * (-d)) • (1 : Matrix ι ι ℂ) +
           (c * (-d) + d * c) • P := by rw [add_smul, add_smul]; abel
@@ -359,8 +362,10 @@ theorem transposition_square_in_determinant_range (a b : ι → ℂ) (p : Perm �
   let F (u : I × I) :=
     (diagonal a + orbitConj (swapRotation x y u.1) (orbitConj (swapRotation i j u.2) D)).det
   refine ⟨F, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · unfold F orbitConj
-    fun_prop (disch := exact continuous_swapRotation _ _)
+  · have h₁ := (continuous_swapRotation x y).comp (continuous_fst : Continuous (Prod.fst : I × I → I))
+    have h₂ := (continuous_swapRotation i j).comp (continuous_snd : Continuous (Prod.snd : I × I → I))
+    unfold F orbitConj
+    fun_prop
   · intro u
     let W := (swapRotation x y u.1 * swapRotation i j u.2) * p.symm.permMatrix ℂ
     have hW : IsUnitary W := isUnitary_mul_for_winding
