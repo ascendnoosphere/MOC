@@ -3,6 +3,7 @@
 [Proof map index](README.md) · [Conjecture and overview](../README.md#proof-tree) · [Spectral and support results](spectral-support-proof-map.md) · [Contact transfer](contact-transfer-proof-map.md) · [Order four](order-four-proof-map.md) · [Order five](order-five-proof-map.md)
 
 - [How routes connect](#how-routes-connect)
+- [Tests at each order](#tests-at-each-order)
 - [Matrix and operator formulations](#matrix-and-operator-formulations)
 - [Normalization and least-order counterexamples](#normalization-and-least-order-counterexamples)
 - [Induction through normal maximizers](#induction-through-normal-maximizers)
@@ -19,11 +20,11 @@ two complex normal matrices lies in the real convex hull of the products
 formed by matching their eigenvalues. See the [exact statement](../README.md).
 For fixed eigenvalue lists, $U$ is the unitary change between the eigenbases.
 
-The tables cover the 71 general routes recorded in Lean. The
+The tables cover the 85 general routes recorded in Lean. The
 [labelled formulations](#labelled-spectral-formulations) cover the
 additional 243 indexed routes. A proof of an implication or equivalence
 establishes its arrow. The tables give the status of each premise.
-[General route list](../Lean/MOC/ProofRoutes.lean#L236) · [All-order disjunction](../Lean/MOC/ProofRoutes.lean#L571)
+[General route list](../Lean/MOC/ProofRoutes.lean#L324) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L689)
 
 ## How routes connect
 
@@ -34,9 +35,10 @@ An **OR** node needs one complete input.
 ```mermaid
 flowchart BT
     accTitle: The three proof goals
-    accDescr: The unrestricted conjecture is equivalent to the conjunction of order four, order five and every higher order starting at six. It is also equivalent to the disjunction of its registered routes.
+    accDescr: One all-order route suffices. The other option needs a complete route at each order from four on.
     M["Unrestricted MOC<br/>Open"]:::goal
-    Any{{"OR<br/>One all-order route"}}:::gate
+    Any{{"OR<br/>One complete alternative"}}:::gate
+    One["One all-order route"]:::open
     Split{{"AND<br/>All remaining orders"}}:::gate
     Four["Order 4"]:::open
     Five["Order 5"]:::open
@@ -44,7 +46,8 @@ flowchart BT
     Four --- Split
     Five --- Split
     Higher --- Split
-    Split <-->|iff| M
+    Split --- Any
+    One --- Any
     Any <-->|iff| M
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
     classDef gate fill:#e7f0fa,stroke:#52779d,color:#142e47
@@ -53,8 +56,20 @@ flowchart BT
 
 The order split uses the proof for orders zero through three. MOC implies
 the disjunction of the registered routes by choosing an exact route.
-Each registered route supplies its implication back to MOC.
-[Small orders](../Lean/MOC/Small.lean#L68) · [Order split](../Lean/MOC/ProofRoutes.lean#L214) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L57)
+Each registered all-order route supplies its implication back to MOC.
+For the order split, choose one route at order four, one at order five,
+and one at each order at least six. The choice can depend on the order.
+[Small orders](../Lean/MOC/Small.lean#L68) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L689)
+
+For a proof of a named test, apply its implication to `MOCIsTrue` or
+`Conjecture (Fin n)`, the inclusion at order $n$. For example, if
+`h` proves `MOC.Reformulations.complexMatrices`, then
+`MOC.Reformulations.moc_iff_complexMatrices.mpr h` proves `MOC.MOCIsTrue`.
+The selected proof supplies the only premise in this application.
+In the registry, `AnyRoute` means that one member has a proof of its
+goal. `close_any` applies that member's implication. A route with a
+conjunctive premise needs a proof of each conjunct.
+[Normal matrix equivalence](../Lean/MOC/Reformulations/FirstMatrix.lean#L46) · [Route disjunction](../Lean/MOC/ProofRoutes.lean#L69) · [Closure](../Lean/MOC/ProofRoutes.lean#L72)
 
 ```mermaid
 flowchart LR
@@ -69,11 +84,49 @@ flowchart LR
 
 | Relation | Consequence | Lean source |
 | --- | --- | --- |
-| Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../Lean/MOC/ProofRoutes.lean#L41) |
-| A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../Lean/MOC/ProofRoutes.lean#L36) |
-| Refutation of an exact route | The parent is false. | [Transfer of refutation](../Lean/MOC/ProofRoutes.lean#L46) |
-| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../Lean/MOC/ProofRoutes.lean#L588) |
-| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../Lean/MOC/ProofRoutes.lean#L578) · [Order five](../Lean/MOC/ProofRoutes.lean#L583) |
+| Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../Lean/MOC/ProofRoutes.lean#L60) |
+| A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../Lean/MOC/ProofRoutes.lean#L55) |
+| Refutation of an exact route | The parent is false. | [Transfer of refutation](../Lean/MOC/ProofRoutes.lean#L65) |
+| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../Lean/MOC/ProofRoutes.lean#L713) |
+| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../Lean/MOC/ProofRoutes.lean#L703) · [Order five](../Lean/MOC/ProofRoutes.lean#L708) |
+
+## Tests at each order
+
+Fix an order $n\ge4$. Each row gives an exact test for the conjecture
+at that order. The [order-four](order-four-proof-map.md#registered-routes)
+and [order-five](order-five-proof-map.md#registered-routes) lists add
+tests specific to their orders. A contact is a permutation that attains
+the largest matching projection in a given direction. A strict witness
+has a determinant projection larger than that maximum.
+[Common tests](../Lean/MOC/ProofRoutes.lean#L201) · [Fixed-order disjunction](../Lean/MOC/ProofRoutes.lean#L238)
+
+| Exact test at order $n$ | Lean source |
+| --- | --- |
+| Normal complex matrices | [Normal matrix form](../Lean/MOC/Normal.lean#L280) |
+| One set of weights for one free partner eigenvalue | [One-entry law](../Lean/MOC/ProofRoutes.lean#L108) |
+| Evaluated spectral test on a nonempty set of labels | [Labelled test](../Lean/MOC/ProofRoutes.lean#L90) |
+| Equal traces | [Trace condition](../Lean/MOC/Core.lean#L167) |
+| Equal second elementary coefficients | [Second coefficient](../Lean/MOC/EqualSpectralCoefficients.lean#L91) |
+| Equal first and second elementary coefficients | [Both coefficients](../Lean/MOC/EqualSpectralCoefficients.lean#L428) |
+| Bound in the real direction | [Real-part bound](../Lean/MOC/Support.lean#L84) |
+| All pair sums nonzero | [Nonopposite spectra](../Lean/MOC/Support.lean#L101) |
+| All pair sums nonzero and distinct matching products | [Regular products](../Lean/MOC/SpectralPerturbation.lean#L146) |
+| Regular matching products and no zero mixer entries | [Full support](../Lean/MOC/FullSupportReduction.lean#L118) |
+| Bilinear determinant pencil for every complex coefficient tuple | [Bilinear pencil](../Lean/MOC/BilinearPencil.lean#L203) |
+| Balanced spectra and a nonnormal sum | [Balanced nonnormal test](../Lean/MOC/SpectralGap.lean#L314) |
+| Regular spectra in the Möbius-balanced normalization | [Möbius balance](../Lean/MOC/MobiusOrbitMinimum.lean#L836) |
+| One anchored coordinate in each normalized spectrum | [Anchored test](../Lean/MOC/Reformulations/Anchored.lean#L53) |
+| Three fixed coordinates in the rank-one kernel | [Three-anchor test](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) |
+| Exclude strict witnesses with at least $2n-2$ contacts and nonzero matching products | [Nonzero-product bound](../Lean/MOC/SaturatedContactReduction.lean#L70) |
+| Exclude strict witnesses with at least $2n-2$ contacts | [Global contact bound](../Lean/MOC/GlobalContactSlice.lean#L243) |
+| The same contact count with spectral and direction normalization and moment balance | [Balanced contact bound](../Lean/MOC/BalancedContactReduction.lean#L46) |
+| Contact count, rank at least $2n-3$, and moment balance | [Rank and moments](../Lean/MOC/ContactDifferenceRank.lean#L201) |
+| Contact count, rank, moment balance, and an isolated contact point | [Isolated contact point](../Lean/MOC/ContactFibreIsolation.lean#L215) |
+| Exclude strict witnesses with at least $2n-1$ contacts | [Sharp terminal bound](../Lean/MOC/AffineGapCover.lean#L85) |
+| Exclude strict witnesses with contact difference rank at least $2n-2$ | [Sharp rank bound](../Lean/MOC/SharpContactRank.lean#L65) |
+| At least $2n-1$ contacts, rank at least $2n-2$, moments, and isolation | [Sharp isolated bound](../Lean/MOC/SharpContactRank.lean#L80) |
+| At least $2n-1$ contacts, a global maximum, and negative inactive pivots | [Terminal stationary test](../Lean/MOC/StationaryPivot.lean#L475) |
+| Regular spectra with no assignment common to all maximizing permutations | [Common-edge exclusion](../Lean/MOC/FourContactRay.lean#L614) |
 
 ## Matrix and operator formulations
 
@@ -144,6 +197,7 @@ degrees. Degree one supplies the reverse implication.
 | Actual integral torus characters | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBTorus.lean#L88) |
 | Joint Hermitian integrals | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L83) |
 | Gaussian integer spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
+| Gaussian integer spectra and Gaussian rational mixers | Iff | [Statement and proof](../Lean/MOC/GaussianCayley.lean#L306) |
 | Newton monomials | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L64) |
 | Projective toric section weights | Iff | [New Lean source](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
 | Loopless complex directed adjacency | Iff | [New Lean source](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
@@ -151,6 +205,7 @@ degrees. Degree one supplies the reverse implication.
 | Finite bipartite matching | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L85) |
 | Weighted bipartite determinant | Iff | [New Lean source](../Lean/MOC/Reformulations/SecondNative.lean#L66) |
 | Finite Euler determinant | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L188) |
+| Finite Euler determinant at parameter one | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L210) |
 | Normal word products | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L253) |
 | Almost-sure finite spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L271) |
 | Joint tuple projections | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L289) |
@@ -213,19 +268,31 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
 | Affine linear parts | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L26) |
+| Actual affine derivatives | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstBGeometry.lean#L53) |
 | Nonzero spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L48) |
 | Invertible projective diagonal lifts | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L71) |
 | Traceless Cartan spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) |
 | Traceless real-part bound | Iff | [Statement and proof](../Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
 | Regular anchored spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/Anchored.lean#L70) |
 | Three-anchor rank-one kernel in all orders | Iff | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
-| Nonzero contact-saturated support bounds in every order | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L232) |
+| Nonzero contact-saturated support bounds in every order | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L320) |
 | Normal maximizers in every order | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L314) |
 | Principal coisometries in all orders | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L248) |
 | No paired block split | Iff | [Statement and proof](../Lean/MOC/Claim.lean#L63) |
 | Every row and column has degree at least three | Iff | [Statement and proof](../Lean/MOC/SparseRow.lean#L321) |
+| Strict expansion of the support of every proper nonempty set of rows | Iff | [Statement and proof](../Lean/MOC/SupportBlocks.lean#L124) |
+| Balanced spectra and strict support expansion | Iff | [Statement and proof](../Lean/MOC/Extremal.lean#L82) |
+| Scalar common commutant | Iff | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L107) |
 | Regular spectra with scalar common commutant | Iff | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L124) |
-| All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L214) |
+| Regular spectra with scalar common commutant and nonnormal pole compressions | Iff | [Statement and proof](../Lean/MOC/NonnormalPoleReduction.lean#L33) |
+| Terminal matching chart support | Iff | [Statement and proof](../Lean/MOC/MatchingContactTransfer.lean#L123) |
+| Terminal matching chart with threshold $2n-1$ in matrix order $n$ | Iff | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L304) |
+| Terminal matching chart with old gap rank | Iff | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L328) |
+| Terminal matching chart with old gap rank and no common active edge | Iff | [Statement and proof](../Lean/MOC/TerminalActiveEdges.lean#L27) |
+| Terminal matching chart with constraint rank | Iff | [Statement and proof](../Lean/MOC/MatchingContactRank.lean#L111) |
+| Terminal matching chart with minimal prime isolation | Iff | [Statement and proof](../Lean/MOC/IsolatedContactFiber.lean#L61) |
+| Regular contact covers AND the terminal chart bound | If | [Statement and proof](../Lean/MOC/HighContact.lean#L276) |
+| All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L302) |
 
 ## Induction through normal maximizers
 
@@ -329,6 +396,7 @@ determinant bound is needed for the separate form through order four.
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
+| Pointwise characteristic polynomial of the spectral sum | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L145) |
 | Separate elementary coefficients | If | [New Lean source](../Lean/MOC/Reformulations/SecondCoefficient.lean#L89) |
 | Simultaneous characteristic hull | Refuted sufficient condition | [Implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L52) · [Exact counterexample](#counterexample-to-the-common-characteristic-polynomial-law) |
 | Simultaneous mixed-pencil coefficients | If | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
@@ -532,10 +600,10 @@ connection to these spectra.
 | 001–133 | Each entry is equivalent to unrestricted MOC. | [001 through 133](../Lean/MOC/Reformulations/FirstAtlas.lean#L22-L837) |
 | 134–243 | Each entry is equivalent to unrestricted MOC. | [134 through 243](../Lean/MOC/Reformulations/SecondAtlas.lean#L22-L697) |
 
-The registered list spans [001 through 243](../Lean/MOC/ProofRoutes.lean#L324). At a
+The registered list spans [001 through 243](../Lean/MOC/ProofRoutes.lean#L435). At a
 fixed order, the evaluated form is equivalent to the fixed-order
 conjecture when the sample type is nonempty.
-[Fixed-order form](../Lean/MOC/ProofRoutes.lean#L71)
+[Fixed-order form](../Lean/MOC/ProofRoutes.lean#L90)
 
 ## Common weights at small shifted rank sum
 
@@ -939,9 +1007,10 @@ $U$ has a radius that can depend on $U$.
 
 ## Scope of the Lean source
 
-The default MOC target imports the route registries and the new
-spectral and support modules. It checks the axiom dependencies of
-their safe declarations when Lean runs. The local import paths
-resolve after the restoration of the permutation coordinates and
-the weighted-minor certificates. The new source awaits compilation.
-[Default target](../lakefile.toml) · [Axiom audit](../Lean/MOC.lean#L275)
+The default MOC target imports the route registry and runs an axiom
+audit on the safe declarations in its imports. Each open target is a
+proposition. The target checks the proof of each stated implication
+and requires a proof of every imported theorem. A future proof of one
+complete route supplies a proof of MOC through that implication. The
+latest route changes have source checks and await Lean compilation.
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L202) · [Axiom audit](../Lean/MOC.lean#L298)

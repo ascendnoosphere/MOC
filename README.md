@@ -41,8 +41,8 @@ The inclusion in these coordinates is equivalent to the matrix conjecture.
 
 Read the arrows toward the goal. An **iff** arrow gives implications in
 both directions. An **if** arrow gives a sufficient condition. At an
-**AND** node, all incoming conditions are required. The arrows record
-Lean proofs of the relations. A yellow box marks an open statement.
+**AND** node, all incoming conditions are required. At an **OR** node,
+one complete input suffices. A yellow box marks an open statement.
 The status tables identify the steps and cases that Lean proves.
 
 ### All orders
@@ -50,19 +50,19 @@ The status tables identify the steps and cases that Lean proves.
 ```mermaid
 flowchart BT
     accTitle: Proof routes to unrestricted MOC
-    accDescr: The conjunction of all order ranges and any equivalent test each imply and follow from MOC. The separate characteristic coefficients and the simultaneous mixed determinant give sufficient conditions.
+    accDescr: One complete all-order route suffices. The other option needs a complete route at each order from four on. Different orders can use different tests.
     Goal["Unrestricted MOC<br/>Open"]:::goal
+    Any{{"OR<br/>One complete alternative"}}:::join
     Ranges{{"AND<br/>All order ranges"}}:::join
-    Tests["Any equivalent<br/>all-order test"]:::open
-    Polys["Separate characteristic coefficients<br/>or simultaneous mixed determinant"]:::open
+    Tests["One registered<br/>all-order route"]:::open
     Base["Orders 0–3<br/>Proved"]:::proved
     Four["Order 4"]:::open
     Five["Order 5"]:::open
     Higher["Orders 6 and higher"]:::open
 
-    Ranges <-->|iff| Goal
-    Tests <-->|iff| Goal
-    Polys -->|if| Goal
+    Any <-->|iff| Goal
+    Ranges --- Any
+    Tests --- Any
     Base --- Ranges
     Four --- Ranges
     Five --- Ranges
@@ -76,7 +76,9 @@ flowchart BT
 
 Because the base orders are proved, the order split requires proofs in
 order four, order five, and every order at least six.
-[Order split](Lean/MOC/ProofRoutes.lean#L214)
+Use any one complete route for each order. A single route that proves
+all orders suffices on its own.
+[Combined route theorem](Lean/MOC/ProofRoutes.lean#L689) · [Order split](Lean/MOC/ProofRoutes.lean#L302)
 
 A **directional bound** compares $\mathrm{Re}(\eta\det(A+B))$ with the
 largest $\mathrm{Re}(\eta P_\sigma)$ for a complex direction $\eta$.
@@ -89,10 +91,10 @@ is in the hull if and only if the bound holds in every direction.
 | Relation to unrestricted MOC | Open statement | Lean proof of the relation |
 | --- | --- | --- |
 | Iff | In orders at least four, prove the directional bound for $\eta=1$ if both eigenvalue lists sum to zero and every entry of $U$ is nonzero. | [Traceless form](Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
-| Iff | In each order $n$, prove the directional bound when there are at least $2n-1$ contacts. Another exact test uses at least $2n-2$ contacts and requires every matching product to be nonzero. | [General contact test](Lean/MOC/AffineGapCover.lean#L85) · [Nonzero-product test](Lean/MOC/ProofRoutes.lean#L232) |
+| Iff | In each order $n$, prove the directional bound when there are at least $2n-1$ contacts. Another exact test uses at least $2n-2$ contacts and requires every matching product to be nonzero. | [General contact test](Lean/MOC/AffineGapCover.lean#L85) · [Nonzero-product test](Lean/MOC/ProofRoutes.lean#L320) |
 | Iff, new Lean source | At the $2n-1$ threshold, exclude a strict maximum over all relative unitaries in which every nonzero mixer entry lies on an inactive permutation with negative real signed weight. | [Terminal stationary test](Lean/MOC/StationaryPivot.lean#L483) · [Signed score identity](Docs/contact-transfer-proof-map.md#complex-stationary-score) |
 | Iff | For every pair of lists and every direction in orders at least four, some maximizing $U$ gives a normal sum. The maximum is over all unitary $U$ for the fixed lists. | [Normal maximizers](Lean/MOC/NormalSupportMaximum.lean#L314) |
-| Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L89) |
+| Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L108) |
 | Iff | Replace the square unitary by a rectangular matrix with at least three orthonormal rows and one extra column. Compare with products that match the shorter list to distinct positions in the longer list. | [Rectangular determinant bound](Lean/MOC/PrincipalCoisometry.lean#L248) |
 | Iff | In orders at least four, use lists $x,y$ with $x_1=0$, $x_2=1$, and $y_1=0$. For every unitary $U$ with no zero entries, place $\det(U-XUY)/\det U$ in the hull of the products $\prod_j(1-x_{\sigma(j)}y_j)$. Here $X=\mathrm{diag}(x)$ and $Y=\mathrm{diag}(y)$. | [Three fixed coordinates](Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
 | Iff, new Lean source | Use normal adjacency matrices of loopless complex weighted directed graphs. Keep all relative unitary positions. | [Loopless adjacency](Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
@@ -106,13 +108,16 @@ is in the hull if and only if the bound holds in every direction.
 | Partial | For $\det(A+zB)$ in positive order $n$, the separate coefficient bounds hold at degrees $0$, $1$, $n-1$, and $n$. This covers every coefficient through order three. | [First](Lean/MOC/Reformulations/NativeLinksA.lean#L107) · [Penultimate](Lean/MOC/Reformulations/NativeLinksA.lean#L150) · [Endpoints](Lean/MOC/Reformulations/NativeLinksA.lean#L162) |
 | Partial, new Lean source | The first three elementary symmetric coefficients of $A+UBU^*$ have one set of matching weights in every order. The weights depend only on $U$. | [Coefficient proof](Lean/MOC/Reformulations/SecondCoefficient.lean#L245) |
 | Partial, new Lean source | The complex stationary score marginal, exchange identities, and spectral multiplier equations restrict a strict counterexample. Smaller-order inclusion also gives one law for a free eigenvalue when its column meets at most two distinct opposing eigenvalues. | [Stationary tests](Docs/all-orders-proof-map.md#stationary-support-and-spectral-exchange) · [Free eigenvalue](Lean/MOC/GroupedEigenvalueMoments.lean#L88) |
-| Open | The directional bound at the contact thresholds remains to be proved in general. The order split also leaves every order at least six to prove. | [Contact endpoint](Lean/MOC/AffineGapCover.lean#L85) · [Higher orders](Lean/MOC/ProofRoutes.lean#L214) |
+| Open | The directional bound at the contact thresholds remains to be proved in general. The order split also leaves every order at least six to prove. | [Contact endpoint](Lean/MOC/AffineGapCover.lean#L85) · [Higher orders](Lean/MOC/ProofRoutes.lean#L302) |
 
 Two iff routes for the same goal imply each other. A sufficient route
 implies every iff route for that goal. An all-order route also implies
 each iff route at a fixed order. Refuting an iff route refutes its goal.
-A sufficient condition can fail while the goal still holds.
-[Transfer between routes](Lean/MOC/ProofRoutes.lean#L36) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L588)
+A sufficient condition can fail while the goal still holds. In Lean,
+apply the selected implication to its proof to obtain `MOCIsTrue`.
+Open route goals are propositions in the registry. The default target
+checks the definitions, the implications, and the axiom dependencies.
+[Transfer between routes](Lean/MOC/ProofRoutes.lean#L55) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L713)
 
 ### Order four
 
@@ -162,7 +167,7 @@ of the corresponding real orthogonal tables.
 Other exact routes include the test on stationary real orthogonal
 violations with one row and one column free of zeros, the one-free-entry
 law, and the rectangular test with three rows and four columns.
-[Stationary row and column test](Lean/MOC/StationaryDenseCross.lean#L64) · [One free entry](Lean/MOC/ProofRoutes.lean#L89) · [Rectangular test](Lean/MOC/PrincipalCoisometry.lean#L140)
+[Stationary row and column test](Lean/MOC/StationaryDenseCross.lean#L64) · [One free entry](Lean/MOC/ProofRoutes.lean#L108) · [Rectangular test](Lean/MOC/PrincipalCoisometry.lean#L140)
 
 ### Order five
 
@@ -198,7 +203,7 @@ in the all-order table uses the condition on the matching products.
 | --- | --- | --- |
 | Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
 | Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
-| Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L110) |
+| Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L129) |
 | Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
 | Open | Prove the general directional bound on the eight-contact test in the diagram. Another exact test uses at least nine contacts with arbitrary unitary $U$. | [Eight-contact test](Lean/MOC/OrderFiveContact.lean#L51) · [Nine-contact test at $n=5$](Lean/MOC/AffineGapCover.lean#L85) |
 
@@ -207,13 +212,13 @@ orthogonal matrices and a decomposition of every unitary squared-minor
 table into a convex combination of two real orthogonal tables.
 The proposed route through one nonnegative permutation law for all
 spectra of every fixed $U$ is refuted in order five.
-[Orthogonal transfer](Lean/MOC/ProofRoutes.lean#L203) · [Refuted common-law premise](Lean/MOC/ProofRoutes.lean#L132)
+[Orthogonal transfer](Lean/MOC/ProofRoutes.lean#L290) · [Refuted common-law premise](Lean/MOC/ProofRoutes.lean#L151)
 
 Lean also records further equivalent formulations and sufficient
 conditions, including routes through finite representations, matrix
 polynomials, and matching problems. The branch lists give the complete
 statements and the proof of each connection to its goal.
-[All-order branches](Lean/MOC/ProofRoutes.lean#L236) · [Order-four branches](Lean/MOC/ProofRoutes.lean#L169) · [Order-five branches](Lean/MOC/ProofRoutes.lean#L187)
+[All-order branches](Lean/MOC/ProofRoutes.lean#L680) · [Tests at each order](Docs/all-orders-proof-map.md#tests-at-each-order) · [Order-four branches](Lean/MOC/ProofRoutes.lean#L244) · [Order-five branches](Lean/MOC/ProofRoutes.lean#L277)
 
 ## Cases proved in Lean
 

@@ -10,9 +10,9 @@ its premises and links to the relevant Lean source.
 
 | Map | Coverage |
 | --- | --- |
-| [All orders](all-orders-proof-map.md) | Order split, 71 general routes, and the audit of 243 spectral formulations. |
-| [Order four](order-four-proof-map.md) | Eleven routes, real orthogonal mixers, stationary maxima, and contact patterns. |
-| [Order five](order-five-proof-map.md) | Ten routes, contact thresholds, sparse mixers, and squared-minor tests. |
+| [All orders](all-orders-proof-map.md) | All-order alternatives, the order split, tests available at each order, and 243 labelled spectral formulations. |
+| [Order four](order-four-proof-map.md) | Fixed conics, real orthogonal mixers, stationary maxima, contact patterns, and the bilinear chart. |
+| [Order five](order-five-proof-map.md) | Fixed conics, contact thresholds, sparse mixers, and squared-minor tests. |
 | [Contact transfer](contact-transfer-proof-map.md) | Fixed and varying determinant differences, contact counts, rank, moments, and isolation. |
 | [Spectral and support results](spectral-support-proof-map.md) | Spectral families, order-four support tests, and coverage of the research PDFs. |
 

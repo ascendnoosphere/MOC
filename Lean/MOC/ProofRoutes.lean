@@ -1,13 +1,32 @@
-import MOC.Reformulations
+import MOC.AffineGapCover
+import MOC.BilinearPencil
+import MOC.ConicSpectralReductions
+import MOC.EqualSpectralCoefficients
+import MOC.Extremal
+import MOC.FourContactRay
+import MOC.FourDirectSupportCertificate
+import MOC.FourTerminalCoverage
+import MOC.GaussianCayley
+import MOC.HermitianByNormalFourProof
+import MOC.HighContact
+import MOC.IsolatedContactFiber
+import MOC.MatchingContactRank
+import MOC.MobiusOrbitMinimum
 import MOC.NormalSupportMaximum
+import MOC.NonnormalPoleReduction
 import MOC.OrderFourIndependent
 import MOC.OrderFiveContact
 import MOC.OrderFiveCommonLawObstruction
 import MOC.OrderFivePairMarkers
 import MOC.PrincipalCoisometry
 import MOC.ReducingCommutant
-import MOC.SpectralMinorDecomposition
+import MOC.Reformulations
 import MOC.SaturatedContactReduction
+import MOC.SharpContactRank
+import MOC.SpectralMinorDecomposition
+import MOC.StationaryDenseCross
+import MOC.StationaryPivot
+import MOC.TerminalActiveEdges
 
 /-! A branch belongs here only if there is a Lean proof that it closes its
 parent. Open premises within one branch are joined by AND, not OR. -/
@@ -166,49 +185,118 @@ def SixContactStep : Prop :=
 def of_witness_iff {P Bad : Prop} (label : String) (e : (¬ P) ↔ Bad) : Route P :=
   fromIff label ((not_congr e).symm.trans not_not)
 
+theorem contact_step_of_le_sharp_threshold {n k : ℕ} (hk : k ≤ 2 * n - 1)
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) (_ : ∀ i j, U i j ≠ 0)
+    (w : StrictMatchingSupport U) (hw : w.contacts.card < k) :
+    ∃ v : StrictMatchingSupport U, w.contacts.card < v.contacts.card := by
+  have hbound : w.contacts.card ≤ 2 * Fintype.card (Fin n) - 2 := by
+    rw [Fintype.card_fin]
+    omega
+  obtain ⟨v, _, _, hinc, _⟩ := global_varying_gap_contact_transfer
+    (affineGapContinuation (Equiv.Perm (Fin n))) hU w hbound
+  exact ⟨v, Finset.card_lt_card hinc⟩
+
+/-- These tests apply at each order in the open range. The order can
+be fixed before a proof chooses a test. -/
+@[irreducible] def orderRoutes (n : ℕ) (hn : 4 ≤ n) : List (Route (Conjecture (Fin n))) := by
+  letI : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp (by omega)
+  letI : Nontrivial (Fin n) := Fin.nontrivial_iff_two_le.mpr (by omega)
+  exact [fromIff "Normal complex matrices" conjecture_iff_normalConjecture.symm,
+    fromIff "One-entry positive laws" (oneEntryLaw_iff n),
+    fromIff "Evaluated atlas comparison" (some_labelledAt_iff n),
+    fromIff "Equal traces" conjecture_iff_equal_trace.symm,
+    fromIff "Equal second elementary coefficients" conjecture_iff_equal_second_elementary.symm,
+    fromIff "Equal first and second elementary coefficients"
+      conjecture_iff_equal_first_second_elementary.symm,
+    fromIff "Real-part bound" conjecture_iff_real_bound.symm,
+    fromIff "Nonopposite spectra" conjecture_iff_nonopposite.symm,
+    fromIff "Regular matching products" conjecture_iff_regular_matching_products.symm,
+    fromIff "Regular spectra and full-support mixers" conjecture_iff_regular_spectra_full_support.symm,
+    fromIff "Bilinear pencil" conjecture_iff_bilinear_pencil.symm,
+    fromIff "Balanced spectra with a nonnormal sum" conjecture_iff_balanced_nonnormal.symm,
+    fromIff "Möbius-balanced regular spectra"
+      (conjecture_iff_mobius_balanced_regular (ι := Fin n) (by rw [Fintype.card_fin]; omega)).symm,
+    fromIff "Anchored spectra" (Reformulations.conjecture_iff_anchored_regular (n := n) ⟨0, by omega⟩).symm,
+    fromIff "Three-anchor rank-one kernel"
+      (Reformulations.conjecture_iff_three_anchor_kernel (n := n) ⟨0, by omega⟩ ⟨1, by omega⟩
+        ⟨0, by omega⟩ (fun h => Nat.zero_ne_one (congrArg Fin.val h))).symm,
+    fromIff "Nonzero contact-saturated support bound" conjecture_iff_contact_saturated_bound.symm,
+    fromIff "Global contact bound" conjecture_iff_global_contact_bound.symm,
+    fromIff "Balanced global contact bound" conjecture_iff_balanced_global_contact_bound.symm,
+    fromIff "Contact bound with rank and moments" conjecture_iff_rank_moment_global_contact_bound.symm,
+    fromIff "Contact bound with isolation, rank and moments"
+      conjecture_iff_isolated_rank_moment_contact_bound.symm,
+    fromIff "Sharp terminal contact bound" conjecture_iff_sharp_terminal_contact_bound.symm,
+    fromIff "Sharp contact rank bound" conjecture_iff_sharp_contact_rank_bound.symm,
+    fromIff "Sharp contact bound with isolation, rank and moments"
+      conjecture_iff_sharp_isolated_rank_moment_contact_bound.symm,
+    fromIff "Terminal stationary witnesses with negative pivots"
+      conjecture_iff_terminal_negative_pivots.symm,
+    fromIff "Support without a common active edge"
+      conjecture_iff_support_without_common_active_edge.symm]
+
+theorem order_routes_iff (n : ℕ) (hn : 4 ≤ n) :
+    AnyRoute (orderRoutes n hn) ↔ Conjecture (Fin n) := by
+  apply any_iff_of_branch "Normal complex matrices" conjecture_iff_normalConjecture.symm
+  unfold orderRoutes
+  exact List.mem_cons_self
+
 def fourRoutes : List (Route (Conjecture (Fin 4))) :=
-  [fromIff "Normal matrices of order four" conjecture_iff_normalConjecture.symm,
-   fromIff "Real orthogonal mixers with complex spectra" conjecture_four_iff_orthogonal.symm,
+  [fromIff "Real orthogonal mixers with complex spectra" conjecture_four_iff_orthogonal.symm,
    fromIff "Regular orthogonal support maximizers"
       conjecture_four_iff_regular_orthogonal_support_maxima.symm,
    fromIff "Normal sum at a support maximizer" conjecture_four_iff_exists_normal_support_maximizer.symm,
-   fromIff "One-entry positive laws" (oneEntryLaw_iff 4),
-   fromIff "Evaluated atlas comparison at order four" (some_labelledAt_iff 4),
    fromIff "Principal coisometry of dimension three" (conjecture_iff_principalCoisometry 3).symm,
+   fromIff "Rectangular compression with three rows" (conjecture_iff_rectangularCompression 3).symm,
+   fromIff "Regular orthogonal inclusion" Reformulations.conjecture_four_iff_regularOrthogonal.symm,
    of_witness_iff "Exclude all regular stationary orthogonal witnesses"
       not_conjecture_four_iff_regular_stationary_orthogonal_witness,
-   fromIff "Nonzero six-contact support bound" conjecture_iff_contact_saturated_bound.symm,
-   sufficient "One-contact transfer AND the six-contact support test"
-      (fun h : SixContactStep ∧ Reformulations.ContactForm 4 6 =>
-        conjecture_of_contact_step h.1 h.2),
-   fromIff "Three-anchor rank-one kernel"
-      (Reformulations.conjecture_iff_three_anchor_kernel (0 : Fin 4) 1 0 (by simp)).symm]
+   of_witness_iff "Exclude regular stationary witnesses with a full row and column"
+      not_conjecture_four_iff_dense_cross_stationary_witness,
+   fromIff "Exclude orthogonal witnesses with seven contacts"
+      conjecture_four_iff_seven_orthogonal_contacts.symm,
+   fromIff "Exclude stationary orthogonal witnesses with seven contacts"
+      conjecture_four_iff_terminal_stationary_pivots.symm,
+   fromIff "Exclude regular terminal orthogonal witnesses"
+      conjecture_four_iff_no_regular_terminal_orthogonal_witness.symm,
+   fromIff "Exclude regular terminal witnesses with canonical mixed cost"
+      conjecture_four_iff_no_canonical_mixed_terminal_witness.symm,
+   fromIff "Six-contact support test"
+      ⟨conjecture_of_contact_step (show SixContactStep from
+        contact_step_of_le_sharp_threshold (n := 4) (k := 6) (by decide)), Reformulations.contactForm_of_conjecture⟩,
+   fromIff "Distinct spectra outside circles and lines" conjecture_four_iff_noncircular.symm,
+   fromIff "First spectrum on the standard parabola"
+      (conjecture_iff_spectralCurveTest four_spectralParabola_test_iff).symm,
+   fromIff "First spectrum on the standard hyperbola"
+      (conjecture_iff_spectralCurveTest (four_spectralHyperbola_test_iff Complex.I 1 (by simp))).symm,
+   fromIff "First spectrum on the ellipse at the semiaxis threshold"
+      (conjecture_iff_spectralCurveTest (four_spectralEllipse_test_iff (2 + Real.sqrt 3) le_rfl)).symm,
+   fromIff "Signed support gap on the bilinear chart" conjecture_four_iff_bilinear_support.symm] ++
+    orderRoutes 4 le_rfl
 
 def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
-  [fromIff "Normal matrices of order five" conjecture_iff_normalConjecture.symm,
-   fromIff "Regular spectra and full-support mixers"
-      conjecture_iff_regular_spectra_full_support.symm,
-   fromIff "One-entry positive laws" (oneEntryLaw_iff 5),
-   fromIff "Evaluated atlas comparison at order five" (some_labelledAt_iff 5),
-   fromIff "Principal coisometry of dimension four" (conjecture_iff_principalCoisometry 4).symm,
-   fromIff "Three-anchor rank-one kernel"
-      (Reformulations.conjecture_iff_three_anchor_kernel (0 : Fin 5) 1 0 (by simp)).symm,
+  [fromIff "Principal coisometry of dimension four" (conjecture_iff_principalCoisometry 4).symm,
+   fromIff "Rectangular compression with four rows" (conjecture_iff_rectangularCompression 4).symm,
    sufficient "Order four AND existence of normal order-five maximizers"
       (fun h : Conjecture (Fin 4) ∧ NormalMaximizers 5 =>
         five_of_four_and_normalMaximizers h.1 h.2),
-   fromIff "Nonzero eight-contact support bound" conjecture_iff_contact_saturated_bound.symm,
-   sufficient "One-contact transfer AND the eight-contact support test"
-      (fun h : EightContactStep ∧ FullSupportEightContactTest =>
-        (conjecture_five_iff_fullSupportEight_of_step h.1).mpr h.2),
+   fromIff "Eight-contact support test with a full-support mixer"
+      (conjecture_five_iff_fullSupportEight_of_step (show EightContactStep from
+        contact_step_of_le_sharp_threshold (n := 5) (k := 8) (by decide))).symm,
+   fromIff "First spectrum on the standard parabola"
+      (conjecture_iff_spectralCurveTest five_spectralParabola_test_iff).symm,
+   fromIff "First spectrum on the standard hyperbola"
+      (conjecture_iff_spectralCurveTest (five_spectralHyperbola_test_iff Complex.I 1 (by simp))).symm,
    sufficient "Orthogonal minor convexification AND orthogonal order five"
       (fun h : TwoOrthogonalMinorTables (Fin 5) ∧ OrthogonalConjecture (Fin 5) =>
-        (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2)]
+        (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2)] ++
+    orderRoutes 5 (by decide)
 
 theorem four_routes_iff : AnyRoute fourRoutes ↔ Conjecture (Fin 4) :=
-  any_iff_of_branch _ conjecture_iff_normalConjecture.symm (List.mem_cons_self ..)
+  any_iff_of_branch _ conjecture_four_iff_orthogonal.symm (List.mem_cons_self ..)
 
 theorem five_routes_iff : AnyRoute fiveRoutes ↔ Conjecture (Fin 5) :=
-  any_iff_of_branch _ conjecture_iff_normalConjecture.symm (List.mem_cons_self ..)
+  any_iff_of_branch _ (conjecture_iff_principalCoisometry 4).symm (List.mem_cons_self ..)
 
 /-- Solving orders four and five leaves the orders at least six. -/
 theorem all_iff_four_and_five_and_higher :
@@ -267,7 +355,10 @@ theorem moc_iff_contact_saturated_bounds :
    fromIff "Actual integral torus characters" NativeLinksB.torusCharacterForm_iff,
    fromIff "Joint Hermitian integrals" NativeLinksB.quantumIntegralsForm_iff,
    fromIff "Gaussian integer spectra" NativeLinksB.gaussianSpectrumForm_iff,
+   fromIff "Gaussian integer spectra and Gaussian rational mixers"
+      mocIsTrue_iff_gaussian_spectra_rational_mixer.symm,
    fromIff "Affine linear parts" moc_iff_affineLinearParts.symm,
+   fromIff "Actual affine derivatives" NativeFirstB.affineDerivativeForm_iff,
    fromIff "Nonzero spectra" moc_iff_nonzeroSpectra.symm,
    fromIff "Invertible projective diagonal lifts" moc_iff_projectiveDiagonalLifts.symm,
    fromIff "Traceless Cartan spectra" tracelessCartanForm_iff,
@@ -278,6 +369,8 @@ theorem moc_iff_contact_saturated_bounds :
    fromIff "Finite bipartite matching" bipartiteMatchingForm_iff,
    fromIff "Weighted bipartite determinant" weightedBipartiteMatchingForm_iff,
    fromIff "Finite Euler determinant" finiteEulerForm_iff,
+   fromIff "Finite Euler determinant at parameter one"
+      (fixedEulerParameterForm_iff (z := 1) one_ne_zero),
    fromIff "Normal word products" normalWordProductForm_iff,
    fromIff "Almost-sure finite spectra" almostSureSpectralForm_iff,
    fromIff "Joint tuple projections" jointTupleProjectionForm_iff,
@@ -290,6 +383,7 @@ theorem moc_iff_contact_saturated_bounds :
    fromIff "C-star functional calculus" CStar.functionalCalculusForm_iff,
    fromIff "C-star affine form" CStar.affineForm_iff,
    fromIff "C-star pointwise characteristic form" CStar.pointwiseCharacteristicForm_iff,
+   fromIff "Pointwise characteristic polynomial of the spectral sum" pointwiseCharacteristicForm_iff,
    fromIff "C-star scalar weight form" CStar.scalarWeightForm_iff,
    fromIff "Paired finite star representations" CStar.pairedStarRepresentationForm_iff,
    fromIff "Compound form" compoundForm_iff,
@@ -303,10 +397,27 @@ theorem moc_iff_contact_saturated_bounds :
    fromIff "No paired block split" mocIsTrue_iff_no_proper_paired_blocks.symm,
    fromIff "Every row and column has degree at least three"
       mocIsTrue_iff_support_degree_at_least_three.symm,
+   fromIff "Strict support expansion" mocIsTrue_iff_strict_support_expansion.symm,
+   fromIff "Balanced spectra and strict support expansion" mocIsTrue_iff_balanced_expanding.symm,
+   fromIff "Scalar common commutant" mocIsTrue_iff_scalar_common_commutant.symm,
    fromIff "Regular spectra with scalar common commutant"
       mocIsTrue_iff_regular_scalar_common_commutant.symm,
+   fromIff "Regular scalar common commutant and nonnormal poles"
+      mocIsTrue_iff_regular_scalar_nonnormal_poles.symm,
+   fromIff "Terminal matching chart support" mocIsTrue_iff_terminal_chart_support.symm,
+   fromIff "Terminal matching chart with 2n-1 contacts"
+      mocIsTrue_iff_terminal_chart_support_twice_minus_one.symm,
+   fromIff "Terminal matching chart with old gap rank"
+      mocIsTrue_iff_terminal_chart_support_old_gap_rank.symm,
+   fromIff "Terminal matching chart with old gap rank and no common active edge"
+      mocIsTrue_iff_terminal_chart_support_old_gap_rank_no_common_edge.symm,
+   fromIff "Terminal matching chart with constraint rank"
+      mocIsTrue_iff_terminal_chart_support_of_constraint_rank.symm,
+   fromIff "Terminal matching chart with minimal prime isolation"
+      mocIsTrue_iff_terminal_chart_support_minimal_prime.symm,
    fromIff "All three order ranges" all_iff_four_and_five_and_higher.symm,
-   sufficient "Simultaneous characteristic hull" CStar.moc_of_simultaneousCharacteristicForm,
+   sufficient "Regular contact covers AND terminal chart support"
+      (And.elim mocIsTrue_of_regular_contact_covers),
    sufficient "Separate characteristic coefficients" CStar.moc_of_separateCoefficientForm,
    sufficient "Simultaneous mixed-pencil coefficients" moc_of_simultaneousMixedPencilHull]
 
@@ -321,7 +432,7 @@ theorem native_routes_iff : AnyRoute nativeRoutes ↔ MOCIsTrue :=
 /-- This is the evaluated spectral layer of the atlas, not a list of
 unconditional native statements. Each numbered leaf uses its own checked
 equivalence to unrestricted MOC. -/
-opaque labelledRoutes : List (Route MOCIsTrue) :=
+@[irreducible] def labelledRoutes : List (Route MOCIsTrue) :=
   [fromIff "Atlas 001 evaluated" atlas001Labelled_iff,
 fromIff "Atlas 002 evaluated" atlas002Labelled_iff,
 fromIff "Atlas 003 evaluated" atlas003Labelled_iff,
@@ -572,6 +683,20 @@ theorem all_routes_iff : AnyRoute allRoutes ↔ MOCIsTrue := by
   unfold allRoutes
   exact any_iff_of_branch "Normal complex matrices" moc_iff_complexMatrices.symm
     (List.mem_append_left labelledRoutes normal_mem_nativeRoutes)
+
+/-- Prove one all-order route, or choose a route at every order from four on.
+The choices at different orders can be independent. -/
+theorem moc_iff_registered_routes :
+    MOCIsTrue ↔ AnyRoute allRoutes ∨
+      (AnyRoute fourRoutes ∧ AnyRoute fiveRoutes ∧
+        ∀ n (hn : 6 ≤ n), AnyRoute (orderRoutes n (Nat.le_trans (by decide : 4 ≤ 6) hn))) := by
+  constructor
+  · intro h
+    exact Or.inl (all_routes_iff.mpr h)
+  · rintro (hall | ⟨hfour, hfive, hhigher⟩)
+    · exact all_routes_iff.mp hall
+    · exact all_iff_four_and_five_and_higher.mpr
+        ⟨close_any hfour, close_any hfive, fun n hn => close_any (hhigher n hn)⟩
 
 /-- A proof of an all-order analogy can also close either finite-order root.
 The finite-order route is enough by itself; it need not prove all orders. -/

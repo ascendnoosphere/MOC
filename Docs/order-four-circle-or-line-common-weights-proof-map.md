@@ -49,6 +49,13 @@ flowchart TD
 | The spectrum lies on no circle or line | Agreement on every diagonal partner gives the squared-minor weights for every subset image. Triple product moments determine the singleton weights. The nonreal cross ratio separates the remaining pair weights. Complementation gives the larger subsets. | [Necessary minor weights](../Lean/MOC/FourCircleLineCommonWeights.lean#L610) |
 | One mixer has no common squared-minor law | For any spectrum off a circle or line, the converse uses that same mixer to rule out a common law. | [Converse](../Lean/MOC/FourCircleLineCommonWeights.lean#L651) |
 
+The common law gives pointwise determinant inclusion on the circle or
+line. Repeated eigenvalues also satisfy the pointwise inclusion in
+order four. It therefore suffices to test pairs of distinct spectra
+where neither signed spectrum lies on a circle or line. These are the
+first list and the negation of the second list.
+[Pointwise circle or line case](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Exact remaining test](../Lean/MOC/HermitianByNormalFourProof.lean#L124)
+
 ## Two free diagonal entries
 
 Take the fixed spectrum $(1,-i,-2,-2i)$ and the diagonal partner

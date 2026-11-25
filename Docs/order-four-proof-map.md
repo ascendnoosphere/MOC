@@ -19,49 +19,60 @@ standalone proof source with an absent dependency.
 ```mermaid
 flowchart BT
     accTitle: Exact and sufficient routes to order four
-    accDescr: The spectral, stationary, and contact tests described in the register give equivalent routes. Contact transfer together with the six-contact bound also suffices.
+    accDescr: Each listed test is equivalent to order four. The existing contact transfer supplies the increase step for the six-contact bound.
     Goal["Order 4<br/>Open"]:::goal
     Ortho["Orthogonal and stationary tests"]
     Spectral["Eigenvalue and<br/>rectangular formulations"]
     NZ["Six contacts<br/>All products nonzero"]
     Normal["A normal sum at a maximum"]
-    Both{{"AND<br/>Contact increase and bound"}}:::gate
+    Conics["One fixed conic test"]
     Step["Increase below 6 contacts"]:::proved
     Bound["Six-contact bound"]:::open
     Ortho <-->|iff each| Goal
     Spectral <-->|iff each| Goal
     NZ <-->|iff| Goal
     Normal <-->|iff| Goal
-    Step --- Both
-    Bound --- Both
-    Both -->|if| Goal
+    Conics <-->|iff each| Goal
+    Step -. supplies reverse implication .-> Bound
+    Bound <-->|iff| Goal
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
-    classDef gate fill:#e7f0fa,stroke:#52779d,color:#142e47
     classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
     classDef proved fill:#e3f4e8,stroke:#41905b,color:#163c24
 ```
 
-The table covers all eleven registered routes. A **coisometry** here
-is a rectangular matrix with orthonormal rows. A **regular** pair of
+The table covers the tests specific to order four. The registry also
+includes the [tests at each order](all-orders-proof-map.md#tests-at-each-order).
+A **coisometry** is a rectangular matrix with orthonormal rows. A **regular** pair of
 spectra has nonzero pair sums and distinct matching products. The
 [contact map](contact-transfer-proof-map.md) defines contacts and strict
 witnesses. The all-order transfer gives the six-contact increase step.
 The six-contact inequality required by this route remains open.
-[Route register](../Lean/MOC/ProofRoutes.lean#L169) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L207) · [Contact transfer](../Lean/MOC/VaryingGapTerminal.lean#L110)
+[Route register](../Lean/MOC/ProofRoutes.lean#L244) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L295) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L188)
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
-| Normal matrices of order four | Iff | [Statement and proof](../Lean/MOC/Normal.lean#L280) |
 | Real orthogonal mixers with complex spectra | Iff | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L574) |
 | Regular orthogonal support maximizers | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L90) |
 | Normal sum at a support maximizer | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L303) |
-| One-entry positive laws | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L89) |
-| Evaluated atlas comparison at order four | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L71) |
 | Principal coisometry of dimension three | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L140) |
+| Rectangular compression with three rows | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L218) |
+| Regular spectra and real orthogonal mixers | Iff | [Statement and proof](../Lean/MOC/Reformulations/StationaryFour.lean#L43) |
 | Exclude all regular stationary orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L231) |
-| Nonzero six-contact support bound | Iff | [Statement and proof](../Lean/MOC/SaturatedContactReduction.lean#L70) |
-| One-contact transfer AND the six-contact support test | If | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L148) |
-| Three-anchor rank-one kernel | Iff | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) |
+| Exclude regular stationary witnesses with a row and a column with no zero entries | Iff | [Statement and proof](../Lean/MOC/StationaryDenseCross.lean#L64) |
+| Exclude orthogonal witnesses with at least seven contacts | Iff | [Statement and proof](../Lean/MOC/ZhengContactReduction.lean#L14) |
+| Exclude stationary orthogonal witnesses with at least seven contacts and the inactive pivot constraints | Iff | [Statement and proof](../Lean/MOC/StationaryPivot.lean#L221) |
+| Exclude regular terminal orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L110) |
+| Exclude regular terminal orthogonal witnesses with canonical mixed cost | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L387) |
+| Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L264) |
+| Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L124) |
+| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L318) |
+| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L375) |
+| Distinct first spectrum on the ellipse with semiaxes $2+\sqrt 3$ and $1$ | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L925) |
+| Signed support gap on the realized bilinear chart | Iff | [Statement and proof](../Lean/MOC/FourDirectSupportCertificate.lean#L118) |
+
+The conic conditions quantify over every unitary mixer and every
+second spectrum. The fixed-curve transport preserves the mixer.
+[Universal conic tests](conic-spectral-reductions-proof-map.md) · [Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27)
 
 ## Real orthogonal and stationary tests
 
@@ -144,7 +155,7 @@ Normalize the mixed coefficient to one by scaling the support
 direction. Row and column relabeling and matrix transpose preserve
 the strict excess and contact count. At nonzero height, the contact
 set cannot contain the four matchings from two disjoint swaps.
-[Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L110) · [Canonical witness](../Lean/MOC/FourTerminalCoverage.lean#L353) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L387)
+[Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L110) · [Canonical witness equivalence](../Lean/MOC/FourTerminalCoverage.lean#L387) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L403)
 
 The exact Python census gives 90 seven-contact and 58 eight-contact
 classes at nonzero height. Two canonical eleven-contact profiles
@@ -166,11 +177,13 @@ where that ray is positive also gives the bound.
 
 Fix the right-hand coordinates of an anchored spectral chart in order
 four. The 24 matching products are linear in four complex coefficients.
-One quadratic equation on those coefficients gives spectral realization.
+With a nonzero scale, one quadratic equation on those coefficients gives
+spectral realization. Nonnegativity of the signed gap at every maximizing
+matching on this chart is equivalent to order four.
 The contact equalities and strict support test are real linear conditions
 on the coefficients. The rank-drop and remaining feasibility tests are
 open. The new Lean source awaits verification.
-[Spectral realization](../Lean/MOC/FourDirectSupportCertificate.lean#L45) · [Support test](../Lean/MOC/FourDirectSupportCertificate.lean#L105)
+[Spectral realization](../Lean/MOC/FourDirectSupportCertificate.lean#L47) · [Bilinear support equivalence](../Lean/MOC/FourDirectSupportCertificate.lean#L118)
 
 ## Paper support bounds and exact examples
 

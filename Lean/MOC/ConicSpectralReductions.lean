@@ -22,6 +22,15 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 def SpectralCurveTest (C : Set ℂ) (U : Matrix ι ι ℂ) : Prop :=
   ∀ (a b : ι → ℂ), Function.Injective a → (∀ i, a i ∈ C) → Holds a b U
 
+/-- A test that recovers all spectra for each unitary mixer recovers the
+conjecture at that order. -/
+theorem conjecture_iff_spectralCurveTest {C : Set ℂ}
+    (hcurve : ∀ (U : Matrix ι ι ℂ), IsUnitary U →
+      (SpectralCurveTest C U ↔ ∀ a b : ι → ℂ, Holds a b U)) :
+    Conjecture ι ↔ ∀ (U : Matrix ι ι ℂ), IsUnitary U → SpectralCurveTest C U :=
+  ⟨fun h U hU => (hcurve U hU).mpr (fun a b => h a b U hU),
+   fun h a b U hU => (hcurve U hU).mp (h U hU) a b⟩
+
 /-- The standard parabola. A complex affine map with nonzero slope
 transports its test to that of any similar parabola. -/
 def spectralParabola : Set ℂ :=

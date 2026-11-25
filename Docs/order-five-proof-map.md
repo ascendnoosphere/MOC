@@ -22,35 +22,30 @@ flowchart BT
     accTitle: Three groups of order-five proof routes
     accDescr: The exact tests imply and follow from order five. The normal-maximizer and orthogonal-decomposition routes each require both stated premises.
     Goal["Order 5<br/>Open"]:::goal
-    Exact["Any exact spectral<br/>or contact test"]
+    Exact["Any exact conic, rectangular,<br/>or contact test"]
     Normal{{"AND<br/>Order 4 and<br/>normal maximizers"}}:::gate
     Real{{"AND<br/>Orthogonal order 5 and<br/>two-table decomposition"}}:::gate
-    Contact{{"AND<br/>Contact increase and<br/>eight-contact bound"}}:::gate
     Exact <-->|iff each| Goal
     Normal -->|if| Goal
     Real -->|if| Goal
-    Contact -->|if| Goal
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
     classDef gate fill:#e7f0fa,stroke:#52779d,color:#142e47
 ```
 
-The ten registered routes include three sufficient conditions. Each
-conjunction requires its two premises. The contact-transfer premise of
-the eight-contact route follows from the all-order transfer, as shown
-in the [threshold map](#contact-thresholds).
-[Route register](../Lean/MOC/ProofRoutes.lean#L187) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L210)
+The table covers the tests specific to order five. The registry also
+includes the [tests at each order](all-orders-proof-map.md#tests-at-each-order).
+Each conjunction requires its two premises. The all-order contact
+transfer makes the full-support eight-contact test exact.
+[Route register](../Lean/MOC/ProofRoutes.lean#L277) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L298)
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
-| Normal matrices of order five | Iff | [Statement and proof](../Lean/MOC/Normal.lean#L280) |
-| Regular spectra and full-support mixers | Iff | [Statement and proof](../Lean/MOC/FullSupportReduction.lean#L118) |
-| One-entry positive laws | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L89) |
-| Evaluated atlas comparison at order five | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L71) |
 | Principal coisometry of dimension four | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L140) |
-| Three-anchor rank-one kernel | Iff | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) |
-| Order four AND existence of normal order-five maximizers | If | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L110) |
-| Nonzero eight-contact support bound | Iff | [Statement and proof](../Lean/MOC/SaturatedContactReduction.lean#L70) |
-| One-contact transfer AND the eight-contact support test | If | [Statement and proof](../Lean/MOC/OrderFiveContact.lean#L97) |
+| Rectangular compression with four rows | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L218) |
+| Order four AND existence of normal order-five maximizers | If | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L129) |
+| Eight-contact support bound with no zero mixer entries | Iff | [Statement and transfer](../Lean/MOC/ProofRoutes.lean#L283) |
+| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1320) |
+| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1341) |
 | Orthogonal minor convexification AND orthogonal order five | If | [Statement and proof](../Lean/MOC/Realification.lean#L79) |
 
 For the regular spectral test, each pair sum is nonzero, different
@@ -146,7 +141,7 @@ refutes that premise. The determinant inclusion for this reflection
 holds for every pair of lists. A separate pair-assignment example
 shows that the best assignment on pairs can exceed every assignment
 induced by a permutation of the individual indices.
-[Pair-minor equivalence](../Lean/MOC/OrderFivePairMarkers.lean#L225) · [Refuted law](../Lean/MOC/ProofRoutes.lean#L132) · [Inclusion for the reflection](../Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Pair-assignment example](../Lean/MOC/PairAssignmentObstruction.lean#L116)
+[Pair-minor equivalence](../Lean/MOC/OrderFivePairMarkers.lean#L225) · [Refuted law](../Lean/MOC/ProofRoutes.lean#L151) · [Inclusion for the reflection](../Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Pair-assignment example](../Lean/MOC/PairAssignmentObstruction.lean#L116)
 
 Lean also gives inclusion for the order-five Fourier matrix, the
 unitary matrices with zero diagonal and off-diagonal magnitudes $1/2$,

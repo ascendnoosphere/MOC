@@ -1,4 +1,6 @@
 import MOC.MatchingChartPolynomial
+import MOC.HighContact
+import MOC.SpectralPerturbation
 import MOC.Support
 
 /-! In order four, fixing the right coordinates of the anchored matching chart
@@ -110,6 +112,43 @@ theorem fourBilinearMatchingProduct_support_gap (a b y w : Fin 4 → ℂ) (η : 
       ∑ σ, realSignedWeight U σ *
         ((fourBilinearMatchingProduct y w r).re - (fourBilinearMatchingProduct y w σ).re) := by
   simpa only [h, matchingGap] using support_gap_eq a b U hU η r
+
+/-- Nonnegativity of the signed gap on the bilinear chart is equivalent
+to order four. The quadratic equation ensures a common realization. -/
+theorem conjecture_four_iff_bilinear_support :
+    Conjecture (Fin 4) ↔ ∀ (U : Matrix (Fin 4) (Fin 4) ℂ) (y w : Fin 4 → ℂ),
+      IsUnitary U → y 0 = 0 → w 0 ≠ 0 → w 0 * w 3 = w 1 * w 2 →
+      ∀ r : Equiv.Perm (Fin 4),
+        (∀ σ, (fourBilinearMatchingProduct y w σ).re ≤ (fourBilinearMatchingProduct y w r).re) →
+        0 ≤ ∑ σ, realSignedWeight U σ *
+          ((fourBilinearMatchingProduct y w r).re - (fourBilinearMatchingProduct y w σ).re) := by
+  classical
+  constructor
+  · intro h U y w hU _ hw hquad r hr
+    obtain ⟨a, b, hp⟩ := exists_spectra_of_fourBilinearMatchingProduct y w hw hquad
+    have hprod (σ : Equiv.Perm (Fin 4)) :
+        fourBilinearMatchingProduct y w σ = 1 * matchingProduct a b σ := by
+      rw [one_mul, hp σ]
+    obtain ⟨σ, hσ⟩ := (holds_iff_directional a b U).mp (h a b U hU) 1
+    rw [← fourBilinearMatchingProduct_support_gap a b y w 1 U hU hprod r]
+    exact sub_nonneg.mpr (hσ.trans (by simpa only [hprod] using hr σ))
+  · intro h
+    apply conjecture_iff_regular_matching_products.mpr
+    intro a b U hU hnz hinj
+    apply (holds_iff_directional a b U).mpr
+    intro η
+    by_cases hη : η = 0
+    · exact ⟨1, by simp only [hη, zero_mul, le_refl]⟩
+    obtain ⟨ha, hb⟩ := injective_spectra_of_matchingProduct_injective hinj
+    obtain ⟨y, w, hy, hw, hquad, hprod⟩ :=
+      exists_fourBilinearMatchingProduct_of_nonopposite a b η hη hnz
+        (ha.ne (by decide)) (hb.ne (by decide))
+    obtain ⟨r, _, hr⟩ := Finset.exists_max_image Finset.univ
+      (fun σ : Equiv.Perm (Fin 4) => (fourBilinearMatchingProduct y w σ).re)
+      ⟨1, Finset.mem_univ _⟩
+    have hgap := h U y w hU hy hw hquad r (fun σ => hr σ (Finset.mem_univ _))
+    rw [← fourBilinearMatchingProduct_support_gap a b y w η U hU hprod r, hprod r] at hgap
+    exact ⟨r, sub_nonneg.mp hgap⟩
 
 end
 

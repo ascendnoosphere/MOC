@@ -13,6 +13,13 @@ The mixer $U$ has Haar probability measure and is independent of the
 entries. Its result is a bound on the probability that $d$ is outside
 the matching hull. It concerns this specified ensemble.
 
+The registered almost-sure reformulation requires inclusion almost
+everywhere in every order on every probability space where the mixer
+is unitary almost everywhere. A singleton probability space recovers
+the deterministic conjecture. The Gaussian–Haar
+theorem bounds failure in one ensemble under a second-moment premise.
+[Almost-sure equivalence](../Lean/MOC/Reformulations/SecondNative.lean#L271) · [Gaussian bound](../Lean/MOC/GaussianHaarContainment.lean#L1131)
+
 ```mermaid
 flowchart BT
     A["Two exchanges on disjoint pairs"] --> S["Three products surround a disk"]

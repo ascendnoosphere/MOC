@@ -382,6 +382,22 @@ theorem exists_canonical_mixed_terminal_witness (h : ¬ Conjecture (Fin 4)) :
     · rw [hcs j hj, mul_zero]
     · simpa only [Finset.smul_sum, smul_smul, smul_eq_mul] using hg'
 
+/-- Order four holds exactly when there is no regular terminal witness
+with canonical mixed cost. -/
+theorem conjecture_four_iff_no_canonical_mixed_terminal_witness :
+    Conjecture (Fin 4) ↔ ¬ ∃ O : Matrix.orthogonalGroup (Fin 4) ℝ,
+      ∃ w : StrictMatchingSupport (Complex.ofRealHom.mapMatrix O.val),
+        FourRegularSpectra w ∧ 7 ≤ w.contacts.card ∧
+        ∃ c : Fin 34 → ℝ, (∀ j, 0 ≤ c j) ∧
+          (∀ j ∉ fourCanonicalCapOrdinaryRays, c j = 0) ∧
+          fourTerminalGap w = (∑ j, c j • ordinaryCostRay j) + mixedCostRay 0 := by
+  constructor
+  · rintro h ⟨O, w, _⟩
+    exact w.not_holds (h w.a w.b _ (isUnitary_ofReal_orthogonal O))
+  · intro h
+    by_contra hfail
+    exact h (exists_canonical_mixed_terminal_witness hfail)
+
 /-- A nonzero support height excludes a full rectangle of two disjoint swaps
 in the contact set of a regular witness. -/
 theorem four_terminal_nonzero_height_no_rectangle {U : Matrix (Fin 4) (Fin 4) ℂ}
