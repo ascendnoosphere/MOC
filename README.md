@@ -406,8 +406,10 @@ Combining the blocks proves the convex-hull inclusion in every order.
   the sum $s_p=\sum_j a_{p(j)}b_j$. If the sums are distinct and no
   three lie on one real affine line, a single $R>0$ gives inclusion for
   $(a_i+z)_i$ and $b$ for every $|z|>R$ and every unitary change of
-  eigenbasis.
-  [Uniform exterior shift](Lean/MOC/UniformExteriorShift.lean#L67) · [Proof map](Docs/free-eigenvalue-and-exterior-shifts-proof-map.md#generic-assignment-sums)
+  eigenbasis. For every fixed $a$ with distinct entries, the partners
+  $b$ satisfying this condition form an open dense subset of
+  $\mathbb C^n$.
+  [Uniform exterior shift](Lean/MOC/UniformExteriorShift.lean#L67) · [Open dense partners](Lean/MOC/GenericExteriorShift.lean#L155) · [Proof map](Docs/free-eigenvalue-and-exterior-shifts-proof-map.md#generic-assignment-sums)
 - Fix a real spectrum and a complex partner spectrum. The exterior
   shift bound gives inclusion for every mixer outside an explicit
   radius computed from the two lists and a triangle gap of the

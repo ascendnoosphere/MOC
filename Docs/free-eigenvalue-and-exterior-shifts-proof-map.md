@@ -70,6 +70,14 @@ finite certificates was unavailable in the workspace.
 
 ### Generic assignment sums
 
+Fix any first list $a$ with pairwise distinct complex entries. In every
+finite order $n$, there is an open dense set of partner lists
+$b\in\mathbb C^n$ with the following property. For each such $b$ there
+is one radius $R(a,b)>0$. For every complex shift $|z|>R(a,b)$ and
+every unitary mixer, the conjecture holds for $(a_i+z)_i$ and $b$.
+The set of partners is open and dense with $a$ held fixed.
+[Generic partners and uniform exterior radius](../Lean/MOC/GenericExteriorShift.lean#L155)
+
 Fix two complex spectral lists $a,b$ of order $n$. For each permutation
 $\sigma$, let $s_\sigma=\sum_j a_{\sigma(j)}b_j$. Suppose these sums
 are distinct and no three lie on one real affine line in the complex
@@ -78,6 +86,17 @@ holds for the lists $(a_i+z)_i$ and $b$ for every complex $z$ with
 $|z|>R$ and every relative unitary matrix. The radius depends only on
 the two lists.
 [Uniform exterior inclusion](../Lean/MOC/UniformExteriorShift.lean#L67)
+
+The set of all $b$ that satisfy this assignment condition is itself
+open and dense. Pair differences and signed triangle areas are
+continuous functions of $b$. Choose one direction $v$ whose assignment
+values are in general position. The dense pole theorem supplies one
+for each simple $a$. Along any real line $b+t v$, each pair difference
+is affine in $t$ with nonzero slope. Each signed triangle area is a
+quadratic polynomial in $t$ whose leading coefficient is its nonzero
+area at $v$. Only finitely many $t$ can violate one of these conditions.
+Every neighborhood of $b$ therefore contains a good partner.
+[Dense pole theorem](../Lean/MOC/ReciprocalSpectralPerturbation.lean#L121) · [Orientation test](../Lean/MOC/AssignmentOrientation.lean#L38) · [Polynomial roots along a line](../Lean/MOC/PolynomialLineDensity.lean#L15) · [Open dense assignment condition](../Lean/MOC/GenericExteriorShift.lean#L97)
 
 Put $t=1/z$. Divide every matching product by $z^n$ to get
 $\prod_j(1+t(a_{\sigma(j)}+b_j))$. The product
