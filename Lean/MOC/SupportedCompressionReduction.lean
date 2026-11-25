@@ -122,7 +122,7 @@ theorem holds_normal_compression_of_injOn_support {n : ℕ} (hSmall : Conjecture
     exact congrArg Matrix.diagonal (funext fun j => mul_comm _ _)
   have hAroots : (diagonal a).charpoly.roots = (Finset.univ : Finset (Fin n)).val.map a := by
     simpa only [Matrix.one_mul, Matrix.mul_one, Matrix.conjTranspose_one] using
-      (roots_unitary_diagonalization a (U := 1) (by simp [IsUnitary]))
+      (roots_unitary_diagonalization a (U := 1) isUnitary_one)
   exact hsub (conjecture_iff_normalConjecture.mp hSmall _ _ a b hA hC hAroots hb)
 
 /-- The smaller-order conjecture covers every normal principal compression. -/

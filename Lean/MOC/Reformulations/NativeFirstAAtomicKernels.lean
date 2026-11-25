@@ -30,7 +30,7 @@ private theorem atomicDiagonalNormal {n : ℕ} (a : Fin n → ℂ) :
 
 private theorem atomicDiagonalRoots {n : ℕ} (a : Fin n → ℂ) :
     (diagonal a).charpoly.roots = (Finset.univ : Finset (Fin n)).val.map a := by
-  have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+  have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   simpa using roots_unitary_diagonalization a hOne
 
 /-- The finite atomic integral-operator Fredholm comparison in the two

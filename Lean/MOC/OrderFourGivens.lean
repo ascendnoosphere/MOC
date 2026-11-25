@@ -320,7 +320,7 @@ theorem four_no_flat_swap_away_from_zero
     rw [Finset.card_erase_of_mem (by simp [hri]), Finset.card_erase_of_mem (Finset.mem_univ i)]
     simp
   have hsparse : (supportColumns Vᴴ {k}).card ≤ 2 := (Finset.card_le_card hsub).trans_eq hcard
-  have hholds := holds_of_column_degree_le_two (conjecture_le_three (by omega)) a b hV k hsparse
+  have hholds := holds_of_column_degree_le_two conjecture_three a b hV k hsparse
   obtain ⟨p, hp⟩ := (holds_iff_directional a b V).mp hholds η
   exact (not_lt_of_ge (hflat.symm.le.trans hp)) (hgap p)
 

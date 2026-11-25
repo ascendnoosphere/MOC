@@ -24,7 +24,7 @@ def HermitianByNormalAtMost (ι : Type*) [Fintype ι] [DecidableEq ι] (k : ℕ)
 private theorem nonrealCount_le_card {ι : Type*} [Fintype ι] (b : ι → ℂ) :
     nonrealCount b ≤ Fintype.card ι := by
   classical
-  simpa [nonrealCount] using
+  simpa only [nonrealCount] using
     (Finset.card_filter_le (s := (Finset.univ : Finset ι)) fun i => (b i).im ≠ 0)
 
 /-- Shifting by a real number and inverting preserves real and nonreal labels. -/
@@ -288,7 +288,7 @@ theorem hermitianByNormal_iff_nonreal_partners :
   · intro h n
     induction n with
     | zero =>
-      exact fun a b U hU => conjecture_zero _ b U hU
+      exact fun a b U hU => conjecture_zero (fun i => (a i : ℂ)) b U hU
     | succ n ih =>
       intro a b U hU
       by_cases hn : 4 ≤ n + 1
@@ -298,6 +298,7 @@ theorem hermitianByNormal_iff_nonreal_partners :
           obtain ⟨p, hp⟩ := hb
           exact holds_of_real_pivot (k := n + 1) (fun a' b' V hV _ => ih a' b' V hV)
             a b U hU (by simpa using nonrealCount_le_card b) p hp
-      · exact conjecture_le_three (by omega) _ b U hU
+      · have hsmall : n + 1 ≤ 3 := Nat.le_of_lt_succ (Nat.lt_of_not_ge hn)
+        exact conjecture_le_three hsmall (fun i => (a i : ℂ)) b U hU
 
 end MOC

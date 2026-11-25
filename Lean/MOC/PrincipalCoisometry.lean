@@ -250,11 +250,11 @@ theorem mocIsTrue_iff_principalCoisometry :
   rw [mocIsTrue_iff_from_four]
   constructor
   · intro h n hn
-    exact (conjecture_iff_principalCoisometry n).mp (h (n + 1) (by omega))
+    exact (conjecture_iff_principalCoisometry n).mp (h (n + 1) (Nat.succ_le_succ hn))
   · intro h m hm
     cases m with
-    | zero => omega
-    | succ n => exact (conjecture_iff_principalCoisometry n).mpr (h n (by omega))
+    | zero => exact False.elim ((by decide : ¬ (4 : ℕ) ≤ 0) hm)
+    | succ n => exact (conjecture_iff_principalCoisometry n).mpr (h n (Nat.le_of_succ_le_succ hm))
 
 end
 

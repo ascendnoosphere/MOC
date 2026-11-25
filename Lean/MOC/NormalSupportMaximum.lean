@@ -202,7 +202,7 @@ theorem holds_four_of_normal_support_maximum (a b : Fin 4 → ℂ)
     (hmax : ∀ V : Matrix (Fin 4) (Fin 4) ℂ, IsUnitary V →
       (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re) : Holds a b U :=
   holds_of_normal_support_maximum_of_smaller_orders
-    (fun m hm => conjecture_le_three (by omega)) a b hU η hC hκ hmax
+    (fun m hm => conjecture_le_three (n := m) (Nat.le_of_lt_succ hm)) a b hU η hC hκ hmax
 
 private theorem exists_nonzero_support_violation {ι : Type*} [Fintype ι] [DecidableEq ι]
     (a b : ι → ℂ) {U : Matrix ι ι ℂ} (hU : IsUnitary U) (hbad : ¬ Holds a b U) :
@@ -307,7 +307,7 @@ theorem conjecture_four_iff_exists_normal_support_maximizer : Conjecture (Fin 4)
         ∀ V : Matrix (Fin 4) (Fin 4) ℂ, IsUnitary V →
           (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re :=
   conjecture_iff_exists_normal_support_maximizer_of_smaller_orders
-    (fun m hm => conjecture_le_three (by omega))
+    (fun m hm => conjecture_le_three (n := m) (Nat.le_of_lt_succ hm))
 
 /-- The conjecture in all orders is equivalent to existence of a normal sum
 at some maximizer of every directional unitary orbit in orders at least four. -/

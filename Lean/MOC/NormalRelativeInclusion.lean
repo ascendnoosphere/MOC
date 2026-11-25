@@ -110,14 +110,10 @@ theorem holds_of_simple_normal_relative_of_smaller_orders {n : ℕ}
     (hW : IsStarNormal ((diagonal a)⁻¹ * (U * diagonal b * Uᴴ))) : Holds a b U := by
   by_cases hn : n ≤ 3
   · exact conjecture_le_three hn a b U hU
-  letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+  have hnpos : 0 < n := Nat.lt_trans (by decide : 0 < 3) (Nat.lt_of_not_ge hn)
+  letI : Nonempty (Fin n) := ⟨⟨0, hnpos⟩⟩
   by_contra hbad
-  have hcut : ¬ HasProperPairedBlocks U := by
-    rintro ⟨m, k, er, ec, P, Q, hm, hk, hsplit⟩
-    have hcard := Fintype.card_congr er
-    simp only [Fintype.card_sum, Fintype.card_fin] at hcard
-    exact hbad (holds_of_paired_blocks (hbelow m (by omega)) (hbelow k (by omega))
-      er ec a b U hU P Q hsplit)
+  have hcut : ¬ HasProperPairedBlocks U := mt (holds_of_proper_paired_blocks hbelow a b hU) hbad
   exact hbad (holds_of_normal_relative_of_scalar_commutant a b U hU ha hW
     (scalar_of_commute_simple_summands hU hcut haInj hbInj))
 
@@ -129,7 +125,8 @@ theorem holds_of_normal_relative_of_smaller_orders {n : ℕ}
     (hW : IsStarNormal ((diagonal a)⁻¹ * (U * diagonal b * Uᴴ))) : Holds a b U := by
   by_cases hn : n ≤ 3
   · exact conjecture_le_three hn a b U hU
-  letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+  have hnpos : 0 < n := Nat.lt_trans (by decide : 0 < 3) (Nat.lt_of_not_ge hn)
+  letI : Nonempty (Fin n) := ⟨⟨0, hnpos⟩⟩
   by_contra hbad
   apply hbad (holds_of_normal_relative_of_scalar_hermitian_commutant a b U hU ha hW ?_)
   intro H hH hAH hBH
@@ -137,12 +134,12 @@ theorem holds_of_normal_relative_of_smaller_orders {n : ℕ}
   intro hns
   have hA : IsStarNormal (diagonal a) := by
     simpa only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] using
-      normal_conjugated_diagonal a (1 : Matrix (Fin n) (Fin n) ℂ) (by simp [IsUnitary])
+      normal_conjugated_diagonal a (1 : Matrix (Fin n) (Fin n) ℂ) isUnitary_one
   have hB := normal_conjugated_diagonal b U hU
   obtain ⟨a', d, V, hV, hAV, hd⟩ :=
-    exists_joint_normal_hermitian_diagonalization _ H hA hH hAH
+    exists_joint_normal_hermitian_diagonalization (diagonal a) H hA hH hAH
   obtain ⟨b', e, W, hW', hBW, he⟩ :=
-    exists_joint_normal_hermitian_diagonalization _ H hB hH hBH
+    exists_joint_normal_hermitian_diagonalization (U * diagonal b * Uᴴ) H hB hH hBH
   have hdV : Vᴴ * H = diagonal d * Vᴴ := by
     calc
       _ = (Vᴴ * V) * diagonal d * Vᴴ := by rw [hd]; simp only [Matrix.mul_assoc]
@@ -162,13 +159,9 @@ theorem holds_of_normal_relative_of_smaller_orders {n : ℕ}
     apply hns
     refine ⟨μ, ?_⟩
     rw [hd, hμ, ← Matrix.smul_one_eq_diagonal, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, hV.1]
-  obtain ⟨m, k, er, ec, P, Q, hm, hk, hsplit⟩ := hblocks
-  have hcard := Fintype.card_congr er
-  simp only [Fintype.card_sum, Fintype.card_fin] at hcard
   apply hbad
   apply (holds_iff_relative_to_diagonalizations a b a' b' hU hV hW' hAV hBW).mpr
-  exact holds_of_paired_blocks (hbelow m (by omega)) (hbelow k (by omega))
-    er ec a' b' (Vᴴ * W) hR P Q hsplit
+  exact holds_of_proper_paired_blocks hbelow a' b' hR hblocks
 
 /-- Every regular opposite shift of a least-order violation has a
 nonnormal relative product. -/

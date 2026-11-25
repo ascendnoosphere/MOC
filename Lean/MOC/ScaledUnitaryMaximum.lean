@@ -143,7 +143,7 @@ private theorem holds_of_simple_concentric_aux {n : ℕ}
     Holds a (fun i => (t : ℂ) * b i) U := by
   by_cases hn : n ≤ 3
   · exact conjecture_le_three hn a _ U hU
-  letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+  letI : Nonempty (Fin n) := ⟨⟨0, Nat.lt_trans (by decide : 0 < 3) (Nat.lt_of_not_ge hn)⟩⟩
   let d (i : Fin n) := (t : ℂ) * b i
   change Holds a d U
   by_contra hbad
@@ -161,15 +161,14 @@ private theorem holds_of_simple_concentric_aux {n : ℕ}
     exact (not_le_of_gt (hsep σ)) ((hvmax U hU).trans hσ)
   have hcut : ¬ HasProperPairedBlocks V := by
     rintro ⟨m, k, er, ec, P, Q, hm, hk, hsplit⟩
-    have hcard := Fintype.card_congr er
-    simp only [Fintype.card_sum, Fintype.card_fin] at hcard
+    obtain ⟨hm', hk'⟩ := paired_block_orders_lt er hm hk
     have hBlocksUnitary : IsUnitary (fromBlocks P 0 0 Q) := hsplit ▸ unitary_reindex er ec hV
     obtain ⟨hP, hQ⟩ := unitary_directSum_iff.mp hBlocksUnitary
-    have hleft := hbelow m (by omega) (fun i => a (er (.inl i))) (fun i => b (ec (.inl i)))
+    have hleft := hbelow m hm' (fun i => a (er (.inl i))) (fun i => b (ec (.inl i)))
       (fun i => ha (er (.inl i))) (fun i => hb (ec (.inl i)))
       (haInj.comp (er.injective.comp Sum.inl_injective))
       (hbInj.comp (ec.injective.comp Sum.inl_injective)) P hP
-    have hright := hbelow k (by omega) (fun i => a (er (.inr i))) (fun i => b (ec (.inr i)))
+    have hright := hbelow k hk' (fun i => a (er (.inr i))) (fun i => b (ec (.inr i)))
       (fun i => ha (er (.inr i))) (fun i => hb (ec (.inr i)))
       (haInj.comp (er.injective.comp Sum.inr_injective))
       (hbInj.comp (ec.injective.comp Sum.inr_injective)) Q hQ
@@ -213,7 +212,7 @@ private theorem holds_of_simple_concentric_aux {n : ℕ}
     rw [Matrix.diagonal_smul, Matrix.diagonal_smul, Matrix.mul_smul, Matrix.smul_mul]
     change (t : ℂ) • B = (t : ℂ) • diagonal B.diag
     rw [← hdiag]
-  have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+  have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   apply hfail
   exact holds_of_joint_unitary_diagonalization a d a (fun i => (t : ℂ) * B i i)
     hV hOne (by simp) (by simpa only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] using hBd)

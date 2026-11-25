@@ -62,7 +62,7 @@ private theorem pairPlane_cross_adjugate
     · simp [C, M, Matrix.diagonal_apply_ne _ hxy]
   have hsame := adjugate_cross_eq_of_eq_off_pair_entry C M i j hC
   have h := ((unitary_pairPlane_identity_max_iff a B η).mp fun V hV =>
-    hmax _ (unitary_directSum hV (by simp [IsUnitary]))).2
+    hmax _ (unitary_directSum hV isUnitary_one)).2
   change (η * (a i - a j)) * C.adjugate i j +
     star ((η * (a i - a j)) * C.adjugate j i) = 0 at h
   change (η * (a i - a j)) * M.adjugate i j +

@@ -51,7 +51,7 @@ theorem chainTermForm_iff : ChainTermForm ↔ MOCIsTrue := by
     have hh := h C F G 0 n (Pi.basisFun ℂ (Fin n)) 1 a b
     dsimp only at hh
     rw [hf, hg] at hh
-    simpa [OperatorHull] using hh hA hB (by simp [IsUnitary]) ha hb
+    simpa [OperatorHull] using hh hA hB isUnitary_one ha hb
   · intro h C f g k n e U a b
     dsimp only
     intro hA hB hU ha hb

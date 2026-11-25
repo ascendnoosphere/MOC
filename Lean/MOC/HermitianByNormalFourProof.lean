@@ -71,7 +71,8 @@ theorem hermitianByNormalAtMost_four (n : ℕ) : HermitianByNormalAtMost (Fin n)
   by_cases h : m = 4
   · subst m
     exact hermitianByNormal_four
-  · exact fun a b U hU => conjecture_le_three (by omega) _ b U hU
+  · have hsmall : m ≤ 3 := Nat.le_of_lt_succ (lt_of_le_of_ne hm h)
+    exact fun a b U hU => conjecture_le_three hsmall (fun i => (a i : ℂ)) b U hU
 
 /-- A common circle or line can omit four partner labels in any order. -/
 theorem holds_of_common_generalized_circle_with_four_outliers {n : ℕ}

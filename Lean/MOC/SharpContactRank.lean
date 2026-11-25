@@ -68,8 +68,7 @@ theorem conjecture_iff_sharp_contact_rank_bound :
         2 * Fintype.card ι - 2 ≤ Module.finrank ℂ (contactDifferenceSpan w.pivot w.contacts) := by
   constructor
   · rintro h ⟨U,hU,w,-⟩
-    obtain ⟨q,hq⟩ := (holds_iff_directional _ _ _).mp (h w.a w.b U hU) w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+    exact w.not_holds (h w.a w.b U hU)
   · intro h
     apply conjecture_iff_sharp_terminal_contact_bound.mpr
     rintro ⟨U,hU,w,-⟩
@@ -96,8 +95,7 @@ theorem conjecture_iff_sharp_isolated_rank_moment_contact_bound [Nonempty ι] :
         ∀ y ∈ zeroLocus v.contactFibreIdeal, eval y p ≠ 0 → y = matchingProduct v.a v.b := by
   constructor
   · rintro h ⟨U,hU,v,-⟩
-    obtain ⟨q,hq⟩ := ((holds_iff_directional _ _ _).mp (h v.a v.b U hU)) v.η
-    exact (not_lt_of_ge (hq.trans (v.maximal q))) v.strict
+    exact v.not_holds (h v.a v.b U hU)
   · intro h
     apply conjecture_iff_isolated_rank_moment_contact_bound.mpr
     rintro ⟨U,hU,v,_,_,he,hη,ht,hc,hn,hopt,hm,hmax,hi⟩

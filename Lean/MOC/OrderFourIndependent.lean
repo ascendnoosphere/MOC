@@ -111,7 +111,7 @@ theorem conjecture_four_iff_regular_orthogonal_support_maxima :
     let V := Complex.ofRealHom.mapMatrix O.val
     have hV : IsUnitary V := isUnitary_ofReal_orthogonal O
     have hvle : (η * determinantValue a b U).re ≤ (η * determinantValue a b V).re := hmaxV _ hU
-    have hsmall : Conjecture (Fin 3) := conjecture_le_three (by omega)
+    have hsmall : Conjecture (Fin 3) := conjecture_three
     have hgoal : ∃ p : Equiv.Perm (Fin 4),
         (η * determinantValue a b V).re ≤ (η * matchingProduct a b p).re := by
       by_cases hr : ∀ i, 3 ≤ (supportColumns V {i}).card

@@ -112,14 +112,11 @@ theorem collision_or_paired_contact {U : Matrix (Fin 4) (Fin 4) ℂ}
 private theorem nondegenerate_spectra {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
     (w : StrictMatchingSupport U) :
     Function.Injective w.a ∧ Function.Injective w.b ∧ ∀ i j, w.a i + w.b j ≠ 0 := by
-  have hbad : ¬ Holds w.a w.b U := fun h => by
-    obtain ⟨q, hq⟩ := (holds_iff_directional _ _ _).mp h w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
-  refine ⟨?_, ?_, fun i j h => hbad (holds_four_of_opposite_entries _ _ _ hU h)⟩
+  refine ⟨?_, ?_, fun i j h => w.not_holds (holds_four_of_opposite_entries w.a w.b U hU h)⟩
   · exact Classical.byContradiction fun h =>
-      hbad (holds_four_of_repeated_spectrum _ _ _ hU (Or.inl h))
+      w.not_holds (holds_four_of_repeated_spectrum w.a w.b U hU (Or.inl h))
   · exact Classical.byContradiction fun h =>
-      hbad (holds_four_of_repeated_spectrum _ _ _ hU (Or.inr h))
+      w.not_holds (holds_four_of_repeated_spectrum w.a w.b U hU (Or.inr h))
 
 private theorem diff_fourteen (a b : Fin 4 → ℂ) :
     diff a b s₁₄ = (a 1 + b 1) * (a 2 - a 0) * (a 3 + b 3) * (b 2 - b 0) := by
@@ -358,20 +355,15 @@ at least eight contacts without losing the pattern. -/
 theorem exists_eight_contacts {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
     (w : StrictMatchingSupport U) (hT : Pattern w) :
     ∃ v : StrictMatchingSupport U, Pattern v ∧ 8 ≤ v.contacts.card := by
-  have go (d : ℕ) (u : StrictMatchingSupport U) (hu : Pattern u)
-      (hd : 8 - u.contacts.card = d) :
-      ∃ v : StrictMatchingSupport U, Pattern v ∧ 8 ≤ v.contacts.card := by
-    induction d using Nat.strong_induction_on generalizing u with
-    | h d ih =>
-      by_cases h : 8 ≤ u.contacts.card
-      · exact ⟨u,hu,h⟩
-      obtain ⟨v,_,hp,hinc,_⟩ := grow_contacts hU u hu (Or.inl (by omega))
+  obtain ⟨v, hcard, hv⟩ := exists_strictMatchingSupport_at_least_preserving 8
+    Pattern w hT (fun u hu hbelow => by
+      have hbound : u.contacts.card ≤ 7 := Nat.le_of_lt_succ hbelow
+      obtain ⟨v, _, hp, hinc, _⟩ := grow_contacts hU u hu (Or.inl hbound)
       have hv : Pattern v := ⟨hp.trans hu.1, hinc.subset hu.2.1,
         hinc.subset hu.2.2.1, hinc.subset hu.2.2.2.1,
         hinc.subset hu.2.2.2.2.1, hinc.subset hu.2.2.2.2.2⟩
-      have hlt := Finset.card_lt_card hinc
-      exact ih (8 - v.contacts.card) (by omega) v hv rfl
-  exact go _ w hT rfl
+      exact ⟨v, hv, Finset.card_lt_card hinc⟩)
+  exact ⟨v, hv, hcard⟩
 
 -- The adjacent mixed rectangle in the complementary-pair decomposition.
 theorem mixed_block_rectangle (a b : Fin 4 → ℂ) :

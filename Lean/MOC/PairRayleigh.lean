@@ -365,7 +365,7 @@ theorem unitary_pairPlane_identity_max_iff (a : Fin 2 ⊕ κ → ℂ)
   intro C δ Z i j
   let z := (Z i j + star (Z j i)) / 2
   have hij : i ≠ j := by simp [i, j]
-  have h1 : IsUnitary (1 : Matrix (Fin 2) (Fin 2) ℂ) := by simp [IsUnitary]
+  have h1 : IsUnitary (1 : Matrix (Fin 2) (Fin 2) ℂ) := isUnitary_one
   have hbase := conjugate_diagonal_pairPlane a (1 : Matrix (Fin 2) (Fin 2) ℂ) h1
   dsimp only at hbase
   rw [Matrix.fromBlocks_one, Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one,

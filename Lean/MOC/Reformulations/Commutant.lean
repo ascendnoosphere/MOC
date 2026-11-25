@@ -72,7 +72,7 @@ private theorem commutant_subset_matching {n : ℕ} (a b : Fin n → ℂ)
       exact (mul_eq_zero.mp hzero).resolve_left (sub_ne_zero.mpr (fun e => hij (ha e)))
   have hroots := roots_unitary_diagonalization b hV
   change Y.charpoly.roots = _ at hroots
-  have hI : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+  have hI : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   have hd := roots_unitary_diagonalization y hI
   simp only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] at hd
   obtain ⟨p, hp⟩ := exists_perm_of_equal_multisets y b (hd.symm.trans (hy ▸ hroots))

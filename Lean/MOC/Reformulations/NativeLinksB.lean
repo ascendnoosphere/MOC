@@ -34,7 +34,7 @@ theorem projectiveLiftForm_iff : ProjectiveLiftForm ↔ MOCIsTrue := by
     have hroots (s : Fin n → ℂ) :
         (diagonal s).charpoly.roots = (Finset.univ : Finset (Fin n)).val.map s := by
       simpa using roots_unitary_diagonalization s
-        (show IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) by simp [IsUnitary])
+        (isUnitary_one (ι := Fin n))
     exact h n _ _ U a b (diagonal_normal a) (diagonal_normal b) ha hb hU (hroots a) (hroots b)
   · intro h n A B U a b hA hB _ _ hU ha hb
     exact moc_iff_complexMatrices.mp h n A B U a b hA hB hU ha hb
@@ -89,7 +89,7 @@ theorem quantumIntegralsForm_iff : QuantumIntegralsForm ↔ MOCIsTrue := by
     let c : Fin 2 → ℂ := ![1, Complex.I]
     let A (k : Fin 2) := diagonal (fun j => (a' j k : ℂ))
     let B (k : Fin 2) := diagonal (fun j => (b' j k : ℂ))
-    have h1 : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+    have h1 : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
     have hA : ∀ k, A k = 1 * diagonal (fun j => (a' j k : ℂ)) *
         (1 : Matrix (Fin n) (Fin n) ℂ)ᴴ := by intro k; simp [A]
     have hB : ∀ k, B k = 1 * diagonal (fun j => (b' j k : ℂ)) *

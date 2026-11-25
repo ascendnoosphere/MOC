@@ -225,7 +225,7 @@ theorem holds_iff_relative_to_diagonalizations (a b a' b' : ι → ℂ)
     unfold determinantValue at ⊢
     rw [ha, hb]
     exact determinantValue_relative a' b' V W hV
-  have h1 : IsUnitary (1 : Matrix ι ι ℂ) := by simp [IsUnitary]
+  have h1 : IsUnitary (1 : Matrix ι ι ℂ) := isUnitary_one
   have har := roots_unitary_diagonalization a h1
   simp only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] at har
   rw [ha, roots_unitary_diagonalization a' hV] at har

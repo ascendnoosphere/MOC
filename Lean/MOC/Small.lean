@@ -58,9 +58,12 @@ theorem holds_reindex_iff (eRow eCol : κ ≃ ι) (a b : ι → ℂ) (U : Matrix
 theorem conjecture_reindex_iff (e : κ ≃ ι) : Conjecture κ ↔ Conjecture ι := by
   constructor
   · intro h a b U hU
-    exact (holds_reindex_iff e e a b U).mp (h _ _ _ (unitary_reindex e e hU))
+    exact (holds_reindex_iff e e a b U).mp
+      (h (a ∘ e) (b ∘ e) (U.submatrix e e) (unitary_reindex e e hU))
   · intro h a b U hU
-    exact (holds_reindex_iff e.symm e.symm a b U).mp (h _ _ _ (unitary_reindex e.symm e.symm hU))
+    exact (holds_reindex_iff e.symm e.symm a b U).mp
+      (h (a ∘ e.symm) (b ∘ e.symm) (U.submatrix e.symm e.symm)
+        (unitary_reindex e.symm e.symm hU))
 
 theorem conjecture_le_three {n : ℕ} (h : n ≤ 3) : Conjecture (Fin n) := by
   have hn : n = 0 ∨ n = 1 ∨ n = 2 ∨ n = 3 := by omega
@@ -73,6 +76,22 @@ theorem conjecture_le_three {n : ℕ} (h : n ≤ 3) : Conjecture (Fin n) := by
 theorem conjecture_of_card_le_three (h : Fintype.card ι ≤ 3) : Conjecture ι :=
   (conjecture_reindex_iff (Fintype.equivFin ι)).mpr (conjecture_le_three h)
 
+theorem conjecture_of_lt_five (hfour : Conjecture (Fin 4)) {n : ℕ} (hn : n < 5) :
+    Conjecture (Fin n) := by
+  by_cases h : n = 4
+  · subst n
+    exact hfour
+  · have hlt : n < 4 := lt_of_le_of_ne (Nat.le_of_lt_succ hn) h
+    exact conjecture_le_three (Nat.le_of_lt_succ hlt)
+
+/-- Each block in a nonempty two-block split has smaller order. -/
+theorem paired_block_orders_lt {m k n : ℕ} (e : Fin m ⊕ Fin k ≃ Fin n)
+    (hm : 0 < m) (hk : 0 < k) : m < n ∧ k < n := by
+  have hcard : m + k = n := by
+    simpa only [Fintype.card_sum, Fintype.card_fin] using Fintype.card_congr e
+  rw [← hcard]
+  exact ⟨Nat.lt_add_of_pos_right hk, Nat.lt_add_of_pos_left hm⟩
+
 /-- Paired blocks remain covered after independent relabeling of the two spectra. -/
 theorem holds_reindexed_blocks_of_conjectures {η : Type*} [Fintype η] [DecidableEq η]
     (hι : Conjecture ι) (hκ : Conjecture κ) (eRow eCol : η ≃ ι ⊕ κ)
@@ -80,7 +99,7 @@ theorem holds_reindexed_blocks_of_conjectures {η : Type*} [Fintype η] [Decidab
     (hU : IsUnitary U) (hV : IsUnitary V) :
     Holds (Sum.elim a c ∘ eRow) (Sum.elim b d ∘ eCol)
       ((fromBlocks U 0 0 V).submatrix eRow eCol) :=
-  (holds_reindex_iff eRow eCol _ _ _).mpr
+  (holds_reindex_iff eRow eCol (Sum.elim a c) (Sum.elim b d) (fromBlocks U 0 0 V)).mpr
     (holds_blocks_of_conjectures hι hκ a b c d U V hU hV)
 
 /-- A paired block split can be recognized directly in an existing eigenbasis. -/
@@ -97,7 +116,9 @@ theorem holds_of_paired_blocks {η : Type*} [Fintype η] [DecidableEq η]
     cases x <;> rfl
   apply (holds_reindex_iff eRow eCol a b U).mp
   rw [hBlocks, ← hsplit a eRow, ← hsplit b eCol]
-  exact holds_blocks_of_conjectures hι hκ _ _ _ _ V W hV hW
+  exact holds_blocks_of_conjectures hι hκ
+    (fun i => a (eRow (.inl i))) (fun i => b (eCol (.inl i)))
+    (fun j => a (eRow (.inr j))) (fun j => b (eCol (.inr j))) V W hV hW
 
 /-- Two paired blocks of size at most three give a verified case in the full ambient hull. -/
 theorem holds_blocks_le_three {m n : ℕ} (hm : m ≤ 3) (hn : n ≤ 3)

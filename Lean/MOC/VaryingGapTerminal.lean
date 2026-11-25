@@ -138,31 +138,19 @@ theorem conjecture_iff_varying_gap_terminal
     Conjecture ι ↔ ¬ ∃ (U : Matrix ι ι ℂ), IsUnitary U ∧
       ∃ w : StrictMatchingSupport U, 2 * Fintype.card ι - 1 ≤ w.contacts.card := by
   constructor
-  · rintro h ⟨U,hU,w,-⟩
-    obtain ⟨q,hq⟩ := ((holds_iff_directional _ _ _).mp (h w.a w.b U hU)) w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+  · rintro h ⟨U, hU, w, -⟩
+    exact w.not_holds (h w.a w.b U hU)
   · intro h a b U hU
     classical
     by_contra hh
-    rw [holds_iff_directional, not_forall] at hh
-    obtain ⟨η,hη⟩ := hh
-    push_neg at hη
-    obtain ⟨p,_,hp⟩ := Finset.exists_max_image Finset.univ
-      (fun q : Equiv.Perm ι => (η * matchingProduct a b q).re)
-      ⟨1, Finset.mem_univ _⟩
-    let w : StrictMatchingSupport U := ⟨a,b,η,p,fun q => hp q (Finset.mem_univ _),hη p⟩
+    obtain ⟨w⟩ := nonempty_strictMatchingSupport_of_failure a b hh
     let k := 2 * Fintype.card ι - 1
-    have step (d : ℕ) (u : StrictMatchingSupport U) (hd : k - u.contacts.card = d) :
-        ∃ v : StrictMatchingSupport U, k ≤ v.contacts.card := by
-      induction d using Nat.strong_induction_on generalizing u with
-      | h d ih =>
-        by_cases hk : k ≤ u.contacts.card
-        · exact ⟨u,hk⟩
-        · obtain ⟨v,_,_,hv,_⟩ := global_varying_gap_contact_transfer hcont hU u (by omega)
-          have hv' := Finset.card_lt_card hv
-          exact ih (k - v.contacts.card) (by omega) v rfl
-    obtain ⟨v,hv⟩ := step _ w rfl
-    exact h ⟨U,hU,v,hv⟩
+    obtain ⟨v, hv⟩ := exists_strictMatchingSupport_at_least k w (fun u hu => by
+      have hbound : u.contacts.card ≤ 2 * Fintype.card ι - 2 := by
+        simpa only [k, Nat.sub_sub] using Nat.le_sub_one_of_lt hu
+      obtain ⟨v, _, _, hinc, _⟩ := global_varying_gap_contact_transfer hcont hU u hbound
+      exact ⟨v, Finset.card_lt_card hinc⟩)
+    exact h ⟨U, hU, v, hv⟩
 
 end
 end MOC

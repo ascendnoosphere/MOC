@@ -53,16 +53,15 @@ theorem fourMatchingHessian_has_kernel (z : Fin 8 → ℂ) (η : ℂ) :
   · have hre (i : Fin 14) : (u i : ℂ) = y i := by
       apply Complex.ext
       · simp [u]
-      · have hi : v i = 0 := by rw [hv]; rfl
-        simpa [v] using hi.symm
+      · have hi : (y i).im = 0 := congrFun hv i
+        simpa only [Complex.ofReal_im] using hi.symm
     have hgu (i : Fin 14) : cubicGradient u i = 0 := by
       apply Complex.ofReal_injective
       have he : ((cubicGradient u i : ℝ) : ℂ) = cubicGradient y i := by
         fin_cases i <;>
           simp [cubicGradient, Complex.ofReal_add, Complex.ofReal_sub, Complex.ofReal_mul,
             Complex.ofReal_neg, Complex.ofReal_pow, hre]
-      rw [he, hy]
-      rfl
+      exact he.trans ((hy i).trans Complex.ofReal_zero.symm)
     by_cases hu : u = 0
     · refine ⟨fun _ => 1, ?_, ?_⟩
       · intro h
@@ -76,12 +75,11 @@ theorem fourMatchingHessian_has_kernel (z : Fin 8 → ℂ) (η : ℂ) :
       change fourMatchingHessianAction u u = 0
       rw [matching_hessian_self]
       funext i
-      rw [hgu, mul_zero]
-      rfl
+      change 2 * cubicGradient u i = 0
+      rw [hgu i, mul_zero]
   · refine ⟨v, hv, ?_⟩
     funext i
     change fourMatchingHessianAction u v i = 0
-    rw [← gradient_projection_im y i, hy]
-    rfl
+    rw [← gradient_projection_im y i, hy i, Complex.zero_im]
 
 end MOC

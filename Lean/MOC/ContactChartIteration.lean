@@ -36,35 +36,21 @@ theorem conjecture_iff_no_nonzero_terminal_witness (k : ℕ)
         ∀ q, matchingProduct w.a w.b q ≠ 0 := by
   constructor
   · rintro h ⟨U, hU, w, -, -⟩
-    obtain ⟨q, hq⟩ := ((holds_iff_directional _ _ _).mp (h w.a w.b U hU)) w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+    exact w.not_holds (h w.a w.b U hU)
   · intro h
     apply conjecture_iff_nonopposite.mpr
     intro a b U hU hnz
     classical
     by_contra hh
-    obtain ⟨w, hw, ha⟩ : ∃ w : StrictMatchingSupport U,
-        w.a = a ∧ w.b = b := by
-      rw [holds_iff_directional, not_forall] at hh
-      obtain ⟨η, hη⟩ := hh
-      push_neg at hη
-      obtain ⟨p, _, hp⟩ := Finset.exists_max_image Finset.univ
-        (fun q : Equiv.Perm ι => (η * matchingProduct a b q).re)
-        ⟨1, Finset.mem_univ _⟩
-      exact ⟨⟨a, b, η, p, fun q => hp q (Finset.mem_univ _), hη p⟩, rfl, rfl⟩
-    have hit (d : ℕ) (v : StrictMatchingSupport U)
-        (hn : ∀ q, matchingProduct v.a v.b q ≠ 0)
-        (hd : k - v.contacts.card = d) : False := by
-      induction d using Nat.strong_induction_on generalizing v with
-      | h d ih =>
-        by_cases hk : k ≤ v.contacts.card
-        · exact h ⟨U, hU, v, hk, hn⟩
-        · obtain ⟨v', hv', hn'⟩ := step U hU v hn (Nat.lt_of_not_ge hk)
-          have hcard := Finset.card_lt_card hv'
-          exact ih (k - v'.contacts.card) (by omega) v' hn' rfl
-    apply hit _ w _ rfl
-    intro q
-    rw [hw, ha]
-    exact Finset.prod_ne_zero_iff.mpr fun j _ => hnz (q j) j
+    obtain ⟨w, ha, hb⟩ := exists_strictMatchingSupport_of_failure a b hh
+    have hw : ∀ q, matchingProduct w.a w.b q ≠ 0 := by
+      intro q
+      rw [ha, hb]
+      exact Finset.prod_ne_zero_iff.mpr fun j _ => hnz (q j) j
+    obtain ⟨v, hv, hvnz⟩ := exists_strictMatchingSupport_at_least_preserving k
+      (fun u => ∀ q, matchingProduct u.a u.b q ≠ 0) w hw (fun u hunz hu => by
+        obtain ⟨v, hinc, hvnz⟩ := step U hU u hunz hu
+        exact ⟨v, hvnz, Finset.card_lt_card hinc⟩)
+    exact h ⟨U, hU, v, hv, hvnz⟩
 
 end MOC

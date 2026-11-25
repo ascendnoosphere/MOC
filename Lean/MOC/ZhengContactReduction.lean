@@ -16,10 +16,9 @@ theorem conjecture_four_iff_seven_orthogonal_contacts :
       ∃ w : StrictMatchingSupport (Complex.ofRealHom.mapMatrix O.val),
         7 ≤ w.contacts.card := by
   constructor
-  · rintro h ⟨O,w,-⟩
-    have hO := isUnitary_ofReal_orthogonal O
-    obtain ⟨q,hq⟩ := (holds_iff_directional _ _ _).mp (h w.a w.b _ hO) w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+  · rintro h ⟨O, w, -⟩
+    exact w.not_holds (h w.a w.b (Complex.ofRealHom.mapMatrix O.val)
+      (isUnitary_ofReal_orthogonal O))
   · intro h
     apply conjecture_four_iff_orthogonal.mpr
     intro a b O
@@ -29,28 +28,14 @@ theorem conjecture_four_iff_seven_orthogonal_contacts :
     apply Classical.byContradiction
     intro hf
     change ¬ Holds a b U at hf
-    rw [holds_iff_directional, not_forall] at hf
-    obtain ⟨η,hη⟩ := hf
-    push_neg at hη
-    obtain ⟨p,_,hp⟩ := Finset.exists_max_image Finset.univ
-      (fun q : Equiv.Perm (Fin 4) => (η * matchingProduct a b q).re)
-      ⟨1,Finset.mem_univ _⟩
-    let w : StrictMatchingSupport U :=
-      ⟨a,b,η,p,fun q => hp q (Finset.mem_univ _),hη p⟩
-    have step (d : ℕ) (u : StrictMatchingSupport U) (hd : 7 - u.contacts.card = d) :
-        ∃ v : StrictMatchingSupport U, 7 ≤ v.contacts.card := by
-      induction d using Nat.strong_induction_on generalizing u with
-      | h d ih =>
-        by_cases hk : 7 ≤ u.contacts.card
-        · exact ⟨u,hk⟩
-        · have hh : u.contacts.card ≤ 2 * Fintype.card (Fin 4) - 2 := by
-            rw [Fintype.card_fin]
-            omega
-          obtain ⟨v,_,_,hv,_⟩ := global_varying_gap_contact_transfer
-            (affineGapContinuation (Equiv.Perm (Fin 4))) hU u hh
-          have hh := Finset.card_lt_card hv
-          exact ih (7 - v.contacts.card) (by omega) v rfl
-    obtain ⟨v,hv⟩ := step _ w rfl
-    exact h ⟨O,v,hv⟩
+    obtain ⟨w⟩ := nonempty_strictMatchingSupport_of_failure a b hf
+    obtain ⟨v, hv⟩ := exists_strictMatchingSupport_at_least 7 w (fun u hu => by
+      have hbound : u.contacts.card ≤ 2 * Fintype.card (Fin 4) - 2 := by
+        rw [Fintype.card_fin]
+        exact Nat.le_of_lt_succ hu
+      obtain ⟨v, _, _, hinc, _⟩ := global_varying_gap_contact_transfer
+        (affineGapContinuation (Equiv.Perm (Fin 4))) hU u hbound
+      exact ⟨v, Finset.card_lt_card hinc⟩)
+    exact h ⟨O, v, hv⟩
 
 end MOC

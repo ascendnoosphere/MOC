@@ -178,7 +178,7 @@ theorem four_disjoint_flat_swaps_have_strictly_losing_product
     rw [Finset.card_erase_of_mem (by simp [hri]), Finset.card_erase_of_mem (Finset.mem_univ i)]
     simp
   have hsparse : (supportColumns Wᴴ {k}).card ≤ 2 := (Finset.card_le_card hsub).trans_eq hcard
-  have hholds := holds_of_column_degree_le_two (conjecture_le_three (by omega)) a b hW k hsparse
+  have hholds := holds_of_column_degree_le_two conjecture_three a b hW k hsparse
   obtain ⟨p, hp⟩ := (holds_iff_directional a b W).mp hholds η
   exact (not_lt_of_ge (hflat.symm.le.trans hp)) (hgap p)
 

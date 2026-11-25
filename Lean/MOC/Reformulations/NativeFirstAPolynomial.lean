@@ -47,7 +47,7 @@ private theorem linearPolynomialMatrix_monic {r : ℕ} (a : Fin r → ℂ) :
 
 private theorem linearPolynomialMatrix_roots {r : ℕ} (a : Fin r → ℂ) :
     (linearPolynomialMatrix a).det.roots = Finset.univ.val.map a := by
-  have hOne : IsUnitary (1 : Matrix (Fin r) (Fin r) ℂ) := by simp [IsUnitary]
+  have hOne : IsUnitary (1 : Matrix (Fin r) (Fin r) ℂ) := isUnitary_one
   have hroots := roots_unitary_diagonalization a hOne
   have hpoly : (diagonal a).charpoly = (linearPolynomialMatrix a).det := by
     unfold Matrix.charpoly linearPolynomialMatrix

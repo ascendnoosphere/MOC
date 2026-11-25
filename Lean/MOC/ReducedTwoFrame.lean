@@ -345,7 +345,12 @@ private theorem paddedReciprocal_mem {α β : Type*} (c : α ↪ β) (x : α →
     paddedReciprocal c x i ≠ 0 ↔ i ∈ Set.range c := by
   classical
   unfold paddedReciprocal
-  split <;> simp [*, hx]
+  by_cases hi : i ∈ Set.range c
+  · rw [dif_pos hi]
+    exact iff_of_true
+      (inv_ne_zero (hx ((Equiv.ofInjective c c.injective).symm ⟨i, hi⟩))) hi
+  · rw [dif_neg hi]
+    exact iff_of_false (fun h => h rfl) hi
 
 private def paddedReciprocalEquiv {α β : Type*} (c : α ↪ β) (x : α → ℂ)
     (hx : ∀ i, x i ≠ 0) :

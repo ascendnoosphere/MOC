@@ -16,17 +16,9 @@ order four and the proved cases of order at most three. -/
 theorem holds_five_of_proper_paired_blocks
     (hfour : Conjecture (Fin 4)) (a b : Fin 5 → ℂ)
     {U : Matrix (Fin 5) (Fin 5) ℂ} (hU : IsUnitary U) (hs : HasProperPairedBlocks U) :
-    Holds a b U := by
-  obtain ⟨m, k, eRow, eCol, V, W, hm, hk, hBlocks⟩ := hs
-  have hcard := Fintype.card_congr eRow
-  simp only [Fintype.card_sum, Fintype.card_fin] at hcard
-  have hsmall (s : ℕ) (hs : s ≤ 4) : Conjecture (Fin s) := by
-    by_cases h : s = 4
-    · subst s
-      exact hfour
-    · exact conjecture_le_three (by omega)
-  exact holds_of_paired_blocks (hsmall m (by omega)) (hsmall k (by omega))
-    eRow eCol a b U hU V W hBlocks
+    Holds a b U :=
+  holds_of_proper_paired_blocks (fun m hm => conjecture_of_lt_five hfour (n := m) hm)
+    a b hU hs
 
 /-- Two blocks of orders at most three need no order-four result. -/
 theorem holds_five_of_small_paired_blocks {m k : ℕ} (hm : m ≤ 3) (hk : k ≤ 3)
@@ -47,10 +39,12 @@ theorem order_five_failure_structure (hfour : Conjecture (Fin 4)) (a b : Fin 5 �
   refine ⟨fun h => hfail (holds_five_of_proper_paired_blocks hfour a b hU h), ?_, ?_⟩
   · intro i
     by_contra hi
-    exact hfail (holds_of_row_degree_le_two hfour a b hU i (by omega))
+    exact hfail (holds_of_row_degree_le_two hfour a b hU i
+      (Nat.le_of_lt_succ (Nat.lt_of_not_ge hi)))
   · intro j
     by_contra hj
-    exact hfail (holds_of_column_degree_le_two hfour a b hU j (by omega))
+    exact hfail (holds_of_column_degree_le_two hfour a b hU j
+      (Nat.le_of_lt_succ (Nat.lt_of_not_ge hj)))
 
 /-- The order-five contact test for mixers whose entries are all nonzero.
 The contacts count permutations, even if their matching products coincide. -/

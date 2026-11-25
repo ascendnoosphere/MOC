@@ -217,13 +217,17 @@ theorem global_reaches_contact_threshold_with_observables {U : Matrix ι ι ℂ}
     | h d ih =>
       by_cases hk : k ≤ u.contacts.card + observables.card
       · exact ⟨u, hk, .refl u, fun _ _ => rfl⟩
-      · obtain ⟨u', hlt, hdata, hobs⟩ :=
-          global_contact_transfer_with_observables hU u observables (Nat.lt_of_not_ge hk)
-        have hcard := Finset.card_lt_card hlt
+      · have hbelow : u.contacts.card + observables.card < k := Nat.lt_of_not_ge hk
+        obtain ⟨u', hlt, hdata, hobs⟩ :=
+          global_contact_transfer_with_observables hU u observables hbelow
+        have hcard := Nat.add_lt_add_right (Finset.card_lt_card hlt) observables.card
+        have hdecrease : k - (u'.contacts.card + observables.card) < d := by
+          rw [← hd]
+          exact Nat.sub_lt_sub_left hbelow hcard
         obtain ⟨v, hv, huv, hfixed⟩ :=
-          ih (k - (u'.contacts.card + observables.card)) (by omega) u' rfl
+          ih (k - (u'.contacts.card + observables.card)) hdecrease u' rfl
         exact ⟨v, hv, hdata.trans huv, fun p hp => (hfixed p hp).trans (hobs p hp)⟩
-  exact step _ w rfl
+  exact step (k - (w.contacts.card + observables.card)) w rfl
 
 /-- Starting from any strict witness, reach at least $2n-2$ contacts
 without changing the mixer, direction, pivot, fixed complex gap, or
@@ -233,7 +237,7 @@ theorem global_reaches_contact_threshold {U : Matrix ι ι ℂ} (hU : IsUnitary 
     ∃ v : StrictMatchingSupport U, 2 * Fintype.card ι - 2 ≤ v.contacts.card ∧
       w.PreservesContactData v := by
   obtain ⟨v, hv, hdata, _⟩ := global_reaches_contact_threshold_with_observables hU w ∅
-  exact ⟨v, by simpa using hv, hdata⟩
+  exact ⟨v, by simpa only [Finset.card_empty, Nat.add_zero] using hv, hdata⟩
 
 /-- Terminal support on the full exact profile locus is equivalent to MOC. -/
 theorem conjecture_iff_global_contact_bound :
@@ -241,18 +245,11 @@ theorem conjecture_iff_global_contact_bound :
       ∃ w : StrictMatchingSupport U, 2 * Fintype.card ι - 2 ≤ w.contacts.card := by
   constructor
   · rintro h ⟨U, hU, w, -⟩
-    obtain ⟨q, hq⟩ := ((holds_iff_directional _ _ _).mp (h w.a w.b U hU)) w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+    exact w.not_holds (h w.a w.b U hU)
   · intro h a b U hU
     classical
     by_contra hh
-    rw [holds_iff_directional, not_forall] at hh
-    obtain ⟨η, hη⟩ := hh
-    push_neg at hη
-    obtain ⟨p, _, hp⟩ := Finset.exists_max_image Finset.univ
-      (fun q : Equiv.Perm ι => (η * matchingProduct a b q).re)
-      ⟨1, Finset.mem_univ _⟩
-    let w : StrictMatchingSupport U := ⟨a, b, η, p, fun q => hp q (Finset.mem_univ _), hη p⟩
+    obtain ⟨w⟩ := nonempty_strictMatchingSupport_of_failure a b hh
     obtain ⟨v, hv, _⟩ := global_reaches_contact_threshold hU w
     exact h ⟨U, hU, v, hv⟩
 

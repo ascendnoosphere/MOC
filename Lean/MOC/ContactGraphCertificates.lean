@@ -94,13 +94,11 @@ theorem StrictMatchingSupport.nonzero_contact_component_has_boundary
     (hn : matchingProduct w.a w.b r ≠ 0) :
     ∃ q ∉ w.contacts, nonzeroTranspositionEdge w.a w.b r q := by
   have hη : w.η ≠ 0 := fun h => by simpa [h] using w.strict
-  have hbad : ¬ Holds w.a w.b U := fun h => by
-    obtain ⟨q,hq⟩ := (holds_iff_directional _ _ _).mp h w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
   have hrzero : (w.η * matchingProduct w.a w.b r).re = 0 :=
     (Finset.mem_filter.mp hr).2.trans hzero
   obtain ⟨i,j,hij,hs,hns⟩ := exists_nonzero_inactive_swap_of_not_holds_at_zero_height
-    w.a w.b w.η r U hU hbad (mul_ne_zero hη hn) hrzero (fun q => (w.maximal q).trans_eq hzero)
+    w.a w.b w.η r U hU w.not_holds (mul_ne_zero hη hn) hrzero
+    (fun q => (w.maximal q).trans_eq hzero)
   refine ⟨_,fun hx => hs.ne ((Finset.mem_filter.mp hx).2.trans hzero),hn,hns,i,j,hij,rfl⟩
 
 end MOC

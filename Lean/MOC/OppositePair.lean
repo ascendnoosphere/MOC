@@ -143,7 +143,7 @@ theorem exists_supportOverlap_hull_reduction (a b : ι → ℂ) (U : Matrix ι �
     simp [spectralSupport])
   let e : ι ⊕ Fin k ≃ ρ ⊕ σ := Fintype.equivOfCardEq (by
     rw [Fintype.card_sum, Fintype.card_sum, Fintype.card_fin, hρ, hσ, hcard])
-  have hX : Xᴴ * X = 1 := support_columns_isometry 1 (by simp [IsUnitary]) a
+  have hX : Xᴴ * X = 1 := support_columns_isometry 1 isUnitary_one a
   have hY : Yᴴ * Y = 1 := support_columns_isometry U hU b
   have hGun : IsUnit G.det := isUnit_iff_ne_zero.mpr hG
   obtain ⟨E, F, hE, hF, hcommon⟩ := exists_overlap_frames e X Y hX hY hGun

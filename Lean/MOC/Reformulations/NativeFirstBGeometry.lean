@@ -62,7 +62,7 @@ theorem affineDerivativeForm_iff : AffineDerivativeForm ↔ MOCIsTrue := by
     have hh := h n f g 1 a b
     dsimp only at hh
     rw [h₁, h₂] at hh
-    simpa [OperatorHull] using hh hA hB (by simp [IsUnitary]) ha hb
+    simpa [OperatorHull] using hh hA hB isUnitary_one ha hb
   · intro h n f g U a b
     dsimp only
     intro hA hB hU ha hb

@@ -110,11 +110,7 @@ def NormalMaximizers (n : ℕ) : Prop :=
 theorem five_of_four_and_normalMaximizers (h₄ : Conjecture (Fin 4))
     (h₅ : NormalMaximizers 5) : Conjecture (Fin 5) :=
   (conjecture_iff_exists_normal_support_maximizer_of_smaller_orders
-    (fun m hm => by
-      by_cases h : m = 4
-      · subst m
-        exact h₄
-      · exact conjecture_le_three (by omega))).mpr h₅
+    (fun m hm => conjecture_of_lt_five h₄ (n := m) hm)).mpr h₅
 
 /-- This branch requires both the one-contact transfer and the support test.
 Neither of these alone is listed as an alternative proof of order five. -/
@@ -237,7 +233,7 @@ theorem moc_iff_contact_saturated_bounds :
     MOCIsTrue ↔ ∀ n : ℕ, ContactSaturatedBound (Fin n) :=
   forall_congr' fun _ => conjecture_iff_contact_saturated_bound
 
-def nativeRoutes : List (Route MOCIsTrue) :=
+@[irreducible] def nativeRoutes : List (Route MOCIsTrue) :=
   [fromIff "Normal complex matrices" moc_iff_complexMatrices.symm,
    fromIff "Normal eigenframes" moc_iff_normalFrames.symm,
    fromIff "Nonnormal inputs with normal spectral representatives"
@@ -310,13 +306,18 @@ def nativeRoutes : List (Route MOCIsTrue) :=
    sufficient "Simultaneous characteristic hull" CStar.moc_of_simultaneousCharacteristicForm,
    sufficient "Simultaneous mixed-pencil coefficients" moc_of_simultaneousMixedPencilHull]
 
+private theorem normal_mem_nativeRoutes :
+    fromIff "Normal complex matrices" moc_iff_complexMatrices.symm ∈ nativeRoutes := by
+  unfold nativeRoutes
+  exact List.mem_cons_self
+
 theorem native_routes_iff : AnyRoute nativeRoutes ↔ MOCIsTrue :=
-  any_iff_of_branch _ moc_iff_complexMatrices.symm (List.mem_cons_self ..)
+  any_iff_of_branch "Normal complex matrices" moc_iff_complexMatrices.symm normal_mem_nativeRoutes
 
 /-- This is the evaluated spectral layer of the atlas, not a list of
 unconditional native statements. Each numbered leaf uses its own checked
 equivalence to unrestricted MOC. -/
-def labelledRoutes : List (Route MOCIsTrue) :=
+opaque labelledRoutes : List (Route MOCIsTrue) :=
   [fromIff "Atlas 001 evaluated" atlas001Labelled_iff,
 fromIff "Atlas 002 evaluated" atlas002Labelled_iff,
 fromIff "Atlas 003 evaluated" atlas003Labelled_iff,
@@ -564,9 +565,9 @@ fromIff "Atlas 243 evaluated" atlas243Labelled_iff]
 def allRoutes : List (Route MOCIsTrue) := nativeRoutes ++ labelledRoutes
 
 theorem all_routes_iff : AnyRoute allRoutes ↔ MOCIsTrue := by
-  apply any_iff_of_branch "Normal complex matrices" moc_iff_complexMatrices.symm
-  apply List.mem_append_left
-  exact List.mem_cons_self ..
+  unfold allRoutes
+  exact any_iff_of_branch "Normal complex matrices" moc_iff_complexMatrices.symm
+    (List.mem_append_left labelledRoutes normal_mem_nativeRoutes)
 
 /-- A proof of an all-order analogy can also close either finite-order root.
 The finite-order route is enough by itself; it need not prove all orders. -/

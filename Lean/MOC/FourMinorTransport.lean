@@ -328,7 +328,7 @@ private def evaluateEffect (i : Fin 3) (v : Fin 3 → ℝ) :
 private theorem isUnitary_fixedRowMixer (P : Matrix.orthogonalGroup FourRowIndices ℝ)
     (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W) : IsUnitary (fixedRowMixer P.val W) := by
   unfold fixedRowMixer
-  exact unitary_product _ _ (unitary_directSum (by simp [IsUnitary]) hW)
+  exact unitary_product _ _ (unitary_directSum isUnitary_one hW)
     (isUnitary_ofReal_orthogonal P)
 
 /-- A real row-effect mixture with prescribed coefficients lifts to the

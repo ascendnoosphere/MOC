@@ -33,9 +33,7 @@ theorem StrictMatchingSupport.exists_more_contacts_on_affine_difference_curve
   classical
   letI : Nonempty ι := Classical.byContradiction fun hn => by
     letI : IsEmpty ι := not_nonempty_iff.mp hn
-    have hhold := conjecture_of_subsingleton w.a w.b U hU
-    obtain ⟨q,hq⟩ := (holds_iff_directional _ _ _).mp hhold w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+    exact w.not_holds (conjecture_of_subsingleton w.a w.b U hU)
   let G (r : Equiv.Perm ι → ℂ) := matchingProfileDetGap U w.η w.pivot r
   let g : ProfileRing ι := ∑ q, C (realSignedWeight U q : ℂ) *
     (C w.η * (X q - X w.pivot))

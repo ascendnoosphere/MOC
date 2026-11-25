@@ -93,7 +93,7 @@ private theorem matchingProduct_subset_commutingPair {X Y : Type} {n : ℕ}
   rintro _ ⟨σ, rfl⟩
   refine ⟨diagonalFunctionRep (x ∘ σ), diagonalFunctionRep y,
     diagonalFunctionRep_hasSpectrum x σ, ?_, ?_, ?_⟩
-  · exact ⟨1, by simp [IsUnitary], fun q => by simp [diagonalFunctionRep, pullbackFunctions]⟩
+  · exact ⟨1, isUnitary_one, fun q => by simp [diagonalFunctionRep, pullbackFunctions]⟩
   · intro p q
     change Commute (diagonal (p ∘ x ∘ σ)) (diagonal (q ∘ y))
     unfold Commute SemiconjBy
@@ -134,7 +134,7 @@ theorem pairedStarRepresentationForm_iff : PairedStarRepresentationForm ↔ MOCI
     let ρ := diagonalFunctionRep (id : Fin n → Fin n)
     let η := (conjugationRep U hU).comp ρ
     have ha : HasLabelledSpectrum ρ id :=
-      ⟨1, by simp [IsUnitary], fun _ => by simp [ρ, diagonalFunctionRep, pullbackFunctions]⟩
+      ⟨1, isUnitary_one, fun _ => by simp [ρ, diagonalFunctionRep, pullbackFunctions]⟩
     have hb : HasLabelledSpectrum η id := ⟨U, hU, fun _ => rfl⟩
     have he := h (Fin n) (Fin n) n id id a b ρ η ha hb
     exact convexHull_mono (commutingPair_subset_commutant a b) he

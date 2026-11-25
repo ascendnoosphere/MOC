@@ -349,8 +349,7 @@ theorem StrictMatchingSupport.angular_deficit_pos [DecidableEq ι]
   have horig : Holds w.a w.b U :=
     (hull_common_factor_iff (pow_ne_zero _ hp₀) (determinantValue_scale w.a w.b U p)
       (matchingProduct_scale w.a w.b p)).mp hhold
-  obtain ⟨q,hq⟩ := (holds_iff_directional _ _ _).mp horig w.η
-  exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+  exact w.not_holds horig
 
 end
 

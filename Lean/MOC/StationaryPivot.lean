@@ -241,10 +241,8 @@ theorem conjecture_four_iff_terminal_stationary_pivots :
         (w.η * determinantValue w.a w.b V).re :=
       hmaxP _ (isUnitary_ofReal_orthogonal O)
     let v : StrictMatchingSupport V := ⟨w.a, w.b, w.η, w.pivot, w.maximal, w.strict.trans_le hVP⟩
-    have hvd : determinantValue v.a v.b V ≠ 0 := by
-      intro hvd
-      obtain ⟨q, hq⟩ := (holds_iff_directional v.a v.b V).mp (holds_of_singular v.a v.b hV hvd) v.η
-      exact (not_lt_of_ge (hq.trans (v.maximal q))) v.strict
+    have hvd : determinantValue v.a v.b V ≠ 0 :=
+      fun hzero => v.not_holds (holds_of_singular v.a v.b hV hzero)
     apply h
     refine ⟨P, v, hw, hvd, hmaxP, ?_⟩
     intro i j hpivot

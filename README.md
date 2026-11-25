@@ -23,7 +23,7 @@ matching products with nonnegative real weights whose sum is one.
 
 The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
 library. Lean proves the unrestricted result through order three.
-[General goal](Lean/MOC/Claim.lean#L9) · [Orders zero through three](Lean/MOC/Small.lean#L65)
+[General goal](Lean/MOC/Claim.lean#L9) · [Orders zero through three](Lean/MOC/Small.lean#L68)
 
 Choose a unitary eigenbasis for each matrix. In the basis for $A$, write
 $A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$.
@@ -69,7 +69,7 @@ flowchart BT
 
 Because the base orders are proved, the order split requires proofs in
 order four, order five, and every order at least six.
-[Order split](Lean/MOC/ProofRoutes.lean#L218)
+[Order split](Lean/MOC/ProofRoutes.lean#L214)
 
 A **directional bound** compares $\mathrm{Re}(\eta\det(A+B))$ with the
 largest $\mathrm{Re}(\eta P_\sigma)$ for a complex direction $\eta$.
@@ -82,7 +82,7 @@ is in the hull if and only if the bound holds in every direction.
 | Relation to unrestricted MOC | Open statement | Lean proof of the relation |
 | --- | --- | --- |
 | Iff | In orders at least four, prove the directional bound for $\eta=1$ if both eigenvalue lists sum to zero and every entry of $U$ is nonzero. | [Traceless form](Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
-| Iff | In each order $n$, prove the directional bound when there are at least $2n-1$ contacts. Another exact test uses at least $2n-2$ contacts and requires every matching product to be nonzero. | [General contact test](Lean/MOC/AffineGapCover.lean#L85) · [Nonzero-product test](Lean/MOC/ProofRoutes.lean#L236) |
+| Iff | In each order $n$, prove the directional bound when there are at least $2n-1$ contacts. Another exact test uses at least $2n-2$ contacts and requires every matching product to be nonzero. | [General contact test](Lean/MOC/AffineGapCover.lean#L85) · [Nonzero-product test](Lean/MOC/ProofRoutes.lean#L232) |
 | Iff | For every pair of lists and every direction in orders at least four, some maximizing $U$ gives a normal sum. The maximum is over all unitary $U$ for the fixed lists. | [Normal maximizers](Lean/MOC/NormalSupportMaximum.lean#L314) |
 | Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L89) |
 | Iff | Replace the square unitary by a rectangular matrix with at least three orthonormal rows and one extra column. Compare with products that match the shorter list to distinct positions in the longer list. | [Rectangular determinant bound](Lean/MOC/PrincipalCoisometry.lean#L248) |
@@ -93,15 +93,15 @@ is in the hull if and only if the bound holds in every direction.
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | A strict violation with at most $2n-2$ contacts can gain a contact by changing the lists. The new violation keeps the same $U$, direction, and previous contacts. | [Contact transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Proof of the continuation premise](Lean/MOC/AffineGapCover.lean#L80) |
-| Partial | A counterexample of least order has no proper diagonal block split after independent row and column permutations. Each row and column of $U$ has at least three nonzero entries. Every matrix that commutes with both summands is a scalar multiple of the identity. | [Block split](Lean/MOC/Claim.lean#L43) · [Rows](Lean/MOC/SparseRow.lean#L287) · [Columns](Lean/MOC/SparseRow.lean#L309) · [Commuting matrices](Lean/MOC/ReducingCommutant.lean#L74) |
+| Partial | A counterexample of least order has no proper diagonal block split after independent row and column permutations. Each row and column of $U$ has at least three nonzero entries. Every matrix that commutes with both summands is a scalar multiple of the identity. | [Block split](Lean/MOC/Claim.lean#L51) · [Rows](Lean/MOC/SparseRow.lean#L287) · [Columns](Lean/MOC/SparseRow.lean#L309) · [Commuting matrices](Lean/MOC/ReducingCommutant.lean#L70) |
 | Partial | For $\det(A+zB)$ in positive order $n$, Lean proves the separate coefficient bounds at degrees $0$, $1$, $n-1$, and $n$. The simultaneous statement requires a single set of weights. | [First](Lean/MOC/Reformulations/NativeLinksA.lean#L106) · [Penultimate](Lean/MOC/Reformulations/NativeLinksA.lean#L149) · [Endpoints](Lean/MOC/Reformulations/NativeLinksA.lean#L161) |
-| Open | The directional bound at the contact thresholds remains to be proved in general. The order split also leaves every order at least six to prove. | [Contact endpoint](Lean/MOC/AffineGapCover.lean#L85) · [Higher orders](Lean/MOC/ProofRoutes.lean#L218) |
+| Open | The directional bound at the contact thresholds remains to be proved in general. The order split also leaves every order at least six to prove. | [Contact endpoint](Lean/MOC/AffineGapCover.lean#L85) · [Higher orders](Lean/MOC/ProofRoutes.lean#L214) |
 
 Two iff routes for the same goal imply each other. A sufficient route
 implies every iff route for that goal. An all-order route also implies
 each iff route at a fixed order. Refuting an iff route refutes its goal.
 A sufficient condition can fail while the goal still holds.
-[Transfer between routes](Lean/MOC/ProofRoutes.lean#L36) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L583)
+[Transfer between routes](Lean/MOC/ProofRoutes.lean#L36) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L584)
 
 ### Order four
 
@@ -171,28 +171,28 @@ Here **regular spectra** means that all sums $a_i+b_j$ are nonzero and
 all matching products are distinct. The eight-contact test in the diagram
 uses the condition on the entries of $U$. The separate eight-contact test
 in the all-order table uses the condition on the matching products.
-[Regular spectra](Lean/MOC/FullSupportReduction.lean#L118) · [Nonzero entries in $U$](Lean/MOC/OrderFiveContact.lean#L57) · [Nonzero matching products](Lean/MOC/SaturatedContactReduction.lean#L63)
+[Regular spectra](Lean/MOC/FullSupportReduction.lean#L118) · [Nonzero entries in $U$](Lean/MOC/OrderFiveContact.lean#L51) · [Nonzero matching products](Lean/MOC/SaturatedContactReduction.lean#L63)
 
 | Status | Result | Lean source |
 | --- | --- | --- |
-| Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L103) |
-| Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L99) |
+| Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
+| Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
 | Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L110) |
 | Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
-| Open | Prove the general directional bound on the eight-contact test in the diagram. Another exact test uses at least nine contacts with arbitrary unitary $U$. | [Eight-contact test](Lean/MOC/OrderFiveContact.lean#L57) · [Nine-contact test at $n=5$](Lean/MOC/AffineGapCover.lean#L85) |
+| Open | Prove the general directional bound on the eight-contact test in the diagram. Another exact test uses at least nine contacts with arbitrary unitary $U$. | [Eight-contact test](Lean/MOC/OrderFiveContact.lean#L51) · [Nine-contact test at $n=5$](Lean/MOC/AffineGapCover.lean#L85) |
 
 A further sufficient route needs **both** the bound for order-five real
 orthogonal matrices and a decomposition of every unitary squared-minor
 table into a convex combination of two real orthogonal tables.
 The proposed route through one nonnegative permutation law for all
 spectra of every fixed $U$ is refuted in order five.
-[Orthogonal transfer](Lean/MOC/ProofRoutes.lean#L207) · [Refuted common-law premise](Lean/MOC/ProofRoutes.lean#L136)
+[Orthogonal transfer](Lean/MOC/ProofRoutes.lean#L203) · [Refuted common-law premise](Lean/MOC/ProofRoutes.lean#L132)
 
 Lean also records further equivalent formulations and sufficient
 conditions, including routes through finite representations, matrix
 polynomials, and matching problems. The branch lists give the complete
 statements and the proof of each connection to its goal.
-[All-order branches](Lean/MOC/ProofRoutes.lean#L240) · [Order-four branches](Lean/MOC/ProofRoutes.lean#L173) · [Order-five branches](Lean/MOC/ProofRoutes.lean#L191)
+[All-order branches](Lean/MOC/ProofRoutes.lean#L236) · [Order-four branches](Lean/MOC/ProofRoutes.lean#L169) · [Order-five branches](Lean/MOC/ProofRoutes.lean#L187)
 
 ## Cases proved in Lean
 
@@ -213,7 +213,7 @@ statements and the proof of each connection to its goal.
   in any order if at most four entries $-b_j$, counted with multiplicity,
   lie outside $C$. It also holds if the entries outside $C$ take at most
   three distinct values.
-  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L77) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90)
+  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90)
 - The inclusion holds in any order if either list has at most two
   distinct values. It also holds if deleting one entry from the second
   list leaves at most two distinct values, or if the first list is
@@ -229,7 +229,7 @@ statements and the proof of each connection to its goal.
   [Order four](Lean/MOC/FourCoincidence.lean#L360) · [Negated list](Lean/MOC/FourNegativeCopy.lean#L147) · [Multiplicity bound](Lean/MOC/OppositePair.lean#L25)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.
-  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L99)
+  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)
 - Let $I$ be the identity matrix. The inclusion holds in any order if
   the ranks of $A+tI$ and $B-tI$ sum to at most $n+2$ for some complex $t$.
   [Proof](Lean/MOC/RankTwoOverlap.lean#L481)

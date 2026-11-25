@@ -41,7 +41,7 @@ theorem isCompact_setOf_isUnitary : IsCompact {U : Matrix ι ι ℂ | IsUnitary 
 theorem exists_support_maximizer (a b : ι → ℂ) (η : ℂ) :
     ∃ U : Matrix ι ι ℂ, IsUnitary U ∧ ∀ V : Matrix ι ι ℂ, IsUnitary V →
       (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re := by
-  have hne : {U : Matrix ι ι ℂ | IsUnitary U}.Nonempty := ⟨1, by simp [IsUnitary]⟩
+  have hne : {U : Matrix ι ι ℂ | IsUnitary U}.Nonempty := ⟨1, isUnitary_one⟩
   have hc : Continuous (fun U : Matrix ι ι ℂ => (η * determinantValue a b U).re) := by
     unfold determinantValue
     fun_prop

@@ -11,12 +11,8 @@ namespace MOC
 private theorem no_paired_blocks_of_smaller_orders {n : ℕ}
     (hbelow : ∀ m < n, Conjecture (Fin m))
     {a b : Fin n → ℂ} {U : Matrix (Fin n) (Fin n) ℂ}
-    (hU : IsUnitary U) (hnot : ¬ Holds a b U) : ¬ HasProperPairedBlocks U := by
-  rintro ⟨m, k, eRow, eCol, X, Y, hm, hk, hsplit⟩
-  have hcard := Fintype.card_congr eRow
-  simp only [Fintype.card_sum, Fintype.card_fin] at hcard
-  exact hnot (holds_of_paired_blocks (hbelow m (by omega)) (hbelow k (by omega))
-    eRow eCol a b U hU X Y hsplit)
+    (hU : IsUnitary U) (hnot : ¬ Holds a b U) : ¬ HasProperPairedBlocks U :=
+  mt (holds_of_proper_paired_blocks hbelow a b hU) hnot
 
 /-- In the least failing order a counterexample can be chosen with distinct matching
 products and an invertible, nonnormal sum at a support and Frobenius maximum.

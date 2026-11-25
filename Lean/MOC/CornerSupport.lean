@@ -58,7 +58,7 @@ private theorem normal_sum_of_commuting_spectral_pair (a b : ι → ℂ) (U : Ma
     rw [hmul, hmul, hn b]
   have hBAstar : Commute B Aᴴ :=
     commute_adjoint_of_commute_spectral_diagonalization b U A hU hAB.symm
-  have hOne : IsUnitary (1 : Matrix ι ι ℂ) := by simp [IsUnitary]
+  have hOne : IsUnitary (1 : Matrix ι ι ℂ) := isUnitary_one
   have hA1 : Commute ((1 : Matrix ι ι ℂ) * diagonal a * (1 : Matrix ι ι ℂ)ᴴ) B := by
     simpa only [Matrix.one_mul, Matrix.mul_one, Matrix.conjTranspose_one] using hAB
   have hABstar : Commute A Bᴴ := by

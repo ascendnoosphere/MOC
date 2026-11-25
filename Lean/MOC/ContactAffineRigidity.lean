@@ -134,8 +134,7 @@ theorem StrictMatchingSupport.exists_more_contacts_on_exact_affine_line [Nonempt
       (fun t => by
         obtain ⟨a,b,hab⟩ := hex (t / s w.pivot)
         exact ⟨a,b,fun q => by rw [congrFun hab q, hsconst q, div_mul_cancel₀ _ hsp]⟩)
-    obtain ⟨q,hq⟩ := (holds_iff_directional _ _ _).mp hholds w.η
-    exact (not_lt_of_ge (hq.trans (w.maximal q))) w.strict
+    exact w.not_holds hholds
   have hIm (q : Equiv.Perm ι) : (B q / A).im = 0 := by
     apply Classical.byContradiction
     intro hq

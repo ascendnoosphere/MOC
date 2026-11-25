@@ -325,7 +325,7 @@ private theorem relabeledIndex_correct (r : Fin 24) : ∀ i : Fin 24,
 private theorem fourPerm_relabeledIndex (r i : Fin 24) :
     fourPerm (relabeledIndex r i) = (fourPerm r)⁻¹ * fourPerm i := by
   rw [← relabeledIndex_correct r i]
-  exact fourPermEquiv.apply_symm_apply _
+  exact fourPermEquiv.apply_symm_apply ((fourPerm r)⁻¹ * fourPerm i)
 
 private theorem homogeneousFacet_basePoly (k : Fin 16) (r i : Fin 24) :
     homogeneousFacet (fourPerm r, facetKind k) i [0, 1] [1, 1] =
@@ -337,8 +337,15 @@ private def lowerFacetCheck (k : Fin 184) (i : Fin 24) : Bool :=
     equal (basePoly (facetEntry k).1 (relabeledIndex (facetEntry k).2.1 i))
       (mul (scale 2 (weightedDiamondLowerFacetScale k)) (weightedDiamondLowerRays12 k i))
 
+private theorem blockIndex_lt (block : Fin 8) (offset : Fin 23) :
+    23 * block.val + offset.val < 184 := by
+  have hblock : block.val ≤ 7 := Nat.le_of_lt_succ block.isLt
+  have hoffset : offset.val ≤ 22 := Nat.le_of_lt_succ offset.isLt
+  exact Nat.lt_of_le_of_lt
+    (Nat.add_le_add (Nat.mul_le_mul_left 23 hblock) hoffset) (by decide)
+
 private def blockIndex (block : Fin 8) (offset : Fin 23) : Fin 184 :=
-  ⟨23 * block.val + offset.val, by omega⟩
+  ⟨23 * block.val + offset.val, blockIndex_lt block offset⟩
 
 private def blockCheck (block : Fin 8) : Bool :=
   (List.finRange 23).all fun offset => (List.finRange 24).all (lowerFacetCheck (blockIndex block offset))
@@ -371,13 +378,13 @@ private theorem blockCheck_correct (block : Fin 8) : blockCheck block = true := 
   · exact block7
 
 private theorem lowerFacetCheck_correct (k : Fin 184) (i : Fin 24) : lowerFacetCheck k i = true := by
-  have hk := k.isLt
-  let block : Fin 8 := ⟨k.val / 23, by omega⟩
-  let offset : Fin 23 := ⟨k.val % 23, by omega⟩
+  let block : Fin 8 :=
+    ⟨k.val / 23, (Nat.div_lt_iff_lt_mul (by decide : 0 < 23)).mpr k.isLt⟩
+  let offset : Fin 23 := ⟨k.val % 23, Nat.mod_lt k.val (by decide)⟩
   have he : blockIndex block offset = k := by
     apply Fin.ext
     change 23 * (k.val / 23) + k.val % 23 = k.val
-    omega
+    exact Nat.div_add_mod k.val 23
   have h : (List.finRange 23).all
       (fun offset => (List.finRange 24).all (lowerFacetCheck (blockIndex block offset))) = true :=
     blockCheck_correct block

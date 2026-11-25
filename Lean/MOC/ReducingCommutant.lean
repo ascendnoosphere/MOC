@@ -20,7 +20,7 @@ theorem holds_of_reducing_commutant {n : ℕ} [Nonempty (Fin n)]
     (hnonscalar : ¬ ∃ μ : ℂ, H = μ • (1 : Matrix (Fin n) (Fin n) ℂ)) :
     Holds a b U := by
   classical
-  have h1 : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+  have h1 : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   have hAH' : Commute (1 * diagonal a * (1 : Matrix (Fin n) (Fin n) ℂ)ᴴ) H := by
     simpa only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] using hAH
   obtain ⟨d, V, hV, hAV, hd⟩ :=
@@ -46,14 +46,10 @@ theorem holds_of_reducing_commutant {n : ℕ} [Nonempty (Fin n)]
     apply hnonscalar
     refine ⟨μ, ?_⟩
     rw [hd, hμ, ← Matrix.smul_one_eq_diagonal, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, hV.1]
-  obtain ⟨m, k, er, ec, P, Q, hm, hk, hRsplit⟩ := hblocks
-  have hcard := Fintype.card_congr er
-  simp only [Fintype.card_sum, Fintype.card_fin] at hcard
   have hAV' : diagonal a = V * diagonal a * Vᴴ := by
     simpa only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] using hAV
   apply (holds_iff_relative_to_diagonalizations a b a b hU hV hW hAV' hBW).mpr
-  exact holds_of_paired_blocks (hbelow m (by omega)) (hbelow k (by omega))
-    er ec _ _ _ hR P Q hRsplit
+  exact holds_of_proper_paired_blocks hbelow a b hR hblocks
 
 /-- A complex scale on the right spectrum preserves its reducing commutant. -/
 theorem holds_of_hermitian_reducing_commutant {n : ℕ} [Nonempty (Fin n)]
@@ -84,7 +80,7 @@ theorem scalar_of_commute_normal_pair_of_smaller_orders {n : ℕ} [Nonempty (Fin
     · simpa only [realPart_apply_coe] using (h.add_right h').smul_right (2⁻¹ : ℝ)
     · simpa only [imaginaryPart_apply_coe] using
         (((h.sub_right h').smul_right (2⁻¹ : ℝ)).smul_right (-Complex.I))
-  have h1 : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+  have h1 : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   have hAY' : Commute (1 * diagonal a * (1 : Matrix (Fin n) (Fin n) ℂ)ᴴ) Y := by
     simpa only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] using hAY
   have hAYstar : Commute (diagonal a) Yᴴ := by
@@ -120,7 +116,7 @@ theorem mocIsTrue_iff_scalar_common_commutant :
   · intro h
     by_contra hfail
     obtain ⟨n, hn, hbelow, a, b, U, hU, hnot, _⟩ := exists_least_bad_instance hfail
-    letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+    letI : Nonempty (Fin n) := ⟨⟨0, Nat.lt_of_lt_of_le (by decide : 0 < 4) hn⟩⟩
     exact hnot (h n hn a b U hU (scalar_of_commute_normal_pair_of_smaller_orders hbelow a b hU hnot))
 
 /-- Nonzero spectral sums, distinct matching products, and scalar common
@@ -138,7 +134,7 @@ theorem mocIsTrue_iff_regular_scalar_common_commutant :
   · intro h
     by_contra hfail
     obtain ⟨n, hn, hbelow, a, b, U, hU, hnot, _⟩ := exists_least_bad_instance hfail
-    letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+    letI : Nonempty (Fin n) := ⟨⟨0, Nat.lt_of_lt_of_le (by decide : 0 < 4) hn⟩⟩
     rw [holds_iff_directional] at hnot
     push_neg at hnot
     obtain ⟨η, hsep⟩ := hnot

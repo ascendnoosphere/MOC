@@ -11,9 +11,6 @@ open Matrix BigOperators
 namespace MOC.Reformulations
 noncomputable section
 
-private theorem unitary_one (n : ℕ) : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by
-  simp [IsUnitary]
-
 private theorem unitary_star {n : ℕ} {U : Matrix (Fin n) (Fin n) ℂ}
     (hU : IsUnitary U) : IsUnitary Uᴴ :=
   ⟨by simpa only [Matrix.conjTranspose_conjTranspose] using hU.2,
@@ -60,7 +57,7 @@ theorem moc_iff_complexMatrices : MOCIsTrue ↔ complexMatrices := by
   · intro h n
     apply conjecture_iff_normalConjecture.mpr
     intro A B a b hA hB ha hb
-    simpa using h n A B 1 a b hA hB (unitary_one n) ha hb
+    simpa using h n A B 1 a b hA hB isUnitary_one ha hb
 
 /-- Atlas 002 in orthonormal mode coordinates; repeated entries record the ranks
 of their spectral projections. The two diagonalizing frames need not agree. -/
@@ -76,7 +73,7 @@ theorem moc_iff_normalFrames : MOCIsTrue ↔ normalFrames := by
     exact hull_of_realizations h a b V W U hV hW hU
   · intro h n a b U hU
     simpa [Holds, determinantValue] using
-      h n a b 1 1 U (unitary_one n) (unitary_one n) hU
+      h n a b 1 1 U isUnitary_one isUnitary_one hU
 
 /-- Atlas 006: arbitrary complex matrices supply root lists, not the determinant
 of the original, potentially nonnormal, matrix sum. -/
@@ -93,7 +90,7 @@ theorem moc_iff_nonnormalSpectralRepresentatives : MOCIsTrue ↔ nonnormalSpectr
   · intro h n a b U hU
     have hroots (s : Fin n → ℂ) :
         (diagonal s).charpoly.roots = (Finset.univ : Finset (Fin n)).val.map s := by
-      simpa using roots_unitary_diagonalization s (unitary_one n)
+      simpa using roots_unitary_diagonalization s isUnitary_one
     exact h n (diagonal a) (diagonal b) U a b (hroots a) (hroots b) hU
 
 /-- Atlas 008 in a joint spectral frame. Each side is diagonal in its own

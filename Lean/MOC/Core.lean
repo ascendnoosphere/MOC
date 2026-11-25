@@ -33,6 +33,9 @@ def Holds (a b : ι → ℂ) (U : Matrix ι ι ℂ) : Prop :=
 def Conjecture (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
   ∀ (a b : ι → ℂ) (U : Matrix ι ι ℂ), IsUnitary U → Holds a b U
 
+theorem isUnitary_one : IsUnitary (1 : Matrix ι ι ℂ) := by
+  constructor <;> rw [Matrix.conjTranspose_one, Matrix.one_mul]
+
 omit [DecidableEq ι] in
 theorem matchingProduct_inverse (a b : ι → ℂ) (σ : Equiv.Perm ι) :
     matchingProduct a b σ.symm = ∏ i, (a i + b (σ i)) := by

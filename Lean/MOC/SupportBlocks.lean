@@ -6,8 +6,6 @@ open BigOperators Matrix
 
 namespace MOC
 
-noncomputable section
-
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- If the rows in `s` are supported in `t`, the excess column capacity of `t`
@@ -102,7 +100,7 @@ theorem hasProperPairedBlocks_of_unitary_support_cut {n : ℕ}
   · rfl
 
 /-- The column neighbors of a row set in the support of a matrix. -/
-def supportColumns (U : Matrix ι ι ℂ) (s : Finset ι) : Finset ι := by
+noncomputable def supportColumns (U : Matrix ι ι ℂ) (s : Finset ι) : Finset ι := by
   classical
   exact Finset.univ.filter (fun j => ∃ i ∈ s, U i j ≠ 0)
 
@@ -135,7 +133,5 @@ theorem mocIsTrue_iff_strict_support_expansion :
     apply mocIsTrue_iff_no_proper_paired_blocks.mpr
     intro n hn a b U hU hblocks
     exact h n hn a b U hU (card_lt_supportColumns_of_no_paired_blocks hU hblocks)
-
-end
 
 end MOC

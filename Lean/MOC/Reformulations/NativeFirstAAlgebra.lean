@@ -29,7 +29,7 @@ private theorem diagonal_normal {n : ℕ} (a : Fin n → ℂ) : IsStarNormal (di
 
 private theorem diagonal_charpoly_roots {n : ℕ} (a : Fin n → ℂ) :
     (diagonal a).charpoly.roots = (Finset.univ : Finset (Fin n)).val.map a := by
-  have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [IsUnitary]
+  have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   simpa using roots_unitary_diagonalization a hOne
 
 /-- Atlas 025. Every finite complex algebra is represented on itself by left

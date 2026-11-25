@@ -122,7 +122,7 @@ theorem det_normal_activeCompression_mem_hull (X : Matrix (Fin 2) (Fin 2) ℂ)
   let R := fromBlocks (1 : Matrix Unit Unit ℂ) 0 0 V
   let B := U * diagonal b * Uᴴ
   let C := activeCompression b U
-  have hR : IsUnitary R := unitary_directSum (by simp [IsUnitary]) hV
+  have hR : IsUnitary R := unitary_directSum isUnitary_one hV
   have hcomp : activeCompression b (Rᴴ * U) = Vᴴ * C * V := by
     have hconj : (Rᴴ * U) * diagonal b * (Rᴴ * U)ᴴ = Rᴴ * B * R := by
       simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
@@ -241,7 +241,7 @@ theorem det_activeCompression_mem_deletion_hull {κ : Type*} [Fintype κ] [Decid
           Matrix.det_diagonal]
         rfl
   let R := fromBlocks V 0 0 (1 : Matrix κ κ ℂ)
-  have hR : IsUnitary R := unitary_directSum hV (by simp [IsUnitary])
+  have hR : IsUnitary R := unitary_directSum hV isUnitary_one
   have hRight : R * diagonal (Sum.elim β d) * Rᴴ = fromBlocks Y 0 0 (diagonal d) := by
     dsimp only [R, Y]
     rw [← Matrix.fromBlocks_diagonal, Matrix.fromBlocks_conjTranspose,

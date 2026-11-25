@@ -18,7 +18,7 @@ theorem moc_iff_traceless_real_bound :
         ∃ σ : Equiv.Perm (Fin n), (determinantValue a b U).re ≤ (matchingProduct a b σ).re := by
   constructor
   · intro h n _ a b U hU _ _ _
-    simpa using (holds_iff_directional a b U).mp (h n a b U hU) 1
+    simpa only [one_mul] using (holds_iff_directional a b U).mp (h n a b U hU) 1
   · intro h
     apply tracelessCartanForm_iff.mp
     intro n a b U hU ha hb
@@ -27,7 +27,9 @@ theorem moc_iff_traceless_real_bound :
       intro V hV hfull
       apply (holds_iff_directional a b V).mpr
       intro k
-      have hcard : Fintype.card (Fin n) ≠ 0 := by simp; omega
+      have hcard : Fintype.card (Fin n) ≠ 0 := by
+        rw [Fintype.card_fin]
+        exact Nat.ne_of_gt (Nat.lt_of_lt_of_le (by decide : 0 < 4) hn)
       let c : ℂ := k ^ ((Fintype.card (Fin n) : ℂ)⁻¹)
       have hc : c ^ Fintype.card (Fin n) = k := Complex.cpow_nat_inv_pow k hcard
       have ha' : ∑ i, c * a i = 0 := by rw [← Finset.mul_sum, ha, mul_zero]
@@ -35,6 +37,6 @@ theorem moc_iff_traceless_real_bound :
       obtain ⟨σ, hσ⟩ := h n hn (fun i => c * a i) (fun j => c * b j) V hV hfull ha' hb'
       rw [determinantValue_scale, matchingProduct_scale, hc] at hσ
       exact ⟨σ, hσ⟩
-    · exact conjecture_le_three (by omega) a b U hU
+    · exact conjecture_le_three (Nat.le_of_lt_succ (Nat.lt_of_not_ge hn)) a b U hU
 
 end MOC.Reformulations

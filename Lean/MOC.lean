@@ -250,7 +250,7 @@ run_cmd do
   let allowed := #[`propext, `Classical.choice, `Quot.sound]
   let mut count := 0
   let mut checked : CollectAxioms.State := {}
-  for (name, declaration) in env.constants.toList do
+  for (name, declaration) in env.constants do
     let some idx := env.getModuleIdxFor? name | continue
     unless (`MOC).isPrefixOf env.allImportedModuleNames[idx.toNat]! do continue
     -- Code generation adds unsafe auxiliary declarations to the imported environment.

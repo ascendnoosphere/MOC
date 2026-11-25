@@ -122,7 +122,7 @@ theorem four_reflect_column_to_signed_coordinate
     · exact (hn (by simp [hcol, hji])).elim
   have hcard : (supportColumns Vᴴ {k}).card ≤ 2 :=
     (Finset.card_le_card hS).trans (by simp)
-  exact holds_of_column_degree_le_two (conjecture_le_three (by omega)) a b hV k hcard
+  exact holds_of_column_degree_le_two conjecture_three a b hV k hcard
 
 
 /-- Every signed coordinate target for a dense column determines a strict
