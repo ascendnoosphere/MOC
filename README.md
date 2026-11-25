@@ -131,9 +131,10 @@ of the default target checks the imported implications and their axiom dependenc
 
 The modulus bound compares $|\det(A+B)|$ with the largest $|P_\sigma|$.
 A modulus bound at order $n$ implies the bound at every order $m\leq n$.
-Consequently, convex-hull inclusion on any unbounded set of orders would
-give the modulus bound at every order.
-[Order transfer](Lean/MOC/ModulusOrderTransfer.lean#L120) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
+The modulus bound in all orders is equivalent to the bound for real
+orthogonal changes of eigenbasis on any unbounded set of orders.
+Both eigenvalue lists can still contain arbitrary complex numbers.
+[Order transfer](Lean/MOC/ModulusOrderTransfer.lean#L140) · [Real orthogonal equivalence](Lean/MOC/RealOrthogonalModulus.lean#L94) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
 
 ### Order four
 

@@ -42,8 +42,8 @@ private theorem duplicatedSlots_fst_inl {ι : Type*} [DecidableEq ι] (i : ι)
 
 /-- The edges of a permutation on two copies of a finite index set give
 two permutations after the copies of each index are identified. -/
-private theorem two_slot_assignments {ι : Type*} [Fintype ι]
-    (s : Equiv.Perm (ι × Bool)) (w : ι → ι → ℝ) :
+theorem two_slot_assignments {ι M : Type*} [Fintype ι] [CommMonoid M]
+    (s : Equiv.Perm (ι × Bool)) (w : ι → ι → M) :
     ∃ p q : Equiv.Perm ι,
       (∏ x : ι × Bool, w (s x).1 x.1) = (∏ j, w (p j) j) * ∏ j, w (q j) j := by
   classical

@@ -56,8 +56,11 @@ private theorem determinantValue_scalar_padding (a b : ι → ℂ) (U : Matrix �
   rw [Matrix.det_unique (n := Unit)]
   simp only [Matrix.add_apply, Matrix.diagonal_apply_eq]
 
-private theorem modulus_at_maximizing_identity (h : ModulusConjecture (Option ι))
-    (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U) (i : ι)
+private theorem modulus_at_maximizing_identity (a b : ι → ℂ) (U : Matrix ι ι ℂ) (i : ι)
+    (h : let e := Equiv.optionEquivSumPUnit ι
+      ∀ A B : Option ι → ℂ, ∃ τ : Equiv.Perm (Option ι),
+        ‖determinantValue A B ((fromBlocks U 0 0 (1 : Matrix Unit Unit ℂ)).submatrix e e)‖ ≤
+          ‖matchingProduct A B τ‖)
     (hmax : ∀ σ, ‖matchingProduct a b σ‖ ≤ ‖matchingProduct a b (Equiv.refl ι)‖)
     (hpos : 0 < ‖matchingProduct a b (Equiv.refl ι)‖) :
     ‖determinantValue a b U‖ ≤ ‖matchingProduct a b (Equiv.refl ι)‖ := by
@@ -66,8 +69,8 @@ private theorem modulus_at_maximizing_identity (h : ModulusConjecture (Option ι
   let B := Sum.elim b (fun _ : Unit => b i)
   let V := fromBlocks U 0 0 (1 : Matrix Unit Unit ℂ)
   let e : Option ι ≃ ι ⊕ Unit := Equiv.optionEquivSumPUnit ι
-  have hV : IsUnitary V := unitary_directSum hU isUnitary_one
-  obtain ⟨τ, hτ⟩ := h (A ∘ e) (B ∘ e) (V.submatrix e e) (unitary_reindex e e hV)
+  obtain ⟨τ, hτ⟩ := h (A ∘ e) (B ∘ e)
+  change ‖determinantValue (A ∘ e) (B ∘ e) (V.submatrix e e)‖ ≤ _ at hτ
   rw [determinantValue_reindex] at hτ
   have hdet : determinantValue A B V = determinantValue a b U * (a i + b i) :=
     determinantValue_scalar_padding a b U (a i) (b i)
@@ -91,24 +94,41 @@ private theorem modulus_at_maximizing_identity (h : ModulusConjecture (Option ι
   rw [hw]
   exact le_of_mul_le_mul_right hbound hi
 
-/-- If the modulus bound holds after adding one label, it holds before the addition. -/
-theorem modulusConjecture_of_option [Nonempty ι] (h : ModulusConjecture (Option ι)) :
-    ModulusConjecture ι := by
+/-- To prove the modulus bound for a mixer, it suffices to prove it for the
+scalar padding of each row permutation of that mixer, with arbitrary spectra. -/
+theorem modulus_bound_of_scalar_padding [Nonempty ι] (a b : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (h : let e := Equiv.optionEquivSumPUnit ι
+      ∀ σ : Equiv.Perm ι, ∀ A B : Option ι → ℂ, ∃ τ : Equiv.Perm (Option ι),
+        ‖determinantValue A B
+          ((fromBlocks (U.submatrix σ (Equiv.refl ι)) 0 0
+            (1 : Matrix Unit Unit ℂ)).submatrix e e)‖ ≤ ‖matchingProduct A B τ‖) :
+    ∃ σ : Equiv.Perm ι, ‖determinantValue a b U‖ ≤ ‖matchingProduct a b σ‖ := by
   classical
-  intro a b U hU
   obtain ⟨σ, hσ⟩ := exists_matching_norm_max a b
   refine ⟨σ, ?_⟩
   by_cases hp : 0 < ‖matchingProduct a b σ‖
   · let e := Equiv.refl ι
     have hbest (τ : Equiv.Perm ι) : ‖matchingProduct (a ∘ σ) b τ‖ ≤
         ‖matchingProduct (a ∘ σ) b (Equiv.refl ι)‖ := hσ (τ.trans σ)
-    have hv := modulus_at_maximizing_identity h (a ∘ σ) (b ∘ e) (U.submatrix σ e)
-      (unitary_reindex σ e hU) (Classical.choice (inferInstance : Nonempty ι)) hbest hp
+    have hv := modulus_at_maximizing_identity (a ∘ σ) (b ∘ e) (U.submatrix σ e)
+      (Classical.choice (inferInstance : Nonempty ι)) (h σ) hbest hp
     rwa [determinantValue_reindex] at hv
   · have hz (τ : Equiv.Perm ι) : matchingProduct a b τ = 0 :=
       norm_eq_zero.mp (le_antisymm ((hσ τ).trans (le_of_not_gt hp)) (norm_nonneg _))
     rw [← signed_determinant a b U hU]
     simp only [hz, mul_zero, Finset.sum_const_zero, norm_zero, le_refl]
+
+/-- If the modulus bound holds after adding one label, it holds before the addition. -/
+theorem modulusConjecture_of_option [Nonempty ι] (h : ModulusConjecture (Option ι)) :
+    ModulusConjecture ι := by
+  intro a b U hU
+  apply modulus_bound_of_scalar_padding a b U hU
+  dsimp only
+  intro σ A B
+  let e := Equiv.optionEquivSumPUnit ι
+  have hV := unitary_directSum (unitary_reindex σ (Equiv.refl ι) hU) (isUnitary_one (ι := Unit))
+  exact h A B _ (unitary_reindex e e hV)
 
 /-- In every order, a proof of the modulus bound implies the bound at the preceding order. -/
 theorem modulusConjecture_of_succ (n : ℕ) (h : ModulusConjecture (Fin (n + 1))) :

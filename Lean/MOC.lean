@@ -165,6 +165,7 @@ import MOC.KrullHeightChain
 import MOC.LexicographicScores
 import MOC.MarkedPadding
 import MOC.ModulusOrderTransfer
+import MOC.RealOrthogonalModulus
 import MOC.DuplicateAnchorObstruction
 import MOC.MatchingProfileClosed
 import MOC.MatchingRectangleSupport
