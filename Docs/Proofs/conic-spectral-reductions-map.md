@@ -2,11 +2,11 @@
 
 [Conjecture and proof tree](../../README.md#proof-tree) · [Order-four map](order-four-proof-maps.md) · [All-order map](all-order-proof-maps.md)
 
-Let \(U\) be unitary. Let \(a\) and \(b\) be complex eigenvalue lists of
-length \(n\). The spectral inclusion compares the determinant of
-\(\mathrm{diag}(a)+U\mathrm{diag}(b)U^*\) with the real convex hull of
+Let $U$ be unitary. Let $a$ and $b$ be complex eigenvalue lists of
+length $n$. The spectral inclusion compares the determinant of
+$\mathrm{diag}(a)+U\mathrm{diag}(b)U^*$ with the real convex hull of
 its matching products. A fixed curve test checks distinct first lists
-on one curve. The second list remains arbitrary. The same \(U\) appears
+on one curve. The second list remains arbitrary. The same $U$ appears
 in the original problem and in the test.
 [Lean test definition](../../Lean/MOC/ConicSpectralReductions.lean#L22)
 
@@ -36,13 +36,13 @@ flowchart BT
   hyperbola approximate both asymptotes and their intersection.
   [Order-four hyperbola test](../../Lean/MOC/ConicSpectralReductions.lean#L366) · [Asymptote limit](../../Lean/MOC/ConicSpectralReductions.lean#L234)
 - For the ellipse, reorder the four labels to give a cross ratio
-  \(\lambda\) with \(\mathrm{Re}\,\lambda\le|\lambda|/2\). The longest
-  side of the triangle with vertices \(0,1,\lambda\) gives the required
-  ordering. For a square root \(w\) of that cross ratio, solve one real
+  $\lambda$ with $\mathrm{Re}\,\lambda\le|\lambda|/2$. The longest
+  side of the triangle with vertices $0,1,\lambda$ gives the required
+  ordering. For a square root $w$ of that cross ratio, solve one real
   quadratic to put two antipodal pairs on the ellipse. The quadratic
   has a real solution if
-  \(4r^2(\mathrm{Re}\,w)^2 \le (r^2-1)^2(\mathrm{Im}\,w)^2\).
-  The stated bound on \(r\) guarantees this inequality.
+  $4r^2(\mathrm{Re}\,w)^2 \le (r^2-1)^2(\mathrm{Im}\,w)^2$.
+  The stated bound on $r$ guarantees this inequality.
   [Order-four ellipse test](../../Lean/MOC/ConicSpectralReductions.lean#L916) · [Antipodal construction](../../Lean/MOC/ConicSpectralReductions.lean#L547)
 
 A common fractional linear change of the signed spectra preserves hull
@@ -53,16 +53,18 @@ same test. [Pole removal](../../Lean/MOC/ConicSpectralReductions.lean#L113) · [
 
 ## Exact ellipse representation
 
-For a fixed $r\ge1$, a distinct quadruple has a fractional linear image on
-the ellipse with semiaxes $r$ and $1$ if and only if some ordering of its
-cross ratio $\lambda$ satisfies
+For a fixed $r\ge1$, a quadruple of distinct points $z_0,z_1,z_2,z_3$ has
+a fractional linear image on the ellipse with semiaxes $r$ and $1$ if
+and only if some ordering of its
+cross ratio $\lambda=(z_0-z_2)(z_1-z_3)/((z_0-z_3)(z_1-z_2))$
+satisfies
 
 $
 ((r^2-1)^2+4r^2)\,\mathrm{Re}\,\lambda
 \le ((r^2-1)^2-4r^2)|\lambda|.
 $
 
-The quotient of the coefficients is $\cos(4\arctan(1/r))$. Thus the bound
+The right-hand coefficient divided by the left-hand coefficient is $\cos(4\arctan(1/r))$. Thus the bound
 asks for an ordering with absolute principal argument at least
 $4\arctan(1/r)$. The fractional map must have no pole at any of the four
 points. [Exact representation criterion](../../Lean/MOC/ConicSpectralReductions.lean#L1518)
@@ -101,7 +103,7 @@ is a separate question.
 ## Order-five equivalences
 
 The parabola and hyperbola tests also suffice in order five. Choose a
-nearest pair in the first spectrum and send it to \(0,1\) by an affine
+nearest pair in the first spectrum and send it to $0,1$ by an affine
 map. If all entries are real, one of the lines already contains them.
 Otherwise move a circle center on the perpendicular bisector of that
 pair. The first additional contact is a minimum of finitely many
@@ -112,13 +114,22 @@ boundary points move a small distance into that half-plane before the
 limit is taken.
 [Order-five parabola test](../../Lean/MOC/ConicSpectralReductions.lean#L1311) · [Order-five hyperbola test](../../Lean/MOC/ConicSpectralReductions.lean#L1332)
 
-If two distinct points are in the upper half-plane, choose a real \(t\)
-so the secant between their images under \(z\mapsto-1/(z-t)\) has any
-given nonzero direction. For \(g(t)=(u-t)(v-t)\), its imaginary part
-vanishes at a weighted average of the real parts of \(u,v\). At that
-point \(g(t)\) is negative real. The direction equation is linear or
-quadratic in \(t\). In the quadratic case this negative value gives a
+If two distinct points are in the upper half-plane, choose a real $t$
+so the secant between their images under $z\mapsto-1/(z-t)$ has any
+given nonzero direction. For $g(t)=(u-t)(v-t)$, its imaginary part
+vanishes at a weighted average of the real parts of $u,v$. At that
+point $g(t)$ is negative real. The direction equation is linear or
+quadratic in $t$. In the quadratic case this negative value gives a
 real root. [Secant alignment](../../Lean/MOC/ConicSpectralReductions.lean#L452)
+
+## Determinant-one exclusions
+
+Let $E$ be a set of order-four unitary mixers with determinant one. A
+test over every unitary mixer outside $E$ suffices for the test over
+all unitary mixers. For an excluded mixer, multiply it by a scalar
+of modulus one and fourth power $-1$. The new mixer has determinant
+$-1$ and conjugates the second diagonal matrix to the same matrix.
+[Scalar-phase equivalence](../../Lean/MOC/ConicSpectralReductions.lean#L1671)
 
 ## Source scope
 

@@ -1665,6 +1665,59 @@ theorem spectralEllipse_represents_all_quadruples_iff (r : ℝ) (hr : 1 ≤ r) :
     · simpa only [Function.comp_apply, Equiv.apply_symm_apply] using hreg (p.symm i)
     · simpa only [Function.comp_apply, Equiv.apply_symm_apply] using hEll (p.symm i)
 
+/-- An exclusion that is confined to determinant-one mixers leaves
+the fixed-curve problem over all unitary mixers unchanged. A scalar
+phase changes the determinant without changing the conjugated matrix. -/
+theorem spectralCurveTest_excluding_det_one_subset_iff (C : Set ℂ)
+    (E : Set (Matrix (Fin 4) (Fin 4) ℂ)) (hE : ∀ U ∈ E, U.det = 1) :
+    (∀ U : Matrix (Fin 4) (Fin 4) ℂ, IsUnitary U → U ∉ E → SpectralCurveTest C U) ↔
+      (∀ U : Matrix (Fin 4) (Fin 4) ℂ, IsUnitary U → SpectralCurveTest C U) := by
+  constructor
+  · intro h U hU
+    by_cases he : U ∈ E
+    · have hd : U.det = 1 := hE U he
+      obtain ⟨z, hz⟩ := IsAlgClosed.exists_pow_nat_eq (-1 : ℂ) (n := 4) (by decide)
+      have hne : ‖z‖ ^ 4 = 1 := by rw [← norm_pow, hz, norm_neg, norm_one]
+      have hs : (‖z‖ ^ 2) ^ 2 = 1 := by simpa only [← pow_mul] using hne
+      have hsquare {x : ℝ} (hx : 0 ≤ x) (hx₂ : x ^ 2 = 1) : x = 1 :=
+        le_antisymm
+          ((sq_le_sq₀ hx zero_le_one).mp (by simpa only [one_pow] using hx₂.le))
+          ((sq_le_sq₀ zero_le_one hx).mp (by simpa only [one_pow] using hx₂.ge))
+      have hnorm : ‖z‖ = 1 := hsquare (norm_nonneg _) (hsquare (sq_nonneg _) hs)
+      have hscalar : star z * z = 1 := by
+        rw [Complex.star_def, ← Complex.normSq_eq_conj_mul_self, ← Complex.sq_norm,
+          hnorm, one_pow, Complex.ofReal_one]
+      have hscalar' : z * star z = 1 := (mul_comm _ _).trans hscalar
+      let V := z • U
+      have hV : IsUnitary V := by
+        constructor
+        · change (z • U) * (z • U)ᴴ = 1
+          rw [Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.smul_mul, smul_smul,
+            hscalar, one_smul, hU.1]
+        · change (z • U)ᴴ * (z • U) = 1
+          rw [Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.smul_mul, smul_smul,
+            hscalar', one_smul, hU.2]
+      have hdV : V.det = -1 := by
+        change (z • U).det = -1
+        rw [Matrix.det_smul, Fintype.card_fin, hz, hd, mul_one]
+      have hVnot : V ∉ E := by
+        intro hmem
+        have hf := hE V hmem
+        rw [hdV] at hf
+        norm_num at hf
+      intro a b ha hcurve
+      have hconj : V * Matrix.diagonal b * Vᴴ = U * Matrix.diagonal b * Uᴴ := by
+        change (z • U) * Matrix.diagonal b * (z • U)ᴴ = U * Matrix.diagonal b * Uᴴ
+        rw [Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.smul_mul,
+          Matrix.smul_mul, smul_smul, hscalar, one_smul]
+      have htest := h V hV hVnot a b ha hcurve
+      unfold Holds determinantValue at htest ⊢
+      rw [hconj] at htest
+      exact htest
+    · exact h U hU he
+  · intro h U hU _
+    exact h U hU
+
 end
 
 end MOC
