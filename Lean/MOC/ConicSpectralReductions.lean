@@ -1,4 +1,5 @@
 import MOC.FractionalFiniteNormalization
+import MOC.GeneralizedSpectralCircles
 import MOC.MobiusCircleDefect
 import MOC.SpectralPerturbation
 import Mathlib.Analysis.Complex.Polynomial.Basic
@@ -902,6 +903,428 @@ theorem four_spectralEllipse_test_iff (r : ℝ) (hr : 2 + Real.sqrt 3 ≤ r)
     intro i
     obtain ⟨j, rfl⟩ := p.surjective i
     exact hEll j
+  · intro h a b _ _
+    exact h a b
+
+private theorem holds_of_parabolic_test_at_two_heights (a b : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) (h : SpectralCurveTest spectralParabola U)
+    (ha : Function.Injective a) (y : ℝ) (hy : ∀ i, (a i).im = 0 ∨ (a i).im = y) :
+    Holds a b U := by
+  let r : ℝ := if y = 0 then 1 else 2 / y
+  have hr : r ≠ 0 := by
+    by_cases he : y = 0
+    · simp [r, he]
+    · simpa only [r, if_neg he] using (div_ne_zero (by norm_num : (2 : ℝ) ≠ 0) he)
+  let s : ℂ := (r : ℂ) * Complex.I
+  have hs : s ≠ 0 := mul_ne_zero (Complex.ofReal_ne_zero.mpr hr) Complex.I_ne_zero
+  apply (holds_affine_spectral_iff a b U hU s 1 hs).mp
+  apply holds_of_parabolic_test_on_parallel_lines _ _ U hU h
+  · intro i j he
+    exact ha (mul_left_cancel₀ hs (add_right_cancel he))
+  · intro i
+    have he : (s * a i + 1).re = 1 - r * (a i).im := by
+      simp only [s, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.one_re,
+        Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im, mul_zero,
+        zero_mul, sub_zero, zero_sub, one_mul, mul_one, add_zero]
+      ring
+    rw [he]
+    rcases hy i with h₀ | hyi
+    · exact Or.inl (by rw [h₀, mul_zero, sub_zero])
+    · rw [hyi]
+      by_cases hy₀ : y = 0
+      · exact Or.inl (by rw [hy₀, mul_zero, sub_zero])
+      · right
+        rw [show r = 2 / y from if_neg hy₀, div_mul_cancel₀ _ hy₀]
+        norm_num
+
+private theorem holds_of_hyperbolic_test_on_two_intersecting_lines (a b : ι → ℂ)
+    (d : ℂ) (k : ℝ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
+    (h : SpectralCurveTest (spectralHyperbola d k) U) (ha : Function.Injective a)
+    (x : ℝ) (hax : ∀ i, (a i).im = 0 ∨ ∃ y : ℝ, a i = (x : ℂ) + (y : ℂ) * d) :
+    Holds a b U := by
+  apply (holds_affine_spectral_iff a b U hU 1 (-(x : ℂ)) one_ne_zero).mp
+  apply holds_of_hyperbolic_test_on_asymptotes _ _ d k U hU h
+  · intro i j he
+    exact ha (mul_left_cancel₀ one_ne_zero (add_right_cancel he))
+  · intro i
+    rcases hax i with hi | ⟨y, hy⟩
+    · refine ⟨(a i).re - x, 0, mul_zero _, ?_⟩
+      apply Complex.ext
+      · simp only [one_mul, Complex.add_re, Complex.neg_re, Complex.ofReal_re, Complex.zero_re,
+          Complex.mul_re, Complex.ofReal_im, zero_mul, sub_zero, add_zero]
+        ring
+      · simp only [one_mul, Complex.add_im, Complex.neg_im, Complex.ofReal_im, Complex.zero_im,
+          Complex.mul_im, Complex.ofReal_re, zero_mul, add_zero, neg_zero, hi]
+    · refine ⟨0, y, zero_mul _, ?_⟩
+      rw [hy, one_mul, Complex.ofReal_zero, zero_add]
+      ring
+
+private theorem holds_of_open_curve_chart {m : Type*} [Fintype m] [DecidableEq m]
+    (a b : m → ℂ) (U : Matrix m m ℂ) (hU : IsUnitary U)
+    (ha : Function.Injective a) (i j : m) (hij : i ≠ j)
+    (hreal : ∀ k, k ≠ i → k ≠ j → (a k).im = 0)
+    (hi : 0 ≤ (a i).im) (hj : 0 ≤ (a j).im) (d : ℂ) (hd : d ≠ 0)
+    (h : ∀ x y : m → ℂ, Function.Injective x →
+      (∀ k, k ≠ i → k ≠ j → (x k).im = 0) →
+      (∃ r : ℝ, x i - x j = (r : ℂ) * d) → Holds x y U) :
+    Holds a b U := by
+  have hupper (x : m → ℂ) (hx : Function.Injective x)
+      (hxreal : ∀ k, k ≠ i → k ≠ j → (x k).im = 0)
+      (hxli : 0 < (x i).im) (hxlj : 0 < (x j).im) : Holds x b U := by
+    obtain ⟨t, r, ht⟩ := exists_real_reciprocal_secant hxli hxlj (hx.ne hij) hd
+    let f (z : ℂ) := fractionalMap 0 (-1) 1 (-(t : ℂ)) z
+    have hf (z : ℂ) : f z = -(z - (t : ℂ))⁻¹ := by
+      simp only [f, fractionalMap, zero_mul, zero_add, one_mul, ← sub_eq_add_neg, neg_div,
+        one_div]
+    let A (s : ℝ) (k : m) := if k = i ∨ k = j then x k else x k + (s : ℂ)
+    have hA : Continuous A := continuous_pi fun k => by
+      by_cases hk : k = i ∨ k = j <;> simp only [A, hk, if_true, if_false] <;> fun_prop
+    have hAz : A 0 = x := by
+      funext k
+      by_cases hk : k = i ∨ k = j <;> simp [A, hk]
+    have hlim : Tendsto A (𝓝[≠] (0 : ℝ)) (𝓝 x) := by
+      rw [← hAz]
+      exact hA.continuousAt.continuousWithinAt
+    have hnear : ∀ᶠ s in 𝓝[≠] (0 : ℝ), ∀ k, A s k - (t : ℂ) ≠ 0 := by
+      apply Filter.eventually_all.mpr
+      intro k
+      by_cases hk : x k - (t : ℂ) = 0
+      · have hkn : ¬ (k = i ∨ k = j) := by
+          intro he
+          rcases he with rfl | rfl
+          · have him := congrArg Complex.im hk
+            simp only [Complex.sub_im, Complex.ofReal_im, Complex.zero_im, sub_zero] at him
+            exact hxli.ne' him
+          · have him := congrArg Complex.im hk
+            simp only [Complex.sub_im, Complex.ofReal_im, Complex.zero_im, sub_zero] at him
+            exact hxlj.ne' him
+        filter_upwards [self_mem_nhdsWithin] with s hs
+        have he : A s k - (t : ℂ) = (s : ℂ) := by
+          simp only [A, if_neg hkn]
+          linear_combination hk
+        rw [he]
+        exact Complex.ofReal_ne_zero.mpr hs
+      · have hc : Continuous fun s => A s k - (t : ℂ) :=
+          ((continuous_apply k).comp hA).sub continuous_const
+        have hkn : A 0 k - (t : ℂ) ≠ 0 := by rwa [hAz]
+        exact (hc.continuousAt.eventually_ne hkn).filter_mono nhdsWithin_le_nhds
+    apply holds_of_spectral_limits U hlim tendsto_const_nhds
+    filter_upwards [eventually_injective_left hlim hx, hnear] with s hs hreg
+    apply holds_of_fractional_spectral_test (A s) b U hU 0 (-1) 1 (-(t : ℂ))
+      (by norm_num) (fun k => by simpa only [one_mul, ← sub_eq_add_neg] using hreg k)
+    intro c
+    change Holds (f ∘ A s) c U
+    apply h _ _
+    · intro k l he
+      exact hs (fractionalMap_injOn _ _ _ _ (by norm_num)
+        (by simpa only [one_mul, ← sub_eq_add_neg] using hreg k)
+        (by simpa only [one_mul, ← sub_eq_add_neg] using hreg l) he)
+    · intro k hki hkj
+      change (f (A s k)).im = 0
+      rw [hf]
+      simp only [A, if_neg (not_or.mpr ⟨hki, hkj⟩), Complex.neg_im, Complex.inv_im,
+        Complex.sub_im, Complex.add_im, Complex.ofReal_im, hxreal k hki hkj,
+        sub_zero, zero_add, neg_zero, zero_div]
+    · refine ⟨r, ?_⟩
+      simpa only [Function.comp_apply, A, if_pos (Or.inl rfl), if_pos (Or.inr rfl), hf] using ht
+  let A (s : ℝ) (k : m) := if k = i ∨ k = j then a k + (s : ℂ) * Complex.I else a k
+  have hA : Continuous A := continuous_pi fun k => by
+    by_cases he : k = i ∨ k = j <;> simp only [A, he, if_true, if_false] <;> fun_prop
+  have hzero : A 0 = a := by
+    funext k
+    by_cases he : k = i ∨ k = j <;> simp [A, he]
+  have hlim : Tendsto A (𝓝[>] (0 : ℝ)) (𝓝 a) := by
+    rw [← hzero]
+    exact hA.continuousAt.continuousWithinAt
+  apply holds_of_spectral_limits U hlim tendsto_const_nhds
+  filter_upwards [self_mem_nhdsWithin, eventually_injective_left hlim ha] with s hs hxi
+  have hpos : 0 < s := hs
+  have hopp (k : m) (hk : k = i ∨ k = j) : (A s k).im = (a k).im + s := by
+    simp only [A, if_pos hk, Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+      Complex.I_re, Complex.I_im, mul_one, mul_zero, add_zero]
+  refine hupper (A s) hxi (fun k hki hkj => ?_) ?_ ?_
+  · simp only [A, if_neg (not_or.mpr ⟨hki, hkj⟩), hreal k hki hkj]
+  · rw [hopp i (Or.inl rfl)]
+    exact add_pos_of_nonneg_of_pos hi hpos
+  · rw [hopp j (Or.inr rfl)]
+    exact add_pos_of_nonneg_of_pos hj hpos
+
+private theorem exists_exterior_circle_chart (a : ι → ℂ) (o : ℂ) (ho : o ≠ 0)
+    (ha : ∀ i, Complex.normSq o ≤ Complex.normSq (a i - o)) :
+    ∃ α β γ δ : ℂ, α * δ - β * γ ≠ 0 ∧
+      (∀ i, γ * a i + δ ≠ 0) ∧
+      (∀ i, 0 ≤ (fractionalMap α β γ δ (a i)).im) ∧
+      (∀ i, Complex.normSq (a i - o) = Complex.normSq o →
+        (fractionalMap α β γ δ (a i)).im = 0) := by
+  let f (t : ℝ) := o + o * circleRotation t
+  have hf : Function.Injective f := by
+    intro t s hts
+    exact circleRotation_injective (mul_left_cancel₀ ho (add_left_cancel hts))
+  obtain ⟨_, ⟨t, rfl⟩, ht⟩ := (Set.infinite_range_of_injective hf).exists_not_mem_finset
+    (Finset.univ.image a)
+  let p := f t
+  let u := o - p
+  have hu : u ≠ 0 := by
+    have heq : u = -(o * circleRotation t) := by dsimp only [u, p, f]; ring
+    rw [heq]
+    exact neg_ne_zero.mpr (mul_ne_zero ho (fun he => by
+      have hn := circleRotation_normSq t
+      rw [he, Complex.normSq_zero] at hn
+      exact zero_ne_one hn))
+  have hnorm : Complex.normSq u = Complex.normSq o := by
+    have heq : u = -(o * circleRotation t) := by dsimp only [u, p, f]; ring
+    rw [heq, Complex.normSq_neg, Complex.normSq_mul, circleRotation_normSq, mul_one]
+  have hreg (i : ι) : a i - p ≠ 0 := fun h =>
+    ht (Finset.mem_image.mpr ⟨i, Finset.mem_univ _, sub_eq_zero.mp h⟩)
+  let k := Complex.I / 2
+  let β := -k * p - Complex.I * u
+  have hd : k * -p - β * 1 ≠ 0 := by
+    have he : k * -p - β * 1 = Complex.I * u := by dsimp only [β]; ring
+    rw [he]
+    exact mul_ne_zero Complex.I_ne_zero hu
+  have hchart (i : ι) :
+      (fractionalMap k β 1 (-p) (a i)).im =
+        (Complex.normSq (a i - o) - Complex.normSq o) /
+          (2 * Complex.normSq (a i - p)) := by
+    let w := a i - p
+    have hn : 0 < Complex.normSq w := Complex.normSq_pos.mpr (hreg i)
+    have hh : fractionalMap k β 1 (-p) (a i) = k - Complex.I * (u / w) := by
+      simp only [fractionalMap, β, one_mul, ← sub_eq_add_neg]
+      change _ / w = _
+      field_simp [hreg i] <;> dsimp only [w] <;> ring
+    have hcross : (u / w).re * Complex.normSq w = (w * star u).re := by
+      rw [Complex.div_re, div_mul_cancel₀ _ hn.ne']
+      simp only [Complex.mul_re, Complex.star_def, Complex.conj_re, Complex.conj_im]
+      ring
+    have hnorm' : Complex.normSq (a i - o) =
+        Complex.normSq w + Complex.normSq o - 2 * (w * star u).re := by
+      rw [show a i - o = w - u by dsimp only [w, u]; ring, Complex.normSq_sub, hnorm] <;> rfl
+    rw [hh, hnorm']
+    have hk : k.im = 1 / 2 := by norm_num [k, Complex.div_im, Complex.normSq_apply]
+    simp only [Complex.sub_im, Complex.mul_im, Complex.I_re, Complex.I_im, zero_mul,
+      one_mul, zero_add, hk]
+    have hden : 2 * Complex.normSq w ≠ 0 := mul_ne_zero (by norm_num) hn.ne'
+    apply (eq_div_iff hden).mpr
+    linear_combination -2 * hcross
+  refine ⟨k, β, 1, -p, hd, (fun i => by simpa only [one_mul, ← sub_eq_add_neg] using hreg i),
+    ?_, ?_⟩
+  · intro i
+    rw [hchart]
+    exact div_nonneg (sub_nonneg.mpr (ha i)) (mul_nonneg (by norm_num) (Complex.normSq_nonneg _))
+  · intro i he
+    rw [hchart, he, sub_self, zero_div]
+
+private theorem holds_of_five_upper_chart
+    (a b : Fin 5 → ℂ) (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U)
+    (ha : Function.Injective a) (hpos : ∀ i, 0 ≤ (a i).im)
+    (i j k : Fin 5) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
+    (hi : (a i).im = 0) (hj : (a j).im = 0) (hk : (a k).im = 0)
+    (d : ℂ) (hd : d ≠ 0)
+    (h : ∀ x y : Fin 5 → ℂ, Function.Injective x →
+      ∀ p q : Fin 5, (∀ l, l ≠ p → l ≠ q → (x l).im = 0) →
+      (∃ r : ℝ, x p - x q = (r : ℂ) * d) → Holds x y U) :
+    Holds a b U := by
+  classical
+  let S : Finset (Fin 5) := {i, j, k}
+  have hS : S.card = 3 := by
+    simp [S, Finset.card_insert_of_not_mem, hij, hik, hjk]
+  let T := (Finset.univ : Finset (Fin 5)) \ S
+  have hT : T.card = 2 := by
+    change (Finset.univ \ S).card = 2
+    rw [Finset.card_sdiff (Finset.subset_univ S), hS]
+    decide
+  obtain ⟨p, q, hpq, hEq⟩ := Finset.card_eq_two.mp hT
+  apply holds_of_open_curve_chart a b U hU ha p q hpq (d := d) (hd := hd)
+  · intro l hlp hlq
+    have hl : l ∈ S := by
+      by_contra hs
+      have ht : l ∈ T := Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, hs⟩
+      rw [hEq] at ht
+      exact (by simpa [hlp, hlq] using ht : False)
+    rcases (by simpa only [S, Finset.mem_insert, Finset.mem_singleton] using hl :
+      l = i ∨ l = j ∨ l = k) with rfl | rfl | rfl
+    · exact hi
+    · exact hj
+    · exact hk
+  · exact hpos p
+  · exact hpos q
+  · exact fun x y hx hreal hsec => h x y hx p q hreal hsec
+
+private theorem five_open_curve_reduction
+    (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) (d : ℂ) (hd : d ≠ 0)
+    (h : ∀ x y : Fin 5 → ℂ, Function.Injective x →
+      ∀ p q : Fin 5, (∀ l, l ≠ p → l ≠ q → (x l).im = 0) →
+      (∃ r : ℝ, x p - x q = (r : ℂ) * d) → Holds x y U) :
+    ∀ a b : Fin 5 → ℂ, Holds a b U := by
+  classical
+  apply holds_all_of_injective_left U
+  intro a b ha
+  let P : Finset (Fin 5 × Fin 5) := Finset.univ.filter fun p => p.1 ≠ p.2
+  have hP : P.Nonempty :=
+    ⟨(0, 1), Finset.mem_filter.mpr ⟨Finset.mem_univ _, by decide⟩⟩
+  let D (p : Fin 5 × Fin 5) := Complex.normSq (a p.2 - a p.1)
+  obtain ⟨p, hp, hmin⟩ := Finset.exists_min_image P D hP
+  let i := p.1
+  let j := p.2
+  have hij : i ≠ j := (Finset.mem_filter.mp hp).2
+  let Δ := a j - a i
+  have hΔ : Δ ≠ 0 := sub_ne_zero.mpr (ha.ne hij.symm)
+  let x (l : Fin 5) := (a l - a i) / Δ
+  have hx : Function.Injective x := by
+    intro l m he
+    have h' : x l * Δ = x m * Δ := congrArg (· * Δ) he
+    simp only [x, div_mul_cancel₀ _ hΔ] at h'
+    exact ha (sub_left_inj.mp h')
+  have hxi : x i = 0 := by simp [x]
+  have hxj : x j = 1 := div_self hΔ
+  have hnx (l : Fin 5) (hli : l ≠ i) : 1 ≤ Complex.normSq (x l) := by
+    have hr := hmin (i, l) (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hli.symm⟩)
+    change Complex.normSq Δ ≤ Complex.normSq (a l - a i) at hr
+    rw [show x l = (a l - a i) / Δ from rfl, Complex.normSq_div]
+    exact (le_div_iff₀ (Complex.normSq_pos.mpr hΔ)).mpr (by rwa [one_mul])
+  have hnx' (l : Fin 5) (hlj : l ≠ j) : 1 ≤ Complex.normSq (x l - 1) := by
+    have hr := hmin (j, l) (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hlj.symm⟩)
+    change Complex.normSq Δ ≤ Complex.normSq (a l - a j) at hr
+    rw [show x l - 1 = (a l - a j) / Δ by
+      change (a l - a i) / Δ - 1 = (a l - a j) / Δ
+      field_simp [hΔ] <;> dsimp only [Δ] <;> ring, Complex.normSq_div]
+    exact (le_div_iff₀ (Complex.normSq_pos.mpr hΔ)).mpr (by rwa [one_mul])
+  let E (l : Fin 5) := Complex.normSq (x l) - (x l).re
+  have hE₀ : E i = 0 := by simp [E, hxi]
+  have hE₁ : E j = 0 := by simp [E, hxj]
+  have hE (l : Fin 5) (hli : l ≠ i) (hlj : l ≠ j) : 0 < E l := by
+    have h₁ := hnx l hli
+    have h₂ := hnx' l hlj
+    rw [Complex.normSq_sub, Complex.normSq_one, map_one, mul_one] at h₂
+    dsimp only [E]
+    linarith
+  have hxaff : x = fun l => Δ⁻¹ * a l - Δ⁻¹ * a i := by
+    funext l
+    simp only [x, div_eq_mul_inv]
+    ring
+  have hleft : (fun l => Δ⁻¹ * a l + -(Δ⁻¹ * a i)) = x := by
+    simpa only [sub_eq_add_neg] using hxaff.symm
+  have hright : (fun l => Δ⁻¹ * b l - (-(Δ⁻¹ * a i))) =
+      (fun l => Δ⁻¹ * b l + Δ⁻¹ * a i) := by
+    funext l
+    rw [sub_neg_eq_add]
+  apply (holds_affine_spectral_iff a b U hU Δ⁻¹ (-(Δ⁻¹ * a i)) (inv_ne_zero hΔ)).mp
+  rw [hleft, hright]
+  generalize (fun l => Δ⁻¹ * b l + Δ⁻¹ * a i) = c
+  by_cases hcol : ∀ l, (x l).im = 0
+  · exact h x c hx 0 0 (fun l _ _ => hcol l) ⟨0, by simp⟩
+  · push_neg at hcol
+    obtain ⟨k₀, hk₀⟩ := hcol
+    let η : ℝ := if 0 < (x k₀).im then 1 else -1
+    let G (l : Fin 5) := 2 * η * (x l).im
+    have hGi : G i = 0 := by simp [G, hxi]
+    have hGj : G j = 0 := by simp [G, hxj]
+    let Q := (Finset.univ : Finset (Fin 5)).filter fun l => 0 < G l
+    have hQ : Q.Nonempty := by
+      refine ⟨k₀, Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩⟩
+      change 0 < 2 * η * (x k₀).im
+      by_cases ht : 0 < (x k₀).im
+      · simpa only [η, if_pos ht, mul_one] using mul_pos (by norm_num : (0 : ℝ) < 2) ht
+      · have hneg := lt_of_le_of_ne (le_of_not_gt ht) hk₀
+        simp only [η, if_neg ht]
+        nlinarith
+    obtain ⟨k, hk, hleast⟩ := Finset.exists_min_image Q (fun l => E l / G l) hQ
+    have hGk : 0 < G k := (Finset.mem_filter.mp hk).2
+    have hki : k ≠ i := fun he => hGk.ne' (he.symm ▸ hGi)
+    have hkj : k ≠ j := fun he => hGk.ne' (he.symm ▸ hGj)
+    let s := E k / G k
+    have hs : 0 ≤ s := (div_pos (hE k hki hkj) hGk).le
+    let o : ℂ := ⟨1/2, s * η⟩
+    have ho : o ≠ 0 := by
+      intro he
+      have hzero := congrArg Complex.re he
+      change (1 / 2 : ℝ) = 0 at hzero
+      norm_num at hzero
+    have hgap (l : Fin 5) : Complex.normSq (x l - o) - Complex.normSq o = E l - s * G l := by
+      simp only [o, E, G, Complex.normSq_apply, Complex.sub_re, Complex.sub_im]
+      ring
+    have hB (l : Fin 5) : Complex.normSq o ≤ Complex.normSq (x l - o) := by
+      apply sub_nonneg.mp
+      rw [hgap]
+      by_cases hl : 0 < G l
+      · have hsl := hleast l (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hl⟩)
+        exact sub_nonneg.mpr ((le_div_iff₀ hl).mpr hsl)
+      · have hEn : 0 ≤ E l := by
+          by_cases hli : l = i
+          · rwa [hli, hE₀]
+          · by_cases hlj : l = j
+            · rwa [hlj, hE₁]
+            · exact (hE l hli hlj).le
+        exact sub_nonneg.mpr ((mul_nonpos_of_nonneg_of_nonpos hs (le_of_not_gt hl)).trans hEn)
+    obtain ⟨α, β, γ, δ, hdet, hreg, hUp, hBoundary⟩ := exists_exterior_circle_chart x o ho hB
+    apply holds_of_fractional_spectral_test x c U hU α β γ δ hdet hreg
+    intro y
+    let z := fractionalMap α β γ δ ∘ x
+    have hz : Function.Injective z := fun l m he =>
+      hx (fractionalMap_injOn α β γ δ hdet (hreg l) (hreg m) he)
+    have hb₀ : Complex.normSq (x i - o) = Complex.normSq o :=
+      sub_eq_zero.mp (by rw [hgap, hE₀, hGi, mul_zero, sub_zero])
+    have hb₁ : Complex.normSq (x j - o) = Complex.normSq o :=
+      sub_eq_zero.mp (by rw [hgap, hE₁, hGj, mul_zero, sub_zero])
+    have hbk : Complex.normSq (x k - o) = Complex.normSq o :=
+      sub_eq_zero.mp (by rw [hgap, show s = E k / G k from rfl,
+        div_mul_cancel₀ _ hGk.ne', sub_self])
+    exact holds_of_five_upper_chart z y U hU hz hUp i j k hij hki.symm hkj.symm
+      (hBoundary i hb₀) (hBoundary j hb₁) (hBoundary k hbk) d hd h
+
+/-- The order-five parabola test. The circle comes from the nearest pair
+and the first point reached by moving the center on its perpendicular
+bisector. Boundary coincidences are included by closedness. -/
+theorem five_spectralParabola_test_iff (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
+    SpectralCurveTest spectralParabola U ↔ ∀ a b : Fin 5 → ℂ, Holds a b U := by
+  constructor
+  · intro h
+    apply five_open_curve_reduction U hU 1 one_ne_zero
+    rintro x y hx p q hreal ⟨r, hr⟩
+    apply holds_of_parabolic_test_at_two_heights x y U hU h hx (x p).im
+    intro l
+    by_cases hlp : l = p
+    · exact Or.inr (by rw [hlp])
+    · by_cases hlq : l = q
+      · right
+        have he := congrArg Complex.im hr
+        simp only [Complex.sub_im, mul_one, Complex.ofReal_im] at he
+        rw [hlq, sub_eq_zero.mp he]
+      · exact Or.inl (hreal l hlp hlq)
+  · intro h a b _ _
+    exact h a b
+
+/-- The order-five hyperbola test, for any choice of its two nonparallel
+asymptote directions and fixed product parameter. -/
+theorem five_spectralHyperbola_test_iff (d : ℂ) (k : ℝ) (hdim : d.im ≠ 0)
+    (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUnitary U) :
+    SpectralCurveTest (spectralHyperbola d k) U ↔ ∀ a b : Fin 5 → ℂ, Holds a b U := by
+  constructor
+  · intro h
+    apply five_open_curve_reduction U hU d (fun he => hdim (congrArg Complex.im he))
+    rintro x y hx p q hreal ⟨r, hr⟩
+    let s : ℝ := (x p).im / d.im
+    let z : ℝ := (x p).re - s * d.re
+    have hs : s * d.im = (x p).im := div_mul_cancel₀ _ hdim
+    have hp : x p = (z : ℂ) + (s : ℂ) * d := by
+      apply Complex.ext
+      · simp only [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+          zero_mul, sub_zero, z]
+        ring
+      · simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+          zero_mul, add_zero, zero_add, hs]
+    have hq : x q = (z : ℂ) + ((s - r : ℝ) : ℂ) * d := by
+      have hpq := sub_eq_iff_eq_add.mp hr
+      rw [hp] at hpq
+      rw [Complex.ofReal_sub]
+      linear_combination -hpq
+    apply holds_of_hyperbolic_test_on_two_intersecting_lines x y d k U hU h hx z
+    intro l
+    by_cases hlp : l = p
+    · exact Or.inr ⟨s, hlp.symm ▸ hp⟩
+    · by_cases hlq : l = q
+      · exact Or.inr ⟨s - r, hlq.symm ▸ hq⟩
+      · exact Or.inl (hreal l hlp hlq)
   · intro h a b _ _
     exact h a b
 
