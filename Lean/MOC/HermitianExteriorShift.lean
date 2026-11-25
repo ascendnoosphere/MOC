@@ -1183,6 +1183,30 @@ theorem holds_exterior_five (z : ℂ) (hz : 123 ≤ ‖z‖)
   dsimp only
   convert exterior_five_threshold_arithmetic z hz using 1 <;> ring
 
+/-- Every fixed real spectrum and complex partner spectrum satisfy the determinant
+hull inclusion for all shifts outside one disk, uniformly over the mixer. -/
+theorem exists_exterior_scalar_shift_radius (a : ι → ℝ) (b : ι → ℂ) :
+    ∃ R : ℝ, 0 < R ∧ ∀ z : ℂ, R ≤ ‖z‖ → ∀ U : Matrix ι ι ℂ, IsUnitary U →
+      Holds (fun i => (a i : ℂ)) (fun i => z + b i) U := by
+  classical
+  by_cases hι : Nonempty ι
+  · letI : Nonempty ι := hι
+    obtain ⟨g, hg, harea⟩ := exterior_exists_positive_triangle_gap b
+    let M := ‖diagonal (fun i => (a i : ℂ))‖
+    let L := M + ‖diagonal b‖
+    let C := 2 * L + 8 * L ^ 2 / g
+    have hML : M ≤ L := le_add_of_nonneg_right (norm_nonneg (diagonal b))
+    have hM : 0 ≤ M := norm_nonneg _
+    have hL : 0 ≤ L := hM.trans hML
+    have hC : 0 ≤ C := by dsimp only [C]; positivity
+    refine ⟨C + 1, add_pos_of_nonneg_of_pos hC zero_lt_one, ?_⟩
+    intro z hz U hU
+    have hcut : C < ‖z‖ := (lt_add_of_pos_right C zero_lt_one).trans_le hz
+    obtain ⟨hlarge, hsmall⟩ := exterior_bound_of_simple_cutoff M L g ‖z‖ hM hML hg hcut
+    exact holds_of_exterior_scalar_shift a b z M L g le_rfl le_rfl hlarge hg.le hsmall harea U hU
+  · letI : IsEmpty ι := ⟨fun i => hι ⟨i⟩⟩
+    exact ⟨1, zero_lt_one, fun z _ U hU => conjecture_of_subsingleton _ _ U hU⟩
+
 end
 
 end MOC

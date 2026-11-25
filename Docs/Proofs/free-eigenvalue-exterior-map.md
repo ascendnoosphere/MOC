@@ -122,8 +122,10 @@ theorem places each block determinant in its matching hull. Products
 of the block convex weights give one convex representation of the full
 determinant at a support maximum. The directional hull test then gives
 the determinant inclusion for every unitary mixer. The exact support
-inequality follows if $|z|>2L+8L^2/g$.
-[Affine-line theorem](../../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../../Lean/MOC/HermitianExteriorShift.lean#L987) · [Explicit radius](../../Lean/MOC/HermitianExteriorShift.lean#L1060)
+inequality follows if $|z|>2L+8L^2/g$. Consequently, each fixed pair of
+spectra where one spectrum is real has an exterior disk bound that
+works for every mixer.
+[Affine-line theorem](../../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../../Lean/MOC/HermitianExteriorShift.lean#L987) · [Explicit radius](../../Lean/MOC/HermitianExteriorShift.lean#L1060) · [Uniform radius](../../Lean/MOC/HermitianExteriorShift.lean#L1189)
 
 For the real spectrum $(-2,-1,0,1,2)$ and the partner spectrum
 $(0,1,-1,i,-i)$ before the shift, take $M=2$, $L=3$, and $g=1/(2\sqrt2)$.
