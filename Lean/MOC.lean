@@ -300,6 +300,7 @@ import MOC.RankTwoOverlapExample
 import MOC.RealMatchingSquares
 import MOC.SixDimensionalMixerBall
 import MOC.SmallSpectralPerturbation
+import MOC.ReciprocalSpectralPerturbation
 import MOC.SpectralProfileDeterminant
 import MOC.SpectralDeterminantStability
 import MOC.TranspositionWinding

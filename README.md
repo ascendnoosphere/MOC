@@ -316,6 +316,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
   small complex spectral parameter gives inclusion uniformly over
   all mixers in the fixed order.
   [Small-spectrum theorem](Docs/small-spectral-perturbation-proof-map.md)
+- Fix any two complex lists $a,b$ of the same finite length, each with
+  pairwise distinct entries. There is a dense open set of centers
+  $z\in\mathbb C$ such that for each center some $r>0$ works for all
+  unitary changes of eigenbasis and all $|t|<r$. The two spectra
+  are $a$ and $(z+t b_j)_j$.
+  [Affine perturbation theorem](Lean/MOC/ReciprocalSpectralPerturbation.lean#L233) · [Proof map](Docs/small-spectral-perturbation-proof-map.md)
 - In order four, the inclusion holds if either list lies on a circle or
   a line. This includes a Hermitian matrix with an arbitrary normal
   partner and the case where either list has a repeated value.
