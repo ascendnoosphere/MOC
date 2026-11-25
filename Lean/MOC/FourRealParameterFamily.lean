@@ -1,5 +1,5 @@
 import MOC.Small
-import MOC.Support
+import MOC.PlaneHullEdges
 import MOC.TwoValues
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Algebra.Polynomial.Eval.Defs
@@ -21,65 +21,6 @@ def fourRealParameterLeft (t : ℝ) : Fin 4 → ℂ :=
 /-- The fixed spectrum of the real-parameter family. -/
 def fourRealParameterRight : Fin 4 → ℂ :=
   ![-1 + Complex.I, -2 - 2 * Complex.I, 2 - Complex.I, 1 + 2 * Complex.I]
-
-private def planeCross (u v : ℂ) : ℝ :=
-  u.re * v.im - u.im * v.re
-
-private theorem planeCross_edge_direction (a b z : ℂ) :
-    planeCross (b - a) (z - a) =
-      ((⟨-(b - a).im, -(b - a).re⟩ : ℂ) * z).re -
-        ((⟨-(b - a).im, -(b - a).re⟩ : ℂ) * a).re := by
-  simp only [planeCross, Complex.sub_re, Complex.sub_im, Complex.mul_re]
-  ring
-
-/-- At a projection-maximizing vertex with a positive turn, its two incident
-edge inequalities bound that projection of the test point. -/
-private theorem planeProjection_le_of_incident_edges (u v w z η : ℂ)
-    (ht : 0 < planeCross (v - u) (w - v))
-    (hin : 0 ≤ planeCross (v - u) (z - u))
-    (hout : 0 ≤ planeCross (w - v) (z - v))
-    (hu : (η * u).re ≤ (η * v).re) (hw : (η * w).re ≤ (η * v).re) :
-    (η * z).re ≤ (η * v).re := by
-  let d := u - v
-  let e := w - v
-  let y := z - v
-  have hdet : planeCross e d = planeCross (v - u) (w - v) := by
-    simp only [e, d, planeCross, Complex.sub_re, Complex.sub_im]
-    ring
-  have hbefore : -planeCross d y = planeCross (v - u) (z - u) := by
-    simp only [d, y, planeCross, Complex.sub_re, Complex.sub_im]
-    ring
-  have hleft : 0 ≤ -planeCross d y := hbefore.symm ▸ hin
-  have hd : (η * d).re ≤ 0 := by
-    simpa only [d, mul_sub, Complex.sub_re, sub_nonpos] using hu
-  have he : (η * e).re ≤ 0 := by
-    simpa only [e, mul_sub, Complex.sub_re, sub_nonpos] using hw
-  have hidentity : planeCross e d * (η * y).re =
-      planeCross e y * (η * d).re + (-planeCross d y) * (η * e).re := by
-    simp only [planeCross, Complex.mul_re]
-    ring
-  have hmul : planeCross e d * (η * y).re ≤ planeCross e d * 0 := by
-    rw [hidentity, mul_zero]
-    exact add_nonpos (mul_nonpos_of_nonneg_of_nonpos hout hd)
-      (mul_nonpos_of_nonneg_of_nonpos hleft he)
-  have hy := (mul_le_mul_left (hdet.symm ▸ ht)).mp hmul
-  simpa only [y, mul_sub, Complex.sub_re, sub_nonpos] using hy
-
-/-- If each vertex has two incident supporting edges with positive turn,
-meeting all their half-planes suffices for membership in the vertex hull. -/
-private theorem mem_planeHull_of_edges {ι : Type*} [Fintype ι] [Nonempty ι]
-    (v : ι → ℂ) (prev next : ι → ι) (z : ℂ) (hcycle : ∀ i, next (prev i) = i)
-    (hturn : ∀ i, 0 < planeCross (v i - v (prev i)) (v (next i) - v i))
-    (hedge : ∀ i, 0 ≤ planeCross (v (next i) - v i) (z - v i)) :
-    z ∈ convexHull ℝ (Set.range v) := by
-  apply mem_hull_of_directional_bound v z
-  intro η
-  obtain ⟨i, _, hmax⟩ := Finset.exists_max_image Finset.univ
-    (fun i => (η * v i).re) Finset.univ_nonempty
-  have hin := hedge (prev i)
-  rw [hcycle i] at hin
-  exact ⟨i, planeProjection_le_of_incident_edges (v (prev i)) (v i) (v (next i)) z η
-    (hturn i) hin (hedge i) (hmax (prev i) (Finset.mem_univ _)) (hmax (next i) (Finset.mem_univ _))⟩
 
 private abbrev ParameterPermutation := Equiv.Perm (Fin 4)
 
@@ -455,6 +396,7 @@ private theorem holds_fourRealParameter_positive_small (t : ℝ) (ht0 : 0 < t)
   have hpolygon := mem_planeHull_of_edges (parameterHull t) parameterPrev parameterNext
     (determinantValue (fourRealParameterLeft t) fourRealParameterRight U)
     (by decide +kernel) (parameterHull_turn t ht0 ht1) (parameterHull_edge t ht0.le ht1 U hU)
+  unfold Holds
   apply convexHull_mono ?_ hpolygon
   rintro _ ⟨i, rfl⟩
   exact ⟨(parameterPermutation (parameterHullIndex i)).symm, rfl⟩
@@ -559,6 +501,292 @@ theorem holds_fourRealParameter_of_positive_cells (exceptional : Set ℝ) (hfin 
   · exact hnonneg t ht U hU
   · have ht' : 0 ≤ -t := neg_nonneg.mpr (le_of_not_ge ht)
     simpa only [neg_neg] using holds_fourRealParameter_neg (-t) U hU (hnonneg (-t) ht')
+
+private theorem holds_of_scaled_minor_polygon {ι κ : Type*} [Fintype ι] [Nonempty ι] [Fintype κ]
+    (a b : Fin 4 → ℂ) (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U)
+    (c : ℂ) (hc : c ≠ 0) (label : ι → ParameterPermutation) (prev next : ι → ι)
+    (hcycle : ∀ i, next (prev i) = i) (rows columns : ι → κ → Finset (Fin 4))
+    (weights : ι → κ → ℝ) (hw : ∀ i j, 0 ≤ weights i j)
+    (hturn : ∀ i, 0 < planeCross
+      (c * matchingProduct a b (label i) - c * matchingProduct a b (label (prev i)))
+      (c * matchingProduct a b (label (next i)) - c * matchingProduct a b (label i)))
+    (hpolynomial : ∀ i σ,
+      planeCross (c * matchingProduct a b (label (next i)) - c * matchingProduct a b (label i))
+        (c * matchingProduct a b σ - c * matchingProduct a b (label i)) =
+      ∑ j, if (columns i j).map σ.toEmbedding = rows i j then weights i j else 0) :
+    Holds a b U := by
+  let v (i : ι) := c * matchingProduct a b (label i)
+  have hedge (i : ι) : 0 ≤ planeCross (v (next i) - v i) (c * determinantValue a b U - v i) := by
+    let d := v (next i) - v i
+    let η : ℂ := ⟨-d.im, -d.re⟩
+    have hmatch (σ : ParameterPermutation) :
+        (η * c * matchingProduct a b σ).re -
+            (η * c * matchingProduct a b (label i)).re =
+          ∑ j, if (columns i j).map σ.toEmbedding = rows i j then weights i j else 0 := by
+      have he := hpolynomial i σ
+      rw [planeCross_edge_direction] at he
+      simpa only [d, v, η, mul_assoc] using he
+    have hbound := support_of_minor_gap_decomposition a b (η * c)
+      (η * c * matchingProduct a b (label i)).re U hU
+      (rows i) (columns i) (weights i) (hw i) hmatch
+    rw [planeCross_edge_direction]
+    simpa only [d, v, η, mul_assoc] using sub_nonneg.mpr hbound
+  have hscaled := mem_planeHull_of_edges v prev next (c * determinantValue a b U)
+    hcycle hturn hedge
+  let L : ℂ →ₗ[ℝ] ℂ := LinearMap.mulLeft ℝ c
+  have hsubset : Set.range v ⊆ L '' Set.range (matchingProduct a b) := by
+    rintro _ ⟨i, rfl⟩
+    exact ⟨matchingProduct a b (label i), ⟨label i, rfl⟩, rfl⟩
+  have he := convexHull_mono hsubset hscaled
+  rw [← LinearMap.image_convexHull] at he
+  obtain ⟨w, hwHull, heq⟩ := he
+  change c * w = c * determinantValue a b U at heq
+  exact (mul_left_cancel₀ hc heq) ▸ hwHull
+
+private def parameterTailPairSum (i j : Fin 4) : IntegerPlanePolynomial :=
+  let scale : ℤ[X] := ![X, X, 1, 1] i
+  (![5 - X, X - 5, 1, 2] i + scale * ![-1, -2, 2, 1] j,
+    ![X, X, 0, 1] i + scale * ![1, -2, -1, 2] j)
+
+private def parameterTailScale (s : ℝ) (i : Fin 4) : ℂ :=
+  ![(s : ℂ), (s : ℂ), 1, 1] i
+
+private theorem evaluateParameterTailPairSum (s t : ℝ) (h : s * t = 5 - s) (i j : Fin 4) :
+    evaluateParameterPlane s (parameterTailPairSum i j) =
+      parameterTailScale s i * (fourRealParameterLeft t i + fourRealParameterRight j) := by
+  fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+    norm_num [evaluateParameterPlane, evaluateParameterPolynomial, parameterTailPairSum,
+      parameterTailScale, fourRealParameterLeft, fourRealParameterRight, Complex.mul_re,
+      Complex.mul_im] <;> nlinarith only [h]
+
+private def parameterTailVertex (p : ParameterPermutation) : IntegerPlanePolynomial :=
+  polynomialPlaneMul
+    (polynomialPlaneMul (parameterTailPairSum (p 0) 0) (parameterTailPairSum (p 1) 1))
+    (polynomialPlaneMul (parameterTailPairSum (p 2) 2) (parameterTailPairSum (p 3) 3))
+
+private theorem evaluateParameterTailVertex (s t : ℝ) (h : s * t = 5 - s)
+    (p : ParameterPermutation) :
+    evaluateParameterPlane s (parameterTailVertex p) =
+      (s : ℂ) ^ 2 * matchingProduct (fourRealParameterLeft t) fourRealParameterRight p := by
+  have hprod : evaluateParameterPlane s (parameterTailVertex p) =
+      ∏ j : Fin 4, parameterTailScale s (p j) *
+        (fourRealParameterLeft t (p j) + fourRealParameterRight j) := by
+    simp only [parameterTailVertex, evaluateParameterPlane_mul, evaluateParameterTailPairSum s t h,
+      Fin.prod_univ_four, mul_assoc]
+  rw [hprod, Finset.prod_mul_distrib, Equiv.prod_comp p (parameterTailScale s)]
+  simp [parameterTailScale, matchingProduct, Fin.prod_univ_four, pow_two]
+
+private def parameterTailPrev : Fin 8 → Fin 8 := ![7, 0, 1, 2, 3, 4, 5, 6]
+
+private def parameterTailNext : Fin 8 → Fin 8 := ![1, 2, 3, 4, 5, 6, 7, 0]
+
+private def parameterTailIndex : Fin 8 → Fin 24 := ![0, 1, 15, 14, 4, 18, 12, 6]
+
+private def parameterTailLabel (i : Fin 8) : ParameterPermutation :=
+  (parameterPermutation (parameterTailIndex i)).symm
+
+private def parameterTailHullVertex (i : Fin 8) : IntegerPlanePolynomial :=
+  parameterTailVertex (parameterTailLabel i)
+
+private def parameterTailTerms : Fin 8 → Fin 12 → ParameterMinorTerm :=
+ ![
+  ![⟨{0}, {2}, ⟨1, 2500, 500, -600, 80, 0⟩⟩,
+    ⟨{1}, {0}, ⟨1, 24000, 9600, -6720, 768, 0⟩⟩,
+    ⟨{2}, {0}, ⟨0, 20000, -11000, 0, 880, 480⟩⟩,
+    ⟨{2}, {1}, ⟨0, 25000, -3750, 5500, 250, -480⟩⟩,
+    ⟨{3}, {0}, ⟨0, 11250, -13250, 400, 1220, 528⟩⟩,
+    ⟨{3}, {1}, ⟨0, 8750, 0, 2300, 1250, 144⟩⟩,
+    ⟨{0, 1}, {0, 2}, ⟨0, 23750, -31000, -10200, 7190, -320⟩⟩,
+    ⟨{0, 1}, {0, 3}, ⟨0, 30000, -37250, -7700, 7190, -480⟩⟩,
+    ⟨{0, 1}, {1, 2}, ⟨0, 6250, -8750, -500, 1100, 160⟩⟩,
+    ⟨{0, 2}, {0, 1}, ⟨1, 4000, 11600, -3120, 128, 0⟩⟩,
+    ⟨{0, 2}, {1, 2}, ⟨1, 15000, -9000, -1200, 480, 0⟩⟩,
+    ⟨{0, 3}, {0, 1}, ⟨1, 17500, 9500, -5400, 560, 0⟩⟩],
+  ![⟨{1}, {0}, ⟨1, 88000, -48000, -7360, 2688, 0⟩⟩,
+    ⟨{1}, {3}, ⟨1, 8000, -4600, -480, 216, 0⟩⟩,
+    ⟨{2}, {1}, ⟨0, 68750, -34250, 3850, -5270, 264⟩⟩,
+    ⟨{3}, {1}, ⟨0, 41250, -3750, -5450, -3290, -600⟩⟩,
+    ⟨{3}, {3}, ⟨0, 17500, -19500, 400, 1720, 768⟩⟩,
+    ⟨{0, 1}, {0, 2}, ⟨0, 13750, -81250, 39650, 6530, -2424⟩⟩,
+    ⟨{0, 1}, {0, 3}, ⟨0, 16250, -91250, 48650, 4630, -2688⟩⟩,
+    ⟨{0, 1}, {1, 3}, ⟨0, 15000, -17500, 500, 1600, 696⟩⟩,
+    ⟨{0, 2}, {0, 1}, ⟨1, 49500, -15300, -9600, 576, 0⟩⟩,
+    ⟨{0, 2}, {1, 2}, ⟨1, 20000, -18000, 4000, -240, 0⟩⟩,
+    ⟨{0, 3}, {0, 1}, ⟨1, 62000, -32400, -6320, 2064, 0⟩⟩,
+    ⟨{0, 3}, {2, 3}, ⟨1, 19500, -3900, -3120, -936, 0⟩⟩],
+  ![⟨{0}, {1}, ⟨1, 13500, 2100, -540, -84, 0⟩⟩,
+    ⟨{1}, {0}, ⟨1, 2500, -500, -100, 20, 0⟩⟩,
+    ⟨{2}, {1}, ⟨0, 1875, 1875, 4125, 75, -138⟩⟩,
+    ⟨{3}, {1}, ⟨0, 7500, 3500, 2850, 210, -56⟩⟩,
+    ⟨{3}, {2}, ⟨0, 3125, -1875, -125, -475, -110⟩⟩,
+    ⟨{0, 1}, {0, 1}, ⟨0, 12500, 0, -2500, -1000, -120⟩⟩,
+    ⟨{0, 1}, {0, 2}, ⟨0, 3125, -1875, 125, -25, -30⟩⟩,
+    ⟨{0, 2}, {0, 3}, ⟨0, 1875, 1875, -875, 75, 62⟩⟩,
+    ⟨{0, 2}, {1, 2}, ⟨0, 13750, 1250, -6000, -700, 88⟩⟩,
+    ⟨{0, 2}, {1, 3}, ⟨1, 2500, -1500, -100, 60, 0⟩⟩,
+    ⟨{0, 3}, {0, 3}, ⟨0, 13750, 2250, -1400, -740, -96⟩⟩,
+    ⟨{0, 3}, {1, 2}, ⟨0, 1875, 3375, -975, 15, 66⟩⟩],
+  ![⟨{0}, {1}, ⟨1, 43500, -41100, 21300, -2964, 0⟩⟩,
+    ⟨{1}, {0}, ⟨1, 5000, -18000, 7000, -720, 0⟩⟩,
+    ⟨{2}, {2}, ⟨0, 8125, -14375, 17875, -6975, 42⟩⟩,
+    ⟨{3}, {0}, ⟨0, 5000, 0, 4000, -400, -248⟩⟩,
+    ⟨{3}, {1}, ⟨0, 9375, 5375, -3925, 4085, 1002⟩⟩,
+    ⟨{0, 1}, {0, 1}, ⟨0, 52500, -48000, 29100, -6520, -1400⟩⟩,
+    ⟨{0, 1}, {0, 2}, ⟨0, 8125, -14375, 20125, -6925, 562⟩⟩,
+    ⟨{0, 2}, {0, 3}, ⟨0, 20000, -20000, 11000, -3200, -312⟩⟩,
+    ⟨{0, 2}, {1, 2}, ⟨0, 40625, -46875, 10625, 375, -790⟩⟩,
+    ⟨{0, 3}, {0, 1}, ⟨1, 500, -9500, 3340, -292, 0⟩⟩,
+    ⟨{0, 3}, {0, 3}, ⟨0, 40625, -25375, 2525, 6715, -1906⟩⟩,
+    ⟨{0, 3}, {1, 2}, ⟨0, 20000, -16500, 6100, -940, -596⟩⟩],
+  ![⟨{0}, {1}, ⟨1, 5000, 10000, -4200, 400, 0⟩⟩,
+    ⟨{1}, {1}, ⟨1, 5000, -18000, 7000, -720, 0⟩⟩,
+    ⟨{2}, {3}, ⟨1, 5000, -2000, -200, 80, 0⟩⟩,
+    ⟨{3}, {1}, ⟨1, 15000, -10000, 5400, -800, 0⟩⟩,
+    ⟨{0, 1}, {0, 1}, ⟨1, 40000, -24000, -2800, 1200, 0⟩⟩,
+    ⟨{0, 1}, {1, 3}, ⟨1, 5000, -2000, -2200, 480, 0⟩⟩,
+    ⟨{0, 2}, {0, 3}, ⟨1, 10000, -8000, 2400, -240, 0⟩⟩,
+    ⟨{0, 2}, {1, 2}, ⟨1, 35000, -30000, 5800, -240, 0⟩⟩,
+    ⟨{0, 3}, {0, 3}, ⟨1, 35000, -12000, -1400, 480, 0⟩⟩,
+    ⟨{0, 3}, {1, 2}, ⟨1, 10000, -4000, 800, -80, 0⟩⟩,
+    ⟨{0, 3}, {1, 3}, ⟨2, 2000, -800, 80, 0, 0⟩⟩,
+    ⟨∅, ∅, ⟨0, 0, 0, 0, 0, 0⟩⟩],
+  ![⟨{0}, {1}, ⟨0, 40625, -81875, 55625, -13425, 450⟩⟩,
+    ⟨{1}, {1}, ⟨0, 40625, -9875, -10375, 1935, -558⟩⟩,
+    ⟨{1}, {2}, ⟨1, 37000, -26000, 1560, 432, 0⟩⟩,
+    ⟨{1}, {3}, ⟨1, 12000, -11000, 2560, -168, 0⟩⟩,
+    ⟨{2}, {0}, ⟨0, 8125, -16375, 11125, -2685, 90⟩⟩,
+    ⟨{2}, {2}, ⟨1, 25000, -18750, 750, 900, 0⟩⟩,
+    ⟨{3}, {0}, ⟨0, 21875, -17625, 6875, -2835, 198⟩⟩,
+    ⟨{3}, {1}, ⟨0, 23750, -33250, 18950, -2070, -1476⟩⟩,
+    ⟨{0, 1}, {0, 1}, ⟨0, 30625, -8375, -11975, 2235, 810⟩⟩,
+    ⟨{0, 2}, {0, 1}, ⟨1, 23000, -19000, 3240, -72, 0⟩⟩,
+    ⟨{0, 2}, {0, 3}, ⟨0, 6250, 1250, -7750, 2550, 180⟩⟩,
+    ⟨{0, 3}, {1, 2}, ⟨0, 6250, 21250, -17750, 150, 900⟩⟩],
+  ![⟨{1}, {1}, ⟨1, 117000, -41400, -10080, 2736, 0⟩⟩,
+    ⟨{1}, {2}, ⟨1, 30000, -11400, -1800, 576, 0⟩⟩,
+    ⟨{1}, {3}, ⟨1, 19500, -6900, -1680, 456, 0⟩⟩,
+    ⟨{2}, {0}, ⟨0, 20625, -23625, 6675, 1095, -630⟩⟩,
+    ⟨{3}, {0}, ⟨0, 28125, -25125, 23025, -14895, 1494⟩⟩,
+    ⟨{3}, {1}, ⟨0, 48750, -21750, 1500, -3480, -1008⟩⟩,
+    ⟨{3}, {2}, ⟨0, 48750, -47250, 16800, -7560, 1440⟩⟩,
+    ⟨{0, 1}, {0, 3}, ⟨0, 22500, -18000, 8100, -2880, 720⟩⟩,
+    ⟨{0, 1}, {1, 2}, ⟨0, 103125, -118125, 33375, 5475, -3150⟩⟩,
+    ⟨{0, 1}, {1, 3}, ⟨0, 31875, -42375, 3225, 14145, -3690⟩⟩,
+    ⟨{0, 2}, {0, 1}, ⟨1, 10500, 15900, -20520, 3384, 0⟩⟩,
+    ⟨{0, 3}, {0, 2}, ⟨1, 15000, -21000, 14400, -2160, 0⟩⟩],
+  ![⟨{0}, {3}, ⟨1, 46500, -51900, 10980, -492, 0⟩⟩,
+    ⟨{1}, {2}, ⟨2, 2400, -960, 96, 0, 0⟩⟩,
+    ⟨{1}, {3}, ⟨1, 46500, -51900, 10980, -492, 0⟩⟩,
+    ⟨{2}, {1}, ⟨1, 34500, -45900, 12420, -924, 0⟩⟩,
+    ⟨{2}, {3}, ⟨1, 39000, -47400, 11280, -672, 0⟩⟩,
+    ⟨{3}, {0}, ⟨1, 28500, 6900, -13980, 2292, 0⟩⟩,
+    ⟨{3}, {1}, ⟨1, 78000, -24000, -21360, 4608, 0⟩⟩,
+    ⟨{0, 1}, {0, 3}, ⟨1, 25500, -14100, 4380, -516, 0⟩⟩,
+    ⟨{0, 1}, {1, 2}, ⟨1, 79500, -72900, 10620, 156, 0⟩⟩,
+    ⟨{0, 2}, {0, 1}, ⟨1, 82500, -55500, 1500, 1260, 0⟩⟩,
+    ⟨{0, 3}, {0, 2}, ⟨2, 48000, -19200, 1920, 0, 0⟩⟩,
+    ⟨{0, 3}, {2, 3}, ⟨1, 82500, 4500, -22500, 3660, 0⟩⟩]]
+
+private def parameterTailTurnWeight : Fin 8 → ParameterWeight :=
+  ![⟨1, 39000, 600, -7920, 1248, 0⟩,
+    ⟨0, 17500, -19500, 400, 1720, 768⟩,
+    ⟨0, 17500, 0, -3500, -1400, -168⟩,
+    ⟨0, 5000, 0, 4000, -400, -248⟩,
+    ⟨1, 5000, -18000, 7000, -720, 0⟩,
+    ⟨1, 35000, -30000, 5800, -240, 0⟩,
+    ⟨0, 71250, -65250, 24900, -10440, 2160⟩,
+    ⟨1, 117000, -41400, -10080, 2736, 0⟩]
+
+private def parameterTailMinorPolynomial (i : Fin 8) (p : ParameterPermutation) : ℤ[X] :=
+  ∑ j : Fin 12,
+    let term := parameterTailTerms i j
+    if term.columns.map p.toEmbedding = term.rows then term.weight.polynomial else 0
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 5000000 in
+private theorem parameterTailEdge_eq (i : Fin 8) (p : ParameterPermutation) :
+    polynomialPlaneCross
+        (polynomialPlaneSub (parameterTailHullVertex (parameterTailNext i)) (parameterTailHullVertex i))
+        (polynomialPlaneSub (parameterTailVertex p) (parameterTailHullVertex i)) =
+      parameterTailMinorPolynomial i p := by
+  obtain ⟨j, hj⟩ := parameterPermutation_surjective p.symm
+  have hp : p = (parameterPermutation j).symm := by rw [hj, Equiv.symm_symm]
+  rw [hp]
+  fin_cases i <;> fin_cases j <;> decide +kernel
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 1000000 in
+private theorem parameterTailTurn_eq (i : Fin 8) :
+    polynomialPlaneCross
+        (polynomialPlaneSub (parameterTailHullVertex i) (parameterTailHullVertex (parameterTailPrev i)))
+        (polynomialPlaneSub (parameterTailHullVertex (parameterTailNext i)) (parameterTailHullVertex i)) =
+      (parameterTailTurnWeight i).polynomial := by
+  fin_cases i <;> decide +kernel
+
+private theorem parameterTailBudget_lower (i : Fin 8) (j : Fin 12) :
+    (parameterTailTerms i j).weight.polynomial = 0 ∨
+      0 < (parameterTailTerms i j).weight.lowerNumerator :=
+  (by decide +kernel : ∀ k l,
+    (parameterTailTerms k l).weight.polynomial = 0 ∨
+      0 < (parameterTailTerms k l).weight.lowerNumerator) i j
+
+private theorem parameterTailTurn_lower (i : Fin 8) :
+    0 < (parameterTailTurnWeight i).lowerNumerator :=
+  (by decide +kernel : ∀ k, 0 < (parameterTailTurnWeight k).lowerNumerator) i
+
+private theorem holds_fourRealParameter_positive_tail (t : ℝ) (ht : 99 ≤ t)
+    (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    Holds (fourRealParameterLeft t) fourRealParameterRight U := by
+  let s : ℝ := 5 / (1 + t)
+  have hden : 0 < 1 + t := by linarith only [ht]
+  have hs0 : 0 < s := div_pos (by norm_num) hden
+  have hs1 : s ≤ 1 / 20 := (div_le_iff₀ hden).mpr (by linarith only [ht])
+  have hst : s * t = 5 - s := by
+    have he : s * (1 + t) = 5 := div_mul_cancel₀ 5 hden.ne'
+    rw [mul_add, mul_one] at he
+    linarith only [he]
+  let w (i : Fin 8) (j : Fin 12) :=
+    evaluateParameterPolynomial s (parameterTailTerms i j).weight.polynomial
+  have hw (i : Fin 8) (j : Fin 12) : 0 ≤ w i j := by
+    rcases parameterTailBudget_lower i j with hzero | hpos
+    · simp only [w, hzero, map_zero, le_refl]
+    · dsimp only [w]
+      rw [evaluateParameterWeight]
+      exact mul_nonneg (pow_nonneg hs0.le _) (parameterWeight_sign (parameterTailTerms i j).weight
+        hpos s hs0.le hs1).le
+  have hc : (s : ℂ) ^ 2 ≠ 0 := pow_ne_zero 2 (Complex.ofReal_ne_zero.mpr hs0.ne')
+  have hv (i : Fin 8) : evaluateParameterPlane s (parameterTailHullVertex i) =
+      (s : ℂ) ^ 2 * matchingProduct (fourRealParameterLeft t) fourRealParameterRight
+        (parameterTailLabel i) :=
+    evaluateParameterTailVertex s t hst (parameterTailLabel i)
+  apply holds_of_scaled_minor_polygon (fourRealParameterLeft t) fourRealParameterRight U hU
+    ((s : ℂ) ^ 2) hc parameterTailLabel parameterTailPrev parameterTailNext
+    (by decide +kernel) (fun i j => (parameterTailTerms i j).rows)
+    (fun i j => (parameterTailTerms i j).columns) w hw
+  · intro i
+    have he := congrArg (evaluateParameterPolynomial s) (parameterTailTurn_eq i)
+    simp only [evaluateParameterPlane_cross, evaluateParameterPlane_sub, hv] at he
+    rw [he, evaluateParameterWeight]
+    exact mul_pos (pow_pos hs0 _) (parameterWeight_sign (parameterTailTurnWeight i)
+      (parameterTailTurn_lower i) s hs0.le hs1)
+  · intro i p
+    have he := congrArg (evaluateParameterPolynomial s) (parameterTailEdge_eq i p)
+    simp only [evaluateParameterPlane_cross, evaluateParameterPlane_sub, hv,
+      evaluateParameterTailVertex s t hst, parameterTailMinorPolynomial, map_sum, apply_ite,
+      map_zero, w] at he
+    exact he
+
+/-- Both unbounded tails of the real-parameter family satisfy the
+matching-hull inclusion for every relative unitary. -/
+theorem holds_fourRealParameter_of_ninetyNine_le_abs (t : ℝ) (ht : 99 ≤ |t|)
+    (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    Holds (fourRealParameterLeft t) fourRealParameterRight U := by
+  by_cases hn : t < 0
+  · have htail : 99 ≤ -t := by simpa only [abs_of_neg hn] using ht
+    simpa only [neg_neg] using holds_fourRealParameter_neg (-t) U hU
+      (fun V hV => holds_fourRealParameter_positive_tail (-t) htail V hV)
+  · have htail : 99 ≤ t := by simpa only [abs_of_nonneg (le_of_not_gt hn)] using ht
+    exact holds_fourRealParameter_positive_tail t htail U hU
 
 end
 
