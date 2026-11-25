@@ -272,8 +272,11 @@ theorem moc_iff_contact_saturated_bounds :
    fromIff "Invertible projective diagonal lifts" moc_iff_projectiveDiagonalLifts.symm,
    fromIff "Traceless Cartan spectra" tracelessCartanForm_iff,
    fromIff "Newton monomials" newtonMonomialForm_iff,
+   fromIff "Projective toric section weights" projectiveToricSectionForm_iff,
+   fromIff "Loopless complex directed adjacency" looplessDirectedAdjacencyForm_iff,
    fromIff "Constant-generator monodromy" constantMonodromyForm_iff,
    fromIff "Finite bipartite matching" bipartiteMatchingForm_iff,
+   fromIff "Weighted bipartite determinant" weightedBipartiteMatchingForm_iff,
    fromIff "Finite Euler determinant" finiteEulerForm_iff,
    fromIff "Normal word products" normalWordProductForm_iff,
    fromIff "Almost-sure finite spectra" almostSureSpectralForm_iff,
@@ -304,6 +307,7 @@ theorem moc_iff_contact_saturated_bounds :
       mocIsTrue_iff_regular_scalar_common_commutant.symm,
    fromIff "All three order ranges" all_iff_four_and_five_and_higher.symm,
    sufficient "Simultaneous characteristic hull" CStar.moc_of_simultaneousCharacteristicForm,
+   sufficient "Separate characteristic coefficients" CStar.moc_of_separateCoefficientForm,
    sufficient "Simultaneous mixed-pencil coefficients" moc_of_simultaneousMixedPencilHull]
 
 private theorem normal_mem_nativeRoutes :

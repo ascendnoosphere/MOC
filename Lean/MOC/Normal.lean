@@ -259,7 +259,7 @@ def NormalConjecture (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
     B.charpoly.roots = (Finset.univ : Finset ι).val.map b →
     (A + B).det ∈ convexHull ℝ (Set.range (matchingProduct a b))
 
-private theorem isStarNormal_unitary_diagonalization (a : ι → ℂ)
+theorem isStarNormal_unitary_diagonalization (a : ι → ℂ)
     {U : Matrix ι ι ℂ} (hU : IsUnitary U) : IsStarNormal (U * diagonal a * Uᴴ) := by
   have hc : Commute (diagonal a) (diagonal (star ∘ a)) := by
     rw [Commute, SemiconjBy, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]

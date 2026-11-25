@@ -56,6 +56,15 @@ theorem hermitianMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)
   rw [hv]
   exact holds_of_real_spectra hA.eigenvalues hB.eigenvalues _ (relative_unitary V _ hV hUW)
 
+/-- Atlas 004 for actual positive definite inputs. -/
+theorem positiveDefiniteMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)
+    (hA : A.PosDef) (hB : B.PosDef) (hU : IsUnitary U) :
+    (A + U * B * Uᴴ).det ∈ convexHull ℝ
+      (Set.range (matchingProduct
+        (fun i => (hA.isHermitian.eigenvalues i : ℂ))
+        (fun i => (hB.isHermitian.eigenvalues i : ℂ)))) :=
+  hermitianMatrixHull A B U hA.isHermitian hB.isHermitian hU
+
 /-- Atlas 024: the inputs are actual rectangular Gram matrices. This is an
 unconditional theorem, not an equivalence to the complex conjecture. -/
 theorem gramMatrixHull {n p q : ℕ}

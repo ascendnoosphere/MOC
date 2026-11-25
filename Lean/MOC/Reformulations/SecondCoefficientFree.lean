@@ -145,6 +145,12 @@ theorem pairedStarRepresentationForm_iff : PairedStarRepresentationForm ↔ MOCI
     exact convexHull_mono (matchingProduct_subset_commutingPair x y f g)
       (h n (f ∘ x) (g ∘ y) (Vᴴ * W) (relative_unitary V W hV hW))
 
+/-- C11 for the determinant, in the finite two-factor representation model.
+Each element of the sum of the two function algebras is specified by its
+two functions. The comparison uses representations with commuting ranges. -/
+theorem abelianizationDeterminantForm_iff : PairedStarRepresentationForm ↔ MOCIsTrue :=
+  pairedStarRepresentationForm_iff
+
 end
 
 end MOC.Reformulations.CStar

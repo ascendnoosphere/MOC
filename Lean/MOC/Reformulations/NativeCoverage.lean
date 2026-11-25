@@ -13,8 +13,8 @@ ID | Status | Lean declaration or gap | Exact scope
 001 | exact native iff | FirstMatrix.moc_iff_complexMatrices | Actual normal matrix determinant with charpoly roots and arbitrary unitary rotation.
 002 | exact native iff | FirstMatrix.moc_iff_normalFrames; Normal.conjecture_iff_normalConjecture | Actual normal matrices and orthonormal eigenframes.
 003 | existing native checked | FirstHermitian.hermitianMatrixHull; FirstHermitian.hermitianSpectralHull | Actual Hermitian matrix hull; output real and equivalent to interval form.
-004 | existing native checked | FirstHermitian.hermitianMatrixHull; FirstHermitian.positiveDefiniteSpectralHull | Positive-definite specialization; scalar positivity is also used in native log-det theorem 046.
-005 | existing native checked | FirstUnitary.unitarySpectralHull | Circle spectra and arbitrary complex mixer; separate theorem that Eigenvalues of an input unitary lie on the circle is not added here.
+004 | existing native checked | FirstHermitian.positiveDefiniteMatrixHull; FirstHermitian.positiveDefiniteSpectralHull | Positive-definite specialization; scalar positivity is also used in native log-det theorem 046.
+005 | existing native checked | FirstUnitary.unitaryMatrixHull; FirstUnitary.unitarySpectralHull | Actual unitary matrices with arbitrary relative unitary position and their characteristic roots.
 006 | exact native iff | FirstMatrix.moc_iff_nonnormalSpectralRepresentatives | Actual charpoly roots and normal diagonal representatives, not nonnormal sums.
 007 | existing native checked | FirstHermitian.rectangularAbsoluteHull | Actual PSD square roots of rectangular Gram matrices.
 008 | exact native spectral iff | FirstMatrix.moc_iff_commutingTupleProjections | Joint spectral coordinates and single scalar direction. No simultaneous law is claimed.
@@ -139,8 +139,8 @@ ID | Status | Lean declaration or gap | Exact scope
 127 | checked-native | MOC.Reformulations.NativeFirstB.lineFiberDet | Exact rank-one determinant equality.
 128 | finite-restriction | MOC.Reformulations.NativeFirstB.higgsTrivializationHull | Actual divided endomorphisms and the determinant scalar, given a canonical-line frame; no holomorphic bundle construction.
 129 | finite-restriction | MOC.Reformulations.NativeFirstB.slopeFiltrationLogHull | Actual exponential-slope operator and positive log bounds; no Harder–Narasimhan construction or degree identification.
-130 | finite-restriction | MOC.Reformulations.NativeFirstB.toricCharacterHull; MOC.Reformulations.NativeLinksB.torusCharacterForm_iff (auditor) | Actual integral torus characters; toric line-bundle weight realizability remains separate.
-131 | finite-restriction | MOC.Reformulations.NativeFirstB.valuationVectorHull | Actual fixed-degree valuation-vector linear evaluation; no Newton–Okounkov body limit.
+130 | native-iff at the section-weight level | projectiveToricSectionForm_iff | Two independently twisted projective section lists at a common torus point give all nonzero spectra. The geometric realization is in the proof map.
+131 | paper native iff | See the Atlas realizations in the all-order proof map | Big line bundles on one variety and a common full-rank flag valuation realize both arbitrary complex lists in degree one.
 132 | finite-restriction | MOC.Reformulations.NativeFirstB.realSymmetricGeometricHull | Actual self-adjoint intersection forms in selected finite coordinates; no numerical cycles construction.
 133 | finite-restriction | MOC.Reformulations.NativeFirstB.curvatureContractionHull | Actual skew-Hermitian curvature evaluations and Chern–Weil scalar; no top Chern-form or global connection construction.
 -/

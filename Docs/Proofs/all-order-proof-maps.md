@@ -7,6 +7,7 @@
 - [Normalization and least-order counterexamples](#normalization-and-least-order-counterexamples)
 - [Induction through normal maximizers](#induction-through-normal-maximizers)
 - [Polynomial and coefficient conditions](#polynomial-and-coefficient-conditions)
+- [Atlas realizations and implications](#atlas-realizations-and-implications)
 - [Labelled spectral formulations](#labelled-spectral-formulations)
 - [Finite overlap compression](#finite-overlap-compression)
 - [Paper cases in any order](#paper-cases-in-any-order)
@@ -17,11 +18,11 @@ two complex normal matrices lies in the real convex hull of the products
 formed by matching their eigenvalues. See the [exact statement](../../README.md).
 For fixed eigenvalue lists, $U$ is the unitary change between the eigenbases.
 
-The tables cover the 67 general routes recorded in Lean. The
+The tables cover the 71 general routes recorded in Lean. The
 [labelled formulations](#labelled-spectral-formulations) cover the
 additional 243 indexed routes. A proof of an implication or equivalence
-establishes its arrow. The premise of each all-order route remains open.
-[General route list](../../Lean/MOC/ProofRoutes.lean#L236) · [All-order disjunction](../../Lean/MOC/ProofRoutes.lean#L567)
+establishes its arrow. The tables give the status of each premise.
+[General route list](../../Lean/MOC/ProofRoutes.lean#L236) · [All-order disjunction](../../Lean/MOC/ProofRoutes.lean#L571)
 
 ## How routes connect
 
@@ -70,8 +71,8 @@ flowchart LR
 | Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../../Lean/MOC/ProofRoutes.lean#L41) |
 | A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../../Lean/MOC/ProofRoutes.lean#L36) |
 | Refutation of an exact route | The parent is false. | [Transfer of refutation](../../Lean/MOC/ProofRoutes.lean#L46) |
-| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../../Lean/MOC/ProofRoutes.lean#L584) |
-| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../../Lean/MOC/ProofRoutes.lean#L574) · [Order five](../../Lean/MOC/ProofRoutes.lean#L579) |
+| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../../Lean/MOC/ProofRoutes.lean#L588) |
+| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../../Lean/MOC/ProofRoutes.lean#L578) · [Order five](../../Lean/MOC/ProofRoutes.lean#L583) |
 
 ## Matrix and operator formulations
 
@@ -142,30 +143,39 @@ degrees. Degree one supplies the reverse implication.
 | Actual integral torus characters | Iff | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksBTorus.lean#L88) |
 | Joint Hermitian integrals | Iff | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksB.lean#L83) |
 | Gaussian integer spectra | Iff | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
-| Newton monomials | Iff | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L39) |
+| Newton monomials | Iff | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L64) |
+| Projective toric section weights | Iff | [New Lean source](../../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
+| Loopless complex directed adjacency | Iff | [New Lean source](../../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
 | Constant-generator monodromy | Iff | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksCFlow.lean#L20) |
-| Finite bipartite matching | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L67) |
-| Finite Euler determinant | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L170) |
-| Normal word products | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L235) |
-| Almost-sure finite spectra | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L253) |
-| Joint tuple projections | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L271) |
+| Finite bipartite matching | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L85) |
+| Weighted bipartite determinant | Iff | [New Lean source](../../Lean/MOC/Reformulations/SecondNative.lean#L66) |
+| Finite Euler determinant | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L188) |
+| Normal word products | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L253) |
+| Almost-sure finite spectra | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L271) |
+| Joint tuple projections | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondNative.lean#L289) |
 | Invertible representatives | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondReal.lean#L93) |
 
 ### Finite star algebra and compound matrices
 
-| Route in Lean | Relation | Lean proof |
+| C-star form | Exact comparison | Lean proof |
 | --- | --- | --- |
-| C-star matrix form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L11) |
-| C-star orbit form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L25) |
-| C-star commuting determinants | Iff | [Statement and proof](../../Lean/MOC/Reformulations/Commutant.lean#L91) |
-| C-star integer coupling form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/Coupling.lean#L119) |
-| C-star Cartesian form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L41) |
-| C-star functional calculus | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L72) |
-| C-star affine form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L82) |
-| C-star pointwise characteristic form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L95) |
-| C-star scalar weight form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/CStar.lean#L110) |
-| Paired finite star representations | Iff | [Statement and proof](../../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L129) |
-| Compound form | Iff | [Statement and proof](../../Lean/MOC/Reformulations/Compounds.lean#L32) |
+| C1 | Two normal matrices with arbitrary relative unitary position | [Matrix form](../../Lean/MOC/Reformulations/CStar.lean#L11) |
+| C2 | A normal matrix with a fixed spectrum with multiplicities | [Orbit form](../../Lean/MOC/Reformulations/CStar.lean#L25) |
+| C3 | Determinants at commuting positions of the two matrices | [Commutant form](../../Lean/MOC/Reformulations/Commutant.lean#L91) |
+| C4 | Integer tables with the two lists of spectral multiplicities as marginals | [Integer couplings](../../Lean/MOC/Reformulations/Coupling.lean#L119) |
+| C5 | Two commuting pairs of Hermitian real and imaginary parts | [Cartesian form](../../Lean/MOC/Reformulations/CStar.lean#L41) |
+| C6 | Two functions on the actual spectra, each constant on equal eigenvalues | [Functional calculus](../../Lean/MOC/Reformulations/CStar.lean#L72) |
+| C7 | Affine changes of the inputs and pointwise characteristic determinants | [Affine form](../../Lean/MOC/Reformulations/CStar.lean#L82) · [Pointwise form](../../Lean/MOC/Reformulations/CStar.lean#L95) |
+| C8 | Two finite function-algebra representations with fixed spectral multiplicities | [Representation form](../../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L129) |
+| C9 | One scalar projection of the squared minors for each spectral pair | [Compound form](../../Lean/MOC/Reformulations/Compounds.lean#L32) · [Scalar weights](../../Lean/MOC/Reformulations/CStar.lean#L110) |
+| C11, determinant | A sum of two functions, one in each represented factor | [Abelianization determinant](../../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L151) |
+
+Each row is equivalent to unrestricted MOC. For C8 and C11, Lean
+uses the two factor representations with their spectral bases.
+On paper, the universal property of the full unital free product
+identifies them with its representations. The quotient identifies
+exactly the pairs with commuting ranges. The abstract completion
+and quotient construction are outside the Lean model.
 
 ## Normalization and least-order counterexamples
 
@@ -246,30 +256,226 @@ the hull bound. The all-order route starts at order four.
 
 ```mermaid
 flowchart BT
-    accTitle: Pointwise and simultaneous polynomial routes
-    accDescr: Pointwise characteristic comparison is equivalent to MOC. Each simultaneous polynomial hull separately implies MOC.
+    accTitle: Pointwise, separate, and simultaneous polynomial comparisons
+    accDescr: Pointwise comparisons are exact. The separate elementary coefficients imply MOC. The full characteristic-polynomial hull is false.
     Goal["Unrestricted MOC"]:::goal
     Pt["Pointwise characteristic<br/>comparison"]
-    Char["One set of weights for<br/>the characteristic polynomial"]:::open
+    Char["One law for the full characteristic polynomial<br/>Refuted in order four"]:::refuted
+    Sep["Separate elementary coefficients"]:::open
+    Low["One law for e1, e2, and e3<br/>Constructed in Lean source"]
     Mixed["One set of weights for<br/>the mixed determinant polynomial"]:::open
     Pt <-->|iff| Goal
-    Char -->|signed constant term| Goal
+    Char -->|project to each coefficient| Sep
+    Low -->|covers the first three indices| Sep
+    Sep -->|top coefficient| Goal
     Mixed -->|evaluate at 1| Goal
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
     classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
+    classDef refuted fill:#fbe7e7,stroke:#aa4949,color:#5b2020
 ```
 
 The mixed determinant is $\det(A+zB)$, where $z$ is the polynomial
 variable. In positive order $n$, its coefficients of degrees $0$, $1$,
 $n-1$, and $n$ each lie in the corresponding matching hull. These bounds
 allow separate weights for each degree. The simultaneous condition calls
-for one set of weights for the whole polynomial.
-[Pointwise characteristic comparison](../../Lean/MOC/Reformulations/CStar.lean#L95) · [First coefficient](../../Lean/MOC/Reformulations/NativeLinksA.lean#L106) · [Penultimate coefficient](../../Lean/MOC/Reformulations/NativeLinksA.lean#L149) · [Endpoint coefficients](../../Lean/MOC/Reformulations/NativeLinksA.lean#L161)
+for one set of weights for the whole polynomial and implies every
+separate coefficient comparison. The proved bounds cover all
+coefficients through order three.
+[Pointwise characteristic comparison](../../Lean/MOC/Reformulations/CStar.lean#L95) · [Separate mixed coefficients](../../Lean/MOC/Reformulations/NativeLinksA.lean#L192) · [Small-order proof](../../Lean/MOC/Reformulations/NativeLinksA.lean#L210)
+
+Let $M=A+UBU^*$. Its elementary coefficient $e_k(M)$ is the
+coefficient of $x^k$ in $det(I+xM)$. For C11, the separate coefficient
+form allows new weights for each $k$. The first three bounds use the
+same weights. The proof writes each of their matching values as a
+constant plus a sum of functions of individual matched pairs.
+Birkhoff weights preserve that sum. The top coefficient is the
+determinant. The remaining indices $4le k<n$ are open here.
+[Lean coefficient definition](../../Lean/MOC/Reformulations/SecondCoefficient.lean#L64) · [First three coefficients](../../Lean/MOC/Reformulations/SecondCoefficient.lean#L245) · [Original low-degree result](https://doi.org/10.21136/CMJ.1992.128332)
+
+The all-order separate coefficient form is equivalent to the
+conjunction of MOC and the bounds for $4le k<n$. Thus only the
+determinant bound is needed for the separate form through order four.
+[Exact split](../../Lean/MOC/Reformulations/SecondCoefficient.lean#L281)
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
-| Simultaneous characteristic hull | If | [Statement and proof](../../Lean/MOC/Reformulations/SecondCoefficient.lean#L50) |
-| Simultaneous mixed-pencil coefficients | If | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksA.lean#L200) |
+| Separate elementary coefficients | If | [New Lean source](../../Lean/MOC/Reformulations/SecondCoefficient.lean#L89) |
+| Simultaneous characteristic hull | Refuted sufficient condition | [Implication](../../Lean/MOC/Reformulations/SecondCoefficient.lean#L52) · [Exact counterexample](#counterexample-to-the-common-characteristic-polynomial-law) |
+| Simultaneous mixed-pencil coefficients | If | [Statement and proof](../../Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
+
+### Counterexample to the common characteristic-polynomial law
+
+Take the orthogonal matrix
+
+$$
+U=rac17egin{pmatrix}
+1&4&4&4\
+-4&1&4&-4\
+-4&-4&1&4\
+-4&4&-4&1
+end{pmatrix}.
+$$
+
+Divide all entries of the following lists by $10^4$.
+
+| List | Numerators |
+| --- | --- |
+| $a$ | $560+17062i$, $-13061-19835i$, $-13135-19794i$, $25636+22567i$ |
+| $b$ | $10341+21575i$, $-15084-9084i$, $-5643-34138i$, $10386+21647i$ |
+| $(c_2,c_3,c_4)$ | $4970-2858i$, $-11115+829i$, $-24243-13124i$ |
+
+Define $L(M)=mathrm{Re}sum_{k=2}^4 c_k e_k(M)$. Compute each $e_k$
+by summing the principal minors of size $k$. For
+$M=mathrm{diag}(a)+Umathrm{diag}(b)U^{mathsf T}$ this gives
+
+$$
+L(M)=rac{276551869758667259929}{1200500000000000000000}.
+$$
+
+On the 24 matched lists $a_j+b_{sigma(j)}$, the largest value is
+$3457447314302311469/20000000000000000000$. This value is less than
+$18/100$. The value at $M$ is greater than $23/100$. The three
+permutations $(1,2,3,4)$, $(1,2,4,3)$ and $(1,3,4,2)$ give a triangle
+that contains the actual value for each separate coefficient of
+index $2$, $3$ or $4$. The trace is constant. This exact arithmetic
+example refutes the common law in C11 and the stronger compound law
+in C10. [Lean implication from the compound law](../../Lean/MOC/Reformulations/NativeLinksD.lean#L48)
+
+## Atlas realizations and implications
+
+The printed Atlas gives 243 rows of spectral data. The audit examines
+the corresponding two-input comparisons. An exact comparison needs
+both arrows. In the reverse direction, the realization must retain the
+original determinant and the allowed relative unitary position.
+The audit gives both arrows for 78 realized comparisons. It also
+records exact variants of individual branches, including the pointwise
+part of entry 048, and gives the premises of convention-dependent
+converses. The 243 labelled evaluations have their own map below.
+[Item-by-item implication audit](../../Lean/MOC/Reformulations/NativeAudit.lean#L16) · [Lean source coverage for entries 001–133](../../Lean/MOC/Reformulations/NativeCoverage.lean)
+
+```mermaid
+flowchart BT
+    accTitle: Atlas comparisons with natural spectra
+    accDescr: Some realizations give equivalent determinant comparisons. Others give only restrictions of MOC. The native product and regularization candidates need separate proofs and can fail.
+    M["Unrestricted MOC"]:::goal
+    N["Normal pencils, determinant lines,<br/>toric section weights, loopless adjacency"]
+    E["Real, positive, or circular spectra<br/>Proved restrictions"]
+    R["Other normal spectral restrictions<br/>Converse not established"]
+    X["Tensor and regularized determinant candidates<br/>Separate comparisons"]
+    N <-->|iff| M
+    M -->|specialize| E
+    M -->|specialize| R
+    classDef goal fill:#18344b,stroke:#18344b,color:#fff
+```
+
+| Atlas entries | Relation and scope | Lean source |
+| --- | --- | --- |
+| 006 | Iff for the normal diagonal matrices of characteristic roots. The statement for arbitrary original nonnormal sums is false. | [Representative equivalence](../../Lean/MOC/Reformulations/FirstMatrix.lean#L86) · [Nonnormal counterexample](../../Lean/MOC/Reformulations/SecondNative.lean#L32) |
+| 008, 243 | Iff for one complex linear projection of joint spectra at a time. A single coordinate gives the converse. | [Commuting tuple projections](../../Lean/MOC/Reformulations/FirstMatrix.lean#L103) · [Joint numerical range](../../Lean/MOC/Reformulations/SecondNative.lean#L289) |
+| 009, 014 | Iff for normal matrices obtained by normalizing regular pencils with invertible denominators, and for the action of the top exterior power of the sum. | [Pencils](../../Lean/MOC/Reformulations/FirstMatrix.lean#L121) · [Determinant line](../../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L96) |
+| 048, 185, 193 | Iff for pointwise determinants of scaled sums or shifted generators. Weights can depend on the scalar parameter. The separate mixed determinant coefficients have the boundary cases stated above. | [Mixed determinants](../../Lean/MOC/Reformulations/FirstStructured.lean#L202) · [Pointwise characteristic comparison](../../Lean/MOC/Reformulations/SecondNative.lean#L145) |
+| 183 | Iff for the determinant of the matrix with entries $(a_i+b_j)U_{ij}$, divided by $det U$. The comparison values are the products over perfect matchings. | [Weighted entry identity](../../Lean/MOC/Weights.lean#L29) · [New Lean equivalence](../../Lean/MOC/Reformulations/SecondNative.lean#L66) |
+| 003–005, 007, 024, 046 | Proved restrictions for Hermitian, positive definite, and unitary matrices, positive square roots of rectangular Gram matrices, Gram matrices, and the positive log-determinant interval. | [Hermitian](../../Lean/MOC/Reformulations/FirstHermitian.lean#L28) · [Positive definite](../../Lean/MOC/Reformulations/FirstHermitian.lean#L60) · [Unitary](../../Lean/MOC/Reformulations/FirstUnitary.lean#L43) · [Gram](../../Lean/MOC/Reformulations/FirstHermitian.lean#L70) · [Absolute value](../../Lean/MOC/Reformulations/FirstHermitian.lean#L82) · [Log determinant](../../Lean/MOC/Reformulations/NativeFirstAHermitian.lean#L37) |
+| 019, 020 | MOC implies the tests on the full lists of differences and ratios. A restriction to a selected column of matrix units has a separate converse. | [Full adjoint and conjugation spectra](../../Lean/MOC/Reformulations/FirstStructured.lean) · [Selected conjugation spectrum](../../Lean/MOC/Reformulations/FirstGeometric.lean) |
+| 050, 062, 063, 071 | The finite determinant variants are exact. MOC implies the stated closed-hull comparisons on infinite spaces by finite-rank approximation. The infinite-only converse needs an additional argument because zero modes can enlarge the matching hull. | [Finite determinant proofs](../../Lean/MOC/Reformulations/NativeFirstAFredholm.lean) · [Finite perturbation determinant](../../Lean/MOC/Reformulations/NativeFirstB.lean#L110) |
+| 021–023, 064 | The displayed tensor candidates fail in higher tensor order. Schatten regularization at index three fails in finite order and with infinitely many zero modes. | [Tensor resultant](../../Lean/MOC/Reformulations/FirstResultant.lean) · [Tensor stationary values](../../Lean/MOC/Reformulations/FirstTensorStationary.lean) · [Hyperdeterminant](../../Lean/MOC/Reformulations/FirstHyperdeterminant.lean) · [Finite regularized determinant](../../Lean/MOC/Reformulations/NativeLinksASchatten.lean#L180) · [Infinite case](#schatten-regularization-with-zero-modes) |
+
+### Schatten regularization with zero modes
+
+For entry 064, take two copies of the list $(-1/2,-2,0,ldots)$.
+Mix the two nonzero coordinates by a rotation with cosine
+$sqrt{5}/3$ and sine $2/3$. The resulting two by two block of
+the sum has trace $-5$ and determinant $5$. Its regularized
+determinant of index three is $e^{25/2}$.
+
+The factor for a spectral value $t$ is $(1+t)e^{-t+t^2/2}$.
+A permutation makes zero, one, or two matches between nonzero
+entries of the two lists. With zero matches the product is
+$e^{37/4}/4$. With one match it is zero, negative, or
+$3e^{41/4}/4$. With two matches it is zero or $9e^{45/4}/4$.
+All these values are less than $e^{25/2}$. For the last one, use
+$e^{5/4}>1+5/4$. There are finitely many distinct comparison values,
+so taking the closed hull preserves the strict separation.
+[Finite-order calculation](../../Lean/MOC/Reformulations/NativeLinksASchatten.lean#L180)
+
+### Additional converses with native data
+
+| Entry | Realization for the converse | Evidence |
+| --- | --- | --- |
+| 079, 089 | Use a flat complex torus with Gaussian lattice. Its holomorphic diagonal endomorphisms act by Gaussian integers in bidegree $(1,0)$. For 089, use a trivial torus action. The indicated bidegree gives a preserved free submodule, which the statement permits. Homogeneity and density give all complex lists. | [Lean density argument](../../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
+| 119 | If observables admit complex functions, use a finite disjoint union of points as a zero-dimensional symplectic manifold. Its quantization has one line per point. Multiplication by two complex functions gives arbitrary diagonal spectra. Self-adjoint observables alone give the proved real restriction. | Paper realization |
+| 130 | Use the two line bundles obtained from the two copies of projective space of dimension $n-1$ in a product. Their coordinate sections give the two lists. Add two projective line factors and twist each linearization by a character on a different extra factor. The two twists give independent scales. An opposite spectral shift removes zeros. | [Lean section-weight model](../../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
+| 131 | Two big line bundles on one projective variety give arbitrary evaluated valuation lists at degree one. The construction uses a common flag and a common real-linear evaluation. | [Paper proof](#newtonokounkov-valuation-realization) |
+| 134 | On a point, the zero map from $mathbb C^n$ in degree $-1$ to the cotangent complex is a perfect obstruction theory. The degree-zero cohomology is zero on both sides. The map in degree $-1$ surjects onto zero. Every endomorphism of the obstruction space is compatible. The degree $-1$ hull recovers MOC. | [Definition of perfect obstruction theory](https://arxiv.org/abs/alg-geom/9601010) |
+| 137 | With continuous $ell$-adic coefficients and a complex scalar embedding, use unramified characters of the absolute Galois group of a finite field. A local unit can have any prescribed value in the dense set of Gaussian rationals that are local units. Usual complex continuity instead forces unit-circle spectra. | [Paper proof](#galois-scalar-realization) |
+| 175 | Require normal adjacency matrices of loopless directed graphs with complex edge weights. Conjugate each traceless spectrum by the discrete Fourier matrix. Each resulting diagonal entry is the mean of that spectrum and is zero. The traceless spectral test is exact. | [New Lean adjacency equivalence](../../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) · [Traceless test](../../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) |
+
+For 130, choose the effective torus on the two projective spaces and the
+two projective lines. In each set of $n$ sections the weights are the
+extra character and its products with the $n-1$ independent projective
+characters. These $2n$ weights form a lattice basis. At one torus point,
+they give any two lists of nonzero values independently.
+
+#### Newton–Okounkov valuation realization
+
+Fix $nge3$ and put $d=n-1$. For a large integer $q$, choose a smooth
+irreducible hypersurface of degree $q$ in $mathbb P^d$. Its equation
+spans the kernel of restriction of degree-$q$ forms to the hypersurface.
+Choose $s=inom{q+d}{d}-1$ distinct points on the hypersurface that
+impose independent conditions on the quotient space of forms. To
+choose each point, take a nonzero class in the current kernel and a
+point where its restriction is nonzero.
+
+Blow up the $s$ points to obtain $Y$. Write $H$ for the pullback of a
+hyperplane and $E$ for the sum of the exceptional divisors. The line
+bundle $L=mathcal O(H)$ has $n$ independent sections. The bundle
+$M=mathcal O(qH-E)$ has one section. For the $k$th power of $M$,
+the dimension of the section space is at least
+$inom{kq+d}{d}-sinom{k-1+d}{d}$. Its leading coefficient as a function
+of $k$ is positive because $q^d>s$ for large $q$ and $dge2$. Thus $M$
+is big. The bundle $L$ is big because it is the pullback by a
+birational map of an ample line bundle.
+
+Use two copies of $Y$ and two elliptic curves, with marked points on all
+four factors. On the two copies of $Y$, use $L$ and $M$ in opposite
+orders for the two bundles on the product. Choose the flags at points
+where the section of $M$ is nonzero. The coordinate sections of $L$
+have values $0,e_1,ldots,e_d$ in the first block, or
+$0,f_1,ldots,f_d$ in the second block. Here the vectors are the unit
+vectors of the corresponding flag coordinates.
+
+On each elliptic factor choose degree-one bundles whose unique sections
+vanish at or away from the marked point as needed. Give the first
+product bundle one simple zero on the first curve and the second
+bundle one simple zero on the other curve. The extra valuation
+coordinates add independent offsets $g_1$ and $g_2$. All four factors
+use big bundles. Tensor products of the displayed sections give a basis
+at degree one. In the common product flag the two valuation lists are
+$g_1,g_1+e_1,ldots,g_1+e_d$ and $g_2,g_2+f_1,ldots,g_2+f_d$.
+Choose a real-linear map on these independent coordinates. It sends
+$g_1,g_2$ to the first elements of two desired complex lists and sends
+the other basis vectors to the corresponding differences. This gives
+every pair of lists. In orders below three, the conjecture already
+holds. [Flag valuation definition](https://www.numdam.org/articles/10.24033/asens.2109/) · [Lean base orders](../../Lean/MOC/Small.lean#L68)
+
+#### Galois scalar realization
+
+Use the absolute Galois group of a finite field. It is the profinite
+completion of $mathbb Z$ with Frobenius as a topological generator.
+Fix an embedding of the Gaussian rationals into a finite extension of
+$mathbb Q_ell$ and a complex scalar embedding extending the usual
+Gaussian embedding. Every unit of the local ring defines a continuous
+character by sending Frobenius to that unit. Indeed, the powers of a
+unit have finite image in every finite congruence quotient, and the
+resulting maps from the profinite completion are compatible.
+
+Gaussian rational local units are dense in $mathbb C$. To approximate
+a complex number, use large positive integer denominators prime to
+$ell$ and Gaussian integer numerators congruent to $1$ modulo $ell$.
+Take direct sums of these characters to realize a dense set of spectral
+pairs in each order. The hull of the finite list of matching products
+varies continuously, so the restricted bound extends to all pairs.
+[Lean spectral closure](../../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73)
 
 ## Labelled spectral formulations
 
@@ -296,7 +502,7 @@ connection to these spectra.
 | 001–133 | Each entry is equivalent to unrestricted MOC. | [001 through 133](../../Lean/MOC/Reformulations/FirstAtlas.lean#L22-L837) |
 | 134–243 | Each entry is equivalent to unrestricted MOC. | [134 through 243](../../Lean/MOC/Reformulations/SecondAtlas.lean#L22-L697) |
 
-The registered list spans [001 through 243](../../Lean/MOC/ProofRoutes.lean#L320). At a
+The registered list spans [001 through 243](../../Lean/MOC/ProofRoutes.lean#L324). At a
 fixed order, the evaluated form is equivalent to the fixed-order
 conjecture when the sample type is nonempty.
 [Fixed-order form](../../Lean/MOC/ProofRoutes.lean#L71)

@@ -16,6 +16,7 @@ import MOC.Reformulations.FirstSpinFactor
 import MOC.Reformulations.FirstStructured
 import MOC.Reformulations.FirstTensorStationary
 import MOC.Reformulations.FirstUnitary
+import MOC.Reformulations.LooplessAdjacency
 import MOC.Reformulations.NativeAudit
 import MOC.Reformulations.NativeCoverage
 import MOC.Reformulations.NativeFirstAAlgebra

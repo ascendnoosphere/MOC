@@ -1,4 +1,5 @@
 import MOC.Claim
+import MOC.Reformulations.SecondCoefficient
 import MOC.Weights
 import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Algebra.Polynomial.Reverse
@@ -186,6 +187,42 @@ by an abstract convexity argument. -/
 def SimultaneousMixedPencilHull : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
     mixedPencilPolynomial a b U ∈ convexHull ℝ (Set.range (mixedPencilVertex a b))
+
+/-- Atlas 048 with a separate convex hull for each mixed coefficient. -/
+def SeparateMixedPencilHull : Prop :=
+  ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
+    ∀ k : ℕ, k ≤ n →
+      (mixedPencilPolynomial a b U).coeff k ∈
+        convexHull ℝ (Set.range (fun σ => (mixedPencilVertex a b σ).coeff k))
+
+theorem separateMixedPencilHull_of_simultaneous (h : SimultaneousMixedPencilHull) :
+    SeparateMixedPencilHull := by
+  intro n a b U hU k _
+  let coeff := CStar.signedCoefficient 1 k
+  have hv : coeff (mixedPencilPolynomial a b U) ∈
+      coeff '' convexHull ℝ (Set.range (mixedPencilVertex a b)) :=
+    ⟨_, h n a b U hU, rfl⟩
+  rw [LinearMap.image_convexHull, ← Set.range_comp] at hv
+  change 1 * (mixedPencilPolynomial a b U).coeff k ∈
+    convexHull ℝ (Set.range fun σ => 1 * (mixedPencilVertex a b σ).coeff k) at hv
+  simpa only [one_mul] using hv
+
+theorem mixedPencil_coeff_hull_of_order_le_three {n k : ℕ} (hn : n ≤ 3) (hk : k ≤ n)
+    (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
+    (mixedPencilPolynomial a b U).coeff k ∈
+      convexHull ℝ (Set.range (fun σ => (mixedPencilVertex a b σ).coeff k)) := by
+  have cases_k : k = 0 ∨ k = 1 ∨ k = n - 1 ∨ k = n := by omega
+  rcases cases_k with rfl | rfl | hr | rfl
+  · exact (mixedPencil_boundary_coeff_hulls a b U hU).1
+  · exact mixedPencil_first_coeff_hull a b U hU
+  · rw [hr]
+    by_cases hpos : 1 ≤ n
+    · have hcard : 1 ≤ Fintype.card (Fin n) := by simpa only [Fintype.card_fin] using hpos
+      simpa only [Fintype.card_fin] using mixedPencil_penultimate_coeff_hull a b U hU hcard
+    · have hz : n = 0 := by omega
+      subst n
+      simpa only [Nat.zero_sub] using (mixedPencil_boundary_coeff_hulls a b U hU).1
+  · simpa only [Fintype.card_fin] using (mixedPencil_boundary_coeff_hulls a b U hU).2
 
 private def evalOneLinear : ℂ[X] →ₗ[ℝ] ℂ where
   toFun p := p.eval 1

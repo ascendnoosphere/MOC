@@ -19,14 +19,14 @@ matching products with nonnegative real weights whose sum is one.
 
 ## Proof tree
 
-[All orders](#all-orders) · [Order four](#order-four) · [Order five](#order-five) · [Proved cases](#cases-proved-in-lean) · [Counterexamples](#counterexamples-to-stronger-statements)
+[All orders](#all-orders) · [Equivalent formulations](Docs/Proofs/all-order-proof-maps.md#matrix-and-operator-formulations) · [Atlas audit](Docs/Proofs/all-order-proof-maps.md#atlas-realizations-and-implications) · [Order four](#order-four) · [Order five](#order-five) · [Proved cases](#cases-proved-in-lean) · [Counterexamples](#counterexamples-to-stronger-statements)
 
 The detailed maps cover every registered Lean route and give the
 premises and source for each branch.
 
 | Detailed map | Coverage |
 | --- | --- |
-| [All-order routes](Docs/Proofs/all-order-proof-maps.md) | The order split, 67 general routes, and 243 labelled spectral formulations. |
+| [All-order routes](Docs/Proofs/all-order-proof-maps.md) | The order split, 71 general routes, and the audit of 243 spectral entries. |
 | [Contact transfer](Docs/Proofs/contact-proof-maps.md) | Fixed and varying determinant differences, terminal counts, rank, moments, and isolation. |
 | [Order four](Docs/Proofs/order-four-proof-maps.md) | Eleven registered routes, orthogonal and stationary restrictions, and named contact patterns. |
 | [Order five](Docs/Proofs/order-five-proof-maps.md) | Ten registered routes, contact thresholds, sparse matrices, and squared-minor tests. |
@@ -57,11 +57,11 @@ The status tables identify the steps and cases that Lean proves.
 ```mermaid
 flowchart BT
     accTitle: Proof routes to unrestricted MOC
-    accDescr: The conjunction of all order ranges and any equivalent test each imply and follow from MOC. Either simultaneous polynomial hull implies MOC.
+    accDescr: The conjunction of all order ranges and any equivalent test each imply and follow from MOC. The separate characteristic coefficients and the simultaneous mixed determinant give sufficient conditions.
     Goal["Unrestricted MOC<br/>Open"]:::goal
     Ranges{{"AND<br/>All order ranges"}}:::join
     Tests["Any equivalent<br/>all-order test"]:::open
-    Polys["Either simultaneous<br/>polynomial hull"]:::open
+    Polys["Separate characteristic coefficients<br/>or simultaneous mixed determinant"]:::open
     Base["Orders 0–3<br/>Proved"]:::proved
     Four["Order 4"]:::open
     Five["Order 5"]:::open
@@ -102,21 +102,23 @@ is in the hull if and only if the bound holds in every direction.
 | Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L89) |
 | Iff | Replace the square unitary by a rectangular matrix with at least three orthonormal rows and one extra column. Compare with products that match the shorter list to distinct positions in the longer list. | [Rectangular determinant bound](Lean/MOC/PrincipalCoisometry.lean#L248) |
 | Iff | In orders at least four, use lists $x,y$ with $x_1=0$, $x_2=1$, and $y_1=0$. For every unitary $U$ with no zero entries, place $\det(U-XUY)/\det U$ in the hull of the products $\prod_j(1-x_{\sigma(j)}y_j)$. Here $X=\mathrm{diag}(x)$ and $Y=\mathrm{diag}(y)$. | [Three fixed coordinates](Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
-| If | Use one set of convex weights for the full characteristic polynomial of the sum and the corresponding matched sums. Its signed constant term gives the determinant. | [Characteristic-polynomial implication](Lean/MOC/Reformulations/SecondCoefficient.lean#L50) |
-| If | Use one set of convex weights for the full polynomial $\det(A+zB)$ and the polynomials from the matchings. Evaluation at $z=1$ gives the determinant. | [Mixed determinant implication](Lean/MOC/Reformulations/NativeLinksA.lean#L200) |
+| Iff, new Lean source | Use normal adjacency matrices of loopless complex weighted directed graphs. Keep all relative unitary positions. | [Loopless adjacency](Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
+| If, new Lean source | For each index, place the elementary symmetric coefficient of the sum in its matching hull. The weights can depend on the index. The coefficient of index $n$ is the determinant. | [Separate coefficient implication](Lean/MOC/Reformulations/SecondCoefficient.lean#L89) |
+| If | Use one set of convex weights for the full polynomial $\det(A+zB)$ and the polynomials from the matchings. Evaluation at $z=1$ gives the determinant. | [Mixed determinant implication](Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
 
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | A strict violation with at most $2n-2$ contacts can gain a contact by changing the lists. The new violation keeps the same $U$, direction, and previous contacts. | [Contact transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Proof of the continuation premise](Lean/MOC/AffineGapCover.lean#L80) |
 | Partial | A counterexample of least order has no proper diagonal block split after independent row and column permutations. Each row and column of $U$ has at least three nonzero entries. Every matrix that commutes with both summands is a scalar multiple of the identity. | [Block split](Lean/MOC/Claim.lean#L51) · [Rows](Lean/MOC/SparseRow.lean#L287) · [Columns](Lean/MOC/SparseRow.lean#L309) · [Commuting matrices](Lean/MOC/ReducingCommutant.lean#L70) |
-| Partial | For $\det(A+zB)$ in positive order $n$, Lean proves the separate coefficient bounds at degrees $0$, $1$, $n-1$, and $n$. The simultaneous statement requires a single set of weights. | [First](Lean/MOC/Reformulations/NativeLinksA.lean#L106) · [Penultimate](Lean/MOC/Reformulations/NativeLinksA.lean#L149) · [Endpoints](Lean/MOC/Reformulations/NativeLinksA.lean#L161) |
+| Partial | For $\det(A+zB)$ in positive order $n$, the separate coefficient bounds hold at degrees $0$, $1$, $n-1$, and $n$. This covers every coefficient through order three. | [First](Lean/MOC/Reformulations/NativeLinksA.lean#L107) · [Penultimate](Lean/MOC/Reformulations/NativeLinksA.lean#L150) · [Endpoints](Lean/MOC/Reformulations/NativeLinksA.lean#L162) |
+| Partial, new Lean source | The first three elementary symmetric coefficients of $A+UBU^*$ have one set of matching weights in every order. The weights depend only on $U$. | [Coefficient proof](Lean/MOC/Reformulations/SecondCoefficient.lean#L245) |
 | Open | The directional bound at the contact thresholds remains to be proved in general. The order split also leaves every order at least six to prove. | [Contact endpoint](Lean/MOC/AffineGapCover.lean#L85) · [Higher orders](Lean/MOC/ProofRoutes.lean#L214) |
 
 Two iff routes for the same goal imply each other. A sufficient route
 implies every iff route for that goal. An all-order route also implies
 each iff route at a fixed order. Refuting an iff route refutes its goal.
 A sufficient condition can fail while the goal still holds.
-[Transfer between routes](Lean/MOC/ProofRoutes.lean#L36) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L584)
+[Transfer between routes](Lean/MOC/ProofRoutes.lean#L36) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L588)
 
 ### Order four
 
@@ -288,7 +290,7 @@ statements and the proof of each connection to its goal.
 - The inclusion holds if all matching products lie on one line in the
   complex plane. It also holds if each product has the form
   $P_\sigma=c+\sum_j f(j,\sigma(j))$ for a fixed $c$ and a fixed function $f$.
-  [Collinear products](Lean/MOC/CollinearKernelSupport.lean#L190) · [Sum over matched pairs](Lean/MOC/Weights.lean#L187)
+  [Collinear products](Lean/MOC/CollinearKernelSupport.lean#L190) · [Sum over matched pairs](Lean/MOC/Weights.lean#L185)
 - Fix $a$, $b$, and $U$, with all entries of $U$ nonzero. The inclusion
   holds for the lists $(a_i-z)$ and $(b_j)$ for every complex $z$ of
   sufficiently large modulus. The lower bound can depend on $a$, $b$, and $U$.
@@ -314,6 +316,11 @@ statements and the proof of each connection to its goal.
   [Proof](Lean/MOC/Singular.lean#L496)
 
 ## Counterexamples to stronger statements
+
+- In order four, a real orthogonal $U$ and two complex spectra give a
+  characteristic polynomial outside the convex hull of the matching
+  characteristic polynomials. Each coefficient of the example is in its
+  own matching hull. [Exact arithmetic certificate](Docs/Proofs/all-order-proof-maps.md#counterexample-to-the-common-characteristic-polynomial-law)
 
 - In order five, let $U=I-2vv^*$ with $v=(1,1,1,1,1)^{\mathsf T}/\sqrt{5}$.
   For this $U$, every pair of lists satisfies the determinant inclusion.

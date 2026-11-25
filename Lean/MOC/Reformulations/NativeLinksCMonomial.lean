@@ -1,5 +1,6 @@
 import MOC.Claim
 import MOC.Geometry
+import MOC.Reformulations.FirstGeometric
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-! Atlas 169: arbitrary actual Laurent-monomial lists, not functions
@@ -33,6 +34,30 @@ private theorem monomial_single {r : ℕ} (z : Fin r → ℂ) (j : Fin r) :
   · intro i _ hi
     simp [Pi.single_apply, hi.symm]
   · simp
+
+/-- Atlas 130 on the two sets of homogeneous coordinate section weights.
+Use independent torus coordinates for the sections of the two line bundles. -/
+def ProjectiveToricSectionForm : Prop :=
+  ∀ (n : ℕ) (z : Fin (n + n) → ℂ), (∀ i, z i ≠ 0) →
+    ∀ (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
+    Holds (fun i => laurentMonomialValue z (Pi.single (Fin.castAdd n i) (1 : ℤ)))
+      (fun i => laurentMonomialValue z (Pi.single (Fin.natAdd n i) (1 : ℤ))) U
+
+theorem projectiveToricSectionForm_iff : ProjectiveToricSectionForm ↔ MOCIsTrue := by
+  classical
+  constructor
+  · intro h
+    apply moc_iff_nonzeroSpectra.mpr
+    intro n a b U hU ha hb
+    let z : Fin (n + n) → ℂ := Fin.addCases a b
+    have hleft (i : Fin n) : z (Fin.castAdd n i) = a i := Fin.addCases_left i
+    have hright (i : Fin n) : z (Fin.natAdd n i) = b i := Fin.addCases_right i
+    have hz (i : Fin (n + n)) : z i ≠ 0 :=
+      Fin.addCases (fun j => by rw [hleft]; exact ha j)
+        (fun j => by rw [hright]; exact hb j) i
+    simpa only [monomial_single, hleft, hright] using h n z hz U hU
+  · intro h n z _ U hU
+    exact h n _ _ U hU
 
 /-- Compare actual monomial evaluations at an actual complex torus point.
 There is no free spectral evaluation map and no density or limiting argument. -/

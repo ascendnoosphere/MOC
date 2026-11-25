@@ -159,7 +159,7 @@ sums. The proof expands a cofactor in column $j$. The cofactor
 stationarity equations make a matrix commutator Hermitian. Averaging
 the expansions for the spectra and their conjugates cancels the real
 part of the correction.
-[Signed weight](../../Lean/MOC/Weights.lean#L52) ·
+[Signed weight](../../Lean/MOC/Weights.lean#L50) ·
 [Cofactor stationarity](../../Lean/MOC/ComplexTiedSwap.lean#L75) ·
 [New Lean identity](../../Lean/MOC/StationaryPivot.lean#L329)
 

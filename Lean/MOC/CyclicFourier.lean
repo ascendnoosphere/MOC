@@ -29,6 +29,16 @@ theorem cyclicFourier_scale_mul (n : ℕ) :
       (n : ℂ)⁻¹ := by
   rw [← Complex.ofReal_mul, ← pow_two, fourier_scale_sq, Complex.ofReal_inv, Complex.ofReal_natCast]
 
+/-- Each entry contributes the same squared modulus to a diagonal
+of a Fourier-conjugated matrix. -/
+theorem cyclicFourier_mul_conj_entry (n : ℕ) [NeZero n] (i j : ZMod n) :
+    cyclicFourier n i j * star (cyclicFourier n i j) = (n : ℂ)⁻¹ := by
+  have hreal : star (((Real.sqrt (n : ℝ))⁻¹ : ℝ) : ℂ) =
+      (((Real.sqrt (n : ℝ))⁻¹ : ℝ) : ℂ) := Complex.conj_ofReal _
+  simp only [cyclicFourier, star_mul', hreal, cyclicCharacter_conj]
+  rw [mul_mul_mul_comm, cyclicFourier_scale_mul, ← AddChar.map_add_eq_mul,
+    add_neg_cancel, AddChar.map_zero_eq_one, mul_one]
+
 theorem cyclicFourier_unitary (n : ℕ) [NeZero n] : IsUnitary (cyclicFourier n) := by
   have h : cyclicFourier n * (cyclicFourier n)ᴴ = 1 := by
     ext i k : 1

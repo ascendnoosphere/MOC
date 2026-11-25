@@ -26,26 +26,24 @@ theorem sum_signedWeight (U : Matrix ι ι ℂ) (h : U.det ≠ 0) :
   simp only [signedWeight, ← Finset.sum_div, leibnizTerm, ← Matrix.det_apply']
   exact div_self h
 
-theorem signed_determinant (a b : ι → ℂ) (U : Matrix ι ι ℂ) (h : IsUnitary U) :
-    ∑ σ, signedWeight U σ * matchingProduct a b σ = determinantValue a b U := by
-  have hmat : (diagonal a + U * diagonal b * Uᴴ) * U =
+theorem determinantValue_eq_weightedEntryDet_div (a b : ι → ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    determinantValue a b U = (Matrix.of (fun i j => (a i + b j) * U i j)).det / U.det := by
+  have hm : (diagonal a + U * diagonal b * Uᴴ) * U =
       Matrix.of (fun i j => (a i + b j) * U i j) := by
-    rw [Matrix.add_mul, Matrix.mul_assoc (U * diagonal b), h.2, Matrix.mul_one]
+    rw [Matrix.add_mul, Matrix.mul_assoc (U * diagonal b), hU.2, Matrix.mul_one]
     ext i j
     simp only [Matrix.diagonal_mul, Matrix.mul_diagonal, Matrix.add_apply, Matrix.of_apply]
     ring
-  have hd : determinantValue a b U * U.det =
-      ∑ σ, leibnizTerm U σ * matchingProduct a b σ := by
-    unfold determinantValue
-    rw [← Matrix.det_mul, hmat, Matrix.det_apply']
-    apply Finset.sum_congr rfl
-    intro σ _
-    simp only [leibnizTerm, matchingProduct, Matrix.of_apply, Finset.prod_mul_distrib]
-    ring
-  rw [(eq_div_iff (det_ne_zero_of_unitary h)).mpr hd, Finset.sum_div]
+  apply (eq_div_iff (det_ne_zero_of_unitary hU)).mpr
+  rw [determinantValue, ← Matrix.det_mul, hm]
+
+theorem signed_determinant (a b : ι → ℂ) (U : Matrix ι ι ℂ) (h : IsUnitary U) :
+    ∑ σ, signedWeight U σ * matchingProduct a b σ = determinantValue a b U := by
+  rw [determinantValue_eq_weightedEntryDet_div a b U h, Matrix.det_apply', Finset.sum_div]
   apply Finset.sum_congr rfl
   intro σ _
-  unfold signedWeight
+  simp only [signedWeight, leibnizTerm, matchingProduct, Matrix.of_apply, Finset.prod_mul_distrib]
   ring
 
 /-- The unitary signed determinant law can use real weights for all complex spectra. -/

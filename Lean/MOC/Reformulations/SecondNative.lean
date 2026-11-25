@@ -1,5 +1,6 @@
 import MOC.Reformulations.Common
 import MOC.Normal
+import MOC.Weights
 import Mathlib.MeasureTheory.Measure.Dirac
 
 /-!
@@ -54,6 +55,23 @@ theorem not_arbitraryAdjacencyForm : ¬ ArbitraryAdjacencyForm := by
   have hd : (A + B).det = -1 := by simp [A, B, Matrix.det_fin_two, Matrix.add_apply]
   rw [hp, Set.range_const, convexHull_singleton, Set.mem_singleton_iff, hd] at hh
   exact neg_ne_zero.mpr one_ne_zero hh
+
+/-- Atlas 183 in weighted matrix entries. The denominator is nonzero for
+a unitary matrix. Each vertex picks one edge in every row and column. -/
+def WeightedBipartiteMatchingForm : Prop :=
+  ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
+    (Matrix.of (fun i j => (a i + b j) * U i j)).det / U.det ∈
+      convexHull ℝ (Set.range (matchingProduct a b))
+
+theorem weightedBipartiteMatchingForm_iff : WeightedBipartiteMatchingForm ↔ MOCIsTrue := by
+  constructor
+  · intro h n a b U hU
+    change determinantValue a b U ∈ convexHull ℝ (Set.range (matchingProduct a b))
+    rw [determinantValue_eq_weightedEntryDet_div a b U hU]
+    exact h n a b U hU
+  · intro h n a b U hU
+    rw [← determinantValue_eq_weightedEntryDet_div a b U hU]
+    exact h n a b U hU
 
 /-- Atlas 183: a probability law on perfect matchings of the two labelled parts.
 The law is allowed to depend on both spectra. -/
