@@ -317,7 +317,7 @@ private theorem assignmentFace_offWeight_bound (U : Matrix ι ι ℂ) (hU : IsUn
         rw [hzero, add_zero]
         have hb := add_le_add (hmass i l) (he i l τ)
         dsimp [C]
-        linarith
+        nlinarith only [hb, hτ]
       · refine ⟨τ, Or.inr rfl, fun i l hi => ?_⟩
         have hσ := hsmall (w σ) (w τ) (hw σ) hw' (by linarith) hweights
         rw [← Complex.normSq_eq_norm_sq, ← hm i l]
@@ -327,7 +327,7 @@ private theorem assignmentFace_offWeight_bound (U : Matrix ι ι ℂ) (hU : IsUn
         rw [hzero, add_zero]
         have hb := add_le_add (hmass i l) (he i l σ)
         dsimp [C]
-        linarith
+        nlinarith only [hb, hσ]
     obtain ⟨ρ, hρ, hsmallEntries⟩ := hdom
     intro π hπ
     have hne : π ≠ ρ := by
@@ -386,7 +386,7 @@ private theorem assignmentFace_variation_bound (U : Matrix ι ι ℂ) (hU : IsUn
     refine (abs_add_le _ _).trans ?_
     rw [abs_neg, abs_of_nonneg (hw π)]
     dsimp [B]
-    linarith
+    nlinarith only [hsign, hweight]
   have hoffSum (g : Equiv.Perm ι → ℝ) (hg : ∀ π ∈ T, |g π| ≤ B) :
       |∑ π ∈ T, g π| ≤ p * B := by
     calc
