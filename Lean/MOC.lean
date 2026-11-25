@@ -7,6 +7,9 @@ import MOC.FiniteFrameLabels
 import MOC.ZhengContactReduction
 import MOC.ZhengRectangleContact
 import MOC.ZhengPairedContacts
+import MOC.ZhengT40Support
+import MOC.ZhengT55Identities
+import MOC.ZhengT81Bypass
 import MOC.ZhengStarObstruction
 import MOC.FourMatchingPolarization
 import MOC.AlternatingMinorLaw

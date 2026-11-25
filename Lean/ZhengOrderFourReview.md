@@ -23,3 +23,9 @@ positive-height branch, Lean [confines all crossing contacts to one
 marked row and column](ZhengT85Independent.md#one-defect-beyond-the-paired-branch),
 with a positive lower bound on each of the other nine gaps. The
 determinant comparison on that remaining case is open.
+
+The [T85 dependency repair](ZhengT40AndT85Dependencies.md) uses the checked
+eight-contact reduction to remove T81 from this part of the proof.
+It does not certify T81 as a standalone terminal case. The remaining
+T85 route uses the strictly positive-height T40 and T55 overlaps;
+the zero-height arguments are now independent of the supplement.

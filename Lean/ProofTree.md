@@ -83,7 +83,8 @@ flowchart BT
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
-    T85["T85: close the marked row and column case · open"]:::open
+    T85["T85: positive-height T40 or T55 overlap · open"]:::open
+    BYPASS["T81 not needed for T85<br/>eight contacts force an arm contact · checked"]:::checked
     OTHERS["Other terminal contact patterns · open"]:::open
     COVER{{"AND: cover every terminal pattern"}}
     STAR["T85: one exact signed residual objective<br/>plus nonnegative minor terms · checked"]:::checked
@@ -102,6 +103,7 @@ flowchart BT
     PHASE -. restrict realizable profiles .-> SEVEN
     PAIRED -. removes the zero-height case .-> T85
     STAR -. identifies the residual case .-> T85
+    BYPASS -. removes the central-only dependency .-> T85
     NOGO -. exact spectral equations are needed .-> T85
     SEC -. excludes a neighborhood of the bad ray .-> T85
     T85 -. candidate case split .-> COVER
@@ -430,6 +432,14 @@ excludes an open neighborhood of that ray, using Lean-checked
 local algebra and the external geometric rank bound. Closing the
 remaining comparison settles $T_{85}$,
 not the other terminal patterns or unrestricted MOC.
+The [checked arm bypass](MOC/ZhengT81Bypass.lean) removes the need
+for T81 in the T85 dependency list; Zheng's Table 3 then leaves
+the T55 overlaps or exactly eight contacts with the central mark
+and one of the two T40 arms. The [zero-height T40 argument](MOC/ZhengT40Support.lean)
+is checked and the [T55 zero-height minor certificate](ZhengT55ZeroHeight.md)
+is a direct paper proof. The [dependency note](ZhengT40AndT85Dependencies.md)
+records which positive-height branches remain.
+
 
 **Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)
 uses the number of polynomial observables that determine the old
