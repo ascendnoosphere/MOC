@@ -14,7 +14,7 @@ flowchart BT
     ALL["Unrestricted MOC · open"]:::open
     ROUTES{{"OR: choose a complete all-order route"}}
     NATIVE["Native and structural analogies<br/>exact and sufficient routes"]:::open
-    SAT["Support bound for balanced,<br/>orbit-maximal terminal witnesses"]:::open
+    SAT["Support bound for rank- and moment-tested<br/>terminal orbit maximizers"]:::open
     SIMPLE["Support bound at ≥ 2n-2 contacts<br/>on the full exact profile locus"]:::open
     ATLAS["243 evaluated atlas forms<br/>each exact, not a native-object proof"]:::open
     SPLIT{{"AND: prove all three order ranges"}}
@@ -120,7 +120,9 @@ flowchart BT
     TERMINAL["Support at ≥ 2n-2 contacts<br/>· open"]:::open
     BALANCE["Keep terminal contacts at a<br/>balanced orbit maximum · checked"]:::checked
     BUDGET["Use independent controlling equations<br/>rather than label count · checked"]:::checked
-    TIGHT["Exclude balanced nonnormal<br/>terminal orbit maxima · open"]:::open
+    RANK["At least 2n−3 independent<br/>contact differences · checked"]:::checked
+    MOMENT["Centered quartic moment test<br/>at contact-preserving maxima · checked"]:::checked
+    TIGHT["Exclude rank- and moment-tested<br/>terminal orbit maxima · open"]:::open
     OUTLIER["Height-zero bound for two imaginary<br/>outliers, arbitrary mixer · checked"]:::checked
     CHART --> CUT
     CUT --> MODEL
@@ -129,6 +131,8 @@ flowchart BT
     BOTH --> TRANSFER
     TRANSFER -. reduces MOC to .-> TERMINAL
     BALANCE -. proves refinement .-> TIGHT
+    RANK -. restricts contact sets .-> TIGHT
+    MOMENT -. restricts spectra .-> TIGHT
     BUDGET -. excludes some contact sets .-> TERMINAL
     TERMINAL <-->|iff| TIGHT
     OUTLIER -. proves a terminal family .-> TERMINAL
@@ -330,6 +334,15 @@ always gains another label, even if all six are contacts. The
 alternating identity leaves at most four contact equations and one
 gap equation, below the dimension threshold. This does not extend to
 an arbitrary six-label set without a relation on its exact profiles.
+The [rank reduction](MOC/ContactDifferenceRank.lean) gives at least
+$2n-3$ independent pivot-difference functions, not merely that many
+labels. With exactly $2n-2$ contacts every nonpivot difference is
+independent. The [subset marker test](MOC/ContactMarkerRank.lean)
+identifies these linear relations with subset-image relations.
+Independence here is on the entire exact profile locus, not the rank
+of a differential at the witness. The same module proves that the
+unrotated determinant-gap function is not in the contact span at any
+strict witness; it separates the span using the witness and its conjugate.
 
 **Joint contact and orbit route.** The [balanced terminal equivalence](MOC/BalancedContactReduction.lean)
 lets us retain any terminal set and its pivot while choosing unit spectral
@@ -341,6 +354,16 @@ preserve the contact inequalities. The Frobenius tie-break ensures
 nonnormality. Mixer stationarity applies with no contact restrictions
 on the mixer. Unrestricted spectral-coordinate stationarity does not
 follow, because those changes can destroy the prescribed contacts.
+
+**Second-order test.** Let $x=(a,-b)$, $m_2=\sum_j x_j^2$,
+$h_2=\sum_j |x_j|^2x_j^2$ and $q=\sum_j |x_j|^4$. On the selected
+unit-energy witness, the [centered Möbius expansion](MOC/MobiusSecondOrder.lean)
+gives
+$$|2n h_2-m_2|\le n q-|m_2|^2/2.$$
+This is compatible with contact retention: the [joint equivalence](MOC/ContactDifferenceRank.lean)
+imposes the rank bound, moment bound, and unrestricted mixer maximum
+on the same witness. It does not require unrestricted spectral stationarity.
+
 
 
 **Certificate route.** Use the checked subset-event and nested-transport
@@ -361,9 +384,11 @@ proved directly by the [two-outlier theorem](MOC/SpectralTwoOutlierComparison.le
 Neither obstruction rules out multiple-chain or subset-event certificates.
 The [crossed exterior transport](MOC/CrossedMinorTransport.lean) glues
 two inclusion couplings through one unnormalized exterior array. It
-does not require either array to have unit mass. The [matrix bridge
-note](CrossedMinorTransport.md) derives the crossed squared-minor
-application separately and marks the unformalized boundary.
+does not require either array to have unit mass. The [matrix bridge](MOC/CrossedMinorBridge.lean)
+now proves the transport for the actual squared minors of a unitary.
+It preserves degree and exchanges one spectator row and one spectator
+column. [The bridge note](CrossedMinorTransport.md) relates that
+transport to individual objectives.
 In fact, an [explicit complement-paired certificate](MOC/TwoOutlierMinorCertificate.lean)
 proves the bound when the outlier heights dominate the stated
 spectator products. It pairs complementary subset events before
@@ -396,7 +421,20 @@ This does not give one minimizer simultaneously for all columns.
 The [pair Rayleigh formula](MOC/PairRayleigh.lean) gives the exact
 maximum over the full complex two-coordinate unitary orbit, including
 a singular baseline. The proof identifies the orbit with a rank-one
-perturbation and uses four cofactors of the baseline.
+perturbation and uses four cofactors of the baseline. It also gives
+the exact derivative-free test for optimality in that plane: a diagonal
+comparison and a zero mixed Hermitian cofactor. The ellipse interpretation
+is the two-dimensional numerical range theorem
+([Lakos, DOI 10.1007/s00013-023-01957-9](https://doi.org/10.1007/s00013-023-01957-9)).
+The [three-slot expansion](MOC/TripleOrbit.lean) gives the corresponding
+sum of three expectations when the inactive block is invertible, using
+a Schur complement ([Cottle, DOI 10.1016/0024-3795(74)90066-4](https://doi.org/10.1016/0024-3795(74)90066-4)).
+Comparing two tied stationary endpoints forces simultaneous cross-cofactor
+equations. The [flat-pair note](FlatPairReduction.md) uses those equations
+to prove a reducing-pair criterion for strictly dissipative partners.
+The local cofactor and invertible-skew steps are checked; the ambient
+block reconstruction is on paper.
+Optimality in a two-coordinate plane is not global optimality.
 
 
 See [Literature.md](Literature.md) for primary sources, DOIs, and the

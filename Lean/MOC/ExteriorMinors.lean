@@ -135,7 +135,8 @@ theorem exteriorColumnVector_eq_det_of_rows (I : ExteriorRows n k) (x : Fin k �
       simp [Matrix.submatrix_apply, ExteriorRows.erase_row]
     rw [ih (I.erase j), hm] <;> rfl
 
-private theorem exteriorColumnVector_eq_zero_of_rows (I : ExteriorRows n k)
+/-- Exterior coefficients vanish in every degree other than the number of columns. -/
+theorem exteriorColumnVector_eq_zero_of_rows (I : ExteriorRows n k)
     (columns : List (Fin n → ℂ)) (h : k ≠ columns.length) :
     exteriorColumnVector n columns I.cube = 0 := by
   induction columns generalizing k with

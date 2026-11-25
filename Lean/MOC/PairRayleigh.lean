@@ -1,6 +1,8 @@
 import MOC.OrderFourGivens
 
-/-! Closed support formula for a complex two-coordinate Rayleigh quotient. -/
+/-! Closed support formula for a complex two-coordinate Rayleigh quotient.
+For the geometric numerical-range interpretation, see G. Lakos,
+DOI: 10.1007/s00013-023-01957-9. The orbit and support proofs here are direct. -/
 
 namespace MOC
 
@@ -333,6 +335,75 @@ theorem isGreatest_unitary_pairPlane_support (a : Fin 2 ⊕ κ → ℂ)
     congr 2
     dsimp only [i, j, C]
     exact congrArg Matrix.det (add_right_comm _ _ _)
+
+private theorem pairRayleighMax_eq_first_iff (a b : ℝ) (z : ℂ) :
+    pairRayleighMax a b z = a ↔ b ≤ a ∧ z = 0 := by
+  constructor
+  · intro he
+    obtain ⟨_, hb, hp⟩ := pairRayleighMax_properties a b z
+    rw [he, sub_self, zero_mul] at hp
+    exact ⟨he ▸ hb, Complex.normSq_eq_zero.mp hp.symm⟩
+  · rintro ⟨hb, rfl⟩
+    simp only [pairRayleighMax, Complex.normSq_zero, mul_zero, add_zero, Real.sqrt_sq_eq_abs,
+      abs_of_nonneg (sub_nonneg.mpr hb)]
+    ring
+
+/-- The identity mixer is a maximum in the full two-coordinate plane
+exactly when a diagonal inequality and a mixed-cofactor equation hold.
+This derivative-free stationarity test uses no inverse of the baseline. -/
+theorem unitary_pairPlane_identity_max_iff (a : Fin 2 ⊕ κ → ℂ)
+    (B : Matrix (Fin 2 ⊕ κ) (Fin 2 ⊕ κ) ℂ) (η : ℂ) :
+    let C := diagonal (pairPlaneFlatten a) + B
+    let δ := a (.inl 0) - a (.inl 1)
+    let Z := (η * δ) • C.adjugate
+    let i : Fin 2 ⊕ κ := .inl 0
+    let j : Fin 2 ⊕ κ := .inl 1
+    (∀ V : Matrix (Fin 2) (Fin 2) ℂ, IsUnitary V →
+      let R : Matrix (Fin 2 ⊕ κ) (Fin 2 ⊕ κ) ℂ := fromBlocks V 0 0 1
+      (η * (R * diagonal a * Rᴴ + B).det).re ≤ (η * (diagonal a + B).det).re) ↔
+      (Z j j).re ≤ (Z i i).re ∧ Z i j + star (Z j i) = 0 := by
+  intro C δ Z i j
+  let z := (Z i j + star (Z j i)) / 2
+  have hij : i ≠ j := by simp [i, j]
+  have h1 : IsUnitary (1 : Matrix (Fin 2) (Fin 2) ℂ) := by simp [IsUnitary]
+  have hbase := conjugate_diagonal_pairPlane a (1 : Matrix (Fin 2) (Fin 2) ℂ) h1
+  dsimp only at hbase
+  rw [Matrix.fromBlocks_one, Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one,
+    Matrix.one_apply_eq, Matrix.one_apply_ne (by decide : (1 : Fin 2) ≠ 0)] at hbase
+  have hC : diagonal a + B =
+      C + δ • vecMulVec (pairVector i j 1 0) (star ∘ pairVector i j 1 0) := by
+    change diagonal a + B = _
+    rw [hbase]
+    exact add_right_comm _ _ _
+  have hval : (η * (diagonal a + B).det).re = (η * C.det).re + (Z i i).re := by
+    rw [hC, support_add_pair_rankOne C hij]
+    simp [pairRayleigh, Z]
+  have hg := isGreatest_unitary_pairPlane_support a B η
+  change IsGreatest _ ((η * C.det).re + pairRayleighMax (Z i i).re (Z j j).re z) at hg
+  have hmem : (η * (diagonal a + B).det).re ∈
+      {t : ℝ | ∃ V : Matrix (Fin 2) (Fin 2) ℂ, IsUnitary V ∧
+        let R : Matrix (Fin 2 ⊕ κ) (Fin 2 ⊕ κ) ℂ := fromBlocks V 0 0 1
+        t = (η * (R * diagonal a * Rᴴ + B).det).re} := by
+    refine ⟨1, h1, ?_⟩
+    dsimp only
+    rw [Matrix.fromBlocks_one, Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one]
+  constructor
+  · intro hmax
+    obtain ⟨W, hW, hEq⟩ := hg.1
+    have hle := hmax W hW
+    dsimp only at hEq hle
+    rw [← hEq, hval] at hle
+    have hge := hg.2 hmem
+    rw [hval] at hge
+    obtain ⟨hdiag, hz⟩ := (pairRayleighMax_eq_first_iff _ _ _).mp
+      (le_antisymm (le_of_add_le_add_left hle) (le_of_add_le_add_left hge))
+    exact ⟨hdiag, (div_eq_zero_iff.mp hz).resolve_right (by norm_num)⟩
+  · rintro ⟨hdiag, hz⟩ V hV
+    dsimp only
+    have hm := hg.2 ⟨V, hV, rfl⟩
+    have he := (pairRayleighMax_eq_first_iff (Z i i).re (Z j j).re z).mpr
+      ⟨hdiag, by dsimp only [z]; rw [hz, zero_div]⟩
+    rwa [he, ← hval] at hm
 
 end
 

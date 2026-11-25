@@ -100,7 +100,12 @@ further lets us require a nonnormal orbit maximizer with equal traces
 and cubic moments on unit energy and unit direction. The resulting
 terminal support bound remains open. The [equation budget](MOC/ContactEquationBudget.lean)
 can force a new contact even after the count threshold when the
-active equations are redundant. The [nonzero-chart reduction](MOC/SaturatedContactReduction.lean)
+active equations are redundant.
+The [joint rank and moment reduction](MOC/ContactDifferenceRank.lean)
+requires at least $2n-3$ independent contact-difference functions and
+a quartic spectral bound on the same balanced terminal maximizer.
+[Subset incidences](MOC/ContactMarkerRank.lean) detect the linear
+relations exactly. The [nonzero-chart reduction](MOC/SaturatedContactReduction.lean)
 is also available when the final argument requires nonzero matching
 products.
 

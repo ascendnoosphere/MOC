@@ -217,7 +217,8 @@ def exteriorColumnVector (n : ℕ) : List (Fin n → ℂ) → SubsetCube n → �
     exteriorColumnVector (n + 1) [] (.inr I) = 0 := by
   simp [exteriorColumnVector, subsetCubeEmpty]
 
-private theorem subsetContraction_mulVec_exteriorColumnVector_orthogonal (n : ℕ)
+/-- Contraction by a vector orthogonal to every factor kills the exterior product. -/
+theorem subsetContraction_mulVec_exteriorColumnVector_orthogonal (n : ℕ)
     (u : Fin n → ℂ) (columns : List (Fin n → ℂ))
     (ho : ∀ x ∈ columns, (∑ j, star (u j) * x j) = 0) :
     subsetContraction n u *ᵥ exteriorColumnVector n columns = 0 := by

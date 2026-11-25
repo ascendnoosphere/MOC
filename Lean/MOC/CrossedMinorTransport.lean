@@ -133,7 +133,7 @@ theorem exists_crossed_exterior_transport
       (∀ a b, 0 ≤ μ a b) ∧
       (∀ a b, μ a b ≠ 0 →
         subsetCubeLabels n a.1 ⊆ subsetCubeLabels n b.1 ∧
-        subsetCubeLabels m b.2 ⊆ subsetCubeLabels m a.2) ∧
+        subsetCubeLabels m b.2 ⊆ subsetCubeLabels m a.2 ∧ w a.1 b.2 ≠ 0) ∧
       (∀ a, ∑ b, μ a b = Complex.normSq (L a.1 a.2)) ∧
       (∀ b, ∑ a, μ a b = Complex.normSq (R b.1 b.2)) := by
   classical
@@ -150,7 +150,9 @@ theorem exists_crossed_exterior_transport
   refine ⟨μ, fun a b => div_nonneg (mul_nonneg (hp a.1 b.2 a.2) (hq b.2 a.1 b.1))
     (Complex.normSq_nonneg _), ?_, ?_, ?_⟩
   · intro a b h
-    exact ⟨hqS b.2 a.1 b.1 (fun hz => h (by simp [μ, hz])), hpS a.1 b.2 a.2 (fun hz => h (by simp [μ, hz]))⟩
+    exact ⟨hqS b.2 a.1 b.1 (fun hz => h (by simp [μ, hz])),
+      hpS a.1 b.2 a.2 (fun hz => h (by simp [μ, hz])),
+      fun hz => h (by simp [μ, mass, hz])⟩
   · rintro ⟨I,J⟩
     rw [Fintype.sum_prod_type, ← sum_comm]
     calc

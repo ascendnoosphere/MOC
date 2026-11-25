@@ -77,14 +77,50 @@ every degree, unlike termwise complementary pairing. The comparison
 itself is already checked by a different proof in
 `MOC/SpectralTwoOutlierComparison.lean`.
 
-## Formalization boundary
+## Lean verification
 
-[CrossedMinorTransport.lean](MOC/CrossedMinorTransport.lean) formalizes
-equal-mass weighted Hall, creation in a vacant unit mode, and two-sided
-gluing for a common exterior array satisfying the two contraction
-equations. [CrossedMinorBlocks.lean](MOC/CrossedMinorBlocks.lean)
-formalizes the unitary spectator annihilation equations and determinant
-row and column deflations. Degree and subset reindexing and the final
-normalization that identify these arrays remain unformalized. The full
-squared-minor transport is the mathematical argument above, not yet a
-Lean theorem. Neither result proves unrestricted certificate coverage.
+[CrossedMinorTransport.lean](MOC/CrossedMinorTransport.lean) proves
+weighted Hall transport, creation in a vacant unit mode and two-sided
+gluing. [CrossedMinorBlocks.lean](MOC/CrossedMinorBlocks.lean) proves
+the spectator annihilation equations and both determinant deflations.
+[CrossedMinorBridge.lean](MOC/CrossedMinorBridge.lean) puts them together
+for the actual subset-indexed squared-minor arrays, with marked indices
+zero on the row and column sides. It includes the case of zero
+cross-block mass and the zero entries for unmatched degrees.
+[CrossedOutlierCertificate.lean](MOC/CrossedOutlierCertificate.lean)
+also proves the quantitative spectral certificate. If all spectator
+products lie between $L$ and $H$, it gives
+$(L-uv)T\le\operatorname{Re}\det\le(H-uv)T$ with the explicit
+nonnegative crossed-minor moment $T$. If $uv>H$, positive spectators
+and a nonzero off-marked entry in the marked column force a strict gap.
+This is a restriction on the two-outlier spectra, not a certificate
+for every terminal objective.
+
+## Open neighborhood (paper)
+
+For order at least two, fix strict $uv>H$ and positive spectators.
+The marked-line-preserving unitary mixers have real support zero at
+these spectra: the marked factor is purely imaginary and the remaining
+determinant is real. The checked gap bounds every other mixer's score
+by $-C(1-c^2)$, where $c=|U_{00}|$ and $C>0$ is uniform. Indeed choose a
+largest off-marked square in column zero; it is at least
+$(1-c^2)$ divided by the number of spectator slots.
+
+After changing one input phase, write $U=R(c,s)U_0$, where $U_0$
+preserves the marked line and $R$ is a real rotation on that line and
+one unit spectator direction. Here $s^2=1-c^2$. For fixed direction,
+spectra, $U_0$ and spectator direction, the difference of determinant
+scores is polynomial in $(c,s)$ and even in $s$: conjugation by the
+marked sign change sends $s$ to $-s$ and fixes the block-diagonal input
+matrices. Substitution leaves a polynomial divisible by $1-c$,
+since the difference vanishes at $c=1$. Its quotient extends
+continuously and is at most $-C(1+c)$ at the base spectra, including
+$c=1$. Compactness of the block unitaries, unit spectator directions,
+and $c\in[0,1]$ keeps this uniform sign in a neighborhood of the
+spectra and the support direction. Thus every maximizing mixer there
+preserves the marked line. The scalar marked factor then reduces the
+support comparison to one smaller order.
+
+This argument is not a Lean theorem. It concerns a neighborhood of
+one support direction, not a neighborhood in which all support
+directions have been settled.

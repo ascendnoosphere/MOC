@@ -5,6 +5,14 @@ import MOC.AnchorMinorGram
 import MOC.Claim
 import MOC.CollinearKernelSupport
 import MOC.CommonLawTransport
+import MOC.ComplexFlatSwap
+import MOC.CompressionDefect
+import MOC.ContactDifferenceRank
+import MOC.ContactMarkerRank
+import MOC.CrossedMinorBlocks
+import MOC.CrossedMinorBridge
+import MOC.CrossedMinorTransport
+import MOC.CrossedOutlierCertificate
 import MOC.ConnectedContactStep
 import MOC.ContactCrossRatios
 import MOC.ContactCurveGeometry
@@ -57,6 +65,8 @@ import MOC.MarkedPadding
 import MOC.MatchingProfileClosed
 import MOC.MatchingRectangleSupport
 import MOC.MobiusStationarity
+import MOC.MobiusSecondOrder
+import MOC.MobiusMomentWitness
 import MOC.PolynomialEvaluationHeight
 import MOC.PositiveTwoOutlierBlock
 import MOC.SpectralTwoOutlierComparison
@@ -122,6 +132,7 @@ import MOC.TrianglePairContacts
 import MOC.TriangleRectangleContact
 import MOC.TripleFibreAmbient
 import MOC.TripleFibreContact
+import MOC.TripleOrbit
 import MOC.TropicalSupport
 import MOC.TwoCircleCover
 import MOC.TwoFreeRealAnchors
