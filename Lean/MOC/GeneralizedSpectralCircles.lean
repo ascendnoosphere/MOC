@@ -443,4 +443,19 @@ theorem spectrumOnGeneralizedCircle_of_card_range_le_three {ι : Type*} [Fintype
     fin_cases j <;> assumption
   · exact ⟨1, 0, 0, 0, Or.inl one_ne_zero, fun i => (hi ⟨i⟩).elim⟩
 
+/-- This quadrilateral lies on no circle or line. -/
+theorem not_generalizedCircle_convexQuadrilateral :
+    ¬ SpectrumOnGeneralizedCircle ![(0 : ℂ), 1, 1 + Complex.I, 2 * Complex.I] := by
+  rintro ⟨q, u, v, c, hn, h⟩
+  have h0 := h 0
+  have h1 := h 1
+  have h2 := h 2
+  have h3 := h 3
+  norm_num [circleValue, Complex.normSq_apply, Complex.add_re, Complex.add_im,
+    Complex.mul_re, Complex.mul_im] at h0 h1 h2 h3
+  have hq : q = 0 := by linarith only [h0, h1, h2, h3]
+  have hu : u = 0 := by linarith only [h0, h1, hq]
+  have hv : v = 0 := by linarith only [h0, h3, hq]
+  exact hn.elim (fun hq' => hq' hq) (fun huv => huv.elim (fun hu' => hu' hu) (fun hv' => hv' hv))
+
 end MOC

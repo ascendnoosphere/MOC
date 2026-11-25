@@ -397,6 +397,10 @@ diagonal permutation of the spectrum.
   The eight permutations have no common nonempty proper subset of the
   index set that they all map onto itself.
   [Proof](Lean/MOC/ContactCountObstruction.lean#L48)
+- The partner list $(0,1,1+i,2i)$ forms a convex quadrilateral. Every
+  dense row with a regular pole gives a nonnormal reciprocal
+  compression.
+  [Pole compression obstruction](Docs/Proofs/spectral-support-proof-map.md#deletion-and-padding-tests)
 
 ## Paper proofs and exact certificates
 

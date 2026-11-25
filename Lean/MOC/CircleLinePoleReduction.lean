@@ -1,4 +1,4 @@
-import MOC.CircleSpectra
+import MOC.GeneralizedSpectralCircles
 import MOC.Support
 import MOC.SupportedCompressionReduction
 
@@ -179,6 +179,42 @@ theorem holds_of_pole_circle (hSmall : Conjecture (Fin n))
     _ = u⁻¹ * (((u * z⁻¹).re : ℂ) + ((u * z⁻¹).im : ℂ) * Complex.I) := by
       rw [Complex.re_add_im]
     _ = _ := by rw [hre, hcast]; ring
+
+/-- For a dense row at a regular pole, normality of the reciprocal
+compression implies that the partner spectrum lies on a circle or line. -/
+theorem generalizedCircle_of_normal_poleCompression_of_dense_row
+    (a b : Fin (n + 1) → ℂ) (U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ)
+    (hU : IsUnitary U) (p : Fin (n + 1)) (hdense : ∀ j, U p j ≠ 0)
+    (hnz : ∀ j, b j + a p ≠ 0) (hC : IsStarNormal (poleCompression a b U p)) :
+    SpectrumOnGeneralizedCircle b := by
+  let β (j : Fin (n + 1)) := (b j + a p)⁻¹
+  let μ := (U * diagonal β * Uᴴ) p p
+  obtain ⟨d, hd, hline⟩ := exists_spectral_line_of_normalCompression β U hU p hC
+  have hβ : SpectrumOnGeneralizedCircle β := by
+    have hd' : d⁻¹ ≠ 0 := inv_ne_zero hd
+    have hparts : (d⁻¹).im ≠ 0 ∨ (d⁻¹).re ≠ 0 := by
+      by_contra! h
+      exact hd' (Complex.ext h.2 h.1)
+    apply spectrumOnGeneralizedCircle_of_line β (d⁻¹).im (d⁻¹).re (d⁻¹ * μ).im hparts
+    intro j
+    change (d⁻¹ * β j).im = (d⁻¹ * μ).im
+    obtain ⟨r, hr⟩ := hline j (hdense j)
+    rw [hr, mul_add, ← mul_assoc d⁻¹ d (r : ℂ), inv_mul_cancel₀ hd, one_mul, Complex.add_im,
+      Complex.ofReal_im, add_zero]
+  simpa only [β, inv_inv, add_neg_cancel_right] using
+    (hβ.inv_of_ne_zero (fun j => inv_ne_zero (hnz j))).add_const (-a p)
+
+/-- The specified convex quadrilateral gives a nonnormal reciprocal
+compression at every dense row whose pole avoids the partner spectrum. -/
+theorem not_normal_poleCompression_convexQuadrilateral
+    (a : Fin 4 → ℂ) (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) (p : Fin 4)
+    (hdense : ∀ j, U p j ≠ 0)
+    (hnz : ∀ j, ![(0 : ℂ), 1, 1 + Complex.I, 2 * Complex.I] j + a p ≠ 0) :
+    ¬ IsStarNormal
+      (poleCompression a ![(0 : ℂ), 1, 1 + Complex.I, 2 * Complex.I] U p) := by
+  intro hC
+  exact not_generalizedCircle_convexQuadrilateral
+    (generalizedCircle_of_normal_poleCompression_of_dense_row a _ U hU p hdense hnz hC)
 
 end
 

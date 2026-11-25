@@ -70,7 +70,7 @@ remain available while the required proof coverage is incomplete.
 | MOC-proof-report.pdf and MOC-proof-report__2.pdf | The PDFs have identical extracted text. The support-cone classification and cancellation now have Lean sources. The full nine-edge uniform neighborhood and all of the stated contact accounting need coverage. |
 | MOC_free_eigenvalue_and_exterior_bound.pdf | Lean sources give uniform interlacing and the quantitative exterior determinant inclusion in every order under the triangle gap bound. The full joint coefficient certificate and its neighborhood still need the facet replay. [Free eigenvalue map](free-eigenvalue-exterior-map.md) |
 | MOC_progress.pdf | The two-frame construction, rank-sum law, and circle-or-line reductions have Lean sources. The binary-cubic mixer reduces to a real chart with an exact obstruction to common compound weights. The all-spectra scalar bound and spectral neighborhood need more proof. [Binary-cubic map](binary-cubic-mixer-map.md) |
-| MOC_proofs_and_reductions.pdf | Common minor weights, the three-value singleton case, uniform interlacing, and the circle-or-line pole implication have Lean sources. The nonnormal deletion example and both padding obstructions have exact calculations. The full multiplicity deletion and the dense convex-position obstruction need more proof. [Deletion and padding](#deletion-and-padding-tests) |
+| MOC_proofs_and_reductions.pdf | Common minor weights, the three-value singleton case, uniform interlacing, and the circle-or-line pole implication have Lean sources. The source also gives the dense convex-position obstruction, a nonnormal deletion example, and two padding obstructions. The full multiplicity deletion and all the listed fixed-order certificates still need coverage. [Deletion and padding](#deletion-and-padding-tests) |
 | circle-or-line.pdf | Lean source gives both directions of the circle-or-line criterion, the two-free-entry counterexample, and the principal-minor maximum for Hermitian and real symmetric orbits. [Common-weight map](circle-line-common-weights-map.md) |
 | two-edge-matchings.pdf | Lean source covers the two-frame law, fixed-support rank-sum theorem, and exact example. [Rank-sum map](all-order-proof-maps.md#common-weights-at-small-shifted-rank-sum) · [Example map](rank-two-overlap-example-map.md) |
 
@@ -103,6 +103,13 @@ flowchart BT
     Smaller --> Both
     Both -->|if| Hull
 ```
+
+At a regular pole, if every entry of the chosen row is nonzero,
+normality of the reciprocal compression requires the full partner
+spectrum to lie on a circle or line. The convex quadrilateral
+$(0,1,1+i,2i)$ fails this test. Every dense row whose pole avoids
+these four values gives a nonnormal compression.
+[Dense-row necessity](../../Lean/MOC/CircleLinePoleReduction.lean#L185) · [Quadrilateral example](../../Lean/MOC/CircleLinePoleReduction.lean#L209)
 
 The order-three Householder mixer has diagonal entries $1/3$
 and off-diagonal entries $-2/3$. Delete its last row and column.
