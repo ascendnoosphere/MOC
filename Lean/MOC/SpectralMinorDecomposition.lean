@@ -26,7 +26,7 @@ private theorem complexFunctional (f : ℂ →L[ℝ] ℝ) (z : ℂ) :
       simp [Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im, smul_eq_mul]
       ring
 
-private theorem productFunctional (f : (ℂ × ℂ) →L[ℝ] ℝ) :
+theorem productFunctional (f : (ℂ × ℂ) →L[ℝ] ℝ) :
     ∃ u v : ℂ, ∀ z : ℂ × ℂ, f z = (u * z.1 + v * z.2).re := by
   let f₀ : ℂ →L[ℝ] ℝ := f.comp ((ContinuousLinearMap.id ℝ ℂ).prod 0)
   let f₁ : ℂ →L[ℝ] ℝ := f.comp ((0 : ℂ →L[ℝ] ℂ).prod (ContinuousLinearMap.id ℝ ℂ))

@@ -42,11 +42,11 @@ private theorem exists_orthogonalBasisEffects_reindex (O : Matrix.orthogonalGrou
 
 /-- A rank-one effect fixes one column of the basis. The other two columns
 are interchanged in the second basis of the mixture. -/
-theorem rank_one_effects_two_bases
+private theorem rank_one_effects_two_bases_aux
     (A B C : Matrix (Fin 3) (Fin 3) ℝ) (hA : A.PosSemidef) (hB : B.PosSemidef) (hC : C.PosSemidef)
     (htraceA : A.trace = 1) (htraceB : B.trace = 1) (hrankA : A.rank = 1) (hsum : A + B + C = 1) :
     ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
-      (![A, B, C] : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ) =
+      (B.rank = 1 → t = 0 ∨ t = 1) ∧ (![A, B, C] : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ) =
         t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
   obtain ⟨O, i, b, hbound, hbi, htotal, ha, hb, hc⟩ :=
     rank_one_effects_complementary_diagonal A B C hA hB hC htraceA htraceB hrankA hsum
@@ -86,7 +86,30 @@ theorem rank_one_effects_two_bases
     simp only [hdiag, Matrix.diagonal_smul, Matrix.mul_add, Matrix.add_mul,
       Matrix.mul_smul, Matrix.smul_mul]
   have he' (l : Fin 3) : e' l = e (Equiv.swap 1 2 l) := rfl
-  refine ⟨P, Q, t, (hbound j).1, (hbound j).2, ?_⟩
+  have hedge (hrankB : B.rank = 1) : t = 0 ∨ t = 1 := by
+    have hOO : O.valᴴ * O.val = 1 := Matrix.mem_unitaryGroup_iff'.mp O.property
+    have hBsq := effect_rank_one_mul_self B hB hrankB htraceB
+    have hconj (D : Matrix (Fin 3) (Fin 3) ℝ) :
+        O.valᴴ * (O.val * D * O.valᴴ) * O.val = D := by
+      calc
+        _ = (O.valᴴ * O.val) * D * (O.valᴴ * O.val) := by simp only [Matrix.mul_assoc]
+        _ = D := by rw [hOO, Matrix.one_mul, Matrix.mul_one]
+    have hBsq' : B * B = O.val * (diagonal b * diagonal b) * O.valᴴ := by
+      rw [hb]
+      calc
+        _ = O.val * diagonal b * (O.valᴴ * O.val) * diagonal b * O.valᴴ := by
+          simp only [Matrix.mul_assoc]
+        _ = _ := by rw [hOO, Matrix.mul_one, Matrix.mul_assoc O.val]
+    have hh := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℝ => O.valᴴ * M * O.val)
+      (hBsq'.symm.trans hBsq)
+    change O.valᴴ * (O.val * (diagonal b * diagonal b) * O.valᴴ) * O.val =
+      O.valᴴ * B * O.val at hh
+    rw [hb, hconj, hconj, Matrix.diagonal_mul_diagonal] at hh
+    have hj := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℝ => M j j) hh
+    simp only [Matrix.diagonal_apply_eq, Pi.mul_apply] at hj
+    have hz : b j * (b j - 1) = 0 := by rw [mul_sub, hj, mul_one, sub_self]
+    exact (mul_eq_zero.mp hz).imp id sub_eq_zero.mp
+  refine ⟨P, Q, t, (hbound j).1, (hbound j).2, hedge, ?_⟩
   rw [hp, hq]
   funext l
   simp only [Pi.add_apply, Pi.smul_apply, Function.comp_apply, he']
@@ -105,39 +128,96 @@ theorem rank_one_effects_two_bases
     rw [Equiv.swap_apply_right, orthogonalBasisEffects_eq_diagonal, orthogonalBasisEffects_eq_diagonal,
       hc, hcdecomp, hh]
 
-/-- If any effect has rank one, the tuple belongs to the convex hull of
-orthonormal-basis effect tuples. -/
-theorem effects_mem_convexHull_of_rank_one
+/-- A rank-one effect fixes one column, and the other two columns are
+interchanged in the second basis. -/
+theorem rank_one_effects_two_bases
+    (A B C : Matrix (Fin 3) (Fin 3) ℝ) (hA : A.PosSemidef) (hB : B.PosSemidef) (hC : C.PosSemidef)
+    (htraceA : A.trace = 1) (htraceB : B.trace = 1) (hrankA : A.rank = 1) (hsum : A + B + C = 1) :
+    ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      (![A, B, C] : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ) =
+        t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
+  obtain ⟨P,Q,t,ht,hu,_,he⟩ := rank_one_effects_two_bases_aux A B C hA hB hC htraceA htraceB hrankA hsum
+  exact ⟨P,Q,t,ht,hu,he⟩
+
+private theorem effects_two_bases_of_rank_one_reordered
     (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
     (hpos : ∀ j, (E j).PosSemidef) (htrace : ∀ j, (E j).trace = 1)
-    (hsum : ∑ j, E j = 1) (hrank : ∃ j, (E j).rank = 1) :
-    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) := by
-  obtain ⟨i, hi⟩ := hrank
-  let e : Equiv.Perm (Fin 3) := Equiv.swap 0 i
-  have h0 : e 0 = i := by simp [e]
-  have hrank' : (E (e 0)).rank = 1 := by rwa [h0]
+    (hsum : ∑ j, E j = 1) (e : Equiv.Perm (Fin 3)) (hrank : (E (e 0)).rank = 1) :
+    ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      ((E (e 1)).rank = 1 → t = 0 ∨ t = 1) ∧
+      E = t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
   have hsum' : E (e 0) + E (e 1) + E (e 2) = 1 := by
     simpa only [Fin.sum_univ_three] using (Equiv.sum_comp e E).trans hsum
-  obtain ⟨P, Q, t, ht, ht', hcomb⟩ := rank_one_effects_two_bases (E (e 0)) (E (e 1)) (E (e 2))
-    (hpos _) (hpos _) (hpos _) (htrace _) (htrace _) hrank' hsum'
+  obtain ⟨P, Q, t, ht, ht', hzero, hcomb⟩ := rank_one_effects_two_bases_aux (E (e 0))
+    (E (e 1)) (E (e 2)) (hpos _) (hpos _) (hpos _) (htrace _) (htrace _) hrank hsum'
   have hvec : (![E (e 0), E (e 1), E (e 2)] : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ) = E ∘ e := by
     funext j
     fin_cases j <;> rfl
   rw [hvec] at hcomb
   obtain ⟨P', hp⟩ := exists_orthogonalBasisEffects_reindex P e.symm
   obtain ⟨Q', hq⟩ := exists_orthogonalBasisEffects_reindex Q e.symm
-  have hE : E = t • orthogonalBasisEffects P' + (1 - t) • orthogonalBasisEffects Q' := by
-    funext j
-    simpa only [hp, hq, Pi.add_apply, Pi.smul_apply, Function.comp_apply, Equiv.apply_symm_apply]
-      using congrFun hcomb (e.symm j)
-  rw [hE]
-  have hp' : orthogonalBasisEffects P' ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
-    subset_convexHull ℝ _ ⟨P', rfl⟩
-  have hq' : orthogonalBasisEffects Q' ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
-    subset_convexHull ℝ _ ⟨Q', rfl⟩
-  exact (convex_convexHull ℝ _)
-    hp' hq' ht
-    (sub_nonneg.mpr ht') (by ring)
+  refine ⟨P', Q', t, ht, ht', hzero, ?_⟩
+  funext j
+  simpa only [hp, hq, Pi.add_apply, Pi.smul_apply, Function.comp_apply, Equiv.apply_symm_apply]
+    using congrFun hcomb (e.symm j)
+
+/-- With one rank-one effect, two orthonormal bases suffice. -/
+theorem effects_two_bases_of_rank_one
+    (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
+    (hpos : ∀ j, (E j).PosSemidef) (htrace : ∀ j, (E j).trace = 1)
+    (hsum : ∑ j, E j = 1) (hrank : ∃ j, (E j).rank = 1) :
+    ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      E = t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
+  obtain ⟨i, hi⟩ := hrank
+  let e : Equiv.Perm (Fin 3) := Equiv.swap 0 i
+  obtain ⟨P,Q,t,ht,hu,_,he⟩ := effects_two_bases_of_rank_one_reordered E hpos htrace hsum e
+    (by simpa [e] using hi)
+  exact ⟨P,Q,t,ht,hu,he⟩
+
+/-- With two rank-one effects, the triple is one orthonormal basis. -/
+theorem effects_basis_of_two_rank_one
+    (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
+    (hpos : ∀ j, (E j).PosSemidef) (htrace : ∀ j, (E j).trace = 1)
+    (hsum : ∑ j, E j = 1) {i j : Fin 3} (hij : i ≠ j)
+    (hi : (E i).rank = 1) (hj : (E j).rank = 1) :
+    ∃ P : Matrix.orthogonalGroup (Fin 3) ℝ, E = orthogonalBasisEffects P := by
+  let e₀ : Equiv.Perm (Fin 3) := Equiv.swap 0 i
+  let j₀ := e₀.symm j
+  let e : Equiv.Perm (Fin 3) := (Equiv.swap 1 j₀).trans e₀
+  have he₀ : e₀ 0 = i := by simp [e₀]
+  have hj₀ : (0 : Fin 3) ≠ j₀ := by
+    intro h
+    exact hij (by rw [← he₀, h]; exact e₀.apply_symm_apply j)
+  have he0 : e 0 = i := by
+    change e₀ (Equiv.swap 1 j₀ 0) = i
+    rw [Equiv.swap_apply_of_ne_of_ne (by decide) hj₀, he₀]
+  have he1 : e 1 = j := by simp [e, j₀]
+  obtain ⟨P,Q,t,_,_,hzero,he⟩ := effects_two_bases_of_rank_one_reordered E hpos htrace hsum e
+    (by simpa only [he0] using hi)
+  rcases hzero (by rwa [he1]) with ht | ht
+  · exact ⟨Q, by simpa only [ht, zero_smul, sub_zero, one_smul, zero_add] using he⟩
+  · exact ⟨P, by simpa only [ht, one_smul, sub_self, zero_smul, add_zero] using he⟩
+
+private theorem mem_effect_hull_of_two_bases (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
+    (h : ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      E = t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q) :
+    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) := by
+  obtain ⟨P,Q,t,ht,hu,he⟩ := h
+  rw [he]
+  have hp : orthogonalBasisEffects P ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
+    subset_convexHull ℝ _ ⟨P,rfl⟩
+  have hq : orthogonalBasisEffects Q ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
+    subset_convexHull ℝ _ ⟨Q,rfl⟩
+  exact (convex_convexHull ℝ _) hp hq ht (sub_nonneg.mpr hu) (by ring)
+
+/-- If any effect has rank one, the tuple belongs to the convex hull of
+orthonormal-basis effect tuples. -/
+theorem effects_mem_convexHull_of_rank_one
+    (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
+    (hpos : ∀ j, (E j).PosSemidef) (htrace : ∀ j, (E j).trace = 1)
+    (hsum : ∑ j, E j = 1) (hrank : ∃ j, (E j).rank = 1) :
+    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
+  mem_effect_hull_of_two_bases E (effects_two_bases_of_rank_one E hpos htrace hsum hrank)
 
 /-- A finite family of initially positive two-dimensional effects stays
 nonnegative in determinant on an interval containing zero. At both endpoints
@@ -341,12 +421,13 @@ private theorem two_column_frame_of_rank_two
 
 /-- A trace-one effect tuple presented on three two-column orthonormal
 frames is a convex mixture of orthonormal-basis effect tuples. -/
-theorem effects_mem_convexHull_of_two_column_frames
+theorem effects_two_bases_of_two_column_frames
     (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ) (X : Fin 3 → Matrix (Fin 3) (Fin 2) ℝ)
     (p q : Fin 3 → ℝ) (hp : ∀ i, 0 < p i) (hq : ∀ i, 0 < q i)
     (htrace : ∀ i, p i + q i = 1) (hgram : ∀ i, (X i)ᴴ * X i = 1)
     (hE : ∀ i, E i = X i * diagonal ![p i, q i] * (X i)ᴴ) (hsum : ∑ i, E i = 1) :
-    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) := by
+    ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      E = t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
   let A₀ : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
   let B₀ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
   let A i := X i * A₀ * (X i)ᴴ
@@ -413,21 +494,92 @@ theorem effects_mem_convexHull_of_two_column_frames
     simpa only [D, a, b] using hsumD
   have hFsum (t : ℝ) : ∑ i, F t i = 1 := by
     simp only [F, Finset.sum_add_distrib, ← Finset.smul_sum, hsum, hDsum, smul_zero, add_zero]
-  have hHull (t : ℝ) (ht : t ∈ Set.Icc l u)
+  have hBasis (t : ℝ) (ht : t ∈ Set.Icc l u)
       (hz : ∃ i, (p i + t * a i) * (q i - t * a i) - (t * b i) ^ 2 = 0) :
-      F t ∈ convexHull ℝ (Set.range orthogonalBasisEffects) := by
+      ∃ P : Matrix.orthogonalGroup (Fin 3) ℝ, F t = orthogonalBasisEffects P := by
     have hpos (i : Fin 3) := posSemidef_fin_two_of_trace_one_of_det_nonneg (H t i) (hHsymm t i)
       (hHtrace t i) (by rw [hHdet]; exact hinterval t ht i)
-    refine effects_mem_convexHull_of_rank_one (F t) (fun i => ?_) (hFtrace t) (hFsum t) ?_
-    · rw [hF]
+    have hpsd (i : Fin 3) : (F t i).PosSemidef := by
+      rw [hF]
       exact (hpos i).1.mul_mul_conjTranspose_same (X i)
-    · obtain ⟨i, hi⟩ := hz
-      refine ⟨i, ?_⟩
+    have hrank (i : Fin 3) (hi : (H t i).det = 0) : (F t i).rank = 1 := by
       rw [hF, rank_two_column_sandwich _ (hgram i)]
-      exact (hpos i).2 ((hHdet t i).trans hi)
+      exact (hpos i).2 hi
+    obtain ⟨i,hi⟩ := hz
+    have hri := hrank i ((hHdet t i).trans hi)
+    let e : Equiv.Perm (Fin 3) := Equiv.swap 0 i
+    let j := e 1
+    let k := e 2
+    have he₀ : e 0 = i := by simp [e]
+    have hij : i ≠ j := by
+      rw [← he₀]
+      exact e.injective.ne (by decide)
+    have hik : i ≠ k := by
+      rw [← he₀]
+      exact e.injective.ne (by decide)
+    by_cases hj : (H t j).det = 0
+    · exact effects_basis_of_two_rank_one (F t) hpsd (hFtrace t) (hFsum t) hij hri (hrank _ hj)
+    by_cases hk : (H t k).det = 0
+    · exact effects_basis_of_two_rank_one (F t) hpsd (hFtrace t) (hFsum t) hik hri (hrank _ hk)
+    -- The two remaining blocks cannot both be invertible: they would
+    -- annihilate the rank-one effect already at the interior point.
+    exfalso
+    have hFsum' : F t i + F t j + F t k = 1 := by
+      simpa only [Fin.sum_univ_three, he₀, j, k] using (Equiv.sum_comp e (F t)).trans (hFsum t)
+    have hEsum' : E i + E j + E k = 1 := by
+      simpa only [Fin.sum_univ_three, he₀, j, k] using (Equiv.sum_comp e E).trans hsum
+    let A := F t i
+    have hproj : A * A = A := effect_rank_one_mul_self _ (hpsd i) hri (hFtrace t i)
+    obtain ⟨hA₁,hA₂⟩ := effects_mul_projection_eq_zero A (F t j) (F t k) hproj
+      (hpsd j) (hpsd k) hFsum'
+    have hcontract (m : Fin 3) (B : Matrix (Fin 2) (Fin 2) ℝ) :
+        (X m)ᴴ * (X m * B * (X m)ᴴ * A) = B * ((X m)ᴴ * A) := by
+      calc
+        _ = ((X m)ᴴ * X m) * (B * ((X m)ᴴ * A)) := by simp only [Matrix.mul_assoc]
+        _ = _ := by rw [hgram m, Matrix.one_mul]
+    have hkill (m : Fin 3) (hz : (H t m).det ≠ 0) (hzero : F t m * A = 0) :
+        E m * A = 0 := by
+      have hHX : H t m * ((X m)ᴴ * A) = 0 := by
+        rw [← hcontract, ← hF, hzero, Matrix.mul_zero]
+      have hX : (X m)ᴴ * A = 0 := by
+        calc
+          _ = (H t m)⁻¹ * (H t m * ((X m)ᴴ * A)) := by
+            rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr hz), Matrix.one_mul]
+          _ = 0 := by rw [hHX, Matrix.mul_zero]
+      rw [hE, Matrix.mul_assoc, hX, Matrix.mul_zero]
+    have hAE : E i * A = A := by
+      have hEj := hkill j hj hA₁
+      have hEk := hkill k hk hA₂
+      calc
+        E i * A = (E i + E j + E k) * A := by
+          rw [Matrix.add_mul, Matrix.add_mul, hEj, hEk, add_zero, add_zero]
+        _ = A := by rw [hEsum', Matrix.one_mul]
+    have hdA : diagonal (![p i,q i] : Fin 2 → ℝ) * ((X i)ᴴ * A) = (X i)ᴴ * A := by
+      rw [← hcontract, ← hE, hAE]
+    have hXA : (X i)ᴴ * A = 0 := by
+      ext r c
+      have hh := congrArg (fun M : Matrix (Fin 2) (Fin 3) ℝ => M r c) hdA
+      change (diagonal (![p i,q i] : Fin 2 → ℝ) * ((X i)ᴴ * A)) r c = ((X i)ᴴ * A) r c at hh
+      rw [Matrix.diagonal_mul] at hh
+      change ((X i)ᴴ * A) r c = 0
+      by_contra! hn
+      have he : (![p i,q i] : Fin 2 → ℝ) r = 1 :=
+        mul_right_cancel₀ hn (hh.trans (one_mul _).symm)
+      have hlt : (![p i,q i] : Fin 2 → ℝ) r < 1 := by
+        fin_cases r
+        · change p i < 1
+          linarith only [htrace i, hq i]
+        · change q i < 1
+          linarith only [htrace i, hp i]
+      exact hlt.ne he
+    have hAz : A = 0 := by rw [← hAE, hE, Matrix.mul_assoc, hXA, Matrix.mul_zero]
+    have htA := hFtrace t i
+    change A.trace = 1 at htA
+    rw [hAz, Matrix.trace_zero] at htA
+    exact zero_ne_one htA
   have hlu : l ≤ u := hl.le.trans hu.le
-  have hL := hHull l ⟨le_rfl, hlu⟩ hleft
-  have hU := hHull u ⟨hlu, le_rfl⟩ hright
+  obtain ⟨P,hL⟩ := hBasis l ⟨le_rfl, hlu⟩ hleft
+  obtain ⟨Q,hU⟩ := hBasis u ⟨hlu, le_rfl⟩ hright
   let w := u / (u - l)
   let v := -l / (u - l)
   have hden : 0 < u - l := sub_pos.mpr (hl.trans hu)
@@ -445,19 +597,30 @@ theorem effects_mem_convexHull_of_two_column_frames
     calc
       _ = (w + v) • E i + (w * l + v * u) • D i := by rw [hmass, hzero, one_smul, zero_smul, add_zero]
       _ = _ := by simp only [add_smul, smul_add, smul_smul]; abel
-  rw [hcomb]
-  exact (convex_convexHull ℝ _) hL hU hw hv hmass
+  have hvw : v = 1 - w := by linarith only [hmass]
+  exact ⟨P,Q,w,hw,by linarith only [hmass,hv],by rw [← hvw, ← hL, ← hU]; exact hcomb⟩
+
+/-- Convex-hull consequence of the two-basis decomposition on frames. -/
+theorem effects_mem_convexHull_of_two_column_frames
+    (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ) (X : Fin 3 → Matrix (Fin 3) (Fin 2) ℝ)
+    (p q : Fin 3 → ℝ) (hp : ∀ i, 0 < p i) (hq : ∀ i, 0 < q i)
+    (htrace : ∀ i, p i + q i = 1) (hgram : ∀ i, (X i)ᴴ * X i = 1)
+    (hE : ∀ i, E i = X i * diagonal ![p i, q i] * (X i)ᴴ) (hsum : ∑ i, E i = 1) :
+    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
+  mem_effect_hull_of_two_bases E
+    (effects_two_bases_of_two_column_frames E X p q hp hq htrace hgram hE hsum)
 
 /-- A positive trace-one effect tuple on a real three-space with ranks
 at most two is a convex mixture of real basis effect tuples. -/
-theorem effects_mem_convexHull_of_rank_le_two
+theorem effects_two_bases_of_rank_le_two
     (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
     (hpos : ∀ j, (E j).PosSemidef) (htrace : ∀ j, (E j).trace = 1)
     (hsum : ∑ j, E j = 1) (hrank : ∀ j, (E j).rank ≤ 2) :
-    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) := by
+    ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      E = t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
   classical
   by_cases h : ∃ j, (E j).rank = 1
-  · exact effects_mem_convexHull_of_rank_one E hpos htrace hsum h
+  · exact effects_two_bases_of_rank_one E hpos htrace hsum h
   have htwo (i : Fin 3) : (E i).rank = 2 := by
     have hne := not_exists.mp h i
     have hupper := hrank i
@@ -475,7 +638,15 @@ theorem effects_mem_convexHull_of_rank_le_two
     omega
   choose X p q hp hq htrace' hgram hshape using
     fun i => two_column_frame_of_rank_two (E i) (hpos i) (htrace i) (htwo i)
-  exact effects_mem_convexHull_of_two_column_frames E X p q hp hq htrace' hgram hshape hsum
+  exact effects_two_bases_of_two_column_frames E X p q hp hq htrace' hgram hshape hsum
+
+/-- Convex-hull consequence of the two-basis decomposition. -/
+theorem effects_mem_convexHull_of_rank_le_two
+    (E : Fin 3 → Matrix (Fin 3) (Fin 3) ℝ)
+    (hpos : ∀ j, (E j).PosSemidef) (htrace : ∀ j, (E j).trace = 1)
+    (hsum : ∑ j, E j = 1) (hrank : ∀ j, (E j).rank ≤ 2) :
+    E ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
+  mem_effect_hull_of_two_bases E (effects_two_bases_of_rank_le_two E hpos htrace hsum hrank)
 
 /-- The real quadratic form obtained by squaring the modulus of each row
 against real coordinate vectors. -/
@@ -509,8 +680,9 @@ theorem realRowEffects_quadratic (W : Matrix (Fin 3) (Fin 3) ℂ) (i : Fin 3) (v
 
 /-- A three-dimensional unitary's row effects have a common convex
 decomposition into the rank-one effects of real orthonormal bases. -/
-theorem realRowEffects_mem_convexHull (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W) :
-    realRowEffects W ∈ convexHull ℝ (Set.range orthogonalBasisEffects) := by
+theorem realRowEffects_two_bases (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W) :
+    ∃ (P Q : Matrix.orthogonalGroup (Fin 3) ℝ) (t : ℝ), 0 ≤ t ∧ t ≤ 1 ∧
+      realRowEffects W = t • orthogonalBasisEffects P + (1 - t) • orthogonalBasisEffects Q := by
   have hpos (i : Fin 3) : (realRowEffects W i).PosSemidef := by
     refine ⟨?_, fun x => ?_⟩
     · rw [realRowEffects_eq_gram]
@@ -538,7 +710,13 @@ theorem realRowEffects_mem_convexHull (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsU
     rw [realRowEffects_eq_gram]
     exact (Matrix.rank_mul_le_left (realRowCoordinates W i)ᴴ (realRowCoordinates W i)).trans
       (Matrix.rank_le_width (realRowCoordinates W i)ᴴ)
-  exact effects_mem_convexHull_of_rank_le_two _ hpos htrace hsum hrank
+  exact effects_two_bases_of_rank_le_two _ hpos htrace hsum hrank
+
+/-- Convex-hull consequence of the two-basis real row decomposition. -/
+theorem realRowEffects_mem_convexHull (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W) :
+    realRowEffects W ∈ convexHull ℝ (Set.range orthogonalBasisEffects) :=
+  mem_effect_hull_of_two_bases _ (realRowEffects_two_bases W hW)
+
 
 end
 

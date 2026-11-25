@@ -331,19 +331,18 @@ private theorem isUnitary_fixedRowMixer (P : Matrix.orthogonalGroup FourRowIndic
   exact unitary_product _ _ (unitary_directSum (by simp [IsUnitary]) hW)
     (isUnitary_ofReal_orthogonal P)
 
-/-- A fixed-row mixer and the real completions of its three-dimensional
-effect mixture have the same convex combination for every squared minor. -/
-theorem fixedRowMixer_minor_mixture (P : Matrix.orthogonalGroup FourRowIndices ℝ)
-    (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W) :
-    ∃ (κ : Type) (_ : Fintype κ) (w : κ → ℝ) (O : κ → Matrix.orthogonalGroup FourRowIndices ℝ),
-      (∀ k, 0 ≤ w k) ∧ (∑ k, w k) = 1 ∧
-      ∀ I J : Finset FourRowIndices, subsetMinorSq (fixedRowMixer P.val W) I J =
-        ∑ k, w k * subsetMinorSq (Complex.ofRealHom.mapMatrix (O k).val) I J := by
+/-- A real row-effect mixture with prescribed coefficients lifts to the
+same mixture of all squared minors, with no increase in the number of terms. -/
+theorem fixedRowMixer_minor_sum_of_effect_sum {κ : Type*} [Fintype κ]
+    (P : Matrix.orthogonalGroup FourRowIndices ℝ)
+    (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W)
+    (w : κ → ℝ) (Q : κ → Matrix.orthogonalGroup (Fin 3) ℝ) (hs : ∑ k, w k = 1)
+    (he : realRowEffects W =
+      ∑ k, w k • realRowEffects (Complex.ofRealHom.mapMatrix (Q k).valᵀ)) :
+    ∀ I J : Finset FourRowIndices, subsetMinorSq (fixedRowMixer P.val W) I J =
+      ∑ k, w k * subsetMinorSq
+        (Complex.ofRealHom.mapMatrix (extendFixedRowOrthogonal P (Q k)).val) I J := by
   classical
-  obtain ⟨κ, inst, w, z, hw, hs, hz, he⟩ :=
-    mem_convexHull_iff_exists_fintype.mp (realRowEffects_mem_convexHull W hW)
-  letI : Fintype κ := inst
-  choose Q hQ using hz
   let O (k : κ) := extendFixedRowOrthogonal P (Q k)
   let V (k : κ) := Complex.ofRealHom.mapMatrix (O k).val
   let W' (k : κ) := Complex.ofRealHom.mapMatrix (Q k).valᵀ
@@ -351,15 +350,12 @@ theorem fixedRowMixer_minor_mixture (P : Matrix.orthogonalGroup FourRowIndices �
   have hU : IsUnitary U := isUnitary_fixedRowMixer P W hW
   have hV (k : κ) : IsUnitary (V k) := isUnitary_ofReal_orthogonal (O k)
   have hV' (k : κ) : V k = fixedRowMixer P.val (W' k) := extendFixedRowOrthogonal_cast P (Q k)
-  have hE (k : κ) : realRowEffects (W' k) = z k :=
-    (realRowEffects_ofReal_transpose (Q k)).trans (hQ k)
   have hEval (i : Fin 3) (v : Fin 3 → ℝ) :
       (v ⬝ᵥ realRowEffects W i *ᵥ v) = ∑ k, w k * (v ⬝ᵥ realRowEffects (W' k) i *ᵥ v) := by
     have h := congrArg (evaluateEffect i v) he
     rw [map_sum] at h
     simp only [map_smul, smul_eq_mul] at h
-    simpa only [hE] using h.symm
-  refine ⟨κ, inst, w, O, hw, hs, ?_⟩
+    exact h
   change ∀ I J : Finset FourRowIndices, subsetMinorSq U I J = ∑ k, w k * subsetMinorSq (V k) I J
   apply squared_minor_mixture_of_anchor (r := Sum.inl 0)
     (by simp [FourRowIndices, Fintype.card_sum]) U hU V hV w hs
@@ -379,6 +375,26 @@ theorem fixedRowMixer_minor_mixture (P : Matrix.orthogonalGroup FourRowIndices �
     | inr i =>
         simp_rw [show U = fixedRowMixer P.val W from rfl, hV', fixedRowMixer_anchored_effect]
         exact hEval i _
+
+
+/-- A fixed-row mixer and the real completions of its three-dimensional
+effect mixture have the same convex combination for every squared minor. -/
+theorem fixedRowMixer_minor_mixture (P : Matrix.orthogonalGroup FourRowIndices ℝ)
+    (W : Matrix (Fin 3) (Fin 3) ℂ) (hW : IsUnitary W) :
+    ∃ (κ : Type) (_ : Fintype κ) (w : κ → ℝ) (O : κ → Matrix.orthogonalGroup FourRowIndices ℝ),
+      (∀ k, 0 ≤ w k) ∧ (∑ k, w k) = 1 ∧
+      ∀ I J : Finset FourRowIndices, subsetMinorSq (fixedRowMixer P.val W) I J =
+        ∑ k, w k * subsetMinorSq (Complex.ofRealHom.mapMatrix (O k).val) I J := by
+  classical
+  obtain ⟨κ, inst, w, z, hw, hs, hz, he⟩ :=
+    mem_convexHull_iff_exists_fintype.mp (realRowEffects_mem_convexHull W hW)
+  letI : Fintype κ := inst
+  choose Q hQ using hz
+  have hE (k : κ) : realRowEffects (Complex.ofRealHom.mapMatrix (Q k).valᵀ) = z k :=
+    (realRowEffects_ofReal_transpose (Q k)).trans (hQ k)
+  refine ⟨κ, inst, w, (fun k => extendFixedRowOrthogonal P (Q k)), hw, hs,
+    fixedRowMixer_minor_sum_of_effect_sum P W hW w Q hs ?_⟩
+  simpa only [hE] using he.symm
 
 /-- Every order-four unitary minor table is a convex mixture of real
 orthogonal minor tables, expressed on the one-plus-three row decomposition. -/
@@ -481,6 +497,62 @@ theorem four_minor_mixture (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
   intro k _
   have hV := squared_minor_reindex e.symm e.symm _ (isUnitary_ofReal_orthogonal (O k)) I J
   exact congrArg (w k * ·) hV.symm
+
+
+/-- A two-basis decomposition of every compressed row-effect triple
+gives a two-point interpolation of the entire order-four minor table.
+This is the realification step in Zheng's Theorem 1.2
+(preprint DOI: 10.13140/RG.2.2.36790.25923). -/
+theorem four_minor_two_point_of_two_basis_effects
+    (heffects : ∀ W : Matrix (Fin 3) (Fin 3) ℂ, IsUnitary W →
+      ∃ (Q₀ Q₁ : Matrix.orthogonalGroup (Fin 3) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+        realRowEffects W = θ • orthogonalBasisEffects Q₀ + (1 - θ) • orthogonalBasisEffects Q₁)
+    (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    ∃ (O₀ O₁ : Matrix.orthogonalGroup (Fin 4) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+      ∀ I J : Finset (Fin 4), subsetMinorSq U I J =
+        θ * subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) I J +
+        (1 - θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) I J := by
+  let e : FourRowIndices ≃ Fin 4 := finSumFinEquiv
+  let A := U.submatrix e e
+  have hA := unitary_reindex e e hU
+  obtain ⟨V,hV,hrow,hminor⟩ := exists_unitary_with_real_row A hA (Sum.inl 0)
+  obtain ⟨P,W,hW,_,hfac⟩ := exists_fixedRowMixer V hV (fun j => ‖A (Sum.inl 0) j‖) hrow
+  obtain ⟨Q₀,Q₁,θ,hθ₀,hθ₁,hE⟩ := heffects W hW
+  let B₀ := extendFixedRowOrthogonal P Q₀
+  let B₁ := extendFixedRowOrthogonal P Q₁
+  let w : Fin 2 → ℝ := ![θ,1-θ]
+  let Q : Fin 2 → Matrix.orthogonalGroup (Fin 3) ℝ := ![Q₀,Q₁]
+  have hs : ∑ i, w i = 1 := by simp [w, Fin.sum_univ_two]
+  have he : realRowEffects W =
+      ∑ i, w i • realRowEffects (Complex.ofRealHom.mapMatrix (Q i).valᵀ) := by
+    simpa only [Fin.sum_univ_two, w, Q, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one, realRowEffects_ofReal_transpose] using hE
+  have hm (I J : Finset FourRowIndices) : subsetMinorSq A I J =
+      θ * subsetMinorSq (Complex.ofRealHom.mapMatrix B₀.val) I J +
+      (1-θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix B₁.val) I J := by
+    rw [← hminor, hfac]
+    simpa only [Fin.sum_univ_two, w, Q, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one, B₀, B₁] using fixedRowMixer_minor_sum_of_effect_sum P W hW w Q hs he I J
+  refine ⟨orthogonal_reindex e.symm B₀, orthogonal_reindex e.symm B₁, θ, hθ₀,hθ₁,fun I J => ?_⟩
+  have hback : A.submatrix e.symm e.symm = U := by ext i j; simp [A, Matrix.submatrix_apply]
+  have hleft := squared_minor_reindex e.symm e.symm A hA I J
+  rw [hback] at hleft
+  rw [hleft, hm]
+  have hr (O : Matrix.orthogonalGroup FourRowIndices ℝ) :
+      subsetMinorSq (Complex.ofRealHom.mapMatrix (orthogonal_reindex e.symm O).val) I J =
+        subsetMinorSq (Complex.ofRealHom.mapMatrix O.val) (I.map e.symm.toEmbedding) (J.map e.symm.toEmbedding) :=
+    squared_minor_reindex e.symm e.symm _ (isUnitary_ofReal_orthogonal O) I J
+  rw [hr B₀, hr B₁]
+
+/-- Zheng's exact two-orthogonal interpolation of squared minor tables
+(Theorem 1.2, preprint DOI: 10.13140/RG.2.2.36790.25923). This proof
+uses real three-effect decomposition instead of the elliptic/Gale route. -/
+theorem four_minor_two_point (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    ∃ (O₀ O₁ : Matrix.orthogonalGroup (Fin 4) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+      ∀ I J : Finset (Fin 4), subsetMinorSq U I J =
+        θ * subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) I J +
+        (1 - θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) I J :=
+  four_minor_two_point_of_two_basis_effects realRowEffects_two_bases U hU
 
 private theorem orthogonalConjecture_of_reindex {ι κ : Type*} [Fintype ι] [DecidableEq ι]
     [Fintype κ] [DecidableEq κ] (e : κ ≃ ι) (h : OrthogonalConjecture ι) :

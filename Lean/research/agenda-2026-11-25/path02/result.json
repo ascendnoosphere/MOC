@@ -1,0 +1,170 @@
+{
+  "seed": 20261125,
+  "solver": "SciPy HiGHS",
+  "max_residual_for_feasible": 5e-09,
+  "cases": 270,
+  "table": {
+    "4/generic": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 2.7755575615628914e-16,
+      "smallest_scaled_probed_margin": 0.009328230930484235
+    },
+    "4/repeated": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.1102230246251565e-15,
+      "smallest_scaled_probed_margin": 1.5960432975248295e-10
+    },
+    "4/exact_opposite": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.1102230246251565e-16,
+      "smallest_scaled_probed_margin": 0.0403000950401599
+    },
+    "4/near_opposite": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 3.323935571231118e-10,
+      "smallest_scaled_probed_margin": 3.772871622376195e-09
+    },
+    "4/near_real": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.594587821160398e-10,
+      "smallest_scaled_probed_margin": 5.200995543492857e-07
+    },
+    "4/concentrated": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.7362142539639747e-15,
+      "smallest_scaled_probed_margin": 3.2200105315412124e-06
+    },
+    "5/generic": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 2.3592239273284576e-16,
+      "smallest_scaled_probed_margin": 0.08062279666750502
+    },
+    "5/repeated": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.1102230246251565e-16,
+      "smallest_scaled_probed_margin": 0.0021714818743208686
+    },
+    "5/exact_opposite": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.8691645453650096e-16,
+      "smallest_scaled_probed_margin": 0.024341096316397807
+    },
+    "5/near_opposite": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 3.1866898963367474e-10,
+      "smallest_scaled_probed_margin": 0.002760885006578727
+    },
+    "5/near_real": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 2.5864802660757746e-10,
+      "smallest_scaled_probed_margin": 0.0007954630257307706
+    },
+    "5/concentrated": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 2.6645352591003757e-15,
+      "smallest_scaled_probed_margin": 5.450017464004457e-05
+    },
+    "6/generic": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 5.898059818321144e-17,
+      "smallest_scaled_probed_margin": 0.0317776005667569
+    },
+    "6/repeated": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.8041124150158794e-16,
+      "smallest_scaled_probed_margin": 0.02746531733446138
+    },
+    "6/exact_opposite": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 5.551115123125783e-17,
+      "smallest_scaled_probed_margin": 0.018441820467802073
+    },
+    "6/near_opposite": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 5.500485622533802e-10,
+      "smallest_scaled_probed_margin": 0.023339508369476424
+    },
+    "6/near_real": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.4828324679250215e-10,
+      "smallest_scaled_probed_margin": 0.0031032547372322264
+    },
+    "6/concentrated": {
+      "cases": 15,
+      "feasible": 15,
+      "lp_statuses": [
+        0
+      ],
+      "max_scaled_residual": 1.1700709845463564e-15,
+      "smallest_scaled_probed_margin": 0.00022895962247974894
+    }
+  }
+}

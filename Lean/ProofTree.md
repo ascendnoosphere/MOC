@@ -49,7 +49,8 @@ flowchart BT
     PENCIL["A positive law for each<br/>one-entry complex pencil"]:::open
     CHART["Three-anchor kernel or<br/>principal-coisometry comparison"]:::open
     TRANSFER["Increase the contact count below 7<br/>even at zero products · checked"]:::checked
-    SEVEN["Support bound at 7 or more contacts<br/>· open"]:::open
+    SEVEN["Support bound for real orthogonal mixers<br/>at 7 or more contacts · open"]:::open
+    TWO["Common mixture of two real orthogonal<br/>squared-minor tables · checked"]:::checked
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
@@ -58,6 +59,7 @@ flowchart BT
     PENCIL --> OR4
     CHART --> OR4
     TRANSFER -. proves the reduction .-> SEVEN
+    TWO -. proves the real restriction .-> SEVEN
     SEVEN <-->|iff| FOUR
     TESTS -. narrow the witness set .-> WITNESS
     ZERO -. excludes a mixer family .-> WITNESS
@@ -542,3 +544,35 @@ the reciprocal of the product of the two endpoint values. The result
 does not yet test other supporting lines for these spectra.
 For related Hermitian block elimination, see
 [Haynsworth, DOI 10.1016/0024-3795(68)90050-5](https://doi.org/10.1016/0024-3795(68)90050-5).
+
+
+## Terminal contact restrictions
+
+The [experiment ledger](research/agenda-2026-11-25/README.md) records the
+proofs and diagnostic limits separately. In the diagram, an exclusion
+applies only when its stated hypotheses hold.
+
+```mermaid
+flowchart BT
+    S["Support at terminal witnesses · open"]:::open
+    CUT["Common invariant cut excluded"]:::checked
+    ANCHOR["Anchor swaps + connected triple edges<br/>at zero height: support for all mixers"]:::checked
+    CYCLE["All transpositions at one nonzero pivot<br/>saturate zero-height contacts"]:::checked
+    STRATUM["Closed marked-zero locus + relative<br/>fixed-gap transfer"]:::checked
+    NONZERO["Two distinct complex contacts give<br/>a nonzero pivot at a strict maximum"]:::checked
+    DISK["Exterior spectator + strict disk<br/>eliminate flat-pair couplings"]:::checked
+    CUT -. restricts possible witnesses .-> S
+    ANCHOR -. proves a terminal family .-> S
+    CYCLE -. rules out strict witnesses with full active swaps .-> S
+    STRATUM -. relative dimension still needed .-> S
+    NONZERO -. enables zero-height analysis .-> CYCLE
+    DISK -. disk choice still needed .-> S
+    classDef open fill:#fff1d6,stroke:#9a5900,color:#231500
+    classDef checked fill:#ddf6e7,stroke:#287348,color:#10291a
+```
+
+- [Invariant-cut exclusion](MOC/PolynomialProfileContact.lean)
+- [Connected anchor criterion](MOC/AnchoredConnectedContacts.lean)
+- [Zero-height saturation](MOC/ZeroHeightCycleSaturation.lean)
+- [Fixed-zero profile locus](MOC/FixedZeroProfiles.lean)
+- [Schur disk criterion](MOC/OrbitTargets.lean)
