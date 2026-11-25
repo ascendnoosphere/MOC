@@ -33,7 +33,7 @@ of the four singleton weights at rows in $I$ and columns in $J$. Each
 is $1/4$, so this gives $q(I,J)=q(I^c,J)$. The complementary-minor
 identity for unitary matrices also gives $q(I,J)=q(I,J^c)$.
 [Row-complement equality](../Lean/MOC/OrderFourComplexHadamard.lean#L88) ·
-[Unitary complementary minors](../Lean/MOC/FiniteMinorLaw.lean#L60)
+[Unitary complementary minors](../Lean/MOC/FiniteMinorLaw.lean#L58)
 
 ## A law on the three partitions
 
@@ -60,4 +60,4 @@ empty minor, and complementary minors give the remaining orders.
 The determinant expansion then gives the inclusion for every pair of
 spectra.
 [Lifted probability law](../Lean/MOC/OrderFourComplexHadamard.lean#L259) ·
-[Transfer to determinants](../Lean/MOC/FiniteMinorLaw.lean#L31)
+[Transfer to determinants](../Lean/MOC/FiniteMinorLaw.lean#L37)

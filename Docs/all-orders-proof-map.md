@@ -787,7 +787,7 @@ The Marcus–de Oliveira conjecture asks whether the determinant of the sum of t
 **Theorem.** Let $D$ be a real diagonal matrix of any order, $u$ a complex vector, $s$ real, and $H=D+suu^*$. Denote the eigenvalues of $H$, with labels and multiplicities, by $h_1,\ldots,h_n$. There is a probability distribution on the permutations of these labels such that
 $$
  \det H[S]=\mathbb E\prod_{i\in S} h_{\sigma(i)}
- \qquad\hbox{for every }S\subseteq[n]. \tag{1}
+ \qquad S\subseteq[n]. \tag{1}
 $$
 Consequently, for every complex diagonal matrix $B=\mathrm{diag}(b_1,\dots,b_n)$,
 $$
