@@ -1,5 +1,5 @@
 import MOC.AffineGapCover
-import MOC.DisjointContactRectangle
+import MOC.CollisionSplitSupport
 import MOC.FourCoincidence
 import MOC.TwoExceptions
 
@@ -279,25 +279,6 @@ theorem grow_contacts {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
         linear_combination hnew - rectangle_linear w.a w.b
       · exact fix q hq hq0 hq14 hq16
 
-/-- An equal-product pair of opposite rectangle corners forces nonnegative
-upper support height unless a neighboring product also equals the pivot. -/
-theorem nonnegative_height_of_reciprocal_pair {p u v : ℂ}
-    (hmul : u * v = p ^ 2) (hu : u.re ≤ p.re) (hv : v.re ≤ p.re)
-    (hne : u ≠ p) : 0 ≤ p.re := by
-  have he : (v.re - p.re) * Complex.normSq u =
-      (p.re - u.re) * Complex.normSq p - p.re * Complex.normSq (u - p) := by
-    have hr := congrArg Complex.re hmul
-    have hi := congrArg Complex.im hmul
-    simp only [pow_two, Complex.mul_re, Complex.mul_im] at hr hi
-    simp only [Complex.normSq_apply, Complex.sub_re, Complex.sub_im]
-    linear_combination u.re * hr + u.im * hi
-  by_contra! hn
-  have hpos : 0 < Complex.normSq (u - p) := Complex.normSq_pos.mpr (sub_ne_zero.mpr hne)
-  have hleft := mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr hv) (Complex.normSq_nonneg u)
-  have hfirst := mul_nonneg (sub_nonneg.mpr hu) (Complex.normSq_nonneg p)
-  have hsecond := mul_neg_of_neg_of_pos hn hpos
-  linarith
-
 /-- Off the paired-contact branch, any strict (T_{85}) witness lies on
 a support line of strictly positive upper height. -/
 theorem positive_height_of_inactive_23 {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
@@ -338,6 +319,38 @@ theorem positive_height_of_inactive_23 {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : Is
     (by simpa only [z, hp] using w.maximal s)
     (by simpa only [z, hp] using w.maximal t) hsep
   exact lt_of_le_of_ne hn (fun h => h₂₃ ((paired_contact_iff_zero_height hU w hT).mpr h.symm))
+
+/-- In the positive-height branch the two single-swap corners 1 and 6
+cannot both be added to the active set. -/
+theorem one_split_inactive_of_inactive_23 {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
+    (w : StrictMatchingSupport U) (hT : Pattern w) (h₂₃ : s₂₃ ∉ w.contacts) :
+    Equiv.swap (0 : Fin 4) 1 ∉ w.contacts ∨ Equiv.swap (2 : Fin 4) 3 ∉ w.contacts := by
+  let s : Perm4 := Equiv.swap 0 1
+  let t : Perm4 := Equiv.swap 2 3
+  have hp := hT.1
+  have hη : w.η ≠ 0 := fun h => by simpa [h] using w.strict
+  obtain ⟨ha,hb,hz⟩ := nondegenerate_spectra hU w
+  have hp0 : matchingProduct w.a w.b 1 ≠ 0 :=
+    Finset.prod_ne_zero_iff.mpr fun j _ => hz _ _
+  have hchange : matchingProduct w.a w.b (1 * s) ≠ matchingProduct w.a w.b 1 :=
+    fun h => matchingProduct_swap_gap_ne_of_simple w.a w.b ha hb 1 hp0 0 1 (by simp)
+      (sub_eq_zero.mpr h.symm)
+  have hdisj : ∀ i, s i = i ∨ t i = i := by
+    intro i
+    fin_cases i <;> simp [s,t,Equiv.swap_apply_def]
+  have hzero := ((collision_or_paired_contact w hT).resolve_right (fun h => h₂₃ h.1)).2
+  have hc : matchingProduct w.a w.b (1 * s * t) = matchingProduct w.a w.b 1 := by
+    rw [one_mul]
+    exact sub_eq_zero.mp hzero
+  have hs := positive_height_collision_split_strict w.a w.b w.η 1 s t hdisj hc hη hchange
+    (positive_height_of_inactive_23 hU w hT h₂₃) (by simpa only [hp] using w.maximal)
+  rcases hs with hs | hs
+  · left
+    intro hin
+    exact hs.ne (by simpa only [one_mul, hp] using (Finset.mem_filter.mp hin).2)
+  · right
+    intro hin
+    exact hs.ne (by simpa only [one_mul, hp] using (Finset.mem_filter.mp hin).2)
 
 /-- An order-four strict witness containing the six labels can be moved to
 at least eight contacts without losing the pattern. -/

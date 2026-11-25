@@ -118,3 +118,9 @@ to strict witnesses with at least eight contacts, label 23 inactive,
 strictly positive upper height, and the collision $p_0=p_7$. They do
 not settle that subcase, nor other terminal patterns in Proposition
 4.4 of the [preprint](https://doi.org/10.13140/RG.2.2.36790.25923).
+
+[The collision-split theorem](MOC/ZhengRectangleContact.lean) now also
+excludes simultaneous contacts at labels 1 and 6 in the positive-height
+branch. [The normal form and further circle tests](GapFreeTerminalGeometry.md)
+are paper arguments. [The alternating moment](AlternatingGapMoments.md)
+gives a quadratic spectral invariant on that branch, not yet a support bound.

@@ -383,6 +383,37 @@ of a differential at the witness. The same module proves that the
 unrotated determinant-gap function is not in the contact span at any
 strict witness; it separates the span using the witness and its conjugate.
 
+**Gap-free terminal geometry.** [Exact-fibre isolation](MOC/GapFreeContactFibre.lean)
+needs only the complex contact differences, not the determinant gap.
+[Proportional incidence rigidity](MOC/ProportionalContactRigidity.lean)
+uses this to exclude normalized affine motions of a zero-free contact
+graph other than the shared scaling and translation, so a covering
+set needs at least $3n-2$ edges. [The zero-aware
+cut test](MOC/ZeroAwareContactCut.lean) retains just one protected zero
+edge per vanishing contact and still leaves only a common translation.
+The [cycle split](MOC/CollisionSplitSupport.lean) creates at least $2^k$
+contacts from a same-ray endpoint at zero height with $k$ relative
+cycles, plus a crossing contact at a contact-maximal witness when
+there is a nontrivial invariant cut. At nonzero height its reciprocal
+identity constrains collisions with no global distinctness premise.
+See [the derivations and scope](GapFreeTerminalGeometry.md). The
+[sharp-count argument](SharpContactLocalGenericity.md) checks in Lean
+that every sufficiently small real step in a prescribed imaginary
+contact-difference direction is realized with the same contact labels.
+Its stronger generic-Jacobian argument uses [Joiţa–Tibăr](https://doi.org/10.4310/ARKIV.2021.v59.n2.a5)
+on paper, not a Jacobian assertion at the original profile.
+
+**Spectral realizability test.** [Alternating gap moments](AlternatingGapMoments.md)
+give an all-order mixed-power vanishing condition by a binomial
+rank bound and show that the real gap second moment has equal
+even and odd sums at order five and higher, also on every partial
+fibre with at least five free slots. At order four the
+difference is exactly the product of the two circle determinants
+times a phase norm. For background on entrywise-product rank and the
+squared-distance lift, see [Styan](https://doi.org/10.1016/0024-3795(73)90023-2)
+and [Gower](https://doi.org/10.1016/0024-3795(85)90187-9).
+These identities constrain actual spectra, not merely the minor cone.
+
 **Joint contact and orbit route.** The [balanced terminal equivalence](MOC/BalancedContactReduction.lean)
 lets us retain any terminal set and its pivot while choosing unit spectral
 energy, unit direction, equal traces, equal squared-norm-weighted traces,
