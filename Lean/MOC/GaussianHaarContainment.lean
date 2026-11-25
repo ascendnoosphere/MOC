@@ -6,6 +6,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.MeasureTheory.Measure.WithDensity
 import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.Integration
+import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.LinearCombination
 
 /-! A deterministic matching triangle and the failure bound it gives for a
@@ -499,8 +500,65 @@ def matchingTriangleDiskBlockEvent {Ω : Type*} (a b : Ω → ι → ℂ) (e : F
     (fun x => matchingTriangleBlockCoordinates (a x) (b x) e j) ⁻¹'
       Metric.closedBall (gaussianTriangleDiskCenters j.2) (1 / 200)
 
+private theorem generateFrom_singleton_compl {Ω : Type*} (S : Set Ω) :
+    MeasurableSpace.generateFrom {Sᶜ} = MeasurableSpace.generateFrom {S} := by
+  apply le_antisymm
+  · apply MeasurableSpace.generateFrom_le
+    intro t ht
+    obtain rfl := Set.mem_singleton_iff.mp ht
+    exact (MeasurableSpace.GenerateMeasurable.basic S (by simp)).compl
+  · apply MeasurableSpace.generateFrom_le
+    intro t ht
+    obtain rfl := Set.mem_singleton_iff.mp ht
+    have hm : MeasurableSet[MeasurableSpace.generateFrom {Sᶜ}] Sᶜ :=
+      MeasurableSpace.GenerateMeasurable.basic Sᶜ (by simp)
+    simpa only [compl_compl] using hm.compl
+
+private theorem matchingTriangle_diskBlock_independent {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) (a b : Ω → ι → ℂ) {m : ℕ} (labels : Fin m → (Fin 4 ↪ ι))
+    (hmeas : ∀ i j, Measurable (fun x =>
+      matchingTriangleBlockCoordinates (a x) (b x) (labels i) j))
+    (hind : ProbabilityTheory.iIndepFun (fun (p : Fin m × (Fin 2 × Fin 4)) x =>
+      matchingTriangleBlockCoordinates (a x) (b x) (labels p.1) p.2) μ) :
+    ProbabilityTheory.iIndepSet (fun i => (matchingTriangleDiskBlockEvent a b (labels i))ᶜ) μ := by
+  classical
+  let D (p : Fin m × (Fin 2 × Fin 4)) : Set Ω :=
+    (fun x => matchingTriangleBlockCoordinates (a x) (b x) (labels p.1) p.2) ⁻¹'
+      Metric.closedBall (gaussianTriangleDiskCenters p.2.2) (1 / 200)
+  let E (i : Fin m) := matchingTriangleDiskBlockEvent a b (labels i)
+  have hm (i : Fin m) : MeasurableSet (E i) :=
+    MeasurableSet.iInter (fun j => hmeas i j isClosed_closedBall.measurableSet)
+  have hw (i : Fin m) : ProbabilityTheory.iIndepFun (fun j x =>
+      matchingTriangleBlockCoordinates (a x) (b x) (labels i) j) μ :=
+    ProbabilityTheory.iIndepFun.precomp (g := fun j : Fin 2 × Fin 4 => (i, j))
+      (fun j k h => congrArg Prod.snd h) hind
+  have hsingle (i : Fin m) : μ (E i) = ∏ j, μ (D (i, j)) :=
+    (hw i).meas_iInter (s := fun j => D (i, j))
+      (fun j => ⟨Metric.closedBall (gaussianTriangleDiskCenters j.2) (1 / 200),
+        isClosed_closedBall.measurableSet, rfl⟩)
+  have hs : ProbabilityTheory.iIndepSet E μ := by
+    apply (ProbabilityTheory.iIndepSet_iff_meas_biInter hm).mpr
+    intro T
+    have hset : (⋂ i ∈ T, E i) =
+        ⋂ p ∈ T.product (Finset.univ : Finset (Fin 2 × Fin 4)), D p := by
+      ext x
+      simp only [E, matchingTriangleDiskBlockEvent, Set.mem_iInter, Finset.mem_product,
+        Finset.mem_univ, and_true]
+      constructor
+      · intro h p hp
+        exact h p.1 hp p.2
+      · intro h i hi j
+        exact h (i, j) hi
+    rw [hset, hind.meas_biInter (S := T.product Finset.univ) (s := D)
+      (fun p _ => ⟨Metric.closedBall (gaussianTriangleDiskCenters p.2.2) (1 / 200),
+        isClosed_closedBall.measurableSet, rfl⟩), Finset.prod_product]
+    exact Finset.prod_congr rfl (fun i _ => (hsingle i).symm)
+  have hg := (ProbabilityTheory.iIndepSet_iff_iIndep E μ).mp hs
+  apply (ProbabilityTheory.iIndepSet_iff_iIndep _ μ).mpr
+  simpa only [E, generateFrom_singleton_compl] using hg
+
 /-- The no-block estimate for Gaussian coordinate laws and independent
-block events. The probabilities of the coordinate disks need not be equal. -/
+coordinates. Every block uses a separate collection of eight coordinates. -/
 theorem gaussianTriangle_no_block_measure_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (a b : Ω → ι → ℂ)
     {m : ℕ} (labels : Fin m → (Fin 4 ↪ ι))
@@ -508,9 +566,8 @@ theorem gaussianTriangle_no_block_measure_le {Ω : Type*} [MeasurableSpace Ω]
       matchingTriangleBlockCoordinates (a x) (b x) (labels i) j))
     (hlaw : ∀ i j, μ.map (fun x =>
       matchingTriangleBlockCoordinates (a x) (b x) (labels i) j) = standardComplexGaussian)
-    (hwithin : ∀ i, ProbabilityTheory.iIndepFun (fun j x =>
-      matchingTriangleBlockCoordinates (a x) (b x) (labels i) j) μ)
-    (hacross : ProbabilityTheory.iIndepSet (fun i => (matchingTriangleDiskBlockEvent a b (labels i))ᶜ) μ) :
+    (hind : ProbabilityTheory.iIndepFun (fun (p : Fin m × (Fin 2 × Fin 4)) x =>
+      matchingTriangleBlockCoordinates (a x) (b x) (labels p.1) p.2) μ) :
     μ {x | ¬ HasMatchingTriangleBlock (a x) (b x)} ≤
       ENNReal.ofReal ((1 - gaussianTriangleBlockMass) ^ m) := by
   have hp₀ : 0 ≤ gaussianTriangleBlockMass := by unfold gaussianTriangleBlockMass; positivity
@@ -522,13 +579,16 @@ theorem gaussianTriangle_no_block_measure_le {Ω : Type*} [MeasurableSpace Ω]
       (by norm_num)
   rw [ENNReal.ofReal_pow (sub_nonneg.mpr hp₁)]
   apply matchingTriangle_no_block_measure_le μ a b
-    (fun i => (matchingTriangleDiskBlockEvent a b (labels i))ᶜ) hacross
+    (fun i => (matchingTriangleDiskBlockEvent a b (labels i))ᶜ)
+    (matchingTriangle_diskBlock_independent μ a b labels hmeas hind)
   · intro i
     have hm : MeasurableSet (matchingTriangleDiskBlockEvent a b (labels i)) :=
       MeasurableSet.iInter (fun j => hmeas i j isClosed_closedBall.measurableSet)
     have hp := gaussianTriangleBlock_measure_ge μ
       (fun j x => matchingTriangleBlockCoordinates (a x) (b x) (labels i) j)
-      (hmeas i) (hlaw i) (hwithin i)
+      (hmeas i) (hlaw i)
+      (ProbabilityTheory.iIndepFun.precomp (g := fun j : Fin 2 × Fin 4 => (i, j))
+        (fun j k h => congrArg Prod.snd h) hind)
     rw [measure_compl hm (measure_ne_top μ _), measure_univ, ENNReal.ofReal_sub 1 hp₀,
       ENNReal.ofReal_one]
     exact tsub_le_tsub_left hp 1
@@ -540,6 +600,69 @@ theorem gaussianTriangle_no_block_measure_le {Ω : Type*} [MeasurableSpace Ω]
     intro j
     have hj := Set.mem_iInter.mp hi j
     simpa only [Set.mem_preimage, Metric.mem_closedBall, dist_eq_norm] using hj
+
+private def consecutiveGaussianBlock (n : ℕ) (i : Fin (n / 4)) : Fin 4 ↪ Fin n where
+  toFun j := ⟨4 * i.val + j.val, by have hi := i.isLt; have hj := j.isLt; omega⟩
+  inj' j k h := by
+    apply Fin.ext
+    have he : 4 * i.val + j.val = 4 * i.val + k.val := congrArg Fin.val h
+    omega
+
+private def gaussianBlockCoordinateIndex (j : Fin 2 × Fin 4) : Fin 2 × Fin 4 :=
+  let l : Fin 4 := if j.1 = 0 then 0 else 2
+  let r : Fin 4 := if j.1 = 0 then 1 else 3
+  ![(0, l), (0, r), (1, l), (1, r)] j.2
+
+/-- Consecutive four-index blocks are disjoint. Thus a single independent
+Gaussian family on the two spectra gives the no-block estimate. -/
+theorem gaussianTriangle_no_block_measure_le_of_iid_spectra {Ω : Type*}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] (n : ℕ)
+    (X : Fin 2 × Fin n → Ω → ℂ) (hmeas : ∀ j, Measurable (X j))
+    (hlaw : ∀ j, μ.map (X j) = standardComplexGaussian)
+    (hind : ProbabilityTheory.iIndepFun X μ) :
+    μ {x | ¬ HasMatchingTriangleBlock (fun j => X (0, j) x) (fun j => X (1, j) x)} ≤
+      ENNReal.ofReal ((1 - gaussianTriangleBlockMass) ^ (n / 4)) := by
+  let e := consecutiveGaussianBlock n
+  let code := gaussianBlockCoordinateIndex
+  let g (p : Fin (n / 4) × (Fin 2 × Fin 4)) : Fin 2 × Fin n :=
+    ((code p.2).1, e p.1 (code p.2).2)
+  have hcode : Function.Injective code := by
+    change Function.Injective gaussianBlockCoordinateIndex
+    decide
+  have hinj : Function.Injective g := by
+    intro x y he
+    have h₀ : (code x.2).1 = (code y.2).1 := congrArg Prod.fst he
+    have hv : 4 * x.1.val + (code x.2).2.val = 4 * y.1.val + (code y.2).2.val :=
+      congrArg (fun p : Fin 2 × Fin n => p.2.val) he
+    have hi : x.1 = y.1 := by
+      apply Fin.ext
+      have hx := (code x.2).2.isLt
+      have hy := (code y.2).2.isLt
+      omega
+    have hj : (code x.2).2 = (code y.2).2 := by
+      apply Fin.ext
+      rw [hi] at hv
+      omega
+    exact Prod.ext hi (hcode (Prod.ext h₀ hj))
+  have hcoord (i : Fin (n / 4)) (j : Fin 2 × Fin 4) :
+      (fun x => matchingTriangleBlockCoordinates (fun k => X (0, k) x)
+        (fun k => X (1, k) x) (e i) j) = X (g (i, j)) := by
+    obtain ⟨j, k⟩ := j
+    fin_cases j <;> fin_cases k <;>
+      simp [matchingTriangleBlockCoordinates, g, code, gaussianBlockCoordinateIndex]
+  apply gaussianTriangle_no_block_measure_le μ _ _ e
+  · intro i j
+    rw [hcoord]
+    exact hmeas (g (i, j))
+  · intro i j
+    rw [hcoord]
+    exact hlaw (g (i, j))
+  · have he : (fun (p : Fin (n / 4) × (Fin 2 × Fin 4)) x =>
+        matchingTriangleBlockCoordinates (fun k => X (0, k) x)
+          (fun k => X (1, k) x) (e p.1) p.2) = (fun p => X (g p)) :=
+        funext fun p => hcoord p.1 p.2
+    rw [he]
+    exact ProbabilityTheory.iIndepFun.precomp hinj hind
 
 /-- The negative moment used to estimate the lower tail of the identity
 matching product. A zero sum has infinite negative moment. -/

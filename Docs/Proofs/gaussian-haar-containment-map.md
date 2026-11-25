@@ -16,7 +16,7 @@ the matching hull. It concerns this specified ensemble.
 ```mermaid
 flowchart BT
     A["Two exchanges on disjoint pairs"] --> S["Three products surround a disk"]
-    G["Eight disk masses and block independence"] --> B["Probability of no good block"]
+    G["Eight disk masses and independence of disjoint coordinates"] --> B["Probability of no good block"]
     N["Gaussian negative moment<br/>Ensemble evaluation pending in Lean"] --> P["Lower tail of the identity product"]
     H["Haar determinant second moment<br/>Ensemble evaluation pending in Lean"] --> D["Upper tail of the determinant"]
     S --> U["Failure is in the union of three events"]
@@ -40,14 +40,14 @@ halves of the squared norm of the direction. These identities give
 a support bound of one half of that norm. The perturbation changes
 each projection by at most $21/100$ of the norm. The proof applies
 the resulting support bound to every direction.
-[Disk inclusion](../../Lean/MOC/GaussianHaarContainment.lean#L134)
+[Disk inclusion](../../Lean/MOC/GaussianHaarContainment.lean#L135)
 
 For each pair, put the four disk centers at $0$, $1$, $1$, and
 $(-2+i\sqrt3)/7$ in the order of the two entries of $a$ and the two
 entries of $b$. Take radius $1/200$ at each center. The denominator
 stays nonzero and the ratio is within $1/10$ of $\omega$. Two such
 pairs give a matching triangle block.
-[Ratio estimate](../../Lean/MOC/GaussianHaarContainment.lean#L256) · [Block construction](../../Lean/MOC/GaussianHaarContainment.lean#L419)
+[Ratio estimate](../../Lean/MOC/GaussianHaarContainment.lean#L257) · [Block construction](../../Lean/MOC/GaussianHaarContainment.lean#L420)
 
 ## Failure bound
 
@@ -55,16 +55,18 @@ For a disk with center $c$ and radius $r$, the Gaussian mass is at
 least $r^2e^{-(|c|+r)^2}$. The proof multiplies its area by a lower
 bound on the density on that disk. For the eight independent
 coordinates of one block, this gives the lower bound
-$p_0=e^{-5}/200^{16}$. For $m$ blocks with independent failure events,
-the probability of no good block is at most $(1-p_0)^m$.
-[One disk](../../Lean/MOC/GaussianHaarContainment.lean#L316) · [Eight disks](../../Lean/MOC/GaussianHaarContainment.lean#L447) · [Independent blocks](../../Lean/MOC/GaussianHaarContainment.lean#L504)
+$p_0=e^{-5}/200^{16}$. The coordinates in different consecutive
+blocks are disjoint. Their independence makes the block failure
+probabilities multiply. The probability of no good block is at most
+$(1-p_0)^{\lfloor n/4\rfloor}$.
+[One disk](../../Lean/MOC/GaussianHaarContainment.lean#L317) · [Eight disks](../../Lean/MOC/GaussianHaarContainment.lean#L448) · [Consecutive blocks of independent spectra](../../Lean/MOC/GaussianHaarContainment.lean#L618)
 
 The remaining two bounds have different premises.
 
 | Premise | Consequence | Lean source |
 | --- | --- | --- |
-| The independent negative moments of the pair sums are each at most $e^{-7/2000}$ at exponent $-1/10$. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Negative-moment proof](../../Lean/MOC/GaussianHaarContainment.lean#L551) |
-| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Second-moment proof](../../Lean/MOC/GaussianHaarContainment.lean#L599) |
+| The independent negative moments of the pair sums are each at most $e^{-7/2000}$ at exponent $-1/10$. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Negative-moment proof](../../Lean/MOC/GaussianHaarContainment.lean#L674) |
+| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Second-moment proof](../../Lean/MOC/GaussianHaarContainment.lean#L722) |
 
 If these bounds hold and there are $\lfloor n/4\rfloor$ independent
 blocks, the union bound gives
@@ -78,14 +80,13 @@ $$
 The three events in this union may be correlated. The displayed
 estimate decays exponentially in $n$. Its small value of $p_0$
 gives no useful bound at moderate orders.
-[Conditional failure bound](../../Lean/MOC/GaussianHaarContainment.lean#L636)
+[Conditional failure bound](../../Lean/MOC/GaussianHaarContainment.lean#L759)
 
 ## Remaining ensemble inputs
 
-The Lean source gives the failure bound from the displayed moment
-estimates. It uses the Gaussian disk law and independent block events
-as stated inputs. Deriving block-event independence from the single
-independent spectral family remains outside this source.
+The Lean source gives the block estimate from the independent Gaussian
+spectral entries. The failure bound also uses the two estimates in the
+table above.
 
 The paper argument evaluates the pair negative moment by the Mellin
 transform of an exponential variable. It uses the series for the
