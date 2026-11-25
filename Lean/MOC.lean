@@ -225,6 +225,8 @@ import MOC.SpectralGramNeighborhood
 import MOC.SpectralMinorDecomposition
 import MOC.SpectralZeroPadding
 import MOC.StationaryFullSupport
+import MOC.StationaryPivot
+import MOC.StationaryPivotTransport
 import MOC.StationaryDenseCross
 import MOC.SubsetAssignmentSupport
 import MOC.SubsetMarkerTest

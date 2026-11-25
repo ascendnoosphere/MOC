@@ -15,6 +15,8 @@ $b,e$ and $d,F$, leaving $C,D,s$ unchanged. In particular the mixed
 coefficient stays one: $\Gamma_{20}-\Gamma_{11}=\Gamma_3-\Gamma_{12}$.
 The proof below closes $b=0$ and $e=0$; it is not a proof of all T40.
 
+The [boundary-budget note](ZhengT40BoundaryBudget.md) records the conditional budget at \(C=0\) and the symbolic mixed quaternion term. It does not close an additional boundary.
+
 ## The two side boundaries
 
 By the conjugation it suffices to set $e=0$. Write

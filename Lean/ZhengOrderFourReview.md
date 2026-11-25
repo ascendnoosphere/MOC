@@ -53,6 +53,27 @@ catalogue.
 
 The [matching Hessian kernel](MOC/FourMatchingHessianKernel.lean) is now checked directly on real projections of exact bracket profiles; the individual symbolic factorizations used in the case proofs are separate.
 
+The [stationary-pivot reduction](MOC/StationaryPivot.lean) imposes the
+seven contacts and real global orbit maximality on a single witness.
+The [two-rich-fibre paper proof](TwoRichPivotFibres.md) gives an
+additional sufficient contact pattern, not a complete classification.
+
+## Partial reductions on the uncovered groups
+
+- **III:** [T10](ZhengT10Reduction.md) closes the ordinary minor branch
+  and transfers the remaining branch to explicit boundary comparisons;
+  [T11](ZhengT11Chart.md) gives its rational six-contact chart and
+  proves the zero-height comparison on paper.
+  The general T4, T5, T6, T10 and T11 bounds remain open here.
+- **V:** [T40 boundary calculations](ZhengT40BoundaryBudget.md) give a
+  conditional reciprocal budget and an exact mixed term, not the
+  outstanding support inequality. The [real-lift obstruction](ZhengRealLiftObstruction.md)
+  proves that the cubic equation and singular Hessian do not
+  characterize projected spectral profiles, even at seven contacts.
+- **VI:** [T55+7](ZhengT55Boundary7.md) reduces the remaining signed
+  comparison at that contact to a quadratic with nonreal root or an
+  explicit exceptional locus. Neither case proves the bound.
+
 The full order-four conjecture still needs the uncovered terminal bounds
 in Groups III, V and VI, or a proof that bypasses them. Nothing in this
 table settles unrestricted order.

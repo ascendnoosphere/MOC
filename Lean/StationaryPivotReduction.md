@@ -4,6 +4,16 @@ Status: mathematical proof, not yet Lean-checked. It strengthens the
 three-zero result in StationaryThreeZero.md. The unrestricted order-four
 conjecture remains open.
 
+The related [signed pivot marginal identity](MOC/StationaryPivot.lean)
+is checked in Lean, including its use at the seven-contact threshold.
+The [two-rich-fibre paper proof](TwoRichPivotFibres.md) excludes two
+four-contact pivot fibres sharing a row or column. The
+[octad obstruction](StationaryOctadObstruction.md) shows that dense
+pivot geometry alone cannot force an admissible pivot or an additional
+flat reflection.
+The [reflection formulas](StationaryPivotReflections.md) give the exact
+defect and compare real and complex phase tests on one pivot plane.
+
 ## 1. A stationary affine correction at a real orthogonal pivot
 
 Let \(U\) be a real orthogonal matrix of order four, and let

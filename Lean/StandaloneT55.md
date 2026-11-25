@@ -10,6 +10,8 @@ The extra contacts 4 and 0 are proved below. The remaining exact
 additional contacts are \(7,9,18,21,23\), whose support inequalities
 are not established in this note.
 
+The [contact 7 note](ZhengT55Boundary7.md) derives a necessary quadratic and its exceptional branch; it does not prove the support bound.
+
 ## Signed comparison
 
 Write \(G_j=H-\Re(\eta P_j)\) and let \(A=01,B=02,C=03\)

@@ -80,6 +80,8 @@ flowchart BT
     TRANSFER["Increase the contact count below 7<br/>even at zero products · checked"]:::checked
     SEVEN["Support bound for real orthogonal mixers<br/>at 7 or more contacts · open"]:::open
     TWO["Common mixture of two real orthogonal<br/>squared-minor tables · checked"]:::checked
+    PIVOT["Seven contacts and signed pivot marginals<br/>at one real global maximizer · checked"]:::checked
+    RICH["Two four-contact fibres sharing<br/>a row or column · proof on paper"]
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
@@ -103,6 +105,8 @@ flowchart BT
     TWO -. proves the real restriction .-> SEVEN
     SEVEN <-->|iff| FOUR
     TESTS -. narrow the witness set .-> WITNESS
+    PIVOT -. narrows the same witness .-> SEVEN
+    RICH -. excludes a contact family .-> PIVOT
     ZERO -. excludes a mixer family .-> WITNESS
     PHASE -. restrict realizable profiles .-> SEVEN
     PAIRED -. removes the zero-height case .-> T85
@@ -142,7 +146,9 @@ For the later groups, the separate progress is [T34 at zero height
 or with contact 13](ZhengT34Partial.md), [two standalone T40 boundaries](ZhengT40Standalone.md),
 and [three standalone T55 boundaries](StandaloneT55.md), including
 the earlier T55+20 overlap. The full [T85 comparison](ZhengT85Independent.md)
-remains independent of these standalone cases. The exact seven-contact
+remains independent of these standalone cases. For additional exact
+reductions and the remaining inequalities, see the
+[Groups III, V and VI audit](ZhengOrderFourReview.md#partial-reductions-on-the-uncovered-groups). The exact seven-contact
 reduction still does not imply that the 27 auxiliary propositions listed
 in Appendix G exhaust every remaining terminal contact set.
 
@@ -635,6 +641,18 @@ shows that each noncontact needs a subset image that no contact shares.
 At nonpositive support height, the contacts obtained from that
 noncontact by one swap cannot by themselves prevent this separation.
 Longer relative permutations still matter.
+
+**Joint stationary-pivot route.** The [checked reduction](MOC/StationaryPivot.lean)
+keeps at least seven contacts when replacing the mixer by a real global
+support maximizer for the terminal spectra. Each nonzero pivot has a
+signed conditional score equal to the full stationary score, so its
+fibre contains an inactive label in a strict witness. The
+[two-rich-fibre theorem on paper](TwoRichPivotFibres.md) handles two
+four-contact fibres sharing a row or column. A
+[dense orthogonal family](StationaryOctadObstruction.md) has no
+admissible pivot, and the two coordinate bases can be the only zeros
+of a nonpositive quartic. Neither obstruction uses an exact spectral
+lift or refutes the conjecture. The general dense comparison remains open.
 
 **Order-four backup.** Exclude the regular stationary orthogonal witnesses
 using the second-order, reflection, and flat-plane tests. The
