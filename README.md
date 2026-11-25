@@ -165,7 +165,7 @@ of the corresponding real orthogonal tables.
 
 | Status | Result | Lean source |
 | --- | --- | --- |
-| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if $U$ is real orthogonal with zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/FourZeroDiagonal.lean#L342) |
+| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if the complex unitary matrix $U$ has zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) |
 | Proved | If every entry of the unitary change of eigenbasis $U$ has modulus $1/2$, one probability law on permutations gives the determinant for all complex spectra. These are the normalized complex Hadamard matrices of order four. | [Common law](Lean/MOC/OrderFourComplexHadamard.lean#L259) · [Inclusion](Lean/MOC/OrderFourComplexHadamard.lean#L272) · [Proof map](Docs/order-four-complex-hadamard-proof-map.md) |
 | Proved | The directional bound holds for specific sets of tied permutations. The pattern labels identify those sets in the linked statements. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) |
 | Partial | It suffices to exclude strict violations at real orthogonal maximizers with at least seven contacts. For each nonzero entry $U_{ij}$, some permutation with $\sigma(j)=i$ does not attain the maximum. Lean proves these restrictions on the same witness. | [Seven-contact reduction](Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary reduction](Lean/MOC/StationaryPivot.lean#L221) |
@@ -376,9 +376,9 @@ Combining the blocks proves the convex-hull inclusion in every order.
   is zero outside one principal block of order at most three.
   [Rank-one change](Lean/MOC/HouseholderSupport.lean#L360) · [Principal block](Lean/MOC/IdentityPadding.lean#L52)
 - In order four, the inclusion holds if a row or column of $U$ has at
-  most two nonzero entries. It also holds if $U$ is real orthogonal with
-  a zero diagonal.
-  [Sparse row](Lean/MOC/SparseRow.lean#L287) · [Sparse column](Lean/MOC/SparseRow.lean#L309) · [Zero diagonal](Lean/MOC/FourZeroDiagonal.lean#L342)
+  most two nonzero entries. It also holds if all four diagonal entries
+  of $U$ are zero.
+  [Sparse row](Lean/MOC/SparseRow.lean#L287) · [Sparse column](Lean/MOC/SparseRow.lean#L309) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196)
 - In order five, the inclusion holds for the discrete Fourier matrix.
   It also holds for each unitary with zero diagonal and off-diagonal
   entries of absolute value $1/2$.

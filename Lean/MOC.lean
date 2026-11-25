@@ -147,6 +147,7 @@ import MOC.FourNonrealReduction
 import MOC.FourParityCorrection
 import MOC.FourQuaternionMinor
 import MOC.FourZeroDiagonal
+import MOC.OrderFourZeroDiagonalUnitary
 import MOC.OrderFourComplexHadamard
 import MOC.FullSupportReduction
 import MOC.FullFlagLaw

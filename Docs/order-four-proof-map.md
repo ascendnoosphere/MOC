@@ -116,10 +116,25 @@ $U$ can be restricted to real orthogonal matrices.
 | Stationary violations with at least seven contacts | The determinant is nonzero. For each nonzero entry $U_{ij}$, a permutation with $\sigma(j)=i$ has strictly smaller projection than the contacts. | [Seven contacts](../Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary pivot](../Lean/MOC/StationaryPivot.lean#L221) |
 | No normal maximizer obstruction | It suffices that for each pair of lists and direction, some maximizer gives a normal sum. | [Exact normal-maximizer test](../Lean/MOC/NormalSupportMaximum.lean#L303) |
 
-The inclusion also holds if either spectrum lies on a circle or line,
-if there is an opposite eigenvalue pair, or if the real orthogonal
-matrix has a zero diagonal.
-[Circle or line](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](../Lean/MOC/FourZeroDiagonal.lean#L342)
+The inclusion also holds if either spectrum lies on a circle or line
+or if there is an opposite eigenvalue pair.
+[Circle or line](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../Lean/MOC/FourCoincidence.lean#L360)
+
+### Complex unitary matrices with zero diagonal
+
+Let $U$ be a complex unitary matrix of order four with zero diagonal.
+The inclusion holds for every pair of complex eigenvalue lists. If another
+entry is zero, its row has at most two nonzero entries. Expansion along that
+row reduces the claim to order three.
+[Inclusion](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) · [Row reduction](../Lean/MOC/SparseRow.lean#L171)
+
+Suppose all off-diagonal entries are nonzero. Only the nine permutations
+with no fixed point contribute to the determinant of $U$. Swaps that
+preserve this condition connect all nine permutations. Row orthogonality
+makes the ratio of the two signed terms at each swap a positive real
+number. All nine terms therefore have the same argument. Division by
+their sum gives nonnegative weights for the matching products.
+[Swaps](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L40) · [Positive ratio](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L86) · [Weights](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L149)
 
 ## Contact patterns
 
