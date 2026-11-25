@@ -42,7 +42,9 @@ theorem rankTwoProjectedPhase_support_iff (a b d : ℝ) :
         dsimp only [x, y]
         field_simp [hD.ne'] <;> ring
       have hq : 0 ≤ (a + 4 * d) * y ^ 2 - 2 * b * y * (1 - x) + a * (1 - x) ^ 2 := by
-        linarith only [h x y hc, rankTwoProjectedPhase_loss a b d x y hc]
+        have hloss := sub_nonneg.mpr (h x y hc)
+        rw [rankTwoProjectedPhase_loss a b d x y hc] at hloss
+        simpa only [zero_mul] using (le_div_iff₀ (by norm_num : 0 < (2 : ℝ))).mp hloss
       rw [hscale] at hq
       have hr : 2 * v / D ≠ 0 :=
         div_ne_zero (mul_ne_zero (by norm_num) hv) hD.ne'
@@ -93,8 +95,7 @@ private theorem phase_linear_support_iff (a b c : ℝ) :
     refine ⟨hc, ?_⟩
     rw [← hs]
     by_cases hz : r = 0
-    · rw [hz]
-      positivity
+    · simpa [hz] using sq_nonneg c
     have hxy : (a / r) ^ 2 + (b / r) ^ 2 = 1 := by
       field_simp [hz] <;> nlinarith only [hs]
     have hsum : a * (a / r) + b * (b / r) = r := by
@@ -108,9 +109,10 @@ private theorem phase_linear_support_iff (a b c : ℝ) :
           (a ^ 2 + b ^ 2) * (x ^ 2 + y ^ 2) := by ring
       rw [hxy, mul_one] at hi
       linarith only [hi, sq_nonneg (a * y - b * x)]
-    by_contra! h
-    have hp : 0 < a * x + b * y + c := by linarith only [h, hc]
-    nlinarith only [hsq, hs, mul_pos (sub_pos.mpr h) hp]
+    by_contra h
+    have hlt := lt_of_not_ge h
+    have hp : 0 < a * x + b * y + c := by linarith only [hlt, hc]
+    nlinarith only [hsq, hs, mul_pos (sub_pos.mpr hlt) hp]
 
 /-- Support on two independent phase circles is equivalent to a squared
 bound in the second phase. The real functions `C`, `A`, and `B` are

@@ -47,10 +47,10 @@ theorem rankTwoPhaseChange_eq_laurent (A B C D z : ℂ) (hz : Complex.normSq z =
 /-- The homogeneous half-angle polynomial of a disk support inequality. -/
 def rankTwoPhaseDiskSextic (ξ P R T S : ℂ) (u v : ℝ) : ℝ :=
   let d := u ^ 2 + v ^ 2
-  -((ξ * R).re * d + 2 * u * v * (ξ * T).re + 2 * v ^ 2 * (ξ * S).re) * d ^ 2 -
+  (-((ξ * R).re * d + 2 * u * v * (ξ * T).re + 2 * v ^ 2 * (ξ * S).re) * d ^ 2 -
     Complex.normSq
       (((u : ℂ) * P + (v : ℂ) * R) * (d : ℂ) +
-        ((2 * v ^ 2 : ℝ) : ℂ) * ((u : ℂ) * T + (v : ℂ) * S))
+        ((2 * v ^ 2 : ℝ) : ℂ) * ((u : ℂ) * T + (v : ℂ) * S)))
 
 private theorem phaseDisk_re_real_mul (ξ Ω : ℂ) (r : ℝ) :
     (ξ * ((r : ℂ) * Ω)).re = r * (ξ * Ω).re := by
@@ -136,7 +136,7 @@ theorem rankTwoPhase_quartic_bound_of_null_disk (ξ P R T S : ℂ) (hP : (ξ * P
   have hfactor (t : ℝ) :
       rankTwoPhaseDiskSextic ξ P R T S 1 t + rankTwoPhaseDiskSextic ξ P R T S 1 (-t) =
         2 * t ^ 2 * G t := by
-    simp [rankTwoPhaseDiskSextic, G, hp, hR, Complex.normSq_apply,
+    simp [rankTwoPhaseDiskSextic, G, hp, hR, Complex.normSq_apply, ← Complex.ofReal_pow,
       Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
   have hn (t : ℝ) (ht : t ≠ 0) : 0 ≤ G t := by
     have hs := add_nonneg (h6 1 t) (h6 1 (-t))
@@ -173,7 +173,8 @@ theorem rankTwoPhase_eq_zero_of_flat_disk (ξ P R T S : ℂ) (hP : (ξ * P).re =
   have hj := hnonpos (-Complex.I) (by rw [Complex.normSq_neg, Complex.normSq_I])
   have hT : (ξ * T).re = 0 := by
     rw [hRe] at hi hj
-    norm_num at hi hj
+    norm_num only [Complex.I_re, Complex.I_im, Complex.neg_re, Complex.neg_im, neg_zero,
+      sub_zero, one_mul, mul_neg, neg_mul, mul_one] at hi hj
     linarith only [hi, hj]
   have hp := hpenalty z hz
   rw [hRe, hT, mul_zero] at hp

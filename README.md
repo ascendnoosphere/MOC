@@ -394,8 +394,8 @@ Combining the blocks proves the convex-hull inclusion in every order.
   entries of absolute value $1/2$.
   [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal and equal magnitudes](Lean/MOC/ConferenceFive.lean#L260)
 - If $U$ is the tensor product of two order-two unitaries, one
-  permutation law works for all pairs of spectra.
-  [Tensor-product law](Docs/two-by-two-tensor-mixer-proof-map.md)
+  probability law on at most ten permutations works for all pairs of spectra.
+  [Common law](Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L437) · [Tensor-product proof map](Docs/two-by-two-tensor-mixer-proof-map.md)
 - A specified rational orthogonal matrix of order six has a closed
   operator-norm ball of radius $1/23083105288$. Every unitary in this
   ball satisfies the inclusion when the second spectrum is constant

@@ -391,11 +391,16 @@ four inner phase evaluations give a scalar test for each outer phase.
 The test requires a nonzero base determinant at each outer phase.
 A proof must still use the actual cofactor data or phase coefficients
 to exclude a strict witness.
-[Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Rank-two test](../Lean/MOC/RankTwoPhaseEscape.lean#L24) · [Two-phase determinant test](../Lean/MOC/RankTwoPhaseEscape.lean#L136)
+[Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Rank-two test](../Lean/MOC/RankTwoPhaseEscape.lean#L24) · [Two-phase determinant test](../Lean/MOC/RankTwoPhaseEscape.lean#L138)
 
-Exact Python checks covered exchange fixtures with zero pivots,
-singular spectator blocks, and both phase tests. The new Lean source
-awaits verification.
+For a rank-one phase variation with zero projected tangent, the
+quadratic disk bound is equivalent to three scalar inequalities.
+For a rank-two variation with zero projected tangent, a quadratic disk bound implies a
+nonnegative homogeneous polynomial of degree six.
+[Rank-one scalar criterion](../Lean/MOC/RankOneSupportDisk.lean#L48) · [Rank-one orbit](../Lean/MOC/RankOneSupportDisk.lean#L162) · [Sextic inequality](../Lean/MOC/PhaseDiskSextic.lean#L62)
+
+Lean checked both phase tests. Exact arithmetic checks covered
+exchange examples with zero pivots and singular spectator blocks.
 [Research attempts](research-attempts-proof-map.md)
 
 ## Polynomial and coefficient conditions

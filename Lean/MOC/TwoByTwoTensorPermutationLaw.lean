@@ -120,9 +120,11 @@ private theorem tensor_singleton_polynomial (c s d t : ℝ)
       ∑ k, if tensorPermImage k j = i then tensorWeight (s^2) (t^2) k else 0 := by
   fin_cases i <;> fin_cases j
   all_goals
-    norm_num [rotationTensorReal, tensorPermImage, tensorWeight, Fin.sum_univ_succ,
-      Matrix.of_apply, Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three, Fin.ext_iff] <;> first
-      | ring
+    simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero]
+    simp (disch := decide) only [if_pos, if_neg]
+    norm_num [rotationTensorReal, tensorWeight, Matrix.of_apply, Matrix.cons_val,
+      Matrix.cons_val_two, Matrix.cons_val_three] <;> first
+      | ring1
       | linear_combination d^2 * hc + (1-s^2) * hd
       | linear_combination t^2 * hc
       | linear_combination s^2 * hd
@@ -141,9 +143,12 @@ private theorem tensor_pair_polynomial (c s d t : ℝ) (hc : c^2+s^2 = 1) (hd : 
         then tensorWeight (s^2) (t^2) k else 0 := by
   fin_cases i <;> fin_cases j
   all_goals
-    norm_num [tensorPair, rotationTensorReal, tensorPermImage, tensorWeight, Fin.sum_univ_succ,
-      Matrix.of_apply, Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three, Fin.ext_iff] <;> first
-      | ring
+    dsimp only
+    simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero]
+    simp (disch := decide) only [if_pos, if_neg]
+    norm_num [tensorPair, rotationTensorReal, tensorWeight, Matrix.of_apply, Matrix.cons_val,
+      Matrix.cons_val_two, Matrix.cons_val_three] <;> first
+      | ring1
       | linear_combination (-(d^2 + t^2)^2*(-c^2 + s^2 - 1)) * hc + ((s - 1)^2*(s + 1)^2*(d^2 + t^2 + 1)) * hd
       | linear_combination (s^2*(d^2 + t^2)^2) * hc + (-s^2*(s - 1)*(s + 1)*(d^2 + t^2 + 1)) * hd
       | linear_combination (s^4*(d^2 + t^2 + 1)) * hd

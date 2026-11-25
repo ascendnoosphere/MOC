@@ -91,7 +91,7 @@ theorem rankOnePhase_disk_iff (ξ P R : ℂ) (hP : (ξ * P).re = 0) :
         by_contra hv
         exact (add_pos_of_nonneg_of_pos (sq_nonneg u) (sq_pos_of_ne_zero hv)).ne' hd
       simp [hu, hv]
-    · have hpos : 0 < d := lt_of_le_of_ne (add_nonneg (sq_nonneg u) (sq_nonneg v)) hd.symm
+    · have hpos : 0 < d := lt_of_le_of_ne (add_nonneg (sq_nonneg u) (sq_nonneg v)) (Ne.symm hd)
       rw [hfact, hGram u v] at hs
       exact nonneg_of_mul_nonneg_left hs (div_pos (pow_pos hpos 2) (by norm_num))
   · intro H z hz
