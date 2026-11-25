@@ -28,6 +28,13 @@ The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
 library. Lean proves the unrestricted result through order three.
 [General goal](Lean/MOC/Claim.lean#L9) · [Orders zero through three](Lean/MOC/Small.lean#L68)
 
+In every order $n\ge 4$, Lean determines exactly how many nonzero
+entries in the change of eigenbasis guarantee one matching law for
+all spectra. The largest such bound is $n+8$. At $n+9$ an explicit
+unitary has no common law. A separate result proves the inclusion
+whenever each row, or each column, has at most three nonzero entries.
+[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L89) · [Witness at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Row and column cases](Docs/sparse-unitary-proof-map.md)
+
 The new proof scripts give finite integer comparisons for all orders, an
 order-four enclosure within one twenty-seventh of the matching width in
 each direction, and a sharp order-five support example. The scripts have
@@ -114,7 +121,7 @@ is in the hull if and only if the bound holds in every direction.
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | A strict violation with at most $2n-2$ contacts can gain a contact by changing the lists. The new violation keeps the same $U$, direction, and previous contacts. | [Contact transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Proof of the continuation premise](Lean/MOC/AffineGapCover.lean#L80) |
-| Partial | A counterexample of least order has no proper diagonal block split after independent row and column permutations. Each row and column of $U$ has at least three nonzero entries. Every matrix that commutes with both summands is a scalar multiple of the identity. | [Block split](Lean/MOC/Claim.lean#L51) · [Rows](Lean/MOC/SparseRow.lean#L316) · [Columns](Lean/MOC/SparseRow.lean#L338) · [Commuting matrices](Lean/MOC/ReducingCommutant.lean#L70) |
+| Partial | A counterexample of least order has no proper diagonal block split after independent row and column permutations. Each row and column of $U$ has at least three nonzero entries. Every matrix that commutes with both summands is a scalar multiple of the identity. | [Block split](Lean/MOC/Claim.lean#L51) · [Rows](Lean/MOC/SparseRow.lean#L339) · [Columns](Lean/MOC/SparseRow.lean#L346) · [Commuting matrices](Lean/MOC/ReducingCommutant.lean#L70) |
 | Partial | For $\det(A+zB)$ in positive order $n$, the separate coefficient bounds hold at degrees $0$, $1$, $n-1$, and $n$. This covers every coefficient through order three. | [First](Lean/MOC/Reformulations/NativeLinksA.lean#L107) · [Penultimate](Lean/MOC/Reformulations/NativeLinksA.lean#L150) · [Endpoints](Lean/MOC/Reformulations/NativeLinksA.lean#L162) |
 | Partial, new Lean source | In every order, each unitary $U$ has one probability law on permutations that gives the first three elementary coefficients for all pairs of spectra. | [Uniform coefficient law](Lean/MOC/Reformulations/SecondCoefficient.lean#L248) |
 | Partial, new Lean source | The complex stationary score marginal, exchange identities, and spectral multiplier equations restrict a strict counterexample. Smaller-order inclusion also gives one law for a free eigenvalue when its column meets at most two distinct opposing eigenvalues. | [Stationary tests](Docs/all-orders-proof-map.md#stationary-support-and-spectral-exchange) · [Free eigenvalue](Lean/MOC/GroupedEigenvalueMoments.lean#L88) |
@@ -398,7 +405,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
   [Proof](Lean/MOC/OneBridge.lean#L307)
 - The inclusion holds if independent row and column permutations make
   all entries of $U$ below the first subdiagonal zero.
-  [Proof](Lean/MOC/SparseRow.lean#L310)
+  [Proof](Lean/MOC/SparseRow.lean#L311)
 - Let $v$ be a unit column vector and $z$ a complex number of modulus
   one. The inclusion holds if $U=I+(z-1)vv^*$. It also holds if $U-I$
   is zero outside one principal block of order at most three.
@@ -406,7 +413,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
 - In order four, the inclusion holds if a row or column of $U$ has at
   most two nonzero entries. It also holds if all four diagonal entries
   of $U$ are zero.
-  [Sparse row](Lean/MOC/SparseRow.lean#L316) · [Sparse column](Lean/MOC/SparseRow.lean#L338) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196)
+  [Sparse row](Lean/MOC/SparseRow.lean#L339) · [Sparse column](Lean/MOC/SparseRow.lean#L346) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196)
 - In order five, the inclusion holds for the discrete Fourier matrix.
   It also holds for each unitary with zero diagonal and off-diagonal
   entries of absolute value $1/2$.

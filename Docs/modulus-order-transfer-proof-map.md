@@ -37,7 +37,7 @@ claimed bound. If $M=0$, all matching products vanish. The signed
 determinant identity then gives $D=0$.
 [Two matchings](../Lean/MOC/DuplicatedAssignment.lean#L45) ·
 [Hall's theorem in the pinned mathlib](https://github.com/leanprover-community/mathlib4/blob/c44e0c8ee63ca166450922a373c7409c5d26b00b/Mathlib/Combinatorics/Hall/Finite.lean#L249) ·
-[Zero maximum](../Lean/MOC/ModulusOrderTransfer.lean#L117) ·
+[Zero maximum](../Lean/MOC/ModulusOrderTransfer.lean#L99) ·
 [Signed determinant identity](../Lean/MOC/Weights.lean#L41)
 
 ## Unbounded sets of orders

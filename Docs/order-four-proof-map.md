@@ -137,7 +137,7 @@ Let $U$ be a complex unitary matrix of order four with zero diagonal.
 The inclusion holds for every pair of complex eigenvalue lists. If another
 entry is zero, its row has at most two nonzero entries. Expansion along that
 row reduces the claim to order three.
-[Inclusion](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) · [Row reduction](../Lean/MOC/SparseRow.lean#L247)
+[Inclusion](../Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) · [Row reduction](../Lean/MOC/SparseRow.lean#L248)
 
 Suppose all off-diagonal entries are nonzero. Only the nine permutations
 with no fixed point contribute to the determinant of $U$. Swaps that

@@ -43,7 +43,7 @@ Use strong induction. The hypothesis gives the inclusion for all spectra and all
 [Normalized minor](../Lean/MOC/SparseRow.lean#L19) · [Degree preservation](../Lean/MOC/SparseDegreeInduction.lean#L39)
 
 The expansion uses the weights $|U_{ip}|^2$, whose sum is one. The term for column $p$ is the smaller determinant times $a_i+b_p$. Each smaller matching product times this factor gives an ambient matching product, by pairing $p$ with $i$. Convexity gives the ambient inclusion. For a low-degree column, exchange the spectra and apply the same expansion to $U^*$. The normalized minors of $U^*$ retain the column bound inherited from $U^*$. Take their adjoints to obtain smaller matrices with the required row bound, then use the induction hypothesis.
-[Expansion and convexity](../Lean/MOC/SparseRow.lean#L247) · [Exchange of spectra](../Lean/MOC/Core.lean#L103) · [Induction](../Lean/MOC/SparseDegreeInduction.lean#L104)
+[Expansion and convexity](../Lean/MOC/SparseRow.lean#L248) · [Exchange of spectra](../Lean/MOC/Core.lean#L103) · [Induction](../Lean/MOC/SparseDegreeInduction.lean#L104)
 
 If no row or column has degree at most two, then each row has degree three and each column has degree at least three. The sum of the row degrees equals the sum of the column degrees because each sum counts every nonzero entry once. The row sum is $3n$, so each column must also have degree three. The case with only the column bound follows by exchanging the spectra and taking the adjoint.
 [Double count](../Lean/MOC/SupportDegreeBalance.lean#L10) · [Exact degrees](../Lean/MOC/SupportDegreeBalance.lean#L28)

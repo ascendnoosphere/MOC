@@ -259,7 +259,7 @@ A proper block split of a least-order counterexample would give two
 smaller orders that both satisfy the conjecture. A row or column with at
 most two nonzero entries also reduces to smaller order. Every matrix that
 commutes with both summands must be a scalar multiple of the identity.
-[Block reduction](../Lean/MOC/Claim.lean#L43) · [Least order](../Lean/MOC/Claim.lean#L51) · [Rows](../Lean/MOC/SparseRow.lean#L316) · [Columns](../Lean/MOC/SparseRow.lean#L338) · [Common commutant](../Lean/MOC/ReducingCommutant.lean#L70)
+[Block reduction](../Lean/MOC/Claim.lean#L43) · [Least order](../Lean/MOC/Claim.lean#L51) · [Rows](../Lean/MOC/SparseRow.lean#L339) · [Columns](../Lean/MOC/SparseRow.lean#L346) · [Common commutant](../Lean/MOC/ReducingCommutant.lean#L70)
 
 Every counterexample, in any order, needs both a row and a column with
 at least four nonzero entries. This follows from the inclusion for
@@ -331,7 +331,7 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Principal coisometries in all orders | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L248) |
 | No paired block split | Iff | [Statement and proof](../Lean/MOC/Claim.lean#L63) |
 | At least $\lvert R\rvert+2$ supporting columns for every nonempty row set $R$ with $\lvert R\rvert\leq n-2$ | Iff | [Statement and proof](../Lean/MOC/SinglePortHallExpansion.lean#L72) |
-| Every row and column has degree at least three | Iff | [Statement and proof](../Lean/MOC/SparseRow.lean#L350) |
+| Every row and column has degree at least three | Iff | [Statement and proof](../Lean/MOC/SparseRow.lean#L358) |
 | Strict expansion of the support of every proper nonempty set of rows | Iff | [Statement and proof](../Lean/MOC/SupportBlocks.lean#L124) |
 | Balanced spectra and strict support expansion | Iff | [Statement and proof](../Lean/MOC/Extremal.lean#L82) |
 | Scalar common commutant | Iff | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L107) |
