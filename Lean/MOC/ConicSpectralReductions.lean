@@ -1,3 +1,4 @@
+import MOC.EllipseVisualAngle
 import MOC.FractionalFiniteNormalization
 import MOC.GeneralizedSpectralCircles
 import MOC.MobiusCircleDefect
@@ -797,14 +798,15 @@ private theorem crossRatio_chart (a b : Fin 4 → ℂ)
   apply (div_eq_iff (hreg i)).mpr
   exact hnum i
 
-private theorem ellipse_chart_of_half_norm (r : ℝ) (hr : 0 < r)
-    (hs : 12 * r ^ 2 ≤ (r ^ 2 - 1) ^ 2)
+private theorem ellipse_chart_of_crossRatio_bound (r : ℝ) (hr : 0 < r)
     (a : Fin 4 → ℂ) (ha : Function.Injective a)
-    (hangle : let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3); z.re ≤ ‖z‖ / 2) :
+    (hangle : let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3)
+      ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * z.re ≤ ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖z‖) :
     ∃ α β γ δ : ℂ, α * δ - β * γ ≠ 0 ∧
       (∀ i, γ * a i + δ ≠ 0) ∧ (∀ i, fractionalMap α β γ δ (a i) ∈ spectralEllipse r) := by
   let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3)
-  change z.re ≤ ‖z‖ / 2 at hangle
+  change ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * z.re ≤
+    ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖z‖ at hangle
   have hz := spectralCrossRatio_ne_zero_one (a 0) (a 1) (a 2) (a 3)
     (ha.ne (by decide)) (ha.ne (by decide)) (ha.ne (by decide))
     (ha.ne (by decide)) (ha.ne (by decide)) (ha.ne (by decide))
@@ -817,11 +819,7 @@ private theorem ellipse_chart_of_half_norm (r : ℝ) (hr : 0 < r)
     simp only [Complex.normSq_apply, pow_two]
   rw [← hw, hrw, hnormw] at hangle
   have hshape : 4 * r ^ 2 * w.re ^ 2 ≤ (r ^ 2 - 1) ^ 2 * w.im ^ 2 := by
-    calc
-      _ ≤ (4 * r ^ 2) * (3 * w.im ^ 2) :=
-        mul_le_mul_of_nonneg_left (by linarith only [hangle]) (by positivity)
-      _ = (12 * r ^ 2) * w.im ^ 2 := by ring
-      _ ≤ _ := mul_le_mul_of_nonneg_right hs (sq_nonneg _)
+    nlinarith only [hangle]
   obtain ⟨u, v, hu, hnegU, hv, hnegV, hInj, hRatio⟩ :=
     exists_ellipse_antipodes r hr w hwn hw₁ hshape
   let b : Fin 4 → ℂ := ![u, -u, v, -v]
@@ -838,6 +836,21 @@ private theorem ellipse_chart_of_half_norm (r : ℝ) (hr : 0 < r)
   have hi : fractionalMap α β γ δ (a i) = b i := congrFun ht i
   rw [hi]
   exact hmem i
+
+private theorem ellipse_chart_of_half_norm (r : ℝ) (hr : 0 < r)
+    (hs : 12 * r ^ 2 ≤ (r ^ 2 - 1) ^ 2)
+    (a : Fin 4 → ℂ) (ha : Function.Injective a)
+    (hangle : let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3); z.re ≤ ‖z‖ / 2) :
+    ∃ α β γ δ : ℂ, α * δ - β * γ ≠ 0 ∧
+      (∀ i, γ * a i + δ ≠ 0) ∧ (∀ i, fractionalMap α β γ δ (a i) ∈ spectralEllipse r) := by
+  apply ellipse_chart_of_crossRatio_bound r hr a ha
+  let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3)
+  change ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * z.re ≤
+    ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖z‖
+  have h₁ := mul_le_mul_of_nonneg_left hangle
+    (show 0 ≤ (r ^ 2 - 1) ^ 2 + 4 * r ^ 2 by positivity)
+  have h₂ := mul_le_mul_of_nonneg_right hs (norm_nonneg z)
+  nlinarith only [h₁, h₂]
 
 private theorem half_norm_crossRatio_ordering (a : Fin 4 → ℂ) (ha : Function.Injective a) :
     ∃ p : Equiv.Perm (Fin 4),
@@ -870,22 +883,42 @@ private theorem half_norm_crossRatio_ordering (a : Fin 4 → ℂ) (ha : Function
         hne 0 3 (by decide), hne 1 2 (by decide)] <;> ring
     exact ⟨p, by simpa only [he] using hz⟩
 
+private theorem ellipse_axis_threshold_iff (r : ℝ) (hr : 1 ≤ r) :
+    12 * r ^ 2 ≤ (r ^ 2 - 1) ^ 2 ↔ 2 + Real.sqrt 3 ≤ r := by
+  have hrp : 0 < r := zero_lt_one.trans_le hr
+  have hs₀ : 0 ≤ Real.sqrt 3 := Real.sqrt_nonneg 3
+  have hsq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have hreal : (2 * Real.sqrt 3 * r) ^ 2 = 12 * r ^ 2 := by
+    rw [mul_pow, mul_pow, hsq]
+    ring
+  have hnon : 0 ≤ r ^ 2 - 1 := by
+    apply sub_nonneg.mpr
+    simpa only [one_pow] using (sq_le_sq₀ zero_le_one hrp.le).mpr hr
+  have hs₃ : Real.sqrt 3 < 3 := by
+    apply (sq_lt_sq₀ hs₀ (by norm_num)).mp
+    rw [hsq]
+    norm_num
+  rw [← hreal, sq_le_sq₀ (by positivity : 0 ≤ 2 * Real.sqrt 3 * r) hnon]
+  constructor
+  · intro h
+    by_contra hneg
+    have hpos : 0 < (2 - (r - Real.sqrt 3)) * (2 + (r - Real.sqrt 3)) :=
+      mul_pos (by linarith only [lt_of_not_ge hneg]) (by linarith only [hr, hs₃])
+    nlinarith only [hpos, hsq, h]
+  · intro h
+    have hb : 2 ≤ r - Real.sqrt 3 := by linarith
+    have hb' := (sq_le_sq₀ (by norm_num : (0 : ℝ) ≤ 2) (by linarith : 0 ≤ r - Real.sqrt 3)).mpr hb
+    nlinarith only [hb', hsq]
+
 /-- The stated ellipse semiaxis threshold is sufficient for an exact order-four
 test. The proof chooses a cross-ratio ordering by the longest side of its
 triangle. The mixer is unchanged. -/
 theorem four_spectralEllipse_test_iff (r : ℝ) (hr : 2 + Real.sqrt 3 ≤ r)
     (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
     SpectralCurveTest (spectralEllipse r) U ↔ ∀ a b : Fin 4 → ℂ, Holds a b U := by
-  have hrp : 0 < r := by linarith [Real.sqrt_nonneg (3 : ℝ)]
-  have hsq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
-  have hb : 2 ≤ r - Real.sqrt 3 := by linarith
-  have hb' := (sq_le_sq₀ (by norm_num : (0 : ℝ) ≤ 2) (by linarith : 0 ≤ r - Real.sqrt 3)).mpr hb
-  have hsmall : 2 * Real.sqrt 3 * r ≤ r ^ 2 - 1 := by nlinarith
-  have hsmall₀ : 0 ≤ 2 * Real.sqrt 3 * r := by positivity
-  have hs := (sq_le_sq₀ hsmall₀ (hsmall₀.trans hsmall)).mpr hsmall
-  have hshape : 12 * r ^ 2 ≤ (r ^ 2 - 1) ^ 2 := by
-    rw [show (2 * Real.sqrt 3 * r) ^ 2 = 12 * r ^ 2 by rw [mul_pow, mul_pow, hsq]; ring] at hs
-    exact hs
+  have hr₁ : 1 ≤ r := by linarith [Real.sqrt_nonneg (3 : ℝ)]
+  have hrp : 0 < r := zero_lt_one.trans_le hr₁
+  have hshape := (ellipse_axis_threshold_iff r hr₁).mpr hr
   constructor
   · intro h
     apply holds_all_of_injective_left U
@@ -1327,6 +1360,310 @@ theorem five_spectralHyperbola_test_iff (d : ℂ) (k : ℝ) (hdim : d.im ≠ 0)
       · exact Or.inl (hreal l hlp hlq)
   · intro h a b _ _
     exact h a b
+
+private theorem spectralCrossRatio_scale (a b c d k : ℂ) (hk : k ≠ 0) :
+    spectralCrossRatio (k * a) (k * b) (k * c) (k * d) =
+      spectralCrossRatio a b c d := by
+  unfold spectralCrossRatio
+  rw [← mul_sub k a c, ← mul_sub k b d, ← mul_sub k a d, ← mul_sub k b c,
+    mul_mul_mul_comm k (a - c) k (b - d), mul_mul_mul_comm k (a - d) k (b - c)]
+  exact mul_div_mul_left _ _ (mul_ne_zero hk hk)
+
+private theorem unit_norm_of_ellipse_coordinates (r : ℝ) (z : ℂ)
+    (hz : z ∈ spectralEllipse r) :
+    ‖(⟨z.re / r, z.im⟩ : ℂ)‖ = 1 := by
+  let w : ℂ := ⟨z.re / r, z.im⟩
+  have hn : ‖w‖ ^ 2 = 1 := by
+    rw [Complex.sq_norm, Complex.normSq_apply]
+    simpa only [w, pow_two] using hz
+  exact le_antisymm
+    ((sq_le_sq₀ (norm_nonneg w) zero_le_one).mp (by simpa only [one_pow] using hn.le))
+    ((sq_le_sq₀ zero_le_one (norm_nonneg w)).mp (by simpa only [one_pow] using hn.ge))
+
+/-- A distinct quadruple on the ellipse has a cross-ratio ordering
+that meets the bound from the focal visual angle. -/
+theorem spectralEllipse_crossRatio_ordering (r : ℝ)
+    (hr : 1 ≤ r) (a : Fin 4 → ℂ)
+    (ha : Function.Injective a) (hEll : ∀ i, a i ∈ spectralEllipse r) :
+    ∃ p : Equiv.Perm (Fin 4),
+      let z := spectralCrossRatio (a (p 0)) (a (p 1)) (a (p 2)) (a (p 3))
+      ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * z.re ≤ ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖z‖ := by
+  have hrp : 0 < r := zero_lt_one.trans_le hr
+  let w (i : Fin 4) : ℂ := ⟨(a i).re / r, (a i).im⟩
+  have hW (i : Fin 4) : ‖w i‖ = 1 := unit_norm_of_ellipse_coordinates r _ (hEll i)
+  have hWinj : Function.Injective w := by
+    intro i j hij
+    apply ha
+    apply Complex.ext
+    · have h := congrArg Complex.re hij
+      change (a i).re / r = (a j).re / r at h
+      have hh := congrArg (fun x : ℝ => x * r) h
+      simpa only [div_mul_cancel₀ _ hrp.ne'] using hh
+    · exact congrArg Complex.im hij
+  obtain ⟨p, hp⟩ := half_norm_crossRatio_ordering w hWinj
+  let W := w ∘ p
+  let X := a ∘ p
+  let L := spectralCrossRatio (W 0) (W 1) (W 2) (W 3)
+  have hL : L.re ≤ ‖L‖ / 2 := hp
+  have hWI : Function.Injective W := hWinj.comp p.injective
+  have hDen : (W 0 - W 3) * (W 1 - W 2) ≠ 0 :=
+    mul_ne_zero (sub_ne_zero.mpr (hWI.ne (by decide))) (sub_ne_zero.mpr (hWI.ne (by decide)))
+  have hLne : L ≠ 0 :=
+    div_ne_zero (mul_ne_zero (sub_ne_zero.mpr (hWI.ne (by decide)))
+      (sub_ne_zero.mpr (hWI.ne (by decide)))) hDen
+  have hLIm : L.im = 0 := unit_circle_crossRatio_im_zero _ _ _ _
+    (hW (p 0)) (hW (p 1)) (hW (p 2)) (hW (p 3)) hDen
+  have hLnorm : ‖L‖ = |L.re| := by
+    have hLc : L = (L.re : ℂ) :=
+      Complex.ext (Complex.ofReal_re _).symm (hLIm.trans (Complex.ofReal_im _).symm)
+    calc
+      _ = ‖(L.re : ℂ)‖ := congrArg norm hLc
+      _ = _ := by rw [Complex.norm_real, Real.norm_eq_abs]
+  have hLneg : L.re < 0 := by
+    by_contra hn
+    have hneg : 0 ≤ L.re := le_of_not_gt hn
+    have hzero : L.re ≠ 0 := fun he => hLne (Complex.ext he hLIm)
+    rw [hLnorm, abs_of_nonneg hneg] at hL
+    linarith only [hL, lt_of_le_of_ne hneg hzero.symm]
+  refine ⟨p, ?_⟩
+  change ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * (spectralCrossRatio (X 0) (X 1) (X 2) (X 3)).re ≤
+    ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖spectralCrossRatio (X 0) (X 1) (X 2) (X 3)‖
+  by_cases he : r = 1
+  · have hwEq : W = X := by
+      funext i
+      apply Complex.ext
+      · change (a (p i)).re / r = (a (p i)).re
+        rw [he, div_one]
+      · rfl
+    rw [← hwEq, he]
+    change (((1 : ℝ) ^ 2 - 1) ^ 2 + 4 * 1 ^ 2) * L.re ≤
+      ((1 ^ 2 - 1) ^ 2 - 4 * 1 ^ 2) * ‖L‖
+    rw [hLnorm, abs_of_neg hLneg]
+    norm_num
+  · have hr₁ : 1 < r := lt_of_le_of_ne hr he.symm
+    let q : ℝ := (r - 1) / (r + 1)
+    let c : ℝ := (r + 1) / 2
+    have hdenr : 0 < r + 1 := by positivity
+    have hq : 0 < q := div_pos (sub_pos.mpr hr₁) hdenr
+    have hc : 0 < c := div_pos hdenr (by norm_num)
+    have hq₁ : q < 1 := by
+      dsimp only [q]
+      apply (div_lt_iff₀ hdenr).mpr
+      linarith
+    let e := ellipseCircleImage (q : ℂ)
+    have hcoords (i : Fin 4) : X i = (c : ℂ) * e (W i) := by
+      have hwi : ‖W i‖ = 1 := hW (p i)
+      change a (p i) = (c : ℂ) * ellipseCircleImage (q : ℂ) (W i)
+      unfold ellipseCircleImage
+      rw [div_eq_mul_inv, Complex.inv_eq_conj hwi]
+      apply Complex.ext
+      · simp only [Complex.mul_re, Complex.add_re, Complex.ofReal_re, Complex.ofReal_im,
+          Complex.conj_re, Complex.conj_im, zero_mul, sub_zero]
+        change (a (p i)).re = c * ((a (p i)).re / r + q * ((a (p i)).re / r))
+        dsimp only [c, q]
+        field_simp [hrp.ne', hdenr.ne'] <;> ring
+      · simp only [Complex.mul_im, Complex.add_im, Complex.ofReal_re, Complex.ofReal_im,
+          Complex.conj_im, zero_mul, add_zero]
+        change (a (p i)).im = c * ((a (p i)).im + q * (-(a (p i)).im))
+        dsimp only [c, q]
+        field_simp [hdenr.ne'] <;> ring
+    have hImInj : Function.Injective (e ∘ W) := by
+      intro i j he
+      exact (ha.comp p.injective) (by rw [hcoords i, hcoords j, show e (W i) = e (W j) from he])
+    have hImDen : (e (W 0) - e (W 3)) * (e (W 1) - e (W 2)) ≠ 0 :=
+      mul_ne_zero (sub_ne_zero.mpr (hImInj.ne (by decide)))
+        (sub_ne_zero.mpr (hImInj.ne (by decide)))
+    have hTh := ellipse_crossRatio_re_bound q (W 0) (W 1) (W 2) (W 3)
+      hq hq₁ (hW (p 0)) (hW (p 1)) (hW (p 2)) (hW (p 3)) hDen hImDen hLneg
+    rw [hcoords 0, hcoords 1, hcoords 2, hcoords 3,
+      spectralCrossRatio_scale _ _ _ _ _ (Complex.ofReal_ne_zero.mpr hc.ne')]
+    let z := spectralCrossRatio (e (W 0)) (e (W 1)) (e (W 2)) (e (W 3))
+    change (q⁻¹ + q) ^ 2 * z.re ≤ (4 - (q⁻¹ - q) ^ 2) * ‖z‖ at hTh
+    change ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * z.re ≤ ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖z‖
+    have hinv : q⁻¹ = (r + 1) / (r - 1) := inv_div _ _
+    have hscaleA : (r ^ 2 - 1) ^ 2 * (q⁻¹ + q) ^ 2 =
+        4 * ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) := by
+      rw [hinv]
+      dsimp only [q]
+      field_simp [(sub_pos.mpr hr₁).ne', hdenr.ne'] <;> ring
+    have hscaleB : (r ^ 2 - 1) ^ 2 * (4 - (q⁻¹ - q) ^ 2) =
+        4 * ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) := by
+      rw [hinv]
+      dsimp only [q]
+      field_simp [(sub_pos.mpr hr₁).ne', hdenr.ne'] <;> ring
+    have h := mul_le_mul_of_nonneg_left hTh (sq_nonneg (r ^ 2 - 1))
+    rw [← mul_assoc, ← mul_assoc, hscaleA, hscaleB] at h
+    nlinarith only [h]
+
+private theorem spectralCrossRatio_fractionalMap
+    (a b c d α β γ δ : ℂ) (hdet : α * δ - β * γ ≠ 0)
+    (ha : γ * a + δ ≠ 0) (hb : γ * b + δ ≠ 0)
+    (hc : γ * c + δ ≠ 0) (hd : γ * d + δ ≠ 0)
+    (had : a ≠ d) (hbc : b ≠ c) :
+    let f := fractionalMap α β γ δ
+    spectralCrossRatio (f a) (f b) (f c) (f d) = spectralCrossRatio a b c d := by
+  let f := fractionalMap α β γ δ
+  have hsub (x y : ℂ) (hx : γ * x + δ ≠ 0) (hy : γ * y + δ ≠ 0) :
+      f x - f y = ((α * δ - β * γ) * (x - y)) / ((γ * x + δ) * (γ * y + δ)) := by
+    dsimp only [f, fractionalMap]
+    field_simp [hx, hy] <;> ring
+  change spectralCrossRatio (f a) (f b) (f c) (f d) = spectralCrossRatio a b c d
+  unfold spectralCrossRatio
+  rw [hsub a c ha hc, hsub b d hb hd, hsub a d ha hd, hsub b c hb hc]
+  field_simp [hdet, ha, hb, hc, hd, sub_ne_zero.mpr had, sub_ne_zero.mpr hbc] <;> ring
+
+/-- A distinct quadruple has a regular fractional-linear image on the
+ellipse precisely when one cross-ratio ordering meets the stated bound.
+The bound is the algebraic form of the visual-angle condition. -/
+theorem spectralEllipse_representation_iff_crossRatio_bound (r : ℝ) (hr : 1 ≤ r)
+    (a : Fin 4 → ℂ) (ha : Function.Injective a) :
+    (∃ α β γ δ : ℂ, α * δ - β * γ ≠ 0 ∧
+      (∀ i, γ * a i + δ ≠ 0) ∧
+      (∀ i, fractionalMap α β γ δ (a i) ∈ spectralEllipse r)) ↔
+    (∃ p : Equiv.Perm (Fin 4),
+      let z := spectralCrossRatio (a (p 0)) (a (p 1)) (a (p 2)) (a (p 3))
+      ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * z.re ≤ ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖z‖) := by
+  constructor
+  · rintro ⟨α, β, γ, δ, hdet, hreg, hEll⟩
+    let b (i : Fin 4) := fractionalMap α β γ δ (a i)
+    have hb : Function.Injective b := by
+      intro i j he
+      exact ha (fractionalMap_injOn α β γ δ hdet (hreg i) (hreg j) he)
+    obtain ⟨p, hp⟩ := spectralEllipse_crossRatio_ordering r hr b hb hEll
+    refine ⟨p, ?_⟩
+    dsimp only [b] at hp
+    have he := spectralCrossRatio_fractionalMap (a (p 0)) (a (p 1)) (a (p 2)) (a (p 3))
+      α β γ δ hdet (hreg (p 0)) (hreg (p 1)) (hreg (p 2)) (hreg (p 3))
+      ((ha.comp p.injective).ne (by decide)) ((ha.comp p.injective).ne (by decide))
+    dsimp only at he hp ⊢
+    rw [he] at hp
+    exact hp
+  · rintro ⟨p, hp⟩
+    obtain ⟨α, β, γ, δ, hdet, hreg, hEll⟩ := ellipse_chart_of_crossRatio_bound
+      r (zero_lt_one.trans_le hr) (a ∘ p) (ha.comp p.injective) hp
+    refine ⟨α, β, γ, δ, hdet, fun i => ?_, fun i => ?_⟩
+    · simpa only [Function.comp_apply, Equiv.apply_symm_apply] using hreg (p.symm i)
+    · simpa only [Function.comp_apply, Equiv.apply_symm_apply] using hEll (p.symm i)
+
+private def fourCrossRatioDiscriminant (a : Fin 4 → ℂ) : ℂ :=
+  ((a 0 - a 1) * (a 2 - a 3)) ^ 2 + ((a 0 - a 2) * (a 1 - a 3)) ^ 2 +
+    ((a 0 - a 3) * (a 1 - a 2)) ^ 2
+
+private theorem fourCrossRatioDiscriminant_perm (a : Fin 4 → ℂ) (p : Equiv.Perm (Fin 4)) :
+    fourCrossRatioDiscriminant (a ∘ p) = fourCrossRatioDiscriminant a := by
+  have hswap (b : Fin 4 → ℂ) (i j : Fin 4) :
+      fourCrossRatioDiscriminant (b ∘ Equiv.swap i j) = fourCrossRatioDiscriminant b := by
+    fin_cases i <;> fin_cases j <;>
+      simp [fourCrossRatioDiscriminant, Equiv.swap_apply_def] <;> ring
+  induction p using Equiv.Perm.swap_induction_on generalizing a with
+  | one => rfl
+  | swap_mul g i j _ ih =>
+    change fourCrossRatioDiscriminant ((a ∘ Equiv.swap i j) ∘ g) = fourCrossRatioDiscriminant a
+    rw [ih, hswap]
+
+private theorem crossRatio_re_norm_of_discriminant_eq_zero
+    (a : Fin 4 → ℂ) (ha : Function.Injective a)
+    (h : fourCrossRatioDiscriminant a = 0) :
+    let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3)
+    z.re = 1 / 2 ∧ ‖z‖ = 1 := by
+  let N := (a 0 - a 2) * (a 1 - a 3)
+  let D := (a 0 - a 3) * (a 1 - a 2)
+  let z := spectralCrossRatio (a 0) (a 1) (a 2) (a 3)
+  have hD : D ≠ 0 := mul_ne_zero (sub_ne_zero.mpr (ha.ne (by decide)))
+    (sub_ne_zero.mpr (ha.ne (by decide)))
+  have hdisc : 2 * (N ^ 2 - N * D + D ^ 2) = 0 := by
+    calc
+      _ = fourCrossRatioDiscriminant a := by
+        unfold fourCrossRatioDiscriminant
+        dsimp only [N, D]
+        ring
+      _ = 0 := h
+  have hND := (mul_eq_zero.mp hdisc).resolve_left (by norm_num)
+  have hp : z ^ 2 - z + 1 = 0 := by
+    change (N / D) ^ 2 - N / D + 1 = 0
+    field_simp [hD]
+    linear_combination hND
+  have hre := congrArg Complex.re hp
+  simp only [pow_two, Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.one_re,
+    Complex.zero_re] at hre
+  have him := congrArg Complex.im hp
+  simp only [pow_two, Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.one_im,
+    Complex.zero_im, add_zero] at him
+  have hzn : z.im ≠ 0 := by
+    intro he
+    rw [he, mul_zero, sub_zero] at hre
+    nlinarith only [hre, sq_nonneg (z.re - 1 / 2)]
+  have hzre : z.re = 1 / 2 := by
+    have he : (2 * z.re - 1) * z.im = 0 := by nlinarith only [him]
+    linarith only [(mul_eq_zero.mp he).resolve_right hzn]
+  refine ⟨hzre, ?_⟩
+  have hnorm : ‖z‖ ^ 2 = 1 := by
+    rw [Complex.sq_norm, Complex.normSq_apply]
+    rw [hzre] at hre ⊢
+    nlinarith only [hre]
+  exact le_antisymm
+    ((sq_le_sq₀ (norm_nonneg z) zero_le_one).mp (by simpa only [one_pow] using hnorm.le))
+    ((sq_le_sq₀ zero_le_one (norm_nonneg z)).mp (by simpa only [one_pow] using hnorm.ge))
+
+/-- The order-four ellipse threshold is sharp for fractional-linear
+representation of all distinct quadruples. -/
+theorem spectralEllipse_represents_all_quadruples_iff (r : ℝ) (hr : 1 ≤ r) :
+    (∀ a : Fin 4 → ℂ, Function.Injective a →
+      ∃ α β γ δ : ℂ, α * δ - β * γ ≠ 0 ∧
+        (∀ i, γ * a i + δ ≠ 0) ∧
+        (∀ i, fractionalMap α β γ δ (a i) ∈ spectralEllipse r)) ↔
+    2 + Real.sqrt 3 ≤ r := by
+  have hrp : 0 < r := zero_lt_one.trans_le hr
+  constructor
+  · intro h
+    let s : ℝ := Real.sqrt 3 / 3
+    let d : ℂ := (s : ℂ) * Complex.I
+    let a : Fin 4 → ℂ := ![0, 1, -1, d]
+    have hs : 0 < s := div_pos (Real.sqrt_pos.2 (by norm_num)) (by norm_num)
+    have hdre : d.re = 0 := by
+      simp only [d, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+        Complex.I_re, Complex.I_im, mul_zero, zero_mul, sub_zero]
+    have hdim : d.im = s := by
+      simp only [d, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+        Complex.I_re, Complex.I_im, mul_one, mul_zero, add_zero]
+    have ha : Function.Injective a := by
+      intro i j he
+      have hre := congrArg Complex.re he
+      have him := congrArg Complex.im he
+      fin_cases i <;> fin_cases j <;>
+        first | rfl | norm_num [a, hdre, hdim] at hre him <;> linarith only [hs, hre, him]
+    have hsq : d ^ 2 = -(1 / 3 : ℂ) := by
+      have hs₃ : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+      have he : s ^ 2 = 1 / 3 := by
+        dsimp only [s]
+        rw [div_pow, hs₃]
+        norm_num
+      dsimp only [d]
+      rw [mul_pow, ← Complex.ofReal_pow, he, Complex.I_sq]
+      push_cast
+      ring
+    have hdisc : fourCrossRatioDiscriminant a = 0 := by
+      have he : fourCrossRatioDiscriminant a = 2 + 6 * d ^ 2 := by
+        simp [fourCrossRatioDiscriminant, a]
+        <;> ring
+      rw [he, hsq]
+      ring
+    obtain ⟨p, hp⟩ := (spectralEllipse_representation_iff_crossRatio_bound r hr a ha).mp (h a ha)
+    have hDiscPerm : fourCrossRatioDiscriminant (a ∘ p) = 0 :=
+      (fourCrossRatioDiscriminant_perm a p).trans hdisc
+    obtain ⟨hre, hnorm⟩ := crossRatio_re_norm_of_discriminant_eq_zero
+      (a ∘ p) (ha.comp p.injective) hDiscPerm
+    dsimp only [Function.comp_apply] at hre hnorm
+    dsimp only at hp
+    rw [hre, hnorm] at hp
+    exact (ellipse_axis_threshold_iff r hr).mp (by nlinarith only [hp])
+  · intro h a ha
+    obtain ⟨p, hp⟩ := half_norm_crossRatio_ordering a ha
+    obtain ⟨α, β, γ, δ, hdet, hreg, hEll⟩ := ellipse_chart_of_half_norm
+      r hrp ((ellipse_axis_threshold_iff r hr).mpr h) (a ∘ p) (ha.comp p.injective) hp
+    refine ⟨α, β, γ, δ, hdet, fun i => ?_, fun i => ?_⟩
+    · simpa only [Function.comp_apply, Equiv.apply_symm_apply] using hreg (p.symm i)
+    · simpa only [Function.comp_apply, Equiv.apply_symm_apply] using hEll (p.symm i)
 
 end
 
