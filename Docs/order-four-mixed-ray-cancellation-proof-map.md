@@ -66,3 +66,45 @@ Both certificates allow zero coefficients. Exact Python checks expanded
 both pencil determinants and checked the square identities on all 24
 permutations. The new Lean source awaits verification.
 [Archived proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_nonlinear_capacity_20261031.txt)
+
+### Additional whole-domain certificates
+
+Each table row uses positive ordinary coefficients. Exact Python
+checks verified the full determinant identities and the permutation
+identities used in the square decompositions.
+
+| Ordinary ray indices | Premise and result |
+| --- | --- |
+| $(13,18,23,28,30)$ | A zero mixed determinant factor forces one of three square bounds. [Lean statement](../Lean/MOC/FourEightContactReducedFactors.lean#L397) |
+| $(7,18,20,23,28)$ | A zero mixed determinant factor forces one of four square bounds. [Lean statement](../Lean/MOC/FourEightContactReducedFactors.lean#L423) |
+| $(13,17,18,27,28)$ | A zero mixed determinant factor and the cubic height equation at positive height give one of three square bounds. [Lean scalar certificate](../Lean/MOC/FourEightContactHigherFactors.lean) |
+| $(7,13,17,27,31)$ | A zero mixed determinant factor gives a matching sum of squares through an explicit four-by-four Gram matrix. [Lean statement](../Lean/MOC/FourEightContactLargestFactors.lean#L45) |
+
+The archived threshold-rectangle proof gives squares for the whole
+family $(7,13,18,27,31)$ on its mixed factor sublevel. For six
+seven-contact families, setting one coefficient to zero reduces the
+nonpositive factor to that of a settled family, with relabeling where
+necessary. The removed term is an ordinary square. The six tuples are
+$(13,17,18,20,27,30)$, $(7,13,20,27,30,31)$,
+$(7,13,18,27,30,31)$, $(7,13,17,18,27,30)$,
+$(7,10,13,17,27,30)$ and $(7,10,13,20,23,30)$.
+For $(7,17,18,23,27,30)$ the factor equation forces the product of the
+coefficients on rays 18 and 23 to be at least one. The formal factor
+links remain separate from these Lean square lemmas.
+[Inheritance and pair certificate](../Lean/MOC/FourSevenContactAffineElimination.lean#L45) · [Archived threshold-rectangle proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_threshold_rectangle_closure_20261031.txt)
+
+### Remaining coefficient tests
+
+For $(7,13,23,30,31)$ the factor equation gives squares when the
+coefficient on ray 31 is at most one. For four seven-contact classes,
+affine factor equations have a nonzero slope or give a pair bound on
+the zero-slope branch. Shared Gram terms give further sufficient
+conditions in seven-contact classes.
+[Eight-contact bound](../Lean/MOC/FourEightContactAffineFactors.lean#L217) · [Affine charts](../Lean/MOC/FourSevenContactAffineChambers.lean#L37) · [Shared compensation](../Lean/MOC/FourSevenContactMiddleNonlinearFactors.lean#L77) · [Four-feature Gram client](../Lean/MOC/FourSevenContactHighNonlinearFactors.lean#L10)
+
+In twelve seven-contact profiles the matching cubic fixes the height
+as a quotient with positive numerator. Positive height requires a
+positive denominator. Exact balanced rank-eight roots can pass this
+test. The open domains require further spectral or support restrictions.
+The new Lean source awaits verification.
+[First six profiles](../Lean/MOC/FourSevenContactSmallNonlinearFactors.lean#L87) · [Second six profiles](../Lean/MOC/FourSevenContactLargeNonlinearFactors.lean#L66)

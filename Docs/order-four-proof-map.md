@@ -154,6 +154,24 @@ holds. The finite orbit census and universal external lower bound
 remain outside these Lean proofs. This source awaits verification.
 [Eleven-contact exclusion](../Lean/MOC/FourTerminalHeight.lean#L128) · [External-bound rescaling](../Lean/MOC/FourTerminalHeight.lean#L15)
 
+### Signed weights and the bilinear spectral chart
+
+The fourteen-term formula expresses the determinant as a signed sum
+of matching products. It has thirteen nonnegative coefficients when
+its anchor coefficient is negative. At most one mixed ray evaluates
+negatively at a fixed mixer. If none does, the support cone proves the
+bound for all spectra. If a mixed ray evaluates negatively, a contact
+where that ray is positive also gives the bound.
+[Signed formula](../Lean/MOC/FourFourteenTermSupport.lean#L78) · [Unique negative ray](../Lean/MOC/FourFourteenTermSupport.lean#L186) · [Contact bound](../Lean/MOC/FourFourteenTermSupport.lean#L260)
+
+Fix the right-hand coordinates of an anchored spectral chart in order
+four. The 24 matching products are linear in four complex coefficients.
+One quadratic equation on those coefficients gives spectral realization.
+The contact equalities and strict support test are real linear conditions
+on the coefficients. The rank-drop and remaining feasibility tests are
+open. The new Lean source awaits verification.
+[Spectral realization](../Lean/MOC/FourDirectSupportCertificate.lean#L45) · [Support test](../Lean/MOC/FourDirectSupportCertificate.lean#L105)
+
 ## Paper support bounds and exact examples
 
 | Result | Hypotheses and conclusion |
