@@ -6,6 +6,14 @@ product, and put $g_j=p_j-p_0$. Use upper support, so that
 $\operatorname{Re}(\eta g_j)\leq 0$. The six labels
 $0,5,7,9,14,18$ are contacts.
 
+**Theorem (T85, proof on paper).** If those six matching products
+attain the upper support height in a common direction, then for every
+complex unitary mixer the determinant lies on or below that supporting
+line. No simplicity or nonzero pair-sum hypothesis is needed in the
+statement. The proof below uses the checked reductions and the
+[complete comparison of the remaining overlaps](#completion-of-the-t85-comparison).
+It does not assume the supplemental proofs of T40, T55 or T81.
+
 ## Direct transfer (Lean checked)
 
 [ZhengRectangleContact.lean](MOC/ZhengRectangleContact.lean) proves
@@ -299,3 +307,17 @@ in normalized gap coordinates that contains **no actual
 projected T85 profile**, regardless of the support height.
 This eliminates more than the simultaneous contact at labels
 1 and 6, but not the whole region of negative linear evaluation.
+
+## Completion of the T85 comparison
+
+The [center-and-split proof](ZhengT40PositiveOverlap.md) closes both T40
+branches of the checked eight-contact reduction. It uses a spectral
+secant equation and a weighted rotation comparison, not nonnegativity
+on the entire linear contact cone. The last input, [the positive-height T55+20 overlap](ZhengT55PositiveOverlap.md),
+uses a rational curve with fixed complex contact differences. The harmonic
+minimum principle forces a strict violation onto one of five regular
+boundaries. Their [exact secant and weighted rotation comparisons](ZhengT85ArmBounds.md)
+rule out every violation. This closes the original six-label T85 support
+inequality on paper by the [checked branch reduction](MOC/ZhengT81Bypass.lean).
+The polynomial Hessian determinant factors and the curve argument are not
+fully formalized in Lean. Other patterns in Proposition 4.4 remain separate.

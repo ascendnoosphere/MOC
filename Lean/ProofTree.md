@@ -83,7 +83,10 @@ flowchart BT
     TESTS["Checked witness tests: Hessian,<br/>three phase directions, reflections<br/>and flat row planes"]:::checked
     ZERO["Zero-diagonal orthogonal mixer<br/>full hull inclusion · checked"]:::checked
     PHASE["Checked contact tests: triple fibres,<br/>rectangles and cross ratios"]:::checked
-    T85["T85: positive-height T40 or T55 overlap · open"]:::open
+    T85["T85 support comparison · proof on paper"]
+    T55OVER["T55+20: compact transfer to five<br/>boundary inequalities · proof on paper"]
+    SECB["Secant sign and weighted rotation<br/>comparisons · Lean checked"]:::checked
+    T40OVER["Both T40 center-and-split overlaps<br/>closed on paper; weighted comparison checked"]
     BYPASS["T81 not needed for T85<br/>eight contacts force an arm contact · checked"]:::checked
     OTHERS["Other terminal contact patterns · open"]:::open
     COVER{{"AND: cover every terminal pattern"}}
@@ -102,6 +105,9 @@ flowchart BT
     ZERO -. excludes a mixer family .-> WITNESS
     PHASE -. restrict realizable profiles .-> SEVEN
     PAIRED -. removes the zero-height case .-> T85
+    T40OVER -. closes both split-and-center cases .-> T85
+    T55OVER -. closes the remaining overlaps .-> T85
+    SECB -. supplies the boundary bounds .-> T55OVER
     STAR -. identifies the residual case .-> T85
     BYPASS -. removes the central-only dependency .-> T85
     NOGO -. exact spectral equations are needed .-> T85
@@ -429,16 +435,20 @@ without assuming the spectra are distinct. The cubic alone accepts the
 pure bad ray. Its Hessian does not: the
 [secant argument](ZhengT85Independent.md#exact-profiles-avoid-an-open-sector-around-the-bad-ray)
 excludes an open neighborhood of that ray, using Lean-checked
-local algebra and the external geometric rank bound. Closing the
-remaining comparison settles $T_{85}$,
-not the other terminal patterns or unrestricted MOC.
+local algebra and the external geometric rank bound. The complete comparison for $T_{85}$ is now proved on paper.
+It does not settle the other terminal patterns or unrestricted MOC.
 The [checked arm bypass](MOC/ZhengT81Bypass.lean) removes the need
 for T81 in the T85 dependency list; Zheng's Table 3 then leaves
 the T55 overlaps or exactly eight contacts with the central mark
 and one of the two T40 arms. The [zero-height T40 argument](MOC/ZhengT40Support.lean)
 is checked and the [T55 zero-height minor certificate](ZhengT55ZeroHeight.md)
-is a direct paper proof. The [dependency note](ZhengT40AndT85Dependencies.md)
-records which positive-height branches remain.
+is a direct paper proof. The [positive-height T40 proof](ZhengT40PositiveOverlap.md)
+now covers both center-and-split configurations via a secant constraint
+and a Lean-checked rotation inequality. The [T55+20 continuation](ZhengT55PositiveOverlap.md)
+forces a strict violation onto five explicit boundaries. The
+[weighted boundary comparisons](ZhengT85ArmBounds.md) exclude all five.
+The determinant identities and the compactification argument are on paper;
+Lean checks the underlying rotation inequalities and key sign arguments.
 
 
 **Equation budget.** The [equation-saturated reduction](MOC/ContactEquationBudget.lean)

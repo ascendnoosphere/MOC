@@ -22,10 +22,15 @@ split. A symbolic two-minor decomposition now rules out the
 positive-height branch, Lean [confines all crossing contacts to one
 marked row and column](ZhengT85Independent.md#one-defect-beyond-the-paired-branch),
 with a positive lower bound on each of the other nine gaps. The
-determinant comparison on that remaining case is open.
+positive-height comparison is now proved on paper.
 
 The [T85 dependency repair](ZhengT40AndT85Dependencies.md) uses the checked
 eight-contact reduction to remove T81 from this part of the proof.
-It does not certify T81 as a standalone terminal case. The remaining
-T85 route uses the strictly positive-height T40 and T55 overlaps;
-the zero-height arguments are now independent of the supplement.
+It does not certify T81 as a standalone terminal case. Both
+[positive-height T40 overlaps](ZhengT40PositiveOverlap.md) are proved
+on paper, with the rotation comparison and secant-polynomial sign
+step checked in Lean. The [positive-height T55+20 proof](ZhengT55PositiveOverlap.md)
+completes the support comparison for T85 using the five boundary
+bounds in [ZhengT85ArmBounds.md](ZhengT85ArmBounds.md). This is a
+repair of Section 5, not a verification of Proposition 4.4 or a proof of
+the full order-four conjecture.

@@ -34,8 +34,11 @@ The two required crossing contacts must then be the center and one
 of 1 or 6, and there are exactly eight contacts in total. Lean
 checks this dichotomy in `narrow_t85_cases_at_eight` and the
 change of orientation in `t85_of_one_orientation_arm_cases`.
-This isolates the two small T40 overlaps needed for this approach.
-It does not prove their inequality.
+This isolates the two T40 overlaps needed for this approach.
+Both are now proved in [the positive-height overlap note](ZhengT40PositiveOverlap.md).
+Lean checks the rotation comparison and the sign reduction from the secant
+polynomial. The Hessian determinant identity and geometric rank step remain
+paper arguments.
 
 The T55 overlaps also collapse to one seven-label pattern. In Table 3,
 the four T55 relabelings for extra contact 4, 11, 12 or 15 omit,
@@ -66,6 +69,9 @@ external theorem is not a Lean proof of the strictly negative
 branch here.
 
 The [direct T55 proof](ZhengT55ZeroHeight.md) also closes its zero-height branch on paper.
+The [positive-height T55+20 continuation](ZhengT55PositiveOverlap.md)
+and its [five boundary comparisons](ZhengT85ArmBounds.md) close the remaining
+input to this T85 proof. This treats the needed overlap, not standalone T55.
 
 ## The exact linear comparison for T40
 
