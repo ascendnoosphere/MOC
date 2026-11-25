@@ -74,6 +74,49 @@ theorem bijectivePermutationPaths_of_cut_labels (U V : Matrix ι ι ℂ)
   rw [Finset.sum_add_distrib, hsx, hsy, ← Finset.sum_add_distrib, hone] at hzero
   exact one_ne_zero hzero
 
+/-- If two layers act on single blocks meeting in at most one label and
+are diagonal elsewhere, every supported full assignment uses each
+intermediate label exactly once. -/
+theorem bijectivePermutationPaths_of_single_overlap (U V : Matrix ι ι ℂ)
+    (A B : Finset ι) (k : ι) (hAB : ∀ i, i ∈ A → i ∈ B → i = k)
+    (hUA : ∀ i j, U i j ≠ 0 → (i ∈ A ↔ j ∈ A) ∧ (i ∉ A → i = j))
+    (hVB : ∀ i j, V i j ≠ 0 → (i ∈ B ↔ j ∈ B) ∧ (i ∉ B → i = j)) :
+    BijectivePermutationPaths U V := by
+  apply bijectivePermutationPaths_of_cut_labels
+  intro l
+  let δ (i : ι) : ℝ := if i = l then 1 else 0
+  have hδ {S : Finset ι} (hl : l ∉ S) {i j : ι}
+      (hij : (i ∈ S ↔ j ∈ S) ∧ (i ∉ S → i = j)) : δ i = δ j := by
+    by_cases hi : i ∈ S
+    · have hj := hij.1.mp hi
+      have hil : i ≠ l := fun h => hl (h ▸ hi)
+      have hjl : j ≠ l := fun h => hl (h ▸ hj)
+      simp [δ, hil, hjl]
+    · rw [hij.2 hi]
+  by_cases hlA : l ∈ A
+  · by_cases hlB : l ∈ B
+    · let x (i : ι) : ℝ := if i ∈ A then 1 else 0
+      let y (i : ι) : ℝ := if i ∈ A ∧ i ≠ l then -1 else 0
+      refine ⟨x, y, ?_, ?_, ?_⟩
+      · intro i j hij
+        simp only [x, (hUA i j hij).1]
+      · intro i j hij
+        obtain ⟨hm, he⟩ := hVB i j hij
+        by_cases hi : i ∈ B
+        · have hj : j ∈ B := hm.mp hi
+          have hz (m : ι) (hm : m ∈ B) : ¬(m ∈ A ∧ m ≠ l) :=
+            fun ⟨hA, hne⟩ => hne ((hAB m hA hm).trans (hAB l hlA hlB).symm)
+          simp [y, hz i hi, hz j hj]
+        · rw [he hi]
+      · intro i
+        by_cases hi : i = l
+        · simp [x, y, hi, hlA]
+        · by_cases ha : i ∈ A <;> simp [x, y, hi, ha]
+    · exact ⟨0, δ, fun _ _ _ => rfl, fun i j h => hδ hlB (hVB i j h),
+        fun i => zero_add (δ i)⟩
+  · exact ⟨δ, 0, fun i j h => hδ hlA (hUA i j h), fun _ _ _ => rfl,
+      fun i => add_zero (δ i)⟩
+
 private theorem leibnizTerm_mul_of_bijective_paths (U V : Matrix ι ι ℂ)
     (hpaths : BijectivePermutationPaths U V) (p : Equiv.Perm ι) :
     leibnizTerm (U * V) p = ∑ q, leibnizTerm U (p * q⁻¹) * leibnizTerm V q := by
@@ -122,18 +165,22 @@ theorem signedWeight_mul_of_bijective_paths (U V : Matrix ι ι ℂ)
   intro q _
   simp only [signedWeight, div_mul_div_comm]
 
+omit [DecidableEq ι] in
 private theorem matchingProduct_mul_reindex (a b : ι → ℂ) (p q : Equiv.Perm ι) :
     matchingProduct a b (p * q) = matchingProduct a (b ∘ q.symm) p := by
   unfold matchingProduct
   rw [← Equiv.prod_comp q (fun j => a (p j) + (b ∘ q.symm) j)]
   simp only [Equiv.Perm.mul_apply, Function.comp_apply, Equiv.symm_apply_apply]
 
-/-- A law for the left layer at a fixed first spectrum expresses the product
-determinant as an average of determinants for the right layer. -/
-theorem determinantValue_mul_of_bijective_paths (a b : ι → ℂ) (U V : Matrix ι ι ℂ)
+/-- The left layer only needs one law for the second spectra obtained
+from permutations in the signed support of the right layer. -/
+theorem determinantValue_mul_of_bijective_paths_on_support {κ : Type*} [Fintype κ]
+    (a b : ι → ℂ) (U V : Matrix ι ι ℂ)
     (hU : IsUnitary U) (hV : IsUnitary V) (hpaths : BijectivePermutationPaths U V)
-    (w : Equiv.Perm ι → ℝ) (hw : ∀ c, weightedMatchingValue a c w = determinantValue a c U) :
-    determinantValue a b (U * V) = ∑ p, (w p : ℂ) * determinantValue (a ∘ p) b V := by
+    (P : κ → Equiv.Perm ι) (w : κ → ℝ) (hw : ∀ q, signedWeight V q ≠ 0 →
+      (∑ t, (w t : ℂ) * matchingProduct a (b ∘ q.symm) (P t)) =
+        determinantValue a (b ∘ q.symm) U) :
+    determinantValue a b (U * V) = ∑ t, (w t : ℂ) * determinantValue (a ∘ P t) b V := by
   have hUadj : IsUnitary Uᴴ := ⟨by simpa only [Matrix.conjTranspose_conjTranspose] using hU.2,
     by simpa only [Matrix.conjTranspose_conjTranspose] using hU.1⟩
   have hUV : IsUnitary (U * V) := by
@@ -155,20 +202,34 @@ theorem determinantValue_mul_of_bijective_paths (a b : ι → ℂ) (U V : Matrix
       change (signedWeight U ((p * q) * q⁻¹) * signedWeight V q) * matchingProduct a b (p * q) = _
       rw [show (p * q) * q⁻¹ = p by simp [mul_assoc], matchingProduct_mul_reindex]
       ring
-    _ = ∑ q : Equiv.Perm ι, signedWeight V q * weightedMatchingValue a (b ∘ q.symm) w := by
-      simp_rw [hw]
-    _ = _ := by
-      simp_rw [weightedMatchingValue, Finset.mul_sum]
-      rw [Finset.sum_comm]
-      apply Finset.sum_congr rfl
-      intro p _
-      rw [← signed_determinant (a ∘ p) b V hV, Finset.mul_sum]
+    _ = ∑ q : Equiv.Perm ι, signedWeight V q *
+        (∑ t, (w t : ℂ) * matchingProduct a (b ∘ q.symm) (P t)) := by
       apply Finset.sum_congr rfl
       intro q _
-      rw [← matchingProduct_mul_reindex a b p q]
-      change signedWeight V q * ((w p : ℂ) * matchingProduct a b (p * q)) =
-        (w p : ℂ) * (signedWeight V q * matchingProduct a b (p * q))
+      by_cases hq : signedWeight V q = 0
+      · simp [hq]
+      · rw [hw q hq]
+    _ = _ := by
+      simp_rw [Finset.mul_sum]
+      rw [Finset.sum_comm]
+      apply Finset.sum_congr rfl
+      intro t _
+      rw [← signed_determinant (a ∘ P t) b V hV, Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro q _
+      rw [← matchingProduct_mul_reindex a b (P t) q]
+      change signedWeight V q * ((w t : ℂ) * matchingProduct a b (P t * q)) =
+        (w t : ℂ) * (signedWeight V q * matchingProduct a b (P t * q))
       ring
+
+/-- A law for the left layer at a fixed first spectrum expresses the product
+determinant as an average of determinants for the right layer. -/
+theorem determinantValue_mul_of_bijective_paths (a b : ι → ℂ) (U V : Matrix ι ι ℂ)
+    (hU : IsUnitary U) (hV : IsUnitary V) (hpaths : BijectivePermutationPaths U V)
+    (w : Equiv.Perm ι → ℝ) (hw : ∀ c, weightedMatchingValue a c w = determinantValue a c U) :
+    determinantValue a b (U * V) = ∑ p, (w p : ℂ) * determinantValue (a ∘ p) b V :=
+  determinantValue_mul_of_bijective_paths_on_support a b U V hU hV hpaths id w
+    (fun q _ => hw (b ∘ q.symm))
 
 /-- It suffices that the left layer has one law for all second spectra and
 that the right layer satisfies inclusion for each first spectrum in that law. -/
@@ -205,7 +266,8 @@ theorem commonWeights_mul_of_bijective_paths (a : ι → ℂ) (U V : Matrix ι �
         simp_rw [← Finset.mul_sum]
         apply Finset.sum_congr rfl
         intro p _
-        rw [Equiv.sum_comp (Equiv.mulLeft p⁻¹) (v p)]
+        congr 1
+        exact Equiv.sum_comp (Equiv.mulLeft p⁻¹) (v p)
       _ = 1 := by simpa only [hvs, mul_one] using hsum
   intro b
   rw [determinantValue_mul_of_bijective_paths a b U V hU hV hpaths w hvalue]

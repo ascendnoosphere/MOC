@@ -105,6 +105,7 @@ is in the hull if and only if the bound holds in every direction.
 | Iff | For every pair of lists and every direction in orders at least four, some maximizing $U$ gives a normal sum. The maximum is over all unitary $U$ for the fixed lists. | [Normal maximizers](Lean/MOC/NormalSupportMaximum.lean#L314) |
 | Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L113) |
 | Iff | Replace the square unitary by a rectangular matrix with at least three orthonormal rows and one extra column. Compare with products that match the shorter list to distinct positions in the longer list. | [Rectangular determinant bound](Lean/MOC/PrincipalCoisometry.lean#L248) |
+| Iff | In each order $n\geq 4$, it suffices to test unitary matrices $U$ for which every nonempty set of at most $n-2$ rows has nonzero entries in at least two more columns than the number of rows. | [Support expansion](Lean/MOC/SinglePortHallExpansion.lean#L72) |
 | Iff | In orders at least four, use lists $x,y$ with $x_1=0$, $x_2=1$, and $y_1=0$. For every unitary $U$ with no zero entries, place $\det(U-XUY)/\det U$ in the hull of the products $\prod_j(1-x_{\sigma(j)}y_j)$. Here $X=\mathrm{diag}(x)$ and $Y=\mathrm{diag}(y)$. | [Three fixed coordinates](Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
 | Iff, new Lean source | Use normal adjacency matrices of loopless complex weighted directed graphs. Keep all relative unitary positions. | [Loopless adjacency](Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
 | If, new Lean source | For each index, place the elementary symmetric coefficient of the sum in its matching hull. The weights can depend on the index. The coefficient of index $n$ is the determinant. | [Separate coefficient implication](Lean/MOC/Reformulations/SecondCoefficient.lean#L91) |
@@ -212,6 +213,7 @@ in the all-order table uses the condition on the matching products.
 | --- | --- | --- |
 | Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
 | Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
+| Proved | The inclusion holds for arbitrary complex spectra in order five if $U$ contains a two-by-two zero submatrix. The two factors have order three. The result does not require order four. | [Zero submatrix](Lean/MOC/SinglePortZeroCorner.lean#L143) |
 | Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L134) |
 | Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
 | Open | Prove the general directional bound on the eight-contact test in the diagram. Another exact test uses at least nine contacts with arbitrary unitary $U$. | [Eight-contact test](Lean/MOC/OrderFiveContact.lean#L51) · [Nine-contact test at $n=5$](Lean/MOC/AffineGapCover.lean#L85) |
@@ -230,6 +232,16 @@ statements and the proof of each connection to its goal.
 [All-order branches](Lean/MOC/ProofRoutes.lean#L695) · [Tests at each order](Docs/all-orders-proof-map.md#tests-at-each-order) · [Order-four branches](Lean/MOC/ProofRoutes.lean#L254) · [Order-five branches](Lean/MOC/ProofRoutes.lean#L289)
 
 ## Cases proved in Lean
+
+### Mixing blocks with one shared coordinate
+
+Take two unitary matrices that each satisfy the inclusion for all pairs
+of spectra. Extend each matrix by the identity outside its coordinate
+block. If the blocks have exactly one shared coordinate, their product
+also satisfies the inclusion for all pairs of spectra. This includes
+two Householder reflections on such blocks in any order, by
+[Drury's theorem](https://doi.org/10.1016/S0024-3795(99)00173-1).
+[Composition](Lean/MOC/SinglePortComposition.lean#L132) · [Reflections](Lean/MOC/SinglePortComposition.lean#L160)
 
 ### A common law at small shifted rank sum
 

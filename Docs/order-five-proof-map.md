@@ -89,29 +89,37 @@ the same $U$. Each test still needs its directional bound.
 
 ```mermaid
 flowchart BT
-    accTitle: Results conditional on order four
-    accDescr: Order four and the existence of normal order-five maximizers imply order five. Conditional on order four, a strict order-five violation can involve at most seven zeros in the mixer.
+    accTitle: Sparse cases and the normal maximizer route
+    accDescr: Order four and normal order-five maximizers imply order five. A two-by-two zero submatrix excludes a violation without assuming order four.
     Goal["Order 5"]:::goal
     Both{{"AND<br/>Both premises"}}:::gate
     Four["Order 4"]:::open
     Norm["Normal sum at a maximizing U<br/>for each pair and direction"]:::open
     Sparse["Counterexample has ≤ 7 zeros<br/>and at least 3 nonzero entries<br/>per row and column"]
+    Base["Order 3<br/>Proved"]
+    Zero["Inclusion if U contains<br/>a 2-by-2 zero submatrix"]
     Four --- Both
     Norm --- Both
     Both -->|if| Goal
     Four -->|restricts a failure| Sparse
+    Base -->|two factors of order 3| Zero
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
     classDef gate fill:#e7f0fa,stroke:#52779d,color:#142e47
     classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
 ```
 
 Under order four, a proper block split, or a row or column with at
-most two nonzero entries, gives a lower-order proof. If all rows and
-columns have at least three nonzero entries, a two-by-two zero corner
-forces its complementary three-by-three corner to have all entries
-nonzero. The normal-maximizer criterion also becomes an equivalence
-under the order-four premise.
-[Counterexample structure](../Lean/MOC/OrderFiveContact.lean#L34) · [Zero count](../Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Zero corner](../Lean/MOC/OrderFiveZeroCorner.lean#L101) · [Normal maxima](../Lean/MOC/NormalSupportMaximum.lean#L270)
+most two nonzero entries, gives a lower-order proof. The normal-maximizer
+criterion also becomes an equivalence under the order-four premise.
+[Counterexample structure](../Lean/MOC/OrderFiveContact.lean#L34) · [Zero count](../Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Normal maxima](../Lean/MOC/NormalSupportMaximum.lean#L270)
+
+Suppose that two distinct rows of $U$ both vanish in two distinct
+columns. Then the inclusion holds for arbitrary complex spectra,
+without the order-four premise. Reindex the rows and columns and
+factor $U$ into two order-three unitary matrices extended by the
+identity. Their coordinate blocks have exactly one shared coordinate.
+The proved order-three result applies to each factor.
+[Factorization](../Lean/MOC/SinglePortZeroCorner.lean#L21) · [Order-five theorem](../Lean/MOC/SinglePortZeroCorner.lean#L143)
 
 ## Squared minors and permutation weights
 

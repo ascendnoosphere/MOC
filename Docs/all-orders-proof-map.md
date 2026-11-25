@@ -246,7 +246,7 @@ flowchart BT
     Goal["Unrestricted MOC"]:::goal
     Spectra["Traceless or anchored<br/>spectral coordinates"]
     Shape["Rectangular determinant<br/>or normal maximizer"]
-    Least["Block, row and column,<br/>or commutant restriction"]
+    Least["Block, support expansion,<br/>or commutant restriction"]
     Contact["Terminal contact bounds"]
     Spectra <-->|iff each| Goal
     Shape <-->|iff each| Goal
@@ -260,6 +260,24 @@ smaller orders that both satisfy the conjecture. A row or column with at
 most two nonzero entries also reduces to smaller order. Every matrix that
 commutes with both summands must be a scalar multiple of the identity.
 [Block reduction](../Lean/MOC/Claim.lean#L43) · [Least order](../Lean/MOC/Claim.lean#L51) · [Rows](../Lean/MOC/SparseRow.lean#L287) · [Columns](../Lean/MOC/SparseRow.lean#L309) · [Common commutant](../Lean/MOC/ReducingCommutant.lean#L70)
+
+Let $R$ be a nonempty set of rows with at least two rows outside it.
+A column supports $R$ if it has a nonzero entry in a row of $R$.
+In a least-order counterexample, at least $|R|+2$ columns support $R$.
+Failure of this bound is equivalent to a zero submatrix with positive
+side lengths $r,l$ such that $r+l=n-1$. Such a submatrix gives two
+unitary factors of orders $l+1$ and $r+1$. Their coordinate blocks
+have exactly one shared coordinate. The inclusions in both smaller
+orders imply the inclusion for the product.
+[Support condition](../Lean/MOC/SinglePortHallExpansion.lean#L23) · [Least-order restriction](../Lean/MOC/SinglePortHallExpansion.lean#L51) · [Zero-submatrix reduction](../Lean/MOC/SinglePortZeroCorner.lean#L124)
+
+The composition proof needs the inclusion for all spectra for each
+factor. It does not need a fixed law for all spectra. After restricting
+to the nonzero permutation terms of the right factor, only the
+partner eigenvalue at the shared coordinate varies in the left block.
+One convex law works for this one free entry. Each term from that law
+then uses the inclusion for the right block.
+[Free entry](../Lean/MOC/SpectralMinorDecomposition.lean#L139) · [Composition theorem](../Lean/MOC/SinglePortComposition.lean#L132)
 
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
@@ -283,6 +301,7 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Normal maximizers in every order | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L314) |
 | Principal coisometries in all orders | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L248) |
 | No paired block split | Iff | [Statement and proof](../Lean/MOC/Claim.lean#L63) |
+| At least $\lvert R\rvert+2$ supporting columns for every nonempty row set $R$ with $\lvert R\rvert\leq n-2$ | Iff | [Statement and proof](../Lean/MOC/SinglePortHallExpansion.lean#L72) |
 | Every row and column has degree at least three | Iff | [Statement and proof](../Lean/MOC/SparseRow.lean#L321) |
 | Strict expansion of the support of every proper nonempty set of rows | Iff | [Statement and proof](../Lean/MOC/SupportBlocks.lean#L124) |
 | Balanced spectra and strict support expansion | Iff | [Statement and proof](../Lean/MOC/Extremal.lean#L82) |
@@ -1020,7 +1039,7 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L203) · [Axiom audit](../Lean/MOC.lean#L306)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L203) · [Axiom audit](../Lean/MOC.lean#L307)
 
 The source audit found 713 Lean modules. Starting at the default target
 reaches 588, including the target itself. The other 125 resolve their
