@@ -6,6 +6,13 @@ import Mathlib.Data.List.FinRange
 
 namespace MOC.RayCoefficients
 
+/-- Compute a bitset difference with kernel-reducible bitwise operations. -/
+theorem ldiff_eq_xor_land (a b : ℕ) : a.ldiff b = a ^^^ (a &&& b) := by
+  apply Nat.eq_of_testBit_eq
+  intro i
+  rw [Nat.testBit_ldiff, Nat.testBit_xor, Nat.testBit_and]
+  cases a.testBit i <;> cases b.testBit i <;> rfl
+
 def unionMasks (masks : List ℕ) : ℕ := masks.foldr Nat.lor 0
 
 theorem testBit_unionMasks (masks : List ℕ) (i : ℕ) :
@@ -35,6 +42,14 @@ The ray's own bit is excluded. -/
 def witnessMask {m : ℕ} (base : ℕ) (posAt : Fin 24 → ℕ)
     (record : Fin m × List (Fin 24)) : ℕ :=
   Nat.ldiff ((record.2.map posAt).foldr Nat.land base) (2 ^ record.1.val)
+
+/-- Compute a witness mask with kernel-reducible bitwise operations. -/
+theorem witnessMask_eq_xor_land {m : ℕ} (base : ℕ) (posAt : Fin 24 → ℕ) :
+    witnessMask (m := m) base posAt = fun record =>
+      let mask := (record.2.map posAt).foldr Nat.land base
+      mask ^^^ (mask &&& 2 ^ record.1.val) := by
+  funext record
+  exact ldiff_eq_xor_land _ _
 
 /-- Each positive ray at a fixed negative ray's crossing either has an
 explicit crossing record or a third ray that certifies non-adjacency. -/

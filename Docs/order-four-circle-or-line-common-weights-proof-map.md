@@ -49,6 +49,13 @@ flowchart TD
 | The spectrum lies on no circle or line | Agreement on every diagonal partner gives the squared-minor weights for every subset image. Triple product moments determine the singleton weights. The nonreal cross ratio separates the remaining pair weights. Complementation gives the larger subsets. | [Necessary minor weights](../Lean/MOC/FourCircleLineCommonWeights.lean#L610) |
 | One mixer has no common squared-minor law | For any spectrum off a circle or line, the converse uses that same mixer to rule out a common law. | [Converse](../Lean/MOC/FourCircleLineCommonWeights.lean#L651) |
 
+The first ray transition in the lower interval uses finite bit masks.
+The masks certify that distinct ray supports are incomparable and that
+each omitted crossing has a witness. Lean checks these masks with a
+bitwise identity for set difference. The other transitions still need
+a successful kernel check.
+[Incomparability condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L41) · [Crossing condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L46) · [Bitwise identity](../Lean/MOC/WeightedDiamondWitnessMasks.lean#L10) · [First ray transition](../Lean/MOC/WeightedDiamondLowerCut01.lean#L142)
+
 The common law gives pointwise determinant inclusion on the circle or
 line. Repeated eigenvalues also satisfy the pointwise inclusion in
 order four. It therefore suffices to test pairs of distinct spectra

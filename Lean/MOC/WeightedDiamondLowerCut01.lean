@@ -128,9 +128,11 @@ private theorem checked : plan.Checked weightedDiamondLowerRays1 weightedDiamond
   · decide +kernel
   · decide +kernel
   · decide +kernel
+  · simp only [ldiff_eq_xor_land]
+    decide +kernel
   · decide +kernel
-  · decide +kernel
-  · decide +kernel
+  · simp only [witnessMask_eq_xor_land]
+    decide +kernel
   · decide +kernel
   · intro k
     fin_cases k <;> decide +kernel
