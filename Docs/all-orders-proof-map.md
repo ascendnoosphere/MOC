@@ -451,17 +451,24 @@ $P(x)+T(-1)^{N(x)}$. Summing these masses against the matching products
 gives the determinant. In particular, if $|T|\le P(x)$ for every $x$,
 the masses are nonnegative and give the inclusion.
 [Signed minor law](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L59) ·
-[Determinant formula](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L118) ·
-[Inclusion under the bound](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L137)
+[Determinant formula](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L119) ·
+[Inclusion under the bound](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L138)
+
+Suppose one gate joins coordinates with equal eigenvalues in the
+first list for the left layer or the second list for the right layer.
+Flipping that switch preserves the matching product and reverses parity.
+The signed correction sums to zero, so independent switches give
+inclusion for this pair of spectra at any gate biases.
+[Equal spectral pair](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L367)
 
 Fix the squared moduli of the entries of all gates. Two products of
 real orthogonal gates attain opposite extreme values of $T$. The same
 convex combination gives every squared minor of the complex mixer.
 Thus the real orthogonal inclusion in the cycle's dimension suffices.
 The support comparison for arbitrary biases at the real endpoints
-remains open. These source proofs await kernel checking.
-[Orthogonal endpoints](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L299) ·
-[Transfer of inclusion](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L340)
+remains open. Lean checks the reduction and the cases above.
+[Orthogonal endpoints](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L301) ·
+[Transfer of inclusion](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L342)
 
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
@@ -513,7 +520,7 @@ separating direction. Contact transfer gives at least $2n-1$ matching
 permutations on the supporting line. Excluding failures with both
 conditions, in every order $n\ge4$, is equivalent to the real
 orthogonal inclusion in all orders. The terminal bound remains open.
-The source proofs await kernel checking.
+Lean checks the reductions.
 [Real zero-rectangle factorization](../Lean/MOC/SinglePortZeroCorner.lean#L131) ·
 [Support expansion](../Lean/MOC/RealOrthogonalInduction.lean#L109) ·
 [Terminal equivalence](../Lean/MOC/RealOrthogonalInduction.lean#L130)
@@ -555,11 +562,11 @@ case is equivalent to existence of a normal sum at some global maximum
 in every support direction. A stationary equation relates the scaled
 inverse of the sum to the partner eigenvalues, including partners with
 mixed imaginary signs. Existence of the required maximum remains open.
-The source proofs await kernel checking.
+Lean checks the reductions.
 [Normal-sum criterion](../Lean/MOC/HermitianNormalSupportDescent.lean#L16) ·
-[Normal-sum inclusion](../Lean/MOC/HermitianNormalSupportDescent.lean#L67) ·
-[Exact equivalence](../Lean/MOC/HermitianNormalSupportDescent.lean#L102) ·
-[Stationary equation](../Lean/MOC/HermitianNormalSupportDescent.lean#L150) ·
+[Normal-sum inclusion](../Lean/MOC/HermitianNormalSupportDescent.lean#L68) ·
+[Exact equivalence](../Lean/MOC/HermitianNormalSupportDescent.lean#L103) ·
+[Stationary equation](../Lean/MOC/HermitianNormalSupportDescent.lean#L151) ·
 [Coefficient route](free-eigenvalue-and-exterior-shifts-proof-map.md#one-law-for-a-free-eigenvalue)
 
 ### Stationary support and spectral exchange

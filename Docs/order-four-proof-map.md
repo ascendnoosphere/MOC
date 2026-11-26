@@ -52,7 +52,7 @@ The six-contact inequality required by this route remains open.
 
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
-| Real orthogonal mixers with complex spectra | Iff | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L640) |
+| Real orthogonal mixers with complex spectra | Iff | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L645) |
 | Regular orthogonal support maximizers | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L90) |
 | Normal sum at a support maximizer | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L303) |
 | Principal coisometry of dimension three | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L140) |
@@ -110,9 +110,9 @@ that $T(U)=tT(O_0)+(1-t)T(O_1)$. Both first rows equal
 $(|U_{1j}|)_{j=1}^4$. The identity holds for the whole table, so it
 holds after applying the determinant formula for any two complex spectra.
 This gives equality of the real convex hulls of the two sets of tables
-and the equivalence with the orthogonal conjecture. The fixed-row and
-convex-hull declarations await kernel checking.
-[Two matrices with fixed first row](../Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](../Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](../Lean/MOC/FourMinorTransport.lean#L640) · [Zheng, Theorem 1.2](https://doi.org/10.13140/RG.2.2.36790.25923)
+and the equivalence with the orthogonal conjecture. Lean checks the
+fixed-row and convex-hull declarations.
+[Two matrices with fixed first row](../Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](../Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](../Lean/MOC/FourMinorTransport.lean#L645) · [Zheng, Theorem 1.2](https://doi.org/10.13140/RG.2.2.36790.25923)
 
 | Exact test | Conditions proved for a counterexample | Lean source |
 | --- | --- | --- |

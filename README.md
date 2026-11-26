@@ -23,9 +23,9 @@ matching products with nonnegative real weights whose sum is one.
 
 The [proof map index](Docs/README.md) lists the general routes and
 restricted results with links to their Lean sources.
-The new reductions for three spectral values, alternating unitary
-cycles, Hermitian–normal pairs, and real orthogonal mixers await
-kernel checking.
+Lean checks the reductions for three spectral values, alternating
+unitary cycles, Hermitian–normal pairs, and real orthogonal mixers.
+Their all-order conclusions still require the open bounds shown below.
 
 The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
 library. Lean proves the unrestricted result through order three.
@@ -182,7 +182,7 @@ every squared minor of $U$ as a convex combination of the two corresponding
 squared minors. The two sets of complete minor tables thus have the same
 real convex hull. The resulting reduction allows both lists of eigenvalues
 to be arbitrary complex numbers.
-[Fixed first row](Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L640)
+[Fixed first row](Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L645)
 
 A second formula writes the determinant using thirteen nonnegative
 squared-minor weights and one signed correction. A geometric-mean bound
@@ -352,9 +352,13 @@ determinant for every pair of complex spectra.
 For arbitrary biases on one alternating cycle, two real orthogonal
 products give a convex combination of the squared-minor tables. The
 source also gives inclusion if the absolute interference is at most
-each independent switch weight. The general real endpoint bound is open.
-[Endpoints](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L299) ·
-[Interference bound](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L137)
+each independent switch weight. If either spectrum has equal entries
+at the two coordinates of one gate in its layer, the independent
+switch weights give inclusion for every bias. The general real endpoint
+bound is open.
+[Endpoints](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L301) ·
+[Interference bound](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L138) ·
+[Equal spectral pair](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L367)
 
 ### A common law at small shifted rank sum
 
@@ -416,7 +420,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
   The inclusion also holds if deleting one entry from the second list
   leaves at most two distinct values, or if the first list is constant
   except at up to two positions.
-  [Common law](Lean/MOC/TwoValues.lean#L272) · [Two distinct values in the second list](Lean/MOC/TwoValues.lean#L335) · [Two distinct values in the first list](Lean/MOC/TwoValues.lean#L349) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247)
+  [Common law](Lean/MOC/TwoValues.lean#L285) · [Two distinct values in the second list](Lean/MOC/TwoValues.lean#L348) · [Two distinct values in the first list](Lean/MOC/TwoValues.lean#L362) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247)
 - Partition one spectrum into three fixed groups with the last group
   of size one. For a fixed mixer, one law works for all three group
   values and every opposing spectrum.
@@ -425,7 +429,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
   characterize one common law. The all-order inclusion for one
   three-value spectrum reduces to mixers in which every row meets
   each spectral group. Both routes have open premises.
-  [Exact weight test](Lean/MOC/ThreeValueIntervalCoupling.lean#L169) ·
+  [Exact weight test](Lean/MOC/ThreeValueIntervalCoupling.lean#L171) ·
   [Deletion route](Lean/MOC/SpectralSupportDeletion.lean#L219)
 - Let the first list equal a scalar `α` outside a row set `E`. In
   the second list, set aside one entry. Require that each remaining
@@ -561,8 +565,8 @@ Combining the blocks proves the convex-hull inclusion in every order.
   existence of such a sum at some maximum in every support direction.
   A real partner pivot gives a directional bound with prescribed
   matching masses under the smaller-order Hermitian–normal premise.
-  [Normal maximizer test](Lean/MOC/HermitianNormalSupportDescent.lean#L102) ·
-  [Prescribed masses](Lean/MOC/HermitianNormalPencil.lean#L168) ·
+  [Normal maximizer test](Lean/MOC/HermitianNormalSupportDescent.lean#L103) ·
+  [Prescribed masses](Lean/MOC/HermitianNormalPencil.lean#L171) ·
   [Proof map](Docs/all-orders-proof-map.md#a-hermitian-matrix-and-a-normal-partner)
 - In orders four and five, fixed parabola and hyperbola tests give
   equivalent forms of the conjecture for that order. In order four,

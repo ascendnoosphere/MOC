@@ -89,8 +89,10 @@ private theorem compression_product_at_negative_knot
         p.succAbove p.succAbove =
       W * diagonal (fun i => (δ i : ℂ) - (a j : ℂ)) * Wᴴ := by
     rw [unitary_conjugation_sub_scalar a U hU, unitary_conjugation_sub_scalar δ W hW,
-      Matrix.submatrix_sub, Matrix.submatrix_smul,
-      Matrix.submatrix_one _ Fin.succAbove_right_injective, hC]
+      Matrix.submatrix_sub]
+    change ((U * diagonal (fun i => (a i : ℂ)) * Uᴴ).submatrix p.succAbove p.succAbove) -
+      (a j : ℂ) • ((1 : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ).submatrix p.succAbove p.succAbove) = _
+    rw [Matrix.submatrix_one _ Fin.succAbove_right_injective, hC]
   rw [← Matrix.det_diagonal, ← det_unitary_conjugation W _ hW, ← hsub,
     det_principal_unitary_diagonalization (fun i => (a i : ℂ) - (a j : ℂ)) hU p,
     Finset.sum_eq_single j]
@@ -113,7 +115,8 @@ theorem exists_hermitian_compression_injection_weights
       (∀ f ∈ s, 0 ≤ w f) ∧ (∑ f ∈ s, w f = 1) ∧
       (∀ b : Fin n → ℂ, ∑ f ∈ s, (w f : ℂ) * partialMatchingFunction a f b =
         ∏ i, ((δ i : ℂ) + b i)) ∧
-      ∀ j, ∑ f ∈ s.filter (fun f => j ∉ Set.range f), w f = Complex.normSq (U p j) := by
+      ∀ j, ∑ f ∈ s.filter (fun f : Fin n ↪ Fin (n + 1) => j ∉ Set.range f), w f =
+        Complex.normSq (U p j) := by
   classical
   obtain ⟨δ, W, hW, hδ, hC⟩ :=
     exists_interlacing_of_hermitian_compression a ha.monotone U hU p
@@ -137,7 +140,7 @@ theorem exists_hermitian_compression_injection_weights
     rw [← hcomp]
     simpa only [sub_eq_add_neg] using hsum
   have hfilter : s.filter (fun f => omittedLabel f = j) =
-      s.filter (fun f => j ∉ Set.range f) := by
+      s.filter (fun f : Fin n ↪ Fin (n + 1) => j ∉ Set.range f) := by
     ext f
     simp only [Finset.mem_filter, omittedLabel_eq_iff]
   rw [← hfilter]
@@ -278,7 +281,7 @@ theorem hermitian_real_pivot_fixed_mass_bound
       intro f hf
       rw [(Finset.mem_filter.mp hf).2]
     have hfilter : s.filter (fun f => omittedLabel f = i) =
-        s.filter (fun f => i ∉ Set.range f) := by
+        s.filter (fun f : Fin n ↪ Fin (n + 1) => i ∉ Set.range f) := by
       ext f
       simp only [Finset.mem_filter, omittedLabel_eq_iff]
     rw [hsum, ← Finset.sum_mul, hfilter, hm i]

@@ -75,7 +75,7 @@ private theorem rotateColumns_entry (U : Matrix ι ι ℂ) {j k : ι} (hjk : j �
   by_cases hlj : l = j
   · simp [hlj, Matrix.conjTranspose_apply, Complex.star_def]
   · by_cases hlk : l = k
-    · simp [hlj, hlk, Matrix.conjTranspose_apply, Complex.star_def]
+    · simp [hlk, Ne.symm hjk, Matrix.conjTranspose_apply, Complex.star_def]
     · simp [hlj, hlk, Matrix.conjTranspose_apply]
 
 private theorem exists_equal_value_pivots (b : ι → ℂ) (S : Finset ι) (x y : ℂ)

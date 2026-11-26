@@ -125,4 +125,4 @@ coordinate, both spectra have at most two values. The law for one
 two-valued spectrum gives the base.
 [Determinant step](../Lean/MOC/OverlappingProjectionBlocks.lean#L446) ·
 [Induction](../Lean/MOC/OverlappingProjectionBlocks.lean#L608) ·
-[Base common law](../Lean/MOC/TwoValues.lean#L272)
+[Base common law](../Lean/MOC/TwoValues.lean#L285)

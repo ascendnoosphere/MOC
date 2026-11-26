@@ -44,8 +44,9 @@ theorem normal_diagonal_add_hermitian_iff_imaginary_blocks
       · simp only [c, Complex.star_def, Complex.sub_im, Complex.conj_im, h]
   have hentry (i j : ι) :
       ((D + H)ᴴ * (D + H) - (D + H) * (D + H)ᴴ) i j = (c i - c j) * H i j := by
-    rw [hidentity, hdiff, Matrix.sub_apply, Matrix.diagonal_mul, Matrix.mul_diagonal,
-      sub_mul, mul_comm (H i j) (c j)]
+    rw [hidentity, hdiff, Matrix.sub_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
+    change c i * H i j - H i j * c j = (c i - c j) * H i j
+    ring
   constructor
   · intro hN i j hij
     have he : (D + H)ᴴ * (D + H) = (D + H) * (D + H)ᴴ := hN.star_comm_self.eq
@@ -194,9 +195,9 @@ theorem hermitian_support_maximum_partner_pair_equation
           Matrix.mul_assoc M Zᴴ Mᴴ, hZstarMstar]
         simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
       _ = Mᴴ * X * M := by
-        rw [show X = Z + Zᴴ from rfl, Matrix.mul_add, Matrix.add_mul,
+        rw [show X = Z + Zᴴ from rfl, Matrix.mul_add Mᴴ Z Zᴴ, Matrix.add_mul,
           Matrix.mul_assoc Mᴴ Z M, hZM, hMstarZstar]
-        simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
+        simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one, add_comm]
   have hidentity : M * X * Mᴴ - Mᴴ * X * M =
       (D - Dᴴ) * (H * X) - (H * X) * (D - Dᴴ) -
         (Dᴴ * X * D - D * X * Dᴴ) := by

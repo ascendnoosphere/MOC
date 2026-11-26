@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Fintype.List
+import Mathlib.Data.Fintype.Perm
 import Mathlib.GroupTheory.Perm.List
 
 /-! A modulus-maximizing diagonal gives positive diagonal scaling factors. -/
@@ -123,9 +124,9 @@ theorem exists_assignment_product_scaling (w : ι → ι → ℝ)
     obtain ⟨τ, hτ⟩ := hpos
     exact hτ.trans_le (hσ τ (Finset.mem_univ τ))
   have hd (j : ι) : 0 < d j := by
-    by_contra! hj
-    have hjzero : d j = 0 := le_antisymm hj (hw (σ j) j)
-    exact hprod.ne' (Finset.prod_eq_zero (Finset.mem_univ j) hjzero)
+    refine lt_of_le_of_ne (hw (σ j) j) ?_
+    intro hj
+    exact hprod.ne' (Finset.prod_eq_zero (Finset.mem_univ j) hj.symm)
   let v (i j : ι) : ℝ≥0 := ⟨w (σ i) j / d j, div_nonneg (hw (σ i) j) (hd j).le⟩
   have hvdiag (i : ι) : v i i = 1 := by
     apply NNReal.coe_eq_one.mp

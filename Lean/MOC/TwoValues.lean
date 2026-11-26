@@ -145,7 +145,10 @@ theorem subsetMinorSq_smul_of_normSq_eq_one (U : Matrix ι ι ℂ) (z : ℂ)
     subsetMinorSq (z • U) I J = subsetMinorSq U I J := by
   by_cases hc : I.card = J.card
   · simp only [subsetMinorSq, dif_pos hc]
-    rw [Matrix.submatrix_smul, Matrix.det_smul, map_mul, map_pow, hz, one_pow, one_mul]
+    let e : I ≃ J := Fintype.equivOfCardEq (by simpa using hc)
+    let M := U.submatrix (fun i : I => (i : ι)) (fun i : I => ((e i : J) : ι))
+    change Complex.normSq (z • M).det = Complex.normSq M.det
+    rw [Matrix.det_smul, map_mul, map_pow, hz, one_pow, one_mul]
   · simp only [subsetMinorSq, dif_neg hc]
 
 theorem sum_signedWeight_image_eq_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsUnitary U)

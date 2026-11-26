@@ -68,10 +68,10 @@ $$
 
 Here $U[I,S]$ is the submatrix on rows $I$ and columns $S$. Nonnegative
 weights with sum one give inclusion for this spectral partition.
-Existence of such weights for every mixer remains open. The source
-proofs await kernel checking.
-[Exact weight test](../Lean/MOC/ThreeValueIntervalCoupling.lean#L169) ·
-[Inclusion from positive weights](../Lean/MOC/ThreeValueIntervalCoupling.lean#L238)
+Existence of such weights for every mixer remains open. Lean checks
+the weight test and the inclusion under its stated premise.
+[Exact weight test](../Lean/MOC/ThreeValueIntervalCoupling.lean#L171) ·
+[Inclusion from positive weights](../Lean/MOC/ThreeValueIntervalCoupling.lean#L247)
 
 A separate reduction preserves the three-value restriction. If a row
 has nonzero entries in columns from at most two spectral groups,

@@ -23,7 +23,7 @@ of the corresponding two-by-two minor of $U$. The existing signed
 determinant formula gives complex permutation weights whose sum is one.
 Their total weight on the permutations that send $J$ to $I$ is
 $q(I,J)$.
-[Signed minor formula](../Lean/MOC/TwoValues.lean#L141)
+[Signed minor formula](../Lean/MOC/TwoValues.lean#L154)
 
 Let $I^c$ be the complementary row pair. For any permutation $\sigma$,
 the difference between the indicators of $\sigma(J)=I$ and

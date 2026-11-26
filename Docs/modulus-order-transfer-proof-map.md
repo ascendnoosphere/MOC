@@ -57,8 +57,8 @@ edge from $i$ to $j$ to a maximizing path from $j$. Deleting a cycle
 cannot decrease the product, so $w_{ij}s_j\leq s_i$. In the relabeled
 matrix use $s_i$ as the row factors. Use the diagonal moduli divided by
 $s_j$ as the column factors.
-[Matching potentials](../Lean/MOC/MatchingPotential.lean#L66) ·
-[Row and column factors](../Lean/MOC/MatchingPotential.lean#L113)
+[Matching potentials](../Lean/MOC/MatchingPotential.lean#L67) ·
+[Row and column factors](../Lean/MOC/MatchingPotential.lean#L114)
 
 Let $V$ be the matrix obtained by dividing the $(i,j)$ entry of
 $C\circ U$ by $r_ic_j$. Each entry of $V$ has modulus at most $|U_{ij}|$.

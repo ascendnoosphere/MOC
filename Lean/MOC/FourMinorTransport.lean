@@ -613,9 +613,14 @@ theorem four_minor_convexHull_eq_orthogonal :
         (1 - θ) • subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) := by
       funext I J
       simpa only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] using hm I J
+    change subsetMinorSq U.val ∈ _
     rw [heq]
-    exact (convex_convexHull ℝ _) (subset_convexHull ℝ _ ⟨O₀, rfl⟩)
-      (subset_convexHull ℝ _ ⟨O₁, rfl⟩) hθ₀ (sub_nonneg.mpr hθ₁) (by ring)
+    let f (O : Matrix.orthogonalGroup (Fin 4) ℝ) :=
+      subsetMinorSq (Complex.ofRealHom.mapMatrix O.val)
+    exact (convex_convexHull ℝ (Set.range f))
+      (subset_convexHull ℝ (Set.range f) (Set.mem_range_self O₀))
+      (subset_convexHull ℝ (Set.range f) (Set.mem_range_self O₁))
+      hθ₀ (sub_nonneg.mpr hθ₁) (by ring)
   · apply convexHull_mono
     rintro _ ⟨O, rfl⟩
     exact ⟨⟨_, isUnitary_ofReal_orthogonal O⟩, rfl⟩

@@ -64,7 +64,7 @@ compression assigns each omitted eigenvalue the squared modulus of its
 component at the deleted coordinate. To get this mass, evaluate the law
 with every partner value equal to the negative of the eigenvalue. All
 products except the ones that omit this eigenvalue vanish.
-[Omission mass](../Lean/MOC/HermitianNormalPencil.lean#L105)
+[Omission mass](../Lean/MOC/HermitianNormalPencil.lean#L107)
 
 Let $p$ be a real partner position with $b_p$ distinct from all other
 partner entries and $a_i+b_p\ne0$ for each Hermitian eigenvalue $a_i$.
@@ -72,10 +72,10 @@ Fix a direction. For each $i$, choose an upper bound on matching
 projections over permutations that send $p$ to $i$. The smaller-order
 Hermitian–normal theorem bounds the determinant projection by the
 average of these upper bounds with weights $|U_{ip}|^2$. The result
-requires a simple Hermitian spectrum. The joint coefficient comparison
-for arbitrary complex free values remains open. These source proofs
-await kernel checking.
-[Real-pivot bound with prescribed weights](../Lean/MOC/HermitianNormalPencil.lean#L168)
+requires a simple Hermitian spectrum. Lean checks the mass and the
+directional bound. The joint coefficient comparison for arbitrary
+complex free values remains open.
+[Real-pivot bound with prescribed weights](../Lean/MOC/HermitianNormalPencil.lean#L171)
 
 When two groups are allowed positive mass, evaluation at the negative
 of one Hermitian value leaves only the other group. If both such real
@@ -84,7 +84,7 @@ group points reproduce the intercept and slope. They then work for
 every complex value of the free entry. A separate deletion proves
 pointwise inclusion when the free column meets at most two Hermitian
 eigenvalues and the smaller-order Hermitian–normal inclusion holds.
-[Two real evaluations](../Lean/MOC/HermitianNormalPencil.lean#L306) ·
+[Two real evaluations](../Lean/MOC/HermitianNormalPencil.lean#L309) ·
 [Two supported Hermitian values](../Lean/MOC/SpectralSupportDeletion.lean#L252)
 
 The joint hull claim for the displayed center still needs the exact

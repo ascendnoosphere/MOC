@@ -60,11 +60,12 @@ theorem cyclic_gate_signed_minor_law (s : Equiv.Perm κ) (hs : TraversesAllIndic
     (hne : s ≠ 1) (L R : κ → Matrix Bool Bool ℂ)
     (hL : ∀ k, IsUnitary (L k)) (hR : ∀ k, IsUnitary (R k)) :
     ∀ I J : Finset (κ × Bool), subsetMinorSq (cyclicGateMixer s L R) I J =
-      ∑ x ∈ univ.filter (fun x => J.map
-        (twoLayerSwitch (Equiv.refl _) (cyclicRightChart s) x).toEmbedding = I),
-        cyclicIndependentWeight L R x + cyclicGateInterference s L R * switchParity x := by
+      ∑ x ∈ univ.filter (fun x : κ ⊕ κ → Bool => J.map
+        (twoLayerSwitch (Equiv.refl (κ × Bool)) (cyclicRightChart s) x).toEmbedding = I),
+        (cyclicIndependentWeight L R x + cyclicGateInterference s L R * switchParity x) := by
   classical
   obtain ⟨k₀⟩ := nonempty_of_cycle_ne_one hne
+  letI : Nonempty κ := ⟨k₀⟩
   let eL : κ × Bool ≃ κ × Bool := Equiv.refl _
   let eR := cyclicRightChart s
   let P := cyclicIndependentWeight L R
@@ -75,7 +76,7 @@ theorem cyclic_gate_signed_minor_law (s : Equiv.Perm κ) (hs : TraversesAllIndic
     (fun x => P x + t * switchParity x)
   intro I J hIJ _
   let E := univ.filter (fun x => J.map (twoLayerSwitch eL eR x).toEmbedding = I)
-  change subsetMinorSq (cyclicGateMixer s L R) I J = ∑ x ∈ E, P x + t * switchParity x
+  change subsetMinorSq (cyclicGateMixer s L R) I J = ∑ x ∈ E, (P x + t * switchParity x)
   by_cases hT : BlockTransversal eL I ∧ BlockTransversal eR J
   · obtain ⟨hI, hJ⟩ := hT
     let x := cyclicSwitchToFalse s I J
@@ -148,6 +149,7 @@ theorem holds_cyclic_gate_of_interference_abs_le (s : Equiv.Perm κ)
     (fun x => cyclicIndependentWeight L R x + cyclicGateInterference s L R * switchParity x)
     ?_ ?_ (cyclic_gate_signed_minor_law s hs hne L R hL hR)
   · intro x
+    change 0 ≤ cyclicIndependentWeight L R x + cyclicGateInterference s L R * switchParity x
     obtain ⟨hl, hh⟩ := abs_le.mp (hbound x)
     rcases switchParity_eq_one_or_neg x with he | he <;> rw [he] <;> linarith
   · rw [Finset.sum_add_distrib, ← Finset.mul_sum, hsum, mul_zero, add_zero]
@@ -346,6 +348,86 @@ theorem holds_cyclic_gate_of_orthogonal (s : Equiv.Perm κ) (hs : TraversesAllIn
   exact holds_of_subsetMinorSq_convex_combination a b
     (blockGateMatrix_mul_unitary _ _ L R hL hR) (isUnitary_ofReal_orthogonal P)
     (isUnitary_ofReal_orthogonal Q) t ht₀ ht₁ hm (hO a b P) (hO a b Q)
+
+private theorem blockSwitch_preserves_equal_pair {ι : Type*} [DecidableEq ι]
+    (e : κ × Bool ≃ ι) (v : ι → ℂ) (k : κ) (h : v (e (k, false)) = v (e (k, true)))
+    (x y : κ → Bool) (hxy : ∀ l ≠ k, x l = y l) (j : ι) :
+    v (blockSwitch e x j) = v (blockSwitch e y j) := by
+  obtain ⟨⟨l, b⟩, rfl⟩ := e.surjective j
+  rw [blockSwitch_apply, blockSwitch_apply]
+  by_cases hl : l = k
+  · subst l
+    have hconstant (c d : Bool) : v (e (k, c)) = v (e (k, d)) := by
+      cases c <;> cases d <;> first | rfl | exact h | exact h.symm
+    exact hconstant _ _
+  · rw [hxy l hl]
+
+/-- Equal spectral values at either gate of an alternating cycle cancel the
+determinant interference. Independent switches suffice for all gate biases. -/
+theorem holds_cyclic_gate_of_equal_spectral_pair (s : Equiv.Perm κ)
+    (hs : TraversesAllIndices s) (hne : s ≠ 1) (L R : κ → Matrix Bool Bool ℂ)
+    (hL : ∀ k, IsUnitary (L k)) (hR : ∀ k, IsUnitary (R k)) (a b : κ × Bool → ℂ)
+    (hpair : (∃ k, a (k, false) = a (k, true)) ∨
+      ∃ k, b (cyclicRightChart s (k, false)) = b (cyclicRightChart s (k, true))) :
+    Holds a b (cyclicGateMixer s L R) := by
+  classical
+  let eL : κ × Bool ≃ κ × Bool := Equiv.refl _
+  let eR := cyclicRightChart s
+  let p := twoLayerSwitch eL eR
+  let q (x : κ ⊕ κ → Bool) := matchingProduct a b (p x)
+  have hq (x : κ ⊕ κ → Bool) :
+      q x = ∏ j, (a (blockSwitch eL (x ∘ Sum.inl) j) + b (blockSwitch eR (x ∘ Sum.inr) j)) := by
+    let τ := blockSwitch eR (x ∘ Sum.inr)
+    unfold q matchingProduct
+    rw [← Equiv.prod_comp τ.symm (fun j => a (p x j) + b j)]
+    apply Finset.prod_congr rfl
+    intro j _
+    change a (blockSwitch eL (x ∘ Sum.inl) (τ (τ.symm j))) + b (τ.symm j) = _
+    rw [τ.apply_symm_apply, show τ.symm = τ from blockSwitch_symm _ _]
+  have hflip : ∃ g : κ ⊕ κ, ∀ x, q (toggleSwitch g x) = q x := by
+    rcases hpair with ⟨k, hk⟩ | ⟨k, hk⟩
+    · refine ⟨Sum.inl k, fun x => ?_⟩
+      rw [hq, hq]
+      have hright : toggleSwitch (Sum.inl k) x ∘ Sum.inr = x ∘ Sum.inr := by
+        funext l
+        simp [toggleSwitch]
+      apply Finset.prod_congr rfl
+      intro j _
+      rw [hright, blockSwitch_preserves_equal_pair eL a k hk
+        (toggleSwitch (Sum.inl k) x ∘ Sum.inl) (x ∘ Sum.inl) (fun l hl => by
+          simp [toggleSwitch, hl]) j]
+    · refine ⟨Sum.inr k, fun x => ?_⟩
+      rw [hq, hq]
+      have hleft : toggleSwitch (Sum.inr k) x ∘ Sum.inl = x ∘ Sum.inl := by
+        funext l
+        simp [toggleSwitch]
+      apply Finset.prod_congr rfl
+      intro j _
+      rw [hleft, blockSwitch_preserves_equal_pair eR b k hk
+        (toggleSwitch (Sum.inr k) x ∘ Sum.inr) (x ∘ Sum.inr) (fun l hl => by
+          simp [toggleSwitch, hl]) j]
+  obtain ⟨g, hg⟩ := hflip
+  have hzero : ∑ x : κ ⊕ κ → Bool, (switchParity x : ℂ) * q x = 0 := by
+    apply Complex.ext
+    · simpa only [Complex.re_sum, Complex.zero_re, Complex.re_ofReal_mul, mul_comm] using
+        sum_weighted_switchParity_eq_zero (fun x => (q x).re) g univ (by simp)
+          (fun x => congrArg Complex.re (hg x))
+    · simpa only [Complex.im_sum, Complex.zero_im, Complex.im_ofReal_mul, mul_comm] using
+        sum_weighted_switchParity_eq_zero (fun x => (q x).im) g univ (by simp)
+          (fun x => congrArg Complex.im (hg x))
+  have hd := cyclic_gate_determinant_eq_independent_add_interference s hs hne L R hL hR a b
+  change determinantValue a b (cyclicGateMixer s L R) =
+    (∑ x, (cyclicIndependentWeight L R x : ℂ) * q x) +
+      (cyclicGateInterference s L R : ℂ) * ∑ x, (switchParity x : ℂ) * q x at hd
+  unfold Holds
+  rw [hd, hzero, mul_zero, add_zero]
+  refine mem_convexHull_of_exists_fintype (cyclicIndependentWeight L R) q ?_
+    (cyclicIndependentWeight_sum L R hL hR) (fun x => ⟨p x, rfl⟩) ?_
+  · intro x
+    unfold cyclicIndependentWeight gateSwitchProbability
+    exact mul_nonneg (Finset.prod_nonneg fun _ _ => Complex.normSq_nonneg _)
+      (Finset.prod_nonneg fun _ _ => Complex.normSq_nonneg _)
+  · simp only [Complex.real_smul]
 
 end
 

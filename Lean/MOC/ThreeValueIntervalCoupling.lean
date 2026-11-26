@@ -41,7 +41,8 @@ private theorem subsetProductCoordinates_interval (J K S : Finset ι) :
     funext j
     by_cases hj : j ∈ J <;> simp [hj]
   unfold subsetProductCoordinates
-  rw [hx, prod_subset_indicator, prod_subset_indicator, hlow, one_pow, one_pow]
+  rw [hx, prod_subset_indicator, prod_subset_indicator]
+  simp only [hlow, one_pow]
   by_cases hlo : J ⊆ S <;> by_cases hhi : S ⊆ K <;> simp [hlo, hhi]
 
 private theorem productTensorEvaluation_interval (T : Matrix (Finset ι) (Finset ι) ℝ)
@@ -84,7 +85,7 @@ private theorem intervalProfile_permutation (J K I : Finset ι) (σ : Equiv.Perm
   rw [Finset.sum_filter]
   simp only [subsetPermutationOperator, Matrix.of_apply, hmap]
   rw [Finset.sum_eq_single S₀]
-  · simp only [if_pos (rfl : S₀ = S₀), hInterval]
+  · simp only [if_true, hInterval]
   · intro S _ hS
     simp only [if_neg hS, ite_self]
   · simp
@@ -155,7 +156,8 @@ private theorem subsetProductCoordinates_corner (I S : Finset ι) (c d : ℂ) :
   classical
   have hlow : Sᶜ ⊆ Iᶜ ↔ I ⊆ S := by simp
   unfold subsetProductCoordinates
-  rw [prod_subset_indicator, prod_subset_indicator, hlow]
+  rw [prod_subset_indicator, prod_subset_indicator]
+  simp only [hlow]
   by_cases hSI : S = I
   · subst S
     simp
@@ -204,10 +206,17 @@ theorem three_value_common_weights_iff_interval {U : Matrix ι ι ℂ} (hU : IsU
     let d := (b₂ - b₀) * (b₁ - b₀)
     have hx : x a = fun i => if i ∈ Iᶜ then c else 0 := by
       funext i
-      by_cases hi : i ∈ I <;> simp [x, a, c, hi] <;> ring
+      by_cases hi : i ∈ I
+      · simp [x, a, hi]
+      · simp only [x, a, c, Finset.mem_compl, if_pos hi, if_neg hi, not_false_eq_true,
+          if_true]
+        ring
     have hy : y a = fun i => if i ∈ I then d else 0 := by
       funext i
-      by_cases hi : i ∈ I <;> simp [y, a, d, hi] <;> ring
+      by_cases hi : i ∈ I
+      · simp only [y, a, d, if_pos hi]
+        ring
+      · simp [y, a, hi]
     have hcorner (W : Matrix (Finset ι) (Finset ι) ℝ) :
         F a W = (threeValueIntervalProfile W J K I : ℂ) * (c ^ Iᶜ.card * d ^ I.card) := by
       rw [hEval, hx, hy]
