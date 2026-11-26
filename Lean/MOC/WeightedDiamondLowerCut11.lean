@@ -1,4 +1,4 @@
-import MOC.WeightedDiamondSparseCut
+import MOC.SparseRayCutKernelChecks
 import MOC.WeightedDiamondLowerRays
 import MOC.WeightedDiamondLowerFacets
 
@@ -892,25 +892,78 @@ private def nextPositiveTable : Array (Fin 24) :=
     0, 1, 2, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
 
 private def plan : SparseRayCutPlan 267 184 where
-  kept k := keptTable.getD k.val 0
-  edges k := edgeTable.getD k.val []
-  origin l := originTable.getD l.val (.kept 0)
+  kept k := keptTable.toList.getD k.val 0
+  edges k := edgeTable.toList.getD k.val []
+  origin l := originTable.toList.getD l.val (.kept 0)
   positiveMask := 6421526757177961534271045080379125999235170802843085560579381816
-  positiveAt i := positiveAtTable.getD i.val 0
-  witnesses k := witnessTable.getD k.val []
-  zeroCoords k := zeroCoordTable.getD k.val []
-  nextPositiveCoord l := nextPositiveTable.getD l.val 0
+  positiveAt i := positiveAtTable.toList.getD i.val 0
+  witnesses k := witnessTable.toList.getD k.val []
+  zeroCoords k := zeroCoordTable.toList.getD k.val []
+  nextPositiveCoord l := nextPositiveTable.toList.getD l.val 0
+
+open FiniteRayChecks
+
+private def cut11Coords : List (Fin 24) :=
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+
+private theorem cut11MemCoords : ∀ i ∈ weightedDiamondLowerImposed11, i ∈ cut11Coords := by
+  decide +kernel
+
+private theorem cut11ImposedIff (i : Fin 24) : i ∈ weightedDiamondLowerImposed11 ↔ i.val < 23 := by
+  fin_cases i <;> decide +kernel
+
+private theorem cut11ForallCoordOfAll {P : Fin 24 → Prop} [DecidablePred P]
+    (h : cut11Coords.all (fun i => decide (P i)) = true) :
+    ∀ i ∈ weightedDiamondLowerImposed11, P i :=
+  fun i hi => of_decide_eq_true (List.all_eq_true.mp h i (cut11MemCoords i hi))
 
 set_option maxRecDepth 20000 in
 set_option maxHeartbeats 8000000 in
-private theorem checked : plan.Checked weightedDiamondLowerRays11 weightedDiamondLowerRays12 weightedDiamondLowerImposed11 23 := by
+private theorem cut11OldSigns :
+    ∀ k : Fin 267, ∀ i ∈ weightedDiamondLowerImposed11,
+      (zero (weightedDiamondLowerRays11 k i) = true ∨ positive (weightedDiamondLowerRays11 k i) = true) ∧
+      (plan.positiveAt i).testBit k.val = positive (weightedDiamondLowerRays11 k i) := by
+  suffices ∀ k : Fin 267, cut11Coords.all (fun i =>
+      if (plan.positiveAt i).testBit k.val then positive (weightedDiamondLowerRays11 k i) else zero (weightedDiamondLowerRays11 k i)) = true by
+    intro k i hi
+    have h := List.all_eq_true.mp (this k) i (cut11MemCoords i hi)
+    generalize hb : (plan.positiveAt i).testBit k.val = b at h ⊢
+    cases b with
+    | false =>
+      have hz : zero (weightedDiamondLowerRays11 k i) = true := h
+      have hp : positive (weightedDiamondLowerRays11 k i) = false := by
+        apply Bool.eq_false_iff.mpr
+        intro hp
+        exact (eval_pos_of_check zero_lt_one hp).ne' (eval_zero_of_check 1 hz)
+      exact ⟨Or.inl hz, hp.symm⟩
+    | true =>
+      have hp : positive (weightedDiamondLowerRays11 k i) = true := h
+      exact ⟨Or.inr hp, hp.symm⟩
+  apply forallFin_of_blocks
+  intro block
+  fin_cases block <;> decide +kernel
+
+set_option maxRecDepth 20000 in
+set_option maxHeartbeats 8000000 in
+private theorem cut11Witnesses
+    (hat : ∀ k : Fin 267, ∀ i ∈ weightedDiamondLowerImposed11,
+      (plan.positiveAt i).testBit k.val = positive (weightedDiamondLowerRays11 k i)) :
+    ∀ k r, r ∈ plan.witnesses k → r.1 ≠ k ∧
+      ∀ i ∈ weightedDiamondLowerImposed11, zero (weightedDiamondLowerRays11 k i) = true → positive (weightedDiamondLowerRays11 r.1 i) = true → i ∈ r.2 := by
+  apply witnessesValid_of_check plan _ _ hat cut11Coords cut11MemCoords
+  apply forallFin_of_all
+  decide +kernel
+
+set_option maxRecDepth 20000 in
+set_option maxHeartbeats 8000000 in
+private theorem checkedLowerCut11 : plan.Checked weightedDiamondLowerRays11 weightedDiamondLowerRays12 weightedDiamondLowerImposed11 23 := by
   refine
-    { oldSigns := ?_
+    { oldSigns := fun k i hi => (cut11OldSigns k i hi).1
       nextSigns := ?_
       nextPositive := ?_
       cutSigns := ?_
       cutPositive_eq := ?_
-      positiveAt_eq := ?_
+      positiveAt_eq := fun k i hi => (cut11OldSigns k i hi).2
       zeroCoordsValid := ?_
       antichainCover := ?_
       witnessesValid := ?_
@@ -918,29 +971,47 @@ private theorem checked : plan.Checked weightedDiamondLowerRays11 weightedDiamon
       keptValid := ?_
       edgeValid := ?_
       originsValid := ?_ }
-  · intro k
-    fin_cases k <;> decide +kernel
-  · intro k
-    fin_cases k <;> decide +kernel
+  · suffices ∀ l : Fin 184,
+        cut11Coords.all (fun i => decide (nonneg (weightedDiamondLowerRays12 l i) = true)) = true by
+      intro l
+      exact cut11ForallCoordOfAll (this l)
+    apply forallFin_of_blocks
+    intro block
+    fin_cases block <;> decide +kernel
+  · simp only [cut11ImposedIff]
+    decide +kernel
   · decide +kernel
   · decide +kernel
-  · decide +kernel
-  · intro k
-    fin_cases k <;> decide +kernel
-  · decide +kernel
-  · decide +kernel
-  · decide +kernel
-  · decide +kernel
-  · intro k
-    fin_cases k <;> decide +kernel
-  · intro k
-    fin_cases k <;> decide +kernel
-  · intro k
-    fin_cases k <;> decide +kernel
+  · suffices ∀ k : Fin 267, (plan.zeroCoords k).all (fun i =>
+        decide (i ∈ weightedDiamondLowerImposed11 ∧ zero (weightedDiamondLowerRays11 k i) = true)) = true by
+      intro k
+      exact memList_of_all (this k)
+    apply forallFin_of_blocks
+    intro block
+    simp only [cut11ImposedIff]
+    fin_cases block <;> decide +kernel
+  · simp only [ldiff_eq_xor_land]
+    decide +kernel
+  · exact cut11Witnesses (fun k i hi => (cut11OldSigns k i hi).2)
+  · simp only [witnessMask_eq_xor_land]
+    decide +kernel
+  · apply forallFin_of_blocks
+    intro block
+    fin_cases block <;> decide +kernel
+  · suffices ∀ k : Fin 267, (plan.edges k).all (fun e => decide
+        (RayCutPlan.CrossingValid weightedDiamondLowerRays11 weightedDiamondLowerRays12 weightedDiamondLowerImposed11 23 e.1 k (.keep e.2.1 e.2.2))) = true by
+      intro k
+      exact memList_of_all (this k)
+    apply forallFin_of_blocks
+    intro block
+    fin_cases block <;> decide +kernel
+  · apply forallFin_of_blocks
+    intro block
+    fin_cases block <;> decide +kernel
 
 theorem weightedDiamondLowerCut11 :
     RayCensusPath ⟨267, weightedDiamondLowerRays11, weightedDiamondLowerImposed11⟩
       ⟨184, weightedDiamondLowerRays12, weightedDiamondLowerImposed12⟩ :=
-  plan.checkedCut checked
+  plan.checkedCut checkedLowerCut11
 
 end MOC.RayCoefficients

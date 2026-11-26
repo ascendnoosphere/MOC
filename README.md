@@ -194,7 +194,7 @@ kernel checking.
 
 | Status | Result | Lean source |
 | --- | --- | --- |
-| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if the complex unitary matrix $U$ has zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) |
+| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if the complex unitary matrix $U$ has zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) |
 | Proved | If every entry of the unitary change of eigenbasis $U$ has modulus $1/2$, one probability law on permutations gives the determinant for all complex spectra. These are the normalized complex Hadamard matrices of order four. | [Common law](Lean/MOC/OrderFourComplexHadamard.lean#L259) · [Inclusion](Lean/MOC/OrderFourComplexHadamard.lean#L272) · [Proof map](Docs/order-four-complex-hadamard-proof-map.md) |
 | Proved | The directional bound holds for specific sets of tied permutations. The pattern labels identify those sets in the linked statements. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) |
 | Partial | It suffices to exclude strict violations at real orthogonal maximizers with at least seven contacts. For each nonzero entry $U_{ij}$, some permutation with $\sigma(j)=i$ does not attain the maximum. Lean proves these restrictions on the same witness. | [Seven-contact reduction](Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary reduction](Lean/MOC/StationaryPivot.lean#L221) |
@@ -250,7 +250,7 @@ in the all-order table uses the condition on the matching products.
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
-| Proved | The inclusion holds for all complex spectra throughout an open operator-norm ball of unitary matrices about the order-five Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier ball](Lean/MOC/FiveFourierNeighborhood.lean#L68) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
+| Proved | The inclusion holds for all complex spectra throughout an open operator-norm ball of unitary matrices about the order-five Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier ball](Lean/MOC/FiveFourierNeighborhood.lean#L68) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L104) |
 | Proved | The inclusion holds for arbitrary complex spectra in order five if $U$ contains a two-by-two zero submatrix. The two factors have order three. The result does not require order four. | [Zero submatrix](Lean/MOC/SinglePortZeroCorner.lean#L143) |
 | Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L134) |
 | Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
@@ -411,10 +411,9 @@ Combining the blocks proves the convex-hull inclusion in every order.
 - Suppose all $a_i$ lie on one circle or line $C$. The inclusion holds
   in any order if at most four entries $-b_j$, counted with multiplicity,
   lie outside $C$. It also holds if the entries outside $C$ take at most
-  three distinct values. The four-entry source proof uses the
-  order-four Hermitian certificate. Lean has checked seven of its
-  eleven ray transitions.
-  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90) · [Certificate status](Docs/order-four-circle-or-line-common-weights-proof-map.md#the-two-implications)
+  three distinct values. The four-entry proof uses the kernel-checked
+  order-four Hermitian–normal theorem.
+  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L82) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90) · [Certificate status](Docs/order-four-circle-or-line-common-weights-proof-map.md#the-two-implications)
 - The inclusion holds in any order if either list has at most two
   distinct values. Fix the relative unitary and a partition of the
   second list into two groups. One set of nonnegative matching weights
@@ -453,7 +452,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
 - In order four, the inclusion holds if either list lies on a circle or
   a line. This includes a Hermitian matrix with an arbitrary normal
   partner and the case where either list has a repeated value.
-  [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Hermitian matrix](Lean/MOC/HermitianByNormalFourProof.lean#L55) · [Repeated value](Lean/MOC/TwoExceptions.lean#L287)
+  [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Hermitian matrix](Lean/MOC/HermitianByNormalFourProof.lean#L59) · [Repeated value](Lean/MOC/TwoExceptions.lean#L287)
 - In order four, the inclusion holds if any $a_i+b_j=0$. This includes
   a list paired with its negation. In any order, an opposite pair suffices
   if the sum of its two eigenvalue multiplicities is at least $n-2$.
@@ -474,7 +473,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
   [Parameter family](Docs/order-four-real-parameter-spectra-proof-map.md)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.
-  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L100)
+  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L104)
 - Let $I$ be the identity matrix. The inclusion holds in any order if
   the ranks of $A+tI$ and $B-tI$ sum to at most $n+2$ for some complex $t$.
   [Proof](Lean/MOC/RankTwoOverlap.lean#L481)

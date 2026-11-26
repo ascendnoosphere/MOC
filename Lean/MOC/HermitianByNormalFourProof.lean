@@ -43,10 +43,14 @@ theorem weightedDiamondFacetCompleteness_lower (t : ℝ) (ht : 0 < t) :
     simp only [eval, Int.cast_one, mul_zero, add_zero, mul_one]
     exact add_pos zero_lt_one ht
   have hchart : t / (1 + t) = eval t [0, 1] / eval t [1, 1] := by simp [eval]
-  exact weightedDiamondFacetCompleteness_of_chart ht (div_nonneg ht.le (by positivity))
+  refine weightedDiamondFacetCompleteness_of_chart
+    (initial := ⟨16, weightedDiamondLowerRays1, weightedDiamondLowerImposed1⟩)
+    (final := ⟨184, weightedDiamondLowerRays12, weightedDiamondLowerImposed12⟩)
+    ht (div_nonneg ht.le (by positivity))
     [0, 1] [1, 1] hd hchart lowerPath (weightedDiamondLowerFirstCut_generates t ht)
     weightedDiamondLowerFacet weightedDiamondLowerFacetScale weightedDiamondLowerFacetScale_positive
-    weightedDiamondLowerFacet_equal
+    ?_
+  with_reducible exact weightedDiamondLowerFacet_equal
 
 end RayCoefficients
 

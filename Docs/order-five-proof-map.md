@@ -168,7 +168,7 @@ least $4/45$ for these spectra.
 Lean also gives inclusion for unitary matrices with zero diagonal and
 off-diagonal magnitudes $1/2$, and for pairs with one real list and at
 least one real entry in the other.
-[Zero diagonal](../Lean/MOC/ConferenceFive.lean#L260) · [Real entry](../Lean/MOC/HermitianByNormalFourProof.lean#L100)
+[Zero diagonal](../Lean/MOC/ConferenceFive.lean#L260) · [Real entry](../Lean/MOC/HermitianByNormalFourProof.lean#L104)
 
 ## Exact spectral and mixer cases
 

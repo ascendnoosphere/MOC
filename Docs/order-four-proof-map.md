@@ -66,7 +66,7 @@ The six-contact inequality required by this route remains open.
 | Exclude regular terminal orthogonal witnesses with canonical mixed cost | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L398) |
 | Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L274) |
 | First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | Iff | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L208) |
-| Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L124) |
+| Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L128) |
 | Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L330) |
 | Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L390) |
 | Distinct first spectrum on the ellipse with semiaxes $2+\sqrt 3$ and $1$ | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L946) |
@@ -123,7 +123,7 @@ fixed-row and convex-hull declarations.
 
 The inclusion also holds if either spectrum lies on a circle or line
 or if there is an opposite eigenvalue pair.
-[Circle or line](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../Lean/MOC/FourCoincidence.lean#L360)
+[Circle or line](../Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Opposite pair](../Lean/MOC/FourCoincidence.lean#L360)
 
 ### Thirteen squared minors and a signed correction
 

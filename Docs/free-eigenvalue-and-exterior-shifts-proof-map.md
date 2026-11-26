@@ -57,7 +57,7 @@ space of functions of the entire complex partner list. Thus the
 injection weights are fixed before any partner entry is chosen.
 The result includes equal consecutive endpoints. This is the
 interlacing step used to lift a lower-order law at a real pivot.
-[Uniform interlacing law](../Lean/MOC/InterlacingCommonLaw.lean#L108) · [Scalar real-pivot case](../Lean/MOC/HermitianByNormalFourProof.lean#L100)
+[Uniform interlacing law](../Lean/MOC/InterlacingCommonLaw.lean#L108) · [Scalar real-pivot case](../Lean/MOC/HermitianByNormalFourProof.lean#L104)
 
 If the Hermitian spectrum is simple, the injection law for a principal
 compression assigns each omitted eigenvalue the squared modulus of its

@@ -50,19 +50,20 @@ flowchart TD
 | One mixer has no common squared-minor law | For any spectrum off a circle or line, the converse uses that same mixer to rule out a common law. | [Converse](../Lean/MOC/FourCircleLineCommonWeights.lean#L651) |
 
 The lower interval has eleven ray transitions. Each transition adds
-one permutation inequality. Lean has checked the first seven transitions.
-Their bit masks certify that distinct ray supports are incomparable and
-that each omitted crossing has a witness. Lean checks the masks with a
-bitwise identity for set difference. The last four transitions need
-complete module checks.
-[Incomparability condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L41) · [Crossing condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L46) · [Bitwise identity](../Lean/MOC/WeightedDiamondWitnessMasks.lean#L10) · [First transition](../Lean/MOC/WeightedDiamondLowerCut01.lean#L142) · [Seventh transition](../Lean/MOC/WeightedDiamondLowerCut07.lean#L400)
+one permutation inequality. All eleven transitions and the combined
+order-four Hermitian–normal theorem passed Lean checks. Their bit masks
+certify that distinct ray supports are incomparable and that each
+omitted crossing has a witness. The sign checks establish each mask.
+The witness checks then use the verified masks. The larger row tests
+use blocks of sixteen rows. Each block passes the Lean kernel.
+[Incomparability condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L41) · [Crossing condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L46) · [Transition path](../Lean/MOC/HermitianByNormalFourProof.lean#L25) · [Witness check](../Lean/MOC/SparseRayCutKernelChecks.lean#L7) · [Finite row checks](../Lean/MOC/SparseRayCutKernelChecks.lean#L40)
 
 The common law gives pointwise determinant inclusion on the circle or
 line. Repeated eigenvalues also satisfy the pointwise inclusion in
 order four. It therefore suffices to test pairs of distinct spectra
 where neither signed spectrum lies on a circle or line. These are the
 first list and the negation of the second list.
-[Pointwise circle or line case](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Exact remaining test](../Lean/MOC/HermitianByNormalFourProof.lean#L124)
+[Pointwise circle or line case](../Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Exact remaining test](../Lean/MOC/HermitianByNormalFourProof.lean#L128)
 
 ## Two free diagonal entries
 
