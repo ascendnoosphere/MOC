@@ -410,6 +410,9 @@ import MOC.ThreeHermitianSummands
 import MOC.TranslatedDeterminantPolynomial
 
 import MOC.BivectorPhaseFactorization
+import MOC.CompactSpectralSampling
+import MOC.CompactTransportDuality
+import MOC.CompactTransportLimit
 import MOC.ContinuousWeightsAtOrigin
 import MOC.ContinuousWeightsAtOneHot
 import MOC.FlagSuperlevelFiltration
@@ -455,12 +458,16 @@ import MOC.SpectralWitnessSeparation
 import MOC.StableRayleighSlice
 import MOC.StructuredRealizationCancellation
 import MOC.ThreeEffectExtremePoints
+import MOC.TracialContinuousKernel
+import MOC.TracialContinuousSpectralChart
+import MOC.TracialContinuousTransport
 import MOC.TracialEntropyTransport
 import MOC.TracialGramSymmetry
 import MOC.TracialLogConjugation
 import MOC.TracialLogDerivative
 import MOC.TracialLogInverseSquare
 import MOC.TracialLogResolvent
+import MOC.TracialPositivePartition
 import MOC.TracialSpectralKernel
 import MOC.TracialSpectralScaling
 import MOC.WalshMinorSupportObstruction
