@@ -260,6 +260,7 @@ import MOC.SubsetAssignmentSupport
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues
 import MOC.ThreeValueIntervalCoupling
+import MOC.ThreeValueProjectiveCompression
 import MOC.SpectralSupportDeletion
 import MOC.Transfer
 import MOC.TrianglePairContacts
