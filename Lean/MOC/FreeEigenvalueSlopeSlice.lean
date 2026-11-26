@@ -75,10 +75,10 @@ private theorem erase_slope_weight (T : Finset (ℂ × ℂ)) (c w : (ℂ × ℂ)
     · exact (mul_nonpos_of_nonneg_of_nonpos hr (le_of_not_gt hpF')).trans (hn _ hpT')
   · rw [Finset.sum_erase T hv₀]
     simp only [v, Finset.sum_sub_distrib, ← Finset.mul_sum, hf, mul_zero, sub_zero]
-  · rw [Finset.sum_erase T (f := fun p => v p • p.2) (a := p₀) (by rw [hv₀, zero_smul])]
+  · rw [Finset.sum_erase T (f := fun p => v p • p.2) (a := p₀) (by simp only [hv₀, zero_smul])]
     simp only [v, sub_smul, mul_smul, Finset.sum_sub_distrib, ← Finset.smul_sum,
       hft, smul_zero, sub_zero]
-  · rw [Finset.sum_erase T (f := fun p => v p * c p) (a := p₀) (by rw [hv₀, zero_mul])]
+  · rw [Finset.sum_erase T (f := fun p => v p * c p) (a := p₀) (by simp only [hv₀, zero_mul])]
     have hproj : (∑ p ∈ T, v p * c p) =
         (∑ p ∈ T, w p * c p) - r * (∑ p ∈ T, f p * c p) := by
       simp only [v, sub_mul, mul_assoc, Finset.sum_sub_distrib, Finset.mul_sum]
@@ -170,7 +170,7 @@ theorem slope_simplex_weights_unique (T : Finset (ℂ × ℂ))
   have hsum' : (∑ q : T, w q.val) = ∑ q : T, v q.val := by
     simpa only [Finset.univ_eq_attach, Finset.sum_attach] using hsum
   have hslope' : (∑ q : T, w q.val • q.val.2) = ∑ q : T, v q.val • q.val.2 := by
-    simpa only [Finset.univ_eq_attach, Finset.sum_attach] using hslope
+    rwa [Finset.univ_eq_attach, Finset.sum_attach T (fun p => w p • p.2), Finset.sum_attach T (fun p => v p • p.2)]
   exact hind.eq_of_sum_eq_sum hsum' hslope' ⟨p, hp⟩ (Finset.mem_univ _)
 
 /-- List the intercepts of the simplex mixtures at one prescribed slope. -/
@@ -230,7 +230,7 @@ theorem joint_coefficient_hull_iff_intercept_hull {S : Set (ℂ × ℂ)} (hS : S
       have hp : a • (z, y) + b • (v, y) ∈ convexHull ℝ S :=
         (convex_convexHull ℝ S) hz hv ha hb hab
       have he : a • (z, y) + b • (v, y) = (a • z + b • v, y) := by
-        apply Prod.ext rfl
+        refine Prod.ext (by rfl) ?_
         change a • y + b • y = y
         rw [← add_smul, hab, one_smul]
       exact he ▸ hp
