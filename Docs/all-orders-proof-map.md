@@ -418,12 +418,13 @@ complementary pair, the linear terms cancel and the constant term
 gives the minor's interference.
 [Two-gate interference bound](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L73) · [Affine correction](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L149) · [Squared minors](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L240) · [Common law](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331)
 
-The corresponding common-law claim for arbitrary gates on the cycle
-is false. Number the four coordinates from $0$ to $3$. For
-$t\in\{-1,1\}$, define the real rotation
-$G_t=\frac1{13}\begin{pmatrix}12&-5t\\5t&12\end{pmatrix}$.
-The left layer uses $G_1$ on $(0,1)$ and $(2,3)$. The right layer
-uses $G_{-1}$ on $(1,2)$ and $G_1$ on $(3,0)$, in these orders.
+The two-gate allowance is sharp for a common law. Number the four
+coordinates from $0$ to $3$. For $t\in\{-1,1\}$, define the real
+rotation $G_t=\frac1{13}\begin{pmatrix}12&-5t\\5t&12\end{pmatrix}$.
+Let $i$ be the imaginary unit. The left layer uses the fair gate
+$\frac{1+i}{2}\begin{pmatrix}1&-1\\1&1\end{pmatrix}$ on $(0,1)$
+and $G_1$ on $(2,3)$. The right layer uses $G_{-1}$ on $(1,2)$ and
+$G_1$ on $(3,0)$, in these orders.
 For a permutation, write $E(I,J)=1$ if it maps the column set $J$
 onto the row set $I$, and zero otherwise. Write $01$ for the set
 $\{0,1\}$, and use the same notation for other pairs. Every
@@ -433,11 +434,16 @@ $$
 E(01,01)+E(01,02)+E(13,02)+E(23,02)-E(12,03)\le1.
 $$
 
-The same combination of squared minor moduli of the gate product is
-$831869471/815730721>1$. Therefore no probability law on the
-permutations represents all the minors. The same inequality
-excludes one determinant law that works for every pair of spectra.
-[Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L29) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L75) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L92)
+The same combination of squared minor moduli of this gate product
+is $9768743/9653618>1$. Therefore no probability law on the
+permutations represents all the minors. The inequality also
+excludes one determinant law for every pair of spectra.
+[Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L154) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L216) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L242)
+
+If the left gate on $(0,1)$ is also $G_1$, the same combination is
+$831869471/815730721>1$. This gives a second obstruction with four
+biased gates.
+[Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L30) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L76) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L130)
 
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
