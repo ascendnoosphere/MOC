@@ -1,4 +1,4 @@
-import MOC.FourSupportConeClassification
+import MOC.FourSupportCostProfiles
 import MOC.RealMatchingSquares
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic.Positivity
@@ -17,10 +17,27 @@ private theorem evaluation_smul (a : ℝ) (v : Fin 14 → ℝ) (p : Fin 24) :
 /-- Each ordinary ray is a real matching function. -/
 theorem ordinaryCostRay_mem_realMatchingFunctionSpace (r : Fin 34) :
     ordinaryCostRay r ∈ realMatchingFunctionSpace := by
-  change ordinaryCostRay r ∈ Set.range
-    (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ))
-  rw [four_matching_space_eq_ordinary_span]
-  exact Submodule.subset_span ⟨r, rfl⟩
+  let mask (k : Fin 16) : Finset (Fin 4) := Finset.univ.filter fun i => k.val.testBit i.val
+  have hMask : ∀ s : Finset (Fin 4), ∃ k : Fin 16, mask k = s := by
+    unfold mask
+    decide +kernel
+  obtain ⟨a, ha⟩ := hMask (ordinaryCostRows r)
+  obtain ⟨b, hb⟩ := hMask (ordinaryCostColumns r)
+  have he : ordinaryCostRay r = realMatchingIndicator a b := by
+    funext p
+    have hmap : (ordinaryCostColumns r).map (fourPerm p).symm.toEmbedding =
+        ordinaryCostRows r ↔ (ordinaryCostRows r).map (fourPerm p).toEmbedding =
+        ordinaryCostColumns r := by
+      constructor
+      · intro h
+        exact le_antisymm (Finset.subset_map_symm.mp h.ge) (Finset.map_symm_subset.mp h.le)
+      · intro h
+        exact le_antisymm (Finset.map_symm_subset.mpr h.ge) (Finset.subset_map_symm.mpr h.le)
+    change (ordinaryCostRayInt r p : ℝ) =
+      ((if (mask a).map (fourPerm p).toEmbedding = mask b then 1 else 0 : ℤ) : ℝ)
+    simp only [ordinaryCostRayInt_indicator, hmap, ha, hb]
+  rw [he]
+  exact realMatchingIndicator_mem a b
 
 /-- Ordinary rays are indicator functions. -/
 theorem ordinaryCostRay_sq (r : Fin 34) (p : Fin 24) :
@@ -38,6 +55,7 @@ theorem realMatchingSOS_add_ordinaryCostRay {g : Fin 24 → ℝ}
     ordinaryCostRay_mem_realMatchingFunctionSpace r
   obtain ⟨x, hx⟩ := hmem
   refine ⟨n + 1, Fin.cons (Real.sqrt a • x) v, fun p => ?_⟩
+  change g p + a * ordinaryCostRay r p = _
   rw [Fin.sum_univ_succ, hv p]
   simp only [Fin.cons_zero, Fin.cons_succ]
   rw [evaluation_smul, hx, mul_pow, Real.sq_sqrt ha, ordinaryCostRay_sq, add_comm]
@@ -70,25 +88,27 @@ theorem fourSevenContactPairFactor_capacity {a b c d e f : ℝ}
   have hpos : 0 < fourSevenContactPairFactor a b c d e f := by
     unfold fourSevenContactPairFactor
     positivity
-  exact hpos.not_ge hz
+  exact (not_le_of_gt hpos) hz
 
 private def seed : Fin 24 → ℝ := fun p => mixedCostSeedInt p
 
 private theorem mixed_ray_eq (p : Fin 24) : mixedCostRay 0 p = seed p := by
   have h : ∀ p : Fin 24, mixedCostRayInt 0 p = mixedCostSeedInt p := by decide +kernel
+  unfold mixedCostRay seed
   exact_mod_cast h p
 
 private theorem seed_mem : seed ∈ realMatchingFunctionSpace := by
-  change seed ∈ Set.range (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ))
-  rw [four_matching_space_eq_ordinary_span]
   have he : seed = ordinaryCostRay 10 + ordinaryCostRay 7 + ordinaryCostRay 17 -
       ordinaryCostRay 25 := by
     funext p
     simp [seed, mixedCostSeedInt, ordinaryCostRay, Pi.add_apply, Pi.sub_apply]
   rw [he]
-  let W := Submodule.span ℝ (Set.range ordinaryCostRay)
-  have hm (r : Fin 34) : ordinaryCostRay r ∈ W := Submodule.subset_span ⟨r, rfl⟩
-  exact W.sub_mem (W.add_mem (W.add_mem (hm 10) (hm 7)) (hm 17)) (hm 25)
+  exact realMatchingFunctionSpace.sub_mem
+    (realMatchingFunctionSpace.add_mem
+      (realMatchingFunctionSpace.add_mem (ordinaryCostRay_mem_realMatchingFunctionSpace 10)
+        (ordinaryCostRay_mem_realMatchingFunctionSpace 7))
+      (ordinaryCostRay_mem_realMatchingFunctionSpace 17))
+    (ordinaryCostRay_mem_realMatchingFunctionSpace 25)
 
 private theorem pair_correction (p : Fin 24) :
     seed p ^ 2 - seed p = 2 * ordinaryCostRay 18 p * ordinaryCostRay 23 p := by
@@ -105,7 +125,7 @@ theorem realMatchingSOS_of_pair_capacity {c d : ℝ}
   have hc' : 0 < c := by
     by_contra! hn
     have hz : c = 0 := le_antisymm hn hc
-    simp [hz] at hcap
+    norm_num [hz] at hcap
   have hd' : 0 ≤ d - c⁻¹ := by
     apply sub_nonneg.mpr
     rw [← one_div]
