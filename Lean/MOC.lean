@@ -329,6 +329,7 @@ import MOC.FourMixedRaySupportBound
 import MOC.PermutationPathComposition
 import MOC.SinglePortHallExpansion
 import MOC.StarPortComposition
+import MOC.OverlappingCircleBlocks
 
 open Lean Elab Command in
 run_cmd do

@@ -12,6 +12,7 @@
 - [Labelled spectral formulations](#labelled-spectral-formulations)
 - [Finite overlap compression](#finite-overlap-compression)
 - [Common weights at small shifted rank sum](#common-weights-at-small-shifted-rank-sum)
+- [Overlapping circle blocks](#overlapping-circle-blocks)
 - [Paper cases in any order](#paper-cases-in-any-order)
 - [Scope of the Lean source](#scope-of-the-lean-source)
 
@@ -825,6 +826,19 @@ mass to a fixed permutation that pairs two zero labels. An extension
 of the allowed supports and continuity include smaller supports.
 [Two-frame law](../Lean/MOC/TwoFrame.lean#L1016) · [Exact excess two](../Lean/MOC/RankTwoOverlap.lean#L440) · [Common shifted law](../Lean/MOC/RankTwoOverlap.lean#L708)
 
+## Overlapping circle blocks
+
+Let two coordinate blocks cover the basis. Each normal matrix can mix its
+own block and is diagonal outside it. Require the first active spectrum
+and the negatives of the second entries in the first block outside the
+second block to lie on one generalized circle. Require the negative
+second active spectrum and the first entries in the second block outside
+the first block to lie on another generalized circle. These conditions
+give determinant inclusion in every order. A scalar Schur pivot preserves
+the conditions and reduces the order by one. The two-circle cover
+theorem gives inclusion when the second block is the full remaining
+matrix. [Exact theorem](../Lean/MOC/OverlappingCircleBlocks.lean#L83) · [Proof map](overlapping-circle-blocks-proof-map.md)
+
 ## Finite overlap compression
 
 ```mermaid
@@ -1203,7 +1217,7 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L218) · [Axiom audit](../Lean/MOC.lean#L334)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L218) · [Axiom audit](../Lean/MOC.lean#L335)
 
 The source audit found 713 Lean modules. Starting at the default target
 reaches 588, including the target itself. The other 125 resolve their

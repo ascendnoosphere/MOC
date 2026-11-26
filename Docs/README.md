@@ -45,6 +45,7 @@ The mixer is the unitary change between the two eigenbases.
 - [Conic spectral reductions](conic-spectral-reductions-proof-map.md)
 - [Equal spectral coefficients](equal-spectral-coefficients-proof-map.md)
 - [One free eigenvalue and exterior shifts](free-eigenvalue-and-exterior-shifts-proof-map.md)
+- [Overlapping circle blocks](overlapping-circle-blocks-proof-map.md)
 - [Real-parameter spectra in order four](order-four-real-parameter-spectra-proof-map.md)
 - [Six-dimensional mixer ball](six-dimensional-mixer-ball-proof-map.md)
 - [Six-dimensional rank-two overlap](six-dimensional-rank-two-overlap-proof-map.md)

@@ -366,6 +366,15 @@ Combining the blocks proves the convex-hull inclusion in every order.
 - Let $C$ and $D$ each be a circle or a line. The inclusion holds in
   any order if all $a_i$ lie in $C$ and all $-b_j$ lie in $C\cup D$.
   [Proof](Lean/MOC/TwoCircleCover.lean#L10)
+- Let the coordinate sets $S$ and $T$ cover the basis. Let $A$ have a
+  normal block on $S$ and be diagonal elsewhere. Let $B$ have a normal
+  block on $T$ and be diagonal elsewhere. The inclusion holds in any
+  order under two conditions. One generalized circle contains the
+  spectrum of $A$ on $S$ and the negatives of the entries of $B$ on
+  $S\setminus T$. The other contains the negative spectrum of $B$ on
+  $T$ and the entries of $A$ on $T\setminus S$. A generalized circle
+  can be a circle, a point circle, or a line.
+  [Overlapping circle blocks](Lean/MOC/OverlappingCircleBlocks.lean#L83) · [Proof map](Docs/overlapping-circle-blocks-proof-map.md)
 - Suppose all $a_i$ lie on one circle or line $C$. The inclusion holds
   in any order if at most four entries $-b_j$, counted with multiplicity,
   lie outside $C$. It also holds if the entries outside $C$ take at most
