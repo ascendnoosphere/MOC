@@ -39,10 +39,11 @@ theorem no_positive_deficit_on_anchored_profile_sequence {n : ℕ}
     have hadd := hγ.add (tendsto_const_nhds : Tendsto (fun _ : ℕ => (1 : ℂ)) atTop (𝓝 1))
     have hplus : Tendsto (fun k => ∑ σ, signedWeight U σ * P (φ k) σ) atTop (𝓝 (γ + 1)) :=
       hadd.congr' (Filter.Eventually.of_forall fun k => (hdef (φ k)).symm)
+    have hmax (σ : Equiv.Perm (Fin n)) : (q σ).re ≤ γ.re := by
+      simpa only [q, Complex.sub_re, Complex.ofReal_re] using sub_le_self γ.re (hc σ)
     exact no_positive_deficit_of_finite_profile_limit atTop U hU (fun k => P (φ k)) q
       (Filter.Eventually.of_forall fun k => hactual (φ k)) (tendsto_pi_nhds.mpr ht) γ
-      (fun σ => by simp [q]) (fun σ => by simpa only [q, Complex.sub_re, Complex.ofReal_re]
-        using sub_le_self γ.re (hc σ)) (tendsto_nhds_unique hsum hplus)
+      (fun σ => by simp [q]) hmax (tendsto_nhds_unique hsum hplus)
   · let ε (k : ℕ) := (P k r)⁻¹
     let G (σ : Equiv.Perm (Fin n)) (k : ℕ) := P k r - P k σ
     have hnorm : Tendsto (fun k => ‖P k r‖) atTop atTop := by

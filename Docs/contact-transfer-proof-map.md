@@ -122,9 +122,9 @@ polynomial constraints, rather than the number of tied permutations.
 | Additional restriction on a regular chart | Lean source |
 | --- | --- |
 | At least $2n-2$ contacts. | [Base terminal chart](../Lean/MOC/MatchingContactTransfer.lean#L123) |
-| At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L304) |
+| At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L303) |
 | Constraint rank at least $2n-2$, including the determinant deficit constraint. | [Full constraint rank](../Lean/MOC/MatchingContactRank.lean#L111) |
-| Rank at least $2n-2$ for the old matching differences alone. | [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L328) |
+| Rank at least $2n-2$ for the old matching differences alone. | [Contact increase below the rank bound](../Lean/MOC/DeficitContactTransfer.lean#L256) · [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L327) |
 | Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) |
 | The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) |
 
@@ -141,6 +141,18 @@ For a finite projection of an irreducible complex affine curve, one
 can remove finitely many values from the target line so that the
 remaining projection is a covering map with local holomorphic sections.
 [Projection and sections](../Lean/MOC/FiniteCurvePlaneCover.lean#L205) · [Covering map](../Lean/MOC/FiniteCurvePlaneCover.lean#L267)
+
+On a prime curve through a regular point, fixing the old complex
+differences and the complex determinant difference leaves at least
+one inactive matching gap nonconstant. The sequence lemma uses actual
+nonzero matching products with the anchored product factorization and
+fixed factor-ratio identities. It excludes a signed determinant
+difference of one when the matching gaps tend to nonnegative real
+values. The half-plane lemma excludes a regular section with
+holomorphic gaps, fixed complex gaps at the contacts, strictly positive
+inactive gap projections, and section variable equal to the scaled
+determinant difference.
+[Nonconstant inactive gap](../Lean/MOC/MatchingContactCurve.lean#L28) · [Normalized profile limit](../Lean/MOC/NormalizedContactLimit.lean#L17) · [Half-plane exclusion](../Lean/MOC/HolomorphicContactLimit.lean#L17)
 
 ## Complex stationary score
 

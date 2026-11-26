@@ -41,7 +41,8 @@ theorem no_holomorphic_deficit_halfPlane_section
   have hti : Tendsto t atTop atTop := tendsto_atTop_add_const_right _ _ hxi
   have hi : Tendsto (fun k => ((t k : ℂ))⁻¹) atTop (𝓝 0) := by
     have h := Complex.continuous_ofReal.continuousAt.tendsto.comp (tendsto_inv_atTop_zero.comp hti)
-    simpa only [Function.comp_apply, Complex.ofReal_inv, Complex.ofReal_zero] using h
+    change Tendsto (fun k => Complex.ofReal ((t k)⁻¹)) atTop (𝓝 (Complex.ofReal 0)) at h
+    simpa only [Complex.ofReal_inv, Complex.ofReal_zero] using h
   have hratio : Tendsto (fun k => (x k : ℂ) / (t k : ℂ)) atTop (𝓝 1) := by
     have h := (tendsto_inv_atTop_zero.comp hxi).const_mul R
     rw [mul_zero] at h
@@ -63,7 +64,7 @@ theorem no_holomorphic_deficit_halfPlane_section
       intro hh
       rw [hh, zero_mul] at he
       exact (ht k).ne' he.symm
-    field_simp [hne, (ht k).ne'] <;> nlinarith only [he]
+    rw [eq_div_iff (ht k).ne', ← he, ← mul_assoc, inv_mul_cancel₀ hne, one_mul]
   have hdiff (k : ℕ) (σ : ContactMatching n) :
       P k r - P k σ = chartMatchingGap η r (z (t k)) σ / (t k : ℂ) := by
     dsimp only [P, chartMatchingGap]
@@ -87,6 +88,7 @@ theorem no_holomorphic_deficit_halfPlane_section
       have h := hlim.mul hratio
       rw [mul_one] at h
       refine h.congr' (Filter.Eventually.of_forall fun k => ?_)
+      change _ = P k r - P k σ
       rw [hdiff]
       change f (x k) / (x k : ℂ) * ((x k : ℂ) / (t k : ℂ)) =
         chartMatchingGap η r (z (t k)) σ / (t k : ℂ)
@@ -101,7 +103,8 @@ theorem no_holomorphic_deficit_halfPlane_section
       have h := hi.const_mul v
       rw [mul_zero] at h
       refine h.congr' (Filter.Eventually.of_forall fun k => ?_)
-      rw [hdiff, hv _ (htR k), div_eq_mul_inv] <;> rfl
+      change _ = P k r - P k σ
+      rw [hdiff, hv _ (htR k), div_eq_mul_inv]
   choose c hc hlim using hslope
   have hcoord (k : ℕ) (σ : ContactMatching n) : P k σ =
       anchoredMatchingCoordinate ((η / (t k : ℂ)) * z (t k) (.inl ()))
@@ -113,7 +116,7 @@ theorem no_holomorphic_deficit_halfPlane_section
     exact ⟨a, b, funext fun σ => (hab σ).trans (hcoord k σ).symm⟩
   have hnz (k : ℕ) (σ : ContactMatching n) : P k σ ≠ 0 :=
     mul_ne_zero (div_ne_zero hη (Complex.ofReal_ne_zero.mpr (ht k).ne'))
-      ((eval_matchingChartRegularPolynomial_ne_zero _).mp (hreg _ (htR k))).2.1 σ
+      (((eval_matchingChartRegularPolynomial_ne_zero _).mp (hreg _ (htR k))).2.1 σ)
   have hsum (k : ℕ) : (∑ σ, signedWeight U σ * P k σ) = P k r + 1 := by
     have hv : η * ((∑ σ, signedWeight U σ * matchingChartCoordinate (z (t k)) σ) -
         matchingChartCoordinate (z (t k)) r) = (t k : ℂ) := by

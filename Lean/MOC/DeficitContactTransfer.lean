@@ -290,8 +290,7 @@ theorem exists_new_contact_of_low_old_gap_rank
         rw [map_add, map_add, add_sub_add_comm]
         exact Q.add_mem ha hb
     | smul c a _ ha =>
-        change C c * a - C (eval z (C c * a)) ∈ Q
-        rw [map_mul, eval_C, map_mul, ← mul_sub]
+        rw [MvPolynomial.smul_eq_C_mul, map_mul, eval_C, map_mul, ← mul_sub]
         exact Ideal.mul_mem_left Q _ ha
   refine exists_new_contact_on_fixed_old_gap_curve hn U hU η r z hz hmax hpos Q ?_ hlt f hfi hf
   intro i

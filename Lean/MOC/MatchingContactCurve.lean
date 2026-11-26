@@ -71,7 +71,7 @@ theorem exists_nonscalar_inactive_gap_on_curve
         rw [map_sub, hc, sub_self]
       have h := hvalues (p - C c) hp
       simp only [map_sub, eval_C] at h
-      have hg : eval z p = eval w p := sub_right_cancel h.symm
+      have hg : eval z p = eval w p := sub_left_inj.mp h.symm
       simp only [p, eval_matchingChartGapPolynomial, chartMatchingGap] at hg
       exact mul_left_cancel₀ hη hg
   have hle := vanishingIdeal_anti_mono hsubset
