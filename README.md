@@ -23,6 +23,9 @@ matching products with nonnegative real weights whose sum is one.
 
 The [proof map index](Docs/README.md) lists the general routes and
 restricted results with links to their Lean sources.
+The new reductions for three spectral values, alternating unitary
+cycles, Hermitian–normal pairs, and real orthogonal mixers await
+kernel checking.
 
 The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
 library. Lean proves the unrestricted result through order three.
@@ -346,6 +349,13 @@ one probability law gives all squared minor moduli and hence the
 determinant for every pair of complex spectra.
 [Squared minors](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L240) · [Common law](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331) · [Inclusion](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L357) · [Cycle and weight formula](Docs/all-orders-proof-map.md#normalization-and-least-order-counterexamples)
 
+For arbitrary biases on one alternating cycle, two real orthogonal
+products give a convex combination of the squared-minor tables. The
+source also gives inclusion if the absolute interference is at most
+each independent switch weight. The general real endpoint bound is open.
+[Endpoints](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L299) ·
+[Interference bound](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L137)
+
 ### A common law at small shifted rank sum
 
 Fix the relative unitary and a scalar shift. Fix the allowed nonzero
@@ -411,6 +421,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
   of size one. For a fixed mixer, one law works for all three group
   values and every opposing spectrum.
   [Common law for three values](Docs/three-spectral-values-with-one-singleton-proof-map.md)
+- For three groups of arbitrary size, the subset-interval equations
+  characterize one common law. The all-order inclusion for one
+  three-value spectrum reduces to mixers in which every row meets
+  each spectral group. Both routes have open premises.
+  [Exact weight test](Lean/MOC/ThreeValueIntervalCoupling.lean#L169) ·
+  [Deletion route](Lean/MOC/SpectralSupportDeletion.lean#L219)
 - Let the first list equal a scalar `α` outside a row set `E`. In
   the second list, set aside one entry. Require that each remaining
   entry `b` has `α + b ≠ 0` and that its shifted reciprocal
@@ -532,6 +548,22 @@ Combining the blocks proves the convex-hull inclusion in every order.
 
 ## Other proved reductions
 
+- The real orthogonal inclusion in all orders reduces to one terminal
+  test for each order $n\ge4$. A failure of least order gives a mixer
+  that expands every nonempty row set of size at most $n-2$ by at least
+  two columns. The same mixer has a strict violation with at least
+  $2n-1$ contacts.
+  The terminal comparison remains open.
+  [Real orthogonal reduction](Lean/MOC/RealOrthogonalInduction.lean#L130)
+- If one matrix is Hermitian and the sum is normal, the source proves
+  inclusion by splitting along the imaginary parts of the partner
+  spectrum. The all-order Hermitian–normal inclusion is equivalent to
+  existence of such a sum at some maximum in every support direction.
+  A real partner pivot gives a directional bound with prescribed
+  matching masses under the smaller-order Hermitian–normal premise.
+  [Normal maximizer test](Lean/MOC/HermitianNormalSupportDescent.lean#L102) ·
+  [Prescribed masses](Lean/MOC/HermitianNormalPencil.lean#L168) ·
+  [Proof map](Docs/all-orders-proof-map.md#a-hermitian-matrix-and-a-normal-partner)
 - In orders four and five, fixed parabola and hyperbola tests give
   equivalent forms of the conjecture for that order. In order four,
   a cross-ratio inequality characterizes which lists with distinct

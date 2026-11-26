@@ -83,28 +83,29 @@ private theorem retained_rows_conjugation (U : Matrix (Fin (n + 1)) (Fin (n + 1)
     Matrix.submatrix_mul U (diagonal β) i.succAbove id id Function.bijective_id,
     Matrix.submatrix_id_id]
 
-/-- A rectangular coisometry completes to a unitary with the omitted row at any index. -/
-theorem exists_unitary_retained_rows (Y : Matrix (Fin n) (Fin (n + 1)) ℂ)
-    (hY : Y * Yᴴ = 1) (i : Fin (n + 1)) :
-    ∃ U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ, IsUnitary U ∧
+/-- A real or complex rectangular coisometry completes to a square coisometry
+with the omitted row at any index. -/
+theorem exists_coisometry_retained_rows {𝕜 : Type*} [RCLike 𝕜]
+    (Y : Matrix (Fin n) (Fin (n + 1)) 𝕜) (hY : Y * Yᴴ = 1) (i : Fin (n + 1)) :
+    ∃ U : Matrix (Fin (n + 1)) (Fin (n + 1)) 𝕜, U * Uᴴ = 1 ∧
       U.submatrix i.succAbove id = Y := by
   classical
-  let v (k : Fin n) : EuclideanSpace ℂ (Fin (n + 1)) :=
+  let v (k : Fin n) : EuclideanSpace 𝕜 (Fin (n + 1)) :=
     (WithLp.equiv 2 _).symm (fun j => star (Y k j))
-  have hv : Orthonormal ℂ v := by
+  have hv : Orthonormal 𝕜 v := by
     apply orthonormal_iff_ite.mpr
     intro k l
-    have h := congrArg (fun M : Matrix (Fin n) (Fin n) ℂ => M k l) hY
+    have h := congrArg (fun M : Matrix (Fin n) (Fin n) 𝕜 => M k l) hY
     dsimp only [v]
     rw [EuclideanSpace.inner_piLp_equiv_symm]
     simpa only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply, dotProduct,
       Pi.star_apply, star_star, mul_comm] using h
-  let f : Fin (n + 1) → EuclideanSpace ℂ (Fin (n + 1)) := Fin.insertNth i 0 v
+  let f : Fin (n + 1) → EuclideanSpace 𝕜 (Fin (n + 1)) := Fin.insertNth i 0 v
   have hf_retained (k : Fin n) : f (i.succAbove k) = v k := by
     simp only [f, Fin.insertNth_apply_succAbove]
   let e := Equiv.ofInjective i.succAbove Fin.succAbove_right_injective
   let s := Set.range i.succAbove
-  have hf : Orthonormal ℂ (s.restrict f) := by
+  have hf : Orthonormal 𝕜 (s.restrict f) := by
     have he : s.restrict f = v ∘ e.symm := by
       funext k
       have hk := congrArg Subtype.val (e.apply_symm_apply k)
@@ -114,21 +115,30 @@ theorem exists_unitary_retained_rows (Y : Matrix (Fin n) (Fin (n + 1)) ℂ)
     rw [he]
     exact hv.comp _ e.symm.injective
   obtain ⟨B, hB⟩ := Orthonormal.exists_orthonormalBasis_extension_of_card_eq
-    (by simp : Module.finrank ℂ (EuclideanSpace ℂ (Fin (n + 1))) = Fintype.card (Fin (n + 1))) hf
-  let U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ := Matrix.of fun k j => star (B k j)
+    (by simp : Module.finrank 𝕜 (EuclideanSpace 𝕜 (Fin (n + 1))) = Fintype.card (Fin (n + 1))) hf
+  let U : Matrix (Fin (n + 1)) (Fin (n + 1)) 𝕜 := Matrix.of fun k j => star (B k j)
   have hU : U * Uᴴ = 1 := by
     ext k l : 1
     have h := orthonormal_iff_ite.mp B.orthonormal k l
     rw [EuclideanSpace.inner_eq_star_dotProduct] at h
-    change (∑ j, B l j * star (B k j)) = if k = l then (1 : ℂ) else 0 at h
+    change (∑ j, B l j * star (B k j)) = if k = l then (1 : 𝕜) else 0 at h
     simpa only [U, Matrix.of_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, star_star,
       Matrix.one_apply, mul_comm] using h
-  refine ⟨U, ⟨hU, Matrix.mul_eq_one_comm.mp hU⟩, ?_⟩
+  refine ⟨U, hU, ?_⟩
   ext k j : 1
   change star (B (i.succAbove k) j) = Y k j
   rw [hB _ ⟨k, rfl⟩, hf_retained]
   change star (star (Y k j)) = _
   exact star_star _
+
+/-- A complex rectangular coisometry completes to a unitary with the omitted
+row at any index. -/
+theorem exists_unitary_retained_rows (Y : Matrix (Fin n) (Fin (n + 1)) ℂ)
+    (hY : Y * Yᴴ = 1) (i : Fin (n + 1)) :
+    ∃ U : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ, IsUnitary U ∧
+      U.submatrix i.succAbove id = Y := by
+  obtain ⟨U, hU, hrows⟩ := exists_coisometry_retained_rows Y hY i
+  exact ⟨U, ⟨hU, Matrix.mul_eq_one_comm.mp hU⟩, hrows⟩
 
 private theorem diagonal_constant_eq_smul_one {ι : Type*} [DecidableEq ι] (t : ℂ) :
     diagonal (fun _ : ι => t) = t • (1 : Matrix ι ι ℂ) := by

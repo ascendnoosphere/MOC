@@ -445,6 +445,24 @@ $831869471/815730721>1$. This gives a second obstruction with four
 biased gates.
 [Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L30) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L76) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L130)
 
+For any gate biases, write $T$ for the real interference scalar in the
+squared-minor formula. The signed mass of each switch choice $x$ is
+$P(x)+T(-1)^{N(x)}$. Summing these masses against the matching products
+gives the determinant. In particular, if $|T|\le P(x)$ for every $x$,
+the masses are nonnegative and give the inclusion.
+[Signed minor law](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L59) ·
+[Determinant formula](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L118) ·
+[Inclusion under the bound](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L137)
+
+Fix the squared moduli of the entries of all gates. Two products of
+real orthogonal gates attain opposite extreme values of $T$. The same
+convex combination gives every squared minor of the complex mixer.
+Thus the real orthogonal inclusion in the cycle's dimension suffices.
+The support comparison for arbitrary biases at the real endpoints
+remains open. These source proofs await kernel checking.
+[Orthogonal endpoints](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L299) ·
+[Transfer of inclusion](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L340)
+
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
 $\det(U-\mathrm{diag}(x)U\mathrm{diag}(y))/\det U$. Its vertices are
@@ -483,6 +501,23 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Regular contact covers AND the terminal chart bound | If | [Statement and proof](../Lean/MOC/HighContact.lean#L276) |
 | All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L315) |
 
+## Real orthogonal induction
+
+Let $U$ be a real orthogonal mixer of order $n$. For a row set $R$,
+let $N(R)$ consist of the columns with a nonzero entry in a row in $R$.
+If the real orthogonal inclusion fails, choose a failure of least
+order. Real sparse deletion and real factorization across a zero
+rectangle show that $|N(R)|\ge |R|+2$ for every nonempty $R$ with
+$|R|+2\le n$. Change the spectra while keeping $U$ and a strict
+separating direction. Contact transfer gives at least $2n-1$ matching
+permutations on the supporting line. Excluding failures with both
+conditions, in every order $n\ge4$, is equivalent to the real
+orthogonal inclusion in all orders. The terminal bound remains open.
+The source proofs await kernel checking.
+[Real zero-rectangle factorization](../Lean/MOC/SinglePortZeroCorner.lean#L131) ·
+[Support expansion](../Lean/MOC/RealOrthogonalInduction.lean#L109) ·
+[Terminal equivalence](../Lean/MOC/RealOrthogonalInduction.lean#L130)
+
 ## Induction through normal maximizers
 
 ```mermaid
@@ -508,6 +543,24 @@ global maximum with normal sum. In the other direction, the theorem
 uses normality at a maximum and the smaller-order results to prove
 the hull bound. The all-order route starts at order four.
 [Conditional equivalence](../Lean/MOC/NormalSupportMaximum.lean#L270) · [All-order equivalence](../Lean/MOC/NormalSupportMaximum.lean#L314)
+
+### A Hermitian matrix and a normal partner
+
+Work in the eigenbasis of the normal partner. If the sum of the
+partner and the Hermitian matrix is normal, the Hermitian matrix has
+zero entries between partner coordinates with different imaginary
+parts. Each remaining block has its two spectra on parallel lines.
+The block laws give inclusion in any order. Thus the full Hermitian–normal
+case is equivalent to existence of a normal sum at some global maximum
+in every support direction. A stationary equation relates the scaled
+inverse of the sum to the partner eigenvalues, including partners with
+mixed imaginary signs. Existence of the required maximum remains open.
+The source proofs await kernel checking.
+[Normal-sum criterion](../Lean/MOC/HermitianNormalSupportDescent.lean#L16) ·
+[Normal-sum inclusion](../Lean/MOC/HermitianNormalSupportDescent.lean#L67) ·
+[Exact equivalence](../Lean/MOC/HermitianNormalSupportDescent.lean#L102) ·
+[Stationary equation](../Lean/MOC/HermitianNormalSupportDescent.lean#L150) ·
+[Coefficient route](free-eigenvalue-and-exterior-shifts-proof-map.md#one-law-for-a-free-eigenvalue)
 
 ### Stationary support and spectral exchange
 
@@ -1296,8 +1349,8 @@ complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
 [Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L1) · [Axiom audit](../Lean/MOC.lean#L337)
 
-The source audit found 713 Lean modules. Starting at the default target
-reaches 588, including the target itself. The other 125 resolve their
+The source audit found 945 Lean modules. Starting at the default target
+reaches 823, including the target itself. The other 122 resolve their
 local imports as separate modules. The import graph has no cycles.
 A previous build reported failures in the Gaussian and Haar measure module.
 The source now qualifies the closed-ball and product-integral lemmas.

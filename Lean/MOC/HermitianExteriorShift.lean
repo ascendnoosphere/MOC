@@ -883,7 +883,9 @@ theorem exterior_support_maximum_has_affine_blocks [Nonempty ι]
   obtain ⟨f, hgap, hline⟩ := exterior_projected_affine_partition b u hu g harea
   exact ⟨f, hblocks f hgap, hline⟩
 
-private theorem exterior_holds_of_affine_blocks (a : ι → ℝ) (β : ι → ℂ)
+/-- A Hermitian matrix and a diagonal partner satisfy the inclusion if each
+Hermitian block sees partner entries on a single affine line. -/
+theorem holds_of_affine_partner_blocks (a : ι → ℝ) (β : ι → ℂ)
     (V : Matrix ι ι ℂ) (hV : IsUnitary V) (f : ι → ι)
     (hblock : exteriorOffBlock f (V * diagonal (fun i => (a i : ℂ)) * Vᴴ) = 0)
     (hline : ∀ i, ∃ s q : ℂ, ∀ j, f j = f i → ∃ t : ℝ, β j = s + (t : ℂ) * q) :
@@ -1032,7 +1034,7 @@ theorem holds_of_exterior_scalar_shift [Nonempty ι] (a : ι → ℝ) (b : ι �
     refine ⟨z + s, q, fun j hj => ?_⟩
     obtain ⟨t, ht⟩ := hsq j hj
     exact ⟨t, by simp only [β, ht, add_assoc]⟩
-  have hhold := exterior_holds_of_affine_blocks a β V hV f hblock hlineβ
+  have hhold := holds_of_affine_partner_blocks a β V hV f hblock hlineβ
   obtain ⟨σ, hσ⟩ := (holds_iff_directional β A V).mp hhold η
   exact ⟨σ, (hmax Uᴴ hU').trans hσ⟩
 

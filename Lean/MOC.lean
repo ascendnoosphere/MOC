@@ -39,6 +39,7 @@ import MOC.BalancedCyclicGateLaw
 import MOC.SingleBiasedCyclicGateLaw
 import MOC.TwoBiasedCyclicGateLaw
 import MOC.BiasedCyclicGateObstruction
+import MOC.TwoLayerOrthogonalEndpoints
 import MOC.ZhengT85Lift
 import MOC.ZhengT85SecantObstruction
 import MOC.ContactDifferential
@@ -165,6 +166,8 @@ import MOC.GeneralContactReduction
 import MOC.Geometry
 import MOC.HermitianByNormalFour
 import MOC.HermitianByNormalGeneral
+import MOC.HermitianNormalPencil
+import MOC.HermitianNormalSupportDescent
 import MOC.HermitianSpectralLine
 import MOC.HermitianStationarySwap
 import MOC.HomotheticMinorFacet
@@ -176,6 +179,7 @@ import MOC.MarkedPadding
 import MOC.ModulusOrderTransfer
 import MOC.DeterminantModulusBound
 import MOC.RealOrthogonalModulus
+import MOC.RealOrthogonalInduction
 import MOC.DuplicateAnchorObstruction
 import MOC.ScalarAnchorObstruction
 import MOC.MatchingProfileClosed
@@ -254,6 +258,8 @@ import MOC.StationaryDenseCross
 import MOC.SubsetAssignmentSupport
 import MOC.SubsetMarkerTest
 import MOC.ThreeValues
+import MOC.ThreeValueIntervalCoupling
+import MOC.SpectralSupportDeletion
 import MOC.Transfer
 import MOC.TrianglePairContacts
 import MOC.TriangleRectangleContact

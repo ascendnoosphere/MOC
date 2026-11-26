@@ -16,34 +16,48 @@ private def finWithPort (l : ℕ) : Fin (l + 1) ≃ Fin l ⊕ Unit where
   left_inv := by intro i; cases i using Fin.cases <;> rfl
   right_inv := by rintro (i | ⟨⟩) <;> rfl
 
-/-- Complete the retained columns on the left block. After removing this
-factor, the resulting unitary fixes those columns and their rows. -/
-theorem exists_singlePort_factors_of_zero_corner {l r : ℕ}
+private def singlePortRetainedRows {l r : ℕ}
+    (U : Matrix ((Fin l ⊕ Unit) ⊕ Fin r) ((Fin l ⊕ Unit) ⊕ Fin r) ℂ) :
+    Matrix (Fin l) (Fin (l + 1)) ℂ :=
+  (U.submatrix (fun i => .inl (finWithPort l i)) (fun j => .inl (.inl j)))ᴴ
+
+private theorem singlePortRetainedRows_coisometry {l r : ℕ}
     {U : Matrix ((Fin l ⊕ Unit) ⊕ Fin r) ((Fin l ⊕ Unit) ⊕ Fin r) ℂ}
     (hU : IsUnitary U) (hz : ∀ i j, U (.inr i) (.inl (.inl j)) = 0) :
-    ∃ (V : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) ℂ)
-      (W : Matrix (Unit ⊕ Fin r) (Unit ⊕ Fin r) ℂ),
-      IsUnitary V ∧ IsUnitary W ∧ U = singlePortLeft V * singlePortRight W := by
+    singlePortRetainedRows U * (singlePortRetainedRows U)ᴴ = 1 := by
   classical
   let ι := (Fin l ⊕ Unit) ⊕ Fin r
   let e := finWithPort l
-  let Y : Matrix (Fin l) (Fin (l + 1)) ℂ :=
-    (U.submatrix (fun i => .inl (e i)) (fun j => .inl (.inl j)))ᴴ
-  have hY : Y * Yᴴ = 1 := by
-    ext j k : 1
-    let f (i : Fin l ⊕ Unit) := star (U (.inl i) (.inl (.inl j))) *
-      U (.inl i) (.inl (.inl k))
-    have h := congrArg (fun M : Matrix ι ι ℂ => M (.inl (.inl j)) (.inl (.inl k))) hU.2
-    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply] at h
-    rw [Fintype.sum_sum_type] at h
-    simp only [hz, mul_zero, Finset.sum_const_zero, add_zero] at h
-    simp only [Matrix.mul_apply, Y, Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_apply,
-      Matrix.submatrix_apply]
-    change (∑ i, f (e i)) = _
-    rw [Equiv.sum_comp e f]
-    simpa only [Matrix.one_apply, Sum.inl.injEq] using h
-  obtain ⟨X, hX, hXY⟩ := exists_unitary_retained_rows Y hY 0
-  let V : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) ℂ := Xᴴ.submatrix e.symm e.symm
+  ext j k : 1
+  let f (i : Fin l ⊕ Unit) := star (U (.inl i) (.inl (.inl j))) *
+    U (.inl i) (.inl (.inl k))
+  have h := congrArg (fun M : Matrix ι ι ℂ => M (.inl (.inl j)) (.inl (.inl k))) hU.2
+  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply] at h
+  rw [Fintype.sum_sum_type] at h
+  simp only [hz, mul_zero, Finset.sum_const_zero, add_zero] at h
+  simp only [Matrix.mul_apply, singlePortRetainedRows, Matrix.conjTranspose_conjTranspose,
+    Matrix.conjTranspose_apply, Matrix.submatrix_apply]
+  change (∑ i, f (e i)) = _
+  rw [Equiv.sum_comp e f]
+  simpa only [Matrix.one_apply, Sum.inl.injEq] using h
+
+private def singlePortCompletedLeft {l : ℕ} (X : Matrix (Fin (l + 1)) (Fin (l + 1)) ℂ) :
+    Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) ℂ :=
+  Xᴴ.submatrix (finWithPort l).symm (finWithPort l).symm
+
+private theorem singlePort_factors_of_completed_rows {l r : ℕ}
+    {U : Matrix ((Fin l ⊕ Unit) ⊕ Fin r) ((Fin l ⊕ Unit) ⊕ Fin r) ℂ}
+    (hU : IsUnitary U) (hz : ∀ i j, U (.inr i) (.inl (.inl j)) = 0)
+    {X : Matrix (Fin (l + 1)) (Fin (l + 1)) ℂ} (hX : IsUnitary X)
+    (hXY : X.submatrix (0 : Fin (l + 1)).succAbove id = singlePortRetainedRows U) :
+    let V := singlePortCompletedLeft X
+    ∃ W : Matrix (Unit ⊕ Fin r) (Unit ⊕ Fin r) ℂ,
+      IsUnitary V ∧ IsUnitary W ∧ U = singlePortLeft V * singlePortRight W ∧
+        singlePortRight W = (singlePortLeft V)ᴴ * U := by
+  classical
+  let ι := (Fin l ⊕ Unit) ⊕ Fin r
+  let e := finWithPort l
+  intro V
   have hV : IsUnitary V := unitary_reindex e.symm e.symm
     (show IsUnitary Xᴴ from ⟨by simpa using hX.2, by simpa using hX.1⟩)
   let L : Matrix ι ι ℂ := fromBlocks V 0 0 1
@@ -89,9 +103,94 @@ theorem exists_singlePort_factors_of_zero_corner {l r : ℕ}
     change R = (fromBlocks (1 : Matrix (Fin l) (Fin l) ℂ) 0 0 W).submatrix s s
     rw [← hblocks, Matrix.submatrix_submatrix]
     simp
-  refine ⟨V, W, hV, hW, ?_⟩
+  refine ⟨W, hV, hW, ?_, hR'.symm⟩
   change U = L * singlePortRight W
   rw [← hR', show R = Lᴴ * U from rfl, ← Matrix.mul_assoc, hL.1, Matrix.one_mul]
+
+/-- Complete the retained columns on the left block. After removing this
+factor, the resulting unitary fixes those columns and their rows. -/
+theorem exists_singlePort_factors_of_zero_corner {l r : ℕ}
+    {U : Matrix ((Fin l ⊕ Unit) ⊕ Fin r) ((Fin l ⊕ Unit) ⊕ Fin r) ℂ}
+    (hU : IsUnitary U) (hz : ∀ i j, U (.inr i) (.inl (.inl j)) = 0) :
+    ∃ (V : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) ℂ)
+      (W : Matrix (Unit ⊕ Fin r) (Unit ⊕ Fin r) ℂ),
+      IsUnitary V ∧ IsUnitary W ∧ U = singlePortLeft V * singlePortRight W := by
+  obtain ⟨X, hX, hXY⟩ :=
+    exists_unitary_retained_rows _ (singlePortRetainedRows_coisometry hU hz) 0
+  obtain ⟨W, hV, hW, hprod, _⟩ := singlePort_factors_of_completed_rows hU hz hX hXY
+  exact ⟨singlePortCompletedLeft X, W, hV, hW, hprod⟩
+
+private theorem ofReal_map_conjTranspose {m n : Type*} (A : Matrix m n ℝ) :
+    Aᴴ.map Complex.ofRealHom = (A.map Complex.ofRealHom)ᴴ := by
+  ext i j
+  simp only [Matrix.map_apply, Matrix.conjTranspose_apply, star_trivial,
+    Complex.ofRealHom_eq_coe, Complex.star_def, Complex.conj_ofReal]
+
+/-- A real unitary with the specified zero corner factors through two real
+unitary blocks that meet in one coordinate. -/
+theorem exists_real_singlePort_factors_of_zero_corner {l r : ℕ}
+    {U : Matrix ((Fin l ⊕ Unit) ⊕ Fin r) ((Fin l ⊕ Unit) ⊕ Fin r) ℂ}
+    (hU : IsUnitary U) (hreal : ∀ i j, (U i j).im = 0)
+    (hz : ∀ i j, U (.inr i) (.inl (.inl j)) = 0) :
+    ∃ (V : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) ℂ)
+      (W : Matrix (Unit ⊕ Fin r) (Unit ⊕ Fin r) ℂ),
+      IsUnitary V ∧ IsUnitary W ∧ U = singlePortLeft V * singlePortRight W ∧
+        (∀ i j, (V i j).im = 0) ∧ ∀ i j, (W i j).im = 0 := by
+  let Y := singlePortRetainedRows U
+  let Yreal := Y.map Complex.re
+  have hY : Y * Yᴴ = 1 := singlePortRetainedRows_coisometry hU hz
+  have hYim (i : Fin l) (j : Fin (l + 1)) : (Y i j).im = 0 := by
+    change (star (U (.inl (finWithPort l j)) (.inl (.inl i)))).im = 0
+    rw [Complex.star_def, Complex.conj_im, hreal, neg_zero]
+  have hYcast : Yreal.map Complex.ofRealHom = Y := by
+    ext i j
+    change ((Y i j).re : ℂ) = Y i j
+    exact Complex.ext rfl (hYim i j).symm
+  have hYreal : Yreal * Yrealᴴ = 1 := by
+    have hc : (Yreal * Yrealᴴ).map Complex.ofRealHom =
+        (1 : Matrix (Fin l) (Fin l) ℝ).map Complex.ofRealHom := by
+      rw [Matrix.map_mul, ofReal_map_conjTranspose, hYcast, hY,
+        Matrix.map_one _ (map_zero _) (map_one _)]
+    ext i j
+    exact Complex.ofReal_injective (congrArg (fun A : Matrix (Fin l) (Fin l) ℂ => A i j) hc)
+  obtain ⟨Z, hZ, hZrows⟩ := exists_coisometry_retained_rows Yreal hYreal 0
+  let X := Z.map Complex.ofRealHom
+  have hXprod : X * Xᴴ = 1 := by
+    dsimp only [X]
+    rw [← ofReal_map_conjTranspose, ← Matrix.map_mul, hZ, Matrix.map_one _ (map_zero _) (map_one _)]
+  have hX : IsUnitary X := ⟨hXprod, Matrix.mul_eq_one_comm.mp hXprod⟩
+  have hXY : X.submatrix (0 : Fin (l + 1)).succAbove id = singlePortRetainedRows U := by
+    rw [show singlePortRetainedRows U = Yreal.map Complex.ofRealHom from hYcast.symm]
+    ext i j
+    exact congrArg (fun A : Matrix (Fin l) (Fin (l + 1)) ℝ => (A i j : ℂ)) hZrows
+  obtain ⟨W, hV, hW, hprod, hright⟩ := singlePort_factors_of_completed_rows hU hz hX hXY
+  let V := singlePortCompletedLeft X
+  have hVreal (i j : Fin l ⊕ Unit) : (V i j).im = 0 := by
+    change (star (Complex.ofRealHom (Z ((finWithPort l).symm j) ((finWithPort l).symm i)))).im = 0
+    rw [Complex.star_def, Complex.conj_im, Complex.ofRealHom_eq_coe, Complex.ofReal_im, neg_zero]
+  let L := singlePortLeft (R := Fin r) V
+  have hLreal (i j : (Fin l ⊕ Unit) ⊕ Fin r) : (L i j).im = 0 := by
+    rcases i with i | i <;> rcases j with j | j
+    · exact hVreal i j
+    · exact Complex.zero_im
+    · exact Complex.zero_im
+    · by_cases hij : i = j
+      · simpa only [L, singlePortLeft, Matrix.fromBlocks_apply₂₂, Matrix.one_apply, if_pos hij]
+          using Complex.one_im
+      · simpa only [L, singlePortLeft, Matrix.fromBlocks_apply₂₂, Matrix.one_apply, if_neg hij]
+          using Complex.zero_im
+  refine ⟨V, W, hV, hW, hprod, hVreal, ?_⟩
+  intro i j
+  let e := Equiv.sumAssoc (Fin l) Unit (Fin r)
+  have he : singlePortRight (L := Fin l) W (e.symm (.inr i)) (e.symm (.inr j)) = W i j := by
+    change (fromBlocks (1 : Matrix (Fin l) (Fin l) ℂ) 0 0 W)
+      (e (e.symm (.inr i))) (e (e.symm (.inr j))) = _
+    simp only [Equiv.apply_symm_apply, Matrix.fromBlocks_apply₂₂]
+  rw [← he, hright]
+  change ((Lᴴ * U) (e.symm (.inr i)) (e.symm (.inr j))).im = 0
+  simp only [Matrix.mul_apply, Complex.im_sum, Matrix.conjTranspose_apply, Complex.mul_im,
+    Complex.star_def, Complex.conj_im, hLreal, hreal, neg_zero, mul_zero, zero_mul, add_zero,
+    Finset.sum_const_zero]
 
 /-- Independent row and column relabelings put a rectangle whose side lengths
 sum to one less than the order into the designated corner. -/

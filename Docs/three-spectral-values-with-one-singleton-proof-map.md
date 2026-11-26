@@ -53,6 +53,35 @@ two values gives equality everywhere. The same weights give equality
 at $c=d$ by continuity.
 [Two-value interpolation](../Lean/MOC/CommonWeights.lean#L72)
 
+## Three groups of arbitrary size
+
+Let $J\subseteq K$ be sets of column labels. Give $J$, $K\setminus J$,
+and the complement of $K$ three distinct values. Fix the unitary mixer
+$U$. For any fixed real weights on permutations, the determinant
+identity for every opposing spectrum is equivalent to the following
+condition for every row set $I$. The total weight of permutations
+$\sigma$ with $\sigma(J)\subseteq I\subseteq\sigma(K)$ equals
+
+$$
+\sum_{J\subseteq S\subseteq K,\ |S|=|I|}|\det U[I,S]|^2.
+$$
+
+Here $U[I,S]$ is the submatrix on rows $I$ and columns $S$. Nonnegative
+weights with sum one give inclusion for this spectral partition.
+Existence of such weights for every mixer remains open. The source
+proofs await kernel checking.
+[Exact weight test](../Lean/MOC/ThreeValueIntervalCoupling.lean#L169) ·
+[Inclusion from positive weights](../Lean/MOC/ThreeValueIntervalCoupling.lean#L238)
+
+A separate reduction preserves the three-value restriction. If a row
+has nonzero entries in columns from at most two spectral groups,
+change bases within those groups so that at most two entries in that
+row are nonzero. The square minors in the deletion formula use partner
+values from the original list. Induction leaves the case in which
+every row has a nonzero entry in each of the three groups.
+[Deletion](../Lean/MOC/SpectralSupportDeletion.lean#L101) ·
+[All-order equivalence](../Lean/MOC/SpectralSupportDeletion.lean#L219)
+
 ## Shifted reciprocals in a segment
 
 Let $a$ and $b$ be two complex eigenvalue lists of the same finite
