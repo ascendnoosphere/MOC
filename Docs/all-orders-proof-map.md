@@ -292,6 +292,15 @@ One convex law works for this one free entry. Each term from that law
 then uses the inclusion for the right block.
 [Free entry](../Lean/MOC/SpectralMinorDecomposition.lean#L139) · [Composition theorem](../Lean/MOC/SinglePortComposition.lean#L132)
 
+Take a finite sequence of unitary gates whose blocks contain one fixed
+coordinate and are pairwise disjoint outside it. Extend each gate by the
+identity outside its block. If each gate satisfies the inclusion for
+every pair of local spectra, their ordered product satisfies it for
+every pair of spectra on the union of the blocks. In the induction,
+the first block and the union of the remaining blocks share only the
+fixed coordinate.
+[Factor matrices](../Lean/MOC/StarPortComposition.lean#L71) · [Ordered composition](../Lean/MOC/StarPortComposition.lean#L80)
+
 Take a finite forest on the coordinate labels. On distinct edges, apply
 two-by-two unitary gates of determinant one in any order. Each gate
 mixes only the two coordinates of its edge. Write its first row on

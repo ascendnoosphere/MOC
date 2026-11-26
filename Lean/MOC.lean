@@ -318,6 +318,7 @@ import MOC.FourCanonicalZeroHeight
 import MOC.FourMixedRaySupportBound
 import MOC.PermutationPathComposition
 import MOC.SinglePortHallExpansion
+import MOC.StarPortComposition
 
 open Lean Elab Command in
 run_cmd do

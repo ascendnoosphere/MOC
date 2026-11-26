@@ -286,6 +286,14 @@ two Householder reflections on such blocks in any order, by
 [Drury's theorem](https://doi.org/10.1016/S0024-3795(99)00173-1).
 [Composition](Lean/MOC/SinglePortComposition.lean#L132) · [Reflections](Lean/MOC/SinglePortComposition.lean#L160)
 
+The composition extends to any finite sequence of unitary gates on
+blocks that share one fixed coordinate and are pairwise disjoint away
+from it. If each gate satisfies the inclusion for all spectra on its
+block, their ordered product satisfies it for all spectra. Each gate
+can be a rank-one unitary phase, including a Householder reflection,
+or any unitary matrix of order at most three.
+[Ordered composition](Lean/MOC/StarPortComposition.lean#L80) · [Rank-one phases](Lean/MOC/StarPortComposition.lean#L35) · [Small blocks](Lean/MOC/StarPortComposition.lean#L42)
+
 In any order, take a forest whose vertices are the coordinate labels.
 For each of any number of distinct edges, choose a determinant-one
 unitary matrix on its two endpoints. Extend it by the identity on the
