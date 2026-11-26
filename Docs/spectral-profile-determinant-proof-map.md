@@ -93,11 +93,13 @@ matrices, one for each ordinary ray. It represents 32 times the
 quadratic form in the tetrahedral coordinates. A gap from actual
 spectra gives a singular real pencil $X$ and admits an imaginary pencil
 $Y$ in the same span with $\mathrm{rank}_{\mathbb C}(X+iY)\le4$.
+The selected indicator columns express every matching evaluation as a
+linear combination of ordinary rays.
 If $X$ has rank eight, $Y$ kills its kernel. On an invertible
 eight-dimensional principal block the corresponding matrices satisfy
 $YX^{-1}Y=-X$. All five-by-five lifted minors vanish at every rank.
 These are necessary spectral conditions.
-[Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight criterion](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor criterion](../Lean/MOC/FourInversePencilRankLift.lean#L117)
+[Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Ordinary span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight criterion](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor criterion](../Lean/MOC/FourInversePencilRankLift.lean#L117)
 
 Write the compressed imaginary part as $Y=\sum_i x_i B_i$, where
 the $B_i$ are real matrices and the $x_i$ are real coefficients.

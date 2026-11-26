@@ -115,7 +115,7 @@ normalized trace pairing on real matrices. These indicators span
 $V$, so the corrected moment on the columns of $J$ is also positive
 semidefinite. This supplies the orthogonal premise of the unitary
 evaluation theorem.
-[Correction formula](../Lean/MOC/FourMatchingAlternatingCorrection.lean#L102) · [Indicator Gram matrix](../Lean/MOC/FourOrthogonalCorrectedMoment.lean#L154) · [Indicator span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L47) · [Corrected moment on the matching jet](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12)
+[Correction formula](../Lean/MOC/FourMatchingAlternatingCorrection.lean#L102) · [Indicator Gram matrix](../Lean/MOC/FourOrthogonalCorrectedMoment.lean#L154) · [Indicator span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L55) · [Corrected moment on the matching jet](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12)
 
 For every complex unitary mixer of order four, the signed determinant
 weights give a nonnegative value to each cost in $V$ that is a sum of

@@ -1,4 +1,5 @@
 import MOC.FourSubsetIndicatorCoordinates
+import MOC.FourSupportCostProfiles
 import MOC.RealMatchingSquares
 
 /-! The selected indicator columns span the order-four matching space. -/
@@ -31,6 +32,13 @@ private noncomputable def evaluationMap : (Fin 14 → ℝ) →ₗ[ℝ] (Fin 24 �
     funext p
     fin_cases p <;> simp [fourMatchingEvaluation, smul_eq_mul] <;> ring
 
+private theorem indicatorBasis_sum_columns (v : Fin 14 → ℝ) :
+    fourIndicatorBasis.mulVecLin v = ∑ k, v k • (fun p => fourIndicatorBasis p k) := by
+  funext p
+  simp only [Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct, Finset.sum_apply,
+    Pi.smul_apply, smul_eq_mul]
+  exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
+
 /-- The selected indicator columns span every matching evaluation. -/
 theorem fourMatchingEvaluation_mem_indicatorRange (m : Fin 14 → ℝ) :
     fourMatchingEvaluation m ∈ LinearMap.range fourIndicatorBasis.mulVecLin := by
@@ -48,17 +56,50 @@ theorem fourIndicatorBasis_range : LinearMap.range fourIndicatorBasis.mulVecLin 
     realMatchingFunctionSpace := by
   apply le_antisymm
   · rintro _ ⟨v, rfl⟩
-    have he : fourIndicatorBasis.mulVecLin v =
-        ∑ k, v k • (fun p => fourIndicatorBasis p k) := by
-      funext p
-      simp only [Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct, Finset.sum_apply,
-        Pi.smul_apply, smul_eq_mul]
-      exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
-    rw [he]
+    rw [indicatorBasis_sum_columns]
     exact realMatchingFunctionSpace.sum_mem fun k _ =>
       realMatchingFunctionSpace.smul_mem _ (realMatchingIndicator_mem _ _)
   · rintro _ ⟨m, rfl⟩
     exact fourMatchingEvaluation_mem_indicatorRange m
+
+private def indicatorOrdinaryIndex : Fin 14 → Fin 34 :=
+  ![0, 0, 1, 2, 4, 5, 6, 8, 9, 10, 16, 17, 22, 23]
+
+private abbrev singletonRowIndex (k : Fin 4) : Fin 34 := k.castLE (by decide)
+
+set_option maxRecDepth 12000 in
+set_option maxHeartbeats 12000000 in
+private theorem indicatorOrdinaryIndex_eq : ∀ (j : Fin 14) (p : Fin 24),
+    fourIndicatorInt j p = if j = 0 then
+      ∑ k : Fin 4, ordinaryCostRayInt (singletonRowIndex k) p
+    else ordinaryCostRayInt (indicatorOrdinaryIndex j) p := by
+  decide +kernel
+
+/-- Every matching evaluation belongs to the real span of the ordinary
+subset-image indicators. -/
+theorem fourMatchingEvaluation_mem_ordinarySpan (m : Fin 14 → ℝ) :
+    fourMatchingEvaluation m ∈ Submodule.span ℝ (Set.range ordinaryCostRay) := by
+  let W := Submodule.span ℝ (Set.range ordinaryCostRay)
+  obtain ⟨v, hv⟩ := fourMatchingEvaluation_mem_indicatorRange m
+  rw [← hv, indicatorBasis_sum_columns]
+  apply W.sum_mem
+  intro j _
+  apply W.smul_mem
+  by_cases hj : j = 0
+  · have he : (fun p => fourIndicatorBasis p j) = ∑ k : Fin 4,
+        ordinaryCostRay (singletonRowIndex k) := by
+      funext p
+      have h := congrArg (Int.cast : ℤ → ℝ) (indicatorOrdinaryIndex_eq j p)
+      simpa only [if_pos hj, Int.cast_sum, fourIndicatorBasis, ordinaryCostRay,
+        Finset.sum_apply] using h
+    rw [he]
+    exact W.sum_mem fun k _ => Submodule.subset_span ⟨singletonRowIndex k, rfl⟩
+  · have he : (fun p => fourIndicatorBasis p j) = ordinaryCostRay (indicatorOrdinaryIndex j) := by
+      funext p
+      have h := congrArg (Int.cast : ℤ → ℝ) (indicatorOrdinaryIndex_eq j p)
+      simpa only [if_neg hj, fourIndicatorBasis, ordinaryCostRay] using h
+    rw [he]
+    exact Submodule.subset_span ⟨indicatorOrdinaryIndex j, rfl⟩
 
 /-- A positive moment for the selected indicators gives a positive matching jet moment. -/
 theorem realMatchingMoment_posSemidef_of_indicator_basis (c : Fin 24 → ℝ)
