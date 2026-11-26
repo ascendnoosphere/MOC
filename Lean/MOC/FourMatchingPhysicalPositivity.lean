@@ -1,11 +1,10 @@
 import MOC.FourMinorTransport
 import MOC.FourMixedRayCancellation
-import MOC.FourSupportConeClassification
+import MOC.FourOrthogonalMatchingMomentTransport
 import MOC.RealMatchingSquares
 
 /-! Alternating correction of the order-four matching moment and transport
-from orthogonal to unitary mixers. The Clifford decomposition remains an
-explicit hypothesis. -/
+from orthogonal to unitary mixers. -/
 
 open BigOperators Matrix
 
@@ -50,7 +49,8 @@ private theorem realMatchingMoment_sign :
     simp [hleft, ite_mul, Finset.sum_ite_eq']
   have hpair := realMatchingGram_alternating_pairing T
   simp only [hgram, hcorner] at hpair
-  change realMatchingMoment matchingSign i j = (E * matchingCornerKernel * Eᵀ) i j
+  change realMatchingMoment matchingSign i j =
+    (E * matchingCornerKernel (R := ℝ) * Eᵀ : Matrix MatchingJetIndex MatchingJetIndex ℝ) i j
   rw [realMatchingMoment_apply_sum, Matrix.mul_assoc, Matrix.mul_apply]
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Finset.mul_sum]
   calc
@@ -110,6 +110,42 @@ theorem realMatchingMoment_alternating_correction
     add_assoc, hlift]
   exact hP.add hEA
 
+private abbrev indicatorMask (m : Fin 16) : Finset (Fin 4) :=
+  Finset.univ.filter fun i => m.val.testBit i.val
+
+private theorem fourSupportCostValue_realMatchingIndicator (U : Matrix (Fin 4) (Fin 4) ℂ)
+    (hU : IsUnitary U) (a b : Fin 16) :
+    fourSupportCostValue U (realMatchingIndicator a b) =
+      subsetMinorSq U (indicatorMask a) (indicatorMask b) := by
+  classical
+  let I := indicatorMask a
+  let J := indicatorMask b
+  have hmap (σ : FourPerm) : I.map σ.toEmbedding = J ↔ J.map σ.symm.toEmbedding = I := by
+    constructor
+    · intro h
+      ext i
+      rw [← h]
+      simp only [Finset.mem_map_equiv, Equiv.symm_symm, Equiv.symm_apply_apply]
+    · intro h
+      ext i
+      rw [← h]
+      simp only [Finset.mem_map_equiv, Equiv.symm_symm, Equiv.apply_symm_apply]
+  have hind (p : Fin 24) : realMatchingIndicator a b p =
+      if J.map (fourPerm p).symm.toEmbedding = I then 1 else 0 := by
+    change (Int.cast : ℤ → ℝ) (if I.map (fourPerm p).toEmbedding = J then 1 else 0) = _
+    by_cases h : I.map (fourPerm p).toEmbedding = J
+    · rw [if_pos h, if_pos ((hmap (fourPerm p)).mp h), Int.cast_one]
+    · rw [if_neg h, if_neg (fun he => h ((hmap (fourPerm p)).mpr he)), Int.cast_zero]
+  let e : Fin 24 ≃ FourPerm := fourPermEquiv.trans (Equiv.inv FourPerm)
+  let f (σ : FourPerm) := if J.map σ.toEmbedding = I then realSignedWeight U σ else 0
+  change (∑ p, realSignedWeight U (fourPerm p).symm * realMatchingIndicator a b p) = _
+  simp only [hind, mul_ite, mul_one, mul_zero]
+  change (∑ p, f (e p)) = _
+  rw [Equiv.sum_comp e f]
+  have hs := congrArg Complex.re (sum_signedWeight_image_eq_subsetMinorSq U hU I J)
+  simpa only [f, realSignedWeight, Finset.sum_filter, Complex.re_sum, apply_ite,
+    Complex.ofReal_re, Complex.zero_re] using hs
+
 /-- The common squared-minor mixture transports the pairing of every
 cost in the matching space with the same orthogonal weights. -/
 theorem fourSupportCostValue_minor_mixture (U : Matrix (Fin 4) (Fin 4) ℂ)
@@ -125,15 +161,14 @@ theorem fourSupportCostValue_minor_mixture (U : Matrix (Fin 4) (Fin 4) ℂ)
   have hV (k : κ) : IsUnitary (V k) := isUnitary_ofReal_orthogonal (O k)
   refine ⟨κ, inst, w, O, hw, hs, ?_⟩
   intro g hg
-  change g ∈ Set.range (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ)) at hg
-  rw [four_matching_space_eq_ordinary_span] at hg
+  rw [realMatchingFunctionSpace_eq_indicator_span] at hg
   change fourSupportCostValue U g = ∑ k, w k * fourSupportCostValue (V k) g
   induction hg using Submodule.span_induction with
   | mem g hg =>
-    obtain ⟨r, rfl⟩ := hg
-    rw [fourSupportCostValue_ordinaryRay U hU]
-    simp only [fourSupportCostValue_ordinaryRay (V _) (hV _)]
-    exact hm (ordinaryCostRows r) (ordinaryCostColumns r)
+    obtain ⟨⟨a, b⟩, rfl⟩ := hg
+    rw [fourSupportCostValue_realMatchingIndicator U hU]
+    simp only [fourSupportCostValue_realMatchingIndicator (V _) (hV _)]
+    exact hm (indicatorMask a) (indicatorMask b)
   | zero => simp
   | add a b _ _ ha hb =>
     simp only [map_add, ha, hb, mul_add, Finset.sum_add_distrib]
@@ -160,6 +195,44 @@ theorem fourSupportCostValue_nonneg_of_orthogonal_corrected_moment
   intro k _
   obtain ⟨t, ht⟩ := horth (O k)
   exact mul_nonneg (hw k) (realMatchingSOS_pairing_nonneg_of_positiveMoment _ t hg hsos ht)
+
+/-- At every complex unitary mixer of order four, a matching sum of
+squares that belongs to the matching space evaluates nonnegatively. -/
+theorem fourSupportCostValue_nonneg_matchingSOS (U : Matrix (Fin 4) (Fin 4) ℂ)
+    (hU : IsUnitary U) {g : Fin 24 → ℝ}
+    (hg : g ∈ realMatchingFunctionSpace) (hsos : IsRealMatchingSOS g) :
+    0 ≤ fourSupportCostValue U g :=
+  fourSupportCostValue_nonneg_of_orthogonal_corrected_moment
+    fourOrthogonalMatchingMoment_exists_correction U hU hg hsos
+
+/-- Signed evaluation of a spectral support cost gives the difference
+between its height and the determinant projection. -/
+theorem fourSupportCostValue_spectral_eq (a b : Fin 4 → ℂ) (η : ℂ) (height : ℝ)
+    (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    fourSupportCostValue U (fun p => height - (η * matchingProduct a b (fourPerm p).symm).re) =
+      height - (η * determinantValue a b U).re := by
+  let e : Fin 24 ≃ FourPerm := fourPermEquiv.trans (Equiv.inv FourPerm)
+  let f (σ : FourPerm) := realSignedWeight U σ * (height - (η * matchingProduct a b σ).re)
+  change (∑ p, f (e p)) = _
+  rw [Equiv.sum_comp e f]
+  have hscore : (∑ σ, realSignedWeight U σ * (η * matchingProduct a b σ).re) =
+      (η * determinantValue a b U).re := by
+    have h := congrArg (fun z : ℂ => (η * z).re) (real_signed_determinant a b U hU)
+    simpa only [Finset.mul_sum, Complex.re_sum, mul_left_comm η, Complex.re_ofReal_mul] using h
+  simp only [f, mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul, sum_realSignedWeight U hU,
+    one_mul, hscore]
+
+/-- A matching sum of squares for a spectral support cost proves the
+directional determinant bound at every unitary mixer of order four. -/
+theorem four_support_of_spectral_matchingSOS (a b : Fin 4 → ℂ) (η : ℂ) (height : ℝ)
+    (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U)
+    (hg : (fun p : Fin 24 => height - (η * matchingProduct a b (fourPerm p).symm).re) ∈
+      realMatchingFunctionSpace)
+    (hsos : IsRealMatchingSOS (fun p => height - (η * matchingProduct a b (fourPerm p).symm).re)) :
+    (η * determinantValue a b U).re ≤ height := by
+  have h := fourSupportCostValue_nonneg_matchingSOS U hU hg hsos
+  rw [fourSupportCostValue_spectral_eq a b η height U hU] at h
+  exact sub_nonneg.mp h
 
 end
 

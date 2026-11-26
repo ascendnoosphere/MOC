@@ -96,7 +96,7 @@ gives the scalar correction $t$. The corrected moment is positive
 semidefinite. If each real orthogonal mixer admits such a corrected
 moment, the common squared-minor mixture gives the support inequality
 for every complex unitary mixer and every matching sum of squares in $V$.
-[Correction](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L76) · [Unitary transport](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L148)
+[Correction](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L76) · [Unitary transport](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L183)
 
 For every real orthogonal matrix $O$ of order four, Lean gives the
 corrected moment directly. Index the coordinates from $0$ to $3$.
@@ -116,6 +116,15 @@ $V$, so the corrected moment on the columns of $J$ is also positive
 semidefinite. This supplies the orthogonal premise of the unitary
 evaluation theorem.
 [Correction formula](../Lean/MOC/FourMatchingAlternatingCorrection.lean#L102) · [Indicator Gram matrix](../Lean/MOC/FourOrthogonalCorrectedMoment.lean#L154) · [Indicator span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L47) · [Corrected moment on the matching jet](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12)
+
+For every complex unitary mixer of order four, the signed determinant
+weights give a nonnegative value to each cost in $V$ that is a sum of
+matching squares. For complex eigenvalue lists and a complex direction,
+take the cost whose value at each permutation is the support height
+minus the projected matching product. If this cost belongs to $V$ and
+is a sum of matching squares, the determinant projection is at most
+the support height.
+[Unitary evaluation](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) · [Directional bound](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227)
 
 ### Wall cost
 
