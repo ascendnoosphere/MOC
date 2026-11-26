@@ -303,6 +303,13 @@ One set of nonnegative weights with sum one represents the determinant
 for every pair of complex spectra at this $U$.
 [Common weights](Lean/MOC/ForestGates.lean#L101) · [Inclusion](Lean/MOC/ForestGates.lean#L143) · [Ordered product](Lean/MOC/ForestGates.lean#L167)
 
+Suppose one summand acts by a scalar on a coordinate and the other
+is a scalar plus a multiple of an orthogonal projection. Delete that
+coordinate. The determinant is a weighted sum of two smaller
+determinants. Each term includes the eigenvalue sum for that
+coordinate. The weights depend only on the projection.
+[Determinant reduction](Lean/MOC/ProjectionLeafPivot.lean#L110) · [Projection and rank formulas](Docs/projection-leaf-deletion-proof-map.md)
+
 On a simple even cycle with at least four coordinates, choose a
 two-by-two unitary gate on each edge. All gates except possibly one
 must have squared entry moduli $1/2$. Each set of alternating edges

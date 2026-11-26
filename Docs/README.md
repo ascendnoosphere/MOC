@@ -57,6 +57,7 @@ The mixer is the unitary change between the two eigenbases.
 
 ## Determinant formulas, attainment, and probability
 
+- [Deleting one coordinate of a projection block](projection-leaf-deletion-proof-map.md)
 - [Spectral profile determinant](spectral-profile-determinant-proof-map.md)
 - [Attained values from transposition walks](transposition-winding-proof-map.md)
 - [Gaussian spectra and Haar mixers](gaussian-spectra-and-haar-mixers-proof-map.md)

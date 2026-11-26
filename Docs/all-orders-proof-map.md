@@ -317,6 +317,14 @@ endpoint swap with weight $|s|^2$. The empty product has weight one on
 the identity permutation.
 [Common law](../Lean/MOC/ForestGates.lean#L101) · [Ordered product](../Lean/MOC/ForestGates.lean#L167) · [Two-row formula](../Lean/MOC/OneBridge.lean#L227)
 
+A coordinate where one summand has a scalar block gives a different
+deletion step. If the other summand is a scalar plus a multiple of an
+orthogonal projection, the determinant is a mixture of two smaller
+determinants, each multiplied by an eigenvalue sum for that
+coordinate. In each term with positive weight the remaining
+projection has the rank that corresponds to the assigned eigenvalue.
+[Determinant reduction](../Lean/MOC/ProjectionLeafPivot.lean#L110) · [Projection leaf deletion](projection-leaf-deletion-proof-map.md)
+
 Two alternating layers on one even cycle also give a common law.
 Let $K$ be a finite set of $m\ge2$ labels and let $s$ be a single
 cycle on $K$. Use coordinates $(k,0)$ and $(k,1)$ for $k\in K$.

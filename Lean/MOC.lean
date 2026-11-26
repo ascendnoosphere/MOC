@@ -33,6 +33,7 @@ import MOC.AlternatingMinorLaw
 import MOC.OneBridge
 import MOC.WeightedPermutationCycle
 import MOC.ForestGates
+import MOC.ProjectionLeafPivot
 import MOC.BalancedCyclicGateLaw
 import MOC.SingleBiasedCyclicGateLaw
 import MOC.BiasedCyclicGateObstruction
