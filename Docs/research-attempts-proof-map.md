@@ -70,16 +70,16 @@ flowchart BT
     Both --> Bound
 ```
 
-- **Inverse-profile route in any order.** For order $nge2$, the
+- **Inverse-profile route in any order.** For order $n\ge 2$, the
   spectral polynomial in $(n-1)^2$ inverse coordinates depends on
   at most $(n-2)^2$ complex linear coordinates. Thus it has an
-  invariance space of dimension at least $2n-3$. A singular
-  matrix with just two contributing permutations measures the
-  difference of their profile values. The claim that all balanced
-  probes determine an indicator-span profile up to constants
-  still needs the full cycle argument.
+  invariance space of dimension at least $2n-3$. In every positive
+  order, evaluations on matrices with zero row and column sums
+  determine any complex function on permutations up to an additive
+  constant.
   [Invariance space](../Lean/MOC/SpectralProfileDeterminant.lean#L362) ·
-  [Two-matching probe](../Lean/MOC/SpectralProfileDeterminant.lean#L40)
+  [Balanced evaluation](../Lean/MOC/BalancedMatchingProbes.lean#L202) ·
+  [Profile recovery](spectral-profile-determinant-proof-map.md#recover-the-profile-from-balanced-matrices)
 - **Rank lift and affine moment planes in order four.** An invertible
   principal block of size eight with a complex rank-four lift gives
   a positive semidefinite moment matrix for the quadratic inverse

@@ -13,11 +13,13 @@ the matching profile at $S$ is $\det(AS+SB)$.
 ```mermaid
 flowchart TD
     Profile["Signed evaluation of the spectral matching products"]
+    Recover["Matching profile determined up to a constant"]
     Border["Bordered determinant in the inverse coordinates"]
     Smaller["Determinant of order n−2 with linear entries"]
     Squares["Order four with any complex phase<br/>Four complex linear squares"]
     Rank["Complex coefficient rank at most four"]
     Sign["Positive and negative real subspaces<br/>Dimension at most four each"]
+    Profile -->|"all balanced inputs"| Recover
     Profile -->|"invertible core, divide by its squared determinant"| Border
     Border -->|"eliminate one row and one column of the core"| Smaller
     Smaller -->|"the remaining matrix is 2 by 2"| Squares
@@ -62,6 +64,43 @@ the inverse-coordinate determinant. A singular matrix with exactly
 two contributing permutations also tests the difference between the
 two profile values.
 [Invariance space](../Lean/MOC/SpectralProfileDeterminant.lean#L362) · [Two-matching probe](../Lean/MOC/SpectralProfileDeterminant.lean#L40)
+
+## Recover the profile from balanced matrices
+
+Let $g$ be a complex function on the permutations of a nonempty finite
+set. The signed evaluation of $g$ at a matrix $S$ is
+
+$$
+E_g(S)=\sum_\sigma \mathrm{sgn}(\sigma)g(\sigma)
+\prod_j S_{\sigma(j),j},
+$$
+
+where $\mathrm{sgn}(\sigma)$ is the sign of permutation $\sigma$.
+If $E_g(S)=0$ for every balanced matrix $S$, then $g$ is constant.
+Conversely, the signed evaluation of a constant function is its value
+times $\det S$. A balanced matrix has the constant vector in its kernel,
+so this determinant is zero. Thus balanced evaluations determine $g$
+up to an additive constant. The new Lean source awaits kernel verification.
+[Balanced evaluation](../Lean/MOC/BalancedMatchingProbes.lean#L202)
+
+Fix a label $o$ and a permutation $p$. For weights $t_i$ at each label
+$i\ne o$, use a matrix with diagonal entry $t_i$ and entries $-t_i$ at
+$(i,o)$ and $(o,i)$. The entry at $(o,o)$ is $\sum_{i\ne o}t_i$.
+All other entries are zero. Move row $i$ to row $p(i)$.
+The new matrix is balanced. Only $p$ and the permutations obtained
+by swapping the images under $p$ of $o$ and one other label contribute.
+Write $p(o\ i)$ for such a swap. The signed evaluation is
+
+$$
+\mathrm{sgn}(p)\Bigl(\prod_{i\ne o} t_i\Bigr)
+\sum_{i\ne o} t_i\bigl(g(p)-g(p(o\ i))\bigr).
+$$
+
+Set all weights to one. Then set one weight to two. Divide each signed
+evaluation by the sign of $p$ and its product of weights. The difference
+of the two results gives the change in $g$ under the selected swap.
+Transpositions generate all permutations, so these comparisons
+determine $g$ up to its value at the identity.
 
 ## Rank and inertia in order four
 

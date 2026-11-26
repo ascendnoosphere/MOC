@@ -45,7 +45,10 @@ certificate. Some historical modules remain outside the default target.
 The research-attempt map records the Lean steps and remaining
 implications for the fifteen research directions. The new scripts
 cover the order-four wall and moment-plane tests, and extend several
-reductions that apply in every order. Kernel verification is pending.
+reductions that apply in every order. In every positive order,
+evaluations on matrices with zero row and column sums determine the
+matching profile up to an additive constant. Kernel verification is pending.
+[Balanced evaluation](Lean/MOC/BalancedMatchingProbes.lean#L202) ·
 [Research attempts](Docs/research-attempts-proof-map.md)
 
 Choose a unitary eigenbasis for each matrix. In the basis for $A$, write

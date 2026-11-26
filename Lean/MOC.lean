@@ -320,6 +320,7 @@ import MOC.ReciprocalSpectralPerturbation
 import MOC.UniformExteriorShift
 import MOC.GenericExteriorShift
 import MOC.SpectralProfileDeterminant
+import MOC.BalancedMatchingProbes
 import MOC.SpectralDeterminantStability
 import MOC.TranspositionWinding
 import MOC.TwoByTwoTensorPermutationLaw
