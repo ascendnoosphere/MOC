@@ -301,6 +301,60 @@ theorem exists_gaussian_rational_unitary_mem_open
     dense_gaussianRationalSubfield (fun _ => star_mem_gaussianRationalSubfield)
     (fun _ ho V hv hV => exists_cayleyMixer_mem_open ho V hV hv) hO U hu hU
 
+/-- On a fixed set of labels of positive size, the real support test
+can use Gaussian-rational entries in both spectra and in the mixer. -/
+theorem conjecture_iff_gaussian_rational_real_bound [Nonempty ι] :
+    Conjecture ι ↔ ∀ (a b : ι → ℂ) (U : 𝕄), IsUnitary U →
+      (∀ i, a i ∈ gaussianRationalSubfield) → (∀ i, b i ∈ gaussianRationalSubfield) →
+      (∀ i j, U i j ∈ gaussianRationalSubfield) →
+      ∃ σ : Equiv.Perm ι, (determinantValue a b U).re ≤ (matchingProduct a b σ).re := by
+  rw [conjecture_iff_real_bound]
+  constructor
+  · intro h a b U hU _ _ _
+    exact h a b U hU
+  · intro h a b U hU
+    by_contra! hgap
+    let D : Set (ι → ℂ) := {x | ∀ i, x i ∈ gaussianRationalSubfield}
+    have hD : Dense D := by
+      have he : D = Set.univ.pi (fun _ : ι => (gaussianRationalSubfield : Set ℂ)) := by
+        ext x
+        simp only [D, Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, forall_const]
+      rw [he]
+      exact dense_pi _ fun _ _ => dense_gaussianRationalSubfield
+    let O (σ : Equiv.Perm ι) : Set ((ι → ℂ) × (ι → ℂ)) :=
+      {p | (matchingProduct p.1 p.2 σ).re < (determinantValue p.1 p.2 U).re}
+    have hO (σ) : IsOpen (O σ) := by
+      unfold O matchingProduct determinantValue
+      apply isOpen_lt <;> fun_prop
+    obtain ⟨⟨x, y⟩, hxy, hxyO⟩ := (hD.prod hD).exists_mem_open
+      (isOpen_iInter_of_finite hO) ⟨(a, b), Set.mem_iInter.mpr hgap⟩
+    let G (σ : Equiv.Perm ι) : Set 𝕄 :=
+      {V | (matchingProduct x y σ).re < (determinantValue x y V).re}
+    have hG (σ) : IsOpen (G σ) := by
+      unfold G determinantValue
+      exact isOpen_lt continuous_const (by fun_prop)
+    have hUG : U ∈ ⋂ σ, G σ := by
+      refine Set.mem_iInter.mpr fun σ => ?_
+      exact Set.mem_iInter.mp hxyO σ
+    obtain ⟨V, hVG, hV, hVr⟩ :=
+      exists_gaussian_rational_unitary_mem_open (isOpen_iInter_of_finite hG) U hUG hU
+    obtain ⟨σ, hσ⟩ := h x y V hV hxy.1 hxy.2 hVr
+    exact (not_le_of_gt (Set.mem_iInter.mp hVG σ)) hσ
+
+/-- On a fixed set of labels of positive size, Gaussian-rational spectra
+and Gaussian-rational unitaries suffice for the determinant hull test. -/
+theorem conjecture_iff_gaussian_rational_spectra_and_mixer [Nonempty ι] :
+    Conjecture ι ↔ ∀ (a b : ι → ℂ) (U : 𝕄), IsUnitary U →
+      (∀ i, a i ∈ gaussianRationalSubfield) → (∀ i, b i ∈ gaussianRationalSubfield) →
+      (∀ i j, U i j ∈ gaussianRationalSubfield) → Holds a b U := by
+  constructor
+  · intro h a b U hU _ _ _
+    exact h a b U hU
+  · intro h
+    apply conjecture_iff_gaussian_rational_real_bound.mpr
+    intro a b U hU ha hb hUr
+    simpa only [one_mul] using (holds_iff_directional a b U).mp (h a b U hU ha hb hUr) 1
+
 /-- Simultaneously restrict the spectra to Gaussian integers and the
 mixer to Gaussian-rational exact unitaries. The hull test is unchanged. -/
 theorem mocIsTrue_iff_gaussian_spectra_rational_mixer :

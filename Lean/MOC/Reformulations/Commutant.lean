@@ -2,6 +2,7 @@ import MOC.Reformulations.Common
 import MOC.FullSupportReduction
 import MOC.Normal
 import MOC.StrongSupport
+import MOC.Variational
 
 open Matrix
 
@@ -97,6 +98,31 @@ theorem commutantForm_iff : CommutantForm ↔ MOCIsTrue := by
       (injective_left_of_injective_products hp)) (h n a b U hU)
   · intro h n a b U hU
     exact convexHull_mono (matching_subset_commutant a b) (h n a b U hU)
+
+/-- Each directional support maximum can be attained by commuting
+summands exactly when the conjecture holds in the given order. -/
+theorem conjecture_iff_commuting_support_maximum (n : ℕ) : Conjecture (Fin n) ↔
+    ∀ (a b : Fin n → ℂ) (η : ℂ), ∃ V : Matrix (Fin n) (Fin n) ℂ, IsUnitary V ∧
+      Commute (diagonal a) (V * diagonal b * Vᴴ) ∧
+      ∀ U : Matrix (Fin n) (Fin n) ℂ, IsUnitary U →
+        (η * determinantValue a b U).re ≤ (η * determinantValue a b V).re := by
+  constructor
+  · intro h a b η
+    obtain ⟨U, hU, hmax⟩ := exists_support_maximizer a b η
+    obtain ⟨p, hp⟩ := (holds_iff_directional a b U).mp (h a b U hU) η
+    obtain ⟨V, hV, hc, he⟩ := matching_subset_commutant a b ⟨p, rfl⟩
+    refine ⟨V, hV, hc, fun W hW => (hmax W hW).trans ?_⟩
+    rw [← he]
+    exact hp
+  · intro h
+    apply conjecture_iff_regular_spectra_full_support.mpr
+    intro a b U hU _ hp _
+    apply (holds_iff_directional a b U).mpr
+    intro η
+    obtain ⟨V, hV, hc, hmax⟩ := h a b η
+    obtain ⟨p, he⟩ := commutant_subset_matching a b
+      (injective_left_of_injective_products hp) ⟨V, hV, hc, rfl⟩
+    exact ⟨p, by rw [he]; exact hmax U hU⟩
 
 end
 

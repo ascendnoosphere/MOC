@@ -412,7 +412,9 @@ theorem transposition_square_in_determinant_range (a b : ι → ℂ) (p : Perm �
     rw [swapRotation_one, orbitConj_I_smul, permuted_diagonal_swap]
     exact permuted_edge_value a b (Equiv.swap i j * p) x y hxy t
 
-private theorem exists_square_log (f : I × I → ℂ) (hf : Continuous f)
+/-- A continuous nowhere-zero complex function on the unit square has a
+continuous logarithm. -/
+theorem exists_continuousLog_unitSquare (f : I × I → ℂ) (hf : Continuous f)
     (hnz : ∀ x, f x ≠ 0) :
     ∃ L : I × I → ℂ, Continuous L ∧ ∀ x, Complex.exp (L x) = f x := by
   obtain ⟨u, _, hmin⟩ := isCompact_univ.exists_isMinOn
@@ -582,7 +584,7 @@ private theorem square_boundary_angle (F : I × I → ℂ) (hF : Continuous F) (
     (h₃ : ∀ t, F (t,1) = straightSegmentPoint z₀₁ z₁₁ t) :
     Complex.arg ((z₁₁ - q) / (z₁₀ - q)) - Complex.arg ((z₀₁ - q) / (z₀₀ - q)) =
       Complex.arg ((z₁₁ - q) / (z₀₁ - q)) - Complex.arg ((z₁₀ - q) / (z₀₀ - q)) := by
-  obtain ⟨L, hL, hval⟩ := exists_square_log (fun u => F u - q)
+  obtain ⟨L, hL, hval⟩ := exists_continuousLog_unitSquare (fun u => F u - q)
     (hF.sub continuous_const) (fun u => sub_ne_zero.mpr (hz u))
   have hside (f : I → I × I) (hf : Continuous f) (z w : ℂ)
       (he : ∀ t, F (f t) = straightSegmentPoint z w t) :

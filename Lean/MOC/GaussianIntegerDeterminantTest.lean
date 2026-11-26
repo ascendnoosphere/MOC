@@ -9,7 +9,8 @@ namespace MOC
 
 private def gaussianI : GaussianInt := ⟨0, 1⟩
 
-private def gaussianMatching {n : ℕ} (a b : Fin n → GaussianInt)
+/-- The matching product with Gaussian integer coefficients. -/
+def gaussianMatching {n : ℕ} (a b : Fin n → GaussianInt)
     (σ : Equiv.Perm (Fin n)) : GaussianInt :=
   ∏ j, (a (σ j) + b j)
 
@@ -198,5 +199,146 @@ theorem mocIsTrue_iff_gaussianIntegerDeterminantTest :
     have hxy := (holds_iff_gaussianIntegerDeterminantTest x y V U hd hU hmap).mpr
       (h n x y d V hd hGram)
     simpa only [x, y, Function.comp_apply, GaussianInt.toComplex_def'] using hxy
+
+/-- The numerator matrix after dividing a Gaussian integer mixer by `d`
+and clearing the scalar denominator. -/
+def gaussianIntegerOrbitNumerator {n : ℕ} (a b : Fin n → GaussianInt) (d : ℕ)
+    (N : Matrix (Fin n) (Fin n) GaussianInt) : Matrix (Fin n) (Fin n) GaussianInt :=
+  (d : GaussianInt) ^ 2 • diagonal a + N * diagonal b * Nᴴ
+
+private theorem gaussianIntegerOrbitComparison_iff {n d : ℕ} {a b : Fin n → GaussianInt}
+    {N : Matrix (Fin n) (Fin n) GaussianInt} {U : Matrix (Fin n) (Fin n) ℂ}
+    (hd : d ≠ 0) (hN : N.map GaussianInt.toComplex = (d : ℂ) • U)
+    (σ : Equiv.Perm (Fin n)) :
+    (gaussianIntegerOrbitNumerator a b d N).det.re ≤
+      (((d : GaussianInt) ^ (2 * n)) * gaussianMatching a b σ).re ↔
+    (determinantValue (GaussianInt.toComplex ∘ a) (GaussianInt.toComplex ∘ b) U).re ≤
+      (matchingProduct (GaussianInt.toComplex ∘ a) (GaussianInt.toComplex ∘ b) σ).re := by
+  let g := GaussianInt.toComplex
+  let x := g ∘ a
+  let y := g ∘ b
+  have hDiag (v : Fin n → GaussianInt) : (diagonal v).map g = diagonal (g ∘ v) := by
+    ext i j
+    by_cases hij : i = j
+    · subst j
+      simp only [Matrix.map_apply, Matrix.diagonal_apply_eq, Function.comp_apply]
+    · simp only [Matrix.map_apply, Matrix.diagonal_apply_ne _ hij, map_zero]
+  have hMap : (gaussianIntegerOrbitNumerator a b d N).map g =
+      (d : ℂ) ^ 2 • (diagonal x + U * diagonal y * Uᴴ) := by
+    simp only [gaussianIntegerOrbitNumerator, Matrix.map_add g (map_add g), Matrix.map_mul,
+      Matrix.map_smul' g _ _ (map_mul g), Matrix.conjTranspose_map g GaussianInt.toComplex_star,
+      map_pow, map_natCast, hDiag, hN, Matrix.conjTranspose_smul, star_natCast_complex,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_add, pow_two, x, y]
+  have hD : g (gaussianIntegerOrbitNumerator a b d N).det =
+      (((d : ℝ) ^ (2 * n) : ℝ) : ℂ) * determinantValue x y U := by
+    rw [g.map_det, RingHom.mapMatrix_apply, hMap, Matrix.det_smul,
+      ← pow_mul, Fintype.card_fin, Complex.ofReal_pow, Complex.ofReal_natCast] <;> rfl
+  have hP : g (((d : GaussianInt) ^ (2 * n)) * gaussianMatching a b σ) =
+      (((d : ℝ) ^ (2 * n) : ℝ) : ℂ) * matchingProduct x y σ := by
+    simp only [map_mul, map_pow, map_natCast, gaussianMatching, map_prod, map_add, matchingProduct,
+      Complex.ofReal_pow, Complex.ofReal_natCast, x, y, Function.comp_apply]
+  let L := (gaussianIntegerOrbitNumerator a b d N).det
+  let R := ((d : GaussianInt) ^ (2 * n)) * gaussianMatching a b σ
+  have hcast : (L.re : ℝ) ≤ (R.re : ℝ) ↔ L.re ≤ R.re := Int.cast_le
+  change L.re ≤ R.re ↔ _
+  rw [← hcast, GaussianInt.to_real_re, GaussianInt.to_real_re]
+  change (g L).re ≤ (g R).re ↔ _
+  rw [hD, hP, Complex.re_ofReal_mul, Complex.re_ofReal_mul]
+  exact mul_le_mul_left (pow_pos (Nat.cast_pos.mpr (Nat.pos_of_ne_zero hd)) _)
+
+private theorem exists_unitary_of_gaussianLeftGram {n d : ℕ}
+    (N : Matrix (Fin n) (Fin n) GaussianInt) (hd : d ≠ 0)
+    (hN : N * Nᴴ = (d : GaussianInt) ^ 2 • 1) :
+    ∃ U : Matrix (Fin n) (Fin n) ℂ, IsUnitary U ∧
+      N.map GaussianInt.toComplex = (d : ℂ) • U := by
+  obtain ⟨U, hU, hmap⟩ := exists_unitary_of_gaussianGram Nᴴ d hd
+    (by simpa only [Matrix.conjTranspose_conjTranspose] using hN)
+  refine ⟨Uᴴ, ?_, ?_⟩
+  · rw [IsUnitary, Matrix.conjTranspose_conjTranspose]
+    exact ⟨hU.2, hU.1⟩
+  · have he := congrArg (fun V : Matrix (Fin n) (Fin n) ℂ => Vᴴ) hmap
+    simpa only [← Matrix.conjTranspose_map GaussianInt.toComplex GaussianInt.toComplex_star,
+      Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_smul,
+      star_natCast_complex] using he
+
+private theorem gaussianLeftGram_of_scaled_unitary {n d : ℕ}
+    (N : Matrix (Fin n) (Fin n) GaussianInt) (U : Matrix (Fin n) (Fin n) ℂ)
+    (hU : IsUnitary U) (hN : N.map GaussianInt.toComplex = (d : ℂ) • U) :
+    N * Nᴴ = (d : GaussianInt) ^ 2 • 1 := by
+  have he : (Nᴴ)ᴴ * Nᴴ = (d : GaussianInt) ^ 2 • 1 := by
+    apply (gaussianGram_map_iff Nᴴ d).mpr
+    rw [Matrix.conjTranspose_map GaussianInt.toComplex GaussianInt.toComplex_star,
+      Matrix.conjTranspose_conjTranspose, hN, Matrix.conjTranspose_smul, star_natCast_complex,
+      Matrix.smul_mul, Matrix.mul_smul, smul_smul, hU.1, pow_two]
+  simpa only [Matrix.conjTranspose_conjTranspose] using he
+
+private theorem exists_integral_spectra {n : ℕ} (a b : Fin n → ℂ)
+    (ha : ∀ i, a i ∈ gaussianRationalSubfield)
+    (hb : ∀ i, b i ∈ gaussianRationalSubfield) :
+    ∃ (d : ℕ) (x y : Fin n → GaussianInt), d ≠ 0 ∧
+      (GaussianInt.toComplex ∘ x) = (fun i => (d : ℂ) * a i) ∧
+      (GaussianInt.toComplex ∘ y) = (fun i => (d : ℂ) * b i) := by
+  classical
+  let f : Fin n ⊕ Fin n → ℂ := Sum.elim a b
+  have hr (i : Fin n ⊕ Fin n) : f i ∈ gaussianRationalSubfield := by
+    cases i with
+    | inl i => exact ha i
+    | inr i => exact hb i
+  have hcoords (i : Fin n ⊕ Fin n) : ∃ p : ℚ × ℚ,
+      (f i).re = (p.1 : ℝ) ∧ (f i).im = (p.2 : ℝ) := by
+    rcases hr i with ⟨p, hp⟩
+    exact ⟨p, congrArg Complex.re hp.symm, congrArg Complex.im hp.symm⟩
+  choose p hp using hcoords
+  let q : (Fin n ⊕ Fin n) × Bool → ℚ :=
+    fun i => if i.2 then (p i.1).1 else (p i.1).2
+  obtain ⟨d, hd, hz⟩ := Reformulations.NativeLinksB.exists_common_denominator q
+  choose z hz using hz
+  let w (i : Fin n ⊕ Fin n) : GaussianInt := ⟨z (i, true), z (i, false)⟩
+  have hw (i : Fin n ⊕ Fin n) : GaussianInt.toComplex (w i) = (d : ℂ) * f i := by
+    have realEq : (d : ℝ) * (p i).1 = z (i, true) := by
+      simpa [q] using congrArg (fun t : ℚ => (t : ℝ)) (hz (i, true))
+    have imagEq : (d : ℝ) * (p i).2 = z (i, false) := by
+      simpa [q] using congrArg (fun t : ℚ => (t : ℝ)) (hz (i, false))
+    apply Complex.ext
+    · rw [w, GaussianInt.toComplex_re, Complex.mul_re, Complex.natCast_re, Complex.natCast_im,
+        zero_mul, sub_zero, (hp i).1]
+      exact realEq.symm
+    · rw [w, GaussianInt.toComplex_im, Complex.mul_im, Complex.natCast_re, Complex.natCast_im,
+        zero_mul, add_zero, (hp i).2]
+      exact imagEq.symm
+  exact ⟨d, w ∘ Sum.inl, w ∘ Sum.inr, hd, funext (fun i => hw (.inl i)),
+    funext (fun i => hw (.inr i))⟩
+
+/-- At any positive order the conjecture holds exactly when there is no
+strict real separation with Gaussian integer spectra and a scaled
+Gaussian integer unitary. Each comparison uses integer arithmetic. -/
+theorem conjecture_iff_no_gaussian_integer_determinant_witness {n : ℕ} [Nonempty (Fin n)] :
+    Conjecture (Fin n) ↔ ¬ ∃ (a b : Fin n → GaussianInt) (d : ℕ)
+      (N : Matrix (Fin n) (Fin n) GaussianInt), d ≠ 0 ∧
+      N * Nᴴ = (d : GaussianInt) ^ 2 • 1 ∧
+      ∀ σ : Equiv.Perm (Fin n), (((d : GaussianInt) ^ (2 * n)) * gaussianMatching a b σ).re <
+        (gaussianIntegerOrbitNumerator a b d N).det.re := by
+  constructor
+  · rintro h ⟨a, b, d, N, hd, hGram, hgap⟩
+    obtain ⟨U, hU, hN⟩ := exists_unitary_of_gaussianLeftGram N hd hGram
+    obtain ⟨σ, hσ⟩ := conjecture_iff_real_bound.mp h _ _ U hU
+    exact (not_le_of_gt (hgap σ)) ((gaussianIntegerOrbitComparison_iff hd hN σ).mpr hσ)
+  · intro h
+    apply conjecture_iff_gaussian_rational_real_bound.mpr
+    intro a b U hU ha hb hUr
+    obtain ⟨d, N, hd, _, hN⟩ := exists_integral_mixer U hU hUr
+    obtain ⟨e, x, y, he, hx, hy⟩ := exists_integral_spectra a b ha hb
+    have hGram := gaussianLeftGram_of_scaled_unitary N U hU hN
+    have hbound : ∃ σ : Equiv.Perm (Fin n), (gaussianIntegerOrbitNumerator x y d N).det.re ≤
+        (((d : GaussianInt) ^ (2 * n)) * gaussianMatching x y σ).re := by
+      by_contra! hg
+      exact h ⟨x, y, d, N, hd, hGram, hg⟩
+    obtain ⟨σ, hσ⟩ := hbound
+    have hs := (gaussianIntegerOrbitComparison_iff hd hN σ).mp hσ
+    rw [hx, hy, determinantValue_scale, matchingProduct_scale] at hs
+    have hpow : (e : ℂ) ^ Fintype.card (Fin n) = (((e : ℝ) ^ n : ℝ) : ℂ) := by
+      simp only [Fintype.card_fin, Complex.ofReal_pow, Complex.ofReal_natCast]
+    simp only [hpow, Complex.re_ofReal_mul] at hs
+    exact ⟨σ, (mul_le_mul_left (pow_pos (Nat.cast_pos.mpr (Nat.pos_of_ne_zero he)) _)).mp hs⟩
 
 end MOC

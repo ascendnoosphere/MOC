@@ -85,6 +85,47 @@ private theorem modulus_unitary_det (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
   apply (sq_eq_sq₀ (norm_nonneg _) zero_le_one).mp
   simpa only [Complex.sq_norm, one_pow] using hs
 
+/-- The comparison permutation can be chosen entirely in the support of
+the unitary. The bound includes the case in which every supported
+matching product is zero. -/
+theorem norm_det_weighted_entries_div_le_supported_matching
+    (C U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    ∃ σ : Equiv.Perm ι, (∀ j, U (σ j) j ≠ 0) ∧
+      ‖(Matrix.of (fun i j => C i j * U i j)).det / U.det‖ ≤ ‖∏ j, C (σ j) j‖ := by
+  classical
+  let masked : Matrix ι ι ℂ := Matrix.of fun i j => if U i j = 0 then 0 else C i j
+  have heq : (Matrix.of fun i j => masked i j * U i j) =
+      Matrix.of (fun i j => C i j * U i j) := by
+    ext i j : 1
+    by_cases hij : U i j = 0 <;>
+      simp [masked, hij]
+  obtain ⟨σ, hσ⟩ := norm_det_weighted_entries_le_matching masked U hU
+  rw [heq] at hσ
+  by_cases hs : ∀ j, U (σ j) j ≠ 0
+  · have hp : (∏ j, masked (σ j) j) = ∏ j, C (σ j) j := by
+      exact Finset.prod_congr rfl fun j _ => by
+        simp only [masked, Matrix.of_apply, if_neg (hs j)]
+    refine ⟨σ, hs, ?_⟩
+    rw [norm_div, modulus_unitary_det U hU, div_one, ← hp]
+    exact hσ
+  · push_neg at hs
+    obtain ⟨j, hj⟩ := hs
+    have hp : (∏ i, masked (σ i) i) = 0 :=
+      Finset.prod_eq_zero (Finset.mem_univ j) (by simp only [masked, Matrix.of_apply, hj, if_true])
+    rw [hp, norm_zero] at hσ
+    have hdet : (Matrix.of fun i j => C i j * U i j).det = 0 :=
+      norm_eq_zero.mp (le_antisymm hσ (norm_nonneg _))
+    have hmatching : ∃ τ : Equiv.Perm ι, ∀ i, U (τ i) i ≠ 0 := by
+      by_contra! h
+      apply det_ne_zero_of_unitary hU
+      rw [Matrix.det_apply']
+      apply Finset.sum_eq_zero
+      intro τ _
+      obtain ⟨i, hi⟩ := h τ
+      rw [Finset.prod_eq_zero (Finset.mem_univ i) hi, mul_zero]
+    obtain ⟨τ, hτ⟩ := hmatching
+    exact ⟨τ, hτ, by simp only [hdet, zero_div, norm_zero, norm_nonneg]⟩
+
 /-- In every finite order, the determinant of the sum in the spectral
 coordinates has modulus at most that of some matching product. -/
 theorem modulusConjecture_all_orders : ModulusConjecture ι := by

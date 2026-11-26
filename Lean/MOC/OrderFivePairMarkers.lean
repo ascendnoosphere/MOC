@@ -73,6 +73,45 @@ theorem count_incident_pair_images (hcard : 2 ≤ Fintype.card ι) (i j : ι)
     rw [Finset.sum_ite_eq', if_pos (Finset.mem_erase.mpr ⟨hne, Finset.mem_univ _⟩)]
     simp [hij]
 
+/-- Summing the squared pair minors incident to a row and a column gives
+one plus the squared entry times the matrix order minus two. The index
+`l` lists the column pairs containing `j` exactly once. -/
+theorem sum_incident_pair_minorSq (hcard : 2 ≤ Fintype.card ι)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) (i j : ι) :
+    (∑ l ∈ (univ : Finset ι).erase j,
+      ∑ I ∈ (univ : Finset (Finset ι)).filter (fun I => I.card = 2 ∧ i ∈ I),
+        subsetMinorSq U I {j,l}) =
+      1 + ((Fintype.card ι : ℝ) - 2) * Complex.normSq (U i j) := by
+  classical
+  let js := (univ : Finset ι).erase j
+  let Is := (univ : Finset (Finset ι)).filter (fun I => I.card = 2 ∧ i ∈ I)
+  let w := realSignedWeight U
+  have hminor (I J : Finset ι) : subsetMinorSq U I J = ∑ σ, w σ * imageIndicator I J σ := by
+    rw [sum_imageIndicator]
+    have h := congrArg Complex.re (sum_signedWeight_image_eq_subsetMinorSq U hU I J)
+    simpa only [w, realSignedWeight, Complex.re_sum, Complex.ofReal_re] using h.symm
+  have hcount (σ : Equiv.Perm ι) :
+      (∑ l ∈ js, ∑ I ∈ Is, imageIndicator I {j,l} σ) =
+        1 + ((Fintype.card ι : ℝ) - 2) * (if σ j = i then 1 else 0) :=
+    count_incident_pair_images hcard i j σ
+  change (∑ l ∈ js, ∑ I ∈ Is, subsetMinorSq U I {j,l}) = _
+  calc
+    _ = ∑ σ, w σ * (∑ l ∈ js, ∑ I ∈ Is, imageIndicator I {j,l} σ) := by
+      simp_rw [hminor, Finset.mul_sum]
+      rw [Finset.sum_comm (s := univ) (t := js) (f := fun σ l =>
+        ∑ I ∈ Is, w σ * imageIndicator I {j,l} σ)]
+      apply Finset.sum_congr rfl
+      intro l _
+      exact Finset.sum_comm
+    _ = _ := by
+      simp_rw [hcount, mul_add, mul_one, Finset.sum_add_distrib]
+      rw [show (∑ σ, w σ) = 1 from sum_realSignedWeight U hU]
+      congr 1
+      rw [← marginal_realSignedWeight U hU i j, Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro σ _
+      by_cases hσ : σ j = i <;> simp [w, hσ, mul_comm]
+
 omit [Fintype ι] in
 private theorem indicator_singleton (i j : ι) (σ : Equiv.Perm ι) :
     imageIndicator {i} {j} σ = if σ j = i then 1 else 0 := by
@@ -148,6 +187,66 @@ theorem mass_eq_of_pair_image_mass_eq (hcard : 2 ≤ Fintype.card ι)
   apply Finset.sum_congr rfl
   intro I hi
   exact hPair I J (Finset.mem_filter.mp hi).2 hj
+
+/-- In orders three through five, two unitary matrices with the same
+squared pair minors have the same squared minors in every size. -/
+theorem subsetMinorSq_eq_of_pair_tables_eq (hmin : 2 < Fintype.card ι)
+    (hmax : Fintype.card ι ≤ 5) (U V : Matrix ι ι ℂ) (hU : IsUnitary U) (hV : IsUnitary V)
+    (hpair : ∀ I J : Finset ι, I.card = 2 → J.card = 2 →
+      subsetMinorSq U I J = subsetMinorSq V I J) (I J : Finset ι) :
+    subsetMinorSq U I J = subsetMinorSq V I J := by
+  classical
+  have hsingle (i j : ι) : Complex.normSq (U i j) = Complex.normSq (V i j) := by
+    have hU' := sum_incident_pair_minorSq hmin.le U hU i j
+    have hV' := sum_incident_pair_minorSq hmin.le V hV i j
+    have hsum : (∑ l ∈ (univ : Finset ι).erase j,
+        ∑ K ∈ (univ : Finset (Finset ι)).filter (fun K => K.card = 2 ∧ i ∈ K),
+          subsetMinorSq U K {j,l}) =
+        ∑ l ∈ (univ : Finset ι).erase j,
+          ∑ K ∈ (univ : Finset (Finset ι)).filter (fun K => K.card = 2 ∧ i ∈ K),
+            subsetMinorSq V K {j,l} := by
+      apply Finset.sum_congr rfl
+      intro l hl
+      apply Finset.sum_congr rfl
+      intro K hK
+      exact hpair K {j,l} (Finset.mem_filter.mp hK).2.1
+        (Finset.card_pair (Finset.mem_erase.mp hl).1.symm)
+    rw [hsum, hV'] at hU'
+    have hpos : (2 : ℝ) < Fintype.card ι := by exact_mod_cast hmin
+    exact mul_left_cancel₀ (sub_ne_zero.mpr hpos.ne') (add_left_cancel hU'.symm)
+  have hempty (W : Matrix ι ι ℂ) (hW : IsUnitary W) : subsetMinorSq W ∅ ∅ = 1 := by
+    apply Complex.ofReal_injective
+    rw [← sum_signedWeight_image_eq_subsetMinorSq W hW]
+    simpa using sum_signedWeight W (det_ne_zero_of_unitary hW)
+  have hsmall (K L : Finset ι) (hKL : K.card = L.card) (hK : K.card ≤ 2) :
+      subsetMinorSq U K L = subsetMinorSq V K L := by
+    rcases (show K.card = 0 ∨ K.card = 1 ∨ K.card = 2 by omega) with hk | hk | hk
+    · obtain rfl := Finset.card_eq_zero.mp hk
+      obtain rfl := Finset.card_eq_zero.mp (hKL.symm.trans hk)
+      rw [hempty U hU, hempty V hV]
+    · obtain ⟨i, rfl⟩ := Finset.card_eq_one.mp hk
+      obtain ⟨j, rfl⟩ := Finset.card_eq_one.mp (hKL.symm.trans hk)
+      rw [subsetMinorSq_singleton U hU, subsetMinorSq_singleton V hV, hsingle]
+    · exact hpair K L hk (hKL.symm.trans hk)
+  by_cases hIJ : I.card = J.card
+  · by_cases hI : I.card ≤ 2
+    · exact hsmall I J hIJ hI
+    · rw [← subsetMinorSq_compl U hU I J, ← subsetMinorSq_compl V hV I J]
+      exact hsmall Iᶜ Jᶜ (by rw [Finset.card_compl, Finset.card_compl, hIJ])
+        (by rw [Finset.card_compl]; omega)
+  · simp [subsetMinorSq, hIJ]
+
+/-- The squared pair minors determine the determinant for all pairs of
+complex spectra in orders three through five. -/
+theorem determinantValue_eq_of_pair_tables_eq (hmin : 2 < Fintype.card ι)
+    (hmax : Fintype.card ι ≤ 5) (a b : ι → ℂ) (U V : Matrix ι ι ℂ)
+    (hU : IsUnitary U) (hV : IsUnitary V)
+    (hpair : ∀ I J : Finset ι, I.card = 2 → J.card = 2 →
+      subsetMinorSq U I J = subsetMinorSq V I J) :
+    determinantValue a b U = determinantValue a b V := by
+  rw [determinantValue_eq_sum_subsetMinors a b U hU,
+    determinantValue_eq_sum_subsetMinors a b V hV]
+  simp_rw [subsetMinorSq_eq_of_pair_tables_eq hmin hmax U V hU hV hpair]
 
 /-- For order five, normalization and doubleton image coordinates suffice
 for the complete squared-minor table, for a fixed arbitrary real law. -/

@@ -33,7 +33,7 @@ entries in the change of eigenbasis guarantee one matching law for
 all spectra. The largest such bound is $n+8$. At $n+9$ an explicit
 unitary has no common law. A separate result proves the inclusion
 whenever each row, or each column, has at most three nonzero entries.
-[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L89) · [Witness at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Row and column cases](Docs/sparse-unitary-proof-map.md)
+[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L106) · [Witness at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Row and column cases](Docs/sparse-unitary-proof-map.md)
 
 The certificate map gives finite integer comparisons for all orders, an
 order-four enclosure within one twenty-seventh of the matching width in
@@ -49,7 +49,8 @@ reductions that apply in every order. In every positive order,
 evaluations on matrices with zero row and column sums determine the
 matching profile up to an additive constant. Kernel verification is pending.
 [Balanced evaluation](Lean/MOC/BalancedMatchingProbes.lean#L202) ·
-[Research attempts](Docs/research-attempts-proof-map.md)
+[Research attempts](Docs/research-attempts-proof-map.md) ·
+[Determinant research reports](Docs/determinant-research-reports-proof-map.md)
 
 Choose a unitary eigenbasis for each matrix. In the basis for $A$, write
 $A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$.
@@ -142,7 +143,7 @@ For all complex normal matrices $A,B$ of the same finite order,
 Drury's modulus bound gives $|\det(A+B)|\leq\max_\sigma |P_\sigma|$.
 The Lean source uses positive row and column factors and the
 arithmetic–geometric mean inequality. Kernel verification is pending.
-[Drury (1994)](https://doi.org/10.1016/0024-3795(94)90356-5) · [Normal-matrix statement](Lean/MOC/DeterminantModulusBound.lean#L100) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
+[Drury (1994)](https://doi.org/10.1016/0024-3795(94)90356-5) · [Normal-matrix statement](Lean/MOC/DeterminantModulusBound.lean#L141) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
 
 The order-transfer theorem sends a modulus bound at order $n$ to every
 order $m\leq n$. The bound for all unitary changes of eigenbasis in every
@@ -293,7 +294,7 @@ one probability law for all spectra. To see why the next count fails,
 place the order-four example beside an identity block of order $n-4$.
 The resulting unitary has exactly $n+9$ nonzero entries. Any common
 law would restrict to a common law on the order-four block.
-[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L89) · [Counterexample at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction to a block](Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
+[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L106) · [Counterexample at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction to a block](Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
 
 ### Mixing blocks with one shared coordinate
 

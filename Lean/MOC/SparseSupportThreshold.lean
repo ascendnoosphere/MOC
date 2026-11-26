@@ -84,6 +84,23 @@ theorem exists_no_universalMatchingWeights_supportEntryCount_eq_card_add_nine
     exact paddedThreeZeroMixer_no_universalMatchingWeights k
       ((hasUniversalMatchingWeights_reindex_iff e e _).mp hw)
 
+/-- In every order of at least four some unitary has no probability law
+that gives all squared minors as subset-image probabilities. -/
+theorem exists_no_common_squared_minor_law_of_card_ge_four
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (hn : 4 ≤ Fintype.card ι) :
+    ∃ U : Matrix ι ι ℂ, IsUnitary U ∧
+      ¬ ∃ w : Equiv.Perm ι → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ = 1) ∧
+        ∀ I J : Finset ι, subsetMinorSq U I J =
+          ∑ σ ∈ Finset.univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I), w σ := by
+  obtain ⟨U, hU, _, hfail⟩ :=
+    exists_no_universalMatchingWeights_supportEntryCount_eq_card_add_nine hn
+  refine ⟨U, hU, ?_⟩
+  rintro ⟨w, hnonnegative, hmass, hminor⟩
+  apply hfail
+  refine ⟨w, hnonnegative, hmass, fun a b => ?_⟩
+  simpa only [weightedMatchingValue, id_eq] using
+    determinantValue_eq_sum_of_indexed_minor_law a b U hU id w hminor
+
 /-- For each order of at least four, the largest total support bound
 that guarantees universal matching weights is the order plus eight. -/
 theorem universalMatchingWeights_supportEntryCount_threshold

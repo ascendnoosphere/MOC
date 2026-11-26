@@ -29,7 +29,7 @@ $$
 The new Lean source states this bound and $R(n)$ for every finite order.
 Kernel verification is pending.
 [Entrywise determinant bound](../Lean/MOC/DeterminantModulusBound.lean#L53) ·
-[Modulus theorem in every order](../Lean/MOC/DeterminantModulusBound.lean#L90)
+[Modulus theorem in every order](../Lean/MOC/DeterminantModulusBound.lean#L131)
 
 ```mermaid
 flowchart TD
@@ -80,7 +80,7 @@ right by $U$ gives $C\circ U$. Since $|\det U|=1$, the entrywise bound
 gives $R(n)$. The [unrestricted convex-hull conjecture](../README.md#proof-tree)
 remains open in this library.
 [Spectral determinant identity](../Lean/MOC/Weights.lean#L29) ·
-[Bound for any enumeration of the eigenvalues](../Lean/MOC/DeterminantModulusBound.lean#L100)
+[Bound for any enumeration of the eigenvalues](../Lean/MOC/DeterminantModulusBound.lean#L141)
 
 ## Transfer by one order
 
