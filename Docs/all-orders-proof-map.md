@@ -371,6 +371,27 @@ minor. This identity gives determinant inclusion for every pair of
 complex spectra.
 [Parity cancellation](../Lean/MOC/CyclicSwitchEvents.lean#L342) · [Complementary choices](../Lean/MOC/CyclicSwitchEvents.lean#L360) · [Transversal cross term](../Lean/MOC/CyclicSwitchMatrices.lean#L179) · [Inclusion](../Lean/MOC/BalancedCyclicGateLaw.lean#L103)
 
+The corresponding common-law claim for arbitrary gates on the cycle
+is false. Number the four coordinates from $0$ to $3$. For
+$t\in\{-1,1\}$, define the real rotation
+$G_t=\frac1{13}\begin{pmatrix}12&-5t\\5t&12\end{pmatrix}$.
+The left layer uses $G_1$ on $(0,1)$ and $(2,3)$. The right layer
+uses $G_{-1}$ on $(1,2)$ and $G_1$ on $(3,0)$, in these orders.
+For a permutation, write $E(I,J)=1$ if it maps the column set $J$
+onto the row set $I$, and zero otherwise. Write $01$ for the set
+$\{0,1\}$, and use the same notation for other pairs. Every
+permutation satisfies
+
+$$
+E(01,01)+E(01,02)+E(13,02)+E(23,02)-E(12,03)\le1.
+$$
+
+The same combination of squared minor moduli of the gate product is
+$831869471/815730721>1$. Therefore no probability law on the
+permutations represents all the minors. The same inequality
+excludes one determinant law that works for every pair of spectra.
+[Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L29) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L75) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L92)
+
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
 $\det(U-\mathrm{diag}(x)U\mathrm{diag}(y))/\det U$. Its vertices are

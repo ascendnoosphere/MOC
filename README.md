@@ -517,6 +517,10 @@ Combining the blocks proves the convex-hull inclusion in every order.
 
 ## Counterexamples to stronger statements
 
+- On four coordinates, two alternating layers of real two-by-two
+  rotations on a cycle can fail to have one set of probability
+  weights that represents the determinant for every pair of spectra.
+  [Gate product](Lean/MOC/BiasedCyclicGateObstruction.lean#L29) · [Failure of common weights](Lean/MOC/BiasedCyclicGateObstruction.lean#L92)
 - For one pair of order-four eigenvalue lists, the largest real part of a
   matching product is five. Append any complex scalars $c,d$ with
   $c+d\ne0$. Some enlarged matching product has real part greater than
