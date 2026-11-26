@@ -13,6 +13,7 @@
 - [Finite overlap compression](#finite-overlap-compression)
 - [Common weights at small shifted rank sum](#common-weights-at-small-shifted-rank-sum)
 - [Overlapping circle blocks](#overlapping-circle-blocks)
+- [Normal products](normal-products-proof-map.md)
 - [Paper cases in any order](#paper-cases-in-any-order)
 - [Scope of the Lean source](#scope-of-the-lean-source)
 

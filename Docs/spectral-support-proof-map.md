@@ -48,6 +48,7 @@ flowchart BT
 
 | Case | Scope | Sources |
 | --- | --- | --- |
+| Normal product | If two normal matrices have a normal product, the inclusion holds in every order. Singular summands and repeated eigenvalues are allowed. An invertible first summand with normal relative product also gives inclusion. | [Matrix theorem](../Lean/MOC/NormalProductInclusion.lean#L199) · [Complete proof](normal-products-proof-map.md) |
 | Two spectral values | Fix the mixer and the subset of second-list labels assigned to the first group. For each attainable image of this subset, assign its squared minor to one representative permutation. The weights are nonnegative and sum to one. They represent the determinant for every first list and every pair of complex group values. | [Common law](../Lean/MOC/TwoValues.lean#L285) · [Squared-minor mass](../Lean/MOC/TwoValues.lean#L154) |
 | Three values and a singleton | Fix the mixer and the label partition with third part of size one. One probability law works for all complex values of the three parts and for every opposing spectrum. | [Lean law](../Lean/MOC/ThreeValues.lean#L51) · [Singleton map](three-spectral-values-with-one-singleton-proof-map.md) |
 | Three values with arbitrary multiplicities | An interval mass test describes the common law. A deletion reduces the all-order case to mixers whose every row meets all three groups. The general bounds remain open. | [Three groups](three-spectral-values-with-one-singleton-proof-map.md#three-groups-of-arbitrary-size) |

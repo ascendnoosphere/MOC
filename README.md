@@ -391,6 +391,14 @@ diagonal permutation of the spectrum.
 
 ### Matrices and eigenvalues
 
+For any two complex normal matrices $A$ and $B$, the inclusion holds if
+$AB$ is normal. The order is arbitrary. Singular matrices and repeated
+eigenvalues are allowed. The inclusion also holds if $A$ is invertible
+and $A^{-1}B$ is normal.
+[Normal product](Lean/MOC/NormalProductInclusion.lean#L199) ·
+[Normal relative product](Lean/MOC/NormalProductInclusion.lean#L220) ·
+[Complete proof map](Docs/normal-products-proof-map.md)
+
 Suppose one matrix is diagonal. In that basis, let the other matrix
 be a block sum of normal weighted permutation cycles. Each cycle can
 have its own scalar shift. Within each block the determinant equals

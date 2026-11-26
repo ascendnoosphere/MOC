@@ -40,41 +40,32 @@ private theorem normal_conjugated_diagonal {ι : Type*} [Fintype ι] [DecidableE
     _ = _ := by
       simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
 
-/-- If the common Hermitian commutant contains only scalars, normality of
-the relative product forces concentric spectra and gives the inclusion. -/
-theorem holds_of_normal_relative_of_scalar_hermitian_commutant {n : ℕ} (a b : Fin n → ℂ)
-    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) (ha : IsUnit (diagonal a).det)
-    (hW : IsStarNormal ((diagonal a)⁻¹ * (U * diagonal b * Uᴴ)))
+/-- Common Gram matrices and a scalar common Hermitian commutant force
+constant spectral moduli and give the inclusion. -/
+theorem holds_of_commuting_grams_of_scalar_hermitian_commutant {n : ℕ} (a b : Fin n → ℂ)
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U)
+    (hBP : Commute (U * diagonal b * Uᴴ) ((diagonal a)ᴴ * diagonal a))
+    (hAQ : Commute (diagonal a) ((U * diagonal b * Uᴴ)ᴴ * (U * diagonal b * Uᴴ)))
     (hcentral : ∀ Y : Matrix (Fin n) (Fin n) ℂ, Y.IsHermitian →
       Commute (diagonal a) Y → Commute (U * diagonal b * Uᴴ) Y →
       ∃ c : ℂ, Y = c • (1 : Matrix (Fin n) (Fin n) ℂ)) : Holds a b U := by
   let A := diagonal a
   let B := U * diagonal b * Uᴴ
-  let W := A⁻¹ * B
-  have hAW : A * W = B := by simp only [W, ← Matrix.mul_assoc, A.mul_nonsing_inv ha, Matrix.one_mul]
   let c (i : Fin n) := (Complex.normSq (b i) : ℂ)
   have hBg : Bᴴ * B = U * diagonal c * Uᴴ := conjugated_diagonal_gram b U hU
   have hBnormal : IsStarNormal B := normal_conjugated_diagonal b U hU
-  have hB' : IsStarNormal (diagonal a * W) := by
-    change IsStarNormal (A * W)
-    rwa [hAW]
-  obtain ⟨hAP, hBP, hAQ, hBQ⟩ := common_grams_of_normal_relative a W ha hW hB'
+  have hAP : Commute A (Aᴴ * A) := by
+    rw [show Aᴴ * A = diagonal (fun i => (Complex.normSq (a i) : ℂ)) from diagonal_gram a]
+    change diagonal a * diagonal _ = diagonal _ * diagonal a
+    rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
+    exact congrArg diagonal (funext fun i => mul_comm _ _)
+  have hBQ : Commute B (Bᴴ * B) := hBnormal.star_comm_self.symm.mul_right (Commute.refl B)
   have hself (Y : Matrix (Fin n) (Fin n) ℂ) : (Yᴴ * Y).IsHermitian := by
     change (Yᴴ * Y)ᴴ = Yᴴ * Y
     simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
-  obtain ⟨α, hα⟩ := hcentral (Aᴴ * A) (hself A) hAP (by
-    change Commute B (Aᴴ * A)
-    rw [← hAW]
-    exact hBP)
+  obtain ⟨α, hα⟩ := hcentral (Aᴴ * A) (hself A) hAP hBP
   obtain ⟨β, hβ⟩ := hcentral (Bᴴ * B) (hself B)
-    (by
-      change Commute A (Bᴴ * B)
-      rw [← hAW]
-      exact hAQ)
-    (by
-      change Commute B (Bᴴ * B)
-      rw [← hAW]
-      exact hBQ)
+    hAQ hBQ
   have hDβ : diagonal c = β • (1 : Matrix (Fin n) (Fin n) ℂ) := by
     calc
       _ = (Uᴴ * (U * diagonal c * Uᴴ)) * U := by
@@ -90,6 +81,26 @@ theorem holds_of_normal_relative_of_scalar_hermitian_commutant {n : ℕ} (a b : 
     simpa only [c, Matrix.diagonal_apply_eq, Matrix.smul_apply, smul_eq_mul, Matrix.one_apply_eq,
       mul_one, Complex.ofReal_re] using congrArg (fun M : Matrix (Fin n) (Fin n) ℂ => (M i i).re) hDβ
   exact holds_of_concentric_circles a b α.re β.re ha' hb' U hU
+
+/-- If the common Hermitian commutant contains only scalars, normality of
+the relative product forces concentric spectra and gives the inclusion. -/
+theorem holds_of_normal_relative_of_scalar_hermitian_commutant {n : ℕ} (a b : Fin n → ℂ)
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) (ha : IsUnit (diagonal a).det)
+    (hW : IsStarNormal ((diagonal a)⁻¹ * (U * diagonal b * Uᴴ)))
+    (hcentral : ∀ Y : Matrix (Fin n) (Fin n) ℂ, Y.IsHermitian →
+      Commute (diagonal a) Y → Commute (U * diagonal b * Uᴴ) Y →
+      ∃ c : ℂ, Y = c • (1 : Matrix (Fin n) (Fin n) ℂ)) : Holds a b U := by
+  let A := diagonal a
+  let B := U * diagonal b * Uᴴ
+  let W := A⁻¹ * B
+  have hAW : A * W = B := by simp only [W, ← Matrix.mul_assoc, A.mul_nonsing_inv ha, Matrix.one_mul]
+  have hB : IsStarNormal (diagonal a * W) := by
+    change IsStarNormal (A * W)
+    rw [hAW]
+    exact normal_conjugated_diagonal b U hU
+  obtain ⟨_, hBP, hAQ, _⟩ := common_grams_of_normal_relative a W ha hW hB
+  rw [show diagonal a * W = B from hAW] at hBP hAQ
+  exact holds_of_commuting_grams_of_scalar_hermitian_commutant a b U hU hBP hAQ hcentral
 
 /-- A scalar common commutant is sufficient for the normal-relative-product
 inclusion. -/

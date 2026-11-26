@@ -198,6 +198,7 @@ import MOC.TwoOutlierMinorCertificate
 import MOC.NestedContactObjective
 import MOC.NestedRectangleObstruction
 import MOC.NormalSupportMaximum
+import MOC.NormalProductInclusion
 import MOC.Obstruction
 import MOC.OppositePair
 import MOC.OppositePairNormal

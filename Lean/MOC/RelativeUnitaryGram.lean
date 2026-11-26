@@ -110,6 +110,77 @@ theorem commute_gram_of_normal_relative (a : ι → ℂ) (W : Matrix ι ι ℂ)
     Commute ((diagonal a)ᴴ * diagonal a) W :=
   commute_gram_of_balanced_relative a W (normal_row_col_energy W hW) hB
 
+/-- If two normal factors have normal product, the first factor commutes
+with the second factor's Gram matrix. Zero eigenvalues are allowed. -/
+theorem commute_right_gram_of_normal_product (a : ι → ℂ) (W : Matrix ι ι ℂ)
+    (hW : IsStarNormal W) (hAW : IsStarNormal (diagonal a * W)) :
+    Commute (diagonal a) (Wᴴ * W) := by
+  let A := diagonal a
+  let P := Aᴴ * A
+  let Q := Wᴴ * W
+  have hPW : Commute P W := commute_gram_of_normal_relative a W hW hAW
+  have hP : Pᴴ = P := by simp only [P, Matrix.conjTranspose_mul,
+    Matrix.conjTranspose_conjTranspose]
+  have hQ : Qᴴ = Q := by simp only [Q, Matrix.conjTranspose_mul,
+    Matrix.conjTranspose_conjTranspose]
+  have hstar : Wᴴ * P = P * Wᴴ := by
+    have he := hPW.star_star.eq
+    change Pᴴ * Wᴴ = Wᴴ * Pᴴ at he
+    rw [hP] at he
+    exact he.symm
+  have hPQ : P * Q = (A * W)ᴴ * (A * W) := by
+    calc
+      _ = (P * Wᴴ) * W := by simp only [Q, Matrix.mul_assoc]
+      _ = (Wᴴ * P) * W := by rw [hstar]
+      _ = _ := by simp only [P, Matrix.conjTranspose_mul, Matrix.mul_assoc]
+  have hsandwich : A * Q * Aᴴ = P * Q := by
+    calc
+      _ = (A * W) * (A * W)ᴴ := by
+        rw [show Q = W * Wᴴ from hW.star_comm_self.eq]
+        simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
+      _ = _ := hAW.star_comm_self.eq.symm.trans hPQ.symm
+  have hentry (i j : ι) (hi : a i ≠ 0) (hq : Q i j ≠ 0) : a i = a j := by
+    have he := congrArg (fun M : Matrix ι ι ℂ => M i j) hsandwich
+    simp only [A, P, Matrix.diagonal_conjTranspose, Matrix.mul_diagonal,
+      Matrix.diagonal_mul, Matrix.diagonal_mul_diagonal, Pi.star_apply, Pi.mul_apply] at he
+    have hz : (a i * Q i j) * (star (a j) - star (a i)) = 0 := by
+      linear_combination he
+    exact (star_injective (sub_eq_zero.mp
+      ((mul_eq_zero.mp hz).resolve_left (mul_ne_zero hi hq)))).symm
+  change A * Q = Q * A
+  ext i j : 1
+  rw [show A = diagonal a from rfl, Matrix.diagonal_mul, Matrix.mul_diagonal]
+  by_cases hq : Q i j = 0
+  · rw [hq, mul_zero, zero_mul]
+  have hqji : Q j i ≠ 0 := by
+    intro hz
+    have he := congrArg (fun M : Matrix ι ι ℂ => M i j) hQ
+    change star (Q j i) = Q i j at he
+    rw [hz, star_zero] at he
+    exact hq he.symm
+  have haij : a i = a j := by
+    by_cases hi : a i = 0
+    · by_cases hj : a j = 0
+      · exact hi.trans hj.symm
+      · exact (hentry j i hj hqji).symm
+    · exact hentry i j hi hq
+  rw [haij, mul_comm]
+
+/-- Commutation with the opposite Gram matrices makes the product normal. -/
+theorem isStarNormal_mul_of_commuting_grams (A B : Matrix ι ι ℂ)
+    (hA : IsStarNormal A) (hB : IsStarNormal B)
+    (hAQ : Commute A (Bᴴ * B)) (hBP : Commute B (Aᴴ * A)) : IsStarNormal (A * B) := by
+  have hAe : Aᴴ * A = A * Aᴴ := hA.star_comm_self.eq
+  have hBe : Bᴴ * B = B * Bᴴ := hB.star_comm_self.eq
+  constructor
+  change (A * B)ᴴ * (A * B) = (A * B) * (A * B)ᴴ
+  calc
+    _ = Bᴴ * ((Aᴴ * A) * B) := by simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
+    _ = (Bᴴ * B) * (Aᴴ * A) := by rw [← hBP.eq, Matrix.mul_assoc]
+    _ = (Bᴴ * B) * (A * Aᴴ) := by rw [hAe]
+    _ = (A * (Bᴴ * B)) * Aᴴ := by rw [← Matrix.mul_assoc, ← hAQ.eq]
+    _ = _ := by rw [hBe]; simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
+
 /-- If the normal summands have scalar common commutant and `diagonal a`
 is invertible, the relative product is energy-balanced in this eigenbasis
 exactly when the first spectrum has constant modulus. -/

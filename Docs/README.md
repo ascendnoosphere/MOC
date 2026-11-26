@@ -41,6 +41,7 @@ contact is a matching that attains that largest projection.
 
 The mixer is the unitary change between the two eigenbases.
 
+- [Normal products and normal relative products](normal-products-proof-map.md)
 - [Circle-or-line common weights in order four](order-four-circle-or-line-common-weights-proof-map.md)
 - [Complex Hadamard matrices in order four](order-four-complex-hadamard-proof-map.md)
 - [Conic spectral reductions](conic-spectral-reductions-proof-map.md)
