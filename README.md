@@ -612,6 +612,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
 
 ## Counterexamples to stronger statements
 
+Three new Lean source scripts address Fourier-only cycle bounds,
+replacement of phases by signs in a fixed chart, and transfer from real
+to complex evaluations of an affine pencil. These examples refute the
+stated extension steps. The three scripts have not been compiled.
+[Exact claims and source status](Docs/all-orders-proof-map.md#refuted-extension-steps)
+
 - On four coordinates, an alternating cycle with three biased
   unitary gates and one fair gate can fail to have one set of
   probability weights for every pair of spectra. Thus the

@@ -605,6 +605,31 @@ Lean checks the reductions.
 [Stationary equation](../Lean/MOC/HermitianNormalSupportDescent.lean#L151) ·
 [Coefficient route](free-eigenvalue-and-exterior-shifts-proof-map.md#one-law-for-a-free-eigenvalue)
 
+### Refuted extension steps
+
+The following exact examples refute three proposed extension steps.
+They are not counterexamples to the determinant inclusion. The complete
+Lean source bodies are written, but these three files have not been
+compiled. They are standalone modules outside the default import.
+
+For a four-switch word $x$, put $s_i(x)=(-1)^{x_i}$ and
+$\chi(x)=\prod_i s_i(x)$. The degree-three Walsh conditions are
+$\sum_x\delta(x)\chi(x)s_i(x)=0$ for every coordinate $i$.
+For the capacity evaluation below, give each false bit a factor two
+and each true bit a factor one half. Sum the deficit times the product
+of these four factors.
+
+| Proposed step | Exact obstruction | Lean source |
+| --- | --- | --- |
+| Nonnegative deficits and vanishing degree-three Walsh coefficients imply the four-switch capacity bound. | Let the deficit be one on each word with three true bits, two on the all-true word, and zero elsewhere. Every required Walsh coefficient vanishes. The top Walsh sum is $-2$. At positive coordinate scalings two and one half, the capacity evaluation is $9/8<2$. | [Deficit and cancellations](../Lean/MOC/CyclicSupportCapacityObstruction.lean#L55) · [Refuted implication](../Lean/MOC/CyclicSupportCapacityObstruction.lean#L77) |
+| Replace diagonal unit phases by real signs while keeping the two surrounding bases fixed. | In order three, let $J$ have every entry one, $A=I-J/3$, and $B=J/3$. The phases are the three cube roots of one. They give determinant zero. Every sign choice gives a real determinant at least $1/9$. The unrestricted order-three inclusion still holds. | [Determinant identity](../Lean/MOC/OrthogonalPhaseSignObstruction.lean#L39) · [Real normal matrices and unitary phases](../Lean/MOC/OrthogonalPhaseSignObstruction.lean#L72) |
+| Fixed-mass bounds at every real evaluation imply the corresponding complex affine-pencil bound. | Average the three segments with endpoints $\pm(z-1)$, $\pm zi$, and $\pm(z+1)(1+i)$, each with mass $1/3$. The point $z/8$ is in this average for every real $z$. At $z=(1-2i)/5$, multiplication by $1+2i$ gives real part zero on the whole average and real part $1/8$ at $z/8$. This example is an abstract pencil, with no matrix realization asserted. | [Real evaluations](../Lean/MOC/HermitianPencilRealSliceObstruction.lean#L22) · [Complex separation](../Lean/MOC/HermitianPencilRealSliceObstruction.lean#L64) |
+
+Thus the cycle proof must use the neighboring spectral factors in
+addition to the Walsh identities. An orthogonal reduction must permit
+changes of basis beyond sign substitution. A Hermitian pencil proof
+must use more than the real evaluation bounds.
+
 ### Stationary support and spectral exchange
 
 At a unitary support maximum, sum the complex signed determinant
