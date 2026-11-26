@@ -317,6 +317,60 @@ endpoint swap with weight $|s|^2$. The empty product has weight one on
 the identity permutation.
 [Common law](../Lean/MOC/ForestGates.lean#L101) · [Ordered product](../Lean/MOC/ForestGates.lean#L167) · [Two-row formula](../Lean/MOC/OneBridge.lean#L227)
 
+Two alternating layers on one even cycle also give a common law.
+Let $K$ be a finite set of $m\ge2$ labels and let $s$ be a single
+cycle on $K$. Use coordinates $(k,0)$ and $(k,1)$ for $k\in K$.
+The left layer uses a gate $L_k$ on $((k,0),(k,1))$. The right
+layer uses $R_k$ on $((k,0),(s(k),1))$. Each gate is a two-by-two
+unitary whose entries have squared modulus $1/2$. The mixer is
+the left layer times the right layer.
+[Gate condition](../Lean/MOC/BalancedGateProducts.lean#L10) · [Cycle mixer](../Lean/MOC/CyclicSwitchMatrices.lean#L127)
+
+At each gate choose the identity or the swap. For a full choice $x$,
+let $N(x)$ be its number of swaps. Give it weight
+$2^{-2m}(1+c(-1)^{N(x)})$, where
+
+$$
+c=2^{2m}\,\mathrm{sign}(s)\,
+\mathrm{Re}\!\left(\prod_{k\in K}
+  (L_k)_{00}\overline{(L_k)_{01}}
+  (R_k)_{00}\overline{(R_k)_{10}}\right).
+$$
+
+The sign is $1$ for an even permutation and $-1$ for an odd one.
+The product inside the real part has modulus $2^{-2m}$, so $|c|\le1$.
+Half of the choices have each parity, so the weights sum to one.
+Compose the right layer's switches first. Add the weights of choices
+that produce the same permutation.
+[Interference term and bound](../Lean/MOC/CyclicSwitchMatrices.lean#L18) · [Probability law](../Lean/MOC/BalancedCyclicGateLaw.lean#L33)
+
+```mermaid
+flowchart BT
+    accTitle: Squared minors of an alternating-cycle mixer
+    accDescr: Parity cancels unless the row and column sets each meet their layer's gates once. In that case the event consists of two complementary switch choices.
+    General["Some gate meets its set zero or two times"]
+    Each["Each gate meets its set once"]
+    Fair["Parity correction cancels"]
+    Cross["Two choices give the cross term"]
+    Law["One law for all squared minors"]
+    Holds["Inclusion for all complex spectra"]
+    General --> Fair --> Law
+    Each --> Cross --> Law
+    Law -->|if| Holds
+```
+
+In the parity-cancellation case, at most one intermediate set
+has compatible counts in both layers. The squared modulus of the
+minor is zero if no such set exists. Otherwise it is the product
+of the two squared minor moduli through that set.
+[Minor factorization](../Lean/MOC/CyclicSwitchMinor.lean#L294) · [Uniform law in this case](../Lean/MOC/CyclicSwitchMinor.lean#L362)
+
+The probability that the resulting permutation maps the column
+set onto the row set is the squared modulus of the corresponding
+minor. This identity gives determinant inclusion for every pair of
+complex spectra.
+[Parity cancellation](../Lean/MOC/CyclicSwitchEvents.lean#L342) · [Complementary choices](../Lean/MOC/CyclicSwitchEvents.lean#L360) · [Transversal cross term](../Lean/MOC/CyclicSwitchMatrices.lean#L179) · [Inclusion](../Lean/MOC/BalancedCyclicGateLaw.lean#L103)
+
 The three-coordinate normalization uses lists $x,y$ with $x_1=0$,
 $x_2=1$, and $y_1=0$. Its determinant is
 $\det(U-\mathrm{diag}(x)U\mathrm{diag}(y))/\det U$. Its vertices are

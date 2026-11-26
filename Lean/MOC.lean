@@ -33,6 +33,7 @@ import MOC.AlternatingMinorLaw
 import MOC.OneBridge
 import MOC.WeightedPermutationCycle
 import MOC.ForestGates
+import MOC.BalancedCyclicGateLaw
 import MOC.ZhengT85Lift
 import MOC.ZhengT85SecantObstruction
 import MOC.ContactDifferential
