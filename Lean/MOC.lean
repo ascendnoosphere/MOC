@@ -410,9 +410,18 @@ import MOC.ThreeHermitianSummands
 import MOC.TranslatedDeterminantPolynomial
 
 import MOC.ContinuousWeightsAtOrigin
+import MOC.ContinuousWeightsAtOneHot
+import MOC.FourSignedHeightBound
 import MOC.GlobalDeletionEllipse
 import MOC.HaarPermutationTwirl
+import MOC.HarmonicSubsetMatchingTests
+import MOC.InterferenceGram
+import MOC.MatchingListCoefficients
+import MOC.MiddleSubsetMatchingSpan
+import MOC.RankOneAffineInvariants
+import MOC.Reformulations.QuadraticDiskCertificate
 import MOC.Reformulations.SubsetOperatorSupport
+import MOC.ThreeEffectExtremePoints
 
 open Lean Elab Command in
 run_cmd do

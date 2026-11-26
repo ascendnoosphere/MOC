@@ -5,7 +5,12 @@ import Mathlib.MeasureTheory.Function.LocallyIntegrable
 import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
 
 /-! Unitary Schur feedback on several coordinates and exact quadrature of
-the squared determinant over independently chosen opposite phases. -/
+the squared determinant over independently chosen opposite phases.
+
+The common rotation that avoids all singular grid points still needs a Lean proof.
+For each sign choice, scale the diagonal phase matrix by one common scalar.
+Each denominator is a nonzero polynomial in this scalar. The finite union
+of their root sets omits a point of the unit circle. -/
 
 open Matrix BigOperators Finset
 

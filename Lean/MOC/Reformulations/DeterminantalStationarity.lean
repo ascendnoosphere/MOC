@@ -93,7 +93,7 @@ private theorem hessian_nonpositive_of_spectral_maximum (a b : ι → ℂ)
       (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re) :
     DeterminantOrbitHessianNonpositive (diagonal a) (U * diagonal b * Uᴴ) η := by
   intro K hK
-  apply determinant_orbit_hessian_nonpos _ _ η hdet _ K hK
+  refine determinant_orbit_hessian_nonpos _ _ η hdet ?_ K hK
   intro R hR
   have hR' : IsUnitary Rᴴ := by
     simpa only [IsUnitary, Matrix.conjTranspose_conjTranspose] using And.intro hR.2 hR.1

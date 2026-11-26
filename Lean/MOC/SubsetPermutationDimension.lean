@@ -1,4 +1,5 @@
 import MOC.SegreConvexity
+import MOC.MiddleSubsetMatchingSpan
 import Mathlib.Combinatorics.Enumerative.Catalan
 import Mathlib.Data.Matrix.Rank
 import Mathlib.Data.Nat.Choose.Vandermonde
@@ -153,5 +154,49 @@ theorem signed_transversal_shift_sum {R α : Type*} [CommRing R] [Fintype α] [D
       ∏ i, (x i - y i) := by
   rw [← Fintype.prod_add]
   exact Finset.prod_congr rfl fun i _ => by ring
+
+/-- The signed vectors of all matchings between two equal classes span a space of Catalan
+dimension on the middle subset level. -/
+theorem finrank_middleSubsetMatchingSpan [CharZero K] (n : ℕ) (L R : Finset ι)
+    (hl : L.card = n) (hr : R.card = n) (hd : Disjoint L R) (hu : L ∪ R = univ) :
+    Module.finrank K (middleSubsetMatchingSpan K n L R) = catalan n := by
+  classical
+  cases n with
+  | zero =>
+    have hL := card_eq_zero.mp hl
+    have hR := card_eq_zero.mp hr
+    subst L
+    subst R
+    let E : SubsetsOfSize ι 0 := ⟨∅, card_empty⟩
+    have htop : middleSubsetMatchingSpan K 0 (∅ : Finset ι) ∅ = ⊤ := by
+      apply top_unique
+      intro f _
+      have hmem : (fun _ : SubsetsOfSize ι 0 => (1 : K)) ∈
+          middleSubsetMatchingSpan K 0 (∅ : Finset ι) ∅ :=
+        Submodule.subset_span ⟨⟨[], SubsetMatchingList.nil⟩, rfl⟩
+      have hf : f = f E • (fun _ : SubsetsOfSize ι 0 => (1 : K)) := by
+        funext S
+        have he : S = E := Subtype.ext (card_eq_zero.mp S.property)
+        rw [he]
+        simp
+      rw [hf]
+      exact Submodule.smul_mem _ _ hmem
+    rw [htop, finrank_top, Module.finrank_pi, Fintype.card_finset_len, Nat.choose_zero, catalan_zero]
+  | succ k =>
+    have hc := congrArg Finset.card hu
+    rw [card_union_of_disjoint hd, hl, hr, card_univ] at hc
+    have hN : Fintype.card ι = 2 * (k + 1) := by omega
+    rw [middleSubsetMatchingSpan_eq_ker L R hl hr hd hu,
+      finrank_subsetIncidenceDown_ker k (by omega), hN]
+    have hs : (2 * (k + 1)).choose k = (2 * (k + 1)).choose (k + 2) :=
+      Nat.choose_symm_of_eq_add (by omega)
+    rw [hs, ← Nat.centralBinom_eq_two_mul_choose]
+    have hv := centralBinom_sub_choose_succ (k + 1)
+    omega
+
+/- The remaining operator identification uses the two disjoint copies of the label set.
+For a middle subset T, take its selected left labels and its unselected right labels.
+The matching coefficient equals the subset-image indicator times the sign of the number
+of selected right labels. This source does not yet transport the span through that map. -/
 
 end MOC

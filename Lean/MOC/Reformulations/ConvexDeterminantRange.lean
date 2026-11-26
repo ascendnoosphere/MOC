@@ -60,7 +60,10 @@ theorem conjecture_iff_special_unitary [Nonempty ι] : Conjecture ι ↔
       relative_unitary Uᴴ D hUstar hD) (by rw [Matrix.det_mul, hDdet, hdU])
     have hcomm : Commute D (diagonal b) := by
       change D * diagonal b = diagonal b * D
-      rw [D, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal, mul_comm d b]
+      rw [D, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
+      apply congrArg diagonal
+      funext i
+      exact mul_comm _ _
     have he : determinantValue a b (U * D) = determinantValue a b U := by
       have hDdiag : D * diagonal b * Dᴴ = diagonal b := by
         rw [hcomm.eq, Matrix.mul_assoc, hD.1, Matrix.mul_one]
@@ -128,7 +131,7 @@ theorem holds_iff_convex_function_test (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     refine ⟨p, ?_⟩
     have hj := hφ.map_sum_le (t := Finset.univ) (p := q) (fun i _ => hw i) hs
       (fun i _ => Set.mem_univ (q i))
-    rw [hv] at hj
+    simp only [hv, smul_eq_mul] at hj
     refine hj.trans ?_
     calc
       _ ≤ ∑ i : κ, w i * φ (matchingProduct a b p) := by

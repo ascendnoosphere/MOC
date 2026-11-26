@@ -15,10 +15,11 @@ namespace MOC
 private theorem normSq_sub_far_center (z k : ℂ) (r : ℝ) :
     Complex.normSq (z - (-(r : ℂ) * conj k)) =
       Complex.normSq z + Complex.normSq (-(r : ℂ) * conj k) + 2 * r * (k * z).re := by
-  rw [Complex.normSq_sub]
   have hc : conj (-(r : ℂ) * conj k) = -(r : ℂ) * k := by simp
-  rw [hc, neg_mul, mul_neg, Complex.neg_re,
-    show z * ((r : ℂ) * k) = (r : ℂ) * (k * z) by ring, Complex.re_ofReal_mul]
+  have he : z * conj (-(r : ℂ) * conj k) = -((r : ℂ) * (k * z)) := by
+    rw [hc]
+    ring
+  rw [Complex.normSq_sub, he, Complex.neg_re, Complex.re_ofReal_mul]
   ring
 
 /-- The convex hull of finitely many complex points is the intersection of

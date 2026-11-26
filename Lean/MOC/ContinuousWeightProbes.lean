@@ -49,7 +49,7 @@ theorem sum_signedError_ge (d : ProbeWitness κ k) (w : κ → ℝ)
   unfold gap
   linarith
 
-private def mass (d : ProbeWitness κ k) (u : Fin (k + 1) → ℝ) : Fin (k + 1) → ℝ :=
+def mass (d : ProbeWitness κ k) (u : Fin (k + 1) → ℝ) : Fin (k + 1) → ℝ :=
   Fin.cases (1 - d.target 0 + d.gap * u 0)
     (fun j => d.target j.succ + d.gap * u j.succ)
 

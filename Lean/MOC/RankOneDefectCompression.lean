@@ -1,4 +1,6 @@
 import MOC.PrincipalCoisometry
+import MOC.Householder
+import MOC.Transfer
 import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-! The compression in the determinant comparison has a square corner
@@ -165,6 +167,153 @@ possibly defective singular value and one extra zero partner label. -/
 theorem conjecture_iff_rankOneDefect (n : ℕ) :
     Conjecture (Fin (n + 1)) ↔ RankOneDefectConjecture n :=
   (conjecture_iff_principalCoisometry n).trans (principalCoisometry_iff_rankOneDefect n)
+
+private theorem scalar_fin_one_eq_smul (a : ℂ) :
+    scalar (Fin 1) a = a • (1 : Matrix (Fin 1) (Fin 1) ℂ) := by
+  ext i j
+  have h : i = j := Subsingleton.elim _ _
+  subst j
+  simp [scalar_apply]
+
+/-- An affine transfer factors into one fixed unitary and a rank-one
+phase. The proof uses the unitary block identities at the boundary phase. -/
+theorem affineSchurTransfer_rankOnePhase
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (a : ℂ) (r : Matrix (Fin 1) ι ℂ)
+    (c : Matrix ι (Fin 1) ℂ) (D : Matrix ι ι ℂ)
+    (hU : IsUnitary (fromBlocks (scalar (Fin 1) a) r c D)) (ha : Complex.normSq a < 1) :
+    ∃ (v : ι → ℂ) (W : Matrix ι ι ℂ), (∑ i, star (v i) * v i = 1) ∧
+      IsUnitary W ∧ ∀ z : ℂ, affineSchurTransfer a r c D z = rankOnePhase v z * W := by
+  let q : ℝ := 1 - Complex.normSq a
+  let t : ℂ := (Real.sqrt q : ℂ)
+  let v : ι → ℂ := fun i => c i 0 / t
+  let W := affineSchurTransfer a r c D 1
+  have hq : 0 < q := sub_pos.mpr ha
+  have hqc : (q : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hq.ne'
+  have ht : t ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.2 hq).ne'
+  have htSq : t * t = (q : ℂ) := by
+    simp only [t, ← Complex.ofReal_mul, ← pow_two, Real.sq_sqrt hq.le]
+  have htStar : star t = t := by simp only [t, Complex.star_def, Complex.conj_ofReal]
+  have hWa : IsUnitary W := affineSchurTransfer_unitary a r c D 1 hU ha Complex.normSq_one
+  have hleft := hU.2
+  have hright := hU.1
+  rw [fromBlocks_conjTranspose, fromBlocks_multiply, ← fromBlocks_one, fromBlocks_inj] at hleft hright
+  have hrr : r * rᴴ = (q : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) := by
+    have h : (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) + r * rᴴ = 1 := by
+      simpa only [scalar_fin_one_eq_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
+        Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, smul_smul, Complex.star_def,
+        Complex.mul_conj] using hright.1
+    calc
+      _ = 1 - (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) :=
+        eq_sub_iff_add_eq.mpr (by rwa [add_comm])
+      _ = _ := by
+        rw [← one_smul ℂ (1 : Matrix (Fin 1) (Fin 1) ℂ), ← sub_smul,
+          q, Complex.ofReal_sub, Complex.ofReal_one]
+  have hcc : cᴴ * c = (q : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) := by
+    have h : (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) + cᴴ * c = 1 := by
+      simpa only [scalar_fin_one_eq_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
+        Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, smul_smul, Complex.star_def,
+        ← Complex.normSq_eq_conj_mul_self] using hleft.1
+    calc
+      _ = 1 - (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) :=
+        eq_sub_iff_add_eq.mpr (by rwa [add_comm])
+      _ = _ := by
+        rw [← one_smul ℂ (1 : Matrix (Fin 1) (Fin 1) ℂ), ← sub_smul,
+          q, Complex.ofReal_sub, Complex.ofReal_one]
+  have hrD : r * Dᴴ = (-a) • cᴴ := by
+    have h := hright.2.1
+    rw [scalar_fin_one_eq_smul, Matrix.smul_mul, Matrix.one_mul, add_comm] at h
+    exact (eq_neg_of_add_eq_zero_left h).trans (neg_smul a cᴴ).symm
+  have hnorm : ∑ i, star (c i 0) * c i 0 = (q : ℂ) := by
+    have h := congrArg (fun X : Matrix (Fin 1) (Fin 1) ℂ => X 0 0) hcc
+    simpa only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.smul_apply,
+      smul_eq_mul, Matrix.one_apply_eq, mul_one] using h
+  have hv : ∑ i, star (v i) * v i = 1 := by
+    calc
+      _ = ∑ i, (t⁻¹ * t⁻¹) * (star (c i 0) * c i 0) := by
+        apply Finset.sum_congr rfl
+        intro i _
+        simp only [v, div_eq_mul_inv, star_mul', star_inv₀, htStar]
+        ring
+      _ = 1 := by rw [← Finset.mul_sum, hnorm, ← mul_inv_rev, htSq, inv_mul_cancel₀ hqc]
+  have hP : (q : ℂ)⁻¹ • (c * cᴴ) = vecMulVec v (star ∘ v) := by
+    ext i j
+    simp only [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply, Fintype.sum_unique,
+      Matrix.conjTranspose_apply, Matrix.vecMulVec_apply, Function.comp_apply,
+      v, div_eq_mul_inv, star_mul', star_inv₀, htStar]
+    rw [← htSq, mul_inv_rev]
+    ring
+  have hW (z : ℂ) : affineSchurTransfer a r c D z =
+      D + ((z + star a) / (q : ℂ)) • (c * r) := by
+    simp only [affineSchurTransfer, q, Complex.ofReal_sub, Complex.ofReal_one]
+  have hrW : r * Wᴴ = cᴴ := by
+    have hstar : star ((1 + star a) / (q : ℂ)) = (1 + a) / (q : ℂ) := by
+      simp only [star_div₀, star_add, star_one, star_star, Complex.star_def, Complex.conj_ofReal]
+    change r * (affineSchurTransfer a r c D 1)ᴴ = cᴴ
+    rw [hW, Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul,
+      Matrix.mul_add, Matrix.mul_smul, ← Matrix.mul_assoc r rᴴ cᴴ, hrD, hrr, hstar,
+      Matrix.smul_mul, Matrix.one_mul, smul_smul, div_mul_cancel₀ _ hqc, ← add_smul,
+      show -a + (1 + a) = 1 by ring, one_smul]
+  refine ⟨v, W, hv, hWa, fun z => ?_⟩
+  have hsplit : affineSchurTransfer a r c D z = W + ((z - 1) / (q : ℂ)) • (c * r) := by
+    change affineSchurTransfer a r c D z =
+      affineSchurTransfer a r c D 1 + ((z - 1) / (q : ℂ)) • (c * r)
+    rw [hW z, hW 1, add_assoc, ← add_smul,
+      show (z + star a) / (q : ℂ) = (1 + star a) / (q : ℂ) + (z - 1) / (q : ℂ) by ring]
+  have hphase : affineSchurTransfer a r c D z * Wᴴ = rankOnePhase v z := by
+    rw [hsplit, Matrix.add_mul, hWa.1, Matrix.smul_mul, Matrix.mul_assoc c r Wᴴ,
+      hrW, rankOnePhase, ← hP, smul_smul, div_eq_mul_inv]
+  calc
+    _ = (affineSchurTransfer a r c D z * Wᴴ) * W := by
+      rw [Matrix.mul_assoc, hWa.2, Matrix.mul_one]
+    _ = _ := by rw [hphase]
+
+/-- A matrix with positive rank-at-most-one Gram defect is unitary or has
+one rank-one phase factor of modulus strictly below one. -/
+theorem rankOneDefect_unitary_or_rankOnePhase {n : ℕ} (V : Matrix (Fin n) (Fin n) ℂ)
+    (hV : (1 - Vᴴ * V).PosSemidef) (hr : (1 - Vᴴ * V).rank ≤ 1) :
+    IsUnitary V ∨ ∃ (v : Fin n → ℂ) (z : ℂ) (W : Matrix (Fin n) (Fin n) ℂ),
+      (∑ i, star (v i) * v i = 1) ∧ ‖z‖ < 1 ∧ IsUnitary W ∧ V = rankOnePhase v z * W := by
+  obtain ⟨hV', hr'⟩ := (rank_one_defect_left_iff_right V).mp ⟨hV, hr⟩
+  obtain ⟨u, hu⟩ := right_defect_column hV' hr'
+  obtain ⟨U, hU, htail⟩ := exists_unitary_retained_rows (defectFrame V u) hu 0
+  let e : (Fin 1 ⊕ Fin n) ≃ Fin (n + 1) :=
+    (Equiv.sumCongr (Equiv.ofUnique (Fin 1) Unit) (Equiv.refl (Fin n))).trans
+      ((Equiv.sumComm Unit (Fin n)).trans
+        ((Equiv.optionEquivSumPUnit (Fin n)).symm.trans (finSuccEquiv' (0 : Fin (n + 1))).symm))
+  have he0 (i : Fin 1) : e (.inl i) = 0 := by simp [e]
+  have he1 (i : Fin n) : e (.inr i) = i.succ := by simp [e]
+  let α := U 0 0
+  let r : Matrix (Fin 1) (Fin n) ℂ := Matrix.of fun _ j => U 0 j.succ
+  let c : Matrix (Fin n) (Fin 1) ℂ := Matrix.of fun i _ => U i.succ 0
+  have hsub (i j : Fin n) : U i.succ j.succ = V i j := by
+    have h := congrArg (fun Y : Matrix (Fin n) (Fin (n + 1)) ℂ => Y i j.succ) htail
+    simpa only [Matrix.submatrix_apply, Fin.succAbove_zero, id_eq, defectFrame,
+      Matrix.of_apply, Fin.cons_succ] using h
+  have hblock : U.submatrix e e = fromBlocks (scalar (Fin 1) α) r c V := by
+    ext (i | i) (j | j)
+    · have h : i = j := Subsingleton.elim _ _
+      simp [he0, α, h, scalar_apply]
+    · simp [he0, he1, r]
+    · simp [he0, he1, c]
+    · simp [he1, hsub]
+  have hW : IsUnitary (fromBlocks (scalar (Fin 1) α) r c V) :=
+    hblock ▸ unitary_reindex e e hU
+  have hnorm : Complex.normSq α ≤ 1 := by
+    have hsum := sum_col_of_mem_doublyStochastic (normSq_transpose_doublyStochastic U hU) 0
+    change (∑ i, Complex.normSq (U 0 i)) = 1 at hsum
+    rw [← hsum]
+    exact Finset.single_le_sum (fun j _ => Complex.normSq_nonneg (U 0 j)) (Finset.mem_univ 0)
+  by_cases hα : Complex.normSq α < 1
+  · obtain ⟨v, W, hv, hW', heq⟩ := affineSchurTransfer_rankOnePhase α r c V hW hα
+    refine Or.inr ⟨v, -star α, W, hv, ?_, hW', ?_⟩
+    · rw [norm_neg, Complex.star_def, Complex.norm_conj]
+      rw [Complex.normSq_eq_norm_sq] at hα
+      nlinarith only [hα, norm_nonneg α, sq_nonneg (‖α‖ - 1)]
+    · have h := (heq (-star α)).symm
+      simpa only [affineSchurTransfer, neg_add_cancel, zero_div, zero_smul, add_zero] using h.symm
+  · have hn : ‖α‖ = 1 := (sq_eq_sq₀ (norm_nonneg _) zero_le_one).mp
+      (by simpa [Complex.normSq_eq_norm_sq] using hnorm.antisymm (le_of_not_gt hα))
+    exact Or.inl (schurTransfer_boundary α r c V hW hn).2.2
 
 end
 

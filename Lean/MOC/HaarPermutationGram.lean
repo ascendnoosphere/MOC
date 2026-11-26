@@ -28,6 +28,13 @@ two color words agree. The set of colors is the label set. -/
 def permutationColorGram : Matrix (Equiv.Perm ι) (Equiv.Perm ι) ℝ :=
   ∑ f : ι → ι, coloringGram f
 
+theorem permutationColorGram_apply_colorings (p q : Equiv.Perm ι) :
+    permutationColorGram p q = (by
+      classical
+      exact ∑ f : ι → ι, if f ∘ p = f ∘ q then (1 : ℝ) else 0) := by
+  classical
+  simp only [permutationColorGram, Matrix.sum_apply, coloringGram, Matrix.of_apply]
+
 private theorem coloringGram_posSemidef (f : ι → ι) : (coloringGram f).PosSemidef := by
   classical
   let X : Matrix (ι → ι) (Equiv.Perm ι) ℝ := Matrix.of fun w p => if f ∘ p = w then 1 else 0

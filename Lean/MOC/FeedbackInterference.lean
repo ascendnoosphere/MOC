@@ -1,7 +1,14 @@
 import MOC.Transfer
 
 /-! Cofactors of the entrywise spectral sum give the two global interference
-sums. Laplace expansion reconstructs the determinant separately on every row. -/
+sums. Laplace expansion reconstructs the determinant separately on every row.
+
+The link to the Fourier coefficients of the transfer still needs a Lean proof.
+Write the transfer as a rank-one update divided by the feedback denominator.
+Its spectral weighting gives two rank-one updates. Their determinant is quadratic
+in the update parameter. Its constant term is the determinant of the deleted
+weighted matrix. The transfer determinant formula then gives the positive
+cofactor as the first Fourier coefficient. Conjugation gives the other coefficient. -/
 
 open BigOperators Matrix
 open scoped ComplexConjugate

@@ -120,7 +120,8 @@ private theorem rank_kernel_conjecture_reindex {κ : Type*} [Fintype κ] [Decida
     unfold kernelMatchingProduct
     rw [← Equiv.prod_comp e (fun j => K (((e.symm.trans σ).trans e) j) j)]
     simp only [Matrix.submatrix_apply, Equiv.trans_apply, Equiv.symm_apply_apply]
-  have hh := h (K.submatrix e e) (U.submatrix e e) (hr ▸ hK) (unitary_reindex e e hU)
+  have hK' : (K.submatrix e e).rank ≤ r := by rwa [hr]
+  have hh := h (K.submatrix e e) (U.submatrix e e) hK' (unitary_reindex e e hU)
   rw [hv] at hh
   apply convexHull_mono _ hh
   rintro _ ⟨σ, rfl⟩

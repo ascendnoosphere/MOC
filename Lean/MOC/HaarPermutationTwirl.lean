@@ -10,6 +10,7 @@ import Mathlib.RingTheory.RootsOfUnity.Complex
 /-! Haar averaging on the tensor basis indexed by finite words. -/
 
 open BigOperators Matrix MeasureTheory
+open scoped InnerProductSpace
 
 namespace MOC
 
@@ -206,7 +207,6 @@ private theorem tensorPower_unit_phase_diagonal (a : ι → ℂ) (ha : ∀ i, �
 private theorem word_phase_product (f : Word ι) (j : ι) (z : ℂ) :
     (∏ i, if f i = j then z else 1) = z ^ wordMultiplicity f j := by
   rw [Finset.prod_ite, Finset.prod_const, Finset.prod_const_one, mul_one]
-  rfl
 
 private theorem commute_diagonal_of_commute_unitary
     (F : Matrix (Word ι) (Word ι) ℂ)
@@ -245,6 +245,267 @@ private theorem commute_diagonal_of_commute_unitary
         (Finset.prod_fiberwise' Finset.univ h a).symm
     rw [hp f, hp g]
     simp only [hmultiplicity f g hfg, mul_comm (F f g)]
+
+private def colorMapMatrix (f : Word ι) : Matrix ι ι ℂ :=
+  Matrix.of fun i j => if f j = i then 1 else 0
+
+private theorem colorMapMatrix_eq_diagonal_mul_unitary (f : Word ι) :
+    ∃ (d : ι → ℂ) (U : UGroup ι), colorMapMatrix f = diagonal d * (U : Matrix ι ι ℂ) := by
+  classical
+  let A := colorMapMatrix f
+  let x (i : ι) : EuclideanSpace ℂ ι :=
+    (WithLp.equiv 2 _).symm (fun j => star (A i j))
+  let v (i : ι) : EuclideanSpace ℂ ι := (↑(‖x i‖⁻¹) : ℂ) • x i
+  let s : Set ι := {i | x i ≠ 0}
+  have hx (i j : ι) (hij : i ≠ j) : ⟪x i, x j⟫_ℂ = 0 := by
+    dsimp only [x]
+    rw [EuclideanSpace.inner_piLp_equiv_symm, dotProduct]
+    apply Finset.sum_eq_zero
+    intro k _
+    by_cases hk : f k = i
+    · have hn : f k ≠ j := fun h => hij (hk.symm.trans h)
+      simp only [A, colorMapMatrix, Matrix.of_apply, hn, if_false, star_zero, zero_mul]
+    · simp only [A, colorMapMatrix, Matrix.of_apply, hk, if_false, Pi.star_apply,
+        star_zero, mul_zero]
+  have hv : Orthonormal ℂ (s.restrict v) := by
+    rw [orthonormal_iff_ite]
+    intro i j
+    by_cases hij : i = j
+    · subst j
+      rw [if_pos rfl, inner_self_eq_norm_sq_to_K]
+      have hnorm : ‖v i.val‖ = 1 := by
+        change ‖(↑(‖x i.val‖⁻¹) : ℂ) • x i.val‖ = 1
+        rw [norm_smul, Complex.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
+          inv_mul_cancel₀ (norm_ne_zero_iff.mpr i.property)]
+      simpa only [Set.restrict_apply, hnorm, RCLike.ofReal_one, one_pow]
+    · rw [if_neg hij]
+      have hn : i.val ≠ j.val := fun h => hij (Subtype.ext h)
+      change ⟪v i.val, v j.val⟫_ℂ = 0
+      simp only [v, inner_smul_left, inner_smul_right, hx _ _ hn, mul_zero]
+  obtain ⟨B, hB⟩ := Orthonormal.exists_orthonormalBasis_extension_of_card_eq
+    (finrank_euclideanSpace (𝕜 := ℂ) (ι := ι)) hv
+  let U : Matrix ι ι ℂ := Matrix.of fun i j => star (B i j)
+  have hU : U ∈ Matrix.unitaryGroup ι ℂ := by
+    apply Matrix.mem_unitaryGroup_iff.mpr
+    change U * Uᴴ = 1
+    ext i j : 1
+    have h := orthonormal_iff_ite.mp B.orthonormal i j
+    rw [EuclideanSpace.inner_eq_star_dotProduct] at h
+    change (∑ k, B j k * star (B i k)) = if i = j then (1 : ℂ) else 0 at h
+    simpa only [U, Matrix.of_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, star_star,
+      Matrix.one_apply, mul_comm] using h
+  refine ⟨fun i => (‖x i‖ : ℂ), ⟨U, hU⟩, ?_⟩
+  change A = diagonal (fun i => (‖x i‖ : ℂ)) * U
+  ext i j : 1
+  rw [Matrix.diagonal_mul]
+  by_cases hi : x i = 0
+  · have h := congrArg (fun y : EuclideanSpace ℂ ι => y j) hi
+    change star (A i j) = 0 at h
+    have hz : A i j = 0 := star_injective (h.trans star_zero.symm)
+    simp only [hi, norm_zero, Complex.ofReal_zero, zero_mul, hz]
+  · have he : (‖x i‖ : ℂ) • B i = x i := by
+      rw [hB i hi, v, smul_smul, Complex.ofReal_inv,
+        mul_inv_cancel₀ (Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr hi)), one_smul]
+    have hc := congrArg (fun y : EuclideanSpace ℂ ι => y j) he
+    change (‖x i‖ : ℂ) * B i j = star (A i j) at hc
+    have hs := congrArg star hc
+    simpa only [U, Matrix.of_apply, star_mul, Complex.star_def, Complex.conj_ofReal,
+      Complex.conj_conj, mul_comm] using hs.symm
+
+private theorem tensorPower_colorMapMatrix_apply (f x y : Word ι) :
+    tensorPower (colorMapMatrix f) x y = if x = f ∘ y then 1 else 0 := by
+  classical
+  by_cases h : x = f ∘ y
+  · subst x
+    simp only [tensorPower, colorMapMatrix, Matrix.of_apply, Function.comp_apply, if_pos rfl,
+      Finset.prod_const_one]
+  · rw [if_neg h]
+    obtain ⟨i, hi⟩ := Function.ne_iff.mp h
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (by
+      change (if f (y i) = x i then (1 : ℂ) else 0) = 0
+      exact if_neg hi.symm)
+
+private theorem positionPermutation_apply (p : Equiv.Perm ι) (f g : Word ι) :
+    positionPermutation p f g = if f = g ∘ p then 1 else 0 := by
+  classical
+  simp only [positionPermutation, PEquiv.toMatrix_apply, Equiv.toPEquiv_apply,
+    Option.mem_some_iff, Equiv.symm_apply_eq, wordPerm]
+
+private theorem tensorPower_commutant_sum_positionPermutations
+    (F : Matrix (Word ι) (Word ι) ℂ)
+    (hF : ∀ U : UGroup ι, Commute F (tensorPower (U : Matrix ι ι ℂ))) :
+    F = ∑ p : Equiv.Perm ι, F (p : Word ι) id • positionPermutation p := by
+  classical
+  have hdiag := commute_diagonal_of_commute_unitary F hF
+  have hzero (f : Word ι) (hf : ¬Function.Injective f) : F f id = 0 := by
+    have hn : ¬Function.Surjective f := fun h => hf (Finite.injective_iff_surjective.mpr h)
+    change ¬ ∀ j, ∃ i, f i = j at hn
+    push_neg at hn
+    obtain ⟨j, hj⟩ := hn
+    let d (i : ι) : ℂ := if i = j then 0 else 1
+    have h₁ : (∏ i, d (f i)) = 1 := Finset.prod_eq_one fun i _ => if_neg (hj i)
+    have h₀ : (∏ i, d (id i)) = 0 :=
+      Finset.prod_eq_zero (Finset.mem_univ j) (if_pos rfl)
+    have hd := hdiag d
+    rw [tensorPower_diagonal] at hd
+    have he := congrArg (fun M : Matrix (Word ι) (Word ι) ℂ => M f id) hd.eq
+    simp only [Matrix.mul_diagonal, Matrix.diagonal_mul, h₁, h₀, mul_zero, one_mul] at he
+    exact he.symm
+  let e : Equiv.Perm ι ↪ Word ι := ⟨fun p => p, fun _ _ h => Equiv.ext (congrFun h)⟩
+  ext f g : 1
+  have hmap : Commute F (tensorPower (colorMapMatrix g)) := by
+    obtain ⟨d, U, hU⟩ := colorMapMatrix_eq_diagonal_mul_unitary g
+    rw [hU, tensorPower_mul]
+    exact (hdiag d).mul_right (hF U)
+  have he := congrArg (fun M : Matrix (Word ι) (Word ι) ℂ => M f id) hmap.eq
+  simp only [Matrix.mul_apply, tensorPower_colorMapMatrix_apply, Function.comp_id] at he
+  rw [Finset.sum_eq_single g] at he
+  · simp only [if_pos rfl, mul_one] at he
+    rw [he]
+    simp only [Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul, positionPermutation_apply,
+      mul_comm (F _ id)]
+    change (∑ y, (if f = g ∘ y then (1 : ℂ) else 0) * F y id) =
+      ∑ p, (if f = g ∘ e p then (1 : ℂ) else 0) * F (e p) id
+    rw [← Finset.sum_map]
+    symm
+    apply Finset.sum_subset (Finset.subset_univ _)
+    intro y _ hy
+    have hn : ¬ Function.Injective y := by
+      intro hi
+      let p : Equiv.Perm ι := Equiv.ofBijective y (Finite.injective_iff_bijective.mp hi)
+      exact hy (Finset.mem_map.mpr ⟨p, Finset.mem_univ p, rfl⟩)
+    rw [hzero y hn, mul_zero]
+  · intro y _ hy
+    rw [if_neg hy, mul_zero]
+  · simp
+
+private theorem positionPermutation_adjoint (p : Equiv.Perm ι) :
+    (positionPermutation p)ᴴ = (wordPerm p).permMatrix ℂ := by
+  classical
+  simp only [positionPermutation, Matrix.conjTranspose_permMatrix, Equiv.Perm.inv_def,
+    Equiv.symm_symm]
+
+private theorem positionPermutation_trace_pair (p q : Equiv.Perm ι) :
+    ((positionPermutation p)ᴴ * positionPermutation q).trace =
+      (permutationColorGram p q : ℂ) := by
+  classical
+  rw [positionPermutation_adjoint, PEquiv.toMatrix_toPEquiv_mul,
+    permutationColorGram_apply_colorings, Complex.ofReal_sum]
+  change (∑ f : Word ι, positionPermutation q (f ∘ p) f) = _
+  apply Finset.sum_congr rfl
+  intro f _
+  rw [positionPermutation_apply]
+  by_cases h : f ∘ p = f ∘ q
+  · simp only [h, if_true, Complex.ofReal_one]
+  · simp only [h, if_false, Complex.ofReal_zero]
+
+private theorem positionPermutation_trace_identity_projection (p : Equiv.Perm ι) :
+    ((positionPermutation p)ᴴ * identityWordProjection).trace =
+      (Pi.single 1 (1 : ℂ) : Equiv.Perm ι → ℂ) p := by
+  classical
+  rw [positionPermutation_adjoint, PEquiv.toMatrix_toPEquiv_mul]
+  change (∑ f : Word ι, identityWordProjection (f ∘ p) f) = _
+  rw [Finset.sum_eq_single id]
+  · have h : id ∘ (p : Word ι) = id ↔ p = 1 := by
+      constructor
+      · intro he
+        exact Equiv.ext (congrFun he)
+      · rintro rfl
+        rfl
+    simp only [identityWordProjection, Matrix.diagonal_apply, h, if_pos rfl, Pi.single_apply]
+  · intro f _ hf
+    simp only [identityWordProjection, Matrix.diagonal_apply, hf, if_false, ite_self]
+  · simp
+
+private theorem twirlTerm_apply (U : UGroup ι) (f g : Word ι) :
+    twirlTerm U f g = star (∏ i, U i (f i)) * ∏ i, U i (g i) := by
+  classical
+  unfold twirlTerm
+  rw [Matrix.mul_apply]
+  simp only [Matrix.mul_diagonal, identityWordProjection, Matrix.diagonal_apply_eq]
+  rw [Finset.sum_eq_single id]
+  · simp only [if_pos rfl, mul_one, Matrix.conjTranspose_apply, tensorPower,
+      Matrix.of_apply, id_eq]
+  · intro j _ hj
+    rw [if_neg hj, mul_zero, zero_mul]
+  · simp
+
+private theorem unitaryTwirl_apply (μ : Measure (UGroup ι)) [IsFiniteMeasure μ]
+    (f g : Word ι) :
+    unitaryTwirl μ f g = ∫ U, star (∏ i, U i (f i)) * ∏ i, U i (g i) ∂μ := by
+  let L : Matrix (Word ι) (Word ι) ℂ →L[ℂ] ℂ :=
+    (Matrix.entryLinearMap ℂ ℂ f g).toContinuousLinearMap
+  change L (∫ U, twirlTerm U ∂μ) = _
+  rw [← L.integral_comp_comm (integrable_twirlTerm μ)]
+  exact integral_congr_ae (Filter.Eventually.of_forall fun U => twirlTerm_apply U f g)
+
+/-- Integration against a right-invariant probability measure on the unitary
+group gives the inverse permutation Gram matrix on permutation monomials. -/
+theorem haar_permutationMonomial_covariance
+    (μ : Measure (Matrix.unitaryGroup ι ℂ)) [IsProbabilityMeasure μ] [μ.IsMulRightInvariant]
+    (p q : Equiv.Perm ι) :
+    (∫ U, star (∏ i, U i (p i)) * ∏ i, U i (q i) ∂μ) =
+      ((permutationColorGram (ι := ι)).map Complex.ofReal)⁻¹ p q := by
+  classical
+  let F := unitaryTwirl μ
+  let b (r : Equiv.Perm ι) := F (r : Word ι) id
+  let G : Matrix (Equiv.Perm ι) (Equiv.Perm ι) ℂ :=
+    (permutationColorGram (ι := ι)).map Complex.ofReal
+  let C : Matrix (Equiv.Perm ι) (Equiv.Perm ι) ℂ :=
+    Matrix.of fun r s => F (r : Word ι) (s : Word ι)
+  have hF : F = ∑ r, b r • positionPermutation r :=
+    tensorPower_commutant_sum_positionPermutations F (unitaryTwirl_commute_unitary μ)
+  have hG (s r t : Equiv.Perm ι) : G (s * r) (s * t) = G r t := by
+    change (permutationColorGram (s * r) (s * t) : ℂ) = (permutationColorGram r t : ℂ)
+    rw [permutationColorGram_apply_colorings, permutationColorGram_apply_colorings]
+    apply congrArg Complex.ofReal
+    simpa only [wordPerm, Function.comp_assoc, Equiv.Perm.coe_mul] using
+      Equiv.sum_comp (wordPerm s)
+        (fun f => if f ∘ r = f ∘ t then (1 : ℝ) else 0)
+  have hb (r : Equiv.Perm ι) : (G *ᵥ b) r = (Pi.single 1 1 : Equiv.Perm ι → ℂ) r := by
+    have hp := unitaryTwirl_trace_pair μ r
+    change ((positionPermutation r)ᴴ * F).trace = _ at hp
+    rw [hF, Finset.mul_sum, Matrix.trace_sum] at hp
+    simp only [Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul,
+      positionPermutation_trace_pair, positionPermutation_trace_identity_projection] at hp
+    calc
+      (G *ᵥ b) r = ∑ t, b t * (permutationColorGram r t : ℂ) := by
+        change (∑ t, (permutationColorGram r t : ℂ) * b t) = _
+        exact Finset.sum_congr rfl (fun t _ => mul_comm _ _)
+      _ = _ := hp
+  have hC (r s : Equiv.Perm ι) : C r s = b (s⁻¹ * r) := by
+    change F (r : Word ι) (s : Word ι) = _
+    have he (t : Equiv.Perm ι) :
+        (r : Word ι) = (s : Word ι) ∘ t ↔ t = s⁻¹ * r := by
+      constructor
+      · intro h
+        exact Equiv.ext fun i => by
+          simp only [Equiv.Perm.mul_apply, congrFun h i, Function.comp_apply,
+            Equiv.Perm.inv_apply_self]
+      · rintro rfl
+        funext i
+        simp only [Function.comp_apply, Equiv.Perm.mul_apply, Equiv.Perm.apply_inv_self]
+    rw [hF, Matrix.sum_apply]
+    simp only [Matrix.smul_apply, smul_eq_mul, positionPermutation_apply, he,
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  have hGC : G * C = 1 := by
+    ext r s : 1
+    rw [Matrix.mul_apply,
+      ← Equiv.sum_comp (Equiv.mulLeft s) (fun t => G r t * C t s)]
+    change (∑ t, G r (s * t) * C (s * t) s) = (1 : Matrix _ _ ℂ) r s
+    have hh (t : Equiv.Perm ι) : G r (s * t) = G (s⁻¹ * r) t := by
+      simpa only [← mul_assoc, mul_inv_cancel, one_mul] using hG s (s⁻¹ * r) t
+    have hc (t : Equiv.Perm ι) : C (s * t) s = b t := by
+      rw [hC, ← mul_assoc, inv_mul_cancel, one_mul]
+    simp only [hh, hc]
+    change (G *ᵥ b) (s⁻¹ * r) = (1 : Matrix _ _ ℂ) r s
+    rw [hb, Pi.single_apply, Matrix.one_apply]
+    simp only [eq_comm (a := (1 : Equiv.Perm ι)) (b := s⁻¹ * r), inv_mul_eq_one,
+      eq_comm (a := s) (b := r)]
+  have hInv : G⁻¹ = C := Matrix.inv_eq_right_inv hGC
+  change _ = G⁻¹ p q
+  rw [hInv]
+  exact (unitaryTwirl_apply μ (p : Word ι) (q : Word ι)).symm
 
 end
 

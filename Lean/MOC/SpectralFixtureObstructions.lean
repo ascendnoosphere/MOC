@@ -170,6 +170,46 @@ theorem compressed_reflector_counterexample :
     norm_num [reflectorTopLeft, reflector3, Matrix.det_fin_two,
       Matrix.submatrix_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
 
+def modulusFixtureA : Matrix (Fin 2) (Fin 2) ℝ :=
+  diagonal ![0,2]
+
+def modulusFixtureB : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![1/2, Real.sqrt 3 / 2; Real.sqrt 3 / 2, -1/2]
+
+/- The normalized matrix Fuglede–Kadison determinant is the geometric
+mean of the singular values. Their product is the ordinary determinant
+modulus. In order two the normalization is a square root. The theorem
+below gives the matrix calculation before this normalization. -/
+
+/-- The actual determinant modulus is zero while both commuting matching
+moduli are positive. Taking square roots preserves this strict comparison. -/
+theorem modulus_fixture_counterexample :
+    modulusFixtureA.IsHermitian ∧ modulusFixtureB.IsHermitian ∧
+      modulusFixtureB.charpoly = (X - 1) * (X + 1) ∧
+      (modulusFixtureA + modulusFixtureB).det = 0 ∧
+      ((0 : ℝ) + 1) * (2 - 1) = 1 ∧ ((0 : ℝ) - 1) * (2 + 1) = -3 := by
+  have hs : (Real.sqrt 3 / 2) * (Real.sqrt 3 / 2) = 3 / 4 := by
+    calc
+      _ = (Real.sqrt 3)^2 / 4 := by ring
+      _ = _ := by rw [Real.sq_sqrt (by norm_num)]
+  refine ⟨?_, ?_, ?_, ?_, by norm_num, by norm_num⟩
+  · unfold Matrix.IsHermitian
+    ext i j
+    fin_cases i <;> fin_cases j <;> norm_num [modulusFixtureA, Matrix.conjTranspose_apply,
+      Matrix.diagonal_apply]
+  · unfold Matrix.IsHermitian
+    ext i j
+    fin_cases i <;> fin_cases j <;> norm_num [modulusFixtureB, Matrix.conjTranspose_apply]
+  · rw [charpoly_fin_two_explicit]
+    change (X - C (1 / 2 : ℝ)) * (X - C (-1 / 2 : ℝ)) -
+      C (Real.sqrt 3 / 2) * C (Real.sqrt 3 / 2) = _
+    have hc : C (1 / 2 : ℝ)^2 + C (3 / 4 : ℝ) = 1 := by
+      rw [← map_pow, ← map_add]
+      norm_num
+    rw [← map_mul, hs, show (-1 / 2 : ℝ) = -(1 / 2) by ring, map_neg]
+    linear_combination -hc
+  · norm_num [Matrix.det_fin_two, modulusFixtureA, modulusFixtureB, Matrix.diagonal_apply, hs]
+
 end
 
 end MOC
