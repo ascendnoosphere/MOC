@@ -132,6 +132,20 @@ theorem tracialSpectralKernel_scale
     hL, hR, smul_mul_smul_comm, smul_smul]
   congr 1 <;> ring
 
+/-- The addition kernel gives the sum of the two spectral operators. -/
+theorem tracialSpectralKernel_add (P : SpectralProjectionPartition ι A)
+    (Q : SpectralProjectionPartition κ A) (a : ι → ℂ) (b : κ → ℂ) :
+    tracialSpectralKernel P Q (fun i j => a i + b j) =
+      (∑ i, a i • P.proj i) + ∑ j, b j • Q.proj j := by
+  have hrow (i : ι) : (∑ j, a i • (P.proj i * Q.proj j)) = a i • P.proj i := by
+    rw [← Finset.smul_sum, ← Finset.mul_sum, Q.sum_proj, mul_one]
+  have hcol (j : κ) : (∑ i, b j • (P.proj i * Q.proj j)) = b j • Q.proj j := by
+    rw [← Finset.smul_sum, ← Finset.sum_mul, P.sum_proj, one_mul]
+  unfold tracialSpectralKernel
+  simp only [add_smul, Finset.sum_add_distrib, hrow]
+  rw [Finset.sum_comm (f := fun i j => b j • (P.proj i * Q.proj j))]
+  simp only [hcol]
+
 /-- If the squared kernel modulus has a positive upper bound under the
 trace overlaps, its logarithm bounds the analytic determinant. -/
 theorem fugledeKadisonLog_spectralKernel_le_overlap_bound

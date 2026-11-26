@@ -54,10 +54,10 @@ private theorem cfc_shift_on_positive_spectrum (X : A) (hX : IsSelfAdjoint X)
   rw [cfc_comp' f (fun x : ℝ => x + t) X hcont (by fun_prop) hX,
     cfc_add_const t (fun x : ℝ => x) X (by fun_prop) hX, cfc_id']
 
-private def tracedResolvent (τ : A →L[ℂ] ℂ) (X : A) (t : ℝ) : ℝ :=
+def tracedResolvent (τ : A →L[ℂ] ℂ) (X : A) (t : ℝ) : ℝ :=
   (τ (cfc (fun x : ℝ => (x + t)⁻¹) X)).re
 
-private theorem traced_resolvent_interval [Nontrivial A]
+theorem traced_resolvent_interval [Nontrivial A]
     (τ : A →L[ℂ] ℂ) (X : A) (hX : IsSelfAdjoint X)
     (hXp : ∀ x ∈ spectrum ℝ X, 0 < x) (R : ℝ) (hR : 0 < R) :
     Integrable (fun t : Set.Ioc 0 R => tracedResolvent τ X t.val) (resolventIntervalMeasure R) ∧
@@ -124,7 +124,7 @@ private theorem traced_resolvent_interval [Nontrivial A]
     rw [hvalues, map_sub, h₀, h₁] at hi
     simpa only [hres] using hi
 
-private theorem positive_shift_spectrum_of_strict (X : A) (hX : IsSelfAdjoint X)
+theorem positive_shift_spectrum_of_strict (X : A) (hX : IsSelfAdjoint X)
     (hXp : ∀ x ∈ spectrum ℝ X, 0 < x) (t : ℝ) (ht : 0 ≤ t) :
     ∀ x ∈ spectrum ℝ (X + algebraMap ℝ A t), 0 < x := by
   have he : cfc (fun x : ℝ => x + t) X = X + algebraMap ℝ A t := by
@@ -172,7 +172,7 @@ private theorem traced_resolvent_antitone (τ : A →L[ℂ] ℂ) (hτ : IsNormal
   rw [heX, heY]
   exact trace_mono_of_positive τ hτ (CStarAlgebra.inv_le_inv hUn hUV)
 
-private theorem trace_shifted_log_bounds [Nontrivial A]
+theorem trace_shifted_log_bounds [Nontrivial A]
     (τ : A →L[ℂ] ℂ) (hτ : IsNormalizedTracialState τ)
     (X : A) (hX : IsSelfAdjoint X) (hXp : ∀ x ∈ spectrum ℝ X, 0 < x)
     (R : ℝ) (hR : 0 < R) :
@@ -291,11 +291,6 @@ theorem norm_shifted_inverse_le_of_spectral_gap (X : A) (m t : ℝ)
   have hx₀ := hmt.trans_le hle
   rw [Real.norm_of_nonneg (inv_nonneg.mpr hx₀.le)]
   exact (inv_le_inv₀ hx₀ hmt).mpr hle
-
-/-! Prove the strict trace-log conjugation identity used by
-`fugledeKadisonLog_mul_of_strict_conjugation`. Differentiate the
-resolvent difference under the improper integral. Use the inverse
-square bound to justify the derivative. -/
 
 end
 

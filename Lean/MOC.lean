@@ -455,7 +455,11 @@ import MOC.SpectralWitnessSeparation
 import MOC.StableRayleighSlice
 import MOC.StructuredRealizationCancellation
 import MOC.ThreeEffectExtremePoints
+import MOC.TracialEntropyTransport
 import MOC.TracialGramSymmetry
+import MOC.TracialLogConjugation
+import MOC.TracialLogDerivative
+import MOC.TracialLogInverseSquare
 import MOC.TracialLogResolvent
 import MOC.TracialSpectralKernel
 import MOC.TracialSpectralScaling

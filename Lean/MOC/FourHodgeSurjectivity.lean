@@ -60,7 +60,9 @@ private def fourHodgeCycleIndex : Equiv.Perm HodgeIndex :=
   fourHodgeBlockCycle.prodCongr (Equiv.refl (Fin 2))
 
 private theorem fourHodgeCycleIndex_apply (p : HodgeIndex) :
-    fourHodgeCycleIndex p = (fourHodgeBlockCycle p.1, p.2) := rfl
+    fourHodgeCycleIndex p = (fourHodgeBlockCycle p.1, p.2) := by
+  rcases p with ⟨a, b⟩
+  rfl
 
 private theorem fourHodgeBlockCycle_zero : fourHodgeBlockCycle 0 = 1 := by decide
 private theorem fourHodgeBlockCycle_one : fourHodgeBlockCycle 1 = 2 := by decide
@@ -71,10 +73,11 @@ private theorem fourHodgeImage_cycle {i j : HodgeIndex} (hij : i ≠ j) {c s : �
     realCoordinateRotation (fourHodgeCycleIndex i) (fourHodgeCycleIndex j) c s ∈
       fourHodgeImage := by
   let Q : Matrix HodgeIndex HodgeIndex ℝ :=
-    fun p q => if p = fourHodgeCycleIndex q then 1 else 0
+    fun p q => if p = (fourHodgeBlockCycle q.1, q.2) then 1 else 0
   have hQ : Q ∈ fourHodgeImage := fourHodge_block_cycle_lifts
   have hcol (p k : HodgeIndex) : Q k p =
-      (1 : Matrix HodgeIndex HodgeIndex ℝ) k (fourHodgeCycleIndex p) := Matrix.one_apply.symm
+      (1 : Matrix HodgeIndex HodgeIndex ℝ) k (fourHodgeCycleIndex p) := by
+    simp only [Q, Matrix.one_apply, fourHodgeCycleIndex_apply]
   exact fourHodgeImage_transport hQ hij (fourHodgeCycleIndex.injective.ne hij) (hcol i) (hcol j) h
 
 private theorem fourHodgeImage_within_block (a : Fin 3) (c s : ℝ)

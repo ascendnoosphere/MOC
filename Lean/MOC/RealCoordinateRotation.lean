@@ -5,6 +5,7 @@ import Mathlib.Data.Matrix.Notation
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
 
 /-! Generation of real special orthogonal matrices by coordinate rotations. -/
@@ -193,11 +194,15 @@ theorem realCoordinateRotation_conjugate {ι : Type*} [Fintype ι] [DecidableEq 
   have hrowi (k : ι) : Q p k = (1 : Matrix ι ι ℝ) i k := by
     calc
       Q p k = (Qᵀ * Q) k i := (matrix_mul_apply_of_basis_column Qᵀ Q k i hi).symm
-      _ = _ := by rw [hQ, Matrix.one_apply, Matrix.one_apply, eq_comm]
+      _ = _ := by
+        rw [hQ]
+        simp only [Matrix.one_apply, eq_comm]
   have hrowj (k : ι) : Q q k = (1 : Matrix ι ι ℝ) j k := by
     calc
       Q q k = (Qᵀ * Q) k j := (matrix_mul_apply_of_basis_column Qᵀ Q k j hj).symm
-      _ = _ := by rw [hQ, Matrix.one_apply, Matrix.one_apply, eq_comm]
+      _ = _ := by
+        rw [hQ]
+        simp only [Matrix.one_apply, eq_comm]
   have hleft (k l : ι) :
       (Q * realCoordinateRotation i j c s) k l =
         if l = i then c * Q k i + s * Q k j

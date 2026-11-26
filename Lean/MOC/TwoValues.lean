@@ -138,6 +138,16 @@ def subsetMinorSq (U : Matrix ι ι ℂ) (I J : Finset ι) : ℝ :=
     Complex.normSq (U.submatrix (fun i : I => (i : ι)) (fun i : I => ((e i : J) : ι))).det
   else 0
 
+omit [Fintype ι] in
+/-- A scalar of modulus one leaves every squared minor unchanged. -/
+theorem subsetMinorSq_smul_of_normSq_eq_one (U : Matrix ι ι ℂ) (z : ℂ)
+    (hz : Complex.normSq z = 1) (I J : Finset ι) :
+    subsetMinorSq (z • U) I J = subsetMinorSq U I J := by
+  by_cases hc : I.card = J.card
+  · simp only [subsetMinorSq, dif_pos hc]
+    rw [Matrix.submatrix_smul, Matrix.det_smul, map_mul, map_pow, hz, one_pow, one_mul]
+  · simp only [subsetMinorSq, dif_neg hc]
+
 theorem sum_signedWeight_image_eq_subsetMinorSq (U : Matrix ι ι ℂ) (hU : IsUnitary U)
     (I J : Finset ι) :
     (∑ σ ∈ univ.filter (fun σ : Equiv.Perm ι => J.map σ.toEmbedding = I), signedWeight U σ) =

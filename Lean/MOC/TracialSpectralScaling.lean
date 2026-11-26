@@ -87,7 +87,7 @@ theorem log_scale (P : SpectralProjectionPartition ι A) (d : ι → ℝ)
   have ha : IsSelfAdjoint a := by
     change star a = a
     funext i
-    simpa only [Pi.star_apply] using ha_i i
+    simpa only [Pi.star_apply] using (ha_i i).star_eq
   have hφa : IsSelfAdjoint (φ a) := P.scale_selfAdjoint d
   have hcont : ContinuousOn Real.log (spectrum ℝ a) := by
     change ContinuousOn Real.log (spectrum ℝ (fun i => (d i : ℂ)))

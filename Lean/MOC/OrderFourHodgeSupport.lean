@@ -101,12 +101,13 @@ private theorem hodge_pair_minor (U : FourMatrix) (hU : IsUnitary U) (p q : Hodg
   rw [hodge_pair_sets p, hodge_pair_sets q]
   exact subsetMinorSq_pair U hU (hodge_pair_distinct p) (hodge_pair_distinct q)
 
-/-- A common phase normalizes the determinant of an order-four unitary
-and leaves its spectral determinant unchanged for every pair of lists. -/
-theorem exists_special_unitary_with_same_spectral_determinant
+/-- A common phase gives determinant one and preserves the squared
+minors and the spectral determinant for every pair of lists. -/
+theorem exists_special_unitary_with_same_minor_table
     (U : FourMatrix) (hU : IsUnitary U) :
     ∃ V : FourMatrix, IsUnitary V ∧ V.det = 1 ∧
-      ∀ a b : Fin 4 → ℂ, determinantValue a b V = determinantValue a b U := by
+      subsetMinorSq V = subsetMinorSq U ∧
+      (∀ a b : Fin 4 → ℂ, determinantValue a b V = determinantValue a b U) := by
   have hs : Complex.normSq U.det = 1 := by
     have h := congrArg Matrix.det hU.1
     rw [Matrix.det_mul, Matrix.det_conjTranspose, Matrix.det_one, Complex.star_def,
@@ -121,12 +122,14 @@ theorem exists_special_unitary_with_same_spectral_determinant
   have h₁ : z * star z = 1 := by
     rw [Complex.star_def, Complex.mul_conj, hzn, Complex.ofReal_one]
   have h₂ : star z * z = 1 := by simpa only [mul_comm] using h₁
-  refine ⟨z • U, ⟨?_, ?_⟩, ?_, fun a b => ?_⟩
+  refine ⟨z • U, ⟨?_, ?_⟩, ?_, ?_, fun a b => ?_⟩
   · rw [Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.smul_mul, smul_smul,
       h₁, one_smul, hU.1]
   · rw [Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.smul_mul, smul_smul,
       h₂, one_smul, hU.2]
   · rw [Matrix.det_smul, Fintype.card_fin, hz, inv_mul_cancel₀ (det_ne_zero_of_unitary hU)]
+  · funext I J
+    exact subsetMinorSq_smul_of_normSq_eq_one U z hzn I J
   · have hc : (z • U) * diagonal b * (z • U)ᴴ = U * diagonal b * Uᴴ := by
       rw [Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.smul_mul,
         Matrix.smul_mul, smul_smul, h₁, one_smul]
@@ -180,7 +183,7 @@ Marcus–de Oliveira inclusion holds in order four. -/
 theorem conjecture_four_of_hodge_quadratic_support
     (h : OrderFourHodgeQuadraticSupport) : Conjecture (Fin 4) := by
   intro a b U hU
-  obtain ⟨V, hV, hd, hval⟩ := exists_special_unitary_with_same_spectral_determinant U hU
+  obtain ⟨V, hV, hd, _, hval⟩ := exists_special_unitary_with_same_minor_table U hU
   apply (holds_iff_directional a b U).mpr
   intro η
   let R := fourHodgeRealRepresentation V
@@ -217,7 +220,7 @@ theorem orderFour_oriented_assignment_cost_attained (a b : Fin 4 → ℂ) (η : 
         fourOrientedAssignmentCost (orderFourPairCost a b η) π flip := by
   obtain ⟨σ, hσ⟩ := exists_fourPerm_of_oriented_assignment π flip hflip
   obtain ⟨U, hU, hUval⟩ := matchingProduct_mem_determinantRange a b σ
-  obtain ⟨V, hV, hd, hVval⟩ := exists_special_unitary_with_same_spectral_determinant U hU
+  obtain ⟨V, hV, hd, _, hVval⟩ := exists_special_unitary_with_same_minor_table U hU
   refine ⟨fourHodgeRealRepresentation V,
     Matrix.mul_eq_one_comm.mp (fourHodgeRealRepresentation_orthogonal V hV hd),
     fourHodgeRealRepresentation_det V hV hd, ?_⟩
