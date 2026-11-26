@@ -19,7 +19,7 @@ import MOC.NormalSupportMaximum
 import MOC.NonnormalPoleReduction
 import MOC.OrderFourIndependent
 import MOC.OrderFiveContact
-import MOC.OrderFiveDisjointPairSupport
+import MOC.OrderFiveDisjointPairObstruction
 import MOC.OrderFiveCommonLawObstruction
 import MOC.OrderFivePairMarkers
 import MOC.PrincipalCoisometry
@@ -299,7 +299,7 @@ def fiveRoutes : List (Route (Conjecture (Fin 5))) :=
       (conjecture_iff_spectralCurveTest five_spectralParabola_test_iff).symm,
    fromIff "First spectrum on the standard hyperbola"
       (conjecture_iff_spectralCurveTest (five_spectralHyperbola_test_iff Complex.I 1 (by simp))).symm,
-   sufficient "Disjoint-pair transport certificates" conjecture_five_of_disjoint_pair_dual_test,
+   -- The universal disjoint-pair certificate is refuted by the translated real spectra.
    sufficient "Orthogonal minor convexification AND orthogonal order five"
       (fun h : TwoOrthogonalMinorTables (Fin 5) ∧ OrthogonalConjecture (Fin 5) =>
         (conjecture_iff_orthogonal_of_minor_convexification h.1).mpr h.2)] ++

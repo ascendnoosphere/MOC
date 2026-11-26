@@ -95,11 +95,8 @@ private theorem signed_expectation_image_potential {n : ℕ}
     (∑ σ : Equiv.Perm (Fin n), realSignedWeight U σ * p (J.map σ.toEmbedding)) =
       ∑ I, p I * subsetMinorSq U I J := by
   classical
-  rw [← signed_expectation_subsetImageCombo U hU id (fun _ => J) p]
-  apply Finset.sum_congr rfl
-  intro σ _
-  congr 1
-  simp [subsetImageEvent, mul_ite]
+  simpa [subsetImageEvent, mul_ite] using
+    signed_expectation_subsetImageCombo U hU (fun I => I) (fun _ => J) p
 
 /-- Every pair of disjoint column pairs gives a valid signed expectation.
 The potentials need only have nonnegative sum on disjoint row pairs. -/
@@ -170,7 +167,8 @@ theorem orderFive_spectral_support_le_disjoint_pair_dual
         subsetMinorSq_eq_normSq_det_submatrix Uᴴ hUT J.val I.val f e]
       change Complex.normSq (U.submatrix (Subtype.val ∘ e) (Subtype.val ∘ f)).det =
         Complex.normSq (U.submatrix (Subtype.val ∘ e) (Subtype.val ∘ f))ᴴ.det
-      rw [Matrix.det_conjTranspose, Complex.normSq_conj]
+      rw [Matrix.det_conjTranspose]
+      exact (Complex.normSq_conj _).symm
     simpa only [hm] using (hcolumn Uᴴ hUT I : ∑ J : Pair₅, subsetMinorSq Uᴴ J.val I.val = 1)
   have hcut (k : κ) : 0 ≤ ∑ J : Pair₅, ∑ I : Pair₅, (t k).adjustment I J * m I J := by
     let v := t k
@@ -305,7 +303,8 @@ theorem orderFiveFlowFixture_support (U : Matrix (Fin 5) (Fin 5) ℂ) (hU : IsUn
       (fun I => (flowLeftCost I : ℝ)) (fun L => (flowRightCost L : ℝ)) hcost
   refine spectral_support_of_subsetImage_certificate _ _ U hU _ _ flowRow flowColumn
     (fun k => (flowCoefficient k : ℝ)) (fun k => ?_) r hr (fun σ => ?_)
-  · exact_mod_cast flowCoefficient_nonneg k
+  · dsimp only
+    exact_mod_cast flowCoefficient_nonneg k
   · rw [← flowScore_cast]
     have hterm (k : Fin 39) :
         ((if (flowColumn k).map σ.toEmbedding = flowRow k then flowCoefficient k else 0 : ℤ) : ℝ) =

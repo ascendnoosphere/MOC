@@ -11,8 +11,9 @@
 The order-five conjecture is the [determinant inclusion](../README.md)
 for all five-by-five normal pairs. In the spectral formulation, $U$
 is the unitary change between eigenbases. The complete order-five
-statement remains open in this library. The disjoint-pair transport
-argument and the sharp integer example have proof scripts awaiting kernel checking.
+statement remains open in this library. Disjoint-pair transport
+gives a sharp bound for a specified integer example. Its universal
+certificate test has a counterexample.
 [Certificates](determinant-inclusion-certificates-proof-map.md#order-four-and-order-five-support-bounds)
 [Source scope](all-orders-proof-map.md#scope-of-the-lean-source)
 
@@ -26,11 +27,9 @@ flowchart BT
     Exact["Any exact conic, rectangular,<br/>or contact test"]
     Normal{{"AND<br/>Order 4 and<br/>normal maximizers"}}:::gate
     Real{{"AND<br/>Orthogonal order 5 and<br/>two-table decomposition"}}:::gate
-    Pair["Disjoint-pair dual bound reaching a matching for every spectral objective"]
     Exact <-->|iff each| Goal
     Normal -->|if| Goal
     Real -->|if| Goal
-    Pair -->|if| Goal
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
     classDef gate fill:#e7f0fa,stroke:#52779d,color:#142e47
 ```
@@ -50,7 +49,6 @@ transfer makes the full-support eight-contact test exact.
 | Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1320) |
 | Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1341) |
 | Orthogonal minor convexification AND orthogonal order five | If | [Statement and proof](../Lean/MOC/Realification.lean#L79) |
-| A disjoint-pair certificate attaining a matching score for each spectral objective | If | [Certificate and implication](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L344) |
 
 For the regular spectral test, each pair sum is nonzero, different
 permutations give different products, and $U$ has no zero entries. The
@@ -126,15 +124,17 @@ The proved order-three result applies to each factor.
 ```mermaid
 flowchart BT
     accTitle: Order-five bounds through squared minors
-    accDescr: An objective-specific cost certificate proves one directional bound. A universal law reproducing all two-by-two squared minors would suffice for order five, but has a counterexample.
+    accDescr: A cost certificate proves one directional bound. Two sufficient premises for order five are refuted.
     Direction["One directional bound"]:::goal
     Pair["Explicit pair costs from<br/>the two eigenvalue lists"]
     Dual["Upper bounds on all pair costs<br/>with equality at one permutation"]
     Goal["Order 5"]:::goal
     Uniform["Universal nonnegative law<br/>for squared 2-by-2 minors"]:::refuted
+    Transport["Disjoint-pair dual bound reaches a<br/>matching score for every objective"]:::refuted
     Pair -. gives cost data .-> Dual
     Dual -->|if| Direction
     Uniform -->|if| Goal
+    Transport -->|if| Goal
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
     classDef refuted fill:#fae5e5,stroke:#a33434,color:#361010
 ```
@@ -154,6 +154,16 @@ holds for every pair of lists. A separate pair-assignment example
 shows that the best assignment on pairs can exceed every assignment
 induced by a permutation of the individual indices.
 [Pair-minor equivalence](../Lean/MOC/OrderFivePairMarkers.lean#L225) · [Refuted law](../Lean/MOC/ProofRoutes.lean#L156) · [Inclusion for the reflection](../Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Pair-assignment example](../Lean/MOC/PairAssignmentObstruction.lean#L116)
+
+The disjoint-pair constraints give a stronger bound. They require a
+transport between the two columns of the pair table for every two
+disjoint column pairs. Each transport has support on disjoint row
+pairs. For the lists $(2,2,1,1,1)$ and $(0,0,-1,-1,-1)$ in the real
+direction, every matching product is zero. A doubly stochastic pair
+table satisfies all these transport constraints and has score $4/45$.
+Every bound from the corresponding dual constraints is therefore at
+least $4/45$ for these spectra.
+[Transport bound](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L145) · [Conditional implication](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L343) · [Refuted certificate test](../Lean/MOC/OrderFiveDisjointPairObstruction.lean#L122)
 
 Lean also gives inclusion for unitary matrices with zero diagonal and
 off-diagonal magnitudes $1/2$, and for pairs with one real list and at

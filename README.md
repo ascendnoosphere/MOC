@@ -35,11 +35,11 @@ unitary has no common law. A separate result proves the inclusion
 whenever each row, or each column, has at most three nonzero entries.
 [Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L89) · [Witness at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Row and column cases](Docs/sparse-unitary-proof-map.md)
 
-The new proof scripts give finite integer comparisons for all orders, an
+The certificate map gives finite integer comparisons for all orders, an
 order-four enclosure within one twenty-seventh of the matching width in
-each direction, and a sharp order-five support example. The scripts have
-source and example checks. They await kernel checking. Some historical
-modules remain outside the default target.
+each direction, and a sharp order-five support example. Lean checks the
+order-five example and the counterexample to the universal disjoint-pair
+certificate. Some historical modules remain outside the default target.
 [Certificate statements and hypotheses](Docs/determinant-inclusion-certificates-proof-map.md) · [Source scope](Docs/all-orders-proof-map.md#scope-of-the-lean-source)
 
 The research-attempt map records the Lean steps and remaining
@@ -526,6 +526,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
   There is no one set of nonnegative weights with sum one that represents
   the determinant for all pairs of lists.
   [Inclusion](Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Failure of common weights](Lean/MOC/OrderFiveCommonLawObstruction.lean#L163)
+- In order five, the assignment bound with disjoint-pair transport
+  constraints need not reach the largest matching score. For the lists
+  $(2,2,1,1,1)$ and $(0,0,-1,-1,-1)$ in the real direction, every
+  matching product is zero and every bound from these constraints is at
+  least $4/45$.
+  [Refuted certificate test](Lean/MOC/OrderFiveDisjointPairObstruction.lean#L122) · [Pair-cost proof map](Docs/order-five-proof-map.md#squared-minors-and-permutation-weights)
 - In order four, some pairs of lists have nonzero and distinct matching
   products, with eight permutations that attain the directional maximum.
   The eight permutations have no common nonempty proper subset of the
