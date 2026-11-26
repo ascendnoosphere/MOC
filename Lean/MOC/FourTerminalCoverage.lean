@@ -1,6 +1,8 @@
 import MOC.DeficitContactTransfer
 import MOC.FourMatchingRelations
 import MOC.FourMixedRayCancellation
+import MOC.FourSupportConeClassification
+import MOC.RealMatchingSquares
 import MOC.ZhengContactReduction
 
 /-! Regular terminal witnesses and the canonical mixed cost in order four. -/
@@ -70,7 +72,9 @@ private theorem regular_support_of_chart {U : Matrix (Fin 4) (Fin 4) ℂ}
   obtain ⟨_, hn, hi⟩ := (eval_matchingChartRegularPolynomial_ne_zero z).mp hreg
   have hm (σ : FourPerm) : (η * matchingProduct a b σ).re ≤ (η * matchingProduct a b r).re := by
     apply sub_nonneg.mp
-    exact (chart_gap_of_matching_products η r σ z hz) ▸ hmax σ
+    change 0 ≤ matchingGap a b η r σ
+    rw [← chart_gap_of_matching_products η r σ z hz]
+    exact hmax σ
   have hs : (η * matchingProduct a b r).re < (η * determinantValue a b U).re := by
     rw [eval_matchingChartDeficitPolynomial z a b U hU r hz, mul_sub, Complex.sub_re] at hpos
     exact sub_pos.mp hpos
@@ -167,12 +171,13 @@ private theorem terminal_gap_has_coordinates {U : Matrix (Fin 4) (Fin 4) ℂ}
   have hm (p : Fin 24) : fourMatchingEvaluation m p =
       (w.η * matchingProduct w.a w.b (fourPerm p).symm).re :=
     fourMatchingEvaluation_spectral_real_part w.a w.b w.η p
-  refine ⟨c - m, funext fun p => ?_⟩
-  have hsub : fourMatchingEvaluation (c - m) p =
-      fourMatchingEvaluation c p - fourMatchingEvaluation m p := by
-    fin_cases p <;> simp [fourMatchingEvaluation] <;> ring
-  rw [hsub, hc, hm]
-  rfl
+  have hconst : (fun _ : Fin 24 => H) ∈ realMatchingFunctionSpace := ⟨c, funext hc⟩
+  have hscore : (fun p : Fin 24 =>
+      (w.η * matchingProduct w.a w.b (fourPerm p).symm).re) ∈ realMatchingFunctionSpace :=
+    ⟨m, funext hm⟩
+  have hgap : fourTerminalGap w ∈ realMatchingFunctionSpace :=
+    realMatchingFunctionSpace.sub_mem hconst hscore
+  exact hgap
 
 private theorem terminal_gap_value_neg {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U)
     (w : StrictMatchingSupport U) : fourSupportCostValue U (fourTerminalGap w) < 0 := by
@@ -188,12 +193,17 @@ private theorem orthogonal_as_submatrix (O : Matrix.orthogonalGroup (Fin 4) ℝ)
     (eRow eCol : FourPerm) :
     ∃ O' : Matrix.orthogonalGroup (Fin 4) ℝ, O'.val = O.val.submatrix eRow eCol := by
   let P := O.val.submatrix eRow eCol
-  have hO := (Matrix.mem_orthogonalGroup_iff _ ℝ).mp O.property
+  have hO : O.val * O.valᵀ = 1 := by
+    simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
+      using (Matrix.mem_orthogonalGroup_iff _ ℝ).mp O.property
   have hP : P * Pᵀ = 1 := by
     dsimp only [P]
     rw [Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv, hO,
       Matrix.submatrix_one_equiv]
-  exact ⟨⟨P, (Matrix.mem_orthogonalGroup_iff _ ℝ).mpr hP⟩, rfl⟩
+  have hPstar : P * star P = 1 := by
+    simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
+      using hP
+  exact ⟨⟨P, (Matrix.mem_orthogonalGroup_iff _ ℝ).mpr hPstar⟩, rfl⟩
 
 private theorem matchingProduct_relabel_four (a b : Fin 4 → ℂ) (eRow eCol q : FourPerm) :
     matchingProduct (a ∘ eRow) (b ∘ eCol) q =
@@ -277,7 +287,7 @@ theorem four_regular_orthogonal_gap_relabel (O : Matrix.orthogonalGroup (Fin 4) 
   refine ⟨O', v, hv, hc, fun p => ?_⟩
   have he : (T (fourPerm p).symm)⁻¹ = eCol * fourPerm p * eRow⁻¹ := by
     change (eRow * (fourPerm p)⁻¹ * eCol⁻¹)⁻¹ = _
-    simp only [mul_inv_rev, inv_inv, mul_assoc]
+    simp only [_root_.mul_inv_rev, inv_inv, mul_assoc]
   have hi : fourPerm (fourPermIndex (eCol * fourPerm p * eRow⁻¹)) =
       eCol * fourPerm p * eRow⁻¹ := fourPermEquiv.apply_symm_apply _
   rw [fourTerminalGap, fourTerminalGap, hi]
@@ -297,8 +307,8 @@ theorem four_regular_orthogonal_gap_transpose (O : Matrix.orthogonalGroup (Fin 4
   let U := Complex.ofRealHom.mapMatrix O.val
   let O' : Matrix.orthogonalGroup (Fin 4) ℝ :=
     ⟨O.valᵀ, (Matrix.mem_orthogonalGroup_iff' _ ℝ).mpr (by
-      rw [Matrix.transpose_transpose]
-      exact (Matrix.mem_orthogonalGroup_iff _ ℝ).mp O.property)⟩
+      simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial,
+        Matrix.transpose_transpose] using (Matrix.mem_orthogonalGroup_iff _ ℝ).mp O.property)⟩
   have hU' : Complex.ofRealHom.mapMatrix O'.val = Uᴴ := by
     ext i j
     change (O.val j i : ℂ) = star (O.val j i : ℂ)
@@ -379,7 +389,8 @@ theorem exists_canonical_mixed_terminal_witness (h : ¬ Conjecture (Fin 4)) :
     obtain ⟨c, hcn, hcs, rfl⟩ := hP
     refine ⟨O', w', hreg', hcard.symm ▸ hc, fun j => t⁻¹ * c j,
       fun j => mul_nonneg (inv_nonneg.mpr ht.le) (hcn j), fun j hj => ?_, ?_⟩
-    · rw [hcs j hj, mul_zero]
+    · change t⁻¹ * c j = 0
+      rw [hcs j hj, mul_zero]
     · simpa only [Finset.smul_sum, smul_smul, smul_eq_mul] using hg'
 
 /-- Order four holds exactly when there is no regular terminal witness

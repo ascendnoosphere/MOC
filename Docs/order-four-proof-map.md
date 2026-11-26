@@ -62,8 +62,8 @@ The six-contact inequality required by this route remains open.
 | Exclude regular stationary witnesses with a row and a column with no zero entries | Iff | [Statement and proof](../Lean/MOC/StationaryDenseCross.lean#L64) |
 | Exclude orthogonal witnesses with at least seven contacts | Iff | [Statement and proof](../Lean/MOC/ZhengContactReduction.lean#L14) |
 | Exclude stationary orthogonal witnesses with at least seven contacts and the inactive pivot constraints | Iff | [Statement and proof](../Lean/MOC/StationaryPivot.lean#L221) |
-| Exclude regular terminal orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L110) |
-| Exclude regular terminal orthogonal witnesses with canonical mixed cost | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L387) |
+| Exclude regular terminal orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L114) |
+| Exclude regular terminal orthogonal witnesses with canonical mixed cost | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L398) |
 | Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L274) |
 | First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | Iff | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L208) |
 | Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L124) |
@@ -190,7 +190,7 @@ Normalize the mixed coefficient to one by scaling the support
 direction. Row and column relabeling and matrix transpose preserve
 the strict excess and contact count. At nonzero height, the contact
 set cannot contain the four matchings from two disjoint swaps.
-[Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L110) · [Canonical witness equivalence](../Lean/MOC/FourTerminalCoverage.lean#L387) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L403)
+[Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L114) · [Canonical witness equivalence](../Lean/MOC/FourTerminalCoverage.lean#L398) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L414)
 
 For a gap in this canonical form, the directional bound holds for
 every unitary at normalized heights from zero through one half.
