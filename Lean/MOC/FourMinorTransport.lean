@@ -501,14 +501,14 @@ theorem four_minor_mixture (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
 
 /-- A two-basis decomposition of every compressed row-effect triple
 gives a two-point interpolation of the entire order-four minor table.
-This is the realification step in Zheng's Theorem 1.2
-(preprint DOI: 10.13140/RG.2.2.36790.25923). -/
-theorem four_minor_two_point_of_two_basis_effects
+The two real matrices have the same nonnegative first row. -/
+theorem four_minor_two_point_fixed_first_row_of_two_basis_effects
     (heffects : ∀ W : Matrix (Fin 3) (Fin 3) ℂ, IsUnitary W →
       ∃ (Q₀ Q₁ : Matrix.orthogonalGroup (Fin 3) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
         realRowEffects W = θ • orthogonalBasisEffects Q₀ + (1 - θ) • orthogonalBasisEffects Q₁)
     (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
     ∃ (O₀ O₁ : Matrix.orthogonalGroup (Fin 4) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+      (∀ j, O₀.val 0 j = ‖U 0 j‖) ∧ (∀ j, O₁.val 0 j = ‖U 0 j‖) ∧
       ∀ I J : Finset (Fin 4), subsetMinorSq U I J =
         θ * subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) I J +
         (1 - θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) I J := by
@@ -516,7 +516,7 @@ theorem four_minor_two_point_of_two_basis_effects
   let A := U.submatrix e e
   have hA := unitary_reindex e e hU
   obtain ⟨V,hV,hrow,hminor⟩ := exists_unitary_with_real_row A hA (Sum.inl 0)
-  obtain ⟨P,W,hW,_,hfac⟩ := exists_fixedRowMixer V hV (fun j => ‖A (Sum.inl 0) j‖) hrow
+  obtain ⟨P,W,hW,hProw,hfac⟩ := exists_fixedRowMixer V hV (fun j => ‖A (Sum.inl 0) j‖) hrow
   obtain ⟨Q₀,Q₁,θ,hθ₀,hθ₁,hE⟩ := heffects W hW
   let B₀ := extendFixedRowOrthogonal P Q₀
   let B₁ := extendFixedRowOrthogonal P Q₁
@@ -533,7 +533,25 @@ theorem four_minor_two_point_of_two_basis_effects
     rw [← hminor, hfac]
     simpa only [Fin.sum_univ_two, w, Q, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_fin_one, B₀, B₁] using fixedRowMixer_minor_sum_of_effect_sum P W hW w Q hs he I J
-  refine ⟨orthogonal_reindex e.symm B₀, orthogonal_reindex e.symm B₁, θ, hθ₀,hθ₁,fun I J => ?_⟩
+  have he₀ : e (Sum.inl 0) = 0 := rfl
+  have hfirst (R : Matrix.orthogonalGroup (Fin 3) ℝ) (j : Fin 4) :
+      (orthogonal_reindex e.symm (extendFixedRowOrthogonal P R)).val 0 j = ‖U 0 j‖ := by
+    have hanchor : e.symm 0 = Sum.inl 0 := by rw [← he₀, e.symm_apply_apply]
+    change (extendFixedRowOrthogonal P R).val (e.symm 0) (e.symm j) = ‖U 0 j‖
+    rw [hanchor]
+    have hcast : ((extendFixedRowOrthogonal P R).val (Sum.inl 0) (e.symm j) : ℂ) =
+        fixedRowMixer P.val (Complex.ofRealHom.mapMatrix R.valᵀ) (Sum.inl 0) (e.symm j) :=
+      congrArg (fun M : Matrix FourRowIndices FourRowIndices ℂ =>
+        M (Sum.inl 0) (e.symm j)) (extendFixedRowOrthogonal_cast P R)
+    calc
+      _ = P.val (Sum.inl 0) (e.symm j) := Complex.ofReal_injective
+        (hcast.trans (fixedRowMixer_first P.val (Complex.ofRealHom.mapMatrix R.valᵀ) 0 (e.symm j)))
+      _ = ‖A (Sum.inl 0) (e.symm j)‖ := hProw _
+      _ = ‖U 0 j‖ := by
+        change ‖U (e (Sum.inl 0)) (e (e.symm j))‖ = ‖U 0 j‖
+        rw [he₀, e.apply_symm_apply]
+  refine ⟨orthogonal_reindex e.symm B₀, orthogonal_reindex e.symm B₁, θ, hθ₀, hθ₁,
+    hfirst Q₀, hfirst Q₁, fun I J => ?_⟩
   have hback : A.submatrix e.symm e.symm = U := by ext i j; simp [A, Matrix.submatrix_apply]
   have hleft := squared_minor_reindex e.symm e.symm A hA I J
   rw [hback] at hleft
@@ -544,6 +562,31 @@ theorem four_minor_two_point_of_two_basis_effects
     squared_minor_reindex e.symm e.symm _ (isUnitary_ofReal_orthogonal O) I J
   rw [hr B₀, hr B₁]
 
+/-- A two-basis decomposition of compressed row effects gives a two-point
+interpolation of the entire order-four minor table. -/
+theorem four_minor_two_point_of_two_basis_effects
+    (heffects : ∀ W : Matrix (Fin 3) (Fin 3) ℂ, IsUnitary W →
+      ∃ (Q₀ Q₁ : Matrix.orthogonalGroup (Fin 3) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+        realRowEffects W = θ • orthogonalBasisEffects Q₀ + (1 - θ) • orthogonalBasisEffects Q₁)
+    (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    ∃ (O₀ O₁ : Matrix.orthogonalGroup (Fin 4) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+      ∀ I J : Finset (Fin 4), subsetMinorSq U I J =
+        θ * subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) I J +
+        (1 - θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) I J := by
+  obtain ⟨O₀, O₁, θ, hθ₀, hθ₁, _, _, hm⟩ :=
+    four_minor_two_point_fixed_first_row_of_two_basis_effects heffects U hU
+  exact ⟨O₀, O₁, θ, hθ₀, hθ₁, hm⟩
+
+/-- The two real matrices in the order-four minor interpolation have
+first row equal to the entrywise moduli of the unitary's first row. -/
+theorem four_minor_two_point_fixed_first_row (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
+    ∃ (O₀ O₁ : Matrix.orthogonalGroup (Fin 4) ℝ) (θ : ℝ), 0 ≤ θ ∧ θ ≤ 1 ∧
+      (∀ j, O₀.val 0 j = ‖U 0 j‖) ∧ (∀ j, O₁.val 0 j = ‖U 0 j‖) ∧
+      ∀ I J : Finset (Fin 4), subsetMinorSq U I J =
+        θ * subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) I J +
+        (1 - θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) I J :=
+  four_minor_two_point_fixed_first_row_of_two_basis_effects realRowEffects_two_bases U hU
+
 /-- Zheng's exact two-orthogonal interpolation of squared minor tables
 (Theorem 1.2, preprint DOI: 10.13140/RG.2.2.36790.25923). This proof
 uses real three-effect decomposition instead of the elliptic/Gale route. -/
@@ -553,6 +596,29 @@ theorem four_minor_two_point (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U)
         θ * subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) I J +
         (1 - θ) * subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) I J :=
   four_minor_two_point_of_two_basis_effects realRowEffects_two_bases U hU
+
+/-- The complete squared-minor tables of order-four unitaries and real
+orthogonal matrices have the same real convex hull. -/
+theorem four_minor_convexHull_eq_orthogonal :
+    convexHull ℝ (Set.range fun U : {U : Matrix (Fin 4) (Fin 4) ℂ // IsUnitary U} =>
+      subsetMinorSq U.val) =
+    convexHull ℝ (Set.range fun O : Matrix.orthogonalGroup (Fin 4) ℝ =>
+      subsetMinorSq (Complex.ofRealHom.mapMatrix O.val)) := by
+  apply Set.Subset.antisymm
+  · apply convexHull_min _ (convex_convexHull ℝ _)
+    rintro _ ⟨U, rfl⟩
+    obtain ⟨O₀, O₁, θ, hθ₀, hθ₁, hm⟩ := four_minor_two_point U.val U.property
+    have heq : subsetMinorSq U.val =
+        θ • subsetMinorSq (Complex.ofRealHom.mapMatrix O₀.val) +
+        (1 - θ) • subsetMinorSq (Complex.ofRealHom.mapMatrix O₁.val) := by
+      funext I J
+      simpa only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] using hm I J
+    rw [heq]
+    exact (convex_convexHull ℝ _) (subset_convexHull ℝ _ ⟨O₀, rfl⟩)
+      (subset_convexHull ℝ _ ⟨O₁, rfl⟩) hθ₀ (sub_nonneg.mpr hθ₁) (by ring)
+  · apply convexHull_mono
+    rintro _ ⟨O, rfl⟩
+    exact ⟨⟨_, isUnitary_ofReal_orthogonal O⟩, rfl⟩
 
 private theorem orthogonalConjecture_of_reindex {ι κ : Type*} [Fintype ι] [DecidableEq ι]
     [Fintype κ] [DecidableEq κ] (e : κ ≃ ι) (h : OrthogonalConjecture ι) :

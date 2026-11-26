@@ -172,11 +172,13 @@ flowchart BT
     classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
 ```
 
-The real orthogonal restriction applies to $U$. The eigenvalue lists
-remain complex. Lean proves the restriction by expressing the squared
-absolute values of all unitary minors as one finite convex combination
-of the corresponding real orthogonal tables.
-[Minor decomposition](Lean/MOC/FourMinorTransport.lean#L479) · [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L574)
+For every unitary $U$ of order four, two real orthogonal matrices suffice.
+Their first rows both equal $(|U_{1j}|)_{j=1}^4$. A single weight gives
+every squared minor of $U$ as a convex combination of the two corresponding
+squared minors. The two sets of complete minor tables thus have the same
+real convex hull. The resulting reduction allows both lists of eigenvalues
+to be arbitrary complex numbers.
+[Fixed first row](Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L640)
 
 | Status | Result | Lean source |
 | --- | --- | --- |

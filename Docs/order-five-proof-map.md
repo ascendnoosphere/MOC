@@ -472,7 +472,7 @@ All row and column permutations of (2) hold.
 
 Make one anchor row real using column phases. On its real orthogonal complement, the three other rows yield positive semidefinite real effects \(E_i=\mathrm{Re}(u_i u_i^*)\) with trace one and sum equal to the three-dimensional identity. Every extreme triple consists of three orthogonal rank-one projections. Indeed, if all ranks are at least two, the real spaces of symmetric perturbations on their ranges have total dimension at least nine. The trace and sum constraints impose at most eight independent equations. Perturbation in both signs contradicts extremality. If a trace-one effect has rank one, it is a projection. The other two sum to the identity on its two-dimensional complement and commute. Their spectral decomposition splits them into a mixture of two ordered orthogonal frames.
 
-Every singleton and every anchored pair coordinate depends affinely on these effects. Every nonanchored pair is complementary to an anchored pair, and triple minors reduce to singletons. Thus a complex unitary profile is a convex combination of real orthogonal profiles. Applying (2) before averaging proves it for the original complex mixer. [Lean minor transport](../Lean/MOC/FourMinorTransport.lean#L550)
+Every singleton and every anchored pair coordinate depends affinely on these effects. Every nonanchored pair is complementary to an anchored pair, and triple minors reduce to singletons. Thus a complex unitary profile is a convex combination of real orthogonal profiles. Applying (2) before averaging proves it for the original complex mixer. [Lean minor transport](../Lean/MOC/FourMinorTransport.lean#L593)
 
 #### Exact finite completeness
 
