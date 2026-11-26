@@ -125,6 +125,49 @@ The inclusion also holds if either spectrum lies on a circle or line
 or if there is an opposite eigenvalue pair.
 [Circle or line](../Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](../Lean/MOC/FourCoincidence.lean#L360)
 
+### Thirteen squared minors and a signed correction
+
+Use one-based indices. A permutation word lists the columns in row order.
+Set $P_{ij}=|U_{ij}|^2$, $Q_{I,J}=|\det U[I,J]|^2$, and
+$z_\sigma=\prod_i(a_i+b_{\sigma(i)})$. The set $B$ has the following
+thirteen words. The entries below each word give its weight.
+
+| Word | Weight | Word | Weight |
+| --- | --- | --- | --- |
+| 1432 | $P_{11}$ | 3412 | $Q_{14,23}$ |
+| 2134 | $Q_{12,12}$ | 3421 | $Q_{14,13}$ |
+| 2314 | $Q_{13,12}$ | 4123 | $P_{43}$ |
+| 2341 | $P_{34}$ | 4132 | $Q_{13,34}$ |
+| 2431 | $Q_{12,24}$ | 4312 | $Q_{13,14}$ |
+| 3124 | $Q_{12,13}$ | 4321 | $Q_{14,14}$ |
+| 3214 | $P_{22}$ | | |
+
+Set $q=Q_{12,14}-P_{11}-P_{43}-Q_{13,34}$. For every order-four unitary
+$U$ and arbitrary complex spectra $a,b$, the spectral determinant is
+
+$$
+\sum_{\sigma\in B} w_\sigma z_\sigma+
+q(z_{4123}+z_{2314}+z_{3421}+z_{1432}-z_{1423}).
+$$
+
+The 13 weights are nonnegative and $\sum_{\sigma\in B}w_\sigma+3q=1$.
+Each negative mixed-ray evaluation becomes a positive value of $q$ after
+permuting the rows and columns.
+[Weights](../Lean/MOC/FourSignedMinorIdentity.lean#L45) · [Complex identity](../Lean/MOC/FourSignedMinorIdentity.lean#L147) · [Reduction to positive correction](../Lean/MOC/FourSignedHeightReduction.lean#L80)
+
+For a real angle $\theta$, set $s_\sigma=\mathrm{Re}(e^{-i\theta}z_\sigma)$
+and $f_\sigma=s_\sigma-\min_\tau s_\tau$. Put
+$h=f_{1423}-f_{4123}-f_{2314}-f_{3421}-f_{1432}$.
+The lower support bound in this direction is equivalent to
+$qh\le\sum_{\sigma\in B}w_\sigma f_\sigma$. The minor estimate
+$q\le2\sqrt{w_{3421}w_{4312}}$ holds for every unitary $U$.
+The proposed spectral estimate $h\le\sqrt{f_{3421}f_{4312}}$ fails.
+Take $a=(2+i,-4+5i,3i,-7)$, $b=(2,1+i,-8-i,-7+5i)$, and $\theta=0$.
+The minimum is $-2040$ and $h=206$, while $f_{3421}=510$ and $f_{4312}=28$.
+Thus $206^2=42436>14280=510\cdot28$. All 24 matching products are
+distinct. The full signed inequality remains open in this library.
+[Minor estimate](../Lean/MOC/FourMinorGeometricMean.lean#L89) · [Exact spectral counterexample](../Lean/MOC/FourSpectralGeometricMean.lean#L49)
+
 ### Complex unitary matrices with zero diagonal
 
 Four zeros in any positions suffice for the order-four inclusion.

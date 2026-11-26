@@ -180,6 +180,14 @@ real convex hull. The resulting reduction allows both lists of eigenvalues
 to be arbitrary complex numbers.
 [Fixed first row](Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L640)
 
+A second formula writes the determinant using thirteen nonnegative
+squared-minor weights and one signed correction. A geometric-mean bound
+controls the correction for every order-four unitary. Explicit complex
+spectra refute the proposed companion bound on the matching heights.
+The full support inequality remains open. The new proof scripts await
+kernel checking.
+[Signed formula and exact counterexample](Docs/order-four-proof-map.md#thirteen-squared-minors-and-a-signed-correction)
+
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if the complex unitary matrix $U$ has zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L60) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) |
