@@ -1,4 +1,5 @@
 import MOC.SpectralTranslationRigidity
+import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-! A bivariate slice that stays nonzero in the open upper half-planes
 has a nonnegative Rayleigh difference at a real boundary value. -/
@@ -132,11 +133,11 @@ private theorem spectral_pair_slice (c : SquarefreeClass ι) (a : ι → ℂ)
     simp
   have hj : ({j} : Finset ι) ∉ ({({l} : Finset ι), {j, l}} : Finset (Finset ι)) := by
     have hn : ({j} : Finset ι) ≠ {j, l} := fun h => hjl (by
-      have hm : l ∈ ({j} : Finset ι) := h.symm ▸ (by simp)
+      have hm : l ∈ ({j} : Finset ι) := by rw [h]; simp
       exact (Finset.mem_singleton.mp hm).symm)
     simp [hjl, hn]
   have hl : ({l} : Finset ι) ≠ {j, l} := fun h => hjl (by
-    have hm : j ∈ ({l} : Finset ι) := h.symm ▸ (by simp)
+    have hm : j ∈ ({l} : Finset ι) := by rw [h]; simp
     exact Finset.mem_singleton.mp hm)
   change (∑ J, f J) = _
   rw [← hs, powerset_two_right, Finset.sum_insert h₀, Finset.sum_insert hj, Finset.sum_pair hl]
@@ -287,6 +288,165 @@ theorem IsMinimumNormalizedSpectralValue.right_moment_rayleigh {c : SquarefreeCl
     apply (mul_nonneg_iff_of_pos_left (sq_pos_of_ne_zero hp)).mp
     convert H using 1 <;> ring
   exact (closure_minimal hin hcgood) (hd x)
+
+private theorem spectralRightMoment_complement_sum (c : SquarefreeClass ι)
+    (J : Finset ι) (x : ι → ℝ) :
+    spectralRightMoment c J x = ∑ S : Finset ι, if S.card = J.card then
+      (c Sᶜ J).re * ∏ i ∈ S, x i else 0 := by
+  let e : Equiv.Perm (Finset ι) := ⟨(·ᶜ), (·ᶜ), compl_compl, compl_compl⟩
+  rw [spectralRightMoment, ← Equiv.sum_comp e
+    (fun I => if Iᶜ.card = J.card then (c I J).re * ∏ i ∈ Iᶜ, x i else 0)]
+  apply Finset.sum_congr rfl
+  intro S _
+  change (if (Sᶜ)ᶜ.card = J.card then (c Sᶜ J).re * ∏ i ∈ (Sᶜ)ᶜ, x i else 0) = _
+  rw [compl_compl]
+
+private theorem spectralRightMoment_singleton (c : SquarefreeClass ι) (j : ι) (x : ι → ℝ) :
+    spectralRightMoment c {j} x = ∑ i, (c ({i} : Finset ι)ᶜ {j}).re * x i := by
+  classical
+  rw [spectralRightMoment_complement_sum]
+  simp only [Finset.card_singleton]
+  rw [show (∑ S : Finset ι, if S.card = 1 then (c Sᶜ {j}).re * ∏ i ∈ S, x i else 0) =
+      ∑ S ∈ (Finset.univ : Finset ι).powersetCard 1, (c Sᶜ {j}).re * ∏ i ∈ S, x i by
+      have hs : (Finset.univ : Finset ι).powersetCard 1 =
+          (Finset.univ : Finset (Finset ι)).filter (fun S => S.card = 1) := by
+        ext S
+        simp only [Finset.mem_powersetCard, Finset.subset_univ, Finset.mem_filter,
+          Finset.mem_univ, true_and]
+      rw [hs, Finset.sum_filter]]
+  rw [Finset.powersetCard_one, Finset.sum_image (fun _ _ _ _ h => Finset.singleton_injective h)]
+  simp only [Finset.prod_singleton]
+
+private theorem ordered_pair_sum (f : Finset ι → ℝ) :
+    (∑ i : ι, ∑ k : ι, if i = k then 0 else f {i, k}) =
+      2 * ∑ S : Finset ι, if S.card = 2 then f S else 0 := by
+  classical
+  let g (p : ι × ι) : Finset ι := {p.1, p.2}
+  let T := (Finset.univ : Finset (ι × ι)).filter fun p => p.1 ≠ p.2
+  have hsum : (∑ i : ι, ∑ k : ι, if i = k then 0 else f {i, k}) = ∑ p ∈ T, f (g p) := by
+    rw [T, Finset.sum_filter, Fintype.sum_prod_type]
+    apply Finset.sum_congr rfl
+    intro i _
+    apply Finset.sum_congr rfl
+    intro k _
+    by_cases h : i = k <;> simp only [g, h, if_true, if_false, not_true_eq_false, not_false_eq_true]
+  rw [hsum, ← Finset.sum_fiberwise' T g f, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro S _
+  by_cases hS : S.card = 2
+  · obtain ⟨i, k, hik, rfl⟩ := Finset.card_eq_two.mp hS
+    have hb : T.filter (fun p => g p = {i, k}) = {(i, k), (k, i)} := by
+      ext ⟨u, v⟩
+      simp only [T, g, Finset.mem_filter, Finset.mem_univ, true_and,
+        Finset.mem_insert, Finset.mem_singleton, Prod.mk.injEq]
+      constructor
+      · rintro ⟨huv, h⟩
+        have hu : u = i ∨ u = k := by
+          have hm : u ∈ ({i, k} : Finset ι) := by rw [← h]; simp
+          simpa only [Finset.mem_insert, Finset.mem_singleton] using hm
+        have hv : v = i ∨ v = k := by
+          have hm : v ∈ ({i, k} : Finset ι) := by rw [← h]; simp
+          simpa only [Finset.mem_insert, Finset.mem_singleton] using hm
+        rcases hu with rfl | rfl <;> rcases hv with rfl | rfl
+        · exact (huv rfl).elim
+        · exact Or.inl ⟨rfl, rfl⟩
+        · exact Or.inr ⟨rfl, rfl⟩
+        · exact (huv rfl).elim
+      · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+        · exact ⟨hik, rfl⟩
+        · exact ⟨hik.symm, Finset.pair_comm _ _⟩
+    rw [hb, Finset.sum_pair (show (i, k) ≠ (k, i) from fun h => hik (congrArg Prod.fst h)),
+      if_pos hS, two_mul]
+  · have hzero : T.filter (fun p => g p = S) = ∅ := by
+      apply Finset.filter_eq_empty_iff.mpr
+      intro p hp he
+      have hp' : p.1 ≠ p.2 := (Finset.mem_filter.mp hp).2
+      exact hS (by rw [← he, g, Finset.card_pair hp'])
+    rw [hzero, Finset.sum_empty, if_neg hS, mul_zero]
+
+/-- The entry of the interference matrix for a pair of right labels. -/
+def spectralInterferenceGram (c : SquarefreeClass ι) (j l : ι) : Matrix ι ι ℝ :=
+  fun i k => ((c ({i} : Finset ι)ᶜ {j}).re * (c ({k} : Finset ι)ᶜ {l}).re +
+    (c ({k} : Finset ι)ᶜ {j}).re * (c ({i} : Finset ι)ᶜ {l}).re -
+      if i = k then 0 else (c ({i, k} : Finset ι)ᶜ {j, l}).re) / 2
+
+open Matrix in
+/-- Stability implies positive semidefiniteness of the interference
+matrix for each distinct pair of right labels. -/
+theorem IsMinimumNormalizedSpectralValue.interferenceGram_posSemidef {c : SquarefreeClass ι}
+    (hc : IsMinimumNormalizedSpectralValue c) (j l : ι) (hjl : j ≠ l) :
+    (spectralInterferenceGram c j l).PosSemidef := by
+  classical
+  constructor
+  · ext i k : 1
+    simp only [Matrix.conjTranspose_apply, star_trivial, spectralInterferenceGram]
+    rw [add_comm, eq_comm (a := k), Finset.pair_comm k i]
+  · intro x
+    let a (i : ι) := (c ({i} : Finset ι)ᶜ {j}).re
+    let b (i : ι) := (c ({i} : Finset ι)ᶜ {l}).re
+    let f (S : Finset ι) := (c Sᶜ {j, l}).re * ∏ i ∈ S, x i
+    have hq : (∑ i : ι, ∑ k : ι, if i = k then 0 else f {i, k}) =
+        2 * spectralRightMoment c {j, l} x := by
+      rw [ordered_pair_sum, spectralRightMoment_complement_sum]
+      simp only [Finset.card_pair hjl, f]
+    have he : dotProduct (star x) (spectralInterferenceGram c j l *ᵥ x) =
+        spectralRightMoment c {j} x * spectralRightMoment c {l} x -
+          spectralRightMoment c {j,l} x := by
+      simp only [dotProduct, Matrix.mulVec, Pi.star_apply, star_trivial, spectralInterferenceGram,
+        spectralRightMoment_singleton]
+      conv_lhs => simp only [Finset.mul_sum]
+      change (∑ i : ι, ∑ k : ι, x i * (((a i * b k + a k * b i -
+        if i = k then 0 else (c ({i,k} : Finset ι)ᶜ {j,l}).re) / 2) * x k)) =
+        (∑ i, a i * x i) * (∑ k, b k * x k) - spectralRightMoment c {j,l} x
+      have hterm (i k : ι) :
+          x i * (((a i * b k + a k * b i -
+            if i = k then 0 else (c ({i,k} : Finset ι)ᶜ {j,l}).re) / 2) * x k) =
+          ((a i * x i) * (b k * x k) + (b i * x i) * (a k * x k) -
+            if i = k then 0 else f {i,k}) / 2 := by
+        by_cases h : i = k
+        · simp only [h, if_true]
+          ring
+        · simp only [h, if_false, f, Finset.prod_pair h]
+          ring
+      simp only [hterm, ← Finset.sum_div, Finset.sum_sub_distrib, Finset.sum_add_distrib,
+        ← Finset.mul_sum, ← Finset.sum_mul]
+      rw [hq]
+      ring
+    rw [he]
+    exact hc.right_moment_rayleigh j l hjl x
+
+private theorem balanced_pair_swap (I J : Finset ι) : Iᶜ.card = J.card ↔ Jᶜ.card = I.card := by
+  have hI := Finset.card_add_card_compl I
+  have hJ := Finset.card_add_card_compl J
+  omega
+
+private theorem squarefreeSpectralValue_swap (c : SquarefreeClass ι) (a b : ι → ℂ) :
+    squarefreeSpectralValue (fun I J => c J I) a b = squarefreeSpectralValue c b a := by
+  unfold squarefreeSpectralValue
+  rw [Finset.sum_comm (f := fun I J => c J I * squarefreeDividedDivisor a b I J)]
+  apply Finset.sum_congr rfl
+  intro I _
+  apply Finset.sum_congr rfl
+  intro J _
+  by_cases h : Iᶜ.card = J.card
+  · simp only [squarefreeDividedDivisor, h, (balanced_pair_swap I J).mp h, if_true,
+      mul_comm (∏ j ∈ J, a j)]
+  · simp only [squarefreeDividedDivisor, h, mt (balanced_pair_swap I J).mpr h, if_false]
+
+/-- The interference matrix is also positive semidefinite for a pair
+of left labels, by exchanging the two lists. -/
+theorem IsMinimumNormalizedSpectralValue.leftInterferenceGram_posSemidef {c : SquarefreeClass ι}
+    (hc : IsMinimumNormalizedSpectralValue c) (i k : ι) (hik : i ≠ k) :
+    (spectralInterferenceGram (fun I J => c J I) i k).PosSemidef := by
+  have hswap : IsMinimumNormalizedSpectralValue (fun I J => c J I) := by
+    refine ⟨?_, ?_, hc.rightEndpoint, hc.leftEndpoint, ?_⟩
+    · intro a b ha hb
+      rw [squarefreeSpectralValue_swap]
+      exact hc.stable b a hb ha
+    · intro I J h
+      exact hc.nonnegative J I ((balanced_pair_swap I J).mp h)
+    · rw [squarefreeSpectralValue_swap, hc.normalized]
+  exact hswap.interferenceGram_posSemidef i k hik
 
 end
 
