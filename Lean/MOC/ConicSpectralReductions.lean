@@ -64,8 +64,10 @@ private theorem isClosed_spectral_holds (U : Matrix ι ι ℂ) :
 private theorem holds_of_spectral_limits {T : Type*} {l : Filter T} [l.NeBot]
     (U : Matrix ι ι ℂ) {A B : T → ι → ℂ} {a b : ι → ℂ}
     (ha : Tendsto A l (𝓝 a)) (hb : Tendsto B l (𝓝 b))
-    (h : ∀ᶠ t in l, Holds (A t) (B t) U) : Holds a b U :=
-  (isClosed_spectral_holds U).mem_of_tendsto (ha.prodMk_nhds hb) h
+    (h : ∀ᶠ t in l, Holds (A t) (B t) U) : Holds a b U := by
+  change (a, b) ∈ {p : (ι → ℂ) × (ι → ℂ) | Holds p.1 p.2 U}
+  exact (isClosed_spectral_holds U).mem_of_tendsto (f := fun t => (A t, B t))
+    (ha.prodMk_nhds hb) h
 
 private theorem eventually_injective_left {T : Type*} {l : Filter T}
     {A : T → ι → ℂ} {a : ι → ℂ}
@@ -82,17 +84,21 @@ private theorem eventually_injective_left {T : Type*} {l : Filter T}
     have hj := (continuous_apply j).continuousAt.tendsto.comp ha
     have hnear := (isOpen_ne_fun continuous_fst continuous_snd).mem_nhds
       (show (a i, a j) ∈ {p : ℂ × ℂ | p.1 ≠ p.2} from hinj.ne hij)
-    exact ((hi.prodMk_nhds hj) hnear).mono fun _ hn he => False.elim (hn he)
+    have hne : ∀ᶠ t in l, A t i ≠ A t j := (hi.prodMk_nhds hj) hnear
+    exact hne.mono fun _ hn he => False.elim (hn he)
 
 private theorem holds_affine_spectral_iff (a b : ι → ℂ) (U : Matrix ι ι ℂ)
     (hU : IsUnitary U) (s t : ℂ) (hs : s ≠ 0) :
     Holds (fun i => s * a i + t) (fun j => s * b j - t) U ↔ Holds a b U := by
   have h := holds_fractional_iff a b U hU s t 0 1
     (by simpa using hs) (fun _ => by simp) (fun _ => by simp)
+  have ha : fractionalMap s t 0 1 ∘ a = fun i => s * a i + t := by
+    funext i
+    simp only [fractionalMap, Function.comp_apply, zero_mul, zero_add, div_one]
   have hb : (fun j => -(s * -b j + t)) = (fun j => s * b j - t) := by
     funext j
     ring
-  simpa only [fractionalMap, Function.comp_apply, zero_mul, zero_add, div_one, hb] using h
+  simpa only [ha, fractionalMap, Function.comp_apply, zero_mul, zero_add, div_one, hb] using h
 
 /-- An invertible complex affine map preserves the fixed-unitary spectral test. -/
 theorem spectralCurveTest_affine_image_iff (C : Set ℂ) (U : Matrix ι ι ℂ)
@@ -251,8 +257,14 @@ theorem holds_of_hyperbolic_test_on_asymptotes (a b : ι → ℂ)
   have hA : Continuous A := by
     apply continuous_pi
     intro i
-    by_cases hx : x i ≠ 0 <;> by_cases hy : y i ≠ 0 <;>
-      simp only [A, hyperbolicX, hyperbolicY, hx, hy, if_true, if_false] <;> fun_prop
+    by_cases hx : x i ≠ 0
+    · simp only [A, hyperbolicX, hyperbolicY, if_pos hx]
+      fun_prop
+    · by_cases hy : y i ≠ 0
+      · simp only [A, hyperbolicX, hyperbolicY, if_neg hx, if_pos hy]
+        fun_prop
+      · simp only [A, hyperbolicX, hyperbolicY, if_neg hx, if_neg hy]
+        fun_prop
   have hzero : A 0 = a := by
     funext i
     rw [hax i]
@@ -275,7 +287,7 @@ theorem holds_of_hyperbolic_test_on_asymptotes (a b : ι → ℂ)
       refine ⟨X i, Y i, ?_, rfl⟩
       dsimp only [X, Y]
       rw [div_mul_div_comm, hyperbolic_product]
-      field_simp [hε]
+      field_simp [hε] <;> ring
     · funext i
       simp only [A, p, X, Y, Complex.ofReal_div, add_zero]
       field_simp [Complex.ofReal_ne_zero.mpr hε]
@@ -329,9 +341,12 @@ theorem four_spectralParabola_test_iff (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : Is
       ha (fractionalMap_injOn α β γ δ hd (hreg _ ⟨i, rfl⟩) (hreg _ ⟨j, rfl⟩) he)
     have hreal (i : Fin 4) (hi : i ≠ 3) : (x i).im = 0 := by
       fin_cases i
-      · simp only [x, Function.comp_apply, h0, Complex.zero_im]
-      · simp only [x, Function.comp_apply, h1, Complex.one_im]
-      · simp only [x, Function.comp_apply, h2, Complex.ofReal_im]
+      · change (x 0).im = 0
+        simp only [x, Function.comp_apply, h0, Complex.zero_im]
+      · change (x 1).im = 0
+        simp only [x, Function.comp_apply, h1, Complex.one_im]
+      · change (x 2).im = 0
+        simp only [x, Function.comp_apply, h2, Complex.ofReal_im]
       · exact (hi rfl).elim
     apply holds_of_fractional_spectral_test a b U hU α β γ δ hd
       (fun i => hreg _ ⟨i, rfl⟩)
@@ -342,7 +357,7 @@ theorem four_spectralParabola_test_iff (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : Is
     have hr : r ≠ 0 := by
       by_cases he : H = 0
       · simp [r, he]
-      · exact if_neg he ▸ div_ne_zero (by norm_num) he
+      · simpa only [r, if_neg he] using div_ne_zero (by norm_num : (2 : ℝ) ≠ 0) he
     let s : ℂ := (r : ℂ) * Complex.I
     have hs : s ≠ 0 := mul_ne_zero (Complex.ofReal_ne_zero.mpr hr) Complex.I_ne_zero
     apply (holds_affine_spectral_iff x c U hU s 1 hs).mp
@@ -387,9 +402,12 @@ theorem four_spectralHyperbola_test_iff (d : ℂ) (k : ℝ) (hdim : d.im ≠ 0)
       ha (fractionalMap_injOn α β γ δ hd (hreg _ ⟨i, rfl⟩) (hreg _ ⟨j, rfl⟩) he)
     have hreal (i : Fin 4) (hi : i ≠ 3) : (x i).im = 0 := by
       fin_cases i
-      · simp only [x, Function.comp_apply, h0, Complex.zero_im]
-      · simp only [x, Function.comp_apply, h1, Complex.one_im]
-      · simp only [x, Function.comp_apply, h2, Complex.ofReal_im]
+      · change (x 0).im = 0
+        simp only [x, Function.comp_apply, h0, Complex.zero_im]
+      · change (x 1).im = 0
+        simp only [x, Function.comp_apply, h1, Complex.one_im]
+      · change (x 2).im = 0
+        simp only [x, Function.comp_apply, h2, Complex.ofReal_im]
       · exact (hi rfl).elim
     apply holds_of_fractional_spectral_test a b U hU α β γ δ hd
       (fun i => hreg _ ⟨i, rfl⟩)
@@ -513,7 +531,7 @@ theorem exists_real_reciprocal_secant {u v d : ℂ} (hu : 0 < u.im) (hv : 0 < v.
     exact hv.ne' hi
   have hcast : ((e * g t).re : ℂ) = e * g t :=
     Complex.ext (Complex.ofReal_re _) (by rw [Complex.ofReal_im, ht])
-  refine ⟨((e * g t).re)⁻¹, ?_⟩
+  refine ⟨t, ((e * g t).re)⁻¹, ?_⟩
   rw [Complex.ofReal_inv, hcast]
   change -(u - (t : ℂ))⁻¹ - (-(v - (t : ℂ))⁻¹) =
     (d / (u - v) * ((u - (t : ℂ)) * (v - (t : ℂ))))⁻¹ * d
@@ -564,7 +582,7 @@ theorem exists_ellipse_antipodes (r : ℝ) (hr : 0 < r) (w : ℂ)
   let B := w.im * (r ^ 2 - 1) / r
   have hD : 0 ≤ B ^ 2 - 4 * A * A := by
     apply sub_nonneg.mpr
-    apply (mul_le_mul_right₀ (sq_pos_of_pos hr)).mp
+    apply (mul_le_mul_right (sq_pos_of_pos hr)).mp
     have hB : B ^ 2 * r ^ 2 = (r ^ 2 - 1) ^ 2 * w.im ^ 2 := by
       dsimp only [B]
       field_simp [hr.ne'] <;> ring
@@ -651,6 +669,8 @@ theorem exists_ellipse_antipodes (r : ℝ) (hr : 0 < r) (w : ℂ)
     have h₂ := hh v hvneq
     have h₃ : -u ≠ -v := fun he => huv (neg_injective he)
     have h₄ : -u ≠ v := fun he => huv' ((neg_eq_iff_eq_neg.mp he))
+    have h₅ : -u ≠ u := Ne.symm h₁
+    have h₆ : -v ≠ v := Ne.symm h₂
     intro i j hij
     fin_cases i <;> fin_cases j <;>
       simp_all
@@ -666,7 +686,8 @@ theorem exists_ellipse_antipodes (r : ℝ) (hr : 0 < r) (w : ℂ)
       linear_combination -hm
     unfold spectralCrossRatio
     rw [hm, hm']
-    field_simp [hsum, hsum'] <;> ring
+    apply (div_eq_iff (mul_ne_zero hsum hsum')).mpr
+    ring
 
 private theorem norm_one_sub_sq (z : ℂ) :
     ‖1 - z‖ ^ 2 = 1 + ‖z‖ ^ 2 - 2 * z.re := by
@@ -703,7 +724,7 @@ private theorem crossRatio_orbit_half_norm (z : ℂ) (hzero : z ≠ 0) :
         simp only [Complex.normSq_apply, Complex.sub_re, Complex.sub_im, Complex.one_re,
           Complex.one_im, sub_zero]
         ring
-      rw [Complex.div_re, ← Complex.sq_norm, norm_div, norm_sub_rev z 1]
+      rw [Complex.div_re, ← add_div, ← Complex.sq_norm, norm_div, norm_sub_rev z 1]
       have hn : 0 < ‖z‖ := norm_pos_iff.mpr hzero
       apply (div_le_iff₀ (sq_pos_of_pos hn)).mpr
       rw [show ‖1 - z‖ / ‖z‖ / 2 * ‖z‖ ^ 2 = ‖z‖ * ‖1 - z‖ / 2 by
@@ -728,7 +749,7 @@ private theorem crossRatio_orbit_half_norm (z : ℂ) (hzero : z ≠ 0) :
         simp only [Complex.normSq_apply, Complex.sub_re, Complex.sub_im, Complex.one_re,
           Complex.one_im, sub_zero]
         ring
-      rw [Complex.div_re, ← Complex.sq_norm, norm_div, norm_sub_rev z 1]
+      rw [Complex.div_re, ← add_div, ← Complex.sq_norm, norm_div, norm_sub_rev z 1]
       have hn : 0 < ‖z‖ := norm_pos_iff.mpr hzero
       apply (div_le_iff₀ (sq_pos_of_pos hn)).mpr
       rw [show ‖1 - z‖ / ‖z‖ / 2 * ‖z‖ ^ 2 = ‖z‖ * ‖1 - z‖ / 2 by
@@ -1016,8 +1037,8 @@ private theorem holds_of_open_curve_chart {m : Type*} [Fintype m] [DecidableEq m
     obtain ⟨t, r, ht⟩ := exists_real_reciprocal_secant hxli hxlj (hx.ne hij) hd
     let f (z : ℂ) := fractionalMap 0 (-1) 1 (-(t : ℂ)) z
     have hf (z : ℂ) : f z = -(z - (t : ℂ))⁻¹ := by
-      simp only [f, fractionalMap, zero_mul, zero_add, one_mul, ← sub_eq_add_neg, neg_div,
-        one_div]
+      simp only [f, fractionalMap, zero_mul, zero_add, zero_sub, one_mul, ← sub_eq_add_neg,
+        neg_div, one_div]
     let A (s : ℝ) (k : m) := if k = i ∨ k = j then x k else x k + (s : ℂ)
     have hA : Continuous A := continuous_pi fun k => by
       by_cases hk : k = i ∨ k = j <;> simp only [A, hk, if_true, if_false] <;> fun_prop
@@ -1068,7 +1089,10 @@ private theorem holds_of_open_curve_chart {m : Type*} [Fintype m] [DecidableEq m
         Complex.sub_im, Complex.add_im, Complex.ofReal_im, hxreal k hki hkj,
         sub_zero, zero_add, neg_zero, zero_div]
     · refine ⟨r, ?_⟩
-      simpa only [Function.comp_apply, A, if_pos (Or.inl rfl), if_pos (Or.inr rfl), hf] using ht
+      have hAi : A s i = x i := if_pos (Or.inl rfl)
+      have hAj : A s j = x j := if_pos (Or.inr rfl)
+      change f (A s i) - f (A s j) = (r : ℂ) * d
+      simpa only [hAi, hAj, hf] using ht
   let A (s : ℝ) (k : m) := if k = i ∨ k = j then a k + (s : ℂ) * Complex.I else a k
   have hA : Continuous A := continuous_pi fun k => by
     by_cases he : k = i ∨ k = j <;> simp only [A, he, if_true, if_false] <;> fun_prop
@@ -1133,9 +1157,13 @@ private theorem exists_exterior_circle_chart (a : ι → ℂ) (o : ℂ) (ho : o 
     have hh : fractionalMap k β 1 (-p) (a i) = k - Complex.I * (u / w) := by
       simp only [fractionalMap, β, one_mul, ← sub_eq_add_neg]
       change _ / w = _
-      field_simp [hreg i] <;> dsimp only [w] <;> ring
+      have hw : w ≠ 0 := hreg i
+      apply (div_eq_iff hw).mpr
+      rw [sub_mul, mul_assoc, div_mul_cancel₀ _ hw]
+      dsimp only [w]
+      ring
     have hcross : (u / w).re * Complex.normSq w = (w * star u).re := by
-      rw [Complex.div_re, div_mul_cancel₀ _ hn.ne']
+      rw [Complex.div_re, ← add_div, div_mul_cancel₀ _ hn.ne']
       simp only [Complex.mul_re, Complex.star_def, Complex.conj_re, Complex.conj_im]
       ring
     have hnorm' : Complex.normSq (a i - o) =
@@ -1290,12 +1318,12 @@ private theorem five_open_curve_reduction
       rw [hgap]
       by_cases hl : 0 < G l
       · have hsl := hleast l (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hl⟩)
-        exact sub_nonneg.mpr ((le_div_iff₀ hl).mpr hsl)
+        exact sub_nonneg.mpr ((le_div_iff₀ hl).mp hsl)
       · have hEn : 0 ≤ E l := by
           by_cases hli : l = i
-          · rwa [hli, hE₀]
+          · rw [hli, hE₀]
           · by_cases hlj : l = j
-            · rwa [hlj, hE₁]
+            · rw [hlj, hE₁]
             · exact (hE l hli hlj).le
         exact sub_nonneg.mpr ((mul_nonpos_of_nonneg_of_nonpos hs (le_of_not_gt hl)).trans hEn)
     obtain ⟨α, β, γ, δ, hdet, hreg, hUp, hBoundary⟩ := exists_exterior_circle_chart x o ho hB
@@ -1356,10 +1384,9 @@ theorem five_spectralHyperbola_test_iff (d : ℂ) (k : ℝ) (hdim : d.im ≠ 0)
       · simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
           zero_mul, add_zero, zero_add, hs]
     have hq : x q = (z : ℂ) + ((s - r : ℝ) : ℂ) * d := by
-      have hpq := sub_eq_iff_eq_add.mp hr
-      rw [hp] at hpq
-      rw [Complex.ofReal_sub]
-      linear_combination -hpq
+      calc
+        x q = x p - (r : ℂ) * d := by rw [← hr, sub_sub_cancel]
+        _ = _ := by rw [hp, Complex.ofReal_sub s r]; ring
     apply holds_of_hyperbolic_test_on_two_intersecting_lines x y d k U hU h hx z
     intro l
     by_cases hlp : l = p
@@ -1384,7 +1411,7 @@ private theorem unit_norm_of_ellipse_coordinates (r : ℝ) (z : ℂ)
   let w : ℂ := ⟨z.re / r, z.im⟩
   have hn : ‖w‖ ^ 2 = 1 := by
     rw [Complex.sq_norm, Complex.normSq_apply]
-    simpa only [w, pow_two] using hz
+    simpa only [w, spectralEllipse, Set.mem_setOf_eq, pow_two] using hz
   exact le_antisymm
     ((sq_le_sq₀ (norm_nonneg w) zero_le_one).mp (by simpa only [one_pow] using hn.le))
     ((sq_le_sq₀ zero_le_one (norm_nonneg w)).mp (by simpa only [one_pow] using hn.ge))
@@ -1408,7 +1435,8 @@ theorem spectralEllipse_crossRatio_ordering (r : ℝ)
       change (a i).re / r = (a j).re / r at h
       have hh := congrArg (fun x : ℝ => x * r) h
       simpa only [div_mul_cancel₀ _ hrp.ne'] using hh
-    · exact congrArg Complex.im hij
+    · have him := congrArg Complex.im hij
+      exact him
   obtain ⟨p, hp⟩ := half_norm_crossRatio_ordering w hWinj
   let W := w ∘ p
   let X := a ∘ p
@@ -1429,11 +1457,11 @@ theorem spectralEllipse_crossRatio_ordering (r : ℝ)
       _ = ‖(L.re : ℂ)‖ := congrArg norm hLc
       _ = _ := by rw [Complex.norm_real, Real.norm_eq_abs]
   have hLneg : L.re < 0 := by
-    by_contra hn
-    have hneg : 0 ≤ L.re := le_of_not_gt hn
+    apply lt_of_not_ge
+    intro hneg
     have hzero : L.re ≠ 0 := fun he => hLne (Complex.ext he hLIm)
     rw [hLnorm, abs_of_nonneg hneg] at hL
-    linarith only [hL, lt_of_le_of_ne hneg hzero.symm]
+    linarith only [hL, lt_of_le_of_ne hneg (Ne.symm hzero)]
   refine ⟨p, ?_⟩
   change ((r ^ 2 - 1) ^ 2 + 4 * r ^ 2) * (spectralCrossRatio (X 0) (X 1) (X 2) (X 3)).re ≤
     ((r ^ 2 - 1) ^ 2 - 4 * r ^ 2) * ‖spectralCrossRatio (X 0) (X 1) (X 2) (X 3)‖
@@ -1449,7 +1477,7 @@ theorem spectralEllipse_crossRatio_ordering (r : ℝ)
       ((1 ^ 2 - 1) ^ 2 - 4 * 1 ^ 2) * ‖L‖
     rw [hLnorm, abs_of_neg hLneg]
     norm_num
-  · have hr₁ : 1 < r := lt_of_le_of_ne hr he.symm
+  · have hr₁ : 1 < r := lt_of_le_of_ne hr (Ne.symm he)
     let q : ℝ := (r - 1) / (r + 1)
     let c : ℝ := (r + 1) / 2
     have hdenr : 0 < r + 1 := by positivity
@@ -1478,7 +1506,9 @@ theorem spectralEllipse_crossRatio_ordering (r : ℝ)
         field_simp [hdenr.ne'] <;> ring
     have hImInj : Function.Injective (e ∘ W) := by
       intro i j he
-      exact (ha.comp p.injective) (by rw [hcoords i, hcoords j, show e (W i) = e (W j) from he])
+      apply ha.comp p.injective
+      change X i = X j
+      rw [hcoords i, hcoords j, show e (W i) = e (W j) from he]
     have hImDen : (e (W 0) - e (W 3)) * (e (W 1) - e (W 2)) ≠ 0 :=
       mul_ne_zero (sub_ne_zero.mpr (hImInj.ne (by decide)))
         (sub_ne_zero.mpr (hImInj.ne (by decide)))
@@ -1590,8 +1620,9 @@ private theorem crossRatio_re_norm_of_discriminant_eq_zero
   have hND := (mul_eq_zero.mp hdisc).resolve_left (by norm_num)
   have hp : z ^ 2 - z + 1 = 0 := by
     change (N / D) ^ 2 - N / D + 1 = 0
-    field_simp [hD]
-    linear_combination hND
+    calc
+      _ = (N ^ 2 - N * D + D ^ 2) / D ^ 2 := by field_simp [hD] <;> ring
+      _ = 0 := by rw [hND, zero_div]
   have hre := congrArg Complex.re hp
   simp only [pow_two, Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.one_re,
     Complex.zero_re] at hre

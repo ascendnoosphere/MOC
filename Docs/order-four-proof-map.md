@@ -67,9 +67,9 @@ The six-contact inequality required by this route remains open.
 | Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L274) |
 | First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | Iff | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L208) |
 | Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L124) |
-| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L318) |
-| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L375) |
-| Distinct first spectrum on the ellipse with semiaxes $2+\sqrt 3$ and $1$ | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L925) |
+| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L330) |
+| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L390) |
+| Distinct first spectrum on the ellipse with semiaxes $2+\sqrt 3$ and $1$ | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L946) |
 | Signed support gap on the realized bilinear chart | Iff | [Statement and proof](../Lean/MOC/FourDirectSupportCertificate.lean#L118) |
 
 The conic conditions quantify over every unitary mixer and every

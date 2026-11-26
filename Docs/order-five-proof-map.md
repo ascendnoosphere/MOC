@@ -46,8 +46,8 @@ transfer makes the full-support eight-contact test exact.
 | Rectangular compression with four rows | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L218) |
 | Order four AND existence of normal order-five maximizers | If | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L134) |
 | Eight-contact support bound with no zero mixer entries | Iff | [Statement and transfer](../Lean/MOC/ProofRoutes.lean#L295) |
-| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1320) |
-| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1341) |
+| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1348) |
+| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1369) |
 | Orthogonal minor convexification AND orthogonal order five | If | [Statement and proof](../Lean/MOC/Realification.lean#L79) |
 
 For the regular spectral test, each pair sum is nonzero, different
