@@ -100,7 +100,7 @@ theorem blockMinorLinkFeasible_iff {C : κ → Type*} (U : ∀ k, Matrix (ι k) 
       rw [w, finiteLaw_pushforward_expectation, subsetMinorSq_blockDiagonal'_map U hU k]
       exact hobs k c hc
 
-private theorem fourConstraintFeasible_subsetImage_iff (s : Finset (Fin 13)) :
+theorem fourConstraintFeasible_subsetImage_iff (s : Finset (Fin 13)) :
     FourConstraintFeasible s ↔
       ∃ w : Equiv.Perm (Fin 4) → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ) = 1 ∧
         ∀ k ∈ s, (∑ σ, w σ * subsetImageEvent (ordinaryCostRows (fourConstraintRay k))
