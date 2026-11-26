@@ -123,7 +123,7 @@ polynomial constraints, rather than the number of tied permutations.
 | --- | --- |
 | At least $2n-2$ contacts. | [Base terminal chart](../Lean/MOC/MatchingContactTransfer.lean#L123) |
 | At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L303) |
-| Constraint rank at least $2n-2$, including the determinant deficit constraint. | [Full constraint rank](../Lean/MOC/MatchingContactRank.lean#L111) |
+| Constraint rank at least $2n-2$, including the determinant deficit constraint. | [Full constraint rank](../Lean/MOC/MatchingContactRank.lean#L110) |
 | Rank at least $2n-2$ for the old matching differences alone. | [Contact increase below the rank bound](../Lean/MOC/DeficitContactTransfer.lean#L256) · [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L327) |
 | Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) |
 | The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) |
@@ -187,13 +187,13 @@ the expansions for the spectra and their conjugates cancels the real
 part of the correction.
 [Signed weight](../Lean/MOC/Weights.lean#L50) ·
 [Cofactor stationarity](../Lean/MOC/ComplexTiedSwap.lean#L75) ·
-[New Lean identity](../Lean/MOC/StationaryPivot.lean#L329)
+[Signed score identity](../Lean/MOC/StationaryPivot.lean#L329)
 
 If $F>H$, the same sum with the gaps $H-\mathrm{Re}(\eta P_\sigma)$
 is negative whenever $U_{ij}\ne0$. Thus a negative-weight inactive
 permutation uses that entry. For the equivalence, first increase the
 number of contacts and then maximize over $U$ with the new lists fixed.
 This last step preserves every contact. The exclusion in the diagram
-remains open. The new Lean source awaits compilation.
-[Negative weight](../Lean/MOC/StationaryPivot.lean#L435) ·
-[Terminal equivalence](../Lean/MOC/StationaryPivot.lean#L483)
+remains open.
+[Negative weight](../Lean/MOC/StationaryPivot.lean#L430) ·
+[Terminal equivalence](../Lean/MOC/StationaryPivot.lean#L478)

@@ -56,8 +56,7 @@ theorem exists_matching_contact_curve_of_spanning_constraints
         rw [map_add, map_add, add_sub_add_comm]
         exact Q.add_mem iha ihb
     | smul c a ha iha =>
-        change C c * a - C (eval z (C c * a)) ∈ Q
-        rw [map_mul, eval_C, map_mul, ← mul_sub]
+        rw [MvPolynomial.smul_eq_C_mul, map_mul, eval_C, map_mul, ← mul_sub]
         exact Ideal.mul_mem_left Q _ iha
   have hcontact i := hspan' _ (hspan i)
   letI : Q.IsPrime := hQ
@@ -184,7 +183,7 @@ theorem exists_matchingChartContactCover_of_full_triangle
   have hub : u ≠ b := hne (by simp [u, Equiv.Perm.mul_apply]) hjk
   have hvb : v ≠ b := by
     intro h
-    have h' := congrArg (fun e : ContactMatching n => e j) h
+    have h' : v j = b j := congrArg (fun e : ContactMatching n => e j) h
     rw [hbj, show v j = r j by simp [v, Equiv.Perm.mul_apply,
       Equiv.swap_apply_of_ne_of_ne hij.symm hjk]] at h'
     exact hij (r.injective h'.symm)

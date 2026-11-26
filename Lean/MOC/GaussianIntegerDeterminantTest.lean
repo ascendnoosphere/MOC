@@ -45,6 +45,7 @@ private theorem gaussianGram_map_iff {n : ℕ} (V : Matrix (Fin n) (Fin n) Gauss
   rw [← hm.eq_iff]
   simp only [Matrix.map_mul, hs, Matrix.map_smul' g _ _ (map_mul g), map_pow, map_natCast,
     Matrix.map_one g (map_zero g) (map_one g)]
+  rfl
 
 private theorem star_natCast_complex (d : ℕ) : star (d : ℂ) = (d : ℂ) := by
   apply Complex.ext <;> simp [Complex.star_def]
@@ -138,10 +139,12 @@ theorem holds_iff_gaussianIntegerDeterminantTest {n d : ℕ} (a b : Fin n → Ga
     simp only [gaussianMatching, matchingProduct, map_prod, map_add, x, y, Function.comp_apply]
   have hI : g gaussianI = Complex.I := by
     simpa [g, gaussianI] using GaussianInt.toComplex_def' 0 1
+  have hstar (z : GaussianInt) : g (star z) = star (g z) :=
+    GaussianInt.toComplex_star z
   have hnormal (r s : Equiv.Perm (Fin n)) :
       g (gaussianI * star (gaussianMatching a b r - gaussianMatching a b s)) =
         Complex.I * star (matchingProduct x y r - matchingProduct x y s) := by
-    simp only [map_mul, hI, GaussianInt.toComplex_star, map_sub, hmatching, Complex.star_def]
+    rw [map_mul, hI, hstar, map_sub, hmatching, hmatching]
   have hsupport (k : GaussianInt) : gaussianIntegerSupport a b V k ↔
       ∃ σ : Equiv.Perm (Fin n), (g k * determinantValue x y U).re ≤ (g k * matchingProduct x y σ).re := by
     apply exists_congr
@@ -150,10 +153,10 @@ theorem holds_iff_gaussianIntegerDeterminantTest {n d : ℕ} (a b : Fin n → Ga
     let R := k * ((star V.det * V.det) * gaussianMatching a b σ)
     change L.re ≤ R.re ↔ _
     have hL : g L = (Complex.normSq (g V.det) : ℂ) * (g k * determinantValue x y U) := by
-      simp only [L, map_mul, GaussianInt.toComplex_star, hD, Complex.normSq_eq_conj_mul_self]
+      simp only [L, map_mul, hstar, hD, Complex.normSq_eq_conj_mul_self, Complex.star_def]
       ring
     have hR : g R = (Complex.normSq (g V.det) : ℂ) * (g k * matchingProduct x y σ) := by
-      simp only [R, map_mul, GaussianInt.toComplex_star, hmatching, Complex.normSq_eq_conj_mul_self]
+      simp only [R, map_mul, hstar, hmatching, Complex.normSq_eq_conj_mul_self, Complex.star_def]
       ring
     have hcast : (L.re : ℝ) ≤ (R.re : ℝ) ↔ L.re ≤ R.re := Int.cast_le
     rw [← hcast, GaussianInt.to_real_re, GaussianInt.to_real_re]

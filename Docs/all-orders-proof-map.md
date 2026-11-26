@@ -128,7 +128,7 @@ has a determinant projection larger than that maximum.
 | Exclude strict witnesses with at least $2n-1$ contacts | [Sharp terminal bound](../Lean/MOC/AffineGapCover.lean#L85) |
 | Exclude strict witnesses with contact difference rank at least $2n-2$ | [Sharp rank bound](../Lean/MOC/SharpContactRank.lean#L65) |
 | At least $2n-1$ contacts, rank at least $2n-2$, moments, and isolation | [Sharp isolated bound](../Lean/MOC/SharpContactRank.lean#L80) |
-| At least $2n-1$ contacts, a global maximum, and negative inactive pivots | [Terminal stationary test](../Lean/MOC/StationaryPivot.lean#L475) |
+| At least $2n-1$ contacts, a global maximum, and negative inactive pivots | [Terminal stationary test](../Lean/MOC/StationaryPivot.lean#L478) |
 | Regular spectra with no assignment common to all maximizing permutations | [Common-edge exclusion](../Lean/MOC/FourContactRay.lean#L614) |
 
 ## Matrix and operator formulations
@@ -201,7 +201,7 @@ degrees. Degree one supplies the reverse implication.
 | Joint Hermitian integrals | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L83) |
 | Gaussian integer spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
 | Gaussian integer spectra and Gaussian rational mixers | Iff | [Statement and proof](../Lean/MOC/GaussianCayley.lean#L306) |
-| Gaussian integer spectra and an integral matrix with $V^*V=d^2I$, $d>0$, with division-free comparisons | Iff | [Exact integer test](../Lean/MOC/GaussianIntegerDeterminantTest.lean#L181) |
+| Gaussian integer spectra and an integral matrix with $V^*V=d^2I$, $d>0$, with division-free comparisons | Iff | [Exact integer test](../Lean/MOC/GaussianIntegerDeterminantTest.lean#L184) |
 | Newton monomials | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L64) |
 | Projective toric section weights | Iff | [New Lean source](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
 | Loopless complex directed adjacency | Iff | [New Lean source](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
@@ -425,7 +425,7 @@ uses a matrix with at least three orthonormal rows and one extra column.
 | Terminal matching chart with threshold $2n-1$ in matrix order $n$ | Iff | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L304) |
 | Terminal matching chart with old gap rank | Iff | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L328) |
 | Terminal matching chart with old gap rank and no common active edge | Iff | [Statement and proof](../Lean/MOC/TerminalActiveEdges.lean#L27) |
-| Terminal matching chart with constraint rank | Iff | [Statement and proof](../Lean/MOC/MatchingContactRank.lean#L111) |
+| Terminal matching chart with constraint rank | Iff | [Statement and proof](../Lean/MOC/MatchingContactRank.lean#L110) |
 | Terminal matching chart with minimal prime isolation | Iff | [Statement and proof](../Lean/MOC/IsolatedContactFiber.lean#L61) |
 | Regular contact covers AND the terminal chart bound | If | [Statement and proof](../Lean/MOC/HighContact.lean#L276) |
 | All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L315) |

@@ -82,7 +82,7 @@ private theorem holds_of_continuous_pole_move
       unfold matchingProduct
       exact continuous_finset_prod _ fun j _ =>
         ((continuous_apply (σ j)).comp hA).add continuous_const
-    have hproj := Complex.continuous_re.comp (continuous_const.mul hm)
+    have hproj := Complex.continuous_re.comp ((continuous_const (y := η)).mul hm)
     have hlt : (η * matchingProduct (A 0) b σ).re <
         (η * determinantValue (A 0) b U).re := by
       rw [hA0]
@@ -135,8 +135,8 @@ theorem holds_of_pole_circle (hSmall : Conjecture (Fin n))
     have hz := hcircle j hj
     rw [ho, Complex.normSq_zero] at hz
     have he := sub_eq_zero.mp (Complex.normSq_eq_zero.mp hz)
-    exact ⟨0, by simpa only [Complex.ofReal_zero, mul_zero, add_zero] using
-      he.trans (sub_eq_zero.mp ho).symm⟩
+    refine ⟨0, ?_⟩
+    simpa only [Complex.ofReal_zero, mul_zero, add_zero] using he.trans (sub_eq_zero.mp ho).symm
   let P (t : ℝ) := o + (-a p - o) * circleRotation t
   have hP : Continuous P := continuous_const.add (continuous_const.mul continuous_circleRotation)
   have hPinj : Function.Injective P := fun _ _ h =>
@@ -197,7 +197,7 @@ theorem generalizedCircle_of_normal_poleCompression_of_dense_row
       exact hd' (Complex.ext h.2 h.1)
     apply spectrumOnGeneralizedCircle_of_line β (d⁻¹).im (d⁻¹).re (d⁻¹ * μ).im hparts
     intro j
-    change (d⁻¹ * β j).im = (d⁻¹ * μ).im
+    rw [add_comm ((d⁻¹).im * (β j).re), ← Complex.mul_im]
     obtain ⟨r, hr⟩ := hline j (hdense j)
     rw [hr, mul_add, ← mul_assoc d⁻¹ d (r : ℂ), inv_mul_cancel₀ hd, one_mul, Complex.add_im,
       Complex.ofReal_im, add_zero]

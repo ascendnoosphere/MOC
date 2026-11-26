@@ -321,7 +321,7 @@ private theorem weighted_pivot_cofactor (a b : ι → ℂ) (U : Matrix ι ι ℂ
   rw [show (Uᴴ * T) j i =
       η * (Uᴴ * (A * C.adjugate - C.adjugate * A)) j i by
     simp only [T, Matrix.mul_smul, Matrix.smul_apply, smul_eq_mul]]
-  rw [Matrix.conjTranspose_apply, Complex.normSq_eq_conj_mul_self]
+  rw [Matrix.conjTranspose_apply, Complex.normSq_eq_conj_mul_self, Complex.star_def]
   ring
 
 /-- At a unitary support maximum, the complex signed marginal of the real
@@ -365,8 +365,11 @@ theorem stationary_signedWeight_pivot (a b : ι → ℂ) (U : Matrix ι ι ℂ)
   have hb : U * diagonal b' * Uᴴ = Bᴴ := by
     simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
       Matrix.diagonal_conjTranspose, Matrix.mul_assoc, b']
+    rfl
   have hc : diagonal a' + U * diagonal b' * Uᴴ = Cᴴ := by
-    rw [ha, hb, C, Matrix.conjTranspose_add]
+    rw [ha, hb]
+    change Aᴴ + Bᴴ = (A + B)ᴴ
+    rw [Matrix.conjTranspose_add]
   have ht :
       star η • (Aᴴ * Cᴴ.adjugate - Cᴴ.adjugate * Aᴴ) = -T := by
     rw [← Matrix.adjugate_conjTranspose]
