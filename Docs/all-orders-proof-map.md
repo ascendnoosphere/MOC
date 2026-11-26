@@ -551,16 +551,14 @@ exchange examples with zero pivots and singular spectator blocks.
 ```mermaid
 flowchart BT
     accTitle: Pointwise, separate, and simultaneous polynomial comparisons
-    accDescr: Pointwise comparisons are exact. The separate elementary coefficients imply MOC. The full characteristic-polynomial hull is false.
+    accDescr: Pointwise comparisons are equivalent to MOC. Counterexamples refute the full characteristic-polynomial hull and the separate elementary coefficient condition.
     Goal["Unrestricted MOC"]:::goal
     Pt["Pointwise characteristic<br/>comparison"]
     Char["One law for the full characteristic polynomial<br/>Refuted in order four"]:::refuted
-    Sep["Separate elementary coefficients"]:::open
-    Low["One law for e1, e2, and e3<br/>Constructed in Lean source"]
+    Sep["Separate elementary coefficients<br/>Refuted in every order ≥ 5"]:::refuted
     Mixed["One set of weights for<br/>the mixed determinant polynomial"]:::open
     Pt <-->|iff| Goal
     Char -->|project to each coefficient| Sep
-    Low -->|covers the first three indices| Sep
     Sep -->|top coefficient| Goal
     Mixed -->|evaluate at 1| Goal
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
@@ -568,23 +566,39 @@ flowchart BT
     classDef refuted fill:#fbe7e7,stroke:#aa4949,color:#5b2020
 ```
 
-The mixed determinant is $\det(A+zB)$, where $z$ is the polynomial
-variable. In positive order $n$, its coefficients of degrees $0$, $1$,
-$n-1$, and $n$ each lie in the corresponding matching hull. These bounds
-allow separate weights for each degree. The simultaneous condition calls
-for one set of weights for the whole polynomial and implies every
-separate coefficient comparison. The proved bounds cover all
-coefficients through order three.
+For complex eigenvalue lists $a,b$ and a unitary change of eigenbasis
+$U$, let $A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$, where
+$\mathrm{diag}$ forms a diagonal matrix and $U^*$ is the conjugate
+transpose. The mixed determinant is $\det(A+zB)$, where $z$ is the
+polynomial variable. Each permutation $\sigma$ gives the matching
+polynomial $\prod_j(a_{\sigma(j)}+zb_j)$. In positive order $n$, the
+coefficients of degrees $0$, $1$, $n-1$, and $n$ of the mixed determinant
+each lie in the corresponding matching hull.
+These bounds allow separate weights for each degree. The simultaneous
+condition calls for one set of weights for the whole polynomial and
+implies every separate comparison for this polynomial. The proved
+bounds cover all degrees through order three.
 [Pointwise characteristic comparison](../Lean/MOC/Reformulations/CStar.lean#L95) · [Separate mixed coefficients](../Lean/MOC/Reformulations/NativeLinksA.lean#L192) · [Small-order proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L210)
 
-Let $M=A+UBU^*$. Its elementary coefficient $e_k(M)$ is the
-coefficient of $x^k$ in $\det(I+xM)$. For C11, the separate coefficient
-form allows new weights for each $k$. The first three bounds use the
-same weights for all spectra at a fixed unitary $U$. The proof writes each of their matching values as a
-constant plus a sum of functions of individual matched pairs.
-Birkhoff weights preserve that sum. The top coefficient is the
-determinant. The remaining indices $4\le k<n$ are open here.
-[Lean coefficient definition](../Lean/MOC/Reformulations/SecondCoefficient.lean#L66) · [First three coefficients](../Lean/MOC/Reformulations/SecondCoefficient.lean#L248) · [Original low-degree result](https://doi.org/10.21136/CMJ.1992.128332)
+Let $M=A+B$ and let $I$ be the identity matrix of order $n$. The
+elementary coefficient $e_k(M)$ is the coefficient of $x^k$ in
+$\det(I+xM)$. This polynomial uses the sum $M$ as one matrix. The mixed
+determinant above scales only $B$. For a permutation $\sigma$, let
+$M_\sigma$ be the diagonal matrix with entries $a_{\sigma(j)}+b_j$.
+The separate coefficient form of the atlas abelianization condition
+(C11) asks whether $e_k(M)$ is in the real convex hull of the
+$e_k(M_\sigma)$ for each $1\leq k\leq n$. The weights may depend on $k$.
+
+The first three bounds use the same weights for all spectra at a fixed
+$U$. Each of their matching values is a constant plus a sum of functions
+of individual matched pairs. Birkhoff weights preserve that sum. The
+fourth coefficient is zero in orders below four and equals the
+determinant in order four. The counterexample below refutes the bound
+at index four in every order above four.
+[Coefficient definition](../Lean/MOC/Reformulations/SecondCoefficient.lean#L66) ·
+[Separate coefficient form](../Lean/MOC/Reformulations/SecondCoefficient.lean#L84) ·
+[First three coefficients](../Lean/MOC/Reformulations/SecondCoefficient.lean#L248) ·
+[Merikoski and Virtanen, sections 2–4](https://doi.org/10.21136/CMJ.1992.128332)
 
 The all-order separate coefficient form is equivalent to the
 conjunction of MOC and the bounds for $4\le k<n$. Thus only the
@@ -594,7 +608,7 @@ determinant bound is needed for the separate form through order four.
 | Route in Lean | Relation | Lean proof |
 | --- | --- | --- |
 | Pointwise characteristic polynomial of the spectral sum | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L145) |
-| Separate elementary coefficients | If | [New Lean source](../Lean/MOC/Reformulations/SecondCoefficient.lean#L91) |
+| Separate elementary coefficients | Refuted sufficient condition | [Top-coefficient implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L91) · [Exact counterexample](#counterexample-to-the-fourth-elementary-coefficient-bound) |
 | Simultaneous characteristic hull | Refuted sufficient condition | [Implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L54) · [Exact counterexample](#counterexample-to-the-common-characteristic-polynomial-law) |
 | Simultaneous mixed-pencil coefficients | If | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
 
@@ -635,6 +649,63 @@ that contains the actual value for each separate coefficient of
 index $2$, $3$ or $4$. The trace is constant. This exact arithmetic
 example refutes the common law in C11 and the stronger compound law
 in C10. [Lean implication from the compound law](../Lean/MOC/Reformulations/NativeLinksD.lean#L48)
+
+### Counterexample to the fourth elementary coefficient bound
+
+Let $Q$ be the four-by-four orthogonal matrix in the previous example.
+Use $U=Q\oplus I_1$, where $\oplus$ denotes a block diagonal sum and
+$I_1$ is the identity matrix of order one. Write $\mathrm i$ for the
+imaginary unit. Use these lists of Gaussian integers in order five.
+
+| List | Entries |
+| --- | --- |
+| $a$ | $33+22\mathrm i$, $0$, $-11+8\mathrm i$, $60+17\mathrm i$, $-14-68\mathrm i$ |
+| $b$ | $-3+20\mathrm i$, $-70+10\mathrm i$, $-60-47\mathrm i$, $16+20\mathrm i$, $16+20\mathrm i$ |
+
+Set $W=7U$. The entries of $W$ are integers and $W^{\mathsf T}W=49I$.
+For these lists set $M=\mathrm{diag}(a)+U\mathrm{diag}(b)U^{\mathsf T}$.
+The matrix $N=49\mathrm{diag}(a)+W\mathrm{diag}(b)W^{\mathsf T}$ equals
+$49M$. The fourth coefficient is homogeneous of degree four. The exact
+replay sums the determinants of the order-four principal submatrices
+of $N$. Their sum has real part $9341473392272$. Thus
+$\mathrm{Re}(e_4(M))=9341473392272/49^4$.
+[Exact numerator score](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L226)
+
+For any integer $n\geq5$, append $n-5$ zeros to each spectrum and append
+an identity block to $U$. The new sum is $M\oplus0$, so its polynomial
+$\det(I+x(M\oplus0))$ is still $\det(I+xM)$.
+
+Restrict a permutation of the enlarged labels to pairs of original
+labels. This gives an injection $d$ from a subset $J$ of the original
+$b$ labels into the original $a$ labels. A matched pair contributes
+$a_{d(j)}+b_j$. An unmatched original label contributes its single
+eigenvalue. A pair of padded labels gives a factor of one. Thus the
+matching polynomial of the enlarged lists is
+
+$$
+P_d(x)=
+\prod_{j\in J}(1+x(a_{d(j)}+b_j))
+\prod_{j\notin J}(1+xb_j)
+\prod_{i\notin d(J)}(1+xa_i).
+$$
+
+Choose $r$ labels from each list and match them bijectively. This
+gives $\binom{5}{r}^2r!$ partial injections of size $r$. The exact replay
+checks all 1,546 injections. Let $[x^4]$ extract the coefficient of $x^4$.
+The maximum of $\mathrm{Re}([x^4]P_d)$ is $1604790$. The real part of
+$e_4(M)$ exceeds this maximum by $90178395482/49^4$. Therefore $e_4(M)$
+is outside the closed half-plane that contains all the matching
+coefficients. In every order $n>5$, the padded sum has determinant zero.
+A matching that pairs the padded zeros with each other also gives
+determinant zero.
+
+The exact arithmetic replay passes. The new Lean source awaits kernel
+verification.
+[Finite score bound](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L237) ·
+[Counterexample in every order at least five](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L334) ·
+[Zero padding from the partial-matching bound](../Lean/MOC/Reformulations/ZeroPaddingElementaryCoefficient.lean#L102) ·
+[Refutation of the separate form](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L343) ·
+[Refutation of the simultaneous form](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L348)
 
 ## Atlas realizations and implications
 

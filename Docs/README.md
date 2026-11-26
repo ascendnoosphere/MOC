@@ -10,7 +10,7 @@ its premises and links to the relevant Lean source.
 
 | Map | Coverage |
 | --- | --- |
-| [All orders](all-orders-proof-map.md) | All-order alternatives, the order split, tests available at each order, and 243 labelled spectral formulations. |
+| [All orders](all-orders-proof-map.md) | All-order alternatives, the order split, fixed-order tests, the fourth elementary coefficient counterexample from order five, and 243 labelled spectral formulations. |
 | [Research attempts](research-attempts-proof-map.md) | The steps in Lean and the remaining implications for the numbered research routes and exact replay results. |
 | [Order four](order-four-proof-map.md) | Fixed conics, real orthogonal mixers, stationary maxima, contact patterns, and the bilinear chart. |
 | [Order five](order-five-proof-map.md) | Fixed conics, contact thresholds, two-by-two zero submatrices, and squared-minor tests. |

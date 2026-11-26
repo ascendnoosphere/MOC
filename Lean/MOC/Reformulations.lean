@@ -51,6 +51,7 @@ import MOC.Reformulations.NativeLinksCTraceless
 import MOC.Reformulations.NativeLinksD
 import MOC.Reformulations.SecondAtlas
 import MOC.Reformulations.SecondCoefficient
+import MOC.Reformulations.ElementaryCoefficientCounterexample
 import MOC.Reformulations.SecondCoefficientFree
 import MOC.Reformulations.SecondNative
 import MOC.Reformulations.SecondReal

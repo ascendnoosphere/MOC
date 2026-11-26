@@ -118,7 +118,6 @@ is in the hull if and only if the bound holds in every direction.
 | Iff | In each order $n\geq 4$, it suffices to test unitary matrices $U$ for which every nonempty set of at most $n-2$ rows has nonzero entries in at least two more columns than the number of rows. | [Support expansion](Lean/MOC/SinglePortHallExpansion.lean#L72) |
 | Iff | In orders at least four, use lists $x,y$ with $x_1=0$, $x_2=1$, and $y_1=0$. For every unitary $U$ with no zero entries, place $\det(U-XUY)/\det U$ in the hull of the products $\prod_j(1-x_{\sigma(j)}y_j)$. Here $X=\mathrm{diag}(x)$ and $Y=\mathrm{diag}(y)$. | [Three fixed coordinates](Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
 | Iff, new Lean source | Use normal adjacency matrices of loopless complex weighted directed graphs. Keep all relative unitary positions. | [Loopless adjacency](Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
-| If, new Lean source | For each index, place the elementary symmetric coefficient of the sum in its matching hull. The weights can depend on the index. The coefficient of index $n$ is the determinant. | [Separate coefficient implication](Lean/MOC/Reformulations/SecondCoefficient.lean#L91) |
 | If | Use one set of convex weights for the full polynomial $\det(A+zB)$ and the polynomials from the matchings. Evaluation at $z=1$ gives the determinant. | [Mixed determinant implication](Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
 
 | Status | Result | Lean source |
@@ -571,6 +570,16 @@ Combining the blocks proves the convex-hull inclusion in every order.
   characteristic polynomial outside the convex hull of the matching
   characteristic polynomials. Each coefficient of the example is in its
   own matching hull. [Exact arithmetic certificate](Docs/all-orders-proof-map.md#counterexample-to-the-common-characteristic-polynomial-law)
+
+- For every order $n\geq5$, there are two complex normal matrices $A,B$
+  for which the coefficient of $x^4$ in $\det(I+x(A+B))$ lies outside
+  its matching hull. Here $I$ is the identity. This refutes the
+  sufficient condition that asks for the hull bounds at every index.
+  In order four this coefficient is the determinant. The new Lean
+  source awaits kernel verification.
+  [Counterexample](Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L334) ·
+  [Proof map](Docs/all-orders-proof-map.md#counterexample-to-the-fourth-elementary-coefficient-bound) ·
+  [Top-coefficient implication](Lean/MOC/Reformulations/SecondCoefficient.lean#L91)
 
 - In order five, let $U=I-2vv^*$ with $v=(1,1,1,1,1)^{\mathsf T}/\sqrt{5}$.
   For this $U$, every pair of lists satisfies the determinant inclusion.
