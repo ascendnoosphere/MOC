@@ -1,5 +1,5 @@
 import MOC.SpectralDeterminantStability
-import MOC.SpectralPolynomialTranslation
+import MOC.MinimumSpectralNormalization
 
 /-! Minimum-normalized stable squarefree polynomials and their matching test. -/
 
@@ -26,6 +26,45 @@ structure IsMinimumNormalizedSpectralValue (c : SquarefreeClass ι) : Prop where
   leftEndpoint : c univ ∅ = 1
   rightEndpoint : c ∅ univ = 1
   normalized : squarefreeSpectralValue c (fun _ => 1) (fun _ => 1) = 2 ^ Fintype.card ι
+
+/-- The minimum normalization gives the binomial on the two scalar lists. -/
+theorem IsMinimumNormalizedSpectralValue.constant_lists {c : SquarefreeClass ι}
+    (hc : IsMinimumNormalizedSpectralValue c) (x y : ℂ) :
+    squarefreeSpectralValue c (fun _ => x) (fun _ => y) = (x + y) ^ Fintype.card ι := by
+  classical
+  have hr (I J : Finset ι) (h : Iᶜ.card = J.card) : (c I J).im = 0 :=
+    (hc.nonnegative I J h).1
+  have hn (I J : Finset ι) (h : Iᶜ.card = J.card) : 0 ≤ (c I J).re :=
+    (hc.nonnegative I J h).2
+  have hone : (aggregateSpectralPolynomial c).eval 1 = (2 : ℝ) ^ Fintype.card ι := by
+    apply Complex.ofReal_injective
+    rw [Complex.ofReal_pow, Complex.ofReal_ofNat]
+    have he := (aggregateSpectralPolynomial_aeval c hr (1 : ℂ)).trans hc.normalized
+    have hm := Polynomial.aeval_algebraMap_apply_eq_algebraMap_eval
+      (A := ℂ) (1 : ℝ) (aggregateSpectralPolynomial c)
+    change Polynomial.aeval (1 : ℂ) (aggregateSpectralPolynomial c) =
+      ((aggregateSpectralPolynomial c).eval 1 : ℂ) at hm
+    exact hm.symm.trans he
+  have hp := (aggregateSpectralPolynomial_minimum_normalization c
+    hc.leftEndpoint hc.rightEndpoint hr hn hc.stable).2 hone
+  have hbin (z : ℂ) : squarefreeSpectralValue c (fun _ => z) (fun _ => 1) =
+      (z + 1) ^ Fintype.card ι := by
+    rw [← aggregateSpectralPolynomial_aeval c hr z, hp, map_pow, map_add, Polynomial.aeval_X, map_one]
+  by_cases hy : y = 0
+  · subst y
+    rw [squarefreeSpectralValue_on_support c (fun _ => x) (fun _ => 0)
+      univ ∅ (by simp) (by simp) (by simp)]
+    simp only [hc.leftEndpoint, Finset.prod_empty, Finset.prod_const,
+      Finset.card_univ, mul_one, one_mul, add_zero]
+  · have hxy : x / y * y = x := div_mul_cancel₀ x hy
+    have hsum : y * (x / y + 1) = x + y := by
+      rw [mul_add, mul_comm y (x / y), hxy, mul_one]
+    calc
+      _ = squarefreeSpectralValue c (fun _ => x / y * y) (fun _ => y) :=
+        congrArg (fun a => squarefreeSpectralValue c a (fun _ => y)) (funext fun _ => hxy.symm)
+      _ = y ^ Fintype.card ι * squarefreeSpectralValue c (fun _ => x / y) (fun _ => 1) :=
+        constant_spectral_scale c (x / y) y
+      _ = _ := by rw [hbin, ← mul_pow, hsum]
 
 /-- The squared-minor coefficient of the product on left indices `I`
 and right indices `J`. The minor uses the complementary left index set. -/
@@ -99,6 +138,12 @@ theorem conjecture_of_minimumNormalizedSpectralMatching
 Prove `MinimumNormalizedSpectralMatching` for an arbitrary finite index
 type. The construction above gives the implication to the determinant
 conjecture in the same order.
+
+Derive opposite translation for a member of this class. For each real
+translation parameter, add one scalar variable to both lists. Use the
+first two coefficients to bound the sum of the squares of its real
+roots. Apply the resulting bound on the constant coefficient to the
+polynomial in the translation parameter.
 -/
 
 end

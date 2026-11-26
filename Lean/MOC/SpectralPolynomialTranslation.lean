@@ -17,7 +17,8 @@ two lists of spectral variables. -/
 def squarefreeSpectralValue (c : SquarefreeClass ι) (a b : ι → ℂ) : ℂ :=
   ∑ I : Finset ι, ∑ J : Finset ι, c I J * squarefreeDividedDivisor a b I J
 
-private theorem squarefreeSpectralValue_on_support (c : SquarefreeClass ι)
+/-- Only the balanced monomial on these two supports can contribute. -/
+theorem squarefreeSpectralValue_on_support (c : SquarefreeClass ι)
     (a b : ι → ℂ) (I J : Finset ι) (hIJ : Iᶜ.card = J.card)
     (ha : ∀ i ∉ I, a i = 0) (hb : ∀ j ∉ J, b j = 0) :
     squarefreeSpectralValue c a b =

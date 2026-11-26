@@ -419,6 +419,7 @@ import MOC.InterferenceGram
 import MOC.MatchingListCoefficients
 import MOC.MiddleSubsetMatchingSpan
 import MOC.MinimumNormalizedSpectralMatching
+import MOC.MinimumSpectralNormalization
 import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
 import MOC.Reformulations.QuadraticDiskCertificate
