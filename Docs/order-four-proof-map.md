@@ -199,6 +199,11 @@ The theorem permits coincident and zero matching products, and any
 number of contacts.
 [Square certificate](../Lean/MOC/FourCanonicalHeightSquares.lean#L719) · [Unitary support bound](../Lean/MOC/FourCanonicalHeightSquares.lean#L767) · [Canonical gap premises](order-four-mixed-ray-cancellation-proof-map.md#normalized-heights-from-zero-through-one-half)
 
+Thus any order-four violation has a regular canonical witness with
+normalized support height $H<0$ or $H>1/2$. This witness still has at
+least seven contacts.
+[Height exclusion](../Lean/MOC/FourTerminalHeightInterval.lean#L11)
+
 The earlier exact-seven result uses regular spectra and at least
 seven contacts at zero height. Its proof uses the matching cubic
 and disjoint-swap rectangles. The contact-count source awaits a
@@ -206,8 +211,7 @@ normal build. The directional bound covers that height directly.
 [Exact-seven statement](../Lean/MOC/FourCanonicalZeroHeight.lean#L190) · [Zero-height support](../Lean/MOC/FourCanonicalHeightSquares.lean#L784)
 
 The exact Python census gives 90 seven-contact and 58 eight-contact
-classes at nonzero height. Heights outside the proved interval still
-require a support bound in the general canonical route. Two canonical eleven-contact profiles
+classes at nonzero height. Two canonical eleven-contact profiles
 force equality of distinct matching products. For negative height
 the Lean rescaling applies if the normalized external lower bound
 holds. The finite orbit census and universal external lower bound

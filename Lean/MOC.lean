@@ -331,6 +331,8 @@ import MOC.SinglePortHallExpansion
 import MOC.StarPortComposition
 import MOC.OverlappingCircleBlocks
 
+import MOC.FourTerminalHeightInterval
+
 open Lean Elab Command in
 run_cmd do
   let env ← getEnv

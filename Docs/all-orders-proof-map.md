@@ -1223,7 +1223,7 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L218) · [Axiom audit](../Lean/MOC.lean#L335)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L1) · [Axiom audit](../Lean/MOC.lean#L337)
 
 The source audit found 713 Lean modules. Starting at the default target
 reaches 588, including the target itself. The other 125 resolve their
