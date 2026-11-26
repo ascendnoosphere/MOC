@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Matrix.Rank
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.LinearAlgebra.Dimension.Finite
@@ -358,6 +359,167 @@ theorem decomposable_submodule_star_or_three_space (S : Submodule ℂ (Matrix ι
     · exact exists_bivector_factor_of_mem_carrier (hS _ hA) ha z (hL A hA ha z.property) hz
   · exact Or.inr hH
 
+/-- A basis of a space of dimension at most three, padded with zero vectors. -/
+private theorem exists_three_spanning_vectors (H : Submodule ℂ (ι → ℂ))
+    (hdim : Module.finrank ℂ H ≤ 3) :
+    ∃ v : Fin 3 → (ι → ℂ), ∀ x ∈ H, ∃ c : Fin 3 → ℂ, (∑ i, c i • v i) = x := by
+  let k := Module.finrank ℂ H
+  have hk : k ≤ 3 := hdim
+  let b : Basis (Fin k) ℂ H := Module.finBasis ℂ H
+  let e : Fin k ⊕ Fin (3 - k) ≃ Fin 3 :=
+    finSumFinEquiv.trans (finCongr (by omega))
+  let v (i : Fin 3) : ι → ℂ := Sum.elim (fun j => (b j : ι → ℂ)) (fun _ => 0) (e.symm i)
+  refine ⟨v, fun x hx => ?_⟩
+  let y : H := ⟨x, hx⟩
+  let c (i : Fin 3) : ℂ := Sum.elim (fun j => b.repr y j) (fun _ => 0) (e.symm i)
+  refine ⟨c, ?_⟩
+  rw [← Equiv.sum_comp e (fun i => c i • v i)]
+  simp only [c, v, Equiv.symm_apply_apply, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr,
+    zero_smul, Finset.sum_const_zero, add_zero]
+  simpa only [map_sum, map_smul, Submodule.coe_subtype] using
+    congrArg H.subtype (b.sum_repr y)
+
+private theorem bivectorMatrix_three_vectors (v : Fin 3 → (ι → ℂ)) (c d : Fin 3 → ℂ) :
+    bivectorMatrix (∑ i, c i • v i) (∑ i, d i • v i) =
+      (c 0 * d 1 - c 1 * d 0) • bivectorMatrix (v 0) (v 1) +
+      (c 0 * d 2 - c 2 * d 0) • bivectorMatrix (v 0) (v 2) +
+      (c 1 * d 2 - c 2 * d 1) • bivectorMatrix (v 1) (v 2) := by
+  ext i j
+  simp only [bivectorMatrix, Fin.sum_univ_three, Pi.add_apply, Pi.smul_apply, Matrix.add_apply,
+    Matrix.smul_apply, smul_eq_mul]
+  ring
+
+/-- Decomposable bivectors with carriers in a three-dimensional space
+span a space of dimension at most three. -/
+theorem finrank_le_three_of_bivector_carriers (S : Submodule ℂ (Matrix ι ι ℂ))
+    (hS : ∀ A ∈ S, PluckerBivector A) (H : Submodule ℂ (ι → ℂ))
+    (hdim : Module.finrank ℂ H ≤ 3)
+    (hH : ∀ A ∈ S, A ≠ 0 → bivectorCarrier A ≤ H) : Module.finrank ℂ S ≤ 3 := by
+  obtain ⟨v, hv⟩ := exists_three_spanning_vectors H hdim
+  let g : Fin 3 → Matrix ι ι ℂ :=
+    ![bivectorMatrix (v 0) (v 1), bivectorMatrix (v 0) (v 2), bivectorMatrix (v 1) (v 2)]
+  let T := Submodule.span ℂ (Set.range g)
+  have hg (i : Fin 3) : g i ∈ T := Submodule.subset_span ⟨i, rfl⟩
+  have hST : S ≤ T := by
+    intro A hA
+    by_cases hAz : A = 0
+    · rw [hAz]
+      exact T.zero_mem
+    obtain ⟨x, y, rfl⟩ := (pluckerBivector_iff_decomposable A).mp (hS A hA)
+    have hspan := bivectorCarrier_matrix_eq_span x y hAz
+    have hxy : Submodule.span ℂ ({x, y} : Set (ι → ℂ)) ≤ H := by
+      rw [← hspan]
+      exact hH _ hA hAz
+    have hx : x ∈ H := hxy (Submodule.subset_span (by simp))
+    have hy : y ∈ H := hxy (Submodule.subset_span (by simp))
+    obtain ⟨c, hc⟩ := hv x hx
+    obtain ⟨d, hd⟩ := hv y hy
+    rw [← hc, ← hd]
+    have he : bivectorMatrix (∑ i, c i • v i) (∑ i, d i • v i) =
+        (c 0 * d 1 - c 1 * d 0) • g 0 + (c 0 * d 2 - c 2 * d 0) • g 1 +
+          (c 1 * d 2 - c 2 * d 1) • g 2 := bivectorMatrix_three_vectors v c d
+    rw [he]
+    exact T.add_mem (T.add_mem (T.smul_mem _ (hg 0)) (T.smul_mem _ (hg 1)))
+      (T.smul_mem _ (hg 2))
+  exact (Submodule.finrank_mono hST).trans
+    (by simpa only [T, Set.finrank, Fintype.card_fin] using finrank_range_le_card (R := ℂ) g)
+
+/-- A space of at least four dimensions made of decomposable bivectors
+has a fixed nonzero factor for every element. -/
+theorem decomposable_submodule_star_of_finrank_ge_four (S : Submodule ℂ (Matrix ι ι ℂ))
+    (hS : ∀ A ∈ S, PluckerBivector A) (hdim : 4 ≤ Module.finrank ℂ S) :
+    ∃ z : ι → ℂ, z ≠ 0 ∧ ∀ A ∈ S, ∃ w : ι → ℂ, A = bivectorMatrix z w := by
+  rcases decomposable_submodule_star_or_three_space S hS with h | ⟨H, hHdim, hH⟩
+  · exact h
+  · have hle := finrank_le_three_of_bivector_carriers S hS H hHdim hH
+    omega
+
+/-- Taking a bivector with a fixed first factor is linear in the second factor. -/
+def bivectorStarMap (z : ι → ℂ) : (ι → ℂ) →ₗ[ℂ] Matrix ι ι ℂ where
+  toFun := bivectorMatrix z
+  map_add' x y := by
+    ext i j
+    simp only [bivectorMatrix, Pi.add_apply, Matrix.add_apply]
+    ring
+  map_smul' c x := by
+    ext i j
+    simp only [bivectorMatrix, Pi.smul_apply, Matrix.smul_apply, smul_eq_mul, RingHom.id_apply]
+    ring
+
+/-- The star of a vector consists of all bivectors with that first factor. -/
+def bivectorStar (z : ι → ℂ) : Submodule ℂ (Matrix ι ι ℂ) := LinearMap.range (bivectorStarMap z)
+
+theorem mem_bivectorStar_iff (z : ι → ℂ) (A : Matrix ι ι ℂ) :
+    A ∈ bivectorStar z ↔ ∃ w : ι → ℂ, A = bivectorMatrix z w := by
+  change (∃ w, bivectorMatrix z w = A) ↔ _
+  exact ⟨fun ⟨w, h⟩ => ⟨w, h.symm⟩, fun ⟨w, h⟩ => ⟨w, h.symm⟩⟩
+
+/-- One nonzero pivot of the fixed factor recovers a second factor from
+the corresponding row of the bivector. -/
+theorem bivectorStar_factor_from_row {z : ι → ℂ} {A : Matrix ι ι ℂ} (hA : A ∈ bivectorStar z)
+    {p : ι} (hp : z p ≠ 0) : A = bivectorMatrix z (fun j => A p j / z p) := by
+  obtain ⟨w, rfl⟩ := (mem_bivectorStar_iff z A).mp hA
+  ext i j
+  simp only [bivectorMatrix]
+  field_simp [hp] <;> ring
+
+private theorem bivectorStarMap_ker (z : ι → ℂ) (hz : z ≠ 0) :
+    LinearMap.ker (bivectorStarMap z) = Submodule.span ℂ ({z} : Set (ι → ℂ)) := by
+  obtain ⟨p, hp⟩ : ∃ p, z p ≠ 0 := by
+    by_contra! h
+    exact hz (funext h)
+  ext w
+  rw [LinearMap.mem_ker, Submodule.mem_span_singleton]
+  change bivectorMatrix z w = 0 ↔ ∃ c : ℂ, c • z = w
+  constructor
+  · intro h
+    refine ⟨w p / z p, ?_⟩
+    funext j
+    have he : z p * w j - w p * z j = 0 := congrArg (fun A : Matrix ι ι ℂ => A p j) h
+    change (w p / z p) * z j = w j
+    rw [div_mul_eq_mul_div]
+    exact (div_eq_iff hp).2 (by linear_combination -he)
+  · rintro ⟨c, rfl⟩
+    ext i j
+    simp only [bivectorMatrix, Pi.smul_apply, smul_eq_mul, Matrix.zero_apply]
+    ring
+
+/-- The star of a nonzero vector has dimension one less than the ambient
+vector space. -/
+theorem finrank_bivectorStar (z : ι → ℂ) (hz : z ≠ 0) :
+    Module.finrank ℂ (bivectorStar z) = Fintype.card ι - 1 := by
+  have h := LinearMap.finrank_range_add_finrank_ker (bivectorStarMap z)
+  rw [bivectorStarMap_ker z hz, finrank_span_singleton hz, Module.finrank_pi] at h
+  change Module.finrank ℂ (bivectorStar z) + 1 = _ at h
+  omega
+
 end Carrier
+
+/-- In order five, a four-dimensional space of decomposable bivectors
+is the whole star of one nonzero vector. -/
+theorem decomposable_finrank_four_eq_bivectorStar
+    (S : Submodule ℂ (Matrix (Fin 5) (Fin 5) ℂ))
+    (hS : ∀ A ∈ S, PluckerBivector A) (hdim : Module.finrank ℂ S = 4) :
+    ∃ z : Fin 5 → ℂ, z ≠ 0 ∧ S = bivectorStar z := by
+  obtain ⟨z, hz, hfactor⟩ := decomposable_submodule_star_of_finrank_ge_four S hS (by omega)
+  refine ⟨z, hz, Submodule.eq_of_le_of_finrank_le ?_ ?_⟩
+  · intro A hA
+    exact (mem_bivectorStar_iff z A).mpr (hfactor A hA)
+  · rw [finrank_bivectorStar z hz, hdim, Fintype.card_fin] <;> decide
+
+/-- The common factor and a single pivot provide an explicit formula for
+every element of a four-dimensional order-five star. -/
+theorem decomposable_finrank_four_star_formula
+    (S : Submodule ℂ (Matrix (Fin 5) (Fin 5) ℂ))
+    (hS : ∀ A ∈ S, PluckerBivector A) (hdim : Module.finrank ℂ S = 4) :
+    ∃ (z : Fin 5 → ℂ) (p : Fin 5), z p ≠ 0 ∧ S = bivectorStar z ∧
+      ∀ A ∈ S, A = bivectorMatrix z (fun j => A p j / z p) := by
+  obtain ⟨z, hz, he⟩ := decomposable_finrank_four_eq_bivectorStar S hS hdim
+  obtain ⟨p, hp⟩ : ∃ p, z p ≠ 0 := by
+    by_contra! h
+    exact hz (funext h)
+  refine ⟨z, p, hp, he, fun A hA => ?_⟩
+  rw [he] at hA
+  exact bivectorStar_factor_from_row hA hp
 
 end MOC

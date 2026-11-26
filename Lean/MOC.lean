@@ -425,12 +425,16 @@ import MOC.MinimumNormalizedSpectralMatching
 import MOC.MinimumNormalizedSpectralSlice
 import MOC.MinimumSpectralNormalization
 import MOC.PfaffianMatchingModulus
+import MOC.PfaffianSkewCongruence
+import MOC.PfaffianSquareAndGraphBound
+import MOC.PfaffianStandardSkewBlocks
 import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
 import MOC.Reformulations.QuadraticDiskCertificate
 import MOC.Reformulations.SubsetOperatorSupport
 import MOC.SpectralTranslationRigidity
 import MOC.SpectralWitnessSeparation
+import MOC.StableRayleighSlice
 import MOC.StructuredRealizationCancellation
 import MOC.ThreeEffectExtremePoints
 import MOC.TracialSpectralKernel
