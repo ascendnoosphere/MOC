@@ -1,6 +1,9 @@
+import MOC.FourMatchingIndicatorBasis
 import MOC.FourMatchingRelations
 import MOC.FourSupportCostProfiles
 import Mathlib.Data.List.OfFn
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Tactic.Eval
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
@@ -56,7 +59,8 @@ private theorem generated_sum {ι κ : Type*} [Fintype ι] {r : ι → Profile}
 private theorem generated_single {ι : Type*} [Fintype ι] (r : ι → Profile) (i : ι) :
     generated r (r i) := by
   classical
-  refine ⟨fun j => if j = i then 1 else 0, fun j => by split <;> norm_num, ?_⟩
+  refine ⟨fun j => if j = i then 1 else 0, fun j => by
+    by_cases h : j = i <;> simp [h], ?_⟩
   rw [Finset.sum_eq_single i]
   · simp
   · intro j _ h
@@ -119,8 +123,7 @@ private theorem generated_intersection {ι κ : Type*} [Fintype ι] [Fintype κ]
     apply generated_sum Finset.univ
     intro i _
     by_cases hi : r i k = 0
-    · rw [zero, if_pos hi]
-      exact generated_smul (hw i) (hkeep i hi.ge)
+    · simpa only [zero, if_pos hi] using generated_smul (hw i) (hkeep i hi.ge)
     · simpa only [zero, if_neg hi, zero_smul] using generated_zero s
   have hpair : generated s pair := by
     apply generated_sum Finset.univ
@@ -174,8 +177,8 @@ private theorem generated_intersection {ι κ : Type*} [Fintype ι] [Fintype κ]
       simp only [pair, p, n, P, N, Finset.sum_apply, Pi.smul_apply, Pi.add_apply,
         castProfile, crossing, c, smul_eq_mul, Int.cast_sub, Int.cast_mul]
       calc
-        _ = ∑ i, ((plus i * (r i k : ℝ)) * (∑ j, minus j * (r j l : ℝ))) +
-                   ((plus i * (r i l : ℝ)) * (∑ j, minus j * -(r j k : ℝ))) := by
+        _ = ∑ i, ((plus i * (r i k : ℝ)) * (∑ j, minus j * (r j l : ℝ)) +
+                  (plus i * (r i l : ℝ)) * (∑ j, minus j * -(r j k : ℝ))) := by
           apply Finset.sum_congr rfl
           intro i _
           rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
@@ -201,108 +204,53 @@ private def candidates (k : Fin 24) (r : List IntegerProfile) : List IntegerProf
       (r.filter (fun y => decide (y k < 0))).map (crossing k x))
 
 private def sameProfile (x y : IntegerProfile) : Bool :=
-  decide (∀ k, x k = y k)
+  (List.finRange 24).all fun k => decide (x k = y k)
 
 private theorem sameProfile_sound {x y : IntegerProfile} (h : sameProfile x y = true) : x = y :=
-  funext (of_decide_eq_true h)
+  funext fun k => of_decide_eq_true (List.all_eq_true.mp h k (List.mem_finRange k))
 
--- All rows have nonnegative entries at the active coordinates. Ignore
--- rows whose strictly smaller active support occurs in the same list.
-private def supportMask (active : List (Fin 24)) (x : IntegerProfile) : Nat :=
+private def baseLabels : Fin 14 → Fin 24 :=
+  ![0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 13, 16, 18]
+
+private def cuts : List (Fin 24) := [5, 11, 14, 15, 17, 19, 20, 21, 22, 23]
+
+private def active (t : ℕ) : List (Fin 24) :=
+  List.ofFn baseLabels ++ cuts.take t
+
+private abbrev PackedProfile := Vector ℤ 24
+
+local instance : CoeFun PackedProfile (fun _ => Fin 24 → ℤ) := ⟨Vector.get⟩
+
+private def zeroProfile : PackedProfile := Vector.replicate _ 0
+
+private def packedCandidates (k : Fin 24) (r : List PackedProfile) : List PackedProfile :=
+  (candidates k (r.map Vector.get)).map Vector.ofFn
+
+private def samePackedProfile (x y : PackedProfile) : Bool :=
+  x.toArray == y.toArray
+
+private def supportMask (active : List (Fin 24)) (x : PackedProfile) : Nat :=
   active.foldl (fun m k => if x k = 0 then m else m ||| (1 <<< k.val)) 0
 
 private def maskLe (x y : Nat) : Bool := (x &&& y) == x
 
-private def supportLe (active : List (Fin 24)) (x y : IntegerProfile) : Bool :=
-  maskLe (supportMask active x) (supportMask active y)
+private def primitive (x : PackedProfile) : PackedProfile :=
+  let gcd := x.toArray.toList.foldl (fun d q => d.gcd q.natAbs) 0
+  if gcd = 0 then x else x.map fun q => q / (gcd : ℤ)
 
-private def primitive (x : IntegerProfile) : IntegerProfile :=
-  let gcd := (List.ofFn (fun k : Fin 24 => (x k).natAbs)).foldl Nat.gcd 0
-  if gcd = 0 then x else fun k => x k / (gcd : ℤ)
-
-private def supportMinimal (active : List (Fin 24)) (r : List IntegerProfile) :
-    List IntegerProfile :=
+private def supportMinimal (active : List (Fin 24)) (r : List PackedProfile) :
+    List PackedProfile :=
   let rows := (r.map (fun x => (x, supportMask active x))).foldl
     (fun acc x => if acc.any (fun y => y.2 == x.2) then acc else x :: acc) []
   (rows.filter (fun x => !(rows.any (fun y => maskLe y.2 x.2 && (y.2 != x.2))))).map
     (fun x => primitive x.1)
 
 -- Select a positive coordinate with least residual-to-ray ratio.
-private def pivot (active : List (Fin 24)) (v r : IntegerProfile) : Option (Fin 24) :=
+private def pivot (active : List (Fin 24)) (v r : PackedProfile) : Option (Fin 24) :=
   (active.filter (fun k => decide (0 < r k))).foldl
     (fun best k => match best with
       | none => some k
       | some j => if v k * r j < v j * r k then some k else best) none
-
--- The checker accepts a subtraction only with a positive divisor and
--- a nonnegative coefficient. It checks that the final residual is zero.
-private def reduces (r : List IntegerProfile) (active : List (Fin 24)) :
-    ℕ → IntegerProfile → Bool
-  | 0, v => sameProfile v 0
-  | fuel + 1, v =>
-    if sameProfile v 0 then true else
-      match r.find? (fun y => supportLe active y v) with
-      | none => false
-      | some y =>
-        match pivot active v y with
-        | none => false
-        | some k =>
-          decide (0 < y k ∧ 0 ≤ v k) &&
-            reduces r active fuel (fun l => y k * v l - v k * y l)
-
-private theorem reduces_sound (r : List IntegerProfile) (active : List (Fin 24))
-    (fuel : ℕ) (v : IntegerProfile) (h : reduces r active fuel v = true) :
-    generated (ray r) (castProfile v) := by
-  induction fuel generalizing v with
-  | zero =>
-    have hv := sameProfile_sound h
-    rw [hv]
-    simpa only [castProfile, Pi.zero_apply, Int.cast_zero] using generated_zero (ray r)
-  | succ fuel ih =>
-    by_cases hz : sameProfile v 0 = true
-    · rw [sameProfile_sound hz]
-      simpa only [castProfile, Pi.zero_apply, Int.cast_zero] using generated_zero (ray r)
-    · cases he : r.find? (fun y => supportLe active y v) with
-      | none => simp [reduces, hz, he] at h
-      | some y =>
-        cases hp : pivot active v y with
-        | none => simp [reduces, hz, he, hp] at h
-        | some k =>
-          simp only [reduces, if_neg hz, he, hp, Bool.and_eq_true, decide_eq_true_eq] at h
-          have hg := generated_of_mem (List.mem_of_find?_eq_some he)
-          have hr := ih _ h.2
-          have hy : (0 : ℝ) < y k := by exact_mod_cast h.1.1
-          have hv : (0 : ℝ) ≤ v k := by exact_mod_cast h.1.2
-          have hscaled := generated_smul (inv_nonneg.mpr hy.le)
-            (generated_add (generated_smul hv hg) hr)
-          have heq : (v k : ℝ) • castProfile y +
-              castProfile (fun l => y k * v l - v k * y l) = (y k : ℝ) • castProfile v := by
-            funext l
-            simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, castProfile,
-              Int.cast_sub, Int.cast_mul]
-            ring
-          rwa [heq, smul_smul, inv_mul_cancel₀ hy.ne', one_smul] at hscaled
-
-private theorem advance {r s : List IntegerProfile} (k : Fin 24) (active : List (Fin 24))
-    (hc : (candidates k r).all (reduces s active 24) = true)
-    {x : Profile} (hx : generated (ray r) x) (hk : 0 ≤ x k) :
-    generated (ray s) x := by
-  have hy (y : IntegerProfile) (h : y ∈ candidates k r) :
-      generated (ray s) (castProfile y) :=
-    reduces_sound s active 24 y (List.all_eq_true.mp hc y h)
-  apply generated_intersection (fun i => r.get i) (ray s) k hx hk
-  · intro i hi
-    exact hy _ (List.mem_append_left _ (List.mem_filter.mpr
-      ⟨List.get_mem r i, decide_eq_true hi⟩))
-  · intro i j hi hj
-    apply hy
-    apply List.mem_append_right
-    apply List.mem_flatMap.mpr
-    refine ⟨r.get i, List.mem_filter.mpr ⟨List.get_mem r i, decide_eq_true hi⟩, ?_⟩
-    exact List.mem_map_of_mem (List.mem_filter.mpr ⟨List.get_mem r j, decide_eq_true hj⟩)
-
-private def baseLabels : Fin 14 → Fin 24 :=
-  ![0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 13, 16, 18]
 
 private def baseRay (i : Fin 14) : IntegerProfile :=
   fourMatchingEvaluation (fourMatchingCoordinatesOfValues
@@ -310,76 +258,183 @@ private def baseRay (i : Fin 14) : IntegerProfile :=
 
 private def base : List IntegerProfile := List.ofFn baseRay
 
-private def cuts : List (Fin 24) := [5, 11, 14, 15, 17, 19, 20, 21, 22, 23]
+-- Normalize explicit data before using it in the search and in the checker.
+open Lean Elab Term Meta in
+elab "normalizeProfileTable% " t:term : term => do
+  let e ← elabTermAndSynthesize t none
+  withTransparency .all <| reduce (← instantiateMVars e)
 
-private def active (t : ℕ) : List (Fin 24) :=
-  List.ofFn baseLabels ++ cuts.take t
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
+private def basisTable : List (List ℤ) :=
+  normalizeProfileTable% ((List.finRange 14).map fun i => (List.finRange 24).map (baseRay i))
 
-private def stage : ℕ → List IntegerProfile
-  | 0 => base
-  | t + 1 => supportMinimal (active (t + 1)) (candidates (cuts[t]?.getD 0) (stage t))
+private def packedBase : List PackedProfile :=
+  basisTable.map fun row => Vector.ofFn fun k => row[k.val]?.getD 0
 
-set_option maxRecDepth 32768 in
+private def stage : ℕ → List PackedProfile
+  | 0 => packedBase
+  | t + 1 => supportMinimal (active (t + 1)) (packedCandidates (cuts[t]?.getD 0) (stage t))
+
+-- Find a positive denominator and sparse nonnegative coefficients for a candidate.
+private def findCombination (r : List ((PackedProfile × Nat) × Nat))
+    (active : List (Fin 24)) : ℕ → PackedProfile → Nat × List (Nat × Nat)
+  | 0, _ => (0, [])
+  | fuel + 1, v =>
+    if samePackedProfile v zeroProfile then (1, []) else
+      let m := supportMask active v
+      match r.find? (fun y => maskLe y.1.2 m) with
+      | none => (0, [])
+      | some ((y, _), i) =>
+        match pivot active v y with
+        | none => (0, [])
+        | some k =>
+          let (d, terms) := findCombination r active fuel (Vector.ofFn fun l => y k * v l - v k * y l)
+          (d * (y k).toNat, (i, d * (v k).toNat) :: terms)
+
+-- Store each coordinate and each coefficient in one byte of a natural number.
+private def encodeCoordinate (x : ℤ) : ℕ :=
+  if x < 0 then 2 * x.natAbs - 1 else 2 * x.natAbs
+
+private def decodeCoordinate (x : ℕ) : ℤ :=
+  if x % 2 = 0 then (x / 2 : ℕ) else -((x / 2 : ℕ) : ℤ) - 1
+
+private def encodeRow (row : IntegerProfile) : ℕ :=
+  (List.finRange 24).foldr (fun i word => encodeCoordinate (row i) + 256 * word) 0
+
+private def decodeRow (row : ℕ) : IntegerProfile :=
+  fun i => decodeCoordinate (row / 256 ^ i.val % 256)
+
+private def encodeCombination (c : Nat × List (Nat × Nat)) : Nat :=
+  c.1 + 256 * (c.2.foldr (fun (i, a) rest => i + 256 * a + 65536 * rest) 0)
+
+private def decodeCombination : Nat → Nat → List (Nat × Nat)
+  | 0, _ => []
+  | fuel + 1, code =>
+    if code = 0 then [] else
+      (code % 256, code / 256 % 256) :: decodeCombination fuel (code / 65536)
+
+set_option maxRecDepth 16384 in
 set_option maxHeartbeats 3000000 in
-private theorem basis_evaluation (m : Fin 14 → ℝ) :
-    (∑ i, fourMatchingEvaluation m (baseLabels i) • castProfile (baseRay i)) =
-      fourMatchingEvaluation m := by
-  funext k
-  fin_cases k <;>
-    simp [Fin.sum_univ_succ, Pi.smul_apply, smul_eq_mul, Finset.sum_apply,
-      baseRay, baseLabels, castProfile, fourMatchingCoordinatesOfValues, fourMatchingEvaluation] <;>
-    ring
+@[irreducible]
+private def stageRows : List (List Nat) :=
+  eval% ((List.range 11).map fun t => (stage t).map fun row => encodeRow row.get)
 
-private theorem basis_representation (m : Fin 14 → ℝ)
-    (hn : ∀ i, 0 ≤ fourMatchingEvaluation m i) :
-    generated (ray base) (fourMatchingEvaluation m) :=
-  generated_mono (fun i => generated_of_mem (List.mem_ofFn'.mpr ⟨i, rfl⟩))
-    ⟨fun i => fourMatchingEvaluation m (baseLabels i), fun i => hn _, basis_evaluation m⟩
+private def findCutCertificates (t : Nat) : List Nat :=
+  let labels := active (t + 1)
+  let rays := ((stage (t + 1)).map fun y => (y, supportMask labels y)).zipIdx
+  (packedCandidates (cuts[t]?.getD 0) (stage t)).map fun v =>
+    encodeCombination (findCombination rays labels 24 v)
 
-private def stepCheck (t : ℕ) : Bool :=
-  (candidates (cuts[t]?.getD 0) (stage t)).all (reduces (stage (t + 1)) (active (t + 1)) 24)
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 3000000 in
+@[irreducible]
+private def cutCertificates : List (List Nat) :=
+  eval% ((List.range 10).map findCutCertificates)
 
-set_option maxRecDepth 32768 in
-set_option maxHeartbeats 50000000 in
-private theorem verifiedSteps : ∀ t : Fin 10, stepCheck t = true := by
-  fin_cases t <;> decide
+private def checkedStage (t : Nat) : List IntegerProfile :=
+  (stageRows[t]?.getD []).map decodeRow
 
-private theorem stage_generated (t : ℕ) (ht : t ≤ 10) (m : Fin 14 → ℝ)
-    (hn : ∀ i, 0 ≤ fourMatchingEvaluation m i) :
-    generated (ray (stage t)) (fourMatchingEvaluation m) := by
-  induction t with
-  | zero => exact basis_representation m hn
-  | succ t ih =>
-    exact advance (cuts[t]?.getD 0) (active (t + 1))
-      (verifiedSteps ⟨t, ht⟩) (ih (Nat.le_of_succ_le ht)) (hn _)
+private def weightedProfile (rows : List IntegerProfile) :
+    List (Nat × Nat) → Option IntegerProfile
+  | [] => some 0
+  | (i, a) :: terms =>
+    match rows[i]?, weightedProfile rows terms with
+    | some row, some rem => some fun k => (a : ℤ) * row k + rem k
+    | _, _ => none
 
-private def listedInt : Fin 34 ⊕ Fin 48 → IntegerProfile :=
-  Sum.elim ordinaryCostRayInt mixedCostRayInt
+-- Check a positive multiple of the candidate against the weighted sum.
+private def checkCandidate (rows : List IntegerProfile) (v : IntegerProfile) (code : Nat) :
+    Bool :=
+  let d := code % 256
+  decide (0 < d) && match weightedProfile rows (decodeCombination 24 (code / 256)) with
+    | none => false
+    | some w => sameProfile (fun k => (d : ℤ) * v k) w
 
-private def listed : Fin 34 ⊕ Fin 48 → Profile :=
-  Sum.elim ordinaryCostRay mixedCostRay
+private def checkCandidates (rows : List IntegerProfile) : List IntegerProfile → List Nat → Bool
+  | [], [] => true
+  | v :: vs, c :: cs => checkCandidate rows v c && checkCandidates rows vs cs
+  | _, _ => false
 
-set_option maxRecDepth 32768 in
-set_option maxHeartbeats 50000000 in
-private theorem stage_final_check :
-    (stage 10).all (fun r =>
-      (List.ofFn ordinaryCostRayInt ++ List.ofFn mixedCostRayInt).any (sameProfile r)) = true := by
-  decide
+private def checkCut (t : Nat) : Bool :=
+  checkCandidates (checkedStage (t + 1))
+    (candidates (cuts[t]?.getD 0) (checkedStage t)) (cutCertificates[t]?.getD [])
 
-private theorem listed_of_stage {x : Profile} (hx : generated (ray (stage 10)) x) :
-    generated listed x := by
-  apply generated_mono _ hx
-  intro i
-  have hi := List.all_eq_true.mp stage_final_check ((stage 10).get i) (List.get_mem _ i)
-  obtain ⟨y, hy, hsame⟩ := List.any_eq_true.mp hi
-  have hxy := sameProfile_sound hsame
-  rcases List.mem_append.mp hy with h | h
-  · obtain ⟨j, hj⟩ := List.mem_ofFn'.mp h
-    rw [ray, hxy, ← hj]
-    exact generated_single listed (Sum.inl j)
-  · obtain ⟨j, hj⟩ := List.mem_ofFn'.mp h
-    rw [ray, hxy, ← hj]
-    exact generated_single listed (Sum.inr j)
+private theorem weightedProfile_sound (rows : List IntegerProfile)
+    (terms : List (Nat × Nat)) {w : IntegerProfile}
+    (h : weightedProfile rows terms = some w) : generated (ray rows) (castProfile w) := by
+  induction terms generalizing w with
+  | nil =>
+    have hw : (0 : IntegerProfile) = w := Option.some.inj h
+    rw [← hw]
+    have hzero : castProfile 0 = 0 := by
+      funext k
+      simp only [castProfile, Pi.zero_apply, Int.cast_zero]
+    rw [hzero]
+    exact generated_zero (ray rows)
+  | cons term terms ih =>
+    obtain ⟨i, a⟩ := term
+    cases hrow : rows[i]? with
+    | none => simp [weightedProfile, hrow] at h
+    | some row =>
+      cases hrem : weightedProfile rows terms with
+      | none => simp [weightedProfile, hrow, hrem] at h
+      | some rem =>
+        simp only [weightedProfile, hrow, hrem, Option.some.injEq] at h
+        have he : castProfile w = (a : ℝ) • castProfile row + castProfile rem := by
+          rw [← h]
+          funext k
+          simp only [castProfile, Pi.smul_apply, Pi.add_apply, smul_eq_mul, Int.cast_add,
+            Int.cast_mul, Int.cast_natCast]
+        rw [he]
+        exact generated_add
+          (generated_smul (Nat.cast_nonneg _) (generated_of_mem (List.mem_of_getElem? hrow)))
+          (ih hrem)
+
+private theorem checkCandidate_sound (rows : List IntegerProfile) (v : IntegerProfile)
+    (code : Nat) (h : checkCandidate rows v code = true) : generated (ray rows) (castProfile v) := by
+  cases hw : weightedProfile rows (decodeCombination 24 (code / 256)) with
+  | none => simp [checkCandidate, hw] at h
+  | some w =>
+    simp only [checkCandidate, hw, Bool.and_eq_true, decide_eq_true_eq] at h
+    have hd : 0 < (↑(code % 256) : ℝ) := by exact_mod_cast h.1
+    have he : (↑(code % 256) : ℝ) • castProfile v = castProfile w := by
+      funext k
+      have hk := congrFun (sameProfile_sound h.2) k
+      simpa only [castProfile, Pi.smul_apply, smul_eq_mul, Int.cast_mul, Int.cast_natCast] using
+        congrArg (fun x : ℤ => (x : ℝ)) hk
+    have hs := generated_smul (inv_nonneg.mpr hd.le) (weightedProfile_sound rows _ hw)
+    rwa [← he, smul_smul, inv_mul_cancel₀ hd.ne', one_smul] at hs
+
+private theorem advance {r s : List IntegerProfile} (k : Fin 24)
+    (hc : ∀ y ∈ candidates k r, generated (ray s) (castProfile y))
+    {x : Profile} (hx : generated (ray r) x) (hk : 0 ≤ x k) :
+    generated (ray s) x := by
+  apply generated_intersection (fun i => r.get i) (ray s) k hx hk
+  · intro i hi
+    exact hc _ (List.mem_append_left _ (List.mem_filter.mpr
+      ⟨List.get_mem r i, decide_eq_true hi⟩))
+  · intro i j hi hj
+    apply hc
+    apply List.mem_append_right
+    apply List.mem_flatMap.mpr
+    refine ⟨r.get i, List.mem_filter.mpr ⟨List.get_mem r i, decide_eq_true hi⟩, ?_⟩
+    exact List.mem_map_of_mem (List.mem_filter.mpr ⟨List.get_mem r j, decide_eq_true hj⟩)
+
+private theorem checkCandidates_sound (rows cs : List IntegerProfile) (codes : List Nat)
+    (h : checkCandidates rows cs codes = true) (y : IntegerProfile) (hy : y ∈ cs) :
+    generated (ray rows) (castProfile y) := by
+  induction cs generalizing codes with
+  | nil => simp at hy
+  | cons x xs ih =>
+    cases codes with
+    | nil => simp [checkCandidates] at h
+    | cons code rem =>
+      simp only [checkCandidates, Bool.and_eq_true] at h
+      rcases List.mem_cons.mp hy with he | hy
+      · subst y
+        exact checkCandidate_sound rows x code h.1
+      · exact ih rem h.2 hy
 
 private noncomputable def evaluation : (Fin 14 → ℝ) →ₗ[ℝ] Profile where
   toFun := fourMatchingEvaluation
@@ -390,49 +445,313 @@ private noncomputable def evaluation : (Fin 14 → ℝ) →ₗ[ℝ] Profile wher
     funext i
     fin_cases i <;> simp [fourMatchingEvaluation, Pi.smul_apply, smul_eq_mul] <;> ring
 
-private def listedCoordinates (i : Fin 34 ⊕ Fin 48) : Fin 14 → ℤ :=
-  fourMatchingCoordinatesOfValues (listedInt i)
-
 private theorem listed_cast_eval (m : Fin 14 → ℤ) :
     fourMatchingEvaluation (fun i => (m i : ℝ)) = castProfile (fourMatchingEvaluation m) := by
   funext i
   fin_cases i <;> simp [castProfile, fourMatchingEvaluation, Int.cast_add, Int.cast_mul]
 
-set_option maxHeartbeats 3000000 in
+private def baseDelta (i : Fin 14) : Profile :=
+  fun k => if k = baseLabels i then 1 else 0
+
+set_option maxHeartbeats 1500000 in
+private noncomputable def matchingCoordinates : Profile →ₗ[ℝ] (Fin 14 → ℝ) where
+  toFun := fourMatchingCoordinatesOfValues
+  map_add' x y := by
+    funext i
+    change fourMatchingCoordinatesOfValues (x + y) i =
+      fourMatchingCoordinatesOfValues x i + fourMatchingCoordinatesOfValues y i
+    fin_cases i <;> simp [fourMatchingCoordinatesOfValues, Pi.add_apply] <;> ring
+  map_smul' t x := by
+    funext i
+    change fourMatchingCoordinatesOfValues (t • x) i = t * fourMatchingCoordinatesOfValues x i
+    fin_cases i <;>
+      simp [fourMatchingCoordinatesOfValues, Pi.smul_apply, smul_eq_mul] <;> ring
+
+set_option maxHeartbeats 1500000 in
+private theorem castCoordinates (x : IntegerProfile) :
+    fourMatchingCoordinatesOfValues (castProfile x) =
+      fun i => ((fourMatchingCoordinatesOfValues x i : ℤ) : ℝ) := by
+  funext i
+  fin_cases i <;>
+    simp [castProfile, fourMatchingCoordinatesOfValues, Int.cast_add, Int.cast_sub,
+      Int.cast_mul, Int.cast_neg]
+
+private theorem baseRay_cast (i : Fin 14) :
+    castProfile (baseRay i) = evaluation (matchingCoordinates (baseDelta i)) := by
+  let δ : IntegerProfile := fun k => if k = baseLabels i then 1 else 0
+  have hδ : castProfile δ = baseDelta i := by
+    funext k
+    by_cases hk : k = baseLabels i <;> simp [δ, baseDelta, castProfile, hk]
+  change castProfile (fourMatchingEvaluation (fourMatchingCoordinatesOfValues δ)) =
+    fourMatchingEvaluation (fourMatchingCoordinatesOfValues (baseDelta i))
+  rw [← hδ, castCoordinates, listed_cast_eval]
+
+private theorem baseLabels_injective : Function.Injective baseLabels := by
+  change ∀ (i j : Fin 14), baseLabels i = baseLabels j → i = j
+  decide +kernel
+
+private theorem basis_coordinates (x : Profile) :
+    matchingCoordinates (∑ i, x (baseLabels i) • baseDelta i) = matchingCoordinates x := by
+  let y := ∑ i, x (baseLabels i) • baseDelta i
+  have h (i : Fin 14) : y (baseLabels i) = x (baseLabels i) := by
+    change (∑ j, x (baseLabels j) • baseDelta j) (baseLabels i) = _
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, baseDelta]
+    rw [Finset.sum_eq_single i]
+    · simp
+    · intro j _ hji
+      have hij : baseLabels i ≠ baseLabels j := fun hEq => hji (baseLabels_injective hEq).symm
+      simp only [if_neg hij, mul_zero]
+    · simp
+  have h0 : y 0 = x 0 := h 0
+  have h1 : y 1 = x 1 := h 1
+  have h2 : y 2 = x 2 := h 2
+  have h3 : y 3 = x 3 := h 3
+  have h4 : y 4 = x 4 := h 4
+  have h6 : y 6 = x 6 := h 5
+  have h7 : y 7 = x 7 := h 6
+  have h8 : y 8 = x 8 := h 7
+  have h9 : y 9 = x 9 := h 8
+  have h10 : y 10 = x 10 := h 9
+  have h12 : y 12 = x 12 := h 10
+  have h13 : y 13 = x 13 := h 11
+  have h16 : y 16 = x 16 := h 12
+  have h18 : y 18 = x 18 := h 13
+  change fourMatchingCoordinatesOfValues y = fourMatchingCoordinatesOfValues x
+  funext i
+  fin_cases i <;>
+    simp [fourMatchingCoordinatesOfValues, h0, h1, h2, h3, h4,
+      h6, h7, h8, h9, h10, h12, h13, h16, h18]
+
+private theorem basis_evaluation (m : Fin 14 → ℝ) :
+    (∑ i, fourMatchingEvaluation m (baseLabels i) • castProfile (baseRay i)) =
+      fourMatchingEvaluation m := by
+  let x := fourMatchingEvaluation m
+  change (∑ i, x (baseLabels i) • castProfile (baseRay i)) = x
+  calc
+    _ = ∑ i, x (baseLabels i) • evaluation (matchingCoordinates (baseDelta i)) := by
+      simp only [baseRay_cast]
+    _ = evaluation (matchingCoordinates (∑ i, x (baseLabels i) • baseDelta i)) := by
+      simp only [map_sum, map_smul]
+    _ = evaluation (matchingCoordinates x) := by rw [basis_coordinates]
+    _ = x := congrArg evaluation (fourMatchingEvaluation_leftInverse m)
+
+private def initialCertificates : List Nat :=
+  (List.range 14).map fun i => encodeCombination (1, [(i, 1)])
+
+set_option maxRecDepth 16384 in
+private theorem initialBasisCheck :
+    checkCandidates (checkedStage 0) base initialCertificates = true := by
+  decide +kernel
+
+private theorem basis_representation (m : Fin 14 → ℝ)
+    (hn : ∀ i, 0 ≤ fourMatchingEvaluation m i) :
+    generated (ray (checkedStage 0)) (fourMatchingEvaluation m) :=
+  generated_mono (fun i => checkCandidates_sound (checkedStage 0) base initialCertificates
+    initialBasisCheck (baseRay i) (List.mem_ofFn.mpr ⟨i, rfl⟩))
+    ⟨fun i => fourMatchingEvaluation m (baseLabels i), fun i => hn (baseLabels i), basis_evaluation m⟩
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt5 : checkCut 0 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt11 : checkCut 1 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt14 : checkCut 2 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt15 : checkCut 3 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt17 : checkCut 4 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt19 : checkCut 5 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt20 : checkCut 6 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt21 : checkCut 7 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt22 : checkCut 8 = true := by decide +kernel
+
+set_option maxRecDepth 16384 in
+private theorem verifiedCutAt23 : checkCut 9 = true := by decide +kernel
+
+private theorem verifiedSteps (t : Fin 10) : checkCut t = true := by
+  fin_cases t
+  · exact verifiedCutAt5
+  · exact verifiedCutAt11
+  · exact verifiedCutAt14
+  · exact verifiedCutAt15
+  · exact verifiedCutAt17
+  · exact verifiedCutAt19
+  · exact verifiedCutAt20
+  · exact verifiedCutAt21
+  · exact verifiedCutAt22
+  · exact verifiedCutAt23
+
+private theorem stage_generated (t : ℕ) (ht : t ≤ 10) (m : Fin 14 → ℝ)
+    (hn : ∀ i, 0 ≤ fourMatchingEvaluation m i) :
+    generated (ray (checkedStage t)) (fourMatchingEvaluation m) := by
+  induction t with
+  | zero => exact basis_representation m hn
+  | succ t ih =>
+    exact advance (cuts[t]?.getD 0)
+      (checkCandidates_sound _ _ _ (verifiedSteps ⟨t, ht⟩)) (ih (Nat.le_of_succ_le ht)) (hn _)
+
+private def listedInt : Fin 34 ⊕ Fin 48 → IntegerProfile :=
+  Sum.elim ordinaryCostRayInt mixedCostRayInt
+
+private def listed : Fin 34 ⊕ Fin 48 → Profile :=
+  Sum.elim ordinaryCostRay mixedCostRay
+
+-- Encode the support in one word so that the pairwise check uses one comparison.
+private def supportWord (r : IntegerProfile) : Nat :=
+  (List.finRange 24).foldr (fun i word => (if r i = 0 then 0 else 1) + 2 * word) 0
+
+private def listedProfileData (r : IntegerProfile) : Nat × Nat :=
+  (encodeRow r, supportWord r)
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
+private def ordinaryProfileData : List (Nat × Nat) :=
+  normalizeProfileTable% (List.ofFn fun i => listedProfileData (ordinaryCostRayInt i))
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
+private def mixedProfileData : List (Nat × Nat) :=
+  normalizeProfileTable% (List.ofFn fun i => listedProfileData (mixedCostRayInt i))
+
+private def profileData : Fin 34 ⊕ Fin 48 → Nat × Nat
+  | .inl i => ordinaryProfileData[i.val]?.getD (0, 0)
+  | .inr i => mixedProfileData[i.val]?.getD (0, 0)
+
+private def materializedListed (i : Fin 34 ⊕ Fin 48) : IntegerProfile :=
+  decodeRow (profileData i).1
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
+private theorem materializedListed_eq (i : Fin 34 ⊕ Fin 48) :
+    materializedListed i = listedInt i := by
+  apply sameProfile_sound
+  rcases i with i | i <;> fin_cases i <;> decide +kernel
+
+private def materializedListedRows : List IntegerProfile :=
+  List.ofFn (fun i : Fin 34 => materializedListed (.inl i)) ++
+    List.ofFn (fun i : Fin 48 => materializedListed (.inr i))
+
+private def finalCertificates : List Nat :=
+  eval% (let rows := (ordinaryProfileData ++ mixedProfileData).map Prod.fst
+         (stageRows[10]?.getD []).map fun word => encodeCombination (1, [(rows.idxOf word, 1)]))
+
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 6000000 in
+private theorem stage_final_check :
+    checkCandidates materializedListedRows (checkedStage 10) finalCertificates = true := by
+  decide +kernel
+
+private theorem listed_of_stage {x : Profile} (hx : generated (ray (checkedStage 10)) x) :
+    generated listed x := by
+  apply generated_mono _ hx
+  intro i
+  have hi := checkCandidates_sound materializedListedRows (checkedStage 10) finalCertificates
+    stage_final_check ((checkedStage 10).get i) (List.get_mem _ i)
+  apply generated_mono _ hi
+  intro j
+  have hj := List.get_mem materializedListedRows j
+  rcases List.mem_append.mp hj with h | h
+  · obtain ⟨k, hk⟩ := List.mem_ofFn.mp h
+    rw [ray, ← hk, materializedListed_eq]
+    exact generated_single listed (.inl k)
+  · obtain ⟨k, hk⟩ := List.mem_ofFn.mp h
+    rw [ray, ← hk, materializedListed_eq]
+    exact generated_single listed (.inr k)
+
+private def listedCoordinates (i : Fin 34 ⊕ Fin 48) : Fin 14 → ℤ :=
+  fourMatchingCoordinatesOfValues (listedInt i)
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
 private theorem listed_evaluation (i : Fin 34 ⊕ Fin 48) :
     evaluation (fun k => (listedCoordinates i k : ℝ)) = listed i := by
-  have he : ∀ j : Fin 34 ⊕ Fin 48,
-      sameProfile (fourMatchingEvaluation (listedCoordinates j)) (listedInt j) = true := by
-    decide
+  have h (j : Fin 34 ⊕ Fin 48) :
+      sameProfile (fourMatchingEvaluation (fourMatchingCoordinatesOfValues (materializedListed j)))
+        (materializedListed j) = true := by
+    rcases j with j | j <;> fin_cases j <;> decide +kernel
+  have he := sameProfile_sound (h i)
+  simp only [materializedListed_eq] at he
   change fourMatchingEvaluation (fun k => (listedCoordinates i k : ℝ)) = listed i
-  rw [listed_cast_eval, sameProfile_sound (he i)] <;> cases i <;> rfl
+  rw [listed_cast_eval]
+  change castProfile (fourMatchingEvaluation (fourMatchingCoordinatesOfValues (listedInt i))) = listed i
+  rw [he]
+  cases i <;> rfl
 
 private theorem listed_nonneg (i : Fin 34 ⊕ Fin 48) (k : Fin 24) : 0 ≤ listed i k := by
-  have h : ∀ (j : Fin 34 ⊕ Fin 48) (l : Fin 24), 0 ≤ listedInt j l := by decide
-  have hi : listed i k = (listedInt i k : ℝ) := by cases i <;> rfl
+  have h (j : Fin 34 ⊕ Fin 48) : ∀ l : Fin 24, 0 ≤ materializedListed j l := by
+    rcases j with j | j <;> fin_cases j <;> decide +kernel
+  have hi : listed i k = (materializedListed i k : ℝ) := by
+    rw [materializedListed_eq]
+    cases i <;> rfl
   rw [hi]
   exact_mod_cast h i k
 
 private theorem listed_ne_zero (i : Fin 34 ⊕ Fin 48) : listed i ≠ 0 := by
-  have hl : ∀ j : Fin 34 ⊕ Fin 48, ∃ k : Fin 24, listedInt j k ≠ 0 := by decide
+  have hl (j : Fin 34 ⊕ Fin 48) : ∃ k : Fin 24, materializedListed j k ≠ 0 := by
+    rcases j with j | j <;> fin_cases j <;> decide +kernel
   obtain ⟨k, hk⟩ := hl i
   intro he
   have hv := congrFun he k
-  have hi : listed i k = (listedInt i k : ℝ) := by cases i <;> rfl
+  have hi : listed i k = (materializedListed i k : ℝ) := by
+    rw [materializedListed_eq]
+    cases i <;> rfl
   rw [hi, Pi.zero_apply] at hv
   exact hk (by exact_mod_cast hv)
 
+private def listedSupportWord (i : Fin 34 ⊕ Fin 48) : Nat := (profileData i).2
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
+private theorem listedSupportWord_bit (i : Fin 34 ⊕ Fin 48) :
+    ∀ k : Fin 24, (listedSupportWord i).testBit k.val = decide (listedInt i k ≠ 0) := by
+  rw [← materializedListed_eq i]
+  rcases i with i | i <;> fin_cases i <;> decide +kernel
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
+private theorem listedSupportWord_lt (i : Fin 34 ⊕ Fin 48) :
+    listedSupportWord i < 2 ^ 24 := by
+  rcases i with i | i <;> fin_cases i <;> decide +kernel
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 6000000 in
+private theorem listedSupportWord_distinct (i : Fin 34 ⊕ Fin 48) :
+    ∀ j : Fin 34 ⊕ Fin 48, listedSupportWord j &&& listedSupportWord i = listedSupportWord j →
+      j = i := by
+  rcases i with i | i <;> fin_cases i <;> decide +kernel
+
 private theorem listed_unique_support (i j : Fin 34 ⊕ Fin 48)
     (h : ∀ k, listed i k = 0 → listed j k = 0) : j = i := by
-  have hs : ∀ (a b : Fin 34 ⊕ Fin 48),
-      (∀ k : Fin 24, listedInt a k = 0 → listedInt b k = 0) → b = a := by decide
-  apply hs i j
-  intro k hk
-  have hi : listed i k = (listedInt i k : ℝ) := by cases i <;> rfl
-  have hj : listed j k = (listedInt j k : ℝ) := by cases j <;> rfl
-  have hic : (listedInt i k : ℝ) = 0 := by exact_mod_cast hk
-  have hjc : (listedInt j k : ℝ) = 0 := hj.symm.trans (h k (hi.trans hic))
-  exact_mod_cast hjc
+  apply listedSupportWord_distinct i j
+  apply Nat.eq_of_testBit_eq
+  intro p
+  rw [Nat.testBit_and]
+  by_cases hp : p < 24
+  · let k : Fin 24 := ⟨p, hp⟩
+    change ((listedSupportWord j).testBit k.val && (listedSupportWord i).testBit k.val) =
+      (listedSupportWord j).testBit k.val
+    rw [listedSupportWord_bit j k, listedSupportWord_bit i k]
+    by_cases hz : listedInt i k = 0
+    · have hzero (r : Fin 34 ⊕ Fin 48) : listed r k = 0 ↔ listedInt r k = 0 := by
+        cases r <;> exact Int.cast_eq_zero
+      have hj := (hzero j).mp (h k ((hzero i).mpr hz))
+      simp [hz, hj]
+    · simp [hz]
+  · have hpow : (2 : Nat) ^ 24 ≤ 2 ^ p :=
+      Nat.pow_le_pow_right (by decide) (Nat.le_of_not_gt hp)
+    rw [Nat.testBit_eq_false_of_lt ((listedSupportWord_lt j).trans_le hpow), Bool.false_and]
 
 private theorem nonneg_of_listed {x : Profile} (hx : generated listed x) (k : Fin 24) :
     0 ≤ x k := by
@@ -579,56 +898,18 @@ theorem four_cost_cone_ray_index_unique (i j : Fin 34 ⊕ Fin 48) {a : ℝ}
   change listed j = a • listed i at hf
   rw [hf, Pi.smul_apply, hk, smul_zero]
 
-private def ordinaryBasisIndices : Fin 14 → Fin 34 :=
-  ![0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 16, 17, 22, 23]
-
--- Row i expresses baseRay i in the selected ordinary indicators.
-private def ordinaryBasisCoefficients : Fin 14 → Fin 14 → ℤ :=
-  ![![0, 0, -1, -1, 1, 1, 0, 0, 0, 0, -1, 0, 0, 1],
-    ![0, 0, 1, 1, -1, 0, 0, 0, 0, 0, 1, 0, 0, -1],
-    ![-1, 0, 1, 2, -2, -1, 0, -1, 0, 0, 2, 1, 1, 0],
-    ![1, 0, -1, -1, 1, 0, 0, 1, 0, 0, -1, 0, -1, 0],
-    ![1, 0, 0, -1, 1, 0, 0, 0, 0, 0, -1, -1, 0, 0],
-    ![0, 0, 1, 1, -1, -1, 0, 0, 0, 1, 1, 0, 0, -1],
-    ![0, 0, -1, -1, 1, 0, 0, 0, 0, -1, 0, 0, 0, 1],
-    ![0, -1, -1, -2, 2, 1, 1, 1, 0, 0, -1, -1, 0, 0],
-    ![0, 1, 1, 1, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0],
-    ![0, 1, 0, 1, -1, 0, -1, 0, 0, 0, 0, 1, 0, 0],
-    ![0, 0, -1, -2, 1, 1, 0, 1, 1, 0, -1, 0, -1, 0],
-    ![0, 0, 1, 1, 0, 0, 0, -1, -1, 0, 0, 0, 1, 0],
-    ![0, 0, 1, 1, -1, -1, 0, 0, 0, 0, 1, 0, 0, 0],
-    ![0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-set_option maxHeartbeats 3000000 in
-private theorem ordinary_basis_relation (i : Fin 14) :
-    castProfile (baseRay i) =
-      ∑ j, (ordinaryBasisCoefficients i j : ℝ) • ordinaryCostRay (ordinaryBasisIndices j) := by
-  have he : ∀ (i : Fin 14) (k : Fin 24), baseRay i k =
-      ∑ j, ordinaryBasisCoefficients i j * ordinaryCostRayInt (ordinaryBasisIndices j) k := by
-    decide
-  funext k
-  change (baseRay i k : ℝ) = _
-  rw [he i k]
-  simp only [Int.cast_sum, Int.cast_mul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
-    ordinaryCostRay]
-
 /-- The evaluated matching space is exactly the real span of the
 ordinary graded-minor indicators. -/
 theorem four_matching_space_eq_ordinary_span :
     Set.range (fourMatchingEvaluation : (Fin 14 → ℝ) → (Fin 24 → ℝ)) =
       (Submodule.span ℝ (Set.range ordinaryCostRay) : Set (Fin 24 → ℝ)) := by
   let W := Submodule.span ℝ (Set.range ordinaryCostRay)
-  have hm (i : Fin 14) : castProfile (baseRay i) ∈ W := by
-    rw [ordinary_basis_relation]
-    exact W.sum_mem (fun j _ => W.smul_mem _ (Submodule.subset_span ⟨ordinaryBasisIndices j, rfl⟩))
   ext x
   constructor
   · rintro ⟨m, rfl⟩
-    change fourMatchingEvaluation m ∈ W
-    rw [← basis_evaluation m]
-    exact W.sum_mem (fun i _ => W.smul_mem _ (hm i))
+    exact fourMatchingEvaluation_mem_ordinarySpan m
   · intro hx
-    have hle : W ≤ evaluation.range := by
+    have hle : W ≤ LinearMap.range evaluation := by
       apply Submodule.span_le.mpr
       rintro _ ⟨j, rfl⟩
       exact ⟨fun k => (listedCoordinates (Sum.inl j) k : ℝ), listed_evaluation (Sum.inl j)⟩

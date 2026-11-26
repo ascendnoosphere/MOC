@@ -9,13 +9,13 @@ zero otherwise. The two subsets have the same size. The noncrossing
 matching evaluation gives 14 coordinates for the space of profiles that
 these indicators span. A support cost is a profile in this space whose
 entries are nonnegative. [Matching evaluation](../Lean/MOC/FourMatchingRelations.lean#L196)
-[Equality of spans](../Lean/MOC/FourSupportConeClassification.lean#L617)
-[Support cost](../Lean/MOC/FourSupportConeClassification.lean#L472)
+[Equality of spans](../Lean/MOC/FourSupportConeClassification.lean#L903)
+[Support cost](../Lean/MOC/FourSupportConeClassification.lean#L791)
 
-The cone has 34 ordinary rays and 48 mixed rays. The ordinary rays are the
-16 singleton-image indicators and the 18 pair-image indicators with source
-pair containing zero. Complementing both pairs gives the other pair
-indicators. The mixed rays are a relabeling orbit of the sum of three
+The cone has 34 ordinary extreme rays and 48 mixed extreme rays. The
+ordinary rays are the 16 singleton-image indicators and the 18 pair-image
+indicators with source pair containing zero. Complementing both pairs
+gives the other pair indicators. The mixed rays are a relabeling orbit of the sum of three
 ordinary indicators minus a fourth. [Ray definitions](../Lean/MOC/FourSupportCostProfiles.lean)
 
 ## Proof map
@@ -23,7 +23,7 @@ ordinary indicators minus a fourth. [Ray definitions](../Lean/MOC/FourSupportCos
 ```mermaid
 flowchart TD
     Coordinates["14 independent matching evaluations"]
-    Initial["Nonnegative values on the first 14 matchings"]
+    Initial["Nonnegative values at the 14 selected matchings"]
     Cuts["Intersect with one coordinate halfspace at a time"]
     Replay["Verify each carry and crossing candidate"]
     Cone["All 24 nonnegative values give a sum of the 82 rays"]
@@ -45,18 +45,19 @@ rays. Add the remaining 10 inequalities. At each step, keep each ray
 whose value at the new label is nonnegative. For a pair of old rays with
 opposite signs at that label, take the positive combination whose value
 at the label is zero. A balancing identity proves that these candidates
-generate the intersection. [Basis and cuts](../Lean/MOC/FourSupportConeClassification.lean#L304)
-[Balancing identity](../Lean/MOC/FourSupportConeClassification.lean#L82)
+generate the intersection. [Basis and cuts](../Lean/MOC/FourSupportConeClassification.lean#L212)
+[Balancing identity](../Lean/MOC/FourSupportConeClassification.lean#L86)
 
-The checker retains candidates with minimal support on the active
-coordinates and removes duplicate supports. It checks that each original
-candidate is a nonnegative sum of the retained rays. This check takes
-positive integer multiples and subtracts nonnegative integer multiples of
-retained rays until the residual is zero. Its soundness proof uses only
-those arithmetic operations. The 10 steps give 2,261 candidates to check.
-The last list consists of the named ordinary and mixed profiles.
-[Checker](../Lean/MOC/FourSupportConeClassification.lean#L239)
-[Decomposition](../Lean/MOC/FourSupportConeClassification.lean#L490)
+The search keeps one candidate for each minimal support on the active
+coordinates. For each input profile $v$, it finds a positive integer $d$
+and nonnegative integer coefficients $c_i$ for the retained profiles
+$r_i$. The checker verifies $d v=\sum_i c_i r_i$ at all 24 matchings.
+Thus each input profile is a nonnegative sum of retained profiles.
+The ten cuts have a total of 2,261 input profiles. A final check places
+each profile in the last list among the named ordinary and mixed rays.
+[Checker](../Lean/MOC/FourSupportConeClassification.lean#L394)
+[Final list](../Lean/MOC/FourSupportConeClassification.lean#L652)
+[Decomposition](../Lean/MOC/FourSupportConeClassification.lean#L809)
 
 The listed profiles have different supports, and none of these supports
 is a proper subset of another. If two support costs sum to a listed
@@ -65,10 +66,8 @@ decomposition, only the listed profile can have positive weight. Thus
 each listed profile spans an extreme ray. Conversely, in a decomposition
 of any nonzero extreme cost, each positive-weight summand lies on that
 ray. The two indexed families therefore account for all the extreme rays.
-[Extremality](../Lean/MOC/FourSupportConeClassification.lean#L508)
+[Support test](../Lean/MOC/FourSupportConeClassification.lean#L735)
+[Extremality](../Lean/MOC/FourSupportConeClassification.lean#L827)
 
-The published note used a closed oriented chain in the boundary of the
-matching polytope. This Lean source uses successive intersections
-instead. An independent integer replay checked the initial basis, the
-2,261 candidates, the final list, and its minimal supports. The Lean
-source awaits kernel verification. [Historical certificate](https://github.com/ascendnoosphere/MOC/blob/14cf959d/data/certificates/geometry/cone82_completeness_certificate.json)
+The historical certificate records a closed oriented chain in the
+boundary of the matching polytope. [Historical certificate](https://github.com/ascendnoosphere/MOC/blob/14cf959d/data/certificates/geometry/cone82_completeness_certificate.json)
