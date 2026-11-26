@@ -410,6 +410,10 @@ import MOC.ThreeHermitianSummands
 import MOC.TranslatedDeterminantPolynomial
 
 import MOC.BivectorPhaseFactorization
+import MOC.BlockConstraintFeasibility
+import MOC.BlockConstraintHomology
+import MOC.BlockConstraintLink
+import MOC.BlockConstraintTransport
 import MOC.CompactSpectralSampling
 import MOC.CompactTransportDuality
 import MOC.CompactTransportLimit
@@ -449,6 +453,7 @@ import MOC.PfaffianSquareAndGraphBound
 import MOC.PfaffianStandardSkewBlocks
 import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
+import MOC.RankOneDefectAbsorption
 import MOC.RealPolynomialDescent
 import MOC.RealCoordinateRotation
 import MOC.Reformulations.QuadraticDiskCertificate

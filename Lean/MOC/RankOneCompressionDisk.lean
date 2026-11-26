@@ -42,7 +42,7 @@ theorem rankOneCompressionDisk_eq_compression (b : ι → ℂ) (γ : ℂ)
     Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add, Matrix.fromCols_mul_fromRows]
   rfl
 
-private theorem rankOnePhase_conjTranspose (v : ι → ℂ) (z : ℂ) :
+theorem rankOnePhase_conjTranspose (v : ι → ℂ) (z : ℂ) :
     (rankOnePhase v z)ᴴ = rankOnePhase v (star z) := by
   have hP : (vecMulVec v (star ∘ v))ᴴ = vecMulVec v (star ∘ v) := by
     ext i j

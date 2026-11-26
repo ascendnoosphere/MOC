@@ -3,11 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Tactic.FinCases
 
 /-! An exact two-by-two semidefinite certificate for the support
-quadratic on a closed complex disk.
-
-The general rank-one defect reduction still needs a factorization into
-two unitary matrices and one diagonal matrix. All diagonal entries equal
-one except for one entry of modulus at most one. -/
+quadratic on a closed complex disk. -/
 
 open Matrix
 open scoped ComplexOrder
