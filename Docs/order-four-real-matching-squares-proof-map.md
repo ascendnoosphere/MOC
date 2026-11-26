@@ -131,7 +131,7 @@ $C=\sqrt{L_U(r_5)}$. The three radicands are squared minor moduli.
 If a multiple of the alternating sign makes the moment of the
 signed weights positive semidefinite, then
 $L_U(h)+2A(B+C)\ge0$. The bound includes zero radicands.
-[Signed evaluation](../Lean/MOC/FourMixedRayCancellation.lean#L544) · [Amplitude certificate](../Lean/MOC/FourMatchingCompensation.lean#L168)
+[Signed evaluation](../Lean/MOC/FourMixedRayCancellation.lean#L544) · [Amplitude certificate](../Lean/MOC/FourMatchingCompensation.lean#L173)
 
 ## Scope
 

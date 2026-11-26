@@ -1,4 +1,4 @@
-import MOC.FourMatchingPhysicalPositivity
+import MOC.FourMixedRayCancellation
 import MOC.FourSevenContactAffineElimination
 import Mathlib.Tactic
 
@@ -160,8 +160,13 @@ private theorem wall_amplitude_bound (h A B C : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ 
   have hdiff : h + 2 * (A + t) * (B + C + 2 * t) ≤ -gap + K * t := by
     dsimp [gap, K]
     nlinarith only [ht_sq]
-  have hKt : K * t ≤ gap / 2 := by nlinarith only [ht2]
-  linarith only [hnew, hdiff, hKt, hg]
+  have hKt : K * t ≤ gap / 2 := (le_div_iff₀ (by norm_num : (0 : ℝ) < 2)).2 (by
+    calc
+      K * t * 2 = t * (2 * K) := by ring
+      _ ≤ gap := ht2)
+  have hbound : gap ≤ K * t :=
+    sub_nonneg.mp (by simpa only [sub_eq_add_neg, add_comm] using hnew.trans hdiff)
+  exact (not_lt_of_ge (hbound.trans hKt)) (half_lt_self hg)
 
 /-- The wall bound for the three minor amplitudes, including zero amplitudes,
 under the alternating correction hypothesis on the signed moment. -/

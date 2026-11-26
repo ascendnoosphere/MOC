@@ -31,7 +31,7 @@ a full matching when every color has one unit of slack.
 | 5. Certificates for one objective | A law for nested subset images gives nonnegative evaluation of a nonnegative flag score. One order-five spectral example has an exact disjoint-pair support certificate. [Flag score](../Lean/MOC/FullFlagLaw.lean#L291) · [Order-five bound](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L289) | The disjoint-pair dual cannot certify every objective. Find a certificate that covers the remaining support gaps. [Refuted test](../Lean/MOC/OrderFiveDisjointPairObstruction.lean#L122) |
 | 6. Assignment-score variance | For nonnegative weights of total mass one, an interval with no score gives a lower variance bound, and an interval containing all scores gives an upper bound. Rank-one costs have a signed covariance formula and an integer lattice bound. [Variance bounds](../Lean/MOC/ThresholdVariance.lean#L156) · [Rank-one variance](../Lean/MOC/RankOneVariance.lean#L78) · [Lattice bound](../Lean/MOC/RankOneLattice.lean#L19) | Prove the nearest-score lower bound for the signed variance of every actual rank-one assignment. A positive law for richer joint statistics needs further conditions. |
 | 7. One free eigenvalue | A planar slice tests for a single law for one free eigenvalue. The law follows from the smaller-order inclusion when the supported partners have at most two distinct values. [Slice](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L205) · [Two supported values](../Lean/MOC/GroupedEigenvalueMoments.lean#L88) | Prove the slice condition for an arbitrary number of groups. |
-| 8. Wall inequality in order four | A bound on reciprocal leaf weights gives a matching sum of squares. A positive corrected moment then gives the amplitude inequality, including zero amplitudes. [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94) · [Amplitude bound](../Lean/MOC/FourMatchingCompensation.lean#L168) | Construct the corrected moment for each mixer and identify the spectral gaps to which the coefficient budget applies. |
+| 8. Wall inequality in order four | A bound on reciprocal leaf weights gives a matching sum of squares. A positive corrected moment then gives the amplitude inequality, including zero amplitudes. [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94) · [Amplitude bound](../Lean/MOC/FourMatchingCompensation.lean#L173) | Construct the corrected moment for each mixer and identify the spectral gaps to which the coefficient budget applies. |
 | 9. Projective changes and limits | A common fractional linear map of the signed spectral points preserves the test if its determinant is nonzero and it has no pole on either list. A four-point swap relation gives a cross-ratio test. [Transport](../Lean/MOC/ProjectiveTransport.lean#L61) · [Swap relation](../Lean/MOC/ContactCrossRatios.lean#L16) | For a proposed boundary argument, prove the spectral and remainder conditions on its chosen stratum. |
 | 10. Zero rectangles and modulus | Color multiplicities test for a nonzero matching. With one unit of slack at every color, every allowed edge extends. A column degree gives a lower bound on the number of nonzero matchings. [Existence](../Lean/MOC/UnequalColorHall.lean#L102) · [Extension](../Lean/MOC/UnequalColorHall.lean#L127) · [Count](../Lean/MOC/UnequalColorHall.lean#L162) | The factorial count and the strengthened modulus comparison in the plan need separate Lean proofs. |
 | 11. Indicator span and Fourier tests | A sign-aligned entrywise phase test proves nonnegativity of the signed masses of the score groups. An order-five Fourier mixer has a strictly positive minor law. [Sign alignment](../Lean/MOC/UnitaryPhaseCuts.lean#L164) · [Fourier law](../Lean/MOC/FourierProfiles.lean#L308) | Find compatible signs for the score groups of a general spectral objective. The all-order dimension formula for the indicator span is outside these lemmas. |
@@ -95,7 +95,7 @@ flowchart BT
   [Plane for rays 13, 17, 18, 23, 27, 30](../Lean/MOC/InversePencilMoments.lean#L87)
 - **Determinant factors and matching squares.** A central feature
   with weight $b$ and leaf weights $d_i>0$ gives a square certificate
-  when $sum_i e_i^2/d_ile b$, where $e_i$ are the couplings.
+  when $\sum_i e_i^2/d_i\le b$, where $e_i$ are the couplings.
   One seven-contact factor gives this budget for ordinary ray
   indices 7, 13, 18, 20, 27 and 30. The theorem takes the
   nonpositive factor value as a premise. The determinant
@@ -103,7 +103,7 @@ flowchart BT
   remain open in Lean. Separate two-factor families already have
   their pencil identification.
   [Square completion](../Lean/MOC/FourMatchingCompensation.lean#L16) ·
-  [Seven-contact certificate](../Lean/MOC/FourMatchingCompensation.lean#L247) ·
+  [Seven-contact certificate](../Lean/MOC/FourMatchingCompensation.lean#L252) ·
   [Two-factor families](spectral-profile-determinant-proof-map.md#order-four-inverse-pencil-certificates) ·
   [Other contact certificates](order-four-mixed-ray-cancellation-proof-map.md#canonical-contact-certificates)
 - **Spectral multiplicities.** One spectrum with two values, or with
