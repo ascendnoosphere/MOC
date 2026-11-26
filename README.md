@@ -360,6 +360,16 @@ bound is open.
 [Interference bound](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L138) ·
 [Equal spectral pair](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L367)
 
+On an even cycle of order at least four, the gate probabilities and
+phases can be arbitrary under the following spectral condition.
+Choose a complex number $c$. Each first-layer gate must join two
+eigenvalues with sum $c$. Each second-layer gate must join two
+eigenvalues with sum $-c$. Complementary switch assignments then give
+the same matching product. Their combined masses are nonnegative.
+The resulting probability law proves the inclusion in every such order.
+[Spectral condition and inclusion](Lean/MOC/CyclicAntipodalSpectra.lean#L149) ·
+[Positive paired masses](Lean/MOC/CyclicAntipodalSpectra.lean#L28)
+
 ### A common law at small shifted rank sum
 
 Fix the relative unitary and a scalar shift. Fix the allowed nonzero

@@ -461,6 +461,42 @@ The signed correction sums to zero, so independent switches give
 inclusion for this pair of spectra at any gate biases.
 [Equal spectral pair](../Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L367)
 
+For a separate case, choose $c\in\mathbb C$. Each pair of first-spectrum
+labels joined by a left-layer gate must have sum $c$. Each pair of
+second-spectrum labels joined by a right-layer gate must have sum $-c$.
+The cycle has even order at least four. The gate probabilities and phases
+are arbitrary. If $\bar x$ complements every bit of $x$, the matching
+products satisfy $F_{\bar x}=F_x$, where $F_x$ is the product of the
+matched eigenvalue sums for assignment $x$. Give each assignment the mass
+
+$$
+w(x)=\frac{P(x)+P(\bar x)}{2}+T(-1)^{N(x)}.
+$$
+
+Twice this mass is the squared absolute value of a sum of two gate
+products. It is nonnegative. Complementation permutes the assignments,
+and the parity terms sum to zero, so the masses sum to one. The equality
+$F_{\bar x}=F_x$ preserves the signed determinant formula under this
+averaging. Thus this spectral family satisfies the inclusion in every
+even cycle order. Lean checked the proof and its axiom dependencies.
+[Masses](../Lean/MOC/CyclicAntipodalSpectra.lean#L22) ·
+[Positivity](../Lean/MOC/CyclicAntipodalSpectra.lean#L28) ·
+[Normalization](../Lean/MOC/CyclicAntipodalSpectra.lean#L47) ·
+[Determinant identity](../Lean/MOC/CyclicAntipodalSpectra.lean#L62) ·
+[Inclusion with the spectral condition](../Lean/MOC/CyclicAntipodalSpectra.lean#L149)
+
+```mermaid
+flowchart BT
+    accTitle: Opposite pair sums on a two-layer cycle
+    accDescr: Complement symmetry and positive normalized paired masses give a matching law for this spectral family.
+    Spectra["Pair sums c and -c"] --> Symmetry["Complementary assignments give the same matching product"]
+    Squares["Combined signed mass is a squared absolute value"] --> Positive["Paired masses are nonnegative and sum to one"]
+    Symmetry --> Both{{"AND"}}
+    Positive --> Both
+    Both --> Law["One matching law for this spectral family"]
+    Law --> Holds["Proved inclusion in every even cycle order"]
+```
+
 Fix the squared moduli of the entries of all gates. Two products of
 real orthogonal gates attain opposite extreme values of $T$. The same
 convex combination gives every squared minor of the complex mixer.
@@ -1354,7 +1390,7 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L1) · [Axiom audit](../Lean/MOC.lean#L337)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L1) · [Axiom audit](../Lean/MOC.lean#L495)
 
 The source audit found 945 Lean modules. Starting at the default target
 reaches 823, including the target itself. The other 122 resolve their

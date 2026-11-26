@@ -40,6 +40,7 @@ import MOC.SingleBiasedCyclicGateLaw
 import MOC.TwoBiasedCyclicGateLaw
 import MOC.BiasedCyclicGateObstruction
 import MOC.TwoLayerOrthogonalEndpoints
+import MOC.CyclicAntipodalSpectra
 import MOC.ZhengT85Lift
 import MOC.ZhengT85SecantObstruction
 import MOC.ContactDifferential
