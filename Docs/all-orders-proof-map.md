@@ -322,13 +322,14 @@ Let $K$ be a finite set of $m\ge2$ labels and let $s$ be a single
 cycle on $K$. Use coordinates $(k,0)$ and $(k,1)$ for $k\in K$.
 The left layer uses a gate $L_k$ on $((k,0),(k,1))$. The right
 layer uses $R_k$ on $((k,0),(s(k),1))$. Each gate is a two-by-two
-unitary whose entries have squared modulus $1/2$. The mixer is
-the left layer times the right layer.
-[Gate condition](../Lean/MOC/BalancedGateProducts.lean#L10) · [Cycle mixer](../Lean/MOC/CyclicSwitchMatrices.lean#L127)
+unitary. All gates except possibly one have squared entry moduli
+$1/2$. The mixer is the left layer times the right layer.
+[Gate condition](../Lean/MOC/BalancedGateProducts.lean#L10) · [Cycle mixer](../Lean/MOC/CyclicSwitchMatrices.lean#L179)
 
-At each gate choose the identity or the swap. For a full choice $x$,
-let $N(x)$ be its number of swaps. Give it weight
-$2^{-2m}(1+c(-1)^{N(x)})$, where
+At a gate $Q$, choose the identity with probability $|Q_{00}|^2$ or
+the swap with probability $|Q_{01}|^2$. For a full choice $x$, let
+$P(x)$ be the product of these probabilities and let $N(x)$ be the
+number of swaps in $x$. Give $x$ weight $P(x)(1+c(-1)^{N(x)})$, where
 
 $$
 c=2^{2m}\,\mathrm{sign}(s)\,
@@ -338,11 +339,13 @@ c=2^{2m}\,\mathrm{sign}(s)\,
 $$
 
 The sign is $1$ for an even permutation and $-1$ for an odd one.
-The product inside the real part has modulus $2^{-2m}$, so $|c|\le1$.
-Half of the choices have each parity, so the weights sum to one.
-Compose the right layer's switches first. Add the weights of choices
-that produce the same permutation.
-[Interference term and bound](../Lean/MOC/CyclicSwitchMatrices.lean#L18) · [Probability law](../Lean/MOC/BalancedCyclicGateLaw.lean#L33)
+Each gate contributes a factor of modulus at most $1/2$ inside the
+real part. Thus $|c|\le1$, which gives nonnegative weights. Changing
+any fair gate reverses parity and preserves $P(x)$, so the weights
+sum to one. Compose the right layer's switches first. Add the
+weights of choices that produce the same permutation. When all
+gates are fair, $P(x)=2^{-2m}$.
+[Gate probabilities](../Lean/MOC/BalancedGateProducts.lean#L104) · [Interference bound](../Lean/MOC/CyclicSwitchMatrices.lean#L35) · [Probability law](../Lean/MOC/SingleBiasedCyclicGateLaw.lean#L132) · [Fair case](../Lean/MOC/BalancedCyclicGateLaw.lean#L33)
 
 ```mermaid
 flowchart BT
@@ -362,14 +365,19 @@ flowchart BT
 In the parity-cancellation case, at most one intermediate set
 has compatible counts in both layers. The squared modulus of the
 minor is zero if no such set exists. Otherwise it is the product
-of the two squared minor moduli through that set.
-[Minor factorization](../Lean/MOC/CyclicSwitchMinor.lean#L294) · [Uniform law in this case](../Lean/MOC/CyclicSwitchMinor.lean#L362)
+of the two squared minor moduli through that set. Equal row and
+column cardinalities require at least two gates with zero or two
+selected positions if any gate has such a count. At least one of
+these gates is fair. Changing its switch preserves the subset image
+and cancels the parity term. In the other case, the two complementary
+choices have equal parity and their probabilities sum to $2^{1-2m}$.
+[Minor factorization](../Lean/MOC/CyclicSwitchMinor.lean#L294) · [Independent law](../Lean/MOC/CyclicSwitchMinor.lean#L362) · [Parity cancellation and complementary weights](../Lean/MOC/SingleBiasedCyclicGateLaw.lean#L132)
 
 The probability that the resulting permutation maps the column
 set onto the row set is the squared modulus of the corresponding
 minor. This identity gives determinant inclusion for every pair of
 complex spectra.
-[Parity cancellation](../Lean/MOC/CyclicSwitchEvents.lean#L342) · [Complementary choices](../Lean/MOC/CyclicSwitchEvents.lean#L360) · [Transversal cross term](../Lean/MOC/CyclicSwitchMatrices.lean#L179) · [Inclusion](../Lean/MOC/BalancedCyclicGateLaw.lean#L103)
+[Complementary choices](../Lean/MOC/CyclicSwitchEvents.lean#L360) · [Transversal cross term](../Lean/MOC/CyclicSwitchMatrices.lean#L62) · [Inclusion](../Lean/MOC/SingleBiasedCyclicGateLaw.lean#L233)
 
 The corresponding common-law claim for arbitrary gates on the cycle
 is false. Number the four coordinates from $0$ to $3$. For

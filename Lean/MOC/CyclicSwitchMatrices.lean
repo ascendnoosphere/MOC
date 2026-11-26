@@ -26,11 +26,45 @@ theorem cyclicGateInterference_bound (s : Equiv.Perm κ) (L R : κ → Matrix Bo
   rcases Int.units_eq_one_or s.sign with h | h <;>
     simpa [cyclicGateInterference, h] using balancedGate_interference_bound L R hL hR
 
-theorem cyclic_two_products_normSq (s : Equiv.Perm κ) (L R : κ → Matrix Bool Bool ℂ)
-    (hL : ∀ k, BalancedGate (L k)) (hR : ∀ k, BalancedGate (R k)) (x y : κ → Bool) :
+private theorem gate_mixed_norm_le_half {a b : ℂ} (h : Complex.normSq a + Complex.normSq b = 1) :
+    ‖a * star b‖ ≤ 1 / 2 := by
+  rw [Complex.norm_mul, Complex.star_def, Complex.norm_conj]
+  rw [← Complex.sq_norm, ← Complex.sq_norm] at h
+  nlinarith [sq_nonneg (‖a‖ - ‖b‖)]
+
+theorem cyclic_interference_le_half_pow (s : Equiv.Perm κ)
+    (L R : κ → Matrix Bool Bool ℂ) (hL : ∀ k, IsUnitary (L k)) (hR : ∀ k, IsUnitary (R k)) :
+    |cyclicGateInterference s L R| ≤ (1 / 2 : ℝ) ^ Fintype.card (κ ⊕ κ) := by
+  have hb (k : κ) :
+      ‖(L k false false * star (L k false true)) * (R k false false * star (R k true false))‖
+        ≤ (1 / 2 : ℝ) * (1 / 2 : ℝ) := by
+    rw [Complex.norm_mul]
+    exact mul_le_mul (gate_mixed_norm_le_half (gate_row_probability (L k) (hL k) false))
+      (gate_mixed_norm_le_half (gate_column_probability (R k) (hR k) false)) (norm_nonneg _) (by norm_num)
+  have hp : ‖∏ k, (L k false false * star (L k false true)) *
+      (R k false false * star (R k true false))‖ ≤ (1 / 2 : ℝ) ^ Fintype.card (κ ⊕ κ) := by
+    rw [Complex.norm_prod, Fintype.card_sum, pow_add, ← mul_pow, ← Finset.card_univ, ← Finset.prod_const]
+    exact Finset.prod_le_prod (fun k _ => norm_nonneg _) (fun k _ => hb k)
+  rcases Int.units_eq_one_or s.sign with hs | hs <;>
+    simpa [cyclicGateInterference, hs] using (Complex.abs_re_le_norm _).trans hp
+
+def cyclicIndependentWeight (L R : κ → Matrix Bool Bool ℂ) (x : κ ⊕ κ → Bool) : ℝ :=
+  (∏ k, gateSwitchProbability (L k) (x (Sum.inl k))) *
+    (∏ k, gateSwitchProbability (R k) (x (Sum.inr k)))
+
+omit [DecidableEq κ] in
+theorem cyclicIndependentWeight_balanced (L R : κ → Matrix Bool Bool ℂ)
+    (hL : ∀ k, BalancedGate (L k)) (hR : ∀ k, BalancedGate (R k)) (x : κ ⊕ κ → Bool) :
+    cyclicIndependentWeight L R x = (1 / 2 : ℝ) ^ (Fintype.card κ + Fintype.card κ) := by
+  simp only [cyclicIndependentWeight, gateSwitchProbability, fun k => (hL k).2,
+    fun k => (hR k).2, Finset.prod_const, Finset.card_univ, pow_add]
+
+theorem cyclic_two_products_independent_normSq (s : Equiv.Perm κ) (L R : κ → Matrix Bool Bool ℂ)
+    (hL : ∀ k, IsUnitary (L k)) (hR : ∀ k, IsUnitary (R k)) (x y : κ → Bool) :
     Complex.normSq ((∏ l, L l (x l) false * R l false (y l)) +
       ((s.sign : ℤ) : ℂ) * ∏ l, L (s l) (x (s l)) true * R l true (y l)) =
-      2*(1/2 : ℝ)^(Fintype.card κ + Fintype.card κ) +
+      cyclicIndependentWeight L R (Sum.elim x y) +
+      cyclicIndependentWeight L R (fun z => !(Sum.elim x y z)) +
       2 * switchParity x * switchParity y * cyclicGateInterference s L R := by
   let A := ∏ k, L k (x k) false * R k false (y k)
   let B := ∏ k, L k (x k) true * R k true (y k)
@@ -41,10 +75,20 @@ theorem cyclic_two_products_normSq (s : Equiv.Perm κ) (L R : κ → Matrix Bool
     rw [Finset.prod_mul_distrib, Finset.prod_mul_distrib,
       Equiv.prod_comp s (fun k => L k (x k) true)]
   have hab (b : Bool) : Complex.normSq (∏ k, L k (x k) b * R k b (y k)) =
-      (1/2 : ℝ)^(Fintype.card κ + Fintype.card κ) := by
+      cyclicIndependentWeight L R (fun z => Sum.elim x y z ^^ b) := by
     rw [map_prod]
-    simp_rw [Complex.normSq_mul, fun k => (hL k).2, fun k => (hR k).2]
-    rw [Finset.prod_const, Finset.card_univ, mul_pow, ← pow_add]
+    simp_rw [Complex.normSq_mul, gateSwitchProbability_eq_normSq _ (hL _),
+      gateSwitchProbability_eq_normSq _ (hR _)]
+    rw [Finset.prod_mul_distrib]
+    congr 1
+    apply Finset.prod_congr rfl
+    intro k _
+    change gateSwitchProbability (R k) (b ^^ y k) = gateSwitchProbability (R k) (y k ^^ b)
+    rw [Bool.xor_comm]
+  have ha : Complex.normSq A = cyclicIndependentWeight L R (Sum.elim x y) := by
+    simpa only [Bool.xor_false] using hab false
+  have hb : Complex.normSq B = cyclicIndependentWeight L R (fun z => !(Sum.elim x y z)) := by
+    simpa only [Bool.xor_true] using hab true
   have hprod : A * star B = ((switchParity x * switchParity y : ℝ) : ℂ) * C := by
     dsimp only [A,B,C]
     rw [star_prod, ← Finset.prod_mul_distrib]
@@ -57,7 +101,7 @@ theorem cyclic_two_products_normSq (s : Equiv.Perm κ) (L R : κ → Matrix Bool
       _ = (L k (x k) false * star (L k (x k) true)) *
           (R k false (y k) * star (R k true (y k))) := by ring
       _ = _ := by
-        rw [gate_row_mixed_sign _ (hL k).1, gate_column_mixed_sign _ (hR k).1]
+        rw [gate_row_mixed_sign _ (hL k), gate_column_mixed_sign _ (hR k)]
         cases x k <;> cases y k <;> simp [switchSign]
   have hr : (A * star B).re = switchParity x * switchParity y * C.re := by
     rw [hprod, Complex.re_ofReal_mul]
@@ -65,18 +109,26 @@ theorem cyclic_two_products_normSq (s : Equiv.Perm κ) (L R : κ → Matrix Bool
   change Complex.normSq (A + ((s.sign : ℤ) : ℂ) * B) = _
   rcases Int.units_eq_one_or s.sign with h | h
   · simp only [h, Units.val_one, Int.cast_one, one_mul, Complex.normSq_add]
-    rw [show Complex.normSq A = _ from hab false, show Complex.normSq B = _ from hab true]
+    rw [ha, hb]
     change _ + _ + 2 * (A * star B).re = _
     rw [hr]
     simp [cyclicGateInterference, h, C]
     ring
   · simp only [h, Units.val_neg, Units.val_one, Int.cast_neg, Int.cast_one, neg_one_mul,
       Complex.normSq_add, Complex.normSq_neg, map_neg, mul_neg, Complex.neg_re]
-    rw [show Complex.normSq A = _ from hab false, show Complex.normSq B = _ from hab true]
+    rw [ha, hb]
     change _ + _ + -(2 * (A * star B).re) = _
     rw [hr]
     simp [cyclicGateInterference, h, C]
     ring
+theorem cyclic_two_products_normSq (s : Equiv.Perm κ) (L R : κ → Matrix Bool Bool ℂ)
+    (hL : ∀ k, BalancedGate (L k)) (hR : ∀ k, BalancedGate (R k)) (x y : κ → Bool) :
+    Complex.normSq ((∏ l, L l (x l) false * R l false (y l)) +
+      ((s.sign : ℤ) : ℂ) * ∏ l, L (s l) (x (s l)) true * R l true (y l)) =
+      2*(1/2 : ℝ)^(Fintype.card κ + Fintype.card κ) +
+      2 * switchParity x * switchParity y * cyclicGateInterference s L R := by
+  simpa only [cyclicIndependentWeight_balanced L R hL hR, ← two_mul] using
+    cyclic_two_products_independent_normSq s L R (fun k => (hL k).1) (fun k => (hR k).1) x y
 
 end
 
@@ -196,12 +248,12 @@ namespace MOC
 
 variable {κ ι : Type*} [Fintype κ] [DecidableEq κ] [Fintype ι] [DecidableEq ι]
 
-/-- A balanced block layer has the squared-minor law of independent fair switches. -/
-theorem blockGateMatrix_minor_law (e : κ × Bool ≃ ι) (Q : κ → Matrix Bool Bool ℂ)
-    (hQ : ∀ k, BalancedGate (Q k)) (I J : Finset ι) :
+/-- A block layer has the squared-minor law of independent switches. -/
+theorem blockGateMatrix_independent_law (e : κ × Bool ≃ ι) (Q : κ → Matrix Bool Bool ℂ)
+    (hQ : ∀ k, IsUnitary (Q k)) (I J : Finset ι) :
     subsetMinorSq (blockGateMatrix e Q) I J =
-      ∑ _x ∈ Finset.univ.filter (fun x : κ → Bool =>
-        J.map (blockSwitch e x).toEmbedding = I), (1 / 2 : ℝ) ^ Fintype.card κ := by
+      ∑ x ∈ Finset.univ.filter (fun x : κ → Bool =>
+        J.map (blockSwitch e x).toEmbedding = I), ∏ k, gateSwitchProbability (Q k) (x k) := by
   classical
   let f := e.symm.trans (Equiv.prodComm κ Bool)
   have he : blockGateMatrix e Q = (Matrix.blockDiagonal Q).submatrix f f := by
@@ -217,10 +269,19 @@ theorem blockGateMatrix_minor_law (e : κ × Bool ≃ ι) (Q : κ → Matrix Boo
     simp only [Function.Embedding.trans_apply, Equiv.toEmbedding_apply, blockSwitch_apply, f,
       Equiv.trans_apply, Equiv.symm_apply_apply, Equiv.prodComm_apply]
     cases b <;> cases h : x k <;> simp [balancedLayerSwitch, gateSwitch, h]
-  rw [he, squared_minor_reindex f f _ (balancedLayer_unitary Q hQ),
-    balancedLayer_minor_law Q hQ]
+  rw [he, squared_minor_reindex f f _ (gateLayer_unitary Q hQ),
+    gateLayer_minor_law Q hQ]
   congr 1
   ext x
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, ← hmap x, Finset.map_inj]
+
+/-- A balanced block layer has the squared-minor law of independent fair switches. -/
+theorem blockGateMatrix_minor_law (e : κ × Bool ≃ ι) (Q : κ → Matrix Bool Bool ℂ)
+    (hQ : ∀ k, BalancedGate (Q k)) (I J : Finset ι) :
+    subsetMinorSq (blockGateMatrix e Q) I J =
+      ∑ _x ∈ Finset.univ.filter (fun x : κ → Bool =>
+        J.map (blockSwitch e x).toEmbedding = I), (1 / 2 : ℝ) ^ Fintype.card κ := by
+  simpa only [gateSwitchProbability, fun k => (hQ k).2, Finset.prod_const, Finset.card_univ] using
+    blockGateMatrix_independent_law e Q (fun k => (hQ k).1) I J
 
 end MOC

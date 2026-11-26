@@ -218,7 +218,7 @@ noncomputable section
 
 variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 
-private theorem sum_blockOccupancy {ι : Type*} [DecidableEq ι]
+theorem sum_blockOccupancy {ι : Type*} [DecidableEq ι]
     (e : κ × Bool ≃ ι) (S : Finset ι) :
     (∑ k, blockOccupancy e S k) = (S.card : ℤ) := by
   simp_rw [blockOccupancy_eq_sum]
@@ -265,26 +265,26 @@ private theorem sum_twoLayerSwitch_event_of_middle (s : Equiv.Perm κ)
     (hKL : ∀ k, blockOccupancy (Equiv.refl _) K k = blockOccupancy (Equiv.refl _) I k)
     (hKR : ∀ k, blockOccupancy (cyclicRightChart s) K k = blockOccupancy (cyclicRightChart s) J k)
     (hn : ¬ BlockTransversal (Equiv.refl _) I ∨ ¬ BlockTransversal (cyclicRightChart s) J)
-    (d : ℝ) :
-    (∑ _x ∈ univ.filter (fun x => J.map
-        (twoLayerSwitch (Equiv.refl _) (cyclicRightChart s) x).toEmbedding = I), d * d) =
-      (∑ _x ∈ univ.filter (fun x => K.map (blockSwitch (Equiv.refl _) x).toEmbedding = I), d) *
-      (∑ _x ∈ univ.filter (fun x => J.map (blockSwitch (cyclicRightChart s) x).toEmbedding = K), d) := by
+    (dL dR : (κ → Bool) → ℝ) :
+    (∑ x ∈ univ.filter (fun x => J.map
+        (twoLayerSwitch (Equiv.refl _) (cyclicRightChart s) x).toEmbedding = I), dL (x ∘ Sum.inl) * dR (x ∘ Sum.inr)) =
+      (∑ x ∈ univ.filter (fun x => K.map (blockSwitch (Equiv.refl _) x).toEmbedding = I), dL x) *
+      (∑ x ∈ univ.filter (fun x => J.map (blockSwitch (cyclicRightChart s) x).toEmbedding = K), dR x) := by
   classical
   let e := Equiv.sumArrowEquivProdArrow κ κ Bool
   simp only [Finset.sum_filter, Finset.sum_mul, Finset.mul_sum]
   let g (xy : (κ → Bool) × (κ → Bool)) : ℝ :=
-    (if K.map (blockSwitch (Equiv.refl _) xy.1).toEmbedding = I then d else 0) *
-    (if J.map (blockSwitch (cyclicRightChart s) xy.2).toEmbedding = K then d else 0)
+    (if K.map (blockSwitch (Equiv.refl _) xy.1).toEmbedding = I then dL xy.1 else 0) *
+    (if J.map (blockSwitch (cyclicRightChart s) xy.2).toEmbedding = K then dR xy.2 else 0)
   change _ = ∑ y, ∑ x, g (x,y)
   rw [Finset.sum_comm, ← Fintype.sum_prod_type g]
   apply Fintype.sum_equiv e
   intro x
   have he := twoLayerSwitch_event_with_middle s hs I J K hKL hKR hn x
   change (if J.map (twoLayerSwitch (Equiv.refl _) (cyclicRightChart s) x).toEmbedding = I then
-    d * d else 0) = (if K.map (blockSwitch (Equiv.refl _) (x ∘ Sum.inl)).toEmbedding = I then
-    d else 0) * (if J.map (blockSwitch (cyclicRightChart s) (x ∘ Sum.inr)).toEmbedding = K then
-    d else 0)
+    dL (x ∘ Sum.inl) * dR (x ∘ Sum.inr) else 0) = (if K.map (blockSwitch (Equiv.refl _) (x ∘ Sum.inl)).toEmbedding = I then
+    dL (x ∘ Sum.inl) else 0) * (if J.map (blockSwitch (cyclicRightChart s) (x ∘ Sum.inr)).toEmbedding = K then
+    dR (x ∘ Sum.inr) else 0)
   by_cases hl : K.map (blockSwitch (Equiv.refl _) (x ∘ Sum.inl)).toEmbedding = I <;>
     by_cases hr : J.map (blockSwitch (cyclicRightChart s) (x ∘ Sum.inr)).toEmbedding = K <;>
     simp [he, hl, hr]
@@ -359,14 +359,14 @@ noncomputable section
 
 variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 
-theorem cyclic_nontransversal_uniform_law (s : Equiv.Perm κ) (hs : TraversesAllIndices s)
-    (L R : κ → Matrix Bool Bool ℂ) (hL : ∀ k, BalancedGate (L k)) (hR : ∀ k, BalancedGate (R k))
+theorem cyclic_nontransversal_independent_law (s : Equiv.Perm κ) (hs : TraversesAllIndices s)
+    (L R : κ → Matrix Bool Bool ℂ) (hL : ∀ k, IsUnitary (L k)) (hR : ∀ k, IsUnitary (R k))
     (I J : Finset (κ × Bool))
     (hn : ¬ BlockTransversal (Equiv.refl _) I ∨ ¬ BlockTransversal (cyclicRightChart s) J) :
     subsetMinorSq (blockGateMatrix (Equiv.refl _) L * blockGateMatrix (cyclicRightChart s) R) I J =
-      ∑ _x ∈ univ.filter (fun x => J.map
+      ∑ x ∈ univ.filter (fun x => J.map
         (twoLayerSwitch (Equiv.refl _) (cyclicRightChart s) x).toEmbedding = I),
-          (1 / 2 : ℝ) ^ (Fintype.card κ + Fintype.card κ) := by
+          cyclicIndependentWeight L R x := by
   classical
   let eL : κ × Bool ≃ κ × Bool := Equiv.refl _
   let eR := cyclicRightChart s
@@ -374,19 +374,19 @@ theorem cyclic_nontransversal_uniform_law (s : Equiv.Perm κ) (hs : TraversesAll
   let U := blockGateMatrix eL L
   let V := blockGateMatrix eR R
   change subsetMinorSq (U * V) I J =
-    ∑ _x ∈ E, (1 / 2 : ℝ) ^ (Fintype.card κ + Fintype.card κ)
+    ∑ x ∈ E, cyclicIndependentWeight L R x
   by_cases hIJ : I.card = J.card
   · obtain ⟨hm, hz⟩ := cyclic_nontransversal_subsetMinorSq s hs L R
-      (fun k => (hL k).1) (fun k => (hR k).1) I J hIJ hn
+      hL hR I J hIJ hn
     let compatible := fun K =>
       (∀ k, blockOccupancy eL K k = blockOccupancy eL I k) ∧
       (∀ k, blockOccupancy eR K k = blockOccupancy eR J k)
     by_cases hK : ∃ K, compatible K
     · obtain ⟨K, hKL, hKR⟩ := hK
-      rw [hm K ⟨hKL,hKR⟩, blockGateMatrix_minor_law eL L hL,
-        blockGateMatrix_minor_law eR R hR]
-      simp only [pow_add, E]
-      exact (sum_twoLayerSwitch_event_of_middle s hs I J K hKL hKR hn _).symm
+      rw [hm K ⟨hKL,hKR⟩, blockGateMatrix_independent_law eL L hL,
+        blockGateMatrix_independent_law eR R hR]
+      simp only [cyclicIndependentWeight, E]
+      exact (sum_twoLayerSwitch_event_of_middle s hs I J K hKL hKR hn _ _).symm
     · rw [hz hK]
       have he : E = ∅ := by
         refine Finset.filter_eq_empty_iff.mpr ?_
@@ -404,6 +404,16 @@ theorem cyclic_nontransversal_uniform_law (s : Equiv.Perm κ) (hs : TraversesAll
       intro x _ hx
       exact hIJ (by rw [← hx, Finset.card_map])
     simp [he, subsetMinorSq, hIJ]
+theorem cyclic_nontransversal_uniform_law (s : Equiv.Perm κ) (hs : TraversesAllIndices s)
+    (L R : κ → Matrix Bool Bool ℂ) (hL : ∀ k, BalancedGate (L k)) (hR : ∀ k, BalancedGate (R k))
+    (I J : Finset (κ × Bool))
+    (hn : ¬ BlockTransversal (Equiv.refl _) I ∨ ¬ BlockTransversal (cyclicRightChart s) J) :
+    subsetMinorSq (blockGateMatrix (Equiv.refl _) L * blockGateMatrix (cyclicRightChart s) R) I J =
+      ∑ _x ∈ univ.filter (fun x => J.map
+        (twoLayerSwitch (Equiv.refl _) (cyclicRightChart s) x).toEmbedding = I),
+          (1 / 2 : ℝ) ^ (Fintype.card κ + Fintype.card κ) := by
+  simpa only [cyclicIndependentWeight_balanced L R hL hR] using
+    cyclic_nontransversal_independent_law s hs L R (fun k => (hL k).1) (fun k => (hR k).1) I J hn
 
 end
 
