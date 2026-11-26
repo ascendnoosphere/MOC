@@ -163,8 +163,10 @@ private theorem unitaryTwirl_commute_unitary (μ : Measure (UGroup ι)) [IsFinit
       _ = ∫ U, twirlTerm (U * V) ∂μ := by
         apply integral_congr_ae
         filter_upwards with U
+        have hUV : ((U * V : UGroup ι) : Matrix ι ι ℂ) =
+            (U : Matrix ι ι ℂ) * (V : Matrix ι ι ℂ) := rfl
         change Tᴴ * twirlTerm U * T = twirlTerm (U * V)
-        simp only [twirlTerm, Matrix.UnitaryGroup.mul_apply, tensorPower_mul,
+        simp only [twirlTerm, hUV, tensorPower_mul,
           Matrix.conjTranspose_mul, T, Matrix.mul_assoc]
       _ = _ := integral_mul_right_eq_self twirlTerm V
   change unitaryTwirl μ * T = T * unitaryTwirl μ
@@ -275,7 +277,7 @@ private theorem colorMapMatrix_eq_diagonal_mul_unitary (f : Word ι) :
       rw [if_pos rfl, inner_self_eq_norm_sq_to_K]
       have hnorm : ‖v i.val‖ = 1 := by
         change ‖(↑(‖x i.val‖⁻¹) : ℂ) • x i.val‖ = 1
-        rw [norm_smul, Complex.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
+        rw [norm_smul, Complex.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg (x i.val))),
           inv_mul_cancel₀ (norm_ne_zero_iff.mpr i.property)]
       simpa only [Set.restrict_apply, hnorm, RCLike.ofReal_one, one_pow]
     · rw [if_neg hij]
@@ -307,10 +309,12 @@ private theorem colorMapMatrix_eq_diagonal_mul_unitary (f : Word ι) :
       rw [hB i hi, v, smul_smul, Complex.ofReal_inv,
         mul_inv_cancel₀ (Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr hi)), one_smul]
     have hc := congrArg (fun y : EuclideanSpace ℂ ι => y j) he
-    change (‖x i‖ : ℂ) * B i j = star (A i j) at hc
+    change ((‖x i‖ : ℂ) • B i) j = star (A i j) at hc
+    rw [PiLp.smul_apply, smul_eq_mul] at hc
     have hs := congrArg star hc
-    simpa only [U, Matrix.of_apply, star_mul, Complex.star_def, Complex.conj_ofReal,
-      Complex.conj_conj, mul_comm] using hs.symm
+    have hreal : star (‖x i‖ : ℂ) = (‖x i‖ : ℂ) := Complex.conj_ofReal _
+    rw [star_mul, star_star, hreal] at hs
+    simpa only [U, Matrix.of_apply, mul_comm] using hs.symm
 
 private theorem tensorPower_colorMapMatrix_apply (f x y : Word ι) :
     tensorPower (colorMapMatrix f) x y = if x = f ∘ y then 1 else 0 := by
@@ -506,6 +510,97 @@ theorem haar_permutationMonomial_covariance
   change _ = G⁻¹ p q
   rw [hInv]
   exact (unitaryTwirl_apply μ (p : Word ι) (q : Word ι)).symm
+
+/-- The squared modulus of a linear combination of permutation monomials
+has second moment given by the inverse Gram quadratic form. -/
+theorem haar_permutationSum_secondMoment
+    (μ : Measure (Matrix.unitaryGroup ι ℂ)) [IsProbabilityMeasure μ] [μ.IsMulRightInvariant]
+    (c : Equiv.Perm ι → ℂ) :
+    (∫ U, Complex.normSq (∑ p, c p * ∏ i, U i (p i)) ∂μ) =
+      (dotProduct (star c)
+        (((permutationColorGram (ι := ι)).map Complex.ofReal)⁻¹ *ᵥ c)).re := by
+  classical
+  let m (p : Equiv.Perm ι) (U : UGroup ι) : ℂ := ∏ i, U i (p i)
+  let k (p q : Equiv.Perm ι) (U : UGroup ι) : ℂ := star (m p U) * m q U
+  let b (p q : Equiv.Perm ι) : ℂ := star (c p) * c q
+  let V : Matrix (Equiv.Perm ι) (Equiv.Perm ι) ℂ :=
+    ((permutationColorGram (ι := ι)).map Complex.ofReal)⁻¹
+  have hi (p q : Equiv.Perm ι) : Integrable (fun U => b p q * k p q U) μ := by
+    let L : Matrix (Word ι) (Word ι) ℂ →L[ℂ] ℂ :=
+      (Matrix.entryLinearMap ℂ ℂ (p : Word ι) (q : Word ι)).toContinuousLinearMap
+    have h : Integrable (fun U : UGroup ι => L (twirlTerm U)) μ :=
+      L.integrable_comp (integrable_twirlTerm μ)
+    have hk : Integrable (k p q) μ := h.congr (Filter.Eventually.of_forall fun U =>
+      twirlTerm_apply U (p : Word ι) (q : Word ι))
+    exact hk.const_mul (b p q)
+  have hexpand (U : UGroup ι) :
+      (Complex.normSq (∑ p, c p * m p U) : ℂ) =
+        ∑ p, ∑ q, b p q * k p q U := by
+    let P := ∑ p, c p * m p U
+    calc
+      (Complex.normSq P : ℂ) = star P * P := by
+        rw [mul_comm (star P) P, Complex.star_def, Complex.mul_conj]
+      _ = _ := by
+        simp only [P, star_sum, star_mul']
+        rw [Finset.sum_mul]
+        simp only [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro p _
+        apply Finset.sum_congr rfl
+        intro q _
+        simp only [b, k]
+        ring
+  have hmean : ((∫ U, Complex.normSq (∑ p, c p * m p U) ∂μ) : ℂ) =
+      ∑ p, ∑ q, b p q * V p q := by
+    rw [← integral_complex_ofReal]
+    simp only [hexpand]
+    rw [integral_finset_sum Finset.univ
+      (fun p _ => integrable_finset_sum Finset.univ (fun q _ => hi p q))]
+    apply Finset.sum_congr rfl
+    intro p _
+    rw [integral_finset_sum Finset.univ (fun q _ => hi p q)]
+    apply Finset.sum_congr rfl
+    intro q _
+    rw [integral_const_mul]
+    exact congrArg (b p q * ·) (haar_permutationMonomial_covariance μ p q)
+  have hquad : (∑ p, ∑ q, b p q * V p q) = dotProduct (star c) (V *ᵥ c) := by
+    simp only [dotProduct, Matrix.mulVec, Pi.star_apply, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro p _
+    apply Finset.sum_congr rfl
+    intro q _
+    simp only [b]
+    ring
+  rw [hquad] at hmean
+  simpa only [Complex.ofReal_re] using congrArg Complex.re hmean
+
+/-- The second moment of the entrywise weighted determinant minus a scalar
+multiple of the ordinary determinant is the inverse Gram quadratic form on
+its centered Leibniz coefficients. -/
+theorem haar_entrywiseDet_secondMoment
+    (μ : Measure (Matrix.unitaryGroup ι ℂ)) [IsProbabilityMeasure μ] [μ.IsMulRightInvariant]
+    (A : Matrix ι ι ℂ) (z : ℂ) :
+    let c (p : Equiv.Perm ι) : ℂ :=
+      ((Equiv.Perm.sign p : ℤ) : ℂ) * ((∏ i, A i (p i)) - z)
+    (∫ U, Complex.normSq ((Matrix.of (fun i j => A i j * U i j)).det -
+        z * (U : Matrix ι ι ℂ).det) ∂μ) =
+      (dotProduct (star c)
+        (((permutationColorGram (ι := ι)).map Complex.ofReal)⁻¹ *ᵥ c)).re := by
+  intro c
+  have hexpand (U : UGroup ι) :
+      (Matrix.of (fun i j => A i j * U i j)).det - z * (U : Matrix ι ι ℂ).det =
+        ∑ p, c p * ∏ i, U i (p i) := by
+    rw [← Matrix.det_transpose (Matrix.of (fun i j => A i j * U i j)),
+      ← Matrix.det_transpose (U : Matrix ι ι ℂ), Matrix.det_apply', Matrix.det_apply',
+      Finset.mul_sum, ← Finset.sum_sub_distrib]
+    apply Finset.sum_congr rfl
+    intro p _
+    simp only [Matrix.transpose_apply, Matrix.of_apply, Finset.prod_mul_distrib, c]
+    ring
+  simpa only [hexpand] using haar_permutationSum_secondMoment μ c
+
+/- The exact rational moment values for orders four and five require separate
+finite calculations. -/
 
 end
 

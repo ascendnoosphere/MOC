@@ -189,7 +189,6 @@ theorem affineSchurTransfer_rankOnePhase
   let W := affineSchurTransfer a r c D 1
   have hq : 0 < q := sub_pos.mpr ha
   have hqc : (q : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hq.ne'
-  have ht : t ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.2 hq).ne'
   have htSq : t * t = (q : ℂ) := by
     simp only [t, ← Complex.ofReal_mul, ← pow_two, Real.sq_sqrt hq.le]
   have htStar : star t = t := by simp only [t, Complex.star_def, Complex.conj_ofReal]
@@ -279,7 +278,8 @@ theorem rankOneDefect_unitary_or_rankOnePhase {n : ℕ} (V : Matrix (Fin n) (Fin
   let e : (Fin 1 ⊕ Fin n) ≃ Fin (n + 1) :=
     (Equiv.sumCongr (Equiv.ofUnique (Fin 1) Unit) (Equiv.refl (Fin n))).trans
       ((Equiv.sumComm Unit (Fin n)).trans
-        ((Equiv.optionEquivSumPUnit (Fin n)).symm.trans (finSuccEquiv' (0 : Fin (n + 1))).symm))
+        ((Equiv.optionEquivSumPUnit (Fin n)).symm.trans
+          (finSuccEquiv' (0 : Fin (n + 1))).symm))
   have he0 (i : Fin 1) : e (.inl i) = 0 := by simp [e]
   have he1 (i : Fin n) : e (.inr i) = i.succ := by simp [e]
   let α := U 0 0
@@ -307,10 +307,9 @@ theorem rankOneDefect_unitary_or_rankOnePhase {n : ℕ} (V : Matrix (Fin n) (Fin
   · obtain ⟨v, W, hv, hW', heq⟩ := affineSchurTransfer_rankOnePhase α r c V hW hα
     refine Or.inr ⟨v, -star α, W, hv, ?_, hW', ?_⟩
     · rw [norm_neg, Complex.star_def, Complex.norm_conj]
-      rw [Complex.normSq_eq_norm_sq] at hα
-      nlinarith only [hα, norm_nonneg α, sq_nonneg (‖α‖ - 1)]
-    · have h := (heq (-star α)).symm
-      simpa only [affineSchurTransfer, neg_add_cancel, zero_div, zero_smul, add_zero] using h.symm
+      exact (sq_lt_sq₀ (norm_nonneg _) zero_le_one).mp
+        (by simpa only [Complex.normSq_eq_norm_sq, one_pow] using hα)
+    · simpa only [affineSchurTransfer, neg_add_cancel, zero_div, zero_smul, add_zero] using heq (-star α)
   · have hn : ‖α‖ = 1 := (sq_eq_sq₀ (norm_nonneg _) zero_le_one).mp
       (by simpa [Complex.normSq_eq_norm_sq] using hnorm.antisymm (le_of_not_gt hα))
     exact Or.inl (schurTransfer_boundary α r c V hW hn).2.2

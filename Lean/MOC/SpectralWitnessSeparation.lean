@@ -1,6 +1,9 @@
 import MOC.SegreConvexity
 import MOC.Support
 
+/-! The proof uses the spectral evaluations directly. A dimension statement
+for the projective quotient requires a separate construction of that quotient. -/
+
 open Matrix
 
 namespace MOC

@@ -148,6 +148,12 @@ theorem rankOneCompressionDisk_support_le_of_interior
     simp only [K, if_neg hq]
     linarith only [hdiv]
 
+/- The unrestricted induction still needs the interior comparison. Take
+`M` equal to the largest real matching projection on the list with one
+extra zero label. Prove the quadratic inequality in the hypothesis when
+`q < -‖d‖`. The preceding result covers the boundary with the smaller-order
+conjecture. -/
+
 end
 
 end MOC

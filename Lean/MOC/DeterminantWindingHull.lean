@@ -1,5 +1,8 @@
 import MOC.TranspositionWinding
 
+/-! The hull uses closed walks in the transposition graph. A statement about
+arbitrary graph homology classes also requires the cycle decomposition. -/
+
 open scoped unitInterval
 
 namespace MOC

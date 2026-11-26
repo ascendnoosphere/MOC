@@ -31,10 +31,12 @@ theorem SubsetMatchingList.coefficient_insert_outside {L R : Finset α} {p : Lis
   | @cons L R l r p hl hr hp ih =>
     have hlx : l ≠ x := by intro h; subst x; exact hx (mem_union_left _ (mem_insert_self _ _))
     have hrx : r ≠ x := by intro h; subst x; exact hx (mem_union_right _ (mem_insert_self _ _))
-    have hx' : x ∉ L ∪ R := by simpa [mem_union, hx] using
-      (show x ∉ L ∪ R from fun h => hx (by rcases mem_union.mp h with a | a
-                                            · exact mem_union_left _ (mem_insert_of_mem a)
-                                            · exact mem_union_right _ (mem_insert_of_mem a)))
+    have hx' : x ∉ L ∪ R := by
+      intro h
+      apply hx
+      rcases mem_union.mp h with a | a
+      · exact mem_union_left _ (mem_insert_of_mem a)
+      · exact mem_union_right _ (mem_insert_of_mem a)
     simp only [subsetMatchingCoefficient, mem_insert, hlx, hrx, false_or, ih hx']
 
 private theorem fresh_matching_endpoints {L R : Finset α} {l r : α} (hl : l ∉ L) (hr : r ∉ R)
@@ -88,19 +90,25 @@ theorem SubsetMatchingList.sum_extension_coefficient {L R : Finset α} {p : List
         _ = ∑ x ∈ M \ S, a * subsetMatchingCoefficient p (insert x S) := by
           refine sum_congr rfl fun x hx => ?_
           have hxM := (mem_sdiff.mp hx).1
-          have hlx : l ≠ x := fun h => hlM (h ▸ hxM)
-          have hrx : r ≠ x := fun h => hrM (h ▸ hxM)
+          have hlx : l ≠ x := by rintro rfl; exact hlM hxM
+          have hrx : r ≠ x := by rintro rfl; exact hrM hxM
           simp only [subsetMatchingCoefficient, mem_insert, hlx, hrx, false_or, a]
         _ = 0 := by rw [← mul_sum, ih hd', mul_zero]
     have hl' : l ∉ M \ S := fun h => hlM (mem_sdiff.mp h).1
     have hr' : r ∉ M \ S := fun h => hrM (mem_sdiff.mp h).1
     have hlr : l ∉ insert r (M \ S) := by simp [hne, hl']
     rw [he]
-    by_cases hls : l ∈ S <;> by_cases hrs : r ∈ S <;>
-      simp only [*, insert_sdiff_of_mem, insert_sdiff_of_not_mem, sum_insert,
-        subsetMatchingCoefficient, mem_insert, false_or, true_or, eq_self_iff_true,
-        if_true, if_false, hp.coefficient_insert_outside hlM, hp.coefficient_insert_outside hrM]
-        <;> ring
+    by_cases hls : l ∈ S <;> by_cases hrs : r ∈ S
+    · rw [insert_sdiff_of_mem _ hls, insert_sdiff_of_mem _ hrs]
+      exact hbase
+    · rw [insert_sdiff_of_mem _ hls, insert_sdiff_of_not_mem _ hrs, sum_insert hr', hbase]
+      simp [subsetMatchingCoefficient, hls]
+    · rw [insert_sdiff_of_not_mem _ hls, insert_sdiff_of_mem _ hrs, sum_insert hl', hbase]
+      simp [subsetMatchingCoefficient, hrs]
+    · rw [insert_sdiff_of_not_mem _ hls, insert_sdiff_of_not_mem _ hrs,
+        sum_insert hlr, sum_insert hr', hbase]
+      simp [subsetMatchingCoefficient, hls, hrs, hne, Ne.symm hne,
+        hp.coefficient_insert_outside hlM, hp.coefficient_insert_outside hrM]
 
 theorem SubsetMatchingList.coefficient_formula {L R : Finset α} {p : List (α × α)}
     (hp : SubsetMatchingList L R p) (S : Finset α) :

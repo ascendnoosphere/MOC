@@ -2,6 +2,9 @@ import MOC.Claim
 import MOC.RankTwoKernelInclusion
 import MOC.Singular
 
+/-! The reduction requires a construction of the larger rank-two kernel.
+The predicate states the determinant and separation conditions for that construction. -/
+
 open BigOperators Matrix
 
 namespace MOC

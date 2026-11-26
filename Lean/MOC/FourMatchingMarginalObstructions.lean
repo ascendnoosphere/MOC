@@ -269,6 +269,265 @@ theorem fourMarginalMixer_two_determinants_outside_joint_hull :
     exact_mod_cast jointMatching_certificate p
   exact (not_lt_of_ge hnonneg) jointMixer_separating_value
 
+section Padding
+
+variable {κ : Type*} [Fintype κ] [DecidableEq κ]
+
+private abbrev padZero : Fin 4 ⊕ κ := .inl 0
+private abbrev padOne : Fin 4 ⊕ κ := .inl 1
+private abbrev padThree : Fin 4 ⊕ κ := .inl 3
+
+private def padFirstLeft (i : Fin 4 ⊕ κ) : ℂ :=
+  if i = padZero then 0 else if i = padOne then -1 else 1
+
+private def padFirstRight (j : Fin 4 ⊕ κ) : ℂ :=
+  if j = padZero then -1 else if j = padThree then 1 else 0
+
+private def padRatio : ℂ := 1 - 2 * Complex.I
+
+private def padSecondLeft (i : Fin 4 ⊕ κ) : ℂ :=
+  if i = padOne then -padRatio else if i = padThree then 0 else 3
+
+private def padSecondRight (j : Fin 4 ⊕ κ) : ℂ :=
+  if j = padZero ∨ j = padOne then 3 else if j = padThree then 0 else padRatio
+
+private theorem product_two_exceptions {α : Type*} [Fintype α] [DecidableEq α]
+    (g : α → ℂ) {i j : α} (hij : i ≠ j) (h : ∀ k, k ≠ i → k ≠ j → g k = 1) :
+    (∏ k, g k) = g i * g j := by
+  have hj : j ∈ (Finset.univ : Finset α).erase i := by simp [hij.symm]
+  rw [← Finset.prod_erase_mul Finset.univ g (Finset.mem_univ i),
+    ← Finset.prod_erase_mul (Finset.univ.erase i) g hj]
+  have he : (∏ k ∈ ((Finset.univ : Finset α).erase i).erase j, g k) = 1 := by
+    apply Finset.prod_eq_one
+    intro k hk
+    exact h k (Finset.mem_erase.mp (Finset.mem_erase.mp hk).2).1 (Finset.mem_erase.mp hk).1
+  rw [he, one_mul, mul_comm]
+
+private theorem matching_factor_by_columns (a b g : Fin 4 ⊕ κ → ℂ)
+    (p : Equiv.Perm (Fin 4 ⊕ κ)) (hg : ∀ j, g j ≠ 0) :
+    matchingProduct a b p.symm = (∏ j, g j) * ∏ i, (a i + b (p i)) / g (p i) := by
+  rw [matchingProduct_inverse, ← Equiv.prod_comp p g, ← Finset.prod_mul_distrib]
+  apply Finset.prod_congr rfl
+  intro i _
+  change a i + b (p i) = g (p i) * ((a i + b (p i)) / g (p i))
+  field_simp [hg] <;> ring
+
+private theorem pad_first_matching (p : Equiv.Perm (Fin 4 ⊕ κ)) :
+    matchingProduct padFirstLeft padFirstRight p.symm =
+      if p padZero = padThree ∧ p padOne = padZero then -2
+      else if p padZero = padZero ∧ p padOne ≠ padThree then 2 else 0 := by
+  let d : Fin 4 ⊕ κ → ℂ := fun j => if j = padThree then 2 else 1
+  have hd : ∀ j, d j ≠ 0 := by intro j; by_cases h : j = padThree <;> norm_num [d, h]
+  have hprod : (∏ j, d j) = 2 := by
+    rw [Finset.prod_eq_single padThree]
+    · simp [d]
+    · intro j _ hj; simp [d, hj]
+    · simp
+  let q (i : Fin 4 ⊕ κ) := (padFirstLeft i + padFirstRight (p i)) / d (p i)
+  rw [matching_factor_by_columns _ _ d p hd, hprod]
+  change 2 * (∏ i, q i) = _
+  by_cases hhit : p padZero = padZero ∨ p padOne = padZero
+  · have hq (i : Fin 4 ⊕ κ) (h₀ : i ≠ padZero) (h₁ : i ≠ padOne) : q i = 1 := by
+      have hp : p i ≠ padZero := by
+        intro he
+        rcases hhit with h | h
+        · exact h₀ (p.injective (he.trans h.symm))
+        · exact h₁ (p.injective (he.trans h.symm))
+      by_cases ht : p i = padThree <;>
+        norm_num [q, d, padFirstLeft, padFirstRight, h₀, h₁, hp, ht]
+    rw [product_two_exceptions q (by simp) hq]
+    have hn : p padZero ≠ p padOne := p.injective.ne (by simp)
+    generalize h₀ : p padZero = x at hhit hn ⊢
+    generalize h₁ : p padOne = y at hhit hn ⊢
+    simp only [q, h₀, h₁]
+    rcases hhit with h | h
+    · subst x
+      have hy : y ≠ (padZero : Fin 4 ⊕ κ) := Ne.symm hn
+      by_cases ht : y = padThree <;>
+        norm_num [padFirstLeft, padFirstRight, d, hy, ht]
+    · subst y
+      by_cases ht : x = padThree <;>
+        norm_num [padFirstLeft, padFirstRight, d, hn, ht]
+  · push_neg at hhit
+    let i := p.symm padZero
+    have hi : p i = padZero := p.apply_symm_apply _
+    have h₀ : i ≠ padZero := fun h => hhit.1 (h ▸ hi)
+    have h₁ : i ≠ padOne := fun h => hhit.2 (h ▸ hi)
+    have hq : q i = 0 := by
+      norm_num [q, d, padFirstLeft, padFirstRight, h₀, h₁, hi]
+    rw [Finset.prod_eq_zero (Finset.mem_univ i) hq, mul_zero]
+    simp [hhit.1, hhit.2]
+
+private theorem padSecondRight_values (j : Fin 4 ⊕ κ) :
+    padSecondRight j = 3 ∨ padSecondRight j = padRatio ∨ padSecondRight j = 0 := by
+  unfold padSecondRight
+  split_ifs <;> simp
+
+private theorem pad_second_matching (p : Equiv.Perm (Fin 4 ⊕ κ)) :
+    matchingProduct padSecondLeft padSecondRight p.symm / (3 + padRatio) ^ Fintype.card κ =
+      let x := padSecondRight (p padOne)
+      let y := padSecondRight (p padThree)
+      108 * (3 + padRatio) * ((x - padRatio) / (3 + x) * (y / (3 + y))) := by
+  let d (j : Fin 4 ⊕ κ) : ℂ := 3 + padSecondRight j
+  have hr : (3 : ℂ) + padRatio ≠ 0 := by
+    intro h
+    have he := congrArg Complex.re h
+    norm_num [padRatio, Complex.add_re, Complex.sub_re, Complex.mul_re] at he
+  have hd (j : Fin 4 ⊕ κ) : d j ≠ 0 := by
+    rcases padSecondRight_values j with h | h | h <;> norm_num [d, h, hr]
+  have hprod : (∏ j, d j) = (108 * (3 + padRatio)) * (3 + padRatio) ^ Fintype.card κ := by
+    rw [Fintype.prod_sum_type, Fin.prod_univ_four]
+    norm_num [d, padSecondRight, Finset.prod_const] <;> ring
+  let q (i : Fin 4 ⊕ κ) := (padSecondLeft i + padSecondRight (p i)) / d (p i)
+  have hq (i : Fin 4 ⊕ κ) (h₁ : i ≠ padOne) (h₃ : i ≠ padThree) : q i = 1 := by
+    simpa [q, d, padSecondLeft, h₁, h₃] using div_self (hd (p i))
+  rw [matching_factor_by_columns _ _ d p hd, hprod]
+  change ((108 * (3 + padRatio)) * (3 + padRatio) ^ Fintype.card κ) * (∏ i, q i) / _ = _
+  rw [product_two_exceptions q (by simp) hq]
+  simp only [q, padSecondLeft, d, if_pos rfl, if_neg (by simp : (padThree : Fin 4 ⊕ κ) ≠ padOne),
+    zero_add, add_comm (-(padRatio : ℂ)), ← sub_eq_add_neg]
+  rw [mul_right_comm, mul_div_cancel_right₀ _ (pow_ne_zero _ hr)]
+
+private theorem pad_second_score (x y : ℂ)
+    (hx : x = 3 ∨ x = padRatio ∨ x = 0) (hy : y = 3 ∨ y = padRatio ∨ y = 0) :
+    let f := (108 * (3 + padRatio) * ((x - padRatio) / (3 + x) * (y / (3 + y)))).re
+    0 ≤ f ∧ (x = 3 → (y = 3 ∨ y = padRatio) → f = 108) := by
+  have hr : padRatio ≠ 3 := by
+    intro h
+    have he := congrArg Complex.re h
+    norm_num [padRatio, Complex.sub_re, Complex.mul_re] at he
+  rcases hx with rfl | rfl | rfl <;> rcases hy with rfl | rfl | rfl <;>
+    simp only [hr, Ne.symm hr, false_implies, true_implies, or_true, true_or, and_true] <;>
+    norm_num [padRatio, Complex.div_re, Complex.div_im, Complex.normSq, Complex.mul_re,
+      Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im]
+
+private theorem padded_vertex_separating_score (p : Equiv.Perm (Fin 4 ⊕ κ)) :
+    0 ≤ 54 * (matchingProduct padFirstLeft padFirstRight p.symm).re +
+      (matchingProduct padSecondLeft padSecondRight p.symm / (3 + padRatio) ^ Fintype.card κ).re := by
+  rw [pad_first_matching, pad_second_matching]
+  let x := padSecondRight (p padOne)
+  let y := padSecondRight (p padThree)
+  have hs := pad_second_score x y (padSecondRight_values _) (padSecondRight_values _)
+  by_cases hn : p padZero = padThree ∧ p padOne = padZero
+  · rw [if_pos hn]
+    have hx : x = 3 := by simp [x, hn.2, padSecondRight]
+    have hy₀ : p padThree ≠ padZero := by
+      intro he
+      exact (by simp : (padThree : Fin 4 ⊕ κ) ≠ padOne) (p.injective (he.trans hn.2.symm))
+    have hy₃ : p padThree ≠ padThree := by
+      intro he
+      exact (by simp : (padThree : Fin 4 ⊕ κ) ≠ padZero) (p.injective (he.trans hn.1.symm))
+    have hy : y = 3 ∨ y = padRatio := by
+      by_cases h : p padThree = padOne <;> simp [y, padSecondRight, h, hy₀, hy₃]
+    have he := hs.2 hx hy
+    change 0 ≤ 54 * (-2 : ℂ).re +
+      (108 * (3 + padRatio) * ((x - padRatio) / (3 + x) * (y / (3 + y)))).re
+    rw [he]
+    norm_num
+  · rw [if_neg hn]
+    split_ifs <;> norm_num <;> linarith [hs.1]
+
+private def padMixer : Matrix (Fin 4 ⊕ κ) (Fin 4 ⊕ κ) ℂ :=
+  fromBlocks fourMarginalMixer 0 0 1
+
+private theorem pad_determinant (a b : Fin 4 → ℂ) (s t : ℂ) :
+    determinantValue (Sum.elim a (fun _ : κ => s)) (Sum.elim b (fun _ : κ => t)) padMixer =
+      determinantValue a b fourMarginalMixer * (s + t) ^ Fintype.card κ := by
+  unfold determinantValue padMixer
+  rw [← Matrix.fromBlocks_diagonal, ← Matrix.fromBlocks_diagonal,
+    Matrix.fromBlocks_conjTranspose]
+  simp only [Matrix.fromBlocks_multiply, Matrix.fromBlocks_add, Matrix.det_fromBlocks_zero₂₁,
+    Matrix.conjTranspose_zero, Matrix.conjTranspose_one, Matrix.zero_mul, Matrix.mul_zero,
+    add_zero, zero_add, Matrix.one_mul, Matrix.mul_one, Matrix.diagonal_add,
+    Matrix.det_diagonal, Pi.add_apply, Finset.prod_const, Finset.card_univ]
+
+private theorem padded_determinants_separating_score :
+    54 * (determinantValue padFirstLeft padFirstRight (padMixer (κ := κ))).re +
+      (determinantValue padSecondLeft padSecondRight (padMixer (κ := κ)) /
+        (3 + padRatio) ^ Fintype.card κ).re < 0 := by
+  have ha : (padFirstLeft : Fin 4 ⊕ κ → ℂ) =
+      Sum.elim (GaussianInt.toComplex ∘ jointLeftFirst) (fun _ => 1) := by
+    funext i
+    rcases i with i | i
+    · fin_cases i <;> norm_num [padFirstLeft, jointLeftFirst, Matrix.cons_val]
+    · simp [padFirstLeft]
+  have hb : (padFirstRight : Fin 4 ⊕ κ → ℂ) =
+      Sum.elim (GaussianInt.toComplex ∘ jointRightFirst) (fun _ => 0) := by
+    funext i
+    rcases i with i | i
+    · fin_cases i <;> norm_num [padFirstRight, jointRightFirst, Matrix.cons_val]
+    · simp [padFirstRight]
+  have hc : (padSecondLeft : Fin 4 ⊕ κ → ℂ) =
+      Sum.elim (GaussianInt.toComplex ∘ jointLeftSecond) (fun _ => 3) := by
+    funext i
+    rcases i with i | i
+    · fin_cases i <;> apply Complex.ext <;>
+        norm_num [padSecondLeft, jointLeftSecond, padRatio, Matrix.cons_val,
+          Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im]
+    · simp [padSecondLeft]
+  have hd : (padSecondRight : Fin 4 ⊕ κ → ℂ) =
+      Sum.elim (GaussianInt.toComplex ∘ jointRightSecond) (fun _ => padRatio) := by
+    funext i
+    rcases i with i | i
+    · fin_cases i <;> apply Complex.ext <;>
+        norm_num [padSecondRight, jointRightSecond, padRatio, Matrix.cons_val,
+          Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im]
+    · simp [padSecondRight]
+  have hr : (3 : ℂ) + padRatio ≠ 0 := by
+    intro h
+    have he := congrArg Complex.re h
+    norm_num [padRatio, Complex.add_re, Complex.sub_re, Complex.mul_re] at he
+  rw [ha, hb, hc, hd, pad_determinant, pad_determinant, add_zero, one_pow, mul_one,
+    mul_div_cancel_right₀ _ (pow_ne_zero _ hr)]
+  exact jointMixer_separating_value
+
+private theorem padded_joint_obstruction :
+    (determinantValue padFirstLeft padFirstRight (padMixer (κ := κ)),
+      determinantValue padSecondLeft padSecondRight (padMixer (κ := κ))) ∉
+    convexHull ℝ (Set.range fun p : Equiv.Perm (Fin 4 ⊕ κ) =>
+      (matchingProduct padFirstLeft padFirstRight p, matchingProduct padSecondLeft padSecondRight p)) := by
+  let f : (ℂ × ℂ) →ₗ[ℝ] ℝ :=
+    (54 : ℝ) • Complex.reLm.comp (LinearMap.fst ℝ ℂ ℂ) +
+      Complex.reLm.comp ((LinearMap.mulRight ℝ ((3 + padRatio) ^ Fintype.card κ)⁻¹).comp
+        (LinearMap.snd ℝ ℂ ℂ))
+  intro h
+  have he : 0 ≤ f (determinantValue padFirstLeft padFirstRight (padMixer (κ := κ)),
+      determinantValue padSecondLeft padSecondRight (padMixer (κ := κ))) := by
+    apply convexHull_min ?_ (convex_halfSpace_ge f.isLinear 0) h
+    rintro _ ⟨p, rfl⟩
+    simpa only [f, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.comp_apply,
+      LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.mulRight_apply,
+      Complex.reLm_coe, smul_eq_mul, Equiv.symm_symm, div_eq_mul_inv] using
+      padded_vertex_separating_score p.symm
+  apply (not_lt_of_ge he)
+  simpa only [f, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.comp_apply,
+    LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.mulRight_apply,
+    Complex.reLm_coe, smul_eq_mul, div_eq_mul_inv] using
+    (padded_determinants_separating_score (κ := κ))
+
+end Padding
+
+/-- In every order at least four, two determinant observations at the same
+unitary mixer can lie outside the joint matching hull. -/
+theorem two_determinants_outside_joint_hull {n : ℕ} (hn : 4 ≤ n) :
+    ∃ (U : Matrix (Fin n) (Fin n) ℂ) (a b c d : Fin n → ℂ), IsUnitary U ∧
+      (determinantValue a b U, determinantValue c d U) ∉
+        convexHull ℝ (Set.range fun p : Equiv.Perm (Fin n) =>
+          (matchingProduct a b p, matchingProduct c d p)) := by
+  let E : (Fin 4 ⊕ Fin (n - 4)) ≃ Fin n := finSumFinEquiv.trans (finCongr (by omega))
+  let e := E.symm
+  let U := padMixer (κ := Fin (n - 4))
+  have hu : IsUnitary U := unitary_directSum fourMarginalMixer_unitary isUnitary_one
+  refine ⟨U.submatrix e e, padFirstLeft ∘ e, padFirstRight ∘ e,
+    padSecondLeft ∘ e, padSecondRight ∘ e, unitary_reindex e e hu, ?_⟩
+  rw [determinantValue_reindex, determinantValue_reindex]
+  intro h
+  apply (padded_joint_obstruction (κ := Fin (n - 4)))
+  apply convexHull_min ?_ (convex_convexHull ℝ _) h
+  rintro _ ⟨p, rfl⟩
+  exact subset_convexHull ℝ _ ⟨(e.symm.trans p).trans e,
+    Prod.ext (matchingProduct_reindex e e _ _ p).symm (matchingProduct_reindex e e _ _ p).symm⟩
+
 end
 
 end MOC

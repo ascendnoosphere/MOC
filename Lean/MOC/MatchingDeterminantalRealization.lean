@@ -1,3 +1,5 @@
+import MOC.OperatorBallPolynomial
+import MOC.StrongSupport
 import MOC.TranslatedDeterminantPowers
 import Mathlib.Algebra.MvPolynomial.Eval
 import Mathlib.Analysis.Complex.Polynomial.Basic
@@ -109,28 +111,16 @@ theorem conjecture_iff_shifted_matching_unitary_bound [Nonempty ι] :
     rw [Complex.normSq_eq_norm_sq, Complex.normSq_eq_norm_sq]
     exact pow_le_pow_left₀ (norm_nonneg _) hs 2
 
-private theorem unitary_kronecker_one {k : ℕ} (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
-    IsUnitary (U ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ)) := by
-  let I : Matrix (Fin k) (Fin k) ℂ := 1
-  have hadj : (U ⊗ₖ I)ᴴ = Uᴴ ⊗ₖ Iᴴ := by
-    ext ⟨i, j⟩ ⟨k', l⟩
-    simp only [Matrix.conjTranspose_apply, Matrix.kronecker_apply, star_mul', mul_comm]
-  change (U ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))ᴴ = Uᴴ ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ)ᴴ at hadj
-  rw [Matrix.conjTranspose_one] at hadj
-  constructor
-  · rw [hadj, ← Matrix.mul_kronecker_mul, hU.1, Matrix.mul_one, Matrix.one_kronecker_one]
-  · rw [hadj, ← Matrix.mul_kronecker_mul, hU.2, Matrix.mul_one, Matrix.one_kronecker_one]
-
-/-- A realization gives a unitary norm bound of degree equal to the matrix order. -/
-theorem norm_shiftedMatchingEvaluation_le_of_realization [Nonempty ι]
+/-- A realization bounds the polynomial on the closed operator norm unit ball. -/
+theorem norm_shiftedMatchingEvaluation_le_of_realization_on_ball [Nonempty ι]
     (a b : ι → ℂ) (c : ℂ) {k : ℕ} (hk : 0 < k)
     (K : Matrix (ι × Fin k) (ι × Fin k) ℂ)
     (hK : ∀ Z : Matrix ι ι ℂ, 1 - shiftedMatchingEvaluation a b c Z =
       (1 - K * (Z ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))).det)
-    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
-    ‖shiftedMatchingEvaluation a b c U‖ ≤ ‖K‖ ^ Fintype.card ι := by
+    (Z : Matrix ι ι ℂ) (hZ : ‖Z‖ ≤ 1) :
+    ‖shiftedMatchingEvaluation a b c Z‖ ≤ ‖K‖ ^ Fintype.card ι := by
   letI : Nonempty (Fin k) := ⟨⟨0, hk⟩⟩
-  let x := shiftedMatchingEvaluation a b c U
+  let x := shiftedMatchingEvaluation a b c Z
   let n := Fintype.card ι
   by_contra! hbad
   have hx : 0 < ‖x‖ := (pow_nonneg (norm_nonneg K) n).trans_lt hbad
@@ -144,23 +134,33 @@ theorem norm_shiftedMatchingEvaluation_le_of_realization [Nonempty ι]
     have hpow := pow_le_pow_left₀ (show (0 : ℝ) ≤ 1 from zero_le_one) hge n
     rw [one_pow] at hpow
     exact (not_le_of_gt hp) hpow
-  let V := U ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ)
-  have hV : ‖V‖ = 1 := by
-    apply (sq_eq_sq₀ (norm_nonneg V) zero_le_one).mp
-    rw [pow_two, ← Matrix.l2_opNorm_conjTranspose_mul_self,
-      (unitary_kronecker_one U hU).2, norm_one, one_pow]
-  have hsmall : ‖K * ((t • U) ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))‖ < 1 := by
+  let V := Z ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ)
+  have hV : ‖V‖ = ‖Z‖ := l2_opNorm_kronecker_one Z
+  have hsmall : ‖K * ((t • Z) ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))‖ < 1 := by
     rw [Matrix.smul_kronecker]
     calc
       ‖K * (t • V)‖ ≤ ‖K‖ * ‖t • V‖ := norm_mul_le _ _
-      _ = ‖K‖ * ‖t‖ := by rw [norm_smul, hV, mul_one]
+      _ ≤ ‖K‖ * ‖t‖ := by
+        rw [norm_smul, hV]
+        exact mul_le_mul_of_nonneg_left (mul_le_of_le_one_right (norm_nonneg t) hZ) (norm_nonneg K)
       _ < 1 := hn
   have hu := isUnit_one_sub_of_norm_lt_one hsmall
   have hdet := (Matrix.isUnit_iff_isUnit_det _).mp hu
-  rw [← hK (t • U), shiftedMatchingEvaluation_smul, ht] at hdet
+  rw [← hK (t • Z), shiftedMatchingEvaluation_smul, ht] at hdet
   change IsUnit (1 - x⁻¹ * x) at hdet
   rw [inv_mul_cancel₀ (norm_pos_iff.mp hx), sub_self] at hdet
   exact not_isUnit_zero hdet
+
+/-- A unitary matrix has operator norm one. -/
+theorem norm_shiftedMatchingEvaluation_le_of_realization [Nonempty ι]
+    (a b : ι → ℂ) (c : ℂ) {k : ℕ} (hk : 0 < k)
+    (K : Matrix (ι × Fin k) (ι × Fin k) ℂ)
+    (hK : ∀ Z : Matrix ι ι ℂ, 1 - shiftedMatchingEvaluation a b c Z =
+      (1 - K * (Z ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))).det)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    ‖shiftedMatchingEvaluation a b c U‖ ≤ ‖K‖ ^ Fintype.card ι :=
+  norm_shiftedMatchingEvaluation_le_of_realization_on_ball a b c hk K hK U
+    (CStarRing.norm_of_mem_unitary (Matrix.mem_unitaryGroup_iff.mpr hU.1)).le
 
 /-- An approximate realization is enough. The auxiliary order can depend on
 the norm budget, the two lists and the center. -/
@@ -194,6 +194,154 @@ theorem conjecture_of_approximate_matching_realizations [Nonempty ι]
     (pow_le_pow_left₀ (norm_nonneg K) hnorm (Fintype.card ι))
   rw [hrpow] at hbound
   exact (not_le_of_gt hs) hbound
+
+/-- A polynomial with constant term one and no zero on the closed matrix
+unit ball has an exact realization by a strict contraction. This is the
+premise from Grinshpan, Kaliuzhnyi-Verbovetskyi, Vinnikov and Woerdeman,
+Theorem 3.1, https://arxiv.org/html/1503.06161#S3. Factoring and taking
+direct sums gives the statement for reducible polynomials. Lean does
+not yet prove this premise. -/
+def StrictMatrixBallRealization (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
+  ∀ p : MvPolynomial (ι × ι) ℂ,
+    MvPolynomial.eval (fun _ => 0) p = 1 →
+    (∀ Z : Matrix ι ι ℂ, ‖Z‖ ≤ 1 → MvPolynomial.eval (fun ij => Z ij.1 ij.2) p ≠ 0) →
+    ∃ k : ℕ, 0 < k ∧ ∃ K : Matrix (ι × Fin k) (ι × Fin k) ℂ,
+      ‖K‖ < 1 ∧ ∀ Z : Matrix ι ι ℂ, MvPolynomial.eval (fun ij => Z ij.1 ij.2) p =
+        (1 - K * (Z ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))).det
+
+private theorem exists_shifted_matching_realization_of_ball_bound [Nonempty ι]
+    (h : StrictMatrixBallRealization ι) (a b : ι → ℂ) (c : ℂ) (r : ℝ) (hr : 0 < r)
+    (hball : ∀ Z : Matrix ι ι ℂ, ‖Z‖ ≤ 1 →
+      ‖shiftedMatchingEvaluation a b c Z‖ < r ^ Fintype.card ι) :
+    ∃ k : ℕ, 0 < k ∧ ∃ K : Matrix (ι × Fin k) (ι × Fin k) ℂ,
+      ‖K‖ < r ∧ ∀ Z : Matrix ι ι ℂ, 1 - shiftedMatchingEvaluation a b c Z =
+        (1 - K * (Z ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))).det := by
+  let n := Fintype.card ι
+  let p : MvPolynomial (ι × ι) ℂ :=
+    1 - MvPolynomial.C (((r : ℂ) ^ n)⁻¹) * shiftedMatchingPolynomial a b c
+  have heval (Z : Matrix ι ι ℂ) :
+      MvPolynomial.eval (fun ij => Z ij.1 ij.2) p =
+        1 - ((r : ℂ) ^ n)⁻¹ * shiftedMatchingEvaluation a b c Z := by
+    simp only [p, map_sub, map_one, map_mul, MvPolynomial.eval_C, eval_shiftedMatchingPolynomial]
+  have hz : shiftedMatchingEvaluation a b c (0 : Matrix ι ι ℂ) = 0 := by
+    simpa only [zero_smul, zero_pow Fintype.card_ne_zero, zero_mul] using
+      shiftedMatchingEvaluation_smul a b c 0 (0 : Matrix ι ι ℂ)
+  have hp0 : MvPolynomial.eval (fun _ => 0) p = 1 := by
+    simpa only [Matrix.zero_apply, hz, mul_zero, sub_zero] using heval (0 : Matrix ι ι ℂ)
+  have hpnz (Z : Matrix ι ι ℂ) (hZ : ‖Z‖ ≤ 1) :
+      MvPolynomial.eval (fun ij => Z ij.1 ij.2) p ≠ 0 := by
+    have hnorm : ‖((r : ℂ) ^ n)⁻¹ * shiftedMatchingEvaluation a b c Z‖ < 1 := by
+      rw [norm_mul, norm_inv, norm_pow, Complex.norm_of_nonneg hr.le, inv_mul_eq_div,
+        div_lt_one (pow_pos hr n)]
+      exact hball Z hZ
+    rw [heval]
+    apply sub_ne_zero.mpr
+    intro he
+    rw [← he, norm_one] at hnorm
+    exact (lt_irrefl _) hnorm
+  obtain ⟨k, hk, L, hL, hrep⟩ := h p hp0 hpnz
+  refine ⟨k, hk, (r : ℂ) • L, ?_, fun Z => ?_⟩
+  · rw [norm_smul, Complex.norm_of_nonneg hr.le]
+    simpa only [mul_one] using mul_lt_mul_of_pos_left hL hr
+  · have hpow : (r : ℂ) ^ n ≠ 0 := pow_ne_zero n (Complex.ofReal_ne_zero.mpr hr.ne')
+    have hs := hrep ((r : ℂ) • Z)
+    rw [heval, shiftedMatchingEvaluation_smul, ← mul_assoc, inv_mul_cancel₀ hpow, one_mul,
+      Matrix.smul_kronecker, Matrix.mul_smul] at hs
+    rw [Matrix.smul_mul]
+    exact hs
+
+/-- The admissible norms of exact realizations at a fixed disk center. -/
+def matchingRealizationNorms (a b : ι → ℂ) (c : ℂ) : Set ℝ :=
+  {r | ∃ k : ℕ, 0 < k ∧ ∃ K : Matrix (ι × Fin k) (ι × Fin k) ℂ,
+    ‖K‖ = r ∧ ∀ Z : Matrix ι ι ℂ, 1 - shiftedMatchingEvaluation a b c Z =
+      (1 - K * (Z ⊗ₖ (1 : Matrix (Fin k) (Fin k) ℂ))).det}
+
+/-- The infimum of the admissible norms. -/
+def matchingRealizationRadius (a b : ι → ℂ) (c : ℂ) : ℝ :=
+  sInf (matchingRealizationNorms a b c)
+
+/-- Under the strict realization premise, the infimum is the root of the
+maximum polynomial modulus on the closed operator norm unit ball. -/
+theorem matchingRealizationRadius_eq_of_ball_maximum [Nonempty ι]
+    (h : StrictMatrixBallRealization ι) (a b : ι → ℂ) (c : ℂ)
+    (W : Matrix ι ι ℂ) (hW : ‖W‖ ≤ 1) (hmax : ∀ Z : Matrix ι ι ℂ, ‖Z‖ ≤ 1 →
+      ‖shiftedMatchingEvaluation a b c Z‖ ≤ ‖shiftedMatchingEvaluation a b c W‖) :
+    matchingRealizationRadius a b c =
+      ‖shiftedMatchingEvaluation a b c W‖ ^ ((Fintype.card ι : ℝ)⁻¹) := by
+  let n := Fintype.card ι
+  let m := ‖shiftedMatchingEvaluation a b c W‖
+  let q := m ^ ((n : ℝ)⁻¹)
+  have hq : 0 ≤ q := Real.rpow_nonneg (norm_nonneg _) _
+  have hqpow : q ^ n = m := Real.rpow_inv_natCast_pow (norm_nonneg _) Fintype.card_ne_zero
+  let T := matchingRealizationNorms a b c
+  have hex (r : ℝ) (hr : q < r) : ∃ s ∈ T, s < r := by
+    have hrpow : m < r ^ n := by
+      rw [← hqpow]
+      exact pow_lt_pow_left₀ hr hq Fintype.card_ne_zero
+    obtain ⟨k, hk, K, hK, hrep⟩ := exists_shifted_matching_realization_of_ball_bound
+      h a b c r (hq.trans_lt hr) fun Z hZ => (hmax Z hZ).trans_lt hrpow
+    exact ⟨‖K‖, ⟨k, hk, K, rfl, hrep⟩, hK⟩
+  have hne : T.Nonempty := by
+    obtain ⟨s, hs, _⟩ := hex (q + 1) (lt_add_of_pos_right _ zero_lt_one)
+    exact ⟨s, hs⟩
+  have hlow (r : ℝ) (hr : r ∈ T) : q ≤ r := by
+    obtain ⟨k, hk, K, rfl, hrep⟩ := hr
+    have hb := norm_shiftedMatchingEvaluation_le_of_realization_on_ball a b c hk K hrep W hW
+    apply le_of_pow_le_pow_left₀ (Fintype.card_ne_zero (α := ι)) (norm_nonneg K)
+    exact hqpow.trans_le hb
+  change sInf T = q
+  refine le_antisymm (le_of_forall_gt_imp_ge_of_dense fun r hr => ?_) (le_csInf hne hlow)
+  obtain ⟨s, hs, hsr⟩ := hex r hr
+  exact (csInf_le ⟨q, hlow⟩ hs).trans hsr.le
+
+/-- The largest modulus of the centered matching coefficients. -/
+def matchingCoefficientNorm (a b : ι → ℂ) (c : ℂ) : ℝ :=
+  Finset.univ.sup' Finset.univ_nonempty (fun σ : Equiv.Perm ι => ‖matchingProduct a b σ - c‖)
+
+/-- The conjecture is equivalent to the optimal realization radius, under
+the strict matrix-ball realization premise. -/
+theorem conjecture_iff_optimal_matching_realization_radius [Nonempty ι]
+    (h : StrictMatrixBallRealization ι) : Conjecture ι ↔
+      ∀ (a b : ι → ℂ) (c : ℂ), matchingRealizationRadius a b c =
+        matchingCoefficientNorm a b c ^ ((Fintype.card ι : ℝ)⁻¹) := by
+  classical
+  rw [conjecture_iff_shifted_matching_unitary_bound]
+  have hmax (a b : ι → ℂ) (c : ℂ) : ∃ W : Matrix ι ι ℂ, IsUnitary W ∧ ‖W‖ ≤ 1 ∧
+      ∀ Z : Matrix ι ι ℂ, ‖Z‖ ≤ 1 →
+        ‖shiftedMatchingEvaluation a b c Z‖ ≤ ‖shiftedMatchingEvaluation a b c W‖ := by
+    simpa only [eval_shiftedMatchingPolynomial] using
+      exists_unitary_maximum_mvPolynomial_matrix_eval (shiftedMatchingPolynomial a b c)
+  have hcoeff (a b : ι → ℂ) (c : ℂ) (σ : Equiv.Perm ι) :
+      ‖matchingProduct a b σ - c‖ ≤ matchingCoefficientNorm a b c :=
+    Finset.le_sup' (fun τ : Equiv.Perm ι => ‖matchingProduct a b τ - c‖) (Finset.mem_univ σ)
+  have hatt (a b : ι → ℂ) (c : ℂ) :
+      ∃ σ : Equiv.Perm ι, matchingCoefficientNorm a b c = ‖matchingProduct a b σ - c‖ := by
+    obtain ⟨σ, _, hs⟩ := Finset.exists_mem_eq_sup' Finset.univ_nonempty
+      (fun σ : Equiv.Perm ι => ‖matchingProduct a b σ - c‖)
+    exact ⟨σ, hs⟩
+  constructor
+  · intro hbound a b c
+    obtain ⟨W, hW, hWn, hWmax⟩ := hmax a b c
+    obtain ⟨σ, hσ⟩ := hbound a b c W hW
+    obtain ⟨τ, hτ⟩ := hatt a b c
+    obtain ⟨U, hU, hUval⟩ := matchingProduct_mem_determinantRange a b τ
+    have hUn : ‖U‖ ≤ 1 := (CStarRing.norm_of_mem_unitary (Matrix.mem_unitaryGroup_iff.mpr hU.1)).le
+    have hV := hWmax U hUn
+    rw [norm_shiftedMatchingEvaluation_unitary a b c U hU, hUval, ← hτ] at hV
+    rw [matchingRealizationRadius_eq_of_ball_maximum h a b c W hWn hWmax,
+      le_antisymm (hσ.trans (hcoeff a b c σ)) hV]
+  · intro hrad a b c U hU
+    obtain ⟨W, _, hWn, hWmax⟩ := hmax a b c
+    obtain ⟨σ, hσ⟩ := hatt a b c
+    have he := (matchingRealizationRadius_eq_of_ball_maximum h a b c W hWn hWmax).symm.trans
+      (hrad a b c)
+    rw [hσ] at he
+    have hp := congrArg (fun x : ℝ => x ^ Fintype.card ι) he
+    have hn : Fintype.card ι ≠ 0 := Fintype.card_ne_zero
+    rw [Real.rpow_inv_natCast_pow (norm_nonneg (shiftedMatchingEvaluation a b c W)) hn,
+      Real.rpow_inv_natCast_pow (norm_nonneg (matchingProduct a b σ - c)) hn] at hp
+    have hUn : ‖U‖ ≤ 1 := (CStarRing.norm_of_mem_unitary (Matrix.mem_unitaryGroup_iff.mpr hU.1)).le
+    exact ⟨σ, (hWmax U hUn).trans_eq hp⟩
 
 end
 

@@ -107,8 +107,8 @@ theorem fourSignedHeight_le_of_geometric_mean (U : Matrix (Fin 4) (Fin 4) ℂ)
   have hmatrix : fourSignedMinorCorrection U ≤ 2 * Real.sqrt (w 8 * w 11) := by
     change fourSignedMinorCorrection U ≤
       2 * Real.sqrt (fourSignedMinorWeight U 8 * fourSignedMinorWeight U 11)
-    rw [fourSignedMinorCorrection_eq_minors U hU, fourSignedMinorWeight_eq_minor U hU,
-      fourSignedMinorWeight_eq_minor U hU]
+    rw [fourSignedMinorCorrection_eq_minors U hU, fourSignedMinorWeight_eq_minor U hU 8,
+      fourSignedMinorWeight_eq_minor U hU 11]
     exact four_minor_geometric_mean U hU
   let x := w 8 * f 17
   let y := w 11 * f 22

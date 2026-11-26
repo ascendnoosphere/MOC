@@ -1,4 +1,5 @@
 import MOC.SquarefreeIntersection
+import Mathlib.Algebra.Polynomial.Roots
 
 /-! Marginal values and complement symmetry of a balanced squarefree
 spectral polynomial under opposite scalar translation. -/
@@ -109,6 +110,87 @@ theorem squarefreeSpectralValue_complement_of_opposite_translation
     squarefreeSpectralValue_constantOn c I J hIJ] at he
   simp only [one_pow, one_mul, mul_one, ← hsign] at he
   exact (mul_right_cancel₀ (pow_ne_zero _ (neg_ne_zero.mpr one_ne_zero)) he).symm
+
+/-- A left subset has total coefficient one if the two pure coefficients
+are one and the value is invariant under opposite translations. -/
+theorem squarefreeSpectralValue_left_coefficient_sum
+    (c : SquarefreeClass ι) (hA : c univ ∅ = 1) (hB : c ∅ univ = 1)
+    (hshift : ∀ (a b : ι → ℂ) (t : ℂ),
+      squarefreeSpectralValue c (fun i => a i + t) (fun j => b j - t) =
+        squarefreeSpectralValue c a b)
+    (I : Finset ι) : (∑ J : Finset ι, if Iᶜ.card = J.card then c I J else 0) = 1 := by
+  classical
+  let p : Polynomial ℂ :=
+    ∑ K : Finset ι, ∑ L : Finset ι,
+      if K ⊆ I ∧ Kᶜ.card = L.card then Polynomial.C (c K L) * Polynomial.X ^ K.card else 0
+  have heval (t : ℂ) : p.eval t = squarefreeSpectralValue c (constantOn I t) (fun _ => 1) := by
+    simp only [p, Polynomial.eval_finset_sum, squarefreeSpectralValue]
+    apply Finset.sum_congr rfl
+    intro K _
+    apply Finset.sum_congr rfl
+    intro L _
+    by_cases hKL : Kᶜ.card = L.card
+    · by_cases hKI : K ⊆ I
+      · have hp : ∏ i ∈ K, constantOn I t i = t ^ K.card := calc
+          _ = ∏ _i ∈ K, t := Finset.prod_congr rfl fun i hi => if_pos (hKI hi)
+          _ = _ := Finset.prod_const _
+        simp only [hKI, hKL, true_and, if_true, squarefreeDividedDivisor,
+          Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_C, Polynomial.eval_X,
+          hp, Finset.prod_const_one, mul_one]
+      · obtain ⟨i, hiK, hiI⟩ := Finset.not_subset.mp hKI
+        have hz : ∏ j ∈ K, constantOn I t j = 0 := Finset.prod_eq_zero hiK (if_neg hiI)
+        simp only [hKI, false_and, if_false, Polynomial.eval_zero,
+          squarefreeDividedDivisor, hKL, if_true, hz, zero_mul, mul_zero]
+    · simp only [hKL, and_false, if_false, Polynomial.eval_zero, squarefreeDividedDivisor, mul_zero]
+  have hp : p = (Polynomial.X + 1) ^ I.card := by
+    apply Polynomial.funext
+    intro t
+    rw [heval, (squarefreeSpectralValue_marginals_of_opposite_translation c hA hB hshift _ _).1,
+      Polynomial.eval_pow, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_one]
+    rw [show (fun i => constantOn I t i + 1) = fun i => if i ∈ I then t + 1 else 1 by
+      funext i
+      by_cases hi : i ∈ I <;> simp only [constantOn, hi, if_true, if_false, zero_add],
+      Fintype.prod_ite_mem, Finset.prod_const]
+  have hcoef : p.coeff I.card = ∑ J : Finset ι, if Iᶜ.card = J.card then c I J else 0 := by
+    simp only [p, Polynomial.finset_sum_coeff]
+    rw [Finset.sum_eq_single_of_mem I (Finset.mem_univ _)]
+    · apply Finset.sum_congr rfl
+      intro L _
+      by_cases hIL : Iᶜ.card = L.card <;>
+        simp only [subset_refl, true_and, hIL, if_true, if_false, Polynomial.coeff_zero,
+          Polynomial.coeff_C_mul_X_pow]
+    · intro K _ hKI
+      apply Finset.sum_eq_zero
+      intro L _
+      split
+      · next h =>
+        have hne : I.card ≠ K.card := fun he =>
+          hKI (Finset.eq_of_subset_of_card_le h.1 he.le)
+        rw [Polynomial.coeff_C_mul_X_pow, if_neg hne]
+      · exact Polynomial.coeff_zero _
+  rw [← hcoef, hp, Polynomial.coeff_X_add_one_pow, Nat.choose_self, Nat.cast_one]
+
+/-- Each balanced coefficient is at most one when all balanced coefficients
+are nonnegative and the value is invariant under opposite translations. -/
+theorem squarefreeSpectralValue_coefficient_le_one
+    (c : SquarefreeClass ι) (hA : c univ ∅ = 1) (hB : c ∅ univ = 1)
+    (hshift : ∀ (a b : ι → ℂ) (t : ℂ),
+      squarefreeSpectralValue c (fun i => a i + t) (fun j => b j - t) =
+        squarefreeSpectralValue c a b)
+    (hn : ∀ I J : Finset ι, Iᶜ.card = J.card → 0 ≤ (c I J).re)
+    (I J : Finset ι) (hIJ : Iᶜ.card = J.card) : (c I J).re ≤ 1 := by
+  let f (L : Finset ι) := if Iᶜ.card = L.card then (c I L).re else 0
+  have hsum : (∑ L, f L) = 1 := by
+    have h := congrArg Complex.re (squarefreeSpectralValue_left_coefficient_sum c hA hB hshift I)
+    simpa only [Complex.re_sum, apply_ite, Complex.zero_re, Complex.one_re, f] using h
+  have hsingle := Finset.single_le_sum
+    (f := f) (fun L _ => by
+      dsimp only [f]
+      split
+      · next h => exact hn I L h
+      · exact le_rfl) (Finset.mem_univ J)
+  rw [hsum] at hsingle
+  simpa only [f, hIJ, if_true] using hsingle
 
 end
 

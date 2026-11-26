@@ -90,7 +90,7 @@ theorem middleSubsetMatchingSpan_eq_ker [CharZero K] {k : ℕ} (L R : Finset α)
     apply Subtype.ext
     funext S
     have hz := subsetHarmonic_eq_zero_of_matching_differences (k + 1) L R hl hr hd
-      (extendSubsetLevel v.val) hh ht S.val (hu ▸ subset_univ S.val) S.property
+      (extendSubsetLevel v.val) hh ht S.val (by rw [hu]; exact subset_univ _) S.property
     simpa [extendSubsetLevel, S.property] using hz
   have hrank := LinearMap.finrank_le_finrank_of_injective hinj
   rw [Subspace.dual_finrank_eq] at hrank

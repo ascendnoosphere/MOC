@@ -2,6 +2,9 @@ import Mathlib.Algebra.Category.ModuleCat.Abelian
 import Mathlib.Algebra.Category.ModuleCat.Colimits
 import Mathlib.AlgebraicTopology.SingularHomology.Basic
 
+/-! To apply the last theorem to a complete flag manifold, prove that its
+odd integral homology vanishes. This requires the Schubert cell decomposition. -/
+
 open CategoryTheory
 
 namespace MOC

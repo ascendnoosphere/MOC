@@ -418,10 +418,14 @@ import MOC.HarmonicSubsetMatchingTests
 import MOC.InterferenceGram
 import MOC.MatchingListCoefficients
 import MOC.MiddleSubsetMatchingSpan
+import MOC.MinimumNormalizedSpectralMatching
+import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
 import MOC.Reformulations.QuadraticDiskCertificate
 import MOC.Reformulations.SubsetOperatorSupport
+import MOC.SpectralWitnessSeparation
 import MOC.ThreeEffectExtremePoints
+import MOC.WalshMinorSupportObstruction
 
 open Lean Elab Command in
 run_cmd do

@@ -6,6 +6,9 @@ import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
+/-! To obtain smooth dependence on the vertices, identify the derivative
+of the mean map with the covariance and apply the implicit function theorem. -/
+
 open BigOperators
 open scoped Topology
 
@@ -43,7 +46,7 @@ private theorem projection_le_spectralLogSumExp {J : Type*} [Fintype J] [Nonempt
   obtain ⟨j, _, hj⟩ := Finset.exists_max_image Finset.univ (fun j => L (v j))
     (Finset.univ_nonempty : (Finset.univ : Finset J).Nonempty)
   have hle : L w ≤ L (v j) := by
-    apply convexHull_min _ (convex_halfSpace_le L.isLinear _) hw
+    apply convexHull_min _ (convex_halfSpace_le L.toLinearMap.isLinear _) hw
     rintro _ ⟨i, rfl⟩
     exact hj i (Finset.mem_univ i)
   have he : Real.exp (L (w - z)) ≤ Real.exp (L (v j - z)) :=
