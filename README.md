@@ -310,6 +310,15 @@ determinants. Each term includes the eigenvalue sum for that
 coordinate. The weights depend only on the projection.
 [Determinant reduction](Lean/MOC/ProjectionLeafPivot.lean#L110) · [Projection and rank formulas](Docs/projection-leaf-deletion-proof-map.md)
 
+Partition the coordinates into three sets $X$, $H$, and $Y$. The first
+summand has a two-level normal block on $X\cup H$ and arbitrary
+diagonal entries on $Y$. The second has a two-level normal block on
+$H\cup Y$ and arbitrary diagonal entries on $X$. For fixed eigenspaces
+of both blocks, one probability law on permutations gives the
+determinant for every choice of the levels and diagonal entries.
+The overlap $H$ can have any dimension.
+[Common law](Lean/MOC/OverlappingProjectionBlocks.lean#L636) · [Inclusion](Lean/MOC/OverlappingProjectionBlocks.lean#L671) · [Proof map](Docs/projection-leaf-deletion-proof-map.md#two-overlapping-projection-blocks)
+
 On a simple even cycle with at least four coordinates, choose a
 two-by-two unitary gate on each edge. All gates except possibly two
 must have squared entry moduli $1/2$. Each set of alternating edges

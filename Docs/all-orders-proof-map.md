@@ -325,6 +325,15 @@ coordinate. In each term with positive weight the remaining
 projection has the rank that corresponds to the assigned eigenvalue.
 [Determinant reduction](../Lean/MOC/ProjectionLeafPivot.lean#L110) · [Projection leaf deletion](projection-leaf-deletion-proof-map.md)
 
+This deletion step proves a case with two overlapping two-level
+blocks. Partition the coordinates into $X$, $H$, and $Y$. The first
+summand has its two-level block on $X\cup H$ and is diagonal on $Y$.
+The second has its two-level block on $H\cup Y$ and is diagonal on $X$.
+Keep the two projection matrices fixed. The same law works for every
+choice of the complex levels and private diagonal entries. The law
+implies the inclusion in every order for this class of pairs.
+[Common law](../Lean/MOC/OverlappingProjectionBlocks.lean#L636) · [Inclusion](../Lean/MOC/OverlappingProjectionBlocks.lean#L671) · [Proof map](projection-leaf-deletion-proof-map.md#two-overlapping-projection-blocks)
+
 Two alternating layers on one even cycle also give a common law.
 Let $K$ be a finite set of $m\ge2$ labels and let $s$ be a single
 cycle on $K$. Use coordinates $(k,0)$ and $(k,1)$ for $k\in K$.
@@ -1194,7 +1203,7 @@ proposition. The target checks the proof of each stated implication
 and requires a proof of every imported theorem. A future proof of one
 complete route supplies a proof of MOC through that implication. The
 latest route changes have source checks and await Lean compilation.
-[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L203) · [Axiom audit](../Lean/MOC.lean#L307)
+[Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L218) · [Axiom audit](../Lean/MOC.lean#L334)
 
 The source audit found 713 Lean modules. Starting at the default target
 reaches 588, including the target itself. The other 125 resolve their

@@ -80,3 +80,49 @@ an orthogonal projection has one conditional subspace for inclusion
 of a coordinate and one for exclusion. The matrix proof here uses
 the projection equations directly.
 [Lyons, Proposition 6.3](https://rdlyons.pages.iu.edu/pdf/bases.pdf#page=18)
+
+## Two overlapping projection blocks
+
+Partition the coordinate set into $X$, $H$, and $Y$. The first
+summand has a two-level normal block on $X\cup H$ and is diagonal
+on $Y$. The second summand is diagonal on $X$ and has a two-level
+normal block on $H\cup Y$. Each two-level block has the form $sI+kP$,
+with its own orthogonal projection $P$ and complex scalars $s$ and $k$.
+The levels of that block are $s$ and $s+k$. All three coordinate sets
+can have any dimension.
+
+Fix the two projections. Use a high-level label once per dimension
+of the range of its projection. Use a low-level label once per
+remaining dimension of its block. Assign a private label to each
+diagonal coordinate outside the block. One probability law on
+permutations represents the determinant of the sum for every choice
+of the levels and the private values. This gives inclusion in the
+convex hull for any ordering of the eigenvalues with multiplicity.
+[Spectral labels](../Lean/MOC/ProjectionBlockSpectralLabels.lean#L39) ·
+[Common law](../Lean/MOC/OverlappingProjectionBlocks.lean#L636) ·
+[Determinant inclusion](../Lean/MOC/OverlappingProjectionBlocks.lean#L671)
+
+```mermaid
+flowchart TD
+    Input["Two overlapping two-level blocks and disjoint private coordinate sets"]
+    Input --> Private["A private coordinate exists"]
+    Input --> Shared["No private coordinate remains"]
+    Private --> Condition["Use each positive-weight projection branch"]
+    Condition --> Delete["Delete the coordinate and its two matched labels"]
+    Delete --> Combine["Extend each child permutation and combine the laws"]
+    Shared --> Base["Use the common law for a two-valued spectrum"]
+    Combine --> Law["Proved common law for all levels and private values"]
+    Base --> Law
+```
+
+If a private coordinate exists, apply projection deletion to the
+other summand. The update preserves zero rows at its private
+coordinates. The child traces supply the new multiplicities. A
+positive-weight branch has a spectral label for its selected level.
+Add the two matched labels to each child permutation. The induction
+decreases the order at each deletion. If there is no private
+coordinate, both spectra have at most two values. The law for one
+two-valued spectrum gives the base.
+[Determinant step](../Lean/MOC/OverlappingProjectionBlocks.lean#L446) ·
+[Induction](../Lean/MOC/OverlappingProjectionBlocks.lean#L608) ·
+[Base common law](../Lean/MOC/TwoValues.lean#L272)
