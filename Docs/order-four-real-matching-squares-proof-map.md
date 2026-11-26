@@ -18,14 +18,14 @@ For two subsets of the label set, the subset-image indicator is one
 when a permutation maps the first subset onto the second. It is zero
 otherwise. Let $V$ be the real span of these indicators. The
 noncrossing coordinates give $V$ dimension 14.
-[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L188) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L57)
+[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L203) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L57)
 
 Use the auxiliary values $\beta=(0,1,-1,w)$, with $w$ a real variable.
 For a permutation $\pi$ and a subset $I$, take the constant and
 linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
 matrix that has these 32 coefficients in row $\pi$. Its column space
 is $V$. Write $j_\pi$ for the transpose of that row.
-[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L155)
+[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L170)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
 directions in each block of the jet. Its two directions, with
@@ -47,7 +47,7 @@ $R=E^\mathsf{T}TE$. The real auxiliary test requires that the range
 of $T$ lie in the row space of $J$ and that the partial transpose of
 $R$ be positive semidefinite. The partial transpose exchanges the
 first tensor index of the row and column.
-[Embedding](../Lean/MOC/RealMatchingSquares.lean#L258) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L304) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L460)
+[Embedding](../Lean/MOC/RealMatchingSquares.lean#L273) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L319) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L478)
 
 ```mermaid
 flowchart LR
@@ -66,7 +66,7 @@ flowchart LR
 For $g\in V$, the real auxiliary test is equivalent to the existence
 of a finite list of functions $f_k\in V$ with
 $g_\pi=\sum_k f_k(\pi)^2$ for every $\pi$.
-[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L466)
+[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L484)
 
 The sign of a permutation is $1$ for an even permutation and $-1$
 for an odd one. The signed sum of a cost in $V$ is zero. Let
@@ -76,7 +76,7 @@ $K$ and the symmetric corner $R$ is zero. It is twice the difference
 between entries $(00,11)$ and $(01,10)$ of $R$. This difference also
 multiplies $K$ in the partial-transpose defect. Thus the partial
 transpose fixes $R$.
-[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L292) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L382) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L422)
+[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L307) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L400) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L440)
 
 ## From a positive moment to a support inequality
 
@@ -87,7 +87,7 @@ cost $g$ lies in $V$ and is a sum of matching squares, then
 $\sum_\pi c_\pi g_\pi\ge0$. The added alternating term has zero
 pairing with $g$. The rank-one partial-transpose defect is a separate
 identity that can help construct such a scalar.
-[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L559) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L528)
+[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L578) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L547)
 
 Suppose the real moment is the sum of a positive semidefinite matrix
 and the embedded partial transpose of $uu^\mathsf T$, for a real
@@ -131,5 +131,6 @@ positivity on mixers. The equivalence leaves those steps open.
 
 An exact integer check covered all 24 permutations, the column-span
 certificates, and the signed kernel. A symbolic calculation checked
-the partial-transpose identities for every symmetric corner. The new
-Lean source awaits kernel verification.
+the partial-transpose identities for every symmetric corner. Lean
+checks the real matching-square equivalence and the positive-moment
+implication.

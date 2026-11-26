@@ -80,22 +80,37 @@ set_option maxHeartbeats 14000000 in
 private theorem indicatorColumn_int (a b : Fin 16) (p : Fin 24) :
     fourMatchingEvaluation (fourMatchingCoordinatesOfValues (matchingIndicatorInt a b)) p =
       matchingIndicatorInt a b p := by
-  exact (by decide +kernel : ∀ a b : Fin 16, ∀ p : Fin 24,
-    fourMatchingEvaluation (fourMatchingCoordinatesOfValues (matchingIndicatorInt a b)) p =
-      matchingIndicatorInt a b p) a b p
+  by_cases he : (matchingMask a).card = (matchingMask b).card
+  · exact (by decide +kernel : ∀ a b : Fin 16,
+      (matchingMask a).card = (matchingMask b).card →
+        ∀ p : Fin 24, fourMatchingEvaluation (fourMatchingCoordinatesOfValues (matchingIndicatorInt a b)) p =
+          matchingIndicatorInt a b p) a b he p
+  · have hz : matchingIndicatorInt a b = 0 := by
+      funext j
+      have hn : (matchingMask a).map (fourPerm j).toEmbedding ≠ matchingMask b := by
+        intro hi
+        exact he (by simpa only [Finset.card_map] using congrArg Finset.card hi)
+      simp only [matchingIndicatorInt, if_neg hn, Pi.zero_apply]
+    rw [hz]
+    exact (by decide +kernel : ∀ p : Fin 24,
+      fourMatchingEvaluation (fourMatchingCoordinatesOfValues (0 : Fin 24 → ℤ)) p = 0) p
 
 theorem realMatchingIndicator_mem (a b : Fin 16) :
     realMatchingIndicator a b ∈ realMatchingFunctionSpace := by
-  refine ⟨fun k => (fourMatchingCoordinatesOfValues (R := ℤ) (matchingIndicatorInt a b) k : ℝ), ?_⟩
+  let m (k : Fin 14) := (fourMatchingCoordinatesOfValues (R := ℤ) (matchingIndicatorInt a b) k : ℝ)
+  refine ⟨m, ?_⟩
+  change fourMatchingEvaluation m = realMatchingIndicator a b
   funext p
-  change fourMatchingEvaluation _ p = _
+  dsimp only [m, realMatchingIndicator]
   rw [evaluation_intCast, indicatorColumn_int]
 
 private theorem jetColumn_mem (c : MatchingJetIndex) :
     (fun p => realMatchingJet p c) ∈ realMatchingFunctionSpace := by
-  refine ⟨fun k => (fourMatchingCoordinatesOfValues (R := ℤ) (fun q => matchingJetInt q c) k : ℝ), ?_⟩
+  let m (k : Fin 14) := (fourMatchingCoordinatesOfValues (R := ℤ) (fun q => matchingJetInt q c) k : ℝ)
+  refine ⟨m, ?_⟩
+  change fourMatchingEvaluation m = fun p => realMatchingJet p c
   funext p
-  change fourMatchingEvaluation _ p = (matchingJetInt p c : ℝ)
+  dsimp only [m, realMatchingJet]
   rw [evaluation_intCast, jetColumn_int]
 
 private def pivotColumn : Fin 14 → MatchingJetIndex :=
@@ -316,9 +331,8 @@ private theorem matchingCornerPT_sub (A : Matrix MatchingCornerIndex MatchingCor
   rcases a with ⟨a₁, a₂⟩
   rcases b with ⟨b₁, b₂⟩
   fin_cases a₁ <;> fin_cases a₂ <;> fin_cases b₁ <;> fin_cases b₂ <;>
-    norm_num [matchingCornerPartialTranspose, matchingCornerKernel, skewEntry, Fin.ext_iff] <;>
-    linarith only [hs (0, 0) (0, 1), hs (0, 0) (1, 0), hs (0, 0) (1, 1),
-      hs (0, 1) (1, 0), hs (0, 1) (1, 1), hs (1, 0) (1, 1)]
+    norm_num [matchingCornerPartialTranspose, matchingCornerKernel, skewEntry, Fin.ext_iff]
+  all_goals first | exact sub_eq_zero.mpr (hs _ _) | exact hs _ _
 
 private theorem matchingCorner_kernel_pairing (A : Matrix MatchingCornerIndex MatchingCornerIndex ℝ)
     (hA : A.IsHermitian) :
@@ -327,8 +341,12 @@ private theorem matchingCorner_kernel_pairing (A : Matrix MatchingCornerIndex Ma
   have hs (i j : MatchingCornerIndex) : A i j = A j i := by
     have h := congrArg (fun (B : Matrix MatchingCornerIndex MatchingCornerIndex ℝ) => B j i) hA.eq
     simpa only [Matrix.conjTranspose_apply, star_trivial] using h
-  norm_num [Fintype.sum_prod_type, Fin.sum_univ_two, matchingCornerKernel, skewEntry, Fin.ext_iff]
-  linarith only [hs (0, 0) (1, 1), hs (0, 1) (1, 0)]
+  simp only [Fintype.sum_prod_type, Fin.sum_univ_two, matchingCornerKernel, skewEntry]
+  norm_num
+  change A (0, 0) (1, 1) + -A (0, 1) (1, 0) + (-A (1, 0) (0, 1) + A (1, 1) (0, 0)) =
+    2 * (A (0, 0) (1, 1) - A (0, 1) (1, 0))
+  rw [hs (1, 1) (0, 0), hs (1, 0) (0, 1)]
+  ring
 
 theorem matchingCornerPartialTranspose_eq_of_zero_pairing
     (A : Matrix MatchingCornerIndex MatchingCornerIndex ℝ) (hA : A.IsHermitian)
@@ -507,7 +525,8 @@ theorem realMatchingAuxiliaryPPT_iff_sos {g : Fin 24 → ℝ}
       rintro _ ⟨x, rfl⟩
       refine ⟨Zᵀ *ᵥ (B *ᵥ x), ?_⟩
       have hBstar : Bᴴ = realMatchingJetᵀ * Zᵀ := by
-        simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_eq_transpose_of_trivial]
+        simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_eq_transpose_of_trivial,
+          Matrix.transpose_mul]
       change realMatchingJetᵀ *ᵥ (Zᵀ *ᵥ (B *ᵥ x)) =
         (Bᴴ * B) *ᵥ x
       calc
