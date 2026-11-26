@@ -52,3 +52,66 @@ are affine in the singleton value. If $c\ne d$, equality at the
 two values gives equality everywhere. The same weights give equality
 at $c=d$ by continuity.
 [Two-value interpolation](../Lean/MOC/CommonWeights.lean#L72)
+
+## Shifted reciprocals in a segment
+
+Let $a$ and $b$ be two complex eigenvalue lists of the same finite
+length. Let $U$ be the relative unitary matrix. Fix a scalar
+$\alpha$, a row set $E$, and one column label $j_0$. Suppose
+$a_i=\alpha$ for all $i\notin E$. For each $j\ne j_0$, require
+$\alpha+b_j\ne 0$ and put $q_j=(\alpha+b_j)^{-1}$.
+
+Take distinct nonzero complex numbers $p$ and $s$. Suppose each $q_j$,
+for $j\ne j_0$, is on the closed segment from $p$ to $s$. Each
+endpoint must occur at least $|E|$ times among these $q_j$. One
+probability law on permutations then gives the determinant identity
+for every allowed choice of $a$ and every complex value of $b_{j_0}$.
+[Common law](../Lean/MOC/ReciprocalSegmentRounding.lean#L166) ·
+[Determinant inclusion](../Lean/MOC/ReciprocalSegmentRounding.lean#L238)
+
+```mermaid
+flowchart TD
+    R["Normalize by the product of shifted entries off the exceptional column"]
+    A["AND"]
+    B["Average independent choices of reciprocal endpoints"]
+    C["Apply the common law for two values and one singleton"]
+    D["Use distinct original labels for the endpoints on the selected rows"]
+    E["Sum the masses of rounded matchings sent to each original matching"]
+    F["Common law for the original spectra"]
+    R --> B
+    B --> C
+    C --> A
+    D --> A
+    A --> E --> F
+```
+
+For $j\ne j_0$, divide the matching factor by $\alpha+b_j$.
+The result is $1+(a_{\sigma(j)}-\alpha)q_j$. The factor at $j_0$
+is $a_{\sigma(j_0)}+b_{j_0}$. Each normalized product is affine in
+each $q_j$ separately. The signed determinant identity expresses the
+normalized determinant as a fixed linear combination of these
+products. Thus independent endpoint choices with mean $q_j$ give
+the original normalized determinant on average.
+[Normalization](../Lean/MOC/ReciprocalSegmentRounding.lean#L17) ·
+[Endpoint averaging](../Lean/MOC/ReciprocalSegmentRounding.lean#L69) ·
+[Signed determinant identity](../Lean/MOC/Weights.lean#L58)
+
+For each endpoint choice, apply the common law for two values and
+one singleton. In each resulting matching, keep the row matched
+to $j_0$. On every other row in $E$, replace the rounded label by
+a distinct original label that has the required reciprocal. The
+endpoint counts supply enough labels. Complete this partial
+assignment to a permutation. Every other row contributes a factor
+of one, so the normalized product has the same value. Summing
+the assigned masses gives the common law on the original
+permutations. Multiplication by the removed factors gives the
+determinant identity.
+[Endpoint assignment](../Lean/MOC/EndpointRematching.lean#L9) ·
+[Common law for the original matchings](../Lean/MOC/ReciprocalSegmentRounding.lean#L166)
+
+For example, take lists of length twelve and let `E` contain five
+rows. Set $\alpha=0$. The first list can have any values on those rows
+and zero on the other rows. The second list can have five entries
+equal to $1$, five equal to $1/2$, one equal to $2/3$, and one arbitrary
+entry. The shifted reciprocals off the exceptional label are $1$,
+$2$, and $3/2$. The endpoints $1$ and $2$ each occur five times.

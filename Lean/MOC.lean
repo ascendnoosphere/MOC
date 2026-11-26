@@ -223,6 +223,7 @@ import MOC.RadialExternalCertificates
 import MOC.RealizableContactConsequences
 import MOC.RealizableContactKernels
 import MOC.ReciprocalConjugateSupport
+import MOC.ReciprocalSegmentRounding
 import MOC.Reformulations
 import MOC.SchurEntryObstruction
 import MOC.SchurQuadraticSupport

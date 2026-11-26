@@ -355,6 +355,13 @@ Combining the blocks proves the convex-hull inclusion in every order.
   of size one. For a fixed mixer, one law works for all three group
   values and every opposing spectrum.
   [Common law for three values](Docs/three-spectral-values-with-one-singleton-proof-map.md)
+- Let the first list equal a scalar `α` outside a row set `E`. In
+  the second list, set aside one entry. Require that each remaining
+  entry `b` has `α + b ≠ 0` and that its shifted reciprocal
+  `1 / (α + b)` lies in one segment with distinct nonzero endpoints.
+  If each endpoint occurs at least `|E|` times, one law works for all
+  allowed first lists and all values of the entry set aside.
+  [Reciprocal segment proof](Docs/three-spectral-values-with-one-singleton-proof-map.md#shifted-reciprocals-in-a-segment)
 - Under the stated assignment-sum genericity condition, a sufficiently
   small complex spectral parameter gives inclusion uniformly over
   all mixers in the fixed order.
