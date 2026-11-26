@@ -413,6 +413,12 @@ import MOC.BivectorPhaseFactorization
 import MOC.ContinuousWeightsAtOrigin
 import MOC.ContinuousWeightsAtOneHot
 import MOC.FlagSuperlevelFiltration
+import MOC.FourExteriorPairCost
+import MOC.FourHodgeBlockGenerators
+import MOC.FourHodgeCrossRotation
+import MOC.FourHodgeExteriorSquare
+import MOC.FourHodgeSurjectivity
+import MOC.FourOrientedBlockAssignments
 import MOC.FourSignedHeightBound
 import MOC.FugledeKadisonRegularization
 import MOC.FugledeKadisonTraceLog
@@ -432,6 +438,7 @@ import MOC.MinimumNormalizedSpectralMatching
 import MOC.MinimumNormalizedSpectralSlice
 import MOC.MinimumSpectralNormalization
 import MOC.OrderFiveGrassmannianSupport
+import MOC.OrderFourHodgeSupport
 import MOC.OrderTwoFlagSphere
 import MOC.PfaffianMatchingModulus
 import MOC.PfaffianSkewCongruence
@@ -440,6 +447,7 @@ import MOC.PfaffianStandardSkewBlocks
 import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
 import MOC.RealPolynomialDescent
+import MOC.RealCoordinateRotation
 import MOC.Reformulations.QuadraticDiskCertificate
 import MOC.Reformulations.SubsetOperatorSupport
 import MOC.SpectralTranslationRigidity
@@ -448,7 +456,9 @@ import MOC.StableRayleighSlice
 import MOC.StructuredRealizationCancellation
 import MOC.ThreeEffectExtremePoints
 import MOC.TracialGramSymmetry
+import MOC.TracialLogResolvent
 import MOC.TracialSpectralKernel
+import MOC.TracialSpectralScaling
 import MOC.WalshMinorSupportObstruction
 
 open Lean Elab Command in

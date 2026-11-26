@@ -172,6 +172,76 @@ theorem exists_finiteEntropyScore_of_potential_bounds [Nonempty κ]
   rw [hL] at hqsmall
   linarith only [hqsmall, hlarge, hmul]
 
+/-- Bounds from all linear potentials imply feasibility and give a
+probability vector whose entropy score attains or exceeds the bound. -/
+theorem exists_finiteEntropyScore_of_all_potential_bounds [Nonempty κ]
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (g : κ → E) (w : κ → ℝ) (hw : ∀ i, 0 < w i) (m : E) (z : ℝ)
+    (hbound : ∀ f : E →L[ℝ] ℝ, z ≤ f m + Real.log (∑ i, w i * Real.exp (-f (g i)))) :
+    ∃ q ∈ stdSimplex ℝ κ, (∑ i, q i • g i) = m ∧ z ≤ finiteEntropyScore w q := by
+  classical
+  apply exists_finiteEntropyScore_of_potential_bounds g w hw m z _ hbound
+  let M : (κ → ℝ) →L[ℝ] E :=
+    ∑ i, (ContinuousLinearMap.proj (R := ℝ) i).smulRight (g i)
+  have hM (q : κ → ℝ) : M q = ∑ i, q i • g i := by
+    simp only [M, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.proj_apply]
+  change ∃ q ∈ stdSimplex ℝ κ, (∑ i, q i • g i) = m
+  by_contra hfail
+  have hnot : m ∉ M '' stdSimplex ℝ κ := by
+    rintro ⟨q, hq, he⟩
+    exact hfail ⟨q, hq, (hM q).symm.trans he⟩
+  obtain ⟨l, c, hsmall, hlarge⟩ := geometric_hahn_banach_closed_point
+    ((convex_stdSimplex ℝ κ).linear_image M.toLinearMap)
+    ((isCompact_stdSimplex κ).image M.continuous).isClosed hnot
+  have hg (i : κ) : l (g i) < c := by
+    let q : κ → ℝ := fun j => if j = i then 1 else 0
+    have hq : q ∈ stdSimplex ℝ κ := by
+      refine ⟨fun j => ?_, ?_⟩
+      · simp only [q]
+        split <;> norm_num
+      · simp [q]
+    have hqg : M q = g i := by
+      rw [hM]
+      simp [q, ite_smul]
+    exact hsmall _ ⟨q, hq, hqg⟩
+  let W : ℝ := ∑ i, w i
+  have hW : 0 < W := Finset.sum_pos (fun i _ => hw i) Finset.univ_nonempty
+  let d := l m - c
+  have hd : 0 < d := sub_pos.mpr hlarge
+  let s := max (Real.log W - z) 0 + 1
+  have hs : 0 < s :=
+    add_pos_of_nonneg_of_pos (le_max_right _ _) zero_lt_one
+  let t := s / d
+  have ht : 0 ≤ t := (div_pos hs hd).le
+  let f : E →L[ℝ] ℝ := (-t) • l
+  have hf (x : E) : f x = -t * l x := by
+    simp only [f, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  have hsum : (∑ i, w i * Real.exp (-f (g i))) ≤ W * Real.exp (t * c) := by
+    change (∑ i, w i * Real.exp (-f (g i))) ≤ (∑ i, w i) * Real.exp (t * c)
+    rw [Finset.sum_mul]
+    apply Finset.sum_le_sum
+    intro i _
+    apply mul_le_mul_of_nonneg_left _ (hw i).le
+    apply Real.exp_le_exp.mpr
+    rw [hf, neg_mul, neg_neg]
+    exact mul_le_mul_of_nonneg_left (hg i).le ht
+  have hz := hbound f
+  have hl := Real.log_le_log
+    (Finset.sum_pos (fun i _ => mul_pos (hw i) (Real.exp_pos _)) Finset.univ_nonempty) hsum
+  rw [Real.log_mul hW.ne' (Real.exp_pos _).ne', Real.log_exp] at hl
+  have hz' := hz.trans (add_le_add_left hl (f m))
+  rw [hf] at hz'
+  have htd : t * d = s := div_mul_cancel₀ _ hd.ne'
+  have he : -t * l m + (Real.log W + t * c) = Real.log W - s := by
+    rw [← htd]
+    dsimp only [d]
+    ring
+  rw [he] at hz'
+  have hmax : Real.log W - z ≤ max (Real.log W - z) 0 := le_max_left _ _
+  change z ≤ Real.log W - (max (Real.log W - z) 0 + 1) at hz'
+  linarith only [hz', hmax]
+
 end
 
 end MOC
