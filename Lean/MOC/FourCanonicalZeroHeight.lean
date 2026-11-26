@@ -1,11 +1,9 @@
-import MOC.FourMatchingRelations
+import MOC.FourCanonicalHeightSquares
 import MOC.FourTerminalCoverage
 import Mathlib.Data.Finset.Powerset
-import Mathlib.Tactic.Positivity
 
-/-! The canonical mixed profile at zero support height. The matching cubic
-gives three possible compensation budgets. Rectangle closure excludes all
-three budgets when at least eight matching products lie on the support line. -/
+/-! Rectangle closure limits the contacts at zero support height. The
+terminal contact count uses the canonical cubic compensation alternatives. -/
 
 open BigOperators
 
@@ -13,125 +11,12 @@ namespace MOC
 
 noncomputable section
 
-/-- The thirteen ordinary rays in the canonical mixed profile, in increasing
-order. The argument of `fourCanonicalZeroHeightProfile` uses this order. -/
-def fourCanonicalZeroHeightRay (j : Fin 13) : Fin 34 :=
-  ![0, 7, 10, 13, 17, 18, 20, 22, 23, 27, 28, 30, 31] j
-
-/-- The mixed coefficient is one. The supplied coefficients are the budgets
-of the ordinary rays. -/
-def fourCanonicalZeroHeightProfile (c : Fin 13 → ℝ) (p : Fin 24) : ℝ :=
-  mixedCostRay 0 p + ∑ j, c j * ordinaryCostRay (fourCanonicalZeroHeightRay j) p
-
-private def zeroHeightLift (c : Fin 13 → ℝ) : Fin 14 → ℝ :=
-  ![c 11 + c 12 + c 8 + 1, -c 10 + c 7 - c 8 + c 9, c 1 - c 11, c 10 - c 9,
-    c 0 - c 12, c 4 - c 5 + c 6 - c 8, -c 4 - c 6 - c 7 + c 8 - c 9 - 1,
-    -c 1 - c 2 - c 6 - 1, -c 12 + c 2, c 2 + c 6 + c 9 + 1, c 5 - c 6,
-    -c 2 - c 3 - c 9 - 1, -c 11 + c 3, c 11]
-
-set_option maxRecDepth 10000 in
-set_option maxHeartbeats 20000000 in
-private theorem zeroHeightLift_eval (c : Fin 13 → ℝ) (p : Fin 24) :
-    fourMatchingEvaluation (zeroHeightLift c) p = fourCanonicalZeroHeightProfile c p := by
-  fin_cases p <;>
-    norm_num [fourMatchingEvaluation, zeroHeightLift, fourCanonicalZeroHeightProfile,
-      fourCanonicalZeroHeightRay, mixedCostRay, mixedCostRayInt, mixedCostSeedInt,
-      ordinaryCostRay, ordinaryCostRayInt, fourCostRelabelIndex, fourCostPermutation,
-      fourCostPair, fourPermIndex, fourPerm, Equiv.Perm.mul_apply, Equiv.swap_apply_def,
-      Fin.sum_univ_succ, Matrix.cons_val] <;> ring
-
-private def compensation (center x y : ℝ) : ℝ :=
-  center * x * y - (x * y + x + y)
-
-private def canonicalCubicRemainder (c : Fin 13 → ℝ) : ℝ :=
-  c 9 * c 12 + c 9 * c 11 + c 9 * c 11 * c 12 + c 7 * c 12 +
-  c 7 * c 11 + c 7 * c 11 * c 12 + c 7 * c 9 * c 12 + c 7 * c 9 * c 11 +
-  c 6 * c 12 + c 6 * c 11 + c 6 * c 11 * c 12 + c 6 * c 9 +
-  c 6 * c 9 * c 11 + c 6 * c 7 + c 6 * c 7 * c 12 + c 6 * c 7 * c 9 +
-  c 5 * c 8 * c 10 + c 4 * c 12 + c 4 * c 11 + c 4 * c 11 * c 12 +
-  c 4 * c 9 + c 4 * c 9 * c 12 + c 4 * c 7 + c 4 * c 7 * c 11 +
-  c 4 * c 7 * c 9 + c 4 * c 6 * c 12 + c 4 * c 6 * c 11 + c 4 * c 6 * c 9 +
-  c 4 * c 6 * c 7 + c 3 + c 3 * c 11 + c 3 * c 7 +
-  c 3 * c 7 * c 11 + c 3 * c 6 + c 3 * c 6 * c 11 + c 3 * c 6 * c 7 +
-  c 2 + c 2 * c 12 + c 2 * c 7 + c 2 * c 7 * c 12 +
-  c 2 * c 4 + c 2 * c 4 * c 12 + c 2 * c 4 * c 7 + c 2 * c 3 +
-  c 2 * c 3 * c 7 + c 1 + c 1 * c 11 + c 1 * c 9 +
-  c 1 * c 9 * c 11 + c 1 * c 4 + c 1 * c 4 * c 11 + c 1 * c 4 * c 9 +
-  c 1 * c 3 + c 1 * c 3 * c 11 + c 1 * c 2 + c 1 * c 2 * c 4 +
-  c 1 * c 2 * c 3 + c 0 + c 0 * c 12 + c 0 * c 9 +
-  c 0 * c 9 * c 12 + c 0 * c 6 + c 0 * c 6 * c 12 + c 0 * c 6 * c 9 +
-  c 0 * c 3 + c 0 * c 3 * c 6 + c 0 * c 2 + c 0 * c 2 * c 12 +
-  c 0 * c 2 * c 3 + c 0 * c 1 + c 0 * c 1 * c 9 + c 0 * c 1 * c 3 +
-  c 0 * c 1 * c 2
-
-private theorem zeroHeightLift_cubic (c : Fin 13 → ℝ) :
-    fourMatchingCubic (zeroHeightLift c) =
-      compensation (c 10) (c 4) (c 6) + compensation (c 8) (c 11) (c 12) +
-        compensation (c 5) (c 7) (c 9) - 1 - canonicalCubicRemainder c := by
-  simp only [fourMatchingCubic, zeroHeightLift, Matrix.cons_val, compensation,
-    canonicalCubicRemainder]
-  ring
-
-private theorem canonicalCubicRemainder_nonneg (c : Fin 13 → ℝ) (hc : ∀ j, 0 ≤ c j) :
-    0 ≤ canonicalCubicRemainder c := by
-  have h₀ := hc 0
-  have h₁ := hc 1
-  have h₂ := hc 2
-  have h₃ := hc 3
-  have h₄ := hc 4
-  have h₅ := hc 5
-  have h₆ := hc 6
-  have h₇ := hc 7
-  have h₈ := hc 8
-  have h₉ := hc 9
-  have h₁₀ := hc 10
-  have h₁₁ := hc 11
-  have h₁₂ := hc 12
-  unfold canonicalCubicRemainder
-  positivity
-
-private theorem positive_compensation {center x y : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y)
-    (h : 0 < compensation center x y) :
-    0 < x ∧ 0 < y ∧ x * y + x + y < center * x * y := by
-  have hxne : x ≠ 0 := by
-    intro he
-    simp only [compensation, he, mul_zero, zero_mul, zero_add, zero_sub] at h
-    linarith only [h, hy]
-  have hyne : y ≠ 0 := by
-    intro he
-    simp only [compensation, he, mul_zero, add_zero, zero_add, zero_sub] at h
-    linarith only [h, hx]
-  exact ⟨lt_of_le_of_ne hx hxne.symm, lt_of_le_of_ne hy hyne.symm, sub_pos.mp h⟩
-
 private theorem compensation_center_ne_zero {center x y : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y)
     (h : x * y + x + y < center * x * y) : center ≠ 0 := by
   intro he
   have hnonneg : 0 ≤ x * y + x + y := by positivity
   simp only [he, zero_mul] at h
   exact (not_lt_of_ge hnonneg) h
-
-/-- A canonical mixed profile realized by the real parts of matching products
-supplies one of three strict compensation budgets. For each budget, the
-conclusion lists the two leaf coefficients and the inequality on the
-coefficient of the ordinary ray shared by the leaves. -/
-theorem fourCanonicalZeroHeight_compensation (a b : Fin 4 → ℂ) (η : ℂ)
-    (c : Fin 13 → ℝ) (hc : ∀ j, 0 ≤ c j)
-    (hvalues : ∀ p : Fin 24, (η * matchingProduct a b (fourPerm p).symm).re =
-      fourCanonicalZeroHeightProfile c p) :
-    (0 < c 4 ∧ 0 < c 6 ∧ c 4 * c 6 + c 4 + c 6 < c 10 * c 4 * c 6) ∨
-    (0 < c 11 ∧ 0 < c 12 ∧ c 11 * c 12 + c 11 + c 12 < c 8 * c 11 * c 12) ∨
-    (0 < c 7 ∧ 0 < c 9 ∧ c 7 * c 9 + c 7 + c 9 < c 5 * c 7 * c 9) := by
-  have h := fourMatchingCubic_zero_of_evaluation_eq_spectral a b η (zeroHeightLift c)
-    (fun p => (zeroHeightLift_eval c p).trans (hvalues p).symm)
-  rw [zeroHeightLift_cubic] at h
-  have hr := canonicalCubicRemainder_nonneg c hc
-  by_cases first : 0 < compensation (c 10) (c 4) (c 6)
-  · exact Or.inl (positive_compensation (hc _) (hc _) first)
-  by_cases second : 0 < compensation (c 8) (c 11) (c 12)
-  · exact Or.inr (Or.inl (positive_compensation (hc _) (hc _) second))
-  have third : 0 < compensation (c 5) (c 7) (c 9) := by
-    linarith only [h, hr, le_of_not_gt first, le_of_not_gt second]
-  exact Or.inr (Or.inr (positive_compensation (hc _) (hc _) third))
 
 private def seedZeros : Finset (Fin 24) := {1, 6, 7, 8, 9, 12, 14, 15, 17, 18, 20, 22, 23}
 

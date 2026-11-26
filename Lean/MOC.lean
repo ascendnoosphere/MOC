@@ -319,6 +319,7 @@ import MOC.SpectralDeterminantStability
 import MOC.TranspositionWinding
 import MOC.TwoByTwoTensorPermutationLaw
 import MOC.ForcedSpectralMultiplicity
+import MOC.FourCanonicalHeightSquares
 import MOC.FourCanonicalZeroHeight
 import MOC.FourMixedRaySupportBound
 import MOC.PermutationPathComposition

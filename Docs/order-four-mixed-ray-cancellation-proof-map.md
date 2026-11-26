@@ -51,6 +51,47 @@ relabelings used here. The new Lean source was written without a build.
 
 ## Canonical contact certificates
 
+### Normalized heights from zero through one half
+
+Let $H$ be the real support height in a complex direction $\eta$.
+For each matching product $P_\sigma$, its gap is
+$H-\mathrm{Re}(\eta P_\sigma)$. Suppose this gap profile is the
+fixed mixed ray with coefficient one plus a nonnegative sum of
+the thirteen prescribed ordinary rays. If the original mixed
+coefficient is positive, rescale the direction and height by
+dividing both by that coefficient.
+[Thirteen ordinary rays](../Lean/MOC/FourCanonicalHeightSquares.lean#L17) · [Canonical gap](../Lean/MOC/FourCanonicalHeightSquares.lean#L22)
+
+```mermaid
+flowchart BT
+    accTitle: Support bound for a normalized canonical gap
+    accDescr: An actual spectral gap with the prescribed ray coefficients and height between zero and one half is a sum of matching squares. Unitary evaluation gives the support bound.
+    Gap["Actual spectral gap"]
+    Rays["Mixed coefficient one and<br/>thirteen nonnegative ordinary coefficients"]
+    Height["Height from zero through one half"]
+    Premises{{"AND"}}
+    Squares["Real matching squares"]
+    Bound["Directional bound for every unitary"]
+    Gap --> Premises
+    Rays --> Premises
+    Height --> Premises
+    Premises --> Squares --> Bound
+```
+
+If $0\le H\le 1/2$, the matching cubic forces a coefficient
+bound for square completion. The proof uses two kinds of square
+identities. One uses an ordinary coefficient and two associated
+ordinary coefficients. The other uses the three ordinary
+coefficients with ray indices 18, 23, and 28. If all these
+bounds fail, the cubic is strictly negative throughout the
+stated height interval. This contradicts its vanishing on the
+spectral profile. Nonnegative evaluation of the squares gives
+$\mathrm{Re}(\eta D)\le H$, where $D$ is the determinant of the
+sum at any unitary mixer.
+[Zero-height coefficient alternatives](../Lean/MOC/FourCanonicalHeightSquares.lean#L350) · [Interval square certificate](../Lean/MOC/FourCanonicalHeightSquares.lean#L719) · [Unitary support bound](../Lean/MOC/FourCanonicalHeightSquares.lean#L767)
+
+### Certificates for specified ray sets
+
 Write a normalized cost as the canonical mixed ray plus a sum of
 ordinary rays with nonnegative coefficients. Each tuple specifies the
 ordinary ray indices and the order of their coefficients. The premises

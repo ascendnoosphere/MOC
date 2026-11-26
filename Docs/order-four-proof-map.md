@@ -192,13 +192,22 @@ the strict excess and contact count. At nonzero height, the contact
 set cannot contain the four matchings from two disjoint swaps.
 [Regular witness](../Lean/MOC/FourTerminalCoverage.lean#L110) · [Canonical witness equivalence](../Lean/MOC/FourTerminalCoverage.lean#L387) · [Rectangle exclusion](../Lean/MOC/FourTerminalCoverage.lean#L403)
 
-At zero height a regular witness in this canonical form has exactly seven
-contacts. The script uses the cubic identity for projected matching products
-and six disjoint-swap rectangles. It leaves the seven-contact case open.
-[Count at zero height](../Lean/MOC/FourCanonicalZeroHeight.lean#L305) · [Coefficient constraints](../Lean/MOC/FourCanonicalZeroHeight.lean#L117)
+For a gap in this canonical form, the directional bound holds for
+every unitary at normalized heights from zero through one half.
+The gap equals a sum of matching squares throughout this interval.
+The theorem permits coincident and zero matching products, and any
+number of contacts.
+[Square certificate](../Lean/MOC/FourCanonicalHeightSquares.lean#L719) · [Unitary support bound](../Lean/MOC/FourCanonicalHeightSquares.lean#L767) · [Canonical gap premises](order-four-mixed-ray-cancellation-proof-map.md#normalized-heights-from-zero-through-one-half)
+
+The earlier exact-seven result uses regular spectra and at least
+seven contacts at zero height. Its proof uses the matching cubic
+and disjoint-swap rectangles. The contact-count source awaits a
+normal build. The directional bound covers that height directly.
+[Exact-seven statement](../Lean/MOC/FourCanonicalZeroHeight.lean#L190) · [Zero-height support](../Lean/MOC/FourCanonicalHeightSquares.lean#L784)
 
 The exact Python census gives 90 seven-contact and 58 eight-contact
-classes at nonzero height. Two canonical eleven-contact profiles
+classes at nonzero height. Heights outside the proved interval still
+require a support bound in the general canonical route. Two canonical eleven-contact profiles
 force equality of distinct matching products. For negative height
 the Lean rescaling applies if the normalized external lower bound
 holds. The finite orbit census and universal external lower bound
