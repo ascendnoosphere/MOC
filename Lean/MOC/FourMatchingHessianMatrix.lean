@@ -131,11 +131,13 @@ theorem t34Hessian_pivotBlock (p r a b c q s h : ℝ) :
     simp only [Matrix.submatrix_apply, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
       Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂, Matrix.transpose_apply,
       t34HessianPivotIndices, Sum.elim_inl, Sum.elim_inr, t34HessianPivotUnit,
-      t34HessianPivotCross, t34HessianPivotTail, Matrix.of_apply, Matrix.cons_val] <;>
-    simp (config := { decide := true }) only [fourMatchingHessian, gradientTerms,
-      Matrix.cons_val, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
+      t34HessianPivotCross, t34HessianPivotTail, Matrix.of_apply,
+      Matrix.cons_val, Matrix.cons_val_zero', Matrix.cons_val_succ'] <;>
+    simp (disch := decide) only [if_pos, if_neg, fourMatchingHessian, gradientTerms,
+      Matrix.cons_val, Matrix.cons_val_zero', Matrix.cons_val_succ',
+      List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
       GradientTerm.hessianEntry, t34HeightLift] <;>
-    norm_num [Fin.ext_iff, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
+    norm_num only [Fin.ext_iff] <;> ring
 
 /-- The entries joining the leading pivots and the ninth pivot. -/
 def t34HessianNinthColumn (p b c : ℝ) : Fin 4 ⊕ Fin 4 → ℝ :=
@@ -150,17 +152,19 @@ theorem t34Hessian_ninth_entries (p r a b c q s h : ℝ) :
       ∀ i, H 6 (t34HessianPivotIndices i) = t34HessianNinthColumn p b c i := by
   dsimp only
   refine ⟨?_, ?_, ?_⟩
-  · simp (config := { decide := true }) only [fourMatchingHessian, gradientTerms,
-      Matrix.cons_val, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
+  · simp (disch := decide) only [if_pos, if_neg, fourMatchingHessian, gradientTerms,
+      Matrix.cons_val, Matrix.cons_val_zero', Matrix.cons_val_succ',
+      List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
       GradientTerm.hessianEntry, t34HeightLift] <;> norm_num
   all_goals
     intro i
     rcases i with i | i <;> fin_cases i <;>
       simp only [t34HessianPivotIndices, t34HessianNinthColumn, Sum.elim_inl, Sum.elim_inr,
-        Matrix.cons_val] <;>
-      simp (config := { decide := true }) only [fourMatchingHessian, gradientTerms,
-        Matrix.cons_val, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
+        Matrix.cons_val, Matrix.cons_val_zero', Matrix.cons_val_succ'] <;>
+      simp (disch := decide) only [if_pos, if_neg, fourMatchingHessian, gradientTerms,
+        Matrix.cons_val, Matrix.cons_val_zero', Matrix.cons_val_succ',
+        List.map_cons, List.map_nil, List.sum_cons, List.sum_nil,
         GradientTerm.hessianEntry, t34HeightLift] <;>
-      norm_num [Fin.ext_iff, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
+      norm_num only [Fin.ext_iff] <;> ring
 
 end MOC
