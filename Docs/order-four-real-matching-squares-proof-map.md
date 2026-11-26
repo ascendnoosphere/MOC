@@ -98,11 +98,24 @@ moment, the common squared-minor mixture gives the support inequality
 for every complex unitary mixer and every matching sum of squares in $V$.
 [Correction](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L76) · [Unitary transport](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L148)
 
-The universal orthogonal Clifford decomposition remains a premise of
-this Lean route. The archived argument supplies it in mathematics.
-Exact Python checks used five rational orthogonal mixers and one
-complex unitary minor mixture. The new Lean source awaits verification.
-[Archived Clifford argument](https://github.com/AscendNoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_intrinsic_matching_sos_20261031.txt#L99)
+For every real orthogonal matrix $O$ of order four, Lean gives the
+corrected moment directly. Index the coordinates from $0$ to $3$.
+For $i\in\{1,2,3\}$, let $\Delta_{0i}$ be the principal minor
+on $\{0,i\}$. The scalar correction is
+
+$$
+t=\det(O)\left(\Delta_{01}\Delta_{02}\Delta_{03}
+                  -\prod_{i=0}^{3}O_{ii}\right).
+$$
+
+The proof first uses a matrix with fourteen columns. The columns
+give the constant, nine singleton indicators, and four two-element
+indicators. Their corrected moment is a Gram matrix for the
+normalized trace pairing on real matrices. These indicators span
+$V$, so the corrected moment on the columns of $J$ is also positive
+semidefinite. This supplies the orthogonal premise of the unitary
+evaluation theorem.
+[Correction formula](../Lean/MOC/FourMatchingAlternatingCorrection.lean#L102) · [Indicator Gram matrix](../Lean/MOC/FourOrthogonalCorrectedMoment.lean#L154) · [Indicator span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L47) · [Corrected moment on the matching jet](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12)
 
 ### Wall cost
 
@@ -126,8 +139,8 @@ The Lean source uses the real auxiliary triple $(0,1,-1)$. The
 correspondence with the complex auxiliary triple $(0,1,i)$ uses a
 separate fractional linear change of coordinates. For a determinant
 proof, a further step must place the actual spectral support costs in
-the matching sum-of-squares cone and establish the required
-positivity on mixers. The equivalence leaves those steps open.
+the matching sum-of-squares cone. This spectral test remains open
+for general support costs.
 
 An exact integer check covered all 24 permutations, the column-span
 certificates, and the signed kernel. A symbolic calculation checked

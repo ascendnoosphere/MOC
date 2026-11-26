@@ -272,6 +272,7 @@ import MOC.FourContact0710EqualWeights
 import MOC.FourKleinSpectralSquares
 import MOC.FourMixedRayCancellation
 import MOC.FourMatchingPhysicalPositivity
+import MOC.FourOrthogonalMatchingMomentTransport
 import MOC.FourEightContactSmallFactors
 import MOC.FourEightContactAffineFactors
 import MOC.FourEightContactHigherFactors
