@@ -360,7 +360,7 @@ private def plan : SparseRayCutPlan 91 151 where
 
 set_option maxRecDepth 20000 in
 set_option maxHeartbeats 8000000 in
-private theorem checked : plan.Checked weightedDiamondLowerRays7 weightedDiamondLowerRays8 weightedDiamondLowerImposed7 19 := by
+private theorem checkedLowerCut7 : plan.Checked weightedDiamondLowerRays7 weightedDiamondLowerRays8 weightedDiamondLowerImposed7 19 := by
   refine
     { oldSigns := ?_
       nextSigns := ?_
@@ -385,9 +385,11 @@ private theorem checked : plan.Checked weightedDiamondLowerRays7 weightedDiamond
   · intro k
     fin_cases k <;> decide +kernel
   · decide +kernel
+  · simp only [ldiff_eq_xor_land]
+    decide +kernel
   · decide +kernel
-  · decide +kernel
-  · decide +kernel
+  · simp only [witnessMask_eq_xor_land]
+    decide +kernel
   · intro k
     fin_cases k <;> decide +kernel
   · intro k
@@ -398,6 +400,6 @@ private theorem checked : plan.Checked weightedDiamondLowerRays7 weightedDiamond
 theorem weightedDiamondLowerCut7 :
     RayCensusPath ⟨91, weightedDiamondLowerRays7, weightedDiamondLowerImposed7⟩
       ⟨151, weightedDiamondLowerRays8, weightedDiamondLowerImposed8⟩ :=
-  plan.checkedCut checked
+  plan.checkedCut checkedLowerCut7
 
 end MOC.RayCoefficients

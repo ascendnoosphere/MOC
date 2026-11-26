@@ -50,12 +50,12 @@ flowchart TD
 | One mixer has no common squared-minor law | For any spectrum off a circle or line, the converse uses that same mixer to rule out a common law. | [Converse](../Lean/MOC/FourCircleLineCommonWeights.lean#L651) |
 
 The lower interval has eleven ray transitions. Each transition adds
-one permutation inequality. Lean has checked the first six transitions
-together. Their bit masks certify that distinct ray supports are
-incomparable and that each omitted crossing has a witness. Lean checks
-the masks with a bitwise identity for set difference. The last five
-transitions need complete module checks.
-[Incomparability condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L41) · [Crossing condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L46) · [Bitwise identity](../Lean/MOC/WeightedDiamondWitnessMasks.lean#L10) · [First transition](../Lean/MOC/WeightedDiamondLowerCut01.lean#L142) · [Sixth transition](../Lean/MOC/WeightedDiamondLowerCut06.lean#L427)
+one permutation inequality. Lean has checked the first seven transitions.
+Their bit masks certify that distinct ray supports are incomparable and
+that each omitted crossing has a witness. Lean checks the masks with a
+bitwise identity for set difference. The last four transitions need
+complete module checks.
+[Incomparability condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L41) · [Crossing condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L46) · [Bitwise identity](../Lean/MOC/WeightedDiamondWitnessMasks.lean#L10) · [First transition](../Lean/MOC/WeightedDiamondLowerCut01.lean#L142) · [Seventh transition](../Lean/MOC/WeightedDiamondLowerCut07.lean#L400)
 
 The common law gives pointwise determinant inclusion on the circle or
 line. Repeated eigenvalues also satisfy the pointwise inclusion in

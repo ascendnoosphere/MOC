@@ -411,8 +411,10 @@ Combining the blocks proves the convex-hull inclusion in every order.
 - Suppose all $a_i$ lie on one circle or line $C$. The inclusion holds
   in any order if at most four entries $-b_j$, counted with multiplicity,
   lie outside $C$. It also holds if the entries outside $C$ take at most
-  three distinct values.
-  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90)
+  three distinct values. The four-entry source proof uses the
+  order-four Hermitian certificate. Lean has checked seven of its
+  eleven ray transitions.
+  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90) · [Certificate status](Docs/order-four-circle-or-line-common-weights-proof-map.md#the-two-implications)
 - The inclusion holds in any order if either list has at most two
   distinct values. Fix the relative unitary and a partition of the
   second list into two groups. One set of nonnegative matching weights
