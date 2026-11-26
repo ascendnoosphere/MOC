@@ -138,6 +138,7 @@ import MOC.FiniteCurvePlaneImage
 import MOC.FiniteCurvePrimitiveCoordinate
 import MOC.FiniteCurveProperProjection
 import MOC.FiniteCurveRootCover
+import MOC.FiveFourierNeighborhood
 import MOC.FiveMatchingLaw
 import MOC.FiveParityCorrection
 import MOC.FourCommonShift

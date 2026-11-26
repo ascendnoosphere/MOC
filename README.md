@@ -227,7 +227,7 @@ in the all-order table uses the condition on the matching products.
 | Status | Result | Lean source |
 | --- | --- | --- |
 | Proved | The all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
-| Proved | The inclusion holds for the order-five discrete Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
+| Proved | The inclusion holds for all complex spectra throughout an open operator-norm ball of unitary matrices about the order-five Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier ball](Lean/MOC/FiveFourierNeighborhood.lean#L68) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L100) |
 | Proved | The inclusion holds for arbitrary complex spectra in order five if $U$ contains a two-by-two zero submatrix. The two factors have order three. The result does not require order four. | [Zero submatrix](Lean/MOC/SinglePortZeroCorner.lean#L143) |
 | Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L134) |
 | Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
@@ -422,10 +422,11 @@ Combining the blocks proves the convex-hull inclusion in every order.
   most two nonzero entries. It also holds if all four diagonal entries
   of $U$ are zero.
   [Sparse row](Lean/MOC/SparseRow.lean#L339) · [Sparse column](Lean/MOC/SparseRow.lean#L346) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196)
-- In order five, the inclusion holds for the discrete Fourier matrix.
+- In order five, the inclusion holds for all unitary matrices sufficiently
+  close to the discrete Fourier matrix in operator norm.
   It also holds for each unitary with zero diagonal and off-diagonal
   entries of absolute value $1/2$.
-  [Fourier matrix](Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal and equal magnitudes](Lean/MOC/ConferenceFive.lean#L260)
+  [Fourier ball](Lean/MOC/FiveFourierNeighborhood.lean#L68) · [Zero diagonal and equal magnitudes](Lean/MOC/ConferenceFive.lean#L260)
 - If $U$ is the tensor product of two order-two unitaries, one
   probability law on at most ten permutations works for all pairs of spectra.
   [Common law](Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L437) · [Tensor-product proof map](Docs/two-by-two-tensor-mixer-proof-map.md)

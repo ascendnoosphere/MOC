@@ -155,16 +155,17 @@ shows that the best assignment on pairs can exceed every assignment
 induced by a permutation of the individual indices.
 [Pair-minor equivalence](../Lean/MOC/OrderFivePairMarkers.lean#L225) · [Refuted law](../Lean/MOC/ProofRoutes.lean#L156) · [Inclusion for the reflection](../Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Pair-assignment example](../Lean/MOC/PairAssignmentObstruction.lean#L116)
 
-Lean also gives inclusion for the order-five Fourier matrix, the
-unitary matrices with zero diagonal and off-diagonal magnitudes $1/2$,
-and pairs with one real list and at least one real entry in the other.
-[Fourier matrix](../Lean/MOC/FourierProfiles.lean#L211) · [Zero diagonal](../Lean/MOC/ConferenceFive.lean#L260) · [Real entry](../Lean/MOC/HermitianByNormalFourProof.lean#L100)
+Lean also gives inclusion for unitary matrices with zero diagonal and
+off-diagonal magnitudes $1/2$, and for pairs with one real list and at
+least one real entry in the other.
+[Zero diagonal](../Lean/MOC/ConferenceFive.lean#L260) · [Real entry](../Lean/MOC/HermitianByNormalFourProof.lean#L100)
 
 ## Exact spectral and mixer cases
 
 ```mermaid
 flowchart BT
     Hull["Determinant inclusion<br/>in the stated families"]
+    Fourier["Open Fourier ball of unitary mixers<br/>All complex spectra"]
     Ball["Open ball of mixers<br/>Any real first list"]
     Pencil["Every mixer<br/>Two free entries at fixed center"]
     Tube["Every mixer<br/>Open complex spectral neighborhood"]
@@ -174,6 +175,7 @@ flowchart BT
     Shapes -->|if| Ball
     Facets -->|if| Pencil
     Edges -->|if| Tube
+    Fourier -->|if| Hull
     Ball -->|if| Hull
     Pencil -->|if| Hull
     Tube -->|if| Hull
@@ -181,9 +183,19 @@ flowchart BT
 
 | Family | Exact conclusion |
 | --- | --- |
+| Open Fourier ball | There is an operator-norm ball about the normalized order-five Fourier matrix. Each unitary in the ball has one probability law that represents all squared minor moduli. The law gives the determinant for every pair of complex spectra. [Minor law](../Lean/MOC/FiveFourierNeighborhood.lean#L28) · [Inclusion](../Lean/MOC/FiveFourierNeighborhood.lean#L68) |
 | Open mixer ball | An explicit real orthogonal matrix $V$ has an operator-norm ball of radius $1/167772160$. For each unitary in the ball and each real first list, one probability law works for all complex second lists. The law may depend on every entry of the real list. Five exact separating tests show that this dependence is necessary for the stated replacements. |
 | Two free complex entries | In every order $n\ge5$, use $h=(-1,1,2,0,\ldots,0)$ and $b=(i,\ldots,i,-1+i,v,w)$ with $n-3$ copies of $i$. For every unitary, one law works for all $(v,w)\in\mathbb C^2$. The order-five proof checks the hull of the four complex coefficients. |
 | Spectral neighborhood beyond ordinary minors | Each complex spectral entry can move by at most $5\cdot10^{-16}$ from the center specified below. For every unitary the determinant lies inside the hull. Exactly three of its sixteen edge costs lie outside the cone of singleton and two-element subset indicators. |
+
+To transfer the Fourier law to a nearby unitary, add the change of
+each real signed permutation weight to the corresponding Fourier
+probability. The correction has total mass zero. Its sum over the
+permutations that map a given column set to a given row set equals
+the change in the squared modulus of that minor. The weights are
+continuous at the Fourier matrix. A sufficiently small ball keeps
+all 120 weights at least half the positive lower bound at the center.
+[Positive Fourier law](../Lean/MOC/FourierProfiles.lean#L308) · [Weight correction](../Lean/MOC/FiveFourierNeighborhood.lean#L28)
 
 The fixed-anchor extension of order-four realification fails in order
 five. An actual unitary with a fixed full-support first row has
