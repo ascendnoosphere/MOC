@@ -136,12 +136,18 @@ Open route goals are propositions in the registry. A successful build
 of the default target checks the imported implications and their axiom dependencies.
 [Transfer between routes](Lean/MOC/ProofRoutes.lean#L60) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L728)
 
-The modulus bound compares $|\det(A+B)|$ with the largest $|P_\sigma|$.
-A modulus bound at order $n$ implies the bound at every order $m\leq n$.
-The modulus bound in all orders is equivalent to the bound for real
-orthogonal changes of eigenbasis on any unbounded set of orders.
-Both eigenvalue lists can still contain arbitrary complex numbers.
-[Order transfer](Lean/MOC/ModulusOrderTransfer.lean#L140) · [Real orthogonal equivalence](Lean/MOC/RealOrthogonalModulus.lean#L94) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
+For all complex normal matrices $A,B$ of the same finite order,
+Drury's modulus bound gives $|\det(A+B)|\leq\max_\sigma |P_\sigma|$.
+The Lean source uses positive row and column factors and the
+arithmetic–geometric mean inequality. Kernel verification is pending.
+[Drury (1994)](https://doi.org/10.1016/0024-3795(94)90356-5) · [Normal-matrix statement](Lean/MOC/DeterminantModulusBound.lean#L100) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
+
+The order-transfer theorem sends a modulus bound at order $n$ to every
+order $m\leq n$. The bound for all unitary changes of eigenbasis in every
+order is equivalent to the bound for real orthogonal changes of
+eigenbasis on any unbounded set of orders. Both statements allow
+arbitrary complex eigenvalues.
+[Order transfer](Lean/MOC/ModulusOrderTransfer.lean#L140) · [Real orthogonal equivalence](Lean/MOC/RealOrthogonalModulus.lean#L94)
 
 ### Order four
 

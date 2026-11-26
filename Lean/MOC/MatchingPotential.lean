@@ -107,4 +107,59 @@ theorem exists_matching_norm_potential (m : ι → ι → ℂ) (hdiag : ∀ i, m
     rw [← map_prod]
     exact NNReal.coe_le_coe.mp (hperm σ)
 
+/-- When a nonnegative matrix has a positive assignment product, positive
+row and column factors bound its entries. The product of the factors equals
+the largest assignment product. -/
+theorem exists_assignment_product_scaling (w : ι → ι → ℝ)
+    (hw : ∀ i j, 0 ≤ w i j) (hpos : ∃ σ : Equiv.Perm ι, 0 < ∏ j, w (σ j) j) :
+    ∃ (r c : ι → ℝ), (∀ i, 0 < r i) ∧ (∀ j, 0 < c j) ∧
+      (∀ i j, w i j ≤ r i * c j) ∧
+      ∃ σ : Equiv.Perm ι, (∏ i, r i) * (∏ j, c j) = ∏ j, w (σ j) j := by
+  classical
+  obtain ⟨σ, _, hσ⟩ := Finset.exists_max_image Finset.univ
+    (fun τ : Equiv.Perm ι => ∏ j, w (τ j) j) Finset.univ_nonempty
+  let d (j : ι) := w (σ j) j
+  have hprod : 0 < ∏ j, d j := by
+    obtain ⟨τ, hτ⟩ := hpos
+    exact hτ.trans_le (hσ τ (Finset.mem_univ τ))
+  have hd (j : ι) : 0 < d j := by
+    by_contra! hj
+    have hjzero : d j = 0 := le_antisymm hj (hw (σ j) j)
+    exact hprod.ne' (Finset.prod_eq_zero (Finset.mem_univ j) hjzero)
+  let v (i j : ι) : ℝ≥0 := ⟨w (σ i) j / d j, div_nonneg (hw (σ i) j) (hd j).le⟩
+  have hvdiag (i : ι) : v i i = 1 := by
+    apply NNReal.coe_eq_one.mp
+    change d i / d i = 1
+    exact div_self (hd i).ne'
+  have hvperm (τ : Equiv.Perm ι) : (∏ i, v i (τ i)) ≤ 1 := by
+    apply NNReal.coe_le_one.mp
+    rw [NNReal.coe_prod]
+    change (∏ i, w (σ i) (τ i) / d (τ i)) ≤ 1
+    have hdenom : (∏ i, d (τ i)) = ∏ j, d j := Equiv.prod_comp τ d
+    rw [Finset.prod_div_distrib, hdenom]
+    apply (div_le_one₀ hprod).mpr
+    have hnum : (∏ i, w (σ i) (τ i)) = ∏ j, w (σ (τ.symm j)) j := by
+      simpa only [Function.comp_apply, Equiv.symm_apply_apply] using
+        Equiv.prod_comp τ (fun j => w (σ (τ.symm j)) j)
+    rw [hnum]
+    exact hσ (τ.symm.trans σ) (Finset.mem_univ _)
+  obtain ⟨s, hs, hsb⟩ := exists_matching_potential v hvdiag hvperm
+  have hspos (i : ι) : 0 < (s i : ℝ) := zero_lt_one.trans_le (NNReal.one_le_coe.mpr (hs i))
+  refine ⟨fun i => (s (σ.symm i) : ℝ), fun j => d j / (s j : ℝ),
+    fun i => hspos (σ.symm i), fun j => div_pos (hd j) (hspos j), ?_, σ, ?_⟩
+  · intro i j
+    have hscaled := NNReal.coe_le_coe.mpr (hsb (σ.symm i) j)
+    rw [NNReal.coe_mul] at hscaled
+    change w (σ (σ.symm i)) j / d j * (s j : ℝ) ≤ (s (σ.symm i) : ℝ) at hscaled
+    rw [Equiv.apply_symm_apply, div_mul_eq_mul_div₀] at hscaled
+    calc
+      w i j ≤ (s (σ.symm i) : ℝ) * d j / (s j : ℝ) :=
+        (le_div_iff₀ (hspos j)).mpr ((div_le_iff₀ (hd j)).mp hscaled)
+      _ = _ := by ring
+  · have hrows : (∏ i, (s (σ.symm i) : ℝ)) = ∏ i, (s i : ℝ) :=
+      Equiv.prod_comp σ.symm (fun i => (s i : ℝ))
+    have hnonzero : (∏ i, (s i : ℝ)) ≠ 0 := (Finset.prod_pos fun i _ => hspos i).ne'
+    change (∏ i, (s (σ.symm i) : ℝ)) * (∏ j, d j / (s j : ℝ)) = ∏ j, d j
+    rw [Finset.prod_div_distrib, hrows, mul_div_cancel₀ _ hnonzero]
+
 end MOC

@@ -174,6 +174,7 @@ import MOC.KrullHeightChain
 import MOC.LexicographicScores
 import MOC.MarkedPadding
 import MOC.ModulusOrderTransfer
+import MOC.DeterminantModulusBound
 import MOC.RealOrthogonalModulus
 import MOC.DuplicateAnchorObstruction
 import MOC.ScalarAnchorObstruction
