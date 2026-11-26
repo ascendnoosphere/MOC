@@ -409,27 +409,37 @@ import MOC.ThreeFreeEigenvalueObstruction
 import MOC.ThreeHermitianSummands
 import MOC.TranslatedDeterminantPolynomial
 
+import MOC.BivectorPhaseFactorization
 import MOC.ContinuousWeightsAtOrigin
 import MOC.ContinuousWeightsAtOneHot
 import MOC.FlagSuperlevelFiltration
 import MOC.FourSignedHeightBound
+import MOC.FugledeKadisonRegularization
 import MOC.FugledeKadisonTraceLog
 import MOC.GlobalDeletionEllipse
 import MOC.GrassmannianBivectorLift
+import MOC.GrassmannianImageStars
+import MOC.GrassmannianUnitaryAction
+import MOC.GrassmannianUnitaryLift
 import MOC.HaarPermutationTwirl
 import MOC.HarmonicSubsetMatchingTests
 import MOC.InterferenceGram
 import MOC.MatchingListCoefficients
+import MOC.MatchingMonomialRealization
+import MOC.MatrixPencilAmplification
 import MOC.MiddleSubsetMatchingSpan
 import MOC.MinimumNormalizedSpectralMatching
 import MOC.MinimumNormalizedSpectralSlice
 import MOC.MinimumSpectralNormalization
+import MOC.OrderFiveGrassmannianSupport
+import MOC.OrderTwoFlagSphere
 import MOC.PfaffianMatchingModulus
 import MOC.PfaffianSkewCongruence
 import MOC.PfaffianSquareAndGraphBound
 import MOC.PfaffianStandardSkewBlocks
 import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
+import MOC.RealPolynomialDescent
 import MOC.Reformulations.QuadraticDiskCertificate
 import MOC.Reformulations.SubsetOperatorSupport
 import MOC.SpectralTranslationRigidity
@@ -437,6 +447,7 @@ import MOC.SpectralWitnessSeparation
 import MOC.StableRayleighSlice
 import MOC.StructuredRealizationCancellation
 import MOC.ThreeEffectExtremePoints
+import MOC.TracialGramSymmetry
 import MOC.TracialSpectralKernel
 import MOC.WalshMinorSupportObstruction
 

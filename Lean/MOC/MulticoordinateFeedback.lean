@@ -1,4 +1,6 @@
 import MOC.Transfer
+import MOC.CircleSpectra
+import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Analysis.Complex.Circle
 import Mathlib.MeasureTheory.Group.Integral
 import Mathlib.MeasureTheory.Function.LocallyIntegrable
@@ -7,10 +9,8 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
 /-! Unitary Schur feedback on several coordinates and exact quadrature of
 the squared determinant over independently chosen opposite phases.
 
-The common rotation that avoids all singular grid points still needs a Lean proof.
-For each sign choice, scale the diagonal phase matrix by one common scalar.
-Each denominator is a nonzero polynomial in this scalar. The finite union
-of their root sets omits a point of the unit circle. -/
+One common rotation avoids the singular denominators at every point
+of a finite phase grid. -/
 
 open Matrix BigOperators Finset
 
@@ -168,6 +168,76 @@ theorem diagonal_feedback_quadrature (A : Matrix ι ι ℂ) (t : Finset ι)
         Complex.normSq (A.submatrix (Subtype.val : ↥(sᶜ) → ι) Subtype.val).det := by
   rw [feedback_rows_quadrature]
   simp_rw [det_selected_phase_rows A z _ hz]
+
+/-- One unit phase rotates a finite family of invertible feedback matrices
+away from all singular denominators. -/
+theorem exists_common_feedback_rotation {β : Type*} [Finite β]
+    (D : Matrix κ κ ℂ) (Z : β → Matrix κ κ ℂ) (hZ : ∀ b, (Z b).det ≠ 0) :
+    ∃ u : ℂ, Complex.normSq u = 1 ∧ ∀ b, (u • Z b - D).det ≠ 0 := by
+  classical
+  let A (b : β) := (Z b)⁻¹ * D
+  let P (b : β) : Polynomial ℂ :=
+    (1 - (Polynomial.X : Polynomial ℂ) • Polynomial.C.mapMatrix (A b)).det
+  have he (b : β) (r : ℂ) : (P b).eval r = (1 - r • A b).det := by
+    rw [← Polynomial.coe_evalRingHom]
+    change Polynomial.evalRingHom r ((1 - (Polynomial.X : Polynomial ℂ) •
+      Polynomial.C.mapMatrix (A b)).det) = _
+    rw [RingHom.map_det]
+    apply congrArg Matrix.det
+    ext i j : 1
+    by_cases h : i = j <;>
+      simp [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.sub_apply, Matrix.one_apply,
+        Matrix.smul_apply, smul_eq_mul, h]
+  have hp (b : β) : P b ≠ 0 := by
+    intro hz
+    have h := he b 0
+    simp only [hz, Polynomial.eval_zero, zero_smul, sub_zero, Matrix.det_one, zero_ne_one] at h
+  have hbad : (⋃ b : β, circleRotation ⁻¹' {r | (P b).IsRoot r}).Finite :=
+    Set.finite_iUnion fun b => (Polynomial.finite_setOf_isRoot (hp b)).preimage
+      circleRotation_injective.injOn
+  obtain ⟨t, ht⟩ := hbad.exists_not_mem
+  let r := circleRotation t
+  have hr : Complex.normSq r = 1 := circleRotation_normSq t
+  have hrne : r ≠ 0 := by
+    intro hz
+    simp only [hz, map_zero, zero_ne_one] at hr
+  refine ⟨r⁻¹, by rw [Complex.normSq_inv, hr, inv_one], fun b => ?_⟩
+  have hi : IsUnit (Z b).det := isUnit_iff_ne_zero.mpr (hZ b)
+  have hP : (1 - r • A b).det ≠ 0 := by
+    intro hz
+    apply ht
+    exact Set.mem_iUnion.mpr ⟨b, (he b r).trans hz⟩
+  have hprod : (r⁻¹ • Z b) * (r • A b) = D := by
+    rw [Matrix.mul_smul, Matrix.smul_mul, smul_smul, mul_inv_cancel₀ hrne, one_smul,
+      A, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hi, Matrix.one_mul]
+  have hfact : (r⁻¹ • Z b) * (1 - r • A b) = r⁻¹ • Z b - D := by
+    rw [Matrix.mul_sub, Matrix.mul_one, hprod]
+  rw [← hfact, Matrix.det_mul, Matrix.det_smul]
+  exact mul_ne_zero (mul_ne_zero (pow_ne_zero _ (inv_ne_zero hrne)) (hZ b)) hP
+
+/-- Independently choosing opposite phases in each coordinate gives a
+regular feedback grid after a single common unit rotation. -/
+theorem exists_regular_signed_feedback_grid (D : Matrix κ κ ℂ)
+    (z : κ → ℂ) (hz : ∀ i, Complex.normSq (z i) = 1) :
+    ∃ u : ℂ, Complex.normSq u = 1 ∧ ∀ s : Finset κ,
+      (Matrix.diagonal (fun i => u * (if i ∈ s then z i else -z i)) - D).det ≠ 0 := by
+  let Z (s : Finset κ) := Matrix.diagonal (fun i => if i ∈ s then z i else -z i)
+  have hZ (s : Finset κ) : (Z s).det ≠ 0 := by
+    rw [Z, Matrix.det_diagonal]
+    apply Finset.prod_ne_zero_iff.mpr
+    intro i _
+    have hz' : z i ≠ 0 := by
+      intro h
+      simpa only [h, map_zero, zero_ne_one] using hz i
+    by_cases hi : i ∈ s
+    · simpa only [if_pos hi] using hz'
+    · simpa only [if_neg hi] using neg_ne_zero.mpr hz'
+  obtain ⟨u, hu, h⟩ := exists_common_feedback_rotation D Z hZ
+  refine ⟨u, hu, fun s => ?_⟩
+  have he : u • Z s = Matrix.diagonal (fun i => u * (if i ∈ s then z i else -z i)) := by
+    ext i j : 1
+    by_cases hij : i = j <;> simp [Z, Matrix.diagonal_apply, Matrix.smul_apply, smul_eq_mul, hij]
+  exact he ▸ h s
 
 open MeasureTheory
 
