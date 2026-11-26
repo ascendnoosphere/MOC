@@ -411,21 +411,29 @@ import MOC.TranslatedDeterminantPolynomial
 
 import MOC.ContinuousWeightsAtOrigin
 import MOC.ContinuousWeightsAtOneHot
+import MOC.FlagSuperlevelFiltration
 import MOC.FourSignedHeightBound
+import MOC.FugledeKadisonTraceLog
 import MOC.GlobalDeletionEllipse
+import MOC.GrassmannianBivectorLift
 import MOC.HaarPermutationTwirl
 import MOC.HarmonicSubsetMatchingTests
 import MOC.InterferenceGram
 import MOC.MatchingListCoefficients
 import MOC.MiddleSubsetMatchingSpan
 import MOC.MinimumNormalizedSpectralMatching
+import MOC.MinimumNormalizedSpectralSlice
 import MOC.MinimumSpectralNormalization
+import MOC.PfaffianMatchingModulus
 import MOC.ProbeConstraintTopology
 import MOC.RankOneAffineInvariants
 import MOC.Reformulations.QuadraticDiskCertificate
 import MOC.Reformulations.SubsetOperatorSupport
+import MOC.SpectralTranslationRigidity
 import MOC.SpectralWitnessSeparation
+import MOC.StructuredRealizationCancellation
 import MOC.ThreeEffectExtremePoints
+import MOC.TracialSpectralKernel
 import MOC.WalshMinorSupportObstruction
 
 open Lean Elab Command in

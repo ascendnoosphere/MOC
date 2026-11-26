@@ -1,9 +1,12 @@
 import MOC.DeterminantPolynomialInfeasibility
 import Mathlib.Algebra.MvPolynomial.Rename
+import Mathlib.Algebra.Order.Ring.Cone
 import Mathlib.Algebra.Ring.Semireal.Defs
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.RingTheory.Ideal.Maps
+import Mathlib.RingTheory.Ideal.Maximal
 import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.RingTheory.Localization.Defs
 
 /-! Exact certificate implications for polynomial determinant separation. -/
 
@@ -12,6 +15,8 @@ open BigOperators
 namespace MOC
 
 noncomputable section
+
+universe u
 
 private theorem map_sumSq {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
     {a : R} (ha : IsSumSq a) : IsSumSq (f a) := by
@@ -40,6 +45,210 @@ private theorem lift_quotient_sumSq {R : Type*} [CommRing R] (I : Ideal R)
       obtain ⟨b, hb, hmap⟩ := ih
       obtain ⟨d, hd⟩ := Ideal.Quotient.mk_surjective (I := I) c
       exact ⟨d * d + b, IsSumSq.sq_add d hb, by rw [map_add, map_mul, hd, hmap]⟩
+
+private def oneAddSquares (R : Type*) [CommRing R] : Submonoid R where
+  carrier := {x | ∃ s : R, IsSumSq s ∧ x = 1 + s}
+  one_mem' := ⟨0, IsSumSq.zero, (add_zero 1).symm⟩
+  mul_mem' := by
+    rintro _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩
+    exact ⟨a + b + a * b, (ha.add hb).add (ha.mul hb), by ring⟩
+
+private theorem clear_localization_sumSq {R L : Type*} [CommRing R] [CommRing L]
+    [Algebra R L] (S : Submonoid R) [IsLocalization S L] {z : L} (hz : IsSumSq z) :
+    ∃ (d : S) (p : R), IsSumSq p ∧ algebraMap R L p = (algebraMap R L d) ^ 2 * z := by
+  induction hz with
+  | zero => exact ⟨1, 0, IsSumSq.zero, by rw [map_zero, mul_zero]⟩
+  | sq_add z _ ih =>
+      obtain ⟨d, p, hp, hscale⟩ := ih
+      obtain ⟨⟨a, b⟩, hnum⟩ := IsLocalization.surj S z
+      refine ⟨b * d, (a * d) * (a * d) + ((b : R) * b) * p,
+        IsSumSq.sq_add (a * d) ((IsSumSq.mul_self (b : R)).mul hp), ?_⟩
+      simp only [Submonoid.coe_mul, map_add, map_mul, ← hnum, hscale]
+      ring
+
+private theorem one_add_sumSq_isUnit_in_localization {R : Type*} [CommRing R]
+    {z : Localization (oneAddSquares R)} (hz : IsSumSq z) : IsUnit (1 + z) := by
+  let S := oneAddSquares R
+  let L := Localization S
+  let q := algebraMap R L
+  obtain ⟨d, p, hp, hscale⟩ := clear_localization_sumSq S hz
+  have hd : ∃ t : R, IsSumSq t ∧ (d : R) = 1 + t := d.property
+  obtain ⟨t, ht, hd⟩ := hd
+  have hmem : (d : R) ^ 2 + p ∈ S := by
+    refine ⟨t + t + t * t + p, ((ht.add ht).add (ht.mul ht)).add hp, ?_⟩
+    rw [hd]
+    ring
+  have hnum : IsUnit (q ((d : R) ^ 2 + p)) := IsLocalization.map_units L ⟨_, hmem⟩
+  have he : q ((d : R) ^ 2 + p) = (1 + z) * (q d) ^ 2 := by
+    rw [map_add, map_pow, hscale]
+    ring
+  rw [he] at hnum
+  exact isUnit_of_mul_isUnit_left hnum
+
+/-- A semireal ring has a homomorphism to a semireal field. Localize
+at one plus the sums of squares, then pass to a maximal residue field. -/
+theorem exists_semireal_field_target {R : Type u} [CommRing R] [IsSemireal R] :
+    ∃ (K : Type u) (_ : Field K), IsSemireal K ∧ Nonempty (R →+* K) := by
+  let S := oneAddSquares R
+  let L := Localization S
+  have hzero : (0 : R) ∉ S := by
+    rintro ⟨s, hs, hz⟩
+    exact IsSemireal.one_add_ne_zero hs hz.symm
+  letI : Nontrivial L := by
+    refine nontrivial_of_ne (0 : L) 1 fun hz => ?_
+    have hmap : algebraMap R L (1 : R) = 0 := by
+      rw [map_one]
+      exact hz.symm
+    obtain ⟨d, hd⟩ := (IsLocalization.map_eq_zero_iff S L (1 : R)).mp hmap
+    have hvalue : (d : R) = 0 := by simpa only [mul_one] using hd
+    exact hzero (hvalue ▸ d.property)
+  obtain ⟨I, hI⟩ := Ideal.exists_maximal (α := L)
+  letI : I.IsMaximal := hI
+  let K := L ⧸ I
+  letI : Field K := Ideal.Quotient.field I
+  have hK : IsSemireal K := by
+    constructor
+    intro s hs hz
+    obtain ⟨p, hp, he⟩ := lift_quotient_sumSq I hs
+    have hu : IsUnit (Ideal.Quotient.mk I (1 + p)) :=
+      (one_add_sumSq_isUnit_in_localization hp).map (Ideal.Quotient.mk I)
+    apply hu.ne_zero
+    rw [map_add, map_one, he, hz]
+  exact ⟨K, inferInstance, hK, ⟨(Ideal.Quotient.mk I).comp (algebraMap R L)⟩⟩
+
+private def adjoinConeElement {K : Type*} [Field K] (P : Subsemiring K)
+    (a : K) (ha : a * a ∈ P) : Subsemiring K where
+  carrier := {x | ∃ p ∈ P, ∃ q ∈ P, x = p + a * q}
+  zero_mem' := ⟨0, P.zero_mem, 0, P.zero_mem, by simp⟩
+  one_mem' := ⟨1, P.one_mem, 0, P.zero_mem, by simp⟩
+  add_mem' := by
+    rintro _ _ ⟨p, hp, q, hq, rfl⟩ ⟨r, hr, s, hs, rfl⟩
+    exact ⟨p + r, P.add_mem hp hr, q + s, P.add_mem hq hs, by ring⟩
+  mul_mem' := by
+    rintro _ _ ⟨p, hp, q, hq, rfl⟩ ⟨r, hr, s, hs, rfl⟩
+    exact ⟨p * r + (a * a) * (q * s), P.add_mem (P.mul_mem hp hr) (P.mul_mem ha (P.mul_mem hq hs)),
+      p * s + q * r, P.add_mem (P.mul_mem hp hs) (P.mul_mem hq hr), by ring⟩
+
+/-- A semireal field admits an order compatible with its field operations. -/
+theorem exists_order_of_semireal_field (K : Type*) [Field K] [IsSemireal K] :
+    ∃ _ : LinearOrder K, IsStrictOrderedRing K := by
+  classical
+  let C₀ := Subsemiring.sumSq K
+  let G : Set (Subsemiring K) := {P | C₀ ≤ P ∧ (-1 : K) ∉ P}
+  have hbase : C₀ ∈ G :=
+    ⟨le_rfl, fun hn => IsSemireal.not_isSumSq_neg_one (Subsemiring.mem_sumSq.mp hn)⟩
+  have hchain (c : Set (Subsemiring K)) (hc : c ⊆ G) (hdir : IsChain (· ≤ ·) c)
+      (P₀ : Subsemiring K) (hP₀ : P₀ ∈ c) : ∃ B ∈ G, ∀ P ∈ c, P ≤ B := by
+    letI : Nonempty c := ⟨⟨P₀, hP₀⟩⟩
+    refine ⟨sSup c, ⟨(hc hP₀).1.trans (le_sSup hP₀), ?_⟩, fun _ => le_sSup⟩
+    intro hneg
+    have ⟨Q, hQ⟩ := (Subsemiring.mem_iSup_of_directed hdir.directed).mp (sSup_eq_iSup' c ▸ hneg)
+    exact (hc Q.property).2 hQ
+  obtain ⟨P, _, hP⟩ := zorn_le_nonempty₀ G hchain C₀ hbase
+  have hsquare (a : K) : a * a ∈ P := hP.1.1 (Subsemiring.mem_sumSq.mpr (IsSumSq.mul_self a))
+  have hinv {a : K} (ha : a ∈ P) (hn : a ≠ 0) : a⁻¹ ∈ P := by
+    have hm := P.mul_mem ha (hsquare a⁻¹)
+    rwa [← mul_assoc, mul_inv_cancel₀ hn, one_mul] at hm
+  have htotal (a : K) : a ∈ P ∨ -a ∈ P := by
+    by_cases ha : a ∈ P
+    · exact Or.inl ha
+    right
+    let Q := adjoinConeElement P a (hsquare a)
+    have hPQ : P ≤ Q := fun p hp => ⟨p, hp, 0, P.zero_mem, by simp⟩
+    have haQ : a ∈ Q := ⟨0, P.zero_mem, 1, P.one_mem, by simp⟩
+    have hlt : P < Q := lt_of_le_of_ne hPQ (fun he => ha (he.symm ▸ haQ))
+    have hnQ : (-1 : K) ∈ Q := by
+      by_contra hn
+      exact hP.not_prop_of_gt hlt ⟨hP.1.1.trans hPQ, hn⟩
+    obtain ⟨p, hp, q, hq, he⟩ := hnQ
+    have hqn : q ≠ 0 := by
+      intro hz
+      have hneg : (-1 : K) = p := by simpa only [hz, mul_zero, add_zero] using he
+      exact hP.1.2 (hneg.symm ▸ hp)
+    have hsign : -(a * q) = 1 + p := by linear_combination he
+    rw [show -a = (1 + p) * q⁻¹ by rw [← hsign, neg_mul, mul_assoc, mul_inv_cancel₀ hqn, mul_one]]
+    exact P.mul_mem (P.add_mem P.one_mem hp) (hinv hq hqn)
+  let C : RingCone K :=
+    { __ := P
+      eq_zero_of_mem_of_neg_mem' := by
+        intro a ha hna
+        by_contra hn
+        have hprod := P.mul_mem hna (hinv ha hn)
+        rw [neg_mul, mul_inv_cancel₀ hn] at hprod
+        exact hP.1.2 hprod }
+  letI : IsMaxCone C := ⟨htotal⟩
+  let L : LinearOrder K := LinearOrder.mkOfAddGroupCone C (fun a => Classical.propDecidable (a ∈ C))
+  letI : LinearOrder K := L
+  letI : IsOrderedAddMonoid K := IsOrderedAddMonoid.mkOfCone C
+  letI : IsOrderedRing K := IsOrderedRing.mkOfCone C
+  letI : ZeroLEOneClass K := ⟨by
+    change (1 - 0 : K) ∈ C
+    rw [sub_zero]
+    exact P.one_mem⟩
+  exact ⟨L, IsStrictOrderedRing.of_mul_pos fun a b ha hb =>
+    lt_of_le_of_ne (mul_nonneg ha.le hb.le) (mul_ne_zero ha.ne' hb.ne').symm⟩
+
+/-- The coordinate ring is semireal exactly when the polynomial system
+has a solution in some semireal field extension of the real coefficients. -/
+theorem semireal_polynomial_quotient_iff_extension_point {V : Type u} {E : Type*}
+    (f : E → MvPolynomial V ℝ) :
+    IsSemireal (MvPolynomial V ℝ ⧸ Ideal.span (Set.range f)) ↔
+      ∃ (K : Type u) (_ : Field K) (_ : IsSemireal K)
+        (e : ℝ →+* K) (x : V → K), ∀ j, MvPolynomial.eval₂ e x (f j) = 0 := by
+  let I := Ideal.span (Set.range f)
+  let A := MvPolynomial V ℝ ⧸ I
+  constructor
+  · intro hA
+    letI : IsSemireal A := hA
+    obtain ⟨K, hK, hS, ⟨φ⟩⟩ := exists_semireal_field_target (R := A)
+    letI := hK
+    let ψ := φ.comp (Ideal.Quotient.mk I)
+    let e := ψ.comp MvPolynomial.C
+    let x : V → K := ψ ∘ MvPolynomial.X
+    have he : MvPolynomial.eval₂Hom e x = ψ := by
+      apply MvPolynomial.ringHom_ext
+      · exact fun r => MvPolynomial.eval₂Hom_C e x r
+      · exact fun i => MvPolynomial.eval₂Hom_X' e x i
+    refine ⟨K, hK, hS, e, x, fun j => ?_⟩
+    change MvPolynomial.eval₂Hom e x (f j) = 0
+    rw [he]
+    change φ (Ideal.Quotient.mk I (f j)) = 0
+    rw [Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_range_self j)), map_zero]
+  · rintro ⟨K, hK, hS, e, x, hx⟩
+    letI := hK
+    letI := hS
+    let ψ := MvPolynomial.eval₂Hom e x
+    have hker : I ≤ RingHom.ker ψ := by
+      apply Ideal.span_le.mpr
+      rintro _ ⟨j, rfl⟩
+      exact RingHom.mem_ker.mpr (hx j)
+    let φ : A →+* K := Ideal.Quotient.lift I ψ fun p hp => RingHom.mem_ker.mp (hker hp)
+    constructor
+    intro s hs hz
+    have he : 1 + φ s = 0 := by
+      simpa only [map_add, map_one, map_zero] using congrArg φ hz
+    exact IsSemireal.one_add_ne_zero (map_sumSq φ hs) he
+
+/-- A semireal coordinate ring has a point in a linearly ordered field
+extension of the real coefficients. Conversely such a point makes the
+coordinate ring semireal. -/
+theorem semireal_polynomial_quotient_iff_ordered_extension_point {V : Type u} {E : Type*}
+    (f : E → MvPolynomial V ℝ) :
+    IsSemireal (MvPolynomial V ℝ ⧸ Ideal.span (Set.range f)) ↔
+      ∃ (K : Type u) (_ : Field K) (_ : LinearOrder K) (_ : IsStrictOrderedRing K)
+        (e : ℝ →+* K) (x : V → K), ∀ j, MvPolynomial.eval₂ e x (f j) = 0 := by
+  rw [semireal_polynomial_quotient_iff_extension_point]
+  constructor
+  · rintro ⟨K, hK, hS, e, x, hx⟩
+    letI := hK
+    letI := hS
+    obtain ⟨L, hL⟩ := exists_order_of_semireal_field K
+    exact ⟨K, hK, L, hL, e, x, hx⟩
+  · rintro ⟨K, hK, hL, hO, e, x, hx⟩
+    letI := hK
+    letI := hL
+    letI := hO
+    exact ⟨K, hK, inferInstance, e, x, hx⟩
 
 private theorem not_isSemireal_iff_neg_one_sumSq (R : Type*) [CommRing R] :
     ¬ IsSemireal R ↔ IsSumSq (-1 : R) := by
@@ -99,6 +308,17 @@ theorem semireal_quotient_iff_no_polynomial_certificate {R K : Type*}
   rw [polynomial_certificate_iff_quotient_sumSq]
   exact not_not.symm.trans (not_congr (not_isSemireal_iff_neg_one_sumSq _))
 
+/-- A finite equation certificate exists exactly when the equations have
+no solution over any ordered field extending the real coefficients. -/
+theorem polynomial_certificate_iff_no_ordered_extension_point {V : Type u} {E : Type*}
+    [Fintype E] (f : E → MvPolynomial V ℝ) :
+    (∃ s : MvPolynomial V ℝ, IsSumSq s ∧ ∃ h : E → MvPolynomial V ℝ,
+        (-1 : MvPolynomial V ℝ) = s + ∑ j, h j * f j) ↔
+      ¬ ∃ (K : Type u) (_ : Field K) (_ : LinearOrder K) (_ : IsStrictOrderedRing K)
+        (e : ℝ →+* K) (x : V → K), ∀ j, MvPolynomial.eval₂ e x (f j) = 0 := by
+  rw [polynomial_certificate_iff_quotient_sumSq, ← not_isSemireal_iff_neg_one_sumSq]
+  exact not_congr (semireal_polynomial_quotient_iff_ordered_extension_point f)
+
 /-- Real solutions of a polynomial system are the real-valued algebra
 homomorphisms of its coordinate ring. -/
 theorem real_zeros_iff_real_algebra_point {V K : Type*} (f : K → MvPolynomial V ℝ) :
@@ -136,7 +356,7 @@ theorem no_real_zeros_of_quotient_sumSq {V K : Type*} [Fintype K]
   rw [map_neg, map_one] at hn
   exact (not_le_of_gt (neg_neg_of_pos zero_lt_one)) hn
 
-variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {ι : Type u} [Fintype ι] [DecidableEq ι]
 
 local notation "P" => MvPolynomial (DeterminantWitnessVariable ι) ℝ
 
@@ -417,6 +637,21 @@ theorem determinant_certificate_completeness_iff_semireal_real_point [Nonempty �
     exact h hpoint hsemi
   · intro h hpoint hsemi
     exact hpoint (h hsemi)
+
+/-- Certificate completeness for strict separation is equivalent to
+descent of its polynomial solutions from ordered extensions to the reals. -/
+theorem determinant_certificate_completeness_iff_ordered_field_descent [Nonempty ι] :
+    let f := determinantWitnessPolynomial (ι := ι)
+    let A := P ⧸ Ideal.span (Set.range f)
+    (Conjecture ι → IsSumSq (-1 : A)) ↔
+      ((∃ (K : Type u) (_ : Field K) (_ : LinearOrder K) (_ : IsStrictOrderedRing K)
+          (e : ℝ →+* K) (x : DeterminantWitnessVariable ι → K),
+          ∀ j, MvPolynomial.eval₂ e x (f j) = 0) →
+        ∃ x : DeterminantWitnessVariable ι → ℝ, ∀ j, MvPolynomial.eval x (f j) = 0) := by
+  dsimp only
+  rw [determinant_certificate_completeness_iff_semireal_real_point,
+    semireal_polynomial_quotient_iff_ordered_extension_point,
+    ← real_zeros_iff_real_algebra_point]
 
 end
 end MOC

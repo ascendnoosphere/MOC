@@ -139,11 +139,8 @@ Prove `MinimumNormalizedSpectralMatching` for an arbitrary finite index
 type. The construction above gives the implication to the determinant
 conjecture in the same order.
 
-Derive opposite translation for a member of this class. For each real
-translation parameter, add one scalar variable to both lists. Use the
-first two coefficients to bound the sum of the squares of its real
-roots. Apply the resulting bound on the constant coefficient to the
-polynomial in the translation parameter.
+See `MOC.SpectralTranslationRigidity` for the opposite translation
+theorem and the marginal and coefficient identities.
 -/
 
 end

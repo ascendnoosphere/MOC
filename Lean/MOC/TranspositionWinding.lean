@@ -6,7 +6,7 @@ import Mathlib.Topology.SeparatedMap
 import Mathlib.Topology.UnitInterval
 import Mathlib.Topology.UniformSpace.HeineCantor
 
-/-! Transposition walks for the attainable determinant range. -/
+/-! Transposition walks and integer edge cycles for the determinant range. -/
 
 open BigOperators Matrix
 open scoped Topology unitInterval
@@ -58,9 +58,64 @@ private theorem telescope_sum (f : ℕ → ℝ) (m : ℕ) :
     rw [Finset.sum_range_succ, ih]
     ring
 
-/-- A real value on each oriented edge has zero sum along every closed walk
-if reversing an edge negates its value and every translated square has
-zero sum. The proof averages over all permutation translates of the walk. -/
+/-- If reversal negates the edge values and each translated square has
+zero sum, the edge values are differences of a function on vertices. -/
+theorem exists_transposition_potential_of_squares
+    (d : Equiv.Perm ι → Equiv.Perm ι → ℝ)
+    (hreverse : ∀ p q, TranspositionEdge p q → d q p = -d p q)
+    (hsquare : ∀ i j, i ≠ j → ∀ p q, TranspositionEdge p q →
+      let s := Equiv.swap i j
+      d (s * p) (s * q) - d p q = d q (s * q) - d p (s * p)) :
+    ∃ v : Equiv.Perm ι → ℝ, ∀ p q, TranspositionEdge p q → d p q = v q - v p := by
+  classical
+  have hex (g : Perm ι) : ∃ v : Perm ι → ℝ, ∀ p q, TranspositionEdge p q →
+      d (g * p) (g * q) - d p q = v q - v p := by
+    induction g using Equiv.Perm.swap_induction_on with
+    | one => exact ⟨fun _ => 0, by simp⟩
+    | swap_mul g i j hij ih =>
+      let s := Equiv.swap i j
+      obtain ⟨v, hv⟩ := ih
+      refine ⟨fun p => v p + d (g * p) (s * (g * p)), ?_⟩
+      intro p q hpq
+      have he : d (s * (g * p)) (s * (g * q)) - d (g * p) (g * q) =
+          d (g * q) (s * (g * q)) - d (g * p) (s * (g * p)) :=
+        hsquare i j hij (g * p) (g * q) (transpositionEdge_translate g hpq)
+      change d ((s * g) * p) ((s * g) * q) - d p q =
+        v q + d (g * q) (s * (g * q)) - (v p + d (g * p) (s * (g * p)))
+      simp only [mul_assoc]
+      linarith only [he, hv p q hpq]
+  choose v hv using hex
+  let N : ℝ := Fintype.card (Perm ι)
+  have hN : N ≠ 0 := by
+    change (Fintype.card (Perm ι) : ℝ) ≠ 0
+    exact_mod_cast (Fintype.card_ne_zero : Fintype.card (Perm ι) ≠ 0)
+  refine ⟨fun p => -(∑ g, v g p) / N, ?_⟩
+  intro p q hpq
+  have hsum : (∑ g : Perm ι, d (g * p) (g * q)) = 0 := by
+    obtain ⟨i, j, hij, hstep⟩ := hpq
+    let s := Equiv.swap i j
+    let f (g : Perm ι) := d (g * p) (g * q)
+    have hsq : s * q = p := by
+      rw [hstep, ← mul_assoc, swap_mul_swap_self, one_mul]
+    have hf (g : Perm ι) : f (g * s) = -f g := by
+      change d ((g * s) * p) ((g * s) * q) = -d (g * p) (g * q)
+      simp only [mul_assoc, hsq, show s * p = q from hstep.symm]
+      exact hreverse _ _ (transpositionEdge_translate g ⟨i, j, hij, hstep⟩)
+    have he : (∑ g, f (g * s)) = ∑ g, f g := Equiv.sum_comp (Equiv.mulRight s) f
+    simp only [hf, Finset.sum_neg_distrib] at he
+    change (∑ g, f g) = 0
+    linarith only [he]
+  have hdiff : (∑ g : Perm ι, (d (g * p) (g * q) - d p q)) = ∑ g, (v g q - v g p) :=
+    Finset.sum_congr rfl fun g _ => hv g p q hpq
+  simp only [Finset.sum_sub_distrib, hsum, Finset.sum_const, Finset.card_univ,
+    nsmul_eq_mul, zero_sub] at hdiff
+  rw [← sub_div]
+  apply (eq_div_iff hN).mpr
+  change -(N * d p q) = (∑ g, v g q) - ∑ g, v g p at hdiff
+  linarith only [hdiff]
+
+/-- Edge values with the square and reversal properties sum to zero on
+each closed transposition walk. -/
 theorem transposition_walk_sum_eq_zero_of_squares
     (d : Equiv.Perm ι → Equiv.Perm ι → ℝ)
     (hreverse : ∀ p q, TranspositionEdge p q → d q p = -d p q)
@@ -70,47 +125,13 @@ theorem transposition_walk_sum_eq_zero_of_squares
     (m : ℕ) (p : ℕ → Equiv.Perm ι) (hclosed : p m = p 0)
     (hwalk : ∀ k < m, TranspositionEdge (p k) (p (k + 1))) :
     (∑ k ∈ Finset.range m, d (p k) (p (k + 1))) = 0 := by
-  let total (g : Perm ι) := ∑ k ∈ Finset.range m, d (g * p k) (g * p (k + 1))
-  have hinvariant (g : Perm ι) : total g = total 1 := by
-    induction g using Equiv.Perm.swap_induction_on with
-    | one => rfl
-    | swap_mul g i j hij ih =>
-      let s := Equiv.swap i j
-      have hdiff : total (s * g) - total g =
-          ∑ k ∈ Finset.range m, (d (g * p (k + 1)) (s * (g * p (k + 1))) -
-            d (g * p k) (s * (g * p k))) := by
-        simp only [total, mul_assoc, ← Finset.sum_sub_distrib]
-        apply Finset.sum_congr rfl
-        intro k hk
-        exact hsquare i j hij (g * p k) (g * p (k + 1))
-          (transpositionEdge_translate g (hwalk k (Finset.mem_range.mp hk)))
-      have hz : total (s * g) - total g = 0 := by
-        rw [hdiff, telescope_sum (fun k => d (g * p k) (s * (g * p k))), hclosed, sub_self]
-      exact (sub_eq_zero.mp hz).trans ih
-  have hedge (k : ℕ) (hk : k < m) : (∑ g : Perm ι, d (g * p k) (g * p (k + 1))) = 0 := by
-    obtain ⟨i, j, _, hstep⟩ := hwalk k hk
-    let s := Equiv.swap i j
-    let f (g : Perm ι) := d (g * p k) (g * p (k + 1))
-    have hf (g : Perm ι) : f (g * s) = -f g := by
-      have hs : s * p (k + 1) = p k := by
-        rw [hstep]
-        change Equiv.swap i j * (Equiv.swap i j * p k) = p k
-        rw [← mul_assoc, swap_mul_swap_self, one_mul]
-      change d ((g * s) * p k) ((g * s) * p (k + 1)) = _
-      rw [mul_assoc, mul_assoc, hs, ← hstep]
-      exact hreverse _ _ (transpositionEdge_translate g (hwalk k hk))
-    have he : (∑ g, f (g * s)) = ∑ g, f g := Equiv.sum_comp (Equiv.mulRight s) f
-    simp only [hf, Finset.sum_neg_distrib] at he
-    change (∑ g, f g) = 0
-    linarith only [he]
-  have hsum : (∑ g : Perm ι, total g) = 0 := by
-    unfold total
-    rw [Finset.sum_comm]
-    exact Finset.sum_eq_zero fun k hk => hedge k (Finset.mem_range.mp hk)
-  simp only [hinvariant, Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at hsum
-  have hcard : (Fintype.card (Perm ι) : ℝ) ≠ 0 := by
-    exact_mod_cast (Fintype.card_ne_zero : Fintype.card (Perm ι) ≠ 0)
-  simpa only [total, one_mul] using (mul_eq_zero.mp hsum).resolve_left hcard
+  obtain ⟨v, hv⟩ := exists_transposition_potential_of_squares d hreverse hsquare
+  calc
+    _ = ∑ k ∈ Finset.range m, (v (p (k + 1)) - v (p k)) :=
+      Finset.sum_congr rfl fun k hk => hv _ _ (hwalk k (Finset.mem_range.mp hk))
+    _ = 0 := by
+      rw [telescope_sum (v ∘ p)]
+      simp only [Function.comp_apply, hclosed, sub_self]
 
 private theorem swapMatrix_apply (i j k l : ι) :
     (Equiv.swap i j).permMatrix ℂ k l = if k = Equiv.swap i j l then 1 else 0 := by
@@ -603,42 +624,44 @@ private theorem square_boundary_angle (F : I × I → ℂ) (hF : Continuous F) (
   have H₃ := hside (fun t => (t,1)) (continuous_id.prodMk continuous_const) _ _ h₃
   linarith only [H₀, H₁, H₂, H₃]
 
-/-- The sum of principal changes of argument along the matching edges, in
-radians. When the polygon avoids the point, division by `2 * Real.pi`
-gives its winding number. -/
-def transpositionWindingAngle (a b : ι → ℂ) (q : ℂ)
-    (m : ℕ) (p : ℕ → Equiv.Perm ι) : ℝ :=
-  ∑ k ∈ Finset.range m, Complex.arg
-    ((matchingProduct a b (p (k + 1)) - q) / (matchingProduct a b (p k) - q))
+/-- The principal change of argument along an oriented matching edge. -/
+def matchingEdgeAngle (a b : ι → ℂ) (z : ℂ) (p q : Equiv.Perm ι) : ℝ :=
+  Complex.arg ((matchingProduct a b q - z) / (matchingProduct a b p - z))
 
-/-- A closed transposition walk with nonzero winding certifies an attained
-determinant value in every dimension, including repeated eigenvalues. -/
-theorem mem_determinantRange_of_transposition_winding_ne_zero (a b : ι → ℂ) (q : ℂ)
-    (m : ℕ) (p : ℕ → Equiv.Perm ι) (hclosed : p m = p 0)
-    (hwalk : ∀ k < m, TranspositionEdge (p k) (p (k + 1)))
-    (hwinding : transpositionWindingAngle a b q m p ≠ 0) :
-    q ∈ determinantRange a b := by
-  by_contra hq
-  let z := matchingProduct a b
-  let d (p₀ p₁ : Perm ι) := Complex.arg ((z p₁ - q) / (z p₀ - q))
-  have hz (p₀ : Perm ι) : z p₀ - q ≠ 0 := by
+/-- Reversing an oriented segment that avoids the point negates its angle. -/
+theorem matchingEdgeAngle_reverse_of_segment_avoids (a b : ι → ℂ) (z : ℂ)
+    (p q : Equiv.Perm ι)
+    (h : ∀ t, straightSegmentPoint (matchingProduct a b p) (matchingProduct a b q) t ≠ z) :
+    matchingEdgeAngle a b z q p = -matchingEdgeAngle a b z p q := by
+  have hp : matchingProduct a b p - z ≠ 0 := by
     apply sub_ne_zero.mpr
-    intro he
-    apply hq
-    rw [← he]
-    exact matchingProduct_mem_determinantRange a b p₀
+    simpa only [straightSegmentPoint_zero] using h 0
+  have hseg (t : I) : straightSegmentPoint (matchingProduct a b p - z)
+      (matchingProduct a b q - z) t ≠ 0 := by
+    rw [← straightSegmentPoint_sub]
+    exact sub_ne_zero.mpr (h t)
+  have hslit := edge_ratio_slit hp hseg 1
+  rw [straightSegmentPoint_one] at hslit
+  unfold matchingEdgeAngle
+  rw [← inv_div, Complex.arg_inv, if_neg (Complex.slitPlane_arg_ne_pi hslit)]
+
+/-- At an omitted point, each oriented edge angle is a difference of values
+on its endpoints. -/
+theorem exists_matchingEdgeAngle_potential_of_notMem (a b : ι → ℂ) (q : ℂ)
+    (hq : q ∉ determinantRange a b) :
+    ∃ v : Equiv.Perm ι → ℝ, ∀ p r, TranspositionEdge p r →
+      matchingEdgeAngle a b q p r = v r - v p := by
+  let d := matchingEdgeAngle a b q
   have hreverse (p₀ p₁ : Perm ι) (hedge : TranspositionEdge p₀ p₁) :
       d p₁ p₀ = -d p₀ p₁ := by
     obtain ⟨i,j,hij,rfl⟩ := hedge
     obtain ⟨F, _, hF, hside, _, _, _⟩ :=
       transposition_square_in_determinant_range a b p₀ i j i j hij hij
-    have hseg (t : I) : straightSegmentPoint (z p₀ - q) (z (Equiv.swap i j * p₀) - q) t ≠ 0 := by
-      rw [← straightSegmentPoint_sub, ← hside t]
-      exact sub_ne_zero.mpr (fun he => hq (he ▸ hF (0,t)))
-    have hslit := edge_ratio_slit (hz p₀) hseg 1
-    rw [straightSegmentPoint_one] at hslit
-    dsimp only [d]
-    rw [← inv_div, Complex.arg_inv, if_neg (Complex.slitPlane_arg_ne_pi hslit)]
+    apply matchingEdgeAngle_reverse_of_segment_avoids
+    intro t ht
+    apply hq
+    rw [← ht, ← hside t]
+    exact hF (0,t)
   have hsquare (x y : ι) (hxy : x ≠ y) (p₀ p₁ : Perm ι) (hedge : TranspositionEdge p₀ p₁) :
       let r := Equiv.swap x y
       d (r * p₀) (r * p₁) - d p₀ p₁ = d p₁ (r * p₁) - d p₀ (r * p₀) := by
@@ -646,7 +669,106 @@ theorem mem_determinantRange_of_transposition_winding_ne_zero (a b : ι → ℂ)
     obtain ⟨F, hF, hmem, H₀, H₁, H₂, H₃⟩ :=
       transposition_square_in_determinant_range a b p₀ i j x y hij hxy
     exact square_boundary_angle F hF q (fun u he => hq (he ▸ hmem u)) _ _ _ _ H₀ H₁ H₂ H₃
-  exact hwinding (transposition_walk_sum_eq_zero_of_squares d hreverse hsquare m p hclosed hwalk)
+  exact exists_transposition_potential_of_squares d hreverse hsquare
+
+/-- The sum of edge angles along a transposition walk, in radians. If the
+walk avoids the point, division by `2 * Real.pi` gives its winding number. -/
+def transpositionWindingAngle (a b : ι → ℂ) (q : ℂ)
+    (m : ℕ) (p : ℕ → Equiv.Perm ι) : ℝ :=
+  ∑ k ∈ Finset.range m, matchingEdgeAngle a b q (p k) (p (k + 1))
+
+/-- A closed transposition walk with nonzero winding gives an attained value. -/
+theorem mem_determinantRange_of_transposition_winding_ne_zero (a b : ι → ℂ) (q : ℂ)
+    (m : ℕ) (p : ℕ → Equiv.Perm ι) (hclosed : p m = p 0)
+    (hwalk : ∀ k < m, TranspositionEdge (p k) (p (k + 1)))
+    (hwinding : transpositionWindingAngle a b q m p ≠ 0) :
+    q ∈ determinantRange a b := by
+  by_contra hq
+  obtain ⟨v, hv⟩ := exists_matchingEdgeAngle_potential_of_notMem a b q hq
+  apply hwinding
+  calc
+    transpositionWindingAngle a b q m p = ∑ k ∈ Finset.range m, (v (p (k + 1)) - v (p k)) :=
+      Finset.sum_congr rfl fun k hk => hv _ _ (hwalk k (Finset.mem_range.mp hk))
+    _ = 0 := by
+      rw [telescope_sum (v ∘ p)]
+      simp only [Function.comp_apply, hclosed, sub_self]
+
+/-- An integer cellular cycle of the transposition graph. The boundary
+at a vertex is the incoming coefficient sum minus the outgoing sum.
+Either orientation can represent an edge, with the opposite coefficient. -/
+structure TranspositionCycle (ι : Type*) [Fintype ι] [DecidableEq ι] where
+  coefficient : Equiv.Perm ι → Equiv.Perm ι → ℤ
+  supported : ∀ p q, coefficient p q ≠ 0 → TranspositionEdge p q
+  boundary_zero : ∀ p, (∑ q, coefficient q p) = ∑ q, coefficient p q
+
+/-- A cycle avoids the point if every segment with nonzero coefficient avoids it. -/
+def TranspositionCycle.Avoids (c : TranspositionCycle ι) (a b : ι → ℂ) (z : ℂ) : Prop :=
+  ∀ p q, c.coefficient p q ≠ 0 →
+    ∀ t, straightSegmentPoint (matchingProduct a b p) (matchingProduct a b q) t ≠ z
+
+/-- The sum of edge angles weighted by an integer cycle. -/
+def TranspositionCycle.windingAngle (c : TranspositionCycle ι) (a b : ι → ℂ) (z : ℂ) : ℝ :=
+  ∑ p, ∑ q, (c.coefficient p q : ℝ) * matchingEdgeAngle a b z p q
+
+private theorem TranspositionCycle.two_mul_windingAngle (c : TranspositionCycle ι)
+    (a b : ι → ℂ) (z : ℂ) (h : c.Avoids a b z) :
+    2 * c.windingAngle a b z = ∑ p, ∑ q,
+      ((c.coefficient p q - c.coefficient q p : ℤ) : ℝ) * matchingEdgeAngle a b z p q := by
+  have hr : (∑ p, ∑ q, (c.coefficient q p : ℝ) * matchingEdgeAngle a b z p q) =
+      -c.windingAngle a b z := by
+    rw [Finset.sum_comm, TranspositionCycle.windingAngle, ← Finset.sum_neg_distrib]
+    apply Finset.sum_congr rfl
+    intro p _
+    rw [← Finset.sum_neg_distrib]
+    apply Finset.sum_congr rfl
+    intro q _
+    by_cases hc : c.coefficient p q = 0
+    · simp only [hc, Int.cast_zero, zero_mul, neg_zero]
+    · rw [matchingEdgeAngle_reverse_of_segment_avoids a b z p q (h p q hc), mul_neg]
+  simp only [Int.cast_sub, sub_mul, Finset.sum_sub_distrib,
+    ← TranspositionCycle.windingAngle, hr, sub_neg_eq_add, two_mul]
+
+/-- The angle depends only on the signed coefficient of each oriented edge. -/
+theorem TranspositionCycle.windingAngle_eq_of_orientedCoefficients
+    (c e : TranspositionCycle ι) (a b : ι → ℂ) (z : ℂ)
+    (hc : c.Avoids a b z) (he : e.Avoids a b z)
+    (h : ∀ p q, c.coefficient p q - c.coefficient q p = e.coefficient p q - e.coefficient q p) :
+    c.windingAngle a b z = e.windingAngle a b z := by
+  have hmul : 2 * c.windingAngle a b z = 2 * e.windingAngle a b z := by
+    rw [c.two_mul_windingAngle a b z hc, e.two_mul_windingAngle a b z he]
+    simp only [h]
+  linarith only [hmul]
+
+private theorem TranspositionCycle.sum_vertex_differences_eq_zero
+    (c : TranspositionCycle ι) (v : Equiv.Perm ι → ℝ) :
+    (∑ p, ∑ q, (c.coefficient p q : ℝ) * (v q - v p)) = 0 := by
+  have hin : (∑ p, ∑ q, (c.coefficient p q : ℝ) * v q) =
+      ∑ p, ((∑ q, c.coefficient q p : ℤ) : ℝ) * v p := by
+    rw [Finset.sum_comm]
+    simp only [Int.cast_sum, Finset.sum_mul]
+  have hout : (∑ p, ∑ q, (c.coefficient p q : ℝ) * v p) =
+      ∑ p, ((∑ q, c.coefficient p q : ℤ) : ℝ) * v p := by
+    simp only [Int.cast_sum, Finset.sum_mul]
+  simp only [mul_sub, Finset.sum_sub_distrib, hin, hout, c.boundary_zero, sub_self]
+
+/-- Every integer cellular cycle with nonzero angle gives an attained value. -/
+theorem mem_determinantRange_of_transpositionCycle_winding_ne_zero
+    (a b : ι → ℂ) (z : ℂ) (c : TranspositionCycle ι) (hwinding : c.windingAngle a b z ≠ 0) :
+    z ∈ determinantRange a b := by
+  by_contra hz
+  obtain ⟨v, hv⟩ := exists_matchingEdgeAngle_potential_of_notMem a b z hz
+  apply hwinding
+  calc
+    c.windingAngle a b z = ∑ p, ∑ q, (c.coefficient p q : ℝ) * (v q - v p) := by
+      unfold TranspositionCycle.windingAngle
+      apply Finset.sum_congr rfl
+      intro p _
+      apply Finset.sum_congr rfl
+      intro q _
+      by_cases hc : c.coefficient p q = 0
+      · simp only [hc, Int.cast_zero, zero_mul]
+      · rw [hv p q (c.supported p q hc)]
+    _ = 0 := c.sum_vertex_differences_eq_zero v
 
 end
 
