@@ -81,8 +81,7 @@ theorem matchingProjection_principalMinor (U : Matrix ι ι ℂ) (hU : IsUnitary
   rw [matchingProjection, Matrix.submatrix_smul, hblock, Matrix.det_smul, hcard,
     Matrix.det_fromBlocks_one₁₁, hg, Matrix.det_mul, Matrix.det_conjTranspose]
   change (1 / 2 : ℂ) ^ Fintype.card ι * (star N.det * N.det) = _
-  rw [mul_comm (star N.det) N.det, Complex.star_def, Complex.mul_conj, hn]
-  rfl
+  rw [mul_comm (star N.det) N.det, Complex.star_def, Complex.mul_conj, hn] <;> rfl
 
 /-- A three-by-six frame with equal column norms. -/
 noncomputable def balancedProjectionFrame : Matrix (Fin 3) (Fin 6) ℂ :=

@@ -41,6 +41,18 @@ theorem exteriorRelaxationEntry_properties :
     (∀ I J, exteriorRelaxationEntry Iᶜ Jᶜ = exteriorRelaxationEntry I J) := by
   decide +kernel
 
+/-- The singleton and pair blocks displayed in the report, in their listed
+subset order. Their entries are scaled by six. -/
+theorem exteriorRelaxation_small_blocks :
+    let S : Fin 6 → Finset (Fin 4) := ![{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}]
+    (Matrix.of fun i j : Fin 4 => exteriorRelaxationEntry {i} {j}) =
+      !![2, 2, 2, 0; 2, 0, 2, 2; 2, 2, 0, 2; 0, 2, 2, 2] ∧
+    (Matrix.of fun i j : Fin 6 => exteriorRelaxationEntry (S i) (S j)) =
+      !![2, 2, 0, 0, 0, 2; 2, 0, 2, 2, 0, 0; 0, 2, 0, 2, 2, 0;
+         0, 2, 2, 0, 2, 0; 0, 0, 2, 2, 0, 2; 2, 0, 0, 0, 2, 2] := by
+  intro S
+  constructor <;> (ext i j; revert i j; decide +kernel)
+
 /-- The rank-two kernel has Gaussian integer entries. -/
 def exteriorRelaxationKernel : Matrix (Fin 4) (Fin 4) GaussianInt :=
   !![⟨-3, -1⟩, ⟨12, -11⟩, ⟨2, -3⟩, ⟨-7, -9⟩;

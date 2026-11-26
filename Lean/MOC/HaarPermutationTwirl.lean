@@ -146,7 +146,7 @@ private theorem unitaryTwirl_trace_pair (μ : Measure (UGroup ι)) [IsProbabilit
   change L (∫ U, twirlTerm U ∂μ) = _
   rw [← L.integral_comp_comm (integrable_twirlTerm μ)]
   change (∫ U, (R * twirlTerm U).trace ∂μ) = _
-  simp only [hc, integral_const, MeasureTheory.Measure.real_univ_eq_one, one_smul]
+  simp only [hc, integral_const, measureReal_univ_eq_one, one_smul]
 
 private theorem unitaryTwirl_commute_unitary (μ : Measure (UGroup ι)) [IsFiniteMeasure μ]
     [μ.IsMulRightInvariant] (V : UGroup ι) :
@@ -172,6 +172,79 @@ private theorem unitaryTwirl_commute_unitary (μ : Measure (UGroup ι)) [IsFinit
   rw [← Matrix.mul_assoc T (Tᴴ * unitaryTwirl μ) T,
     ← Matrix.mul_assoc T Tᴴ (unitaryTwirl μ), tensorPower_unitary V, Matrix.one_mul] at h
   exact h
+
+private theorem tensorPower_diagonal (a : ι → ℂ) :
+    tensorPower (diagonal a) = diagonal (fun f : Word ι => ∏ i, a (f i)) := by
+  classical
+  ext f g
+  by_cases h : f = g
+  · subst g
+    simp only [tensorPower, Matrix.of_apply, Matrix.diagonal_apply_eq]
+  · rw [Matrix.diagonal_apply_ne _ h]
+    obtain ⟨i, hi⟩ := Function.ne_iff.mp h
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (Matrix.diagonal_apply_ne _ hi)
+
+private def wordMultiplicity (f : Word ι) (j : ι) : ℕ :=
+  (Finset.univ.filter (fun i => f i = j)).card
+
+private theorem wordMultiplicity_lt (f : Word ι) (j : ι) :
+    wordMultiplicity f j < Fintype.card ι + 1 := by
+  apply Nat.lt_succ_of_le
+  simpa only [wordMultiplicity, Finset.card_univ] using
+    Finset.card_filter_le Finset.univ (fun i => f i = j)
+
+private theorem tensorPower_unit_phase_diagonal (a : ι → ℂ) (ha : ∀ i, ‖a i‖ = 1) :
+    diagonal a ∈ Matrix.unitaryGroup ι ℂ := by
+  apply Matrix.mem_unitaryGroup_iff.mpr
+  change diagonal a * (diagonal a)ᴴ = 1
+  rw [Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal]
+  have he (i : ι) : a i * star (a i) = 1 := by
+    rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq, ha i, one_pow,
+      Complex.ofReal_one]
+  simp only [Pi.mul_apply, Pi.star_apply, he, Matrix.diagonal_one]
+
+private theorem word_phase_product (f : Word ι) (j : ι) (z : ℂ) :
+    (∏ i, if f i = j then z else 1) = z ^ wordMultiplicity f j := by
+  rw [Finset.prod_ite, Finset.prod_const, Finset.prod_const_one, mul_one]
+  rfl
+
+private theorem commute_diagonal_of_commute_unitary
+    (F : Matrix (Word ι) (Word ι) ℂ)
+    (hF : ∀ U : UGroup ι, Commute F (tensorPower (U : Matrix ι ι ℂ)))
+    (a : ι → ℂ) : Commute F (tensorPower (diagonal a)) := by
+  classical
+  let n := Fintype.card ι + 1
+  let z := Complex.exp (2 * Real.pi * Complex.I / n)
+  have hprimitive : IsPrimitiveRoot z n := Complex.isPrimitiveRoot_exp n (Nat.succ_ne_zero _)
+  have hznorm : ‖z‖ = 1 := by
+    have he := congrArg norm hprimitive.pow_eq_one
+    rw [norm_pow, norm_one] at he
+    exact (pow_eq_one_iff_of_nonneg (norm_nonneg z) (Nat.succ_ne_zero _)).mp he
+  have hmultiplicity (f g : Word ι) (hfg : F f g ≠ 0) (j : ι) :
+      wordMultiplicity f j = wordMultiplicity g j := by
+    let d (i : ι) := if i = j then z else 1
+    have hdn (i : ι) : ‖d i‖ = 1 := by
+      by_cases hi : i = j <;> simp only [d, hi, if_true, if_false, hznorm, norm_one]
+    let U : UGroup ι := ⟨diagonal d, tensorPower_unit_phase_diagonal d hdn⟩
+    have hd : Commute F (tensorPower (diagonal d)) := hF U
+    rw [tensorPower_diagonal] at hd
+    have he := congrArg (fun M : Matrix (Word ι) (Word ι) ℂ => M f g) hd.eq
+    simp only [Matrix.mul_diagonal, Matrix.diagonal_mul, d, word_phase_product] at he
+    rw [mul_comm (z ^ wordMultiplicity f j) (F f g)] at he
+    exact hprimitive.pow_inj (wordMultiplicity_lt f j) (wordMultiplicity_lt g j)
+      (mul_left_cancel₀ hfg he).symm
+  rw [tensorPower_diagonal]
+  change F * diagonal (fun f : Word ι => ∏ i, a (f i)) =
+    diagonal (fun f : Word ι => ∏ i, a (f i)) * F
+  ext f g
+  simp only [Matrix.mul_diagonal, Matrix.diagonal_mul]
+  by_cases hfg : F f g = 0
+  · rw [hfg, zero_mul, mul_zero]
+  · have hp (h : Word ι) : (∏ i, a (h i)) = ∏ j, a j ^ wordMultiplicity h j := by
+      simpa only [Finset.prod_const, wordMultiplicity] using
+        (Finset.prod_fiberwise' Finset.univ h a).symm
+    rw [hp f, hp g]
+    simp only [hmultiplicity f g hfg, mul_comm (F f g)]
 
 end
 

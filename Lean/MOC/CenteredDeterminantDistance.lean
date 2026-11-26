@@ -121,7 +121,8 @@ theorem card_gaussianMultiplication_cokernel (m : GaussianInt) (hm : m ≠ 0) :
   let e := LinearEquiv.ofInjective f hf
   have hcomp : (LinearMap.range f).subtype ∘ₗ
       AddMonoidHom.toIntLinearMap (e.toAddEquiv : (Fin 2 → ℤ) →+ LinearMap.range f) = f := by
-    ext v i
+    apply LinearMap.ext
+    intro v
     rfl
   have hc := Submodule.natAbs_det_equiv (LinearMap.range f) e.toAddEquiv
   rw [hcomp, show f = Matrix.toLin' A from rfl, LinearMap.det_toLin',
