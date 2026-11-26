@@ -101,8 +101,8 @@ private theorem normalize_skew_pair (A : Matrix (Fin 2) (Fin 2) ℂ)
     ext i j
     fin_cases i <;> fin_cases j <;> simp [c, hz, hA 0 1]
   refine ⟨?_, diagonal ![1, c⁻¹], ?_⟩
-  · rw [he, Matrix.det_fin_two]
-    simpa using mul_ne_zero hc' hc'
+  · rw [he, Matrix.det_fin_two_of]
+    simpa only [zero_mul, mul_neg, zero_sub, neg_neg] using mul_ne_zero hc' hc'
   · rw [Matrix.diagonal_transpose, he]
     ext i j
     rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
@@ -128,7 +128,11 @@ theorem exists_congr_standardSymplecticMatrix {n : ℕ}
       obtain ⟨q, hq⟩ : ∃ q, K p q ≠ 0 := by
         by_contra! h
         exact hdet (Matrix.det_eq_zero_of_row_eq_zero p h)
-      have hpq : p ≠ q := fun h => hq (h ▸ hp)
+      have hpq : p ≠ q := by
+        intro h
+        apply hq
+        rw [← h]
+        exact hp
       have hpr : p ≠ r := fun h => (by decide : (0 : Fin 2) ≠ 1) (congrArg Prod.snd h)
       let e₀ := firstPairEquiv n
       let e := e₀.trans (Equiv.swap r q)
@@ -186,8 +190,7 @@ theorem exists_congr_standardSymplecticMatrix {n : ℕ}
       refine ⟨S, ?_, he⟩
       intro hs
       have hd := congrArg Matrix.det he
-      rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, hs, zero_mul, zero_mul,
-        standardSymplecticMatrix_det] at hd
-      exact zero_ne_one hd
+      simp only [Matrix.det_mul, Matrix.det_transpose, hs, zero_mul,
+        standardSymplecticMatrix_det, zero_ne_one] at hd
 
 end MOC
