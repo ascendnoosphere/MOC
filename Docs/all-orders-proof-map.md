@@ -330,14 +330,15 @@ Let $K$ be a finite set of $m\ge2$ labels and let $s$ be a single
 cycle on $K$. Use coordinates $(k,0)$ and $(k,1)$ for $k\in K$.
 The left layer uses a gate $L_k$ on $((k,0),(k,1))$. The right
 layer uses $R_k$ on $((k,0),(s(k),1))$. Each gate is a two-by-two
-unitary. All gates except possibly one have squared entry moduli
+unitary. All gates except possibly two have squared entry moduli
 $1/2$. The mixer is the left layer times the right layer.
 [Gate condition](../Lean/MOC/BalancedGateProducts.lean#L10) · [Cycle mixer](../Lean/MOC/CyclicSwitchMatrices.lean#L179)
 
 At a gate $Q$, choose the identity with probability $|Q_{00}|^2$ or
 the swap with probability $|Q_{01}|^2$. For a full choice $x$, let
 $P(x)$ be the product of these probabilities and let $N(x)$ be the
-number of swaps in $x$. Give $x$ weight $P(x)(1+c(-1)^{N(x)})$, where
+number of swaps in $x$. If at most one gate is biased, give $x$
+weight $P(x)(1+c(-1)^{N(x)})$, where
 
 $$
 c=2^{2m}\,\mathrm{sign}(s)\,
@@ -358,7 +359,7 @@ gates are fair, $P(x)=2^{-2m}$.
 ```mermaid
 flowchart BT
     accTitle: Squared minors of an alternating-cycle mixer
-    accDescr: Parity cancels unless the row and column sets each meet their layer's gates once. In that case the event consists of two complementary switch choices.
+    accDescr: The parity correction cancels if a gate meets its set zero or two times. Otherwise the event consists of two complementary switch choices.
     General["Some gate meets its set zero or two times"]
     Each["Each gate meets its set once"]
     Fair["Parity correction cancels"]
@@ -375,10 +376,11 @@ has compatible counts in both layers. The squared modulus of the
 minor is zero if no such set exists. Otherwise it is the product
 of the two squared minor moduli through that set. Equal row and
 column cardinalities require at least two gates with zero or two
-selected positions if any gate has such a count. At least one of
-these gates is fair. Changing its switch preserves the subset image
-and cancels the parity term. In the other case, the two complementary
-choices have equal parity and their probabilities sum to $2^{1-2m}$.
+selected positions if any gate has such a count. If at most one
+gate is biased, at least one of these gates is fair. Changing its
+switch preserves the subset image and cancels the parity term. In
+the other case, the two complementary choices have equal parity
+and their probabilities sum to $2^{1-2m}$.
 [Minor factorization](../Lean/MOC/CyclicSwitchMinor.lean#L294) · [Independent law](../Lean/MOC/CyclicSwitchMinor.lean#L362) · [Parity cancellation and complementary weights](../Lean/MOC/SingleBiasedCyclicGateLaw.lean#L132)
 
 The probability that the resulting permutation maps the column
@@ -386,6 +388,25 @@ set onto the row set is the squared modulus of the corresponding
 minor. This identity gives determinant inclusion for every pair of
 complex spectra.
 [Complementary choices](../Lean/MOC/CyclicSwitchEvents.lean#L360) · [Transversal cross term](../Lean/MOC/CyclicSwitchMatrices.lean#L62) · [Inclusion](../Lean/MOC/SingleBiasedCyclicGateLaw.lean#L233)
+
+For two possible biased gates, label them $Q_1,Q_2$ and let $x_i$ be
+the switch at $Q_i$. Define $b_i=|(Q_i)_{00}|^2-|(Q_i)_{01}|^2$,
+$s_i=(-1)^{x_i}$, and $p=b_1b_2$. The interference bound improves
+to $|c|\le1-|p|$. If $|p|<1$, a nonnegative weight for $x$ is
+
+$$
+P(x)\left(1+c(-1)^{N(x)}\frac{1-p s_1s_2}{1-p^2}\right).
+$$
+
+If $|p|=1$, the interference is zero and the law uses $P(x)$.
+The product $P(x)(1-p s_1s_2)$ has only a constant term and terms
+linear in $s_1,s_2$. Each term of the parity correction cancels
+when its switch choice varies over a gate that preserves the
+subset image and is absent from that term. At least two gates
+preserve the image in the parity-cancellation case. For a
+complementary pair, the linear terms cancel and the constant term
+gives the minor's interference.
+[Two-gate interference bound](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L73) · [Affine correction](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L149) · [Squared minors](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L240) · [Common law](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331)
 
 The corresponding common-law claim for arbitrary gates on the cycle
 is false. Number the four coordinates from $0$ to $3$. For

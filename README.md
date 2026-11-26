@@ -311,12 +311,12 @@ coordinate. The weights depend only on the projection.
 [Determinant reduction](Lean/MOC/ProjectionLeafPivot.lean#L110) · [Projection and rank formulas](Docs/projection-leaf-deletion-proof-map.md)
 
 On a simple even cycle with at least four coordinates, choose a
-two-by-two unitary gate on each edge. All gates except possibly one
+two-by-two unitary gate on each edge. All gates except possibly two
 must have squared entry moduli $1/2$. Each set of alternating edges
 forms one layer of disjoint gates. For the product of the two layers,
 one probability law gives all squared minor moduli and hence the
 determinant for every pair of complex spectra.
-[Common law](Lean/MOC/SingleBiasedCyclicGateLaw.lean#L132) · [Inclusion](Lean/MOC/SingleBiasedCyclicGateLaw.lean#L233) · [Cycle and weight formula](Docs/all-orders-proof-map.md#normalization-and-least-order-counterexamples)
+[Squared minors](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L240) · [Common law](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331) · [Inclusion](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L357) · [Cycle and weight formula](Docs/all-orders-proof-map.md#normalization-and-least-order-counterexamples)
 
 ### A common law at small shifted rank sum
 

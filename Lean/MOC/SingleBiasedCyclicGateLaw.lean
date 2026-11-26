@@ -10,7 +10,7 @@ noncomputable section
 
 variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 
-private theorem exists_free_cyclic_switch
+theorem exists_free_cyclic_switch
     (eL eR : κ × Bool ≃ κ × Bool) (I J : Finset (κ × Bool)) (hc : I.card = J.card)
     (hn : ¬ BlockTransversal eL I ∨ ¬ BlockTransversal eR J) (g : κ ⊕ κ) :
     ∃ z ≠ g, ∀ x, J.map (twoLayerSwitch eL eR (toggleSwitch z x)).toEmbedding = I ↔
@@ -63,7 +63,7 @@ private theorem exists_free_cyclic_switch
     have hk : 1 - blockOccupancy eR J k = 0 := hall (Sum.inr k)
     omega
 
-private theorem sum_weighted_switchParity_eq_zero (w : (κ ⊕ κ → Bool) → ℝ)
+theorem sum_weighted_switchParity_eq_zero (w : (κ ⊕ κ → Bool) → ℝ)
     (k : κ ⊕ κ) (S : Finset (κ ⊕ κ → Bool)) (hS : ∀ x, toggleSwitch k x ∈ S ↔ x ∈ S)
     (hw : ∀ x, w (toggleSwitch k x) = w x) :
     ∑ x ∈ S, w x * switchParity x = 0 := by
@@ -81,7 +81,7 @@ private theorem cyclicIndependentWeight_prod (L R : κ → Matrix Bool Bool ℂ)
   rw [Fintype.prod_sum_type]
   rfl
 
-private theorem cyclicIndependentWeight_sum (L R : κ → Matrix Bool Bool ℂ)
+theorem cyclicIndependentWeight_sum (L R : κ → Matrix Bool Bool ℂ)
     (hL : ∀ k, IsUnitary (L k)) (hR : ∀ k, IsUnitary (R k)) :
     ∑ x, cyclicIndependentWeight L R x = 1 := by
   simp_rw [cyclicIndependentWeight_prod, ← Fintype.prod_sum]

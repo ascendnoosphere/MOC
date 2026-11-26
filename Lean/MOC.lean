@@ -36,6 +36,7 @@ import MOC.ForestGates
 import MOC.ProjectionLeafPivot
 import MOC.BalancedCyclicGateLaw
 import MOC.SingleBiasedCyclicGateLaw
+import MOC.TwoBiasedCyclicGateLaw
 import MOC.BiasedCyclicGateObstruction
 import MOC.ZhengT85Lift
 import MOC.ZhengT85SecantObstruction
