@@ -157,11 +157,13 @@ private theorem realSecantKernel_coordinates (v : Fin 14 → ℝ)
   have r9 := he 9
   have r10 := he 10
   have r11 := he 11
-  norm_num [fourMatchingHessianAction, fourRealSecantObstruction, cubicGradient,
-    Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] at r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
-  fin_cases i <;> norm_num [realSecantKernelFirst, realSecantKernelSecond,
+  simp only [fourMatchingHessianAction, fourRealSecantObstruction, cubicGradient,
+    Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero', Pi.zero_apply]
+    at r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
+  ring_nf at r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
+  fin_cases i <;> simp only [realSecantKernelFirst, realSecantKernelSecond,
     Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;>
-    linarith only [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
+    linarith! only [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
 
 /-- The cubic and Hessian kernel tests can hold although no real
 imaginary part satisfies the gradient equation. -/
@@ -171,19 +173,23 @@ theorem fourRealSecantObstruction_checks :
       ¬ ∃ v : Fin 14 → ℝ, fourMatchingHessianAction fourRealSecantObstruction v = 0 ∧
         fourMatchingGradient v = fourMatchingGradient fourRealSecantObstruction := by
   refine ⟨?_, ⟨realSecantKernelFirst, ?_, ?_⟩, ?_⟩
-  · norm_num [fourMatchingCubic, fourRealSecantObstruction,
+  · simp only [fourMatchingCubic, fourRealSecantObstruction,
       Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
+    norm_num1
   · intro h
     have hz : realSecantKernelFirst 12 = 0 := congrFun h 12
-    norm_num [realSecantKernelFirst, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] at hz
+    simp only [realSecantKernelFirst, Matrix.cons_val] at hz
+    norm_num1 at hz
   · funext i
     fin_cases i <;>
-      norm_num [fourMatchingHessianAction, fourRealSecantObstruction, realSecantKernelFirst,
-        cubicGradient, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
+      simp only [fourMatchingHessianAction, fourRealSecantObstruction, realSecantKernelFirst,
+        cubicGradient, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero',
+        Pi.zero_apply] <;> norm_num1
   · rintro ⟨v, hv, hg⟩
     have h0 : fourMatchingGradient fourRealSecantObstruction 0 = 72 := by
-      norm_num [fourMatchingGradient, fourRealSecantObstruction, cubicGradient,
+      simp only [fourMatchingGradient, fourRealSecantObstruction, cubicGradient,
         Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
+      norm_num1
     have hp : fourMatchingGradient v 0 =
         -(9 / 169 : ℝ) * (25 * v 12 ^ 2 - 14 * v 12 * v 13 + 29 * v 13 ^ 2) := by
       conv_lhs =>
@@ -191,7 +197,7 @@ theorem fourRealSecantObstruction_checks :
           realSecantKernelSecond i * v 13) / 13) from funext (realSecantKernel_coordinates v hv)]
       simp [fourMatchingGradient, cubicGradient, realSecantKernelFirst, realSecantKernelSecond,
         Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
-      <;> ring
+      ring
     have he : fourMatchingGradient v 0 = 72 := (congrFun hg 0).trans h0
     rw [he] at hp
     nlinarith only [hp, sq_nonneg (5 * v 12 - (7 / 5 : ℝ) * v 13), sq_nonneg (v 13)]

@@ -259,9 +259,9 @@ in that kernel has first gradient coordinate
 $-9(25r^2-14rs+29s^2)/169$. This is nonpositive, while $G(u)_0=72$.
 The example therefore excludes sufficiency of the cubic and Hessian
 kernel tests. It concerns the spectral equations for the profile,
-before comparison with a unitary. The new Lean source awaits compilation.
+before comparison with a unitary.
 [Bracket convention](../Lean/MOC/FourMatchingPolarization.lean#L18) ·
-[Lean exact example](../Lean/MOC/FourMatchingHessianKernel.lean#L166)
+[Lean exact example](../Lean/MOC/FourMatchingHessianKernel.lean#L170)
 
 ### Other exact obstructions
 
