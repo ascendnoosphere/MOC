@@ -363,10 +363,13 @@ Combining the blocks proves the convex-hull inclusion in every order.
   three distinct values.
   [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L78) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90)
 - The inclusion holds in any order if either list has at most two
-  distinct values. It also holds if deleting one entry from the second
-  list leaves at most two distinct values, or if the first list is
-  constant except at up to two positions.
-  [Two distinct values in the second list](Lean/MOC/TwoValues.lean#L317) · [Two distinct values in the first list](Lean/MOC/TwoValues.lean#L331) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247)
+  distinct values. Fix the relative unitary and a partition of the
+  second list into two groups. One set of nonnegative matching weights
+  with sum one works for all complex group values and all first lists.
+  The inclusion also holds if deleting one entry from the second list
+  leaves at most two distinct values, or if the first list is constant
+  except at up to two positions.
+  [Common law](Lean/MOC/TwoValues.lean#L272) · [Two distinct values in the second list](Lean/MOC/TwoValues.lean#L335) · [Two distinct values in the first list](Lean/MOC/TwoValues.lean#L349) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247)
 - Partition one spectrum into three fixed groups with the last group
   of size one. For a fixed mixer, one law works for all three group
   values and every opposing spectrum.

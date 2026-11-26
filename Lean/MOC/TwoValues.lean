@@ -267,52 +267,70 @@ theorem determinantValue_eq_sum_subsetMinors (a b : ι → ℂ) (U : Matrix ι �
   intro σ hσ
   rw [(Finset.mem_filter.mp hσ).2]
 
-/-- A two-valued second spectrum needs only the image of one subset under the permutation. -/
-theorem holds_two_values (a : ι → ℂ) (J : Finset ι) (c d : ℂ)
-    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
-    Holds a (fun j => if j ∈ J then c else d) U := by
+/-- For a fixed unitary matrix and a fixed two-value partition of the second
+list, one probability law works for every choice of both spectra. -/
+theorem exists_two_values_matching_law (J : Finset ι) (U : Matrix ι ι ℂ)
+    (hU : IsUnitary U) :
+    ∃ w : Equiv.Perm ι → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ) = 1 ∧
+      ∀ (a : ι → ℂ) (c d : ℂ),
+        determinantValue a (fun j => if j ∈ J then c else d) U =
+          ∑ σ, (w σ : ℂ) * matchingProduct a (fun j => if j ∈ J then c else d) σ := by
   classical
-  let b (j : ι) := if j ∈ J then c else d
   let g (σ : Equiv.Perm ι) := J.map σ.toEmbedding
   let T := (univ : Finset (Equiv.Perm ι)).image g
-  let m (I : Finset ι) := ∑ σ ∈ univ.filter (fun σ => g σ = I), signedWeight U σ
-  let w (I : Finset ι) := (m I).re
+  have hmap (σ : Equiv.Perm ι) (_ : σ ∈ univ) : g σ ∈ T :=
+    Finset.mem_image_of_mem g (mem_univ σ)
+  have hrep' (I : Finset ι) : ∃ σ, I ∈ T → g σ = I := by
+    by_cases hI : I ∈ T
+    · obtain ⟨σ, _, hσ⟩ := Finset.mem_image.mp hI
+      exact ⟨σ, fun _ => hσ⟩
+    · exact ⟨Equiv.refl ι, fun h => False.elim (hI h)⟩
+  choose rep hrep using hrep'
+  let w (σ : Equiv.Perm ι) := ∑ I ∈ T, if rep I = σ then subsetMinorSq U I J else 0
+  have hw (σ : Equiv.Perm ι) : 0 ≤ w σ :=
+    Finset.sum_nonneg (fun I _ => ite_nonneg (subsetMinorSq_nonneg U I J) le_rfl)
+  have hsum : ∑ σ, w σ = 1 := by
+    unfold w
+    rw [Finset.sum_comm]
+    simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    apply Complex.ofReal_injective
+    rw [Complex.ofReal_sum, Complex.ofReal_one]
+    simp_rw [← sum_signedWeight_image_eq_subsetMinorSq U hU]
+    rw [Finset.sum_fiberwise_of_maps_to hmap, sum_signedWeight U (det_ne_zero_of_unitary hU)]
+  refine ⟨w, hw, hsum, ?_⟩
+  intro a c d
+  let b (j : ι) := if j ∈ J then c else d
   let v (I : Finset ι) := ∏ i, (a i + if i ∈ I then c else d)
-  have hmap (σ : Equiv.Perm ι) (_ : σ ∈ univ) : g σ ∈ T := Finset.mem_image_of_mem g (mem_univ σ)
   have hv (σ : Equiv.Perm ι) : matchingProduct a b σ = v (g σ) := by
     unfold matchingProduct v
     rw [← Equiv.prod_comp σ (fun i => a i + if i ∈ g σ then c else d)]
     simp [b, g, Finset.mem_map_equiv]
-  have hn (I : Finset ι) (hI : I ∈ T) : 0 ≤ m I := by
-    obtain ⟨σ, _, rfl⟩ := Finset.mem_image.mp hI
-    apply sum_signedWeight_image_nonneg U hU
-    exact card_map _
-  have hvtx (I : Finset ι) (hI : I ∈ T) : v I ∈ Set.range (matchingProduct a b) := by
-    obtain ⟨σ, _, rfl⟩ := Finset.mem_image.mp hI
-    exact ⟨σ, hv σ⟩
-  have hsumC : ∑ I ∈ T, m I = 1 := by
-    rw [Finset.sum_fiberwise_of_maps_to hmap, sum_signedWeight U (det_ne_zero_of_unitary hU)]
-  have hsum : ∑ I ∈ T, w I = 1 := by
-    simpa only [Complex.re_sum, Complex.one_re] using congrArg Complex.re hsumC
-  have hdet : ∑ I ∈ T, w I • v I = determinantValue a b U := calc
-    _ = ∑ I ∈ T, m I * v I := by
-      apply Finset.sum_congr rfl
-      intro I hI
-      have he : (w I : ℂ) = m I := Complex.ext rfl (Complex.nonneg_iff.mp (hn I hI)).2
-      rw [Complex.real_smul, he]
-    _ = ∑ σ, signedWeight U σ * matchingProduct a b σ := by
+  change determinantValue a b U = ∑ σ, (w σ : ℂ) * matchingProduct a b σ
+  calc
+    _ = ∑ σ, signedWeight U σ * v (g σ) := by
+      simpa only [hv] using (signed_determinant a b U hU).symm
+    _ = ∑ I ∈ T, (subsetMinorSq U I J : ℂ) * v I := by
       rw [← Finset.sum_fiberwise_of_maps_to hmap]
       apply Finset.sum_congr rfl
       intro I _
-      rw [Finset.sum_mul]
+      rw [← sum_signedWeight_image_eq_subsetMinorSq U hU, Finset.sum_mul]
       apply Finset.sum_congr rfl
       intro σ hσ
-      rw [hv, (Finset.mem_filter.mp hσ).2]
-    _ = _ := signed_determinant a b U hU
-  change determinantValue a b U ∈ convexHull ℝ (Set.range (matchingProduct a b))
-  rw [← hdet, ← T.centerMass_eq_of_sum_1 v hsum]
-  exact T.centerMass_mem_convexHull (fun I hI => (Complex.nonneg_iff.mp (hn I hI)).1)
-    (hsum.symm ▸ zero_lt_one) hvtx
+      rw [(Finset.mem_filter.mp hσ).2]
+    _ = _ := by
+      simp only [w, Complex.ofReal_sum, Finset.sum_mul]
+      rw [Finset.sum_comm]
+      apply Finset.sum_congr rfl
+      intro I hI
+      simp only [apply_ite Complex.ofReal, Complex.ofReal_zero, ite_mul, zero_mul,
+        Finset.sum_ite_eq, Finset.mem_univ, if_true, hv, hrep I hI]
+
+/-- A two-valued second spectrum needs only the image of one subset under the permutation. -/
+theorem holds_two_values (a : ι → ℂ) (J : Finset ι) (c d : ℂ)
+    (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
+    Holds a (fun j => if j ∈ J then c else d) U := by
+  obtain ⟨w, hw, hs, hd⟩ := exists_two_values_matching_law J U hU
+  exact holds_of_weights w hw hs (hd a c d).symm
 
 theorem holds_of_two_values (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U)
     (c d : ℂ) (hb : ∀ j, b j = c ∨ b j = d) : Holds a b U := by

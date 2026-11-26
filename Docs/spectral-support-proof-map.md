@@ -48,6 +48,7 @@ flowchart BT
 
 | Case | Scope | Sources |
 | --- | --- | --- |
+| Two spectral values | Fix the mixer and the subset of second-list labels assigned to the first group. For each attainable image of this subset, assign its squared minor to one representative permutation. The weights are nonnegative and sum to one. They represent the determinant for every first list and every pair of complex group values. | [Common law](../Lean/MOC/TwoValues.lean#L272) · [Squared-minor mass](../Lean/MOC/TwoValues.lean#L141) |
 | Three values and a singleton | Fix the mixer and the label partition with third part of size one. One probability law works for all complex values of the three parts and for every opposing spectrum. | [Lean law](../Lean/MOC/ThreeValues.lean#L51) · [Singleton map](three-spectral-values-with-one-singleton-proof-map.md) |
 | Small spectral parameter | Under reciprocal assignment general position, a positive radius works for all relative unitaries and every complex parameter within the radius. | [Lean bound](../Lean/MOC/SmallSpectralPerturbation.lean#L757) · [Perturbation map](small-spectral-perturbation-proof-map.md) |
 | Tensor mixer | For the tensor product of two complex unitary matrices of order two, one law works for every pair of spectra and matches all squared minors. | [Lean law](../Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L437) · [Tensor map](two-by-two-tensor-mixer-proof-map.md) |
