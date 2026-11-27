@@ -62,11 +62,11 @@ function createDiskCache(fs,path,crypto,dir,opts={}){
     flush,stats:()=>({...stats,memoryBytes,diskBytes,pending:pending.size})
   };
 }
-function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
+function buildScheduler(core,cyclic,cycleProof,fs,path,crypto,threads,os){
   const {Worker,isMainThread,parentPort,workerData}=threads;
   const hash=x=>crypto.createHash("sha256").update(x).digest("hex");
   const print=x=>process.stdout.write(JSON.stringify(x)+"\n");
-  const defaults={steps:100000,batch:250,workers:Math.max(1,Math.min(8,os.availableParallelism?os.availableParallelism():os.cpus().length)),seed:2026,population:24,archive:128,work:80000,exactWork:1000000,samples:40,cycleSamples:12,cycleShare:.4,cacheDir:".moc-cache",runId:"default",memoryMb:32,cacheMaxMb:4096,out:"moc-counterexample.json"};
+  const defaults={steps:100000,batch:250,workers:Math.max(1,Math.min(8,os.availableParallelism?os.availableParallelism():os.cpus().length)),seed:2026,population:24,archive:128,work:80000,exactWork:1000000,samples:40,cycleSamples:12,cycleShare:.4,proofWork:3000,proofEvery:8,precision:192,cacheDir:".moc-cache",runId:"default",memoryMb:32,cacheMaxMb:4096,out:"moc-counterexample.json"};
   function parse(v){
     const o={...defaults};for(let i=0;i<v.length;i+=2){
       if(!v[i].startsWith("--")||i+1>=v.length)throw Error("expected --option value");
@@ -77,7 +77,7 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
         else if(!Number.isSafeInteger(n)||n<(k==="seed"?0:1))throw Error("invalid "+k);o[k]=n;
       }
     }
-    if(!/^[a-zA-Z0-9_-]+$/.test(o.runId))throw Error("invalid run id");return o;
+    if(!/^[a-zA-Z0-9_-]+$/.test(o.runId))throw Error("invalid run id");if(o.precision<64||o.precision>65536)throw Error("precision must be 64..65536");return o;
   }
   function atomic(file,value){
     const tmp=file+"."+process.pid+"."+crypto.randomBytes(6).toString("hex")+".tmp";
@@ -88,7 +88,7 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
   function read(file){try{return JSON.parse(fs.readFileSync(file,"utf8"));}catch(e){if(e.code==="ENOENT")return null;throw e;}}
   function seedFor(seed,id){return parseInt(hash(seed+":"+id).slice(0,8),16)>>>0;}
   function fresh(o){
-    return {version:"moc-parallel-v1",seed:o.seed,issued:0,completed:0,nextId:0,pending:[],frontiers:{dense:[],cycle:[]},stats:{dense:{evaluated:0,complete:0,dimensions:{},bestGap:null},cycle:{evaluated:0,exactChecks:0,exactUnresolved:0,largeUnresolved:0,maxDimension:"0",bestOptimisticGap:null},cache:{memoryHits:0,diskHits:0,misses:0,writes:0,skipped:0,corrupt:0,writeErrors:0,bytesWritten:0}},certified:null};
+    return {version:"moc-parallel-v1",seed:o.seed,issued:0,completed:0,nextId:0,pending:[],frontiers:{dense:[],cycle:[]},stats:{dense:{evaluated:0,complete:0,dimensions:{},bestGap:null},cycle:{evaluated:0,exactChecks:0,exactUnresolved:0,compressedChecks:0,compressedDirectionRejected:0,compressedInconclusive:0,largeUnresolved:0,maxDimension:"0",bestOptimisticGap:null},cache:{memoryHits:0,diskHits:0,misses:0,writes:0,skipped:0,corrupt:0,writeErrors:0,bytesWritten:0}},certified:null};
   }
   function mergeFrontier(state,lane,incoming,o){
     const uniq=new Map();
@@ -115,7 +115,7 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
   }
   function addStats(state,job,r,delta){
     const s=state.stats[job.lane],x=r.stats||{};
-    for(const k of ["evaluated","complete","exactChecks","exactUnresolved","largeUnresolved"])if(k in s)s[k]+=x[k]||0;
+    for(const k of ["evaluated","complete","exactChecks","exactUnresolved","compressedChecks","compressedDirectionRejected","compressedInconclusive","largeUnresolved"])if(k in s)s[k]+=x[k]||0;
     if(job.lane==="dense"){
       for(const [n,c] of Object.entries(x.dimensions||{}))s.dimensions[n]=(s.dimensions[n]||0)+c;
       if(x.best?.gap!=null&&(s.bestGap===null||x.best.gap>s.bestGap))s.bestGap=x.best.gap;
@@ -126,11 +126,18 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
     for(const k of Object.keys(state.stats.cache))state.stats.cache[k]+=delta[k]||0;
   }
   function runJob(job,o,cache){
-    const before=cache.stats(),opts={...o,steps:job.count,seed:job.seed,frontier:job.frontier,cache,returnFrontier:true,reportEvery:0};
+    const before=cache.stats(),opts={...o,steps:job.count,seed:job.seed,frontier:job.frontier,cache,returnFrontier:true,reportEvery:0,
+      compressedVerify(g,dir,work,precision){
+        const k="cycle-proof-result-v1:"+JSON.stringify([g,dir,work,precision]),hit=cache.get(k);
+        if(hit!==undefined)return hit;
+        const r=cycleProof.propose(g,dir,work,precision);cache.set(k,r);return r;
+      }};
+
     const r=job.lane==="dense"?core.search(opts):cyclic.search(opts);cache.flush();
     const after=cache.stats(),delta={};for(const k of Object.keys(after))delta[k]=after[k]-(before[k]||0);
     return {id:job.id,result:r,cache:delta};
   }
+  function verifyCertificate(cert,work){return cert.format==="moc-cycle-interval-v1"?cycleProof.verify(cert,work):core.verify(cert,work);}
   function coordinator(o,filename){
     const dir=path.resolve(o.cacheDir),folder=path.join(dir,"runs",o.runId),file=path.join(folder,"checkpoint.json"),lock=path.join(folder,"coordinator.lock");
     fs.mkdirSync(folder,{recursive:true});
@@ -151,7 +158,7 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
       print({status,checkpoint:file,completed:state.completed,issued:state.issued,pending:state.pending.length,stats:state.stats,...extra});
     }
     if(state.certified){
-      const proof=core.verify(state.certified, o.exactWork);
+      const proof=verifyCertificate(state.certified,o.exactWork);
       if(proof.status!=="CERTIFIED"){release();throw Error("saved certificate could not be reverified at this budget");}
       atomic(path.resolve(o.out),{...state.certified,proof});finish("CERTIFIED",{certificate:path.resolve(o.out)});return;
     }
@@ -173,7 +180,7 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
       active.delete(w);const r=msg.result;
       if(r.status==="CERTIFIED"){
         // Never trust a cached score or a worker's stored proof summary.
-        const proof=core.verify(r.certificate,o.exactWork);
+        const proof=verifyCertificate(r.certificate,o.exactWork);
         if(proof.status!=="CERTIFIED"){finish("ERROR",{error:"independent certificate recheck failed"});process.exitCode=2;return;}
         state.certified={...r.certificate,proof};
       }
@@ -208,19 +215,24 @@ function buildScheduler(core,cyclic,fs,path,crypto,threads,os){
       parentPort.on("message",job=>{parentPort.postMessage(runJob(job,o,cache));});return;
     }
     const [cmd="search",...rest]=argv;
-    if(cmd==="selftest"){print({dense:core.selftest(),cycle:cyclic.selftest()});return;}
+    if(cmd==="selftest"){print({dense:core.selftest(),cycle:cyclic.selftest(),interval:cycleProof.selftest(core)});return;}
     if(cmd==="search"){coordinator(parse(rest),filename);return;}
+    if(cmd==="verify"){
+      if(!rest.length)throw Error("verify requires a certificate file");
+      const cert=read(rest[0]),o=parse(rest.slice(1));if(!cert)throw Error("certificate missing");
+      const result=verifyCertificate(cert,o.exactWork);print(result);process.exitCode=result.status==="CERTIFIED"?0:result.status==="INCONCLUSIVE"?2:1;return;
+    }
     if(cmd==="inspect"){
       if(rest.length!==1)throw Error("inspect requires checkpoint or cyclic-genome JSON file");
       const g=read(rest[0]);if(g?.format==="moc-cycle-rle-v1")print(cyclic.evaluate(g));else if(g?.version==="moc-parallel-v1")print({completed:g.completed,pending:g.pending.length,stats:g.stats});else throw Error("unknown file format");return;
     }
-    throw Error("commands: search, selftest, inspect");
+    throw Error("commands: search, selftest, inspect, verify");
   }
   return {main,parse,runJob,fresh,mergeFrontier,migrants,addStats};
 }
 if(require.main===module){
   try{
-    const scheduler=buildScheduler(require("./emergent.js"),require("./cyclic.js"),require("node:fs"),require("node:path"),require("node:crypto"),require("node:worker_threads"),require("node:os"));
+    const scheduler=buildScheduler(require("./emergent.js"),require("./cyclic.js"),require("./cycle-proof.js"),require("node:fs"),require("node:path"),require("node:crypto"),require("node:worker_threads"),require("node:os"));
     scheduler.main(process.argv.slice(2),__filename,createDiskCache);
   }catch(e){console.error(e.stack||String(e));process.exitCode=2;}
 }
