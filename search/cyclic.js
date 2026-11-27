@@ -46,7 +46,7 @@ function buildCyclic(core){
     const A=transfer(add(B.l,L.r),mul(L.u,L.v)),F=transfer(add(B.r,R.l),mul(B.u,B.v));
     return {T:mm(F,A),u:norm(mul(B.u,R.u)),v:norm(mul(B.v,R.v))};
   }
-  function dimension(g){return 2n*g.runs.reduce((s,r)=>s+BigInt(r.count),0n);}
+  function dimension(g){return 2n*g.runs.reduce((s,r)=>s+BigInt(r.count),0n)+(g.extra?1n:0n);}
   function validate(g){
     if(!g||g.format!=="moc-cycle-rle-v1"||!Array.isArray(g.runs)||!g.runs.length)throw Error("invalid cyclic genome");
     for(const r of g.runs){
@@ -54,15 +54,70 @@ function buildCyclic(core){
       for(const x of [r.a,r.b])if(!Array.isArray(x)||x.length!==2||x.some(y=>!Array.isArray(y)||y.length!==2||y.some(z=>!Number.isSafeInteger(z)||Math.abs(z)>1000000)))throw Error("invalid spectrum");
       for(const x of [r.p,r.q])if(!Array.isArray(x)||x.length!==3||x.some(y=>!Number.isSafeInteger(y)||Math.abs(y)>1000000)||x[2]<=0)throw Error("invalid gate");
     }
-    if(dimension(g)<4n)throw Error("cycle needs at least four labels");
+    if(g.extra){
+      for(const x of [g.extra.a,g.extra.b])if(!Array.isArray(x)||x.length!==2||x.some(z=>!Number.isSafeInteger(z)||Math.abs(z)>1000000))throw Error("invalid defect spectrum");
+      const x=g.extra.gate;if(!Array.isArray(x)||x.length!==3||x.some(y=>!Number.isSafeInteger(y)||Math.abs(y)>1000000)||x[2]<=0)throw Error("invalid defect gate");
+    }
+    if(g.runs.reduce((s,r)=>s+BigInt(r.count),0n)<2n)throw Error("cycle needs at least four base labels");
     return g;
+  }
+  // Odd order: a genuine extra coordinate in a 3x3 boundary block.
+  // The graph consists of the even ring and a triangle at its closing
+  // edge. Expand determinant permutations into dimers and the three
+  // possible long cycles. No padding or Schur-complement division.
+  // A is either scaled floating arithmetic or rigorous dyadic balls.
+  function oddDeterminant(g,A){
+    const {Z,O,I,rational,add,neg,mul,mm,mp,cp,conj}=A;
+    const iv=x=>rational(BigInt(x[0]),BigInt(x[1]),1n),va=(a,b)=>[a[0]+b[0],a[1]+b[1]],vs=(a,b)=>[a[0]-b[0],a[1]-b[1]],vm=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]],scale=(x,s)=>[x[0]*s,x[1]*s];
+    function block2(x,y,gate,inverse=false){
+      x=x.map(BigInt);y=y.map(BigInt);let [s,t,q]=gate.map(BigInt);
+      const d=q*q+s*s+t*t,c=q*q-s*s-t*t;let sr=2n*q*s,si=2n*q*t;if(inverse){sr=-sr;si=-si;}
+      const w=sr*sr+si*si,den=d*d,dx=vs(x,y),r=a=>rational(a[0],a[1],den);
+      return {l:r(va(scale(x,c*c),scale(y,w))),r:r(va(scale(x,w),scale(y,c*c))),u:r(scale(vm([sr,-si],dx),c)),v:r(scale(vm([sr,si],dx),c))};
+    }
+    const runs=g.runs,r=runs.length,last=runs[r-1],W=Array.from({length:3},(_,i)=>Array.from({length:3},(_,j)=>i===j?O:Z));
+    function rotate(i,j,gate){
+      const [s,t,q]=gate.map(BigInt),d=q*q+s*s+t*t,c=rational(q*q-s*s-t*t,0n,d),v=rational(2n*q*s,2n*q*t,d);
+      for(let k=0;k<3;k++){const x=W[i][k],y=W[j][k];W[i][k]=add(mul(c,x),neg(mul(conj(v),y)));W[j][k]=add(mul(v,x),mul(c,y));}
+    }
+    rotate(0,1,last.q);rotate(1,2,g.extra.gate);
+    const values=[iv(last.a[1]),iv(runs[0].a[0]),iv(g.extra.a)];
+    const H=Array.from({length:3},(_,i)=>Array.from({length:3},(_,j)=>{let x=Z;for(let k=0;k<3;k++)x=add(x,mul(conj(W[k][i]),mul(values[k],W[k][j])));return x;}));
+    const Bdy={l:H[0][0],r:H[1][1],u:H[0][1],v:H[1][0]},d=add(H[2][2],iv(g.extra.b));
+    function cell(p,t,q,first=false,last=false){
+      const B=block2(t.b[0],t.b[1],t.p),L=first?Bdy:block2(p.a[1],t.a[0],p.q,true),R=last?Bdy:block2(t.a[1],q.a[0],t.q,true),transfer=(d,w)=>[d,neg(w),O,Z];
+      const E=transfer(add(B.l,L.r),mul(L.u,L.v)),F=transfer(add(B.r,R.l),mul(B.u,B.v));
+      return {E,F,T:mm(F,E),u:mul(B.u,R.u),v:mul(B.v,R.v),bu:B.u,bv:B.v};
+    }
+    let Q=I,firstT=null,lastT=null,u=O,v=O;
+    function append(x,n,first=false,last=false){
+      if(!n)return;
+      if(first){firstT=x.E;Q=mm(x.F,Q);}
+      else if(last){lastT=x.F;Q=mm(x.E,Q);}
+      else Q=mm(mp(x.T,n),Q);
+      u=mul(cp(last?x.bu:x.u,n),u);v=mul(cp(last?x.bv:x.v,n),v);
+    }
+    for(let j=0;j<r;j++){
+      const t=runs[j],p=runs[(j+r-1)%r],q=runs[(j+1)%r],n=BigInt(t.count),first=j===0,end=j===r-1;
+      if(n===1n)append(cell(p,t,q,first,end),1n,first,end);
+      else{append(cell(p,t,t,first,false),1n,first,false);if(n>2n)append(cell(t,t,t),n-2n);append(cell(t,t,q,false,end),1n,false,end);}
+    }
+    const full=mm(lastT,mm(Q,firstT)),coreDet=add(add(full[0],full[3]),neg(add(mul(u,Bdy.u),mul(v,Bdy.v))));
+    const noU=mm(Q,firstT)[0],noV=mm(lastT,Q)[0],noBoth=Q[0];
+    const triangle=add(mul(mul(H[0][1],H[1][2]),H[2][0]),mul(mul(H[0][2],H[2][1]),H[1][0]));
+    const long=add(mul(mul(u,H[0][2]),H[2][1]),mul(mul(v,H[1][2]),H[2][0]));
+    return add(add(add(mul(d,coreDet),neg(mul(mul(H[0][2],H[2][0]),noU))),neg(mul(mul(H[1][2],H[2][1]),noV))),add(mul(triangle,noBoth),long));
   }
   // In the basis of the second layer, A+B is cyclic tridiagonal.
   // The trace of the transfer product counts monomer/dimer matchings;
   // the two oriented full cycles have sign -1 in even dimension.
   function determinant(g,store){
     validate(g);
-    const key=store?"cycle-det-v1:"+JSON.stringify(g.runs):null,hit=key?store.get(key):undefined;if(hit!==undefined)return hit;
+    const key=store?"cycle-det-v2:"+JSON.stringify(g):null,hit=key?store.get(key):undefined;if(hit!==undefined)return hit;
+    if(g.extra){
+      const d=oddDeterminant(g,{Z,O,I,rational:(x,y,d)=>norm([Number(x)/Number(d),Number(y)/Number(d)]),add:plus,neg,mul:times,mm,mp:(x,n)=>mp(x,n,store),cp:(x,n)=>cp(x,n,store),conj:x=>[x[0],-x[1],x[2]]});
+      if(key)store.set(key,d);return d;
+    }
     let T=I,u=O,v=O;const a=g.runs,r=a.length;
     function append(x,n){if(!n)return;T=mm(mp(x.T,n,store),T);u=times(cp(x.u,n,store),u);v=times(cp(x.v,n,store),v);}
     for(let j=0;j<r;j++){
@@ -78,14 +133,16 @@ function buildCyclic(core){
   function types(g,side){
     const m=new Map();for(const t of g.runs)for(const z of t[side]){
       const k=JSON.stringify(z),v=m.get(k)||{z,count:0n};v.count+=BigInt(t.count);m.set(k,v);
-    }return [...m.values()];
+    }
+    if(g.extra){const z=g.extra[side],k=JSON.stringify(z),v=m.get(k)||{z,count:0n};v.count++;m.set(k,v);}
+    return [...m.values()];
   }
   // Feasible type transportation tables are actual permutations, even
   // when their integer multiplicities are much larger than machine words.
   function matchSamples(g,samples,store){
     const A=types(g,"a"),B=types(g,"b"),m=A.length,n=B.length,z=A.map(a=>B.map(b=>norm(add(a.z,b.z))));
-    const r=rng(stableSeed(JSON.stringify(g.runs))),out=[];
-    let d=O;for(const t of g.runs)for(let j=0;j<2;j++)d=times(d,cp(norm(add(t.a[j],t.b[j])),BigInt(t.count),store));out.push(d);
+    const r=rng(stableSeed(JSON.stringify(g))),out=[];
+    let d=O;for(const t of g.runs)for(let j=0;j<2;j++)d=times(d,cp(norm(add(t.a[j],t.b[j])),BigInt(t.count),store));if(g.extra)d=times(d,norm(add(g.extra.a,g.extra.b)));out.push(d);
     function transport(edges){
       const a=A.map(t=>t.count),b=B.map(t=>t.count);let p=O;
       for(const [i,j] of edges){const k=min(a[i],b[j]);if(k>0n){p=times(p,cp(z[i][j],k,store));a[i]-=k;b[j]-=k;}}
@@ -110,7 +167,7 @@ function buildCyclic(core){
     if(d<-1070n)return [0,0];return sc(x,2**Number(d>100n?100n:d));
   }
   function evaluate(g,o={}){
-    const samples=o.cycleSamples??12,store=o.cache,key=store?"cycle-eval-v2:"+samples+":"+JSON.stringify(g.runs):null,hit=key?store.get(key):undefined;if(hit!==undefined)return hit;
+    const samples=o.cycleSamples??12,store=o.cache,key=store?"cycle-eval-v3:"+samples+":"+JSON.stringify(g):null,hit=key?store.get(key):undefined;if(hit!==undefined)return hit;
     const n=dimension(validate(g)),d=determinant(g,store),p=matchSamples(g,samples,store);
     const nz=p.filter(x=>!zero(x));const ref=nz.length?nz.map(x=>BigInt(x[2])).reduce((x,y)=>x>y?x:y):BigInt(d[2]);
     const G=core.gapFromPoints(p.map(x=>relative(x,ref)),relative(d,ref));
@@ -125,8 +182,13 @@ function buildCyclic(core){
     const v=()=>[r.int(9)-4,r.int(9)-4],g=()=>{let x=r.int(9)-4,y=r.int(9)-4;if(!x&&!y)x=1;return [x,y,1+r.int(7)];};
     return {count:"1",a:[v(),v()],b:[v(),v()],p:g(),q:g()};
   }
-  function restart(r){return {format:"moc-cycle-rle-v1",runs:[randomType(r),randomType(r)]};}
+  function defect(r){const t=randomType(r);return {a:t.a[0],b:t.b[0],gate:t.p};}
+  function restart(r){const g={format:"moc-cycle-rle-v1",runs:[randomType(r),randomType(r)]};if(r()<.5)g.extra=defect(r);return g;}
   function mutate(g,r){
+    if(r()<.09){
+      if(g.extra&&r()<.5){const h={...g};delete h.extra;return h;}
+      return {...g,extra:defect(r)};
+    }
     const runs=g.runs.slice(),j=r.int(runs.length),t=runs[j],n=BigInt(t.count),u=r();
     if(u<.32){
       // Heavy-tailed multiplicative growth; no target dimension.
@@ -157,6 +219,7 @@ function buildCyclic(core){
     }
     const m=p.length;for(let j=0;j<m;j++)gate(2*j,2*j+1,p[j]);
     for(let j=0;j<m;j++)gate(2*j+1,2*((j+1)%m),q[j]);
+    if(g.extra){a.push(g.extra.a);b.push(g.extra.b);gate(0,2*m,g.extra.gate);}
     return {dense:{a,b,gates,mode:0},cert:{format:"moc-emergent-v1",a:a.map(x=>x.map(String)),b:b.map(x=>x.map(String)),gates:exact,direction:["1","0"]}};
   }
   function search(o={}){
@@ -207,14 +270,15 @@ function buildCyclic(core){
       const x=expand(g,1000000),D=core.determinant(core.sumMatrix(x.dense.a,x.dense.b,core.mixer(x.dense))),d=relative(determinant(g),0n);
       const delta=abs(sub(D,d))/Math.max(1,abs(D),abs(d));err=Math.max(err,delta);assert(delta<1e-7,"transfer determinant versus dense normal sum");
     }
-    const g=restart(r);g.runs[0].count="499999999";
+    const g=restart(r);delete g.extra;g.runs[0].count="499999999";
     const data=new Map();let hits=0,miss=0;const cache={get(k){if(data.has(k)){hits++;return data.get(k);}miss++;},set(k,v){data.set(k,v);}};
     const huge=evaluate(g,{cache,cycleSamples:8});assert(huge.dimension==="1000000000","billion-dimensional exact count");assert(huge.determinant.slice(0,2).every(Number.isFinite),"scaled determinant");assert(expand(g)===null,"no large allocation");
     const before=hits;g.runs[0].count="999999999";const grown=evaluate(g,{cache,cycleSamples:8});assert(hits>before,"transfer powers reused on growth");assert(grown.dimension==="2000000000","growth");
+    g.extra=defect(r);const odd=evaluate(g,{cache,cycleSamples:4});assert(odd.dimension==="2000000001","unbounded odd dimension");
     g.runs[0].count="1000000000000000000000000000000";const vast=evaluate(g,{cache,cycleSamples:4});assert(BigInt(vast.dimension)>BigInt(Number.MAX_SAFE_INTEGER),"beyond machine integer dimension");assert(vast.status==="UNRESOLVED_NUMERICAL","no false certification");
     const a=search({seed:41,steps:80,work:2000,exactWork:3000,cycleSamples:5,cache,population:12});
     return {status:"PASS",assertions:count,maxRelativeDetError:err,billion:huge,larger:grown.dimension,beyondMachineInteger:vast.dimension,cacheHits:hits,cacheMisses:miss,smoke:a.stats};
   }
-  return {dimension,determinant,evaluate,expand,search,selftest,validate};
+  return {dimension,determinant,evaluate,expand,search,selftest,validate,oddDeterminant};
 }
 module.exports=buildCyclic(require("./emergent.js"));
