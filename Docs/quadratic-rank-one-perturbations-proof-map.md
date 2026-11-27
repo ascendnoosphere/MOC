@@ -41,6 +41,10 @@ $q(H)=P(H_0^2+csH_0+eI)P^*$. Conjugation by $P$ fixes $E$.
 The real vector theorem applies with the linear coefficient $cs$.
 [Signed complex vector theorem](../Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L178)
 
+For every real coefficient $s$, the matrix $q(D+sww^*)$ is normal
+and differs from $q(D)$ by rank at most two.
+[Complex vector normality and rank](../Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L234)
+
 ## Proof route
 
 ```mermaid

@@ -441,7 +441,7 @@ the inclusion holds for $H^2+cH+eI$ and $E$.
 Repeated eigenvalues and zero vector entries are allowed.
 This proves a family of normal diagonal-plus-rank-two matrices.
 [Inclusion](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L178) ·
-[Normality, eigenvalues, and rank for the real-vector form](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L129) ·
+[Normality and rank](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L234) ·
 [Complete proof map](Docs/quadratic-rank-one-perturbations-proof-map.md)
 
 Suppose one matrix is diagonal. In that basis, let the other matrix

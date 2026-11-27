@@ -228,6 +228,54 @@ theorem det_quadratic_signed_rank_one_hermitian_mem_hull
   rw [hdet, show a = a ∘ (Equiv.refl (Fin n)) from rfl, matchingRange_relabel]
   exact det_quadratic_rank_one_hermitian_mem_hull d' v h hChar c' e a
 
+/-- A monic quadratic of a real diagonal matrix plus a Hermitian rank-one
+update is normal. Its difference from the same quadratic of the diagonal
+has rank at most two. The coefficient of the update can be any real number. -/
+theorem quadratic_signed_rank_one_hermitian_characteristics
+    (d : Fin n → ℝ) (w : Fin n → ℂ) (s : ℝ) (c e : ℂ) :
+    let H := diagonal (fun i => (d i : ℂ)) + (s : ℂ) • vecMulVec w (star w)
+    let Q := H*H+c • H+e • 1
+    IsStarNormal Q ∧ (Q - diagonal (secularQuadraticLabels d c e)).rank ≤ 2 := by
+  intro H Q
+  constructor
+  · have hd : star (fun i : Fin n => (d i : ℂ)) = fun i => (d i : ℂ) := by
+      funext i
+      exact Complex.conj_ofReal (d i)
+    have hw : (vecMulVec w (star w) : Matrix (Fin n) (Fin n) ℂ)ᴴ =
+        vecMulVec w (star w) := by
+      ext i j : 1
+      simp only [Matrix.conjTranspose_apply, Matrix.vecMulVec_apply, Pi.star_apply,
+        StarMul.star_mul, star_star]
+    have hH : H.IsHermitian := by
+      change (diagonal (fun i => (d i : ℂ)) + (s : ℂ) • vecMulVec w (star w))ᴴ = H
+      rw [Matrix.conjTranspose_add, Matrix.diagonal_conjTranspose, Matrix.conjTranspose_smul,
+        hd, hw, show star (s : ℂ) = (s : ℂ) from Complex.conj_ofReal s]
+    let h := hH.eigenvalues
+    let U : Matrix (Fin n) (Fin n) ℂ := hH.eigenvectorUnitary
+    have hU : IsUnitary U :=
+      ⟨Matrix.mem_unitaryGroup_iff.mp hH.eigenvectorUnitary.property,
+        Matrix.mem_unitaryGroup_iff'.mp hH.eigenvectorUnitary.property⟩
+    have hdiag : H = U * diagonal (fun i => (h i : ℂ)) * Uᴴ := hH.spectral_theorem
+    have hquad := conjugate_quadratic U (diagonal (fun i => (h i : ℂ))) hU 1 c e (one_mul 1)
+    rw [one_smul, mul_one, quadraticMatrix_diagonal] at hquad
+    change IsStarNormal (quadraticMatrix c e H)
+    rw [hdiag, hquad]
+    exact isStarNormal_unitary_diagonalization _ hU
+  · let D := diagonal (fun i => (d i : ℂ))
+    let u (i : Fin n) : ℂ := (s : ℂ) * w i
+    have hshape : H = D + vecMulVec u (star w) := by
+      change D + (s : ℂ) • vecMulVec w (star w) = _
+      congr 1
+      ext i j : 1
+      simp only [Matrix.smul_apply, smul_eq_mul, Matrix.vecMulVec_apply, u, mul_assoc]
+    have heq : Q - diagonal (secularQuadraticLabels d c e) =
+        H*H+c • H-(D*D+c • D) := by
+      rw [← quadraticMatrix_diagonal d c e]
+      change H*H+c • H+e • 1-(D*D+c • D+e • 1) = _
+      abel
+    rw [heq, hshape]
+    exact rank_quadratic_image_sub_diagonal_le_two (fun i => (d i : ℂ)) u (star w) c
+
 end
 
 end MOC
