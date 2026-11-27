@@ -19,7 +19,11 @@ private theorem smallWord_product (O : Matrix (Fin 4) (Fin 4) ℝ) (a : Fin 8) :
 
 private theorem singleColumn_frame (O : Matrix (Fin 4) (Fin 4) ℝ) (i : Fin 4) (hi : i ≠ 3) :
     smallFrame O (singleColumn i) = generator O i := by
-  fin_cases i <;> first | contradiction | rfl
+  fin_cases i
+  · rfl
+  · rfl
+  · rfl
+  · exact (hi rfl).elim
 
 private theorem zero_xorSmall (a : Fin 8) : xorSmall 0 a = a := by
   apply Fin.ext

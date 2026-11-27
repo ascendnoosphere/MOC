@@ -211,8 +211,9 @@ theorem fourT7_chart_real_parameters (z w v r c κ : ℂ) (H : ℝ) (hκ : κ �
     dsimp only [l, k, e]
     rw [hh1']
     dsimp only [t]
-    field_simp [hr, hv, sub_ne_zero.mpr hzc, sub_ne_zero.mpr hrc.symm,
-      sub_ne_zero.mpr hvz, sub_ne_zero.mpr hz1] <;> ring
+    field_simp (disch := simp [hr, hv, sub_ne_zero.mpr hzc, sub_ne_zero.mpr hrc.symm,
+      sub_ne_zero.mpr hvz, sub_ne_zero.mpr hz1])
+    ring
   have hl_im : l.im = 0 := by
     rw [hL]
     simp [Complex.mul_im, Complex.sub_im, Complex.add_im, hk_im, he_im]
@@ -233,7 +234,8 @@ theorem fourT7_chart_real_parameters (z w v r c κ : ℂ) (H : ℝ) (hκ : κ �
       field_simp [hv, sub_ne_zero.mpr hz1] <;> ring
     rw [hx]
     dsimp only [h]
-    field_simp [hv, sub_ne_zero.mpr hv1, sub_ne_zero.mpr hz1] <;> ring
+    field_simp (disch := simp [hv, sub_ne_zero.mpr hv1, sub_ne_zero.mpr hz1])
+    ring
   · have hden : v - r - t * (v - z) = (v - r) * (z - r) / (c - r) := by
       dsimp only [t]
       field_simp [sub_ne_zero.mpr hrc.symm, sub_ne_zero.mpr hvz] <;> ring

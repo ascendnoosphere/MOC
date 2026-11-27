@@ -135,14 +135,12 @@ theorem fourGeometricBudget_support_case_one (a b : Fin 4 → ℂ) (η : ℂ) (H
   refine geometricBudget_support_of_remainder a b η H z hz U hU (hc 0 (by decide)) heh
     (by linarith only [he]) (sub_nonneg.mpr heJ) hcap w ?_ ?_
   · intro k
-    fin_cases k <;>
-      (dsimp only [w]
-       linarith only [he, hC, heB, hKe, hP, hQ, heJ, hB₁])
+    fin_cases k <;> norm_num [w] <;>
+      linarith only [he, hC, heB, hKe, hP, hQ, heJ, hB₁]
   · intro i
     rw [geometricBudget_scaled_gap_profile a b η H z hc i]
-    fin_cases i <;>
-      simp (config := { decide := true }) [geometricBudgetGapProfile, geometricBudgetRemainderWeights, geometricBudgetRemainderSupports, w,
-        Fin.sum_univ_succ, Matrix.cons_val, h3, h7, h9, h10, h12, h13, h16, h18] <;> ring
+    exact geometricBudget_case_one_gap_eq K J h p q B C e (fun j => z * g j)
+      h3 h7 h9 h10 h12 h13 h16 h18 i
 
 /-- Permutation indices after exchanging the two finite anchor labels of geometric-budget pattern. -/
 def fourGeometricBudgetSwapIndex : Fin 24 → Fin 24 :=
@@ -189,6 +187,22 @@ theorem fourGeometricBudget_gaps_swap12 (a b : Fin 4 → ℂ) (η : ℂ) (H : �
   have h5 : g 5 = g 3 := fourGeometricBudget_spectral_gap_profile a b η H hc 5
   have h14 : g 14 = g 12 := fourGeometricBudget_spectral_gap_profile a b η H hc 14
   exact ⟨(hm 3).trans h5, hm 7, hm 9, hm 10, (hm 12).trans h14, hm 18, hm 19, hm 22⟩
+
+set_option maxHeartbeats 2000000 in
+private theorem geometricBudget_case_two_gap_eq (K P α p q B C e : ℝ) (g : Fin 24 → ℝ)
+    (h3 : g 3 = K * (1 + q)) (h7 : g 7 = C) (h9 : g 9 = C + q * K)
+    (h10 : g 10 = B) (h12 : g 12 = q * (1 + p))
+    (h13 : g 13 = K + q * α + q * p) (h16 : g 16 = K - q * P + q * p)
+    (h18 : g 18 = C + q) (i : Fin 24) :
+    geometricBudgetGapProfile g (fourGeometricBudgetSwapIndex i) =
+      ∑ k, if i ∈ geometricBudgetRemainderSupports k then
+        geometricBudgetRemainderWeights (q * (e + α)) (q * e) (q * (P - e))
+          ![q * (e + 1), C - q * P, B - q * e, q * (e + K), q * (p - P), K - q * P] k
+      else 0 := by
+  fin_cases i <;>
+    simp (config := { decide := true }) [fourGeometricBudgetSwapIndex, geometricBudgetGapProfile,
+      geometricBudgetRemainderWeights, geometricBudgetRemainderSupports, Fin.sum_univ_succ,
+      Matrix.cons_val, h3, h7, h9, h10, h12, h13, h16, h18] <;> ring
 
 set_option maxHeartbeats 2000000 in
 /-- Case II in the geometric-budget pattern support proof. The row swap exchanges the donor
@@ -239,23 +253,21 @@ theorem fourGeometricBudget_support_case_two (a b : Fin 4 → ℂ) (η : ℂ) (H
   have hw (k : Fin 6) : 0 ≤ w k := by
     fin_cases k <;> norm_num [w]
     · exact mul_nonneg hq.le (by linarith only [he])
-    · exact sub_nonneg.mpr hC
+    · exact hC
     · have hb := (le_div_iff₀ hq).mp heB
       linarith only [hb]
     · have hk := (mul_pos hq hP).le.trans hK
       exact mul_nonneg hq.le (add_nonneg he hk)
     · exact mul_nonneg hq.le (sub_nonneg.mpr hp)
-    · exact sub_nonneg.mpr hK
+    · exact hK
   rw [← determinantValue_reindex r s a b U]
   refine geometricBudget_support_of_remainder (a ∘ r) (b ∘ s) η H z hz (U.submatrix r s)
     (unitary_reindex r s hU) h0 (mul_nonneg hq.le heα) (mul_nonneg hq.le he)
     (mul_nonneg hq.le (sub_nonneg.mpr heP)) hcap' w hw ?_
   intro i
   rw [hperm, geometricBudget_scaled_gap_profile a b η H z hc (fourGeometricBudgetSwapIndex i)]
-  fin_cases i <;>
-    simp (config := { decide := true }) [fourGeometricBudgetSwapIndex, geometricBudgetGapProfile, geometricBudgetRemainderWeights,
-      geometricBudgetRemainderSupports, w, Fin.sum_univ_succ, Matrix.cons_val,
-      h3, h7, h9, h10, h12, h13, h16, h18] <;> ring
+  exact geometricBudget_case_two_gap_eq K P α p q B C e (fun j => z * g j)
+    h3 h7 h9 h10 h12 h13 h16 h18 i
 
 /-- The Case I certificate after exchanging the anchor labels. -/
 theorem fourGeometricBudget_support_case_one_swapped (a b : Fin 4 → ℂ) (η : ℂ) (H z : ℝ)
@@ -275,6 +287,14 @@ theorem fourGeometricBudget_support_case_one_swapped (a b : Fin 4 → ℂ) (η :
   refine fourGeometricBudget_support_case_one (a ∘ r) (b ∘ s) η H z (fourGeometricBudget_contacts_swap12 a b η H hc)
     (U.submatrix r s) (unitary_reindex r s hU) hz hJ hh hK hB₁ hBK hBA hP hQ hC ?_
   obtain ⟨h3, h7, h9, h10, h12, h18, h19, h22⟩ := fourGeometricBudget_gaps_swap12 a b η H hc
+  change z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 3).symm).re - H) = K * q ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 7).symm).re - H) = B ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 9).symm).re - H) = B - K ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 10).symm).re - H) = C ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 12).symm).re - H) = p ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 18).symm).re - H) = B - 1 ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 19).symm).re - H) = K * q - (1 + J - K) ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 22).symm).re - H) = K * q - (1 + h * J - K)
   simpa only [h3, h7, h9, h10, h12, h18, h19, h22] using hprofile
 
 /-- The Case II certificate after exchanging the anchor labels. -/
@@ -295,6 +315,14 @@ theorem fourGeometricBudget_support_case_two_swapped (a b : Fin 4 → ℂ) (η :
   refine fourGeometricBudget_support_case_two (a ∘ r) (b ∘ s) η H z (fourGeometricBudget_contacts_swap12 a b η H hc)
     (U.submatrix r s) (unitary_reindex r s hU) hz hq hP hα hp hK hC hB ?_
   obtain ⟨h3, h7, h9, h10, h12, h18, h19, h22⟩ := fourGeometricBudget_gaps_swap12 a b η H hc
+  change z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 3).symm).re - H) = K * (1 + q) ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 7).symm).re - H) = C ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 9).symm).re - H) = C + q * K ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 10).symm).re - H) = B ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 12).symm).re - H) = q * (1 + p) ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 18).symm).re - H) = C + q ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 19).symm).re - H) = K + q * α ∧
+    z * ((η * matchingProduct (a ∘ Equiv.swap 1 2) b (fourPerm 22).symm).re - H) = K - q * P
   simpa only [h3, h7, h9, h10, h12, h18, h19, h22] using hprofile
 
 end

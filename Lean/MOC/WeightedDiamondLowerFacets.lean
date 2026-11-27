@@ -352,17 +352,63 @@ private def blockCheck (block : Fin 8) : Bool :=
 
 section
 
-set_option maxRecDepth 10000
-set_option maxHeartbeats 3000000
 
-private theorem block0 : blockCheck 0 = true := by decide +kernel
-private theorem block1 : blockCheck 1 = true := by decide +kernel
-private theorem block2 : blockCheck 2 = true := by decide +kernel
-private theorem block3 : blockCheck 3 = true := by decide +kernel
-private theorem block4 : blockCheck 4 = true := by decide +kernel
-private theorem block5 : blockCheck 5 = true := by decide +kernel
-private theorem block6 : blockCheck 6 = true := by decide +kernel
-private theorem block7 : blockCheck 7 = true := by decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block0 : blockCheck 0 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block1 : blockCheck 1 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block2 : blockCheck 2 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block3 : blockCheck 3 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block4 : blockCheck 4 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block5 : blockCheck 5 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block6 : blockCheck 6 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem block7 : blockCheck 7 = true := by
+  unfold blockCheck
+  apply List.all_eq_true.mpr
+  intro offset _
+  fin_cases offset <;> decide +kernel
 
 end
 

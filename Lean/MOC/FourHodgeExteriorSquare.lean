@@ -61,7 +61,8 @@ theorem fourHodgeCompound_diagonal {R : Type*} [CommRing R] (d : Fin 4 → R) :
       diagonal (fun p => d (fourHodgePair p 0) * d (fourHodgePair p 1)) := by
   ext ⟨i,s⟩ ⟨j,t⟩
   fin_cases i <;> fin_cases j <;> fin_cases s <;> fin_cases t <;>
-    simp [fourHodgeCompound, fourHodgePair, Matrix.diagonal_apply, Matrix.cons_val]
+    simp [fourHodgeCompound, fourHodgePair, Matrix.diagonal_apply, Matrix.cons_val,
+      Prod.ext_iff]
 
 @[simp] theorem fourHodgeCompound_one {R : Type*} [CommRing R] :
     fourHodgeCompound (1 : Matrix (Fin 4) (Fin 4) R) = 1 := by
@@ -71,7 +72,7 @@ theorem fourHodgeCompound_diagonal {R : Type*} [CommRing R] (d : Fin 4 → R) :
 theorem fourHodgeCompound_conjTranspose (U : Matrix (Fin 4) (Fin 4) ℂ) :
     fourHodgeCompound Uᴴ = (fourHodgeCompound U)ᴴ := by
   ext p q
-  simp only [fourHodgeCompound, Matrix.conjTranspose_apply, star_sub, star_mul]
+  simp only [fourHodgeCompound, Matrix.conjTranspose_apply, star_sub, StarMul.star_mul]
   ring
 
 theorem fourHodgeCompound_unitary {U : Matrix (Fin 4) (Fin 4) ℂ} (hU : IsUnitary U) :
@@ -89,7 +90,8 @@ private theorem four_det_wedge {R : Type*} [CommRing R] (U : Matrix (Fin 4) (Fin
   rw [Matrix.det_succ_column_zero]
   simp [Fintype.sum_prod_type, Fin.sum_univ_three, Fin.sum_univ_two, Fin.sum_univ_four,
     fourHodgePair, Matrix.cons_val, Matrix.det_fin_three, Matrix.submatrix_apply,
-    Fin.succAbove, Fin.castSucc, Fin.succ]
+    Fin.succAbove, Fin.castSucc, Fin.succ, Fin.coe_ofNat_eq_mod]
+  norm_num
   ring
 
 private def hodgeFrameLabels (p q : HodgeIndex) : Fin 4 → Fin 4 :=
@@ -110,7 +112,8 @@ theorem fourHodgeCompound_wedge_pairing {R : Type*} [CommRing R]
   have h := fourHodgeCompound_wedge_frame (1 : Matrix (Fin 4) (Fin 4) R) p q
   have hI : ((1 : Matrix (Fin 4) (Fin 4) R).submatrix id (hodgeFrameLabels p q)).det =
       if fourHodgeFlip p = q then 1 else 0 := by
-    simpa [Matrix.one_apply, ite_mul, zero_mul, one_mul, Finset.sum_ite_eq'] using h.symm
+    simpa only [fourHodgeCompound_one, Matrix.one_apply, ite_mul, zero_mul,
+      one_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true] using h.symm
   have he : U.submatrix id (hodgeFrameLabels p q) =
       U * (1 : Matrix (Fin 4) (Fin 4) R).submatrix id (hodgeFrameLabels p q) := by
     ext i j
@@ -135,6 +138,7 @@ theorem fourHodgeCompound_complement (U : Matrix (Fin 4) (Fin 4) ℂ)
     simpa [C, J, Matrix.mul_apply, Matrix.transpose_apply, Matrix.submatrix_apply,
       Equiv.Perm.permMatrix, PEquiv.toMatrix_apply, Equiv.toPEquiv_apply] using he
   have he := congrArg (fun X : Matrix HodgeIndex HodgeIndex ℂ => D * X) hpair
+  change D * (Cᵀ * C.submatrix fourHodgeFlip id) = D * J at he
   rw [← Matrix.mul_assoc, hprod, Matrix.one_mul] at he
   have hJ : D * J = D.submatrix id fourHodgeFlip.symm :=
     PEquiv.mul_toMatrix_toPEquiv D fourHodgeFlip
@@ -164,10 +168,11 @@ noncomputable def fourHodgeBasis : Matrix HodgeIndex HodgeIndex ℂ := hodgeScal
 theorem fourHodgeBasis_unitary : IsUnitary fourHodgeBasis := by
   have hraw : fourHodgeBasisRawᴴ * fourHodgeBasisRaw = (2 : ℂ) • 1 := by
     ext ⟨i,s⟩ ⟨j,t⟩
+    simp only [Matrix.mul_apply, Fintype.sum_prod_type, Fin.sum_univ_three, Fin.sum_univ_two]
     fin_cases i <;> fin_cases j <;> fin_cases s <;> fin_cases t <;>
-      norm_num [fourHodgeBasisRaw, hodgeBlock, Matrix.mul_apply, Fintype.sum_prod_type,
-        Fin.sum_univ_three, Fin.sum_univ_two, Matrix.conjTranspose_apply, Matrix.one_apply,
-        Matrix.smul_apply, Complex.star_def, Complex.conj_I, Complex.I_sq, ← pow_two]
+      norm_num [fourHodgeBasisRaw, hodgeBlock, Matrix.conjTranspose_apply, Matrix.one_apply,
+        Matrix.smul_apply, Complex.star_def, Complex.conj_I, Complex.I_sq, ← pow_two,
+        Prod.ext_iff, Fin.ext_iff, Fin.coe_ofNat_eq_mod]
   have hleft : fourHodgeBasisᴴ * fourHodgeBasis = 1 := by
     simp only [fourHodgeBasis, Matrix.conjTranspose_smul, hodgeScale_star, Matrix.smul_mul,
       Matrix.mul_smul, hraw, smul_smul]
@@ -314,16 +319,43 @@ theorem fourHodgeCompound_det (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U
       rw [show V.det * (diagonal d).det * Vᴴ.det = (V.det * Vᴴ.det) * (diagonal d).det by ring,
         hv, one_mul]
 
+private theorem det_in_unitary_hodge_basis (B C : Matrix HodgeIndex HodgeIndex ℂ)
+    (hB : IsUnitary B) : (Bᴴ * C * B).det = C.det := by
+  have hunit : Bᴴ * B = (1 : Matrix HodgeIndex HodgeIndex ℂ) := hB.2
+  have hb : Bᴴ.det * B.det = 1 := by
+    calc
+      _ = (Bᴴ * B).det := by rw [Matrix.det_mul]
+      _ = (1 : Matrix HodgeIndex HodgeIndex ℂ).det :=
+        congrArg (fun X : Matrix HodgeIndex HodgeIndex ℂ => X.det) hunit
+      _ = 1 := by rw [Matrix.det_one]
+  calc
+    _ = Bᴴ.det * C.det * B.det := by rw [Matrix.det_mul, Matrix.det_mul]
+    _ = C.det * (Bᴴ.det * B.det) := by ring
+    _ = C.det := by rw [hb, mul_one]
+
+section
+
+attribute [local irreducible] fourHodgeBasis fourHodgeCompound
+
+set_option maxRecDepth 4096 in
 /-- The real exterior-square matrix has determinant one. -/
 theorem fourHodgeRealRepresentation_det (U : Matrix (Fin 4) (Fin 4) ℂ)
     (hU : IsUnitary U) (hd : U.det = 1) : (fourHodgeRealRepresentation U).det = 1 := by
-  have hb : (fourHodgeBasisᴴ).det * fourHodgeBasis.det = 1 := by
-    simpa only [Matrix.det_mul, Matrix.det_one] using congrArg Matrix.det fourHodgeBasis_unitary.2
-  have he := congrArg Matrix.det (fourHodgeRealRepresentation_cast U hU hd)
-  change ((fourHodgeRealRepresentation U).map Complex.ofRealHom).det = _ at he
-  rw [← RingHom.map_det, fourHodgeComplexRepresentation, Matrix.det_mul, Matrix.det_mul,
-    fourHodgeCompound_det U hU, hd, one_pow, mul_one, hb] at he
-  exact Complex.ofReal_injective (by simpa only [Complex.ofRealHom_apply, Complex.ofReal_one] using he)
+  have hcast := fourHodgeRealRepresentation_cast U hU hd
+  have he : Complex.ofRealHom (fourHodgeRealRepresentation U).det =
+      (fourHodgeComplexRepresentation U).det :=
+    (Complex.ofRealHom.map_det _).trans
+      (congrArg (fun X : Matrix HodgeIndex HodgeIndex ℂ => X.det) hcast)
+  have hdet : (fourHodgeComplexRepresentation U).det = 1 := by
+    rw [fourHodgeComplexRepresentation]
+    calc
+      _ = (fourHodgeCompound U).det :=
+        det_in_unitary_hodge_basis fourHodgeBasis (fourHodgeCompound U) fourHodgeBasis_unitary
+      _ = 1 := by rw [fourHodgeCompound_det U hU, hd, one_pow]
+  apply Complex.ofReal_injective
+  exact he.trans hdet
+
+end
 
 theorem fourHodgeRealRepresentation_mul (U V : Matrix (Fin 4) (Fin 4) ℂ)
     (hU : IsUnitary U) (hV : IsUnitary V) (hdU : U.det = 1) (hdV : V.det = 1) :
@@ -420,7 +452,10 @@ theorem fourHodgeRealRepresentation_eq_one_iff (U : Matrix (Fin 4) (Fin 4) ℂ)
         rw [← fourHodgeCompound_one]
         ext p q : 1
         simp only [fourHodgeCompound, Matrix.neg_apply, neg_mul_neg]
-      simpa only [fourHodgeRealRepresentation, fourHodgeComplexRepresentation, hC,
-        fourHodgeCompound_one] using fourHodgeRealRepresentation_one
+      calc
+        fourHodgeRealRepresentation (-1) = fourHodgeRealRepresentation 1 := by
+          unfold fourHodgeRealRepresentation fourHodgeComplexRepresentation
+          rw [hC, fourHodgeCompound_one]
+        _ = 1 := fourHodgeRealRepresentation_one
 
 end MOC

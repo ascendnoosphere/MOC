@@ -1671,7 +1671,7 @@ theorem spectralEllipse_represents_all_quadruples_iff (r : ℝ) (hr : 1 ≤ r) :
       have hre := congrArg Complex.re he
       have him := congrArg Complex.im he
       fin_cases i <;> fin_cases j <;>
-        first | rfl | norm_num [a, hdre, hdim] at hre him <;> linarith only [hs, hre, him]
+        norm_num [a, hdre, hdim] at hre him ⊢ <;> linarith only [hs, hre, him]
     have hsq : d ^ 2 = -(1 / 3 : ℂ) := by
       have hs₃ : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
       have he : s ^ 2 = 1 / 3 := by

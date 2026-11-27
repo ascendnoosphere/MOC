@@ -9,21 +9,22 @@ Snowden–Vakil (DOI: 10.1112/plms/pds016) for the stronger secant rank statemen
 
 open BigOperators Matrix
 
-set_option maxRecDepth 4096
-set_option maxHeartbeats 2500000
-open private cubicGradient bracket_gradient_zero from MOC.FourMatchingPolarization
+open private cubicGradient bracket_gradient_zero cubicGradient_eq_matching from MOC.FourMatchingPolarization
 
 namespace MOC
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 private theorem fourMatchingGradient_eq_cubicGradient {R : Type*} [CommRing R]
     (u : Fin 14 → R) (i : Fin 14) : fourMatchingGradient u i = cubicGradient u i := by
-  fin_cases i <;> simp [fourMatchingGradient, cubicGradient] <;> ring
+  exact (cubicGradient_eq_matching u i).symm
 
 /-- Mixed polarization of the quadratic gradient, i.e. the Hessian action. -/
 @[irreducible] def fourMatchingHessianAction {R : Type*} [CommRing R] (u v : Fin 14 → R) :
     Fin 14 → R :=
   fun i => cubicGradient (fun k => u k + v k) i - cubicGradient u i - cubicGradient v i
 
+set_option maxRecDepth 4096 in
 set_option maxHeartbeats 1500000 in
 private theorem gradient_projection_im (y : Fin 14 → ℂ) (i : Fin 14) :
     (fourMatchingGradient y i).im =
@@ -33,6 +34,8 @@ private theorem gradient_projection_im (y : Fin 14 → ℂ) (i : Fin 14) :
     simp [cubicGradient, fourMatchingHessianAction, Complex.add_im, Complex.sub_im,
       Complex.mul_im, Complex.mul_re, pow_two] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 private theorem scaled_gradient_zero {R : Type*} [CommRing R] (z : Fin 8 → R) (η : R)
     (i : Fin 14) : cubicGradient (fun k => η * fourBracketLift z k) i = 0 := by
   have he : cubicGradient (fun k => η * fourBracketLift z k) i =
@@ -41,11 +44,15 @@ private theorem scaled_gradient_zero {R : Type*} [CommRing R] (z : Fin 8 → R) 
     fin_cases i <;> simp [cubicGradient] <;> ring
   rw [he, bracket_gradient_zero, mul_zero]
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 private theorem matching_hessian_self (u : Fin 14 → ℝ) :
     fourMatchingHessianAction u u = fun i => 2 * cubicGradient u i := by
   funext i
   fin_cases i <;> simp [cubicGradient, fourMatchingHessianAction] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 /-- A projected point of the bracket cone always gives a nonzero kernel vector
 of the polarized cubic Hessian. -/
 theorem fourMatchingHessian_has_kernel (z : Fin 8 → ℂ) (η : ℂ) :
@@ -89,6 +96,8 @@ theorem fourMatchingHessian_has_kernel (z : Fin 8 → ℂ) (η : ℂ) :
     rw [← gradient_projection_im y i, fourMatchingGradient_eq_cubicGradient, hy i,
       Complex.zero_im]
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 private theorem gradient_projection_re (y : Fin 14 → ℂ) (i : Fin 14) :
     (fourMatchingGradient y i).re =
       fourMatchingGradient (fun k => (y k).re) i -
@@ -97,6 +106,8 @@ private theorem gradient_projection_re (y : Fin 14 → ℂ) (i : Fin 14) :
     simp [fourMatchingGradient_eq_cubicGradient, cubicGradient, Complex.add_re, Complex.sub_re,
       Complex.mul_re, Complex.mul_im, pow_two] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 /-- The singularity equation for a complex lift splits into the real
 Hessian kernel equation and equality of the two real gradients. -/
 theorem fourMatchingGradient_eq_zero_iff (y : Fin 14 → ℂ) :
@@ -124,6 +135,8 @@ theorem fourMatchingGradient_eq_zero_iff (y : Fin 14 → ℂ) :
     · change (fourMatchingGradient y i).im = 0
       simp only [gradient_projection_im, hessian, Pi.zero_apply]
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 /-- A scaled exact bracket profile satisfies both real lift equations. -/
 theorem fourMatching_real_lift_equations (z : Fin 8 → ℂ) (η : ℂ) :
     let u := fun k => (η * fourBracketLift z k).re
@@ -144,6 +157,8 @@ private noncomputable def realSecantKernelFirst : Fin 14 → ℝ :=
 private noncomputable def realSecantKernelSecond : Fin 14 → ℝ :=
   ![-1, 0, -21, -3, 27, 9, 0, 12, 4, -9, -12, -3, 0, 13]
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 private theorem realSecantKernel_coordinates (v : Fin 14 → ℝ)
     (hv : fourMatchingHessianAction fourRealSecantObstruction v = 0) (i : Fin 14) :
     v i = (realSecantKernelFirst i * v 12 + realSecantKernelSecond i * v 13) / 13 := by
@@ -169,6 +184,8 @@ private theorem realSecantKernel_coordinates (v : Fin 14 → ℝ)
     Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;>
     linarith! only [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 2500000 in
 /-- The cubic and Hessian kernel tests can hold although no real
 imaginary part satisfies the gradient equation. -/
 theorem fourRealSecantObstruction_checks :

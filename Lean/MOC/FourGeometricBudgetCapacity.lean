@@ -8,6 +8,82 @@ import Mathlib.Tactic.Ring
 
 namespace MOC
 
+private theorem geometricBudget_chart_geometry_algebra
+    (h r x y A N O D G : ℝ) (hh : h - 1 ≠ 0)
+    (hNnz : N ≠ 0) (hOnz : O ≠ 0) (hDnz : D ≠ 0)
+    (hA : A = h * r - h - r) (hN : N = x ^ 2 + y ^ 2)
+    (hO : O = (x - 1) ^ 2 + y ^ 2)
+    (hD : D = (A * x + r) ^ 2 + (A * y) ^ 2)
+    (hG : G = (1 + (h - 1) * x) ^ 2 + ((h - 1) * y) ^ 2) :
+    let K := h * r * (r - 1) / D
+    let J := (A * N + r * (2 * x - 1)) / D
+    let L := r / ((h - 1) * N)
+    let M := h * (r - 1) / ((h - 1) * O)
+    K + A * J = 1 ∧ (M - L) * ((h - 1) * N * O) = J * D ∧
+    K * D = (h - 1) ^ 2 * N * O * (L * M) ∧
+    (M - L) * K = (h - 1) * J * L * M ∧
+    K + L * (1 + J) = r ^ 2 * (r - 1) * G / ((h - 1) * N * D) ∧
+    K + M * (1 + h * J) = h * r * (r - 1) ^ 2 * G / ((h - 1) * O * D) := by
+  intro K J L M
+  have hLN : (h - 1) * N ≠ 0 := mul_ne_zero hh hNnz
+  have hMO : (h - 1) * O ≠ 0 := mul_ne_zero hh hOnz
+  have hK : K * D = h * r * (r - 1) := div_mul_cancel₀ _ hDnz
+  have hJ : J * D = A * N + r * (2 * x - 1) := div_mul_cancel₀ _ hDnz
+  have hL : L * ((h - 1) * N) = r := div_mul_cancel₀ _ hLN
+  have hM : M * ((h - 1) * O) = h * (r - 1) := div_mul_cancel₀ _ hMO
+  have hDpoly : D = h * r * (r - 1) + A * (A * N + r * (2 * x - 1)) := by
+    rw [hD, hN, hA]
+    ring
+  have hJpoly : h * (r - 1) * N - r * O = A * N + r * (2 * x - 1) := by
+    rw [hN, hO, hA]
+    ring
+  have hleft : h * r * (r - 1) * ((h - 1) * N) +
+      r * (D + (A * N + r * (2 * x - 1))) = r ^ 2 * (r - 1) * G := by
+    rw [hD, hG, hN, hA]
+    ring
+  have hright : h * r * (r - 1) * ((h - 1) * O) +
+      h * (r - 1) * (D + h * (A * N + r * (2 * x - 1))) =
+        h * r * (r - 1) ^ 2 * G := by
+    rw [hD, hG, hN, hO, hA]
+    ring
+  have htwo : (M - L) * ((h - 1) * N * O) = J * D := by
+    calc
+      _ = (M * ((h - 1) * O)) * N - (L * ((h - 1) * N)) * O := by ring
+      _ = A * N + r * (2 * x - 1) := by rw [hM, hL]; exact hJpoly
+      _ = J * D := hJ.symm
+  have hthree : K * D = (h - 1) ^ 2 * N * O * (L * M) := by
+    calc
+      _ = h * r * (r - 1) := hK
+      _ = (L * ((h - 1) * N)) * (M * ((h - 1) * O)) := by rw [hL, hM]; ring
+      _ = _ := by ring
+  refine ⟨?_, htwo, hthree, ?_, ?_, ?_⟩
+  · apply mul_right_cancel₀ hDnz
+    calc
+      (K + A * J) * D = K * D + A * (J * D) := by ring
+      _ = D := by rw [hK, hJ]; exact hDpoly.symm
+      _ = 1 * D := (one_mul D).symm
+  · apply mul_right_cancel₀ hDnz
+    calc
+      ((M - L) * K) * D = (M - L) * (K * D) := by ring
+      _ = (h - 1) * ((M - L) * ((h - 1) * N * O)) * (L * M) := by rw [hthree]; ring
+      _ = ((h - 1) * J * L * M) * D := by rw [htwo]; ring
+  · have hden : (h - 1) * N * D ≠ 0 := mul_ne_zero hLN hDnz
+    apply mul_right_cancel₀ hden
+    calc
+      (K + L * (1 + J)) * ((h - 1) * N * D) =
+          (K * D) * ((h - 1) * N) + (L * ((h - 1) * N)) * (D + J * D) := by ring
+      _ = r ^ 2 * (r - 1) * G := by rw [hK, hL, hJ]; exact hleft
+      _ = (r ^ 2 * (r - 1) * G / ((h - 1) * N * D)) * ((h - 1) * N * D) :=
+        (div_mul_cancel₀ _ hden).symm
+  · have hden : (h - 1) * O * D ≠ 0 := mul_ne_zero hMO hDnz
+    apply mul_right_cancel₀ hden
+    calc
+      (K + M * (1 + h * J)) * ((h - 1) * O * D) =
+          (K * D) * ((h - 1) * O) + (M * ((h - 1) * O)) * (D + h * (J * D)) := by ring
+      _ = h * r * (r - 1) ^ 2 * G := by rw [hK, hM, hJ]; exact hright
+      _ = (h * r * (r - 1) ^ 2 * G / ((h - 1) * O * D)) * ((h - 1) * O * D) :=
+        (div_mul_cancel₀ _ hden).symm
+
 /-- The same geometric capacity identity governs both geometric-budget pattern charts. This
 form clears the positive divisors in the geometric identity. -/
 theorem fourGeometricBudget_geometric_budget {K L M A T R : ℝ}
@@ -124,9 +200,8 @@ theorem fourGeometricBudget_chart_geometry (h r x y : ℝ) (hh : h - 1 ≠ 0) :
     K + L * (1 + J) = r ^ 2 * (r - 1) * G / ((h - 1) * N * D) ∧
     K + M * (1 + h * J) = h * r * (r - 1) ^ 2 * G / ((h - 1) * O * D) := by
   intro A N O D G K J L M hN hO hD
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    dsimp only [K, L, M, J] <;> field_simp [hh, hN, hO, hD] <;>
-    dsimp only [A, N, O, D, G] <;> ring
+  exact geometricBudget_chart_geometry_algebra h r x y A N O D G hh hN hO hD
+    rfl rfl rfl rfl rfl
 
 /-- The two normalized geometric budget identities use the same
 cross product, with the donors interchanged in the second chart. -/

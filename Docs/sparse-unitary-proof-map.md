@@ -202,6 +202,6 @@ is the upper Hessenberg condition.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 26 source modules linked in this map | Yes |
+| The 26 source modules linked in this map | Partial (14/26) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

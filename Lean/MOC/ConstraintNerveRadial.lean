@@ -217,9 +217,10 @@ theorem exists_constraint_nerve_radial_reduction (vertices : Set G) (hfinite : v
   have himage : r '' convexHull ℝ vertices = convexHull ℝ (r '' vertices) := by
     change (radialNormalization ℓ.toLinearMap ∘ τ) '' convexHull ℝ vertices =
       convexHull ℝ ((radialNormalization ℓ.toLinearMap ∘ τ) '' vertices)
-    simpa only [← Set.image_image, hτ] using
-      radialNormalization_image_convexHull ℓ.toLinearMap s
-        (fun x hx => hpos x (subset_convexHull ℝ s hx))
+    simp only [← Set.image_image]
+    rw [hτ]
+    exact radialNormalization_image_convexHull ℓ.toLinearMap s
+      (fun x hx => hpos x (subset_convexHull ℝ s hx))
   refine ⟨ℓ, hsource, himage, ?_, ?_⟩
   · rw [← himage]
     rintro _ ⟨x, hx, rfl⟩

@@ -28,11 +28,11 @@ Each contact set in the table lists the indices $i$ of $q_i$.
 | --- | --- | --- | --- |
 | Entry face | $\{0,1,2,3,6,7\}$ | The contact equations give an entry-face minor certificate. [Support bound](../Lean/MOC/FourEntryFaceSupport.lean#L337) | Yes |
 | Equal chords | $\{0,1,2,3,6,8\}$ | The spectral equations equate two further projections. Eleven squared minors give the bound. [Support bound](../Lean/MOC/FourEqualChordContactSupport.lean#L339) | Yes |
-| Negative defect | $\{0,1,2,3,7,8\}$ | One scalar defect selects an ordinary minor certificate or a two-coefficient Gram certificate. [Support bound](../Lean/MOC/FourNegativeDefectSupport.lean#L13) | No |
-| Quadratic ratios | $\{0,1,4,5,7,8\}$ | Ratios of quadratic polynomials give the coefficient inequality for a four-coefficient Gram certificate. [Support bound](../Lean/MOC/FourQuadraticRatioSupport.lean#L18) | No |
+| Negative defect | $\{0,1,2,3,7,8\}$ | One scalar defect selects an ordinary minor certificate or a two-coefficient Gram certificate. [Support bound](../Lean/MOC/FourNegativeDefectSupport.lean#L13) | Yes |
+| Quadratic ratios | $\{0,1,4,5,7,8\}$ | Ratios of quadratic polynomials give the coefficient inequality for a four-coefficient Gram certificate. [Support bound](../Lean/MOC/FourQuadraticRatioSupport.lean#L19) | Yes |
 | Mixed budgets | $\{1,2,3,4,6,8\}$ | The signs of the spectral parameters select two-coefficient and four-coefficient Gram certificates. [Support bound](../Lean/MOC/FourMixedBudgetSupport.lean#L14) | Yes |
 | Geometric budget | $\{0,1,2,4,6,8\}$ | The spectral chart gives ordinary minor certificates or a Gram certificate with a nonnegative minor remainder. [Support bound](../Lean/MOC/FourGeometricBudgetSupport.lean#L11) | No |
-| Ordered ratios | $\{1,2,3,4,6,7\}$ | Ordering the real ratios gives the coefficient inequality for a two-coefficient Gram certificate. [Support bound](../Lean/MOC/FourOrderedRatioSupport.lean#L14) | No |
+| Ordered ratios | $\{1,2,3,4,6,7\}$ | Ordering the real ratios gives the coefficient inequality for a two-coefficient Gram certificate. [Support bound](../Lean/MOC/FourOrderedRatioSupport.lean#L14) | Yes |
 | Rectangle cone | $\{0,3,5,9,11,12\}$ | For distinct spectra and nonzero pair sums, a rectangle of disjoint swaps forces zero height. The spectral cubic removes the mixed coefficient. Ordinary minors give the bound. [Support bound](../Lean/MOC/FourRectangleConeSupport.lean#L276) | No |
 
 These names identify proof methods. The displayed contact sets specify
@@ -111,13 +111,14 @@ decompositions under explicit real inequalities.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The source modules linked in this map | Partial (13/18) |
+| The source modules linked in this map | Partial (14/18) |
 
-Fresh compilation passed for the entry-face, equal-chord, and mixed-budget
-support theorems. The negative-defect, quadratic-ratio, and ordered-ratio
-routes have compile errors. The bounded build batches ended before the
-geometric-budget and rectangle-cone checks finished. Those two checks
-remain incomplete.
+Before the latest refactor, compilation passed for the entry-face,
+equal-chord, and mixed-budget support theorems. The negative-defect,
+quadratic-ratio, and ordered-ratio routes had compile errors. The bounded
+build batches ended before the geometric-budget and rectangle-cone checks
+finished. The latest proof edits have not been compiled. The table marks
+changed routes and their dependent modules as unchecked.
 
 [Status definitions](README.md#lean-check-status). Conditional lemmas retain
 their stated hypotheses.

@@ -34,7 +34,8 @@ def orderedBlockJoinVertices (m : B → ℕ) (t : ∀ j, Finset (Fin (m j + 1)))
 theorem mem_orderedBlockJoinVertices (m : B → ℕ) (t : ∀ j, Finset (Fin (m j + 1)))
     (j : B) (a : Fin (m j + 1)) :
     (⟨j, a⟩ : OrderedBlockJoinVertex m) ∈ orderedBlockJoinVertices m t ↔ a ∈ t j := by
-  simp only [orderedBlockJoinVertices, Finset.mem_sigma, mem_univ, true_and]
+  change (⟨j, a⟩ : Σ l, Fin (m l + 1)) ∈ (univ : Finset B).sigma t ↔ _
+  simp only [Finset.mem_sigma, mem_univ, true_and]
 
 @[simp]
 theorem orderedBlockJoinBlock_vertices (m : B → ℕ) (t : ∀ j, Finset (Fin (m j + 1)))
@@ -47,7 +48,9 @@ theorem orderedBlockJoinVertices_blocks (m : B → ℕ) (s : Finset (OrderedBloc
     orderedBlockJoinVertices m (orderedBlockJoinBlock m s) = s := by
   ext v
   rcases v with ⟨j, a⟩
-  simp only [mem_orderedBlockJoinVertices, orderedBlockJoinBlock, mem_filter, mem_univ, true_and]
+  change (⟨j, a⟩ : Σ l, Fin (m l + 1)) ∈
+    (univ : Finset B).sigma (orderedBlockJoinBlock m s) ↔ _
+  simp only [Finset.mem_sigma, orderedBlockJoinBlock, mem_filter, mem_univ, true_and]
 
 /-- A face omits a vertex of each block. -/
 def orderedBlockJoinFaces (m : B → ℕ) : Set (Finset (OrderedBlockJoinVertex m)) :=
@@ -177,14 +180,15 @@ private theorem orderedSimplexBoundary_zero {n : ℕ} (s : Finset (Fin (n + 1)))
     rw [orderedSimplexBoundaryCoefficient_zero hz, mul_zero]
 
 private theorem orderedBlockJoin_lt_same (m : B → ℕ) (j : B) (a b : Fin (m j + 1)) :
-    (⟨j, a⟩ : OrderedBlockJoinVertex m) < ⟨j, b⟩ ↔ a < b := by
+    (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m) < (toLex ⟨j, b⟩ : OrderedBlockJoinVertex m) ↔ a < b := by
   rw [Sigma.Lex.lt_def]
+  change (j < j ∨ ∃ h : j = j, h.rec a < b) ↔ a < b
   simp only [lt_irrefl, false_or]
   exact ⟨fun ⟨_, ha⟩ => ha, fun ha => ⟨rfl, ha⟩⟩
 
 private theorem orderedBlockJoin_lt_other (m : B → ℕ) {l j : B} (hl : l ≠ j)
     (b : Fin (m l + 1)) (a : Fin (m j + 1)) :
-    (⟨l, b⟩ : OrderedBlockJoinVertex m) < ⟨j, a⟩ ↔ l < j := by
+    (toLex ⟨l, b⟩ : OrderedBlockJoinVertex m) < (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m) ↔ l < j := by
   rw [Sigma.Lex.lt_def]
   exact ⟨fun h => h.elim id (fun ⟨he, _⟩ => (hl he).elim), Or.inl⟩
 
@@ -193,16 +197,22 @@ private def orderedBlockJoinPrefix (m : B → ℕ) (s : Finset (OrderedBlockJoin
 
 private theorem orderedBlockJoin_rank (m : B → ℕ) (s : Finset (OrderedBlockJoinVertex m))
     (j : B) (a : Fin (m j + 1)) :
-    (s.filter (· < (⟨j, a⟩ : OrderedBlockJoinVertex m))).card =
+    (s.filter (· < (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m))).card =
       orderedBlockJoinPrefix m s j + orderedSimplexRank (orderedBlockJoinBlock m s j) a := by
-  let t := s.filter (· < (⟨j, a⟩ : OrderedBlockJoinVertex m))
+  let t := s.filter (· < (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m))
   have hj : orderedBlockJoinBlock m t j = (orderedBlockJoinBlock m s j).filter (· < a) := by
     ext b
-    simp only [t, orderedBlockJoinBlock, mem_filter, mem_univ, true_and, orderedBlockJoin_lt_same]
+    simp only [t, orderedBlockJoinBlock, mem_filter, mem_univ, true_and]
+    change (_ ∧ (toLex ⟨j, b⟩ : OrderedBlockJoinVertex m) <
+      (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m)) ↔ _
+    rw [orderedBlockJoin_lt_same]
   have hl (l : B) (hne : l ≠ j) :
       orderedBlockJoinBlock m t l = if l < j then orderedBlockJoinBlock m s l else ∅ := by
     ext b
-    simp only [t, orderedBlockJoinBlock, mem_filter, mem_univ, true_and, orderedBlockJoin_lt_other m hne]
+    simp only [t, orderedBlockJoinBlock, mem_filter, mem_univ, true_and]
+    change (_ ∧ (toLex ⟨l, b⟩ : OrderedBlockJoinVertex m) <
+      (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m)) ↔ _
+    rw [orderedBlockJoin_lt_other m hne]
     by_cases hlt : l < j
     · simp only [hlt, and_true, if_true, mem_filter, mem_univ, true_and]
     · simp only [hlt, and_false, if_false, not_mem_empty]
@@ -254,17 +264,17 @@ theorem orderedBlockJoinTopCycle_boundary_zero (m : B → ℕ) :
       (univ : Finset B).sigma (fun j => omittedSimplexVertices (orderedBlockJoinBlock m s j)) := by
     ext v
     rcases v with ⟨j, a⟩
+    change (⟨j, a⟩ : OrderedBlockJoinVertex m) ∈ (univ : Finset (OrderedBlockJoinVertex m)) \ s ↔
+      (⟨j, a⟩ : Σ l, Fin (m l + 1)) ∈
+        (univ : Finset B).sigma (fun j => omittedSimplexVertices (orderedBlockJoinBlock m s j))
     simp only [mem_sdiff, mem_univ, true_and, mem_sigma, omittedSimplexVertices,
       orderedBlockJoinBlock, mem_filter]
-  unfold finiteSimplicialBoundary
-  change (∑ v ∈ univ \ s, (-1 : ℤ) ^ (s.filter (· < v)).card *
-    orderedBlockJoinTopCycle m (insert v s)) = 0
-  rw [hmiss, Finset.sum_sigma]
+  rw [finiteSimplicialBoundary, hmiss, Finset.sum_sigma]
   apply Finset.sum_eq_zero
   intro j _
   have he :
       (∑ a ∈ omittedSimplexVertices (orderedBlockJoinBlock m s j),
-        (-1 : ℤ) ^ (s.filter (· < (⟨j, a⟩ : OrderedBlockJoinVertex m))).card *
+        (-1 : ℤ) ^ (s.filter (· < (toLex ⟨j, a⟩ : OrderedBlockJoinVertex m))).card *
           orderedBlockJoinTopCycle m (insert ⟨j, a⟩ s)) =
       (-1 : ℤ) ^ orderedBlockJoinPrefix m s j *
         (∑ a ∈ omittedSimplexVertices (orderedBlockJoinBlock m s j),

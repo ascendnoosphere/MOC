@@ -114,6 +114,6 @@ the block inclusions by multiplying their convex combinations.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 9 source modules linked in this map | Yes |
+| The 9 source modules linked in this map | Partial (4/9) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

@@ -68,7 +68,11 @@ theorem fourMixedBudget_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
     exact (by decide : (3 : Fin 4) ≠ 1) (hX (he.trans hX₁.symm))
   have hX' : X = ![z, 1, 0, x] := by
     funext i
-    fin_cases i <;> first | rfl | exact hX₁ | exact hX₂
+    fin_cases i
+    · rfl
+    · exact hX₁
+    · exact hX₂
+    · rfl
   have hscale (i : Fin 24) : η * matchingProduct a b (fourPerm i).symm = ξ * F i := by
     rw [hprod, show (Finset.univ : Finset (Fin 4)).erase 2 = {0, 1, 3} by decide +kernel,
       Finset.prod_insert (by decide : (0 : Fin 4) ∉ ({1, 3} : Finset (Fin 4))),

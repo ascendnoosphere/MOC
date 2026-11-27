@@ -232,7 +232,7 @@ The determinant inclusion holds for every unitary mixer when $|z|\ge 123$.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 15 source modules linked in this map | Yes |
+| The 15 source modules linked in this map | Partial (8/15) |
 | [ProofRoutes.lean](../Lean/MOC/FreeEntryEquivalence.lean#L19) | Yes |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

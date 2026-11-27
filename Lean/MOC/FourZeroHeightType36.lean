@@ -55,7 +55,7 @@ theorem fourZeroHeightType36_sign_certificate (p q z r k : ℝ)
   have hn₇ := mul_pos
     (mul_pos (mul_pos (mul_pos hp₀ hq₀) (sub_pos.mpr hp₁)) (sub_pos.mpr (hz.trans hq₀))) hr
   have hk : 0 < k := pos_of_mul_pos_left h₇ hn₇.le
-  exact (mul_neg_of_pos_of_neg hk hneg).not_gt h₀
+  exact not_lt_of_ge (mul_neg_of_pos_of_neg hk hneg).le h₀
 
 private noncomputable def type36PoleProduct (x t y w z d : ℂ) (i : Fin 24) : ℂ :=
   let A : Fin 4 → ℂ := ![x, t, 0, y]
@@ -195,7 +195,7 @@ private theorem type36_normalized_exclusion (p q z : ℝ) (t ξ : ℂ)
     rw [hg]
     dsimp only [k]
     field_simp [hp, hr.ne', hs.ne']
-    linear_combination (-μ) * he
+    linear_combination μ * he
   have e₀ : g 0 = k * (-p * q * z * (z - 1) * (p - q)) := by
     apply hscale
     linear_combination p * hF0 + t.im * p * q * z * hS
@@ -265,7 +265,11 @@ theorem fourZeroHeightType36_impossible (a b : Fin 4 → ℂ) (η : ℂ)
   have hξ : ξ ≠ 0 := mul_ne_zero hη hcn
   have hvec : X = ![1, t, 0, y] := by
     funext i
-    fin_cases i <;> first | exact hX₀ | exact hX₂ | rfl
+    fin_cases i
+    · exact hX₀
+    · rfl
+    · exact hX₂
+    · rfl
   have hscale (i : Fin 24) : η * matchingProduct a b (fourPerm i).symm = ξ * F i := by
     rw [hprod, show (Finset.univ : Finset (Fin 4)).erase 1 = {0, 2, 3} by decide +kernel,
       Finset.prod_insert (by decide : (0 : Fin 4) ∉ ({2, 3} : Finset (Fin 4))),

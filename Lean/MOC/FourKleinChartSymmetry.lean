@@ -314,29 +314,29 @@ private theorem klein_even_sign_of_absolute_failure (β p q : Fin 3 → ℝ) (cN
     | refine ⟨0, ?_⟩
       intro i
       rcases kleinFinThree i with rfl | rfl | rfl <;>
-        norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons] <;>
+        norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons] <;>
         first | exact h0 | exact h1 | exact h2
     | refine ⟨1, ?_⟩
       intro i
       rcases kleinFinThree i with rfl | rfl | rfl <;>
-        norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons]
-      · exact neg_pos.mpr h0
+        norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons]
+      · exact h0
       · exact h1
-      · exact neg_pos.mpr h2
+      · exact h2
     | refine ⟨2, ?_⟩
       intro i
       rcases kleinFinThree i with rfl | rfl | rfl <;>
-        norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons]
+        norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons]
       · exact h0
-      · exact neg_pos.mpr h1
-      · exact neg_pos.mpr h2
+      · exact h1
+      · exact h2
     | refine ⟨3, ?_⟩
       intro i
       rcases kleinFinThree i with rfl | rfl | rfl <;>
         norm_num [kleinEvenSigns, Matrix.cons_val_two, Matrix.cons_val_three,
           Matrix.head_cons, Matrix.tail_cons]
-      · exact neg_pos.mpr h0
-      · exact neg_pos.mpr h1
+      · exact h0
+      · exact h1
       · exact h2
     | exfalso
       first | rw [abs_of_neg h0] at hf | rw [abs_of_pos h0] at hf | rw [h0, abs_zero] at hf
@@ -420,8 +420,9 @@ private theorem klein_sos_of_positive (β p q : Fin 3 → ℝ) (cNeg : ℝ)
     rw [he]
     exact klein_cost_mem _ _ _ _
   · intro h' hb'
-    apply klein_sos_of_sorted_positive _ _ _ _ h' hb' (fun j => hp _) (fun j => ?_) ?_
-    · change p (Equiv.swap 0 i j) ≤ p (Equiv.swap 0 i 0)
+    refine klein_sos_of_sorted_positive _ _ _ _ h' hb' (fun j => hp _) ?_ ?_
+    · intro j
+      change p (Equiv.swap 0 i j) ≤ p (Equiv.swap 0 i 0)
       rw [Equiv.swap_apply_left]
       exact hi _ (Finset.mem_univ _)
     · simpa only [Function.comp_apply, Equiv.sum_comp] using hf

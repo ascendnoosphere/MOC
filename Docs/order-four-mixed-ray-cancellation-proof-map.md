@@ -148,4 +148,4 @@ determinant factors satisfy this test. The test leaves open whether
 the corresponding spectral gaps satisfy the support bound.
 [First six profiles](../Lean/MOC/FourSevenContactSmallNonlinearFactors.lean#L85) · [Second six profiles](../Lean/MOC/FourSevenContactLargeNonlinearFactors.lean#L65)
 
-[Lean check status](README.md#lean-check-status): **Partial (2/14)** for the 14 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (5/14)** for the 14 linked source modules.

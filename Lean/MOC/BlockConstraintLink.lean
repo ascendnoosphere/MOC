@@ -30,7 +30,7 @@ def BlockMinorLinkFeasible {C : κ → Type*} (U : ∀ k, Matrix (ι k) (ι k) �
   ∃ w : Equiv.Perm (Σ k, ι k) → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ) = 1 ∧
     (∀ i j : Σ k, ι k, i.1 ≠ j.1 →
       (∑ σ, w σ * subsetImageEvent {i} {j} σ) = 0) ∧
-    ∀ k c ∈ selected k,
+    ∀ k, ∀ c ∈ selected k,
       let I' := (I k c).map (Function.Embedding.sigmaMk k)
       let J' := (J k c).map (Function.Embedding.sigmaMk k)
       (∑ σ, w σ * subsetImageEvent I' J' σ) =
@@ -54,7 +54,6 @@ theorem blockMinorLinkFeasible_iff {C : κ → Type*} (U : ∀ k, Matrix (ι k) 
       (fun σ => σ) w hw hcross
     let W (p : ∀ k, Equiv.Perm (ι k)) := ∑ σ, if ρ σ = p then w σ else 0
     have hW (p) : 0 ≤ W p := Finset.sum_nonneg fun σ _ => by
-      dsimp only [W]
       split
       · exact hw σ
       · exact le_rfl
@@ -65,7 +64,8 @@ theorem blockMinorLinkFeasible_iff {C : κ → Type*} (U : ∀ k, Matrix (ι k) 
     let I' := (I k c).map (Function.Embedding.sigmaMk k)
     let J' := (J k c).map (Function.Embedding.sigmaMk k)
     change (∑ p, W p * subsetImageEvent I' J' (Equiv.sigmaCongrRight p)) = target k c
-    rw [W, finiteLaw_pushforward_expectation]
+    simp only [W]
+    rw [finiteLaw_pushforward_expectation]
     have he : (∑ σ, w σ * subsetImageEvent I' J' (Equiv.sigmaCongrRight (ρ σ))) =
         ∑ σ, w σ * subsetImageEvent I' J' σ := by
       apply Finset.sum_congr rfl
@@ -78,7 +78,6 @@ theorem blockMinorLinkFeasible_iff {C : κ → Type*} (U : ∀ k, Matrix (ι k) 
     let p (ρ : ∀ k, Equiv.Perm (ι k)) := Equiv.sigmaCongrRight ρ
     let w (σ : Equiv.Perm (Σ k, ι k)) := ∑ ρ, if p ρ = σ then W ρ else 0
     have hw (σ) : 0 ≤ w σ := Finset.sum_nonneg fun ρ _ => by
-      dsimp only [w]
       split
       · exact hW ρ
       · exact le_rfl
@@ -87,7 +86,8 @@ theorem blockMinorLinkFeasible_iff {C : κ → Type*} (U : ∀ k, Matrix (ι k) 
         finiteLaw_pushforward_expectation p W (fun _ => 1)
     refine ⟨w, hw, hmass, ?_, ?_⟩
     · intro i j hij
-      rw [w, finiteLaw_pushforward_expectation]
+      simp only [w]
+      rw [finiteLaw_pushforward_expectation]
       apply Finset.sum_eq_zero
       intro ρ _
       have he : ({j} : Finset (Σ k, ι k)).map (p ρ).toEmbedding ≠ {i} := by
@@ -97,7 +97,8 @@ theorem blockMinorLinkFeasible_iff {C : κ → Type*} (U : ∀ k, Matrix (ι k) 
       simp only [subsetImageEvent, he, if_false, mul_zero]
     · intro k c hc
       dsimp only
-      rw [w, finiteLaw_pushforward_expectation, subsetMinorSq_blockDiagonal'_map U hU k]
+      simp only [w]
+      rw [finiteLaw_pushforward_expectation, subsetMinorSq_blockDiagonal'_map U hU k]
       exact hobs k c hc
 
 theorem fourConstraintFeasible_subsetImage_iff (s : Finset (Fin 13)) :
@@ -113,8 +114,6 @@ theorem fourConstraintFeasible_subsetImage_iff (s : Finset (Fin 13)) :
       ordinaryCostRay r p = subsetImageEvent (ordinaryCostRows r) (ordinaryCostColumns r) (e p) := by
     unfold ordinaryCostRay subsetImageEvent
     rw [ordinaryCostRayInt_indicator]
-    change ((if (ordinaryCostColumns r).map (fourPerm p).symm.toEmbedding = ordinaryCostRows r
-        then (1 : ℤ) else 0) : ℝ) = _
     rw [show e p = (fourPerm p).symm from rfl]
     split <;> norm_num
   constructor
@@ -128,8 +127,9 @@ theorem fourConstraintFeasible_subsetImage_iff (s : Finset (Fin 13)) :
   · rintro ⟨w, hw, hm, hobs⟩
     refine ⟨fun p => w (e p), fun p => hw _, (Equiv.sum_comp e w).trans hm, fun k hk => ?_⟩
     simp only [he]
-    rw [Equiv.sum_comp e]
-    exact hobs k hk
+    exact (Equiv.sum_comp e (fun σ => w σ * subsetImageEvent
+      (ordinaryCostRows (fourConstraintRay k)) (ordinaryCostColumns (fourConstraintRay k)) σ)).trans
+      (hobs k hk)
 
 /-- For any number of copies of the order-four obstruction, the induced
 link contains exactly the selections that omit a probe in every block. -/

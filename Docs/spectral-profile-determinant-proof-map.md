@@ -168,12 +168,12 @@ two-factor square certificate awaits a build check.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 9 source modules linked in this map | Partial (3/9) |
+| The 9 source modules linked in this map | Partial (4/9) |
 | [FourInversePencil.lean](../Lean/MOC/FourInversePencil.lean#L166) | No |
 | [FourInversePencilCertificates.lean](../Lean/MOC/FourInversePencilCertificates.lean#L187) | No |
 | [FourMatchingIndicatorBasis.lean](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) | No |
 | [FourMatchingPhysicalPositivity.lean](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227) | No |
-| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | No |
+| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | Yes |
 | [InversePencilMoments.lean](../Lean/MOC/InversePencilMoments.lean#L51) | No |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

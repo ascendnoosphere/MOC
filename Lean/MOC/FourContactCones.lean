@@ -48,6 +48,10 @@ theorem fourT34_radialQ_ne_zero_of_contacts (α β : Fin 4 → ℂ) (η : ℂ) (
     (sub_nonneg.mpr (hn 4)) (sub_nonneg.mpr (hn 14)) (sub_pos.mpr hd) (sub_nonneg.mpr (hn 7))
     (fun i => by rw [← hrep, hm])
 
+section
+
+attribute [local irreducible] fourMatchingHessian
+
 /-- The radial height determined by the T34 cubic also has singular matching
 Hessian. The arguments of both polynomials are the actual matching gaps. -/
 theorem fourT34_hessian_at_radial_height_eq_zero (α β : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
@@ -59,11 +63,12 @@ theorem fourT34_hessian_at_radial_height_eq_zero (α β : Fin 4 → ℂ) (η : �
     let C := t34RadialC (g 18) (g 16) (g 13) (g 8) (g 4) (g 14) (g 11) (g 7)
     (fourMatchingHessian (t34HeightLift (g 18) (g 16) (g 13) (g 8)
       (g 4) (g 14) (g 11) (g 7) (-C / Q))).det = 0 := by
-  let g := fun i => (η * matchingProduct α β (fourPerm i).symm).re - H
-  let Q := t34RadialQ (g 13) (g 8) (g 4) (g 11) (g 16) (g 7)
-  let C := t34RadialC (g 18) (g 16) (g 13) (g 8) (g 4) (g 14) (g 11) (g 7)
+  intro g Q C
   let L := t34HeightLift (g 18) (g 16) (g 13) (g 8) (g 4) (g 14) (g 11) (g 7)
-  change (fourMatchingHessian (L (-C / Q))).det = 0
+  conv_lhs =>
+    arg 1
+    arg 1
+    change L (-C / Q)
   let m (i : Fin 14) := (η * fourNoncrossingCoordinates (fourSpectralPoints α β) i).re
   have hm (i : Fin 24) : fourMatchingEvaluation m i =
       (η * matchingProduct α β (fourPerm i).symm).re :=
@@ -78,8 +83,13 @@ theorem fourT34_hessian_at_radial_height_eq_zero (α β : Fin 4 → ℂ) (η : �
     rw [hrep] at hzero
     simpa only [L, t34_height_cubic, C, Q] using hzero
   have hH : H = -C / Q := (eq_div_iff hQ).mpr (by linarith only [hC])
-  rw [← hH, ← hrep]
-  exact fourMatchingHessian_det_spectral_real_part_eq_zero α β η
+  conv_lhs =>
+    arg 1
+    arg 1
+    rw [← hH, ← hrep]
+  simpa only [m] using fourMatchingHessian_det_spectral_real_part_eq_zero α β η
+
+end
 
 end
 

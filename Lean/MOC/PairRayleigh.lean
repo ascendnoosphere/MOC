@@ -230,21 +230,15 @@ private theorem pairPlane_exists_unitary (x y : ℂ)
   have he : (starRingEnd ℂ) x * x + (starRingEnd ℂ) y * y = 1 := by
     rw [← Complex.normSq_eq_conj_mul_self, ← Complex.normSq_eq_conj_mul_self,
       ← Complex.ofReal_add, hxy, Complex.ofReal_one]
-  refine ⟨V, ⟨?_, ?_⟩, by simp [V], by simp [V]⟩
-  · ext p q
+  have hV : V * Vᴴ = 1 := by
+    ext p q
     fin_cases p <;> fin_cases q <;>
       simp only [V, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
         Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.empty_val', Matrix.vecCons,
         Fin.cons_zero, Fin.cons_one,
         Matrix.one_apply_eq, star_neg, star_star, neg_mul, mul_neg] <;>
       simp [Matrix.one_apply] <;> first | exact he | exact Eq.trans (by ac_rfl) he | ring
-  · ext p q
-    fin_cases p <;> fin_cases q <;>
-      simp only [V, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
-        Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.empty_val', Matrix.vecCons,
-        Fin.cons_zero, Fin.cons_one,
-        Matrix.one_apply_eq, star_neg, star_star, neg_mul, mul_neg] <;>
-      simp [Matrix.one_apply] <;> first | exact he | exact Eq.trans (by ac_rfl) he | ring
+  exact ⟨V, ⟨hV, Matrix.mul_eq_one_comm.mp hV⟩, by simp [V], by simp [V]⟩
 
 variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 

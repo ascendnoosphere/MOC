@@ -38,18 +38,19 @@ private theorem gramEventGeometry (π : Equiv.Perm (Fin 4)) :
     (gramW π → gramY π → (gramB π ↔ ¬ gramC π)) ∧
     (gramW π → ¬ gramY π → ¬ gramC π) ∧
     (¬ gramW π → ((gramB π ∧ gramY π) ↔ (gramA π ∧ gramB π ∧ ¬ gramD π))) := by
-  have h01 : π 0 ≠ π 1 := π.injective.ne (by omega)
-  have h02 : π 0 ≠ π 2 := π.injective.ne (by omega)
-  have h03 : π 0 ≠ π 3 := π.injective.ne (by omega)
-  have h12 : π 1 ≠ π 2 := π.injective.ne (by omega)
-  have h13 : π 1 ≠ π 3 := π.injective.ne (by omega)
-  have h23 : π 2 ≠ π 3 := π.injective.ne (by omega)
+  have h01 : π 0 ≠ π 1 := π.injective.ne (by decide)
+  have h02 : π 0 ≠ π 2 := π.injective.ne (by decide)
+  have h03 : π 0 ≠ π 3 := π.injective.ne (by decide)
+  have h12 : π 1 ≠ π 2 := π.injective.ne (by decide)
+  have h13 : π 1 ≠ π 3 := π.injective.ne (by decide)
+  have h23 : π 2 ≠ π 3 := π.injective.ne (by decide)
   have b0 := (π 0).isLt
   have b1 := (π 1).isLt
   have b2 := (π 2).isLt
   have b3 := (π 3).isLt
+  simp only [Fin.ext_iff] at h01 h02 h03 h12 h13 h23
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    simp only [gramA, gramB, gramC, gramD, gramY, gramW, Fin.ext_iff] at * <;> omega
+    simp only [gramA, gramB, gramC, gramD, gramY, gramW, Fin.ext_iff] <;> omega
 
 private theorem gramSeed_square_symbolic (π : Equiv.Perm (Fin 4)) :
     gramSeed π ^ 2 = gramSeed π +

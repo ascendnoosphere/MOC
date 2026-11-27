@@ -15,9 +15,9 @@ open SparsePolynomialCertificate
 private abbrev PolynomialTerms := SparsePolynomialCertificate.Polynomial
 open scoped BigOperators
 
-set_option maxRecDepth 32768
-set_option maxHeartbeats 20000000
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 -- The radial variables are p, r, a, b, c, q, d, s.
 private def radialTerms : PolynomialTerms 8 :=
   List.flatten [[⟨1, ![3, 1, 0, 1, 2, 0, 2, 0]⟩,
@@ -1402,6 +1402,8 @@ private def radialTerms : PolynomialTerms 8 :=
       ⟨2, ![0, 0, 0, 0, 0, 0, 8, 1]⟩,
       ⟨1, ![0, 0, 0, 0, 0, 0, 7, 2]⟩]]
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 -- The certificate variables are a, b, c, q, r, s, and p - q.
 -- Every coefficient is scaled by four to keep the certificate integral.
 private def terms0 : PolynomialTerms 7 :=
@@ -3766,6 +3768,8 @@ private def terms0 : PolynomialTerms 7 :=
       ⟨4, ![1, 2, 2, 0, 2, 1, 1]⟩,
       ⟨4, ![1, 2, 1, 1, 1, 0, 2]⟩]]
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private def terms1 : PolynomialTerms 7 :=
   List.flatten [[⟨4, ![1, 1, 2, 0, 1, 1, 0]⟩,
       ⟨4, ![1, 2, 1, 0, 1, 1, 0]⟩,
@@ -3849,6 +3853,8 @@ private def terms1 : PolynomialTerms 7 :=
       ⟨4, ![0, 2, 0, 1, 1, 0, 2]⟩,
       ⟨4, ![0, 2, 1, 3, 0, 0, 0]⟩]]
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private def terms2 : PolynomialTerms 7 :=
   List.flatten [[⟨5, ![1, 2, 1, 1, 1, 0, 0]⟩,
       ⟨4, ![1, 1, 2, 0, 0, 1, 0]⟩,
@@ -4000,17 +4006,25 @@ private def rightPolynomial : PolynomialTerms 7 :=
     mul (certificates 3) (pow scalarSlack 2) ++
     mul (certificates 4) (mul scalarSlack pathSlack) ++ mul (certificates 5) (pow pathSlack 2)
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private theorem exact_identity : (normalizedKeys leftPolynomial == normalizedKeys rightPolynomial) = true := by
   decide +kernel
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private theorem exact_symmetry :
     (normalizedKeys (substitute radialTerms swapCoordinates) == normalizedKeys radialTerms) = true := by
   decide +kernel
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private theorem certificates_nonnegative :
     ∀ i : Fin 6, ∀ t ∈ certificates i, 0 ≤ t.coefficient := by
   decide +kernel
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private theorem radialTerms_homogeneous : ∀ t ∈ radialTerms, ∑ i, t.powers i = 9 := by
   decide +kernel
 
@@ -4018,6 +4032,8 @@ private theorem radialTerms_homogeneous : ∀ t ∈ radialTerms, ∑ i, t.powers
 def radialPolynomial (p r a b c q d s : ℝ) : ℝ :=
   eval ![p, r, a, b, c, q, d, s] radialTerms
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 /-- The T34 radial polynomial scales by the ninth power. -/
 theorem radialPolynomial_normalize (p r a b c q d s : ℝ) (hd : d ≠ 0) :
     radialPolynomial (p / d) (r / d) (a / d) (b / d) (c / d) (q / d) 1 (s / d) =
@@ -4030,6 +4046,8 @@ theorem radialPolynomial_normalize (p r a b c q d s : ℝ) (hd : d ≠ 0) :
   rw [hscale] at he
   exact he
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 theorem radialPolynomial_swap (p r a b c q d s : ℝ) :
     radialPolynomial p r a b c q d s = radialPolynomial q s a c b p d r := by
   let t : Fin 8 → ℝ := ![p, r, a, b, c, q, d, s]
@@ -4040,6 +4058,8 @@ theorem radialPolynomial_swap (p r a b c q d s : ℝ) :
   rw [eval_substitute, hmap] at h
   exact h.symm
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 private theorem exists_nonnegative_certificate {a b c q r s v : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hq : 0 ≤ q) (hr : 0 ≤ r)
     (hs : 0 ≤ s) (hv : 0 ≤ v) :
@@ -4074,6 +4094,8 @@ private theorem exists_nonnegative_certificate {a b c q r s v : ℝ}
   rw [hleft, hright] at h
   linarith only [h]
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 /-- A nonnegative normalized budget with radial polynomial zero meets the
 scalar threshold or one of the two path thresholds. -/
 theorem safe_disjunction_of_radial_root {p r a b c q s : ℝ}
@@ -4100,6 +4122,8 @@ theorem safe_disjunction_of_radial_root {p r a b c q s : ℝ}
     · exact Or.inl (by simpa only [add_comm c b] using h)
     · exact Or.inr (Or.inr ⟨h.2.1, h.1, by simpa only [add_comm] using h.2.2⟩)
 
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 20000000 in
 /-- The same support disjunction at a positive, unnormalized mixed coefficient. -/
 theorem safe_disjunction_of_radial_root_scaled {p r a b c q d s : ℝ}
     (hp : 0 ≤ p) (hr : 0 ≤ r) (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c)

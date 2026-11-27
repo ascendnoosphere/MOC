@@ -164,6 +164,6 @@ to Gantmaher and Krein (1930).
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 6 source modules linked in this map | Yes |
+| The 6 source modules linked in this map | Partial (3/6) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

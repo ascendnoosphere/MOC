@@ -174,7 +174,11 @@ theorem det_mem_matchingHull_of_localCircleSchur {n : ℕ} {κ ν : Type*}
       apply continuous_const.add
       apply continuous_matrix
       intro i j
-      cases i <;> cases j <;> first | exact hP | exact continuous_const
+      cases i <;> cases j
+      · exact hP
+      · exact continuous_const
+      · exact continuous_const
+      · exact continuous_const
     have hMcont (σ : Equiv.Perm (Fin (n + 1) ⊕ κ)) :
         Continuous (fun t : ℝ => L (M (P t) σ)) := by
       apply L.continuous.comp

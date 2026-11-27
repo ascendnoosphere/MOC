@@ -1,4 +1,5 @@
 import MOC.FourContactCertificate
+import MOC.FourMatchingRelations
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.FinCases
@@ -51,6 +52,10 @@ private def cubicGradient {R : Type*} [CommRing R] (m : Fin 14 → R) : Fin 14 �
 private def cubicSlope {R : Type*} [CommRing R] (x y : Fin 14 → R) : R :=
   ∑ k, cubicGradient x k * y k
 
+private theorem cubicGradient_eq_matching {R : Type*} [CommRing R]
+    (m : Fin 14 → R) (i : Fin 14) : cubicGradient m i = fourMatchingGradient m i := by
+  fin_cases i <;> simp [cubicGradient, fourMatchingGradient] <;> ring
+
 set_option maxHeartbeats 1600000 in
 private theorem cubic_polarization {R : Type*} [CommRing R]
     (x y : Fin 14 → R) (s t : R) :
@@ -68,7 +73,9 @@ private theorem cubic_euler {R : Type*} [CommRing R] (x : Fin 14 → R) :
 set_option maxHeartbeats 2500000 in
 private theorem bracket_gradient_zero {R : Type*} [CommRing R] (z : Fin 8 → R) (k : Fin 14) :
     cubicGradient (fourBracketLift z) k = 0 := by
-  fin_cases k <;> simp [cubicGradient, fourBracketLift] <;> ring
+  have hlift : fourBracketLift z = fourNoncrossingCoordinates z := rfl
+  rw [cubicGradient_eq_matching, hlift]
+  exact fourMatchingGradient_noncrossing z k
 
 private theorem bracket_slope_zero {R : Type*} [CommRing R] (z : Fin 8 → R) (y : Fin 14 → R) :
     cubicSlope (fourBracketLift z) y = 0 := by
@@ -95,13 +102,9 @@ private theorem bracket_conj (z : Fin 8 → ℂ) (k : Fin 14) :
 the same cubic, without any genericity, positivity or nonzero assumptions. -/
 theorem fourMatchingCubic_re_bracket (z : Fin 8 → ℂ) (η : ℂ) :
     fourMatchingCubic (fun k => (η * fourBracketLift z k).re) = 0 := by
-  apply Complex.ofReal_injective
-  have he (k : Fin 14) :
-      ((η * fourBracketLift z k).re : ℂ) =
-        (η/2) * fourBracketLift z k + (star η/2) * fourBracketLift (fun i => star (z i)) k := by
-    rw [bracket_conj]
-    apply Complex.ext <;> simp [Complex.div_re,Complex.div_im,Complex.mul_re,Complex.mul_im] <;> ring
-  simpa only [fourMatchingCubic,Complex.ofReal_add,Complex.ofReal_sub,Complex.ofReal_mul,
-    Complex.ofReal_zero,Complex.ofReal_neg,he] using fourMatchingCubic_secant z (fun i => star (z i)) (η/2) (star η/2)
+  apply fourMatchingCubic_real_part_zero
+  intro i
+  rw [fourMatchingGradient_scale, ← cubicGradient_eq_matching,
+    bracket_gradient_zero, mul_zero]
 
 end MOC

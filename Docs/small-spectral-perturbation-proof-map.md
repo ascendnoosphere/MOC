@@ -152,6 +152,6 @@ first spectrum $a$ is simple and invertible, take $x_i=1/a_i$.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 6 source modules linked in this map | Yes |
+| The 6 source modules linked in this map | Partial (4/6) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

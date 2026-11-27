@@ -116,7 +116,7 @@ theorem exists_compact_spectral_sampling_with_radius
       have hc := (dist_pi_lt_iff hδ).mp hv r
       simpa only [F, ContinuousMap.coe_mk, dist_eq_norm] using hc.le
     have he (i : Fin n) : f r (x i) * (p i y : ℂ) = p i y • f r (x i) := by
-      rw [RCLike.real_smul_eq_coe_mul, mul_comm]
+      simpa only [RCLike.real_smul_eq_coe_mul] using mul_comm (f r (x i)) (p i y : ℂ)
     simp only [ContinuousMap.sub_apply, ContinuousMap.sum_apply, ContinuousMap.smul_apply,
       sampleWeightComplex_apply, smul_eq_mul, he]
     exact compact_sample_function_error_le x p hnon hone (f r) δ hclose y

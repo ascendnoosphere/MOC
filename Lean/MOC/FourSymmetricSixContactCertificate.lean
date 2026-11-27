@@ -63,7 +63,7 @@ private theorem eval_pencilDeterminant (x : Fin 7 → ℝ) :
 private def boundedPowers (t : Term 7) : Bool :=
   decide (t.powers 4 ≤ 2) && decide (t.powers 5 ≤ 2) && decide (t.powers 6 ≤ 2)
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem determinantPowers_bound : pencilDeterminant.all boundedPowers = true := by
   decide +kernel
@@ -86,7 +86,7 @@ private def strictCoefficientSigns (p : Terms) : Bool :=
   p.all (fun t => decide (0 ≤ t.coefficient)) &&
     p.any (fun t => decide (0 < t.coefficient) && (List.ofFn t.powers).all (· == 0))
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem cubeCoefficientSigns : strictCoefficientSigns cubePolynomial = true := by
   decide +kernel
@@ -180,7 +180,16 @@ private theorem det_pos_in_cube (u : Fin 7 → ℝ) (hu : ∀ i, 0 ≤ u i)
       show z / (1+z) = u 6 from reco (u 6) hr]
     fin_cases i <;> rfl
   have hpositive := eval_pos_of_signs (![u 0,u 1,u 2,u 3,x,y,z] : Fin 7 → ℝ)
-    (by intro i; fin_cases i <;> first | exact hu _ | exact hx | exact hy | exact hz)
+    (by
+      intro i
+      fin_cases i
+      · exact hu 0
+      · exact hu 1
+      · exact hu 2
+      · exact hu 3
+      · exact hx
+      · exact hy
+      · exact hz)
     cubePolynomial cubeCoefficientSigns
   rw [cube_eval (u 0) (u 1) (u 2) (u 3) x y z hx hy hz, he,
     eval_pencilDeterminant] at hpositive
@@ -204,7 +213,7 @@ private def starTerm (k : Fin 3) (t : Term 7) : Terms :=
 private def starPolynomial (k : Fin 3) : Terms :=
   normalize (pencilDeterminant.flatMap (starTerm k))
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem starCoefficientSigns : ∀ k : Fin 3, strictCoefficientSigns (starPolynomial k) = true := by
   decide +kernel
@@ -246,9 +255,15 @@ private theorem star_eval (k : Fin 3) (a b c d s x y : ℝ)
   intro t ht
   obtain ⟨h4, h5, h6⟩ := powers_bound t ht
   have h1 : t.powers (compensatorIndex k 1) ≤ 2 := by
-    fin_cases k <;> first | exact h4 | exact h5 | exact h6
+    fin_cases k
+    · exact h5
+    · exact h4
+    · exact h4
   have h2 : t.powers (compensatorIndex k 2) ≤ 2 := by
-    fin_cases k <;> first | exact h4 | exact h5 | exact h6
+    fin_cases k
+    · exact h6
+    · exact h6
+    · exact h5
   have hS : 1 + s ≠ 0 := by positivity
   have hL : 1 + x + y ≠ 0 := by positivity
   have h := star_power_identity (1+s) (1+x+y) x y
@@ -317,7 +332,16 @@ private theorem det_pos_in_star (u : Fin 7 → ℝ) (hu : ∀ i, 0 ≤ u i) (k :
     funext i
     fin_cases k <;> fin_cases i <;> rfl
   have hpositive := eval_pos_of_signs (![u 0,u 1,u 2,u 3,s,x,y] : Fin 7 → ℝ)
-    (by intro i; fin_cases i <;> first | exact hu _ | exact hs | exact hx | exact hy)
+    (by
+      intro i
+      fin_cases i
+      · exact hu 0
+      · exact hu 1
+      · exact hu 2
+      · exact hu 3
+      · exact hs
+      · exact hx
+      · exact hy)
     (starPolynomial k) (starCoefficientSigns k)
   rw [star_eval k (u 0) (u 1) (u 2) (u 3) s x y hs hx hy, he,
     eval_pencilDeterminant] at hpositive
@@ -331,7 +355,10 @@ private theorem pencil_singularity_forces_compensation (u : Fin 7 → ℝ) (hu :
   · obtain ⟨k, hk⟩ := hbig
     have hsmall :
         u (compensatorIndex k 0) * (u (compensatorIndex k 1) + u (compensatorIndex k 2)) < 1 := by
-      fin_cases k <;> first | exact h.1 | exact h.2.1 | exact h.2.2
+      fin_cases k
+      · exact h.1
+      · exact h.2.1
+      · exact h.2.2
     exact (det_pos_in_star u hu k hk hsmall).ne' hz
   · push_neg at hbig
     exact (det_pos_in_cube u hu (hbig 0) (hbig 1) (hbig 2)).ne' hz

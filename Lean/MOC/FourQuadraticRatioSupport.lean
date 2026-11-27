@@ -1,4 +1,5 @@
 import MOC.FourBudgetMinor
+import MOC.FourMinorCertificate
 import MOC.FourQuadraticRatioMinor
 import MOC.FourQuadraticRatioSpectralCapacity
 import MOC.ProjectivePole
@@ -86,7 +87,11 @@ theorem fourQuadraticRatio_support (α β : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
       exact hXY 1 3 (by decide) (hX₁.trans h.symm)
     have hX' : X = ![z, 0, 1, x] := by
       funext i
-      fin_cases i <;> first | rfl | exact hX₁ | exact hX₂
+      fin_cases i
+      · rfl
+      · exact hX₁
+      · exact hX₂
+      · rfl
     have hscale (i : Fin 24) : η * matchingProduct α β (fourPerm i).symm = ξ * F i := by
       rw [hprod, show (Finset.univ : Finset (Fin 4)).erase 2 = {0, 1, 3} by decide +kernel,
         Finset.prod_insert (by decide : (0 : Fin 4) ∉ ({1, 3} : Finset (Fin 4))),
@@ -100,7 +105,6 @@ theorem fourQuadraticRatio_support (α β : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
       exact hc i hi
     have hg' (i : Fin 24) : g i = (ξ * (F i - F 0)).re := by
       rw [mul_sub, Complex.sub_re, ← hscale i, ← hscale 0, hc 0 (by decide)]
-      rfl
     obtain ⟨hti, hxi, hdir, r, u, hr, _, _, hW, hZ, hwEq, hzEq⟩ :=
       fourQuadraticRatio_normalized_chart z x w v t ξ H hz hzv hzw hv hwv hT hf ht₁ hx₁ hξ hpc
     have htC : (t.re : ℂ) = t := Complex.ext (by simp) (by simpa using hti.symm)
@@ -109,11 +113,18 @@ theorem fourQuadraticRatio_support (α β : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
     have hrR : r ≠ 0 := Complex.ofReal_ne_zero.mp hr
     have h := fourQuadraticRatio_projective_capacity x.re t.re r u z w v ξ hv hzw htR hrR
     simp only [htC, hxC] at h
-    have h' := h (sub_ne_zero.mpr hf) (sub_ne_zero.mpr hT) hW hZ hzEq hwEq hdir
-      (fun i => (hg' i) ▸ hg i)
-      (by simpa only [← hg'] using hd')
-      (by simpa only [← hg'] using fourQuadraticRatio_gap_nine α β η H hc)
-    simpa only [← hg'] using h'
+    let poleGap (i : Fin 24) : ℝ := (ξ * (F i - F 0)).re
+    have hgap : poleGap = g := by
+      funext i
+      exact (hg' i).symm
+    have hbudget := h (sub_ne_zero.mpr hf) (sub_ne_zero.mpr hT) hW hZ hzEq hwEq hdir
+    change (∀ i, 0 ≤ poleGap i) → 0 < poleGap 2 - poleGap 13 →
+      poleGap 9 = poleGap 15 + (poleGap 2 - poleGap 13) →
+      (poleGap 2 - poleGap 13) ^ 2 * (poleGap 15 + poleGap 19 + poleGap 10 +
+        (poleGap 2 - poleGap 13)) < poleGap 15 * poleGap 19 * (poleGap 10 - (poleGap 2 - poleGap 13)) at hbudget
+    rw [hgap] at hbudget
+    have h9 : g 9 = g 15 + (g 2 - g 13) := fourQuadraticRatio_gap_nine α β η H hc
+    exact hbudget hg hd' h9
   have hGram := four_budget_minor_nonneg_transpose_swap (hg 15) (hg 19) (hg 10) hd'.le hcap.le U hU
   apply sub_nonneg.mp
   rw [fourQuadraticRatio_gap_eq_budget α β η H hc U hU]

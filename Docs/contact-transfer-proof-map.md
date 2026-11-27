@@ -41,7 +41,7 @@ flowchart BT
 | Open test | Proved step from a strict witness | Lean source | Lean Checked? |
 | --- | --- | --- | --- |
 | Bound witnesses with at least $2n-2$ contacts. | Below the threshold, keep the mixer $U$, direction, one maximizing permutation as a pivot, the complex determinant difference from that pivot, and the old complex differences from the pivot. Add a contact. The transfer can also keep selected polynomial values fixed within the count bound. | [Transfer and count bound](../Lean/MOC/GlobalContactSlice.lean#L159) · [Exact test](../Lean/MOC/GlobalContactSlice.lean#L243) | Yes |
-| Bound witnesses with at least $2n-2$ contacts and all products nonzero. | First restrict to spectra with no zero pair sums. The transfer stays where every matching product is nonzero and increases the count below the threshold. | [Nonzero transfer](../Lean/MOC/SaturatedContactReduction.lean#L18) · [Exact test](../Lean/MOC/SaturatedContactReduction.lean#L70) | Yes |
+| Bound witnesses with at least $2n-2$ contacts and all products nonzero. | First restrict to spectra with no zero pair sums. The transfer stays where every matching product is nonzero and increases the count below the threshold. | [Nonzero transfer](../Lean/MOC/SaturatedContactReduction.lean#L18) · [Exact test](../Lean/MOC/SaturatedContactReduction.lean#L70) | No |
 | Bound witnesses with at least $2n-1$ contacts. | At or below $2n-2$ contacts, keep $U$, the direction, pivot, and old complex differences. Allow the determinant difference to vary. The proved continuation on a complex affine curve supplies the new witness. | [Continuation](../Lean/MOC/AffineGapCover.lean#L80) · [Varying-difference transfer](../Lean/MOC/VaryingGapTerminal.lean#L110) · [Exact test](../Lean/MOC/AffineGapCover.lean#L85) | Yes |
 
 Iteration uses the number of contacts still needed. The same induction
@@ -126,11 +126,11 @@ side. The ranks count independent polynomial constraints.
 | Additional restriction on a regular chart | Lean source | Lean Checked? |
 | --- | --- | --- |
 | At least $2n-2$ contacts. | [Base terminal chart](../Lean/MOC/MatchingContactTransfer.lean#L123) | Yes |
-| At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L303) | Yes |
+| At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L303) | No |
 | Constraint rank at least $2n-2$, including the determinant deficit constraint. | [Full constraint rank](../Lean/MOC/MatchingContactRank.lean#L110) | Yes |
-| Rank at least $2n-2$ for the old matching differences alone. | [Contact increase below the rank bound](../Lean/MOC/DeficitContactTransfer.lean#L256) · [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L327) | Yes |
-| Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) | Yes |
-| The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) | Yes |
+| Rank at least $2n-2$ for the old matching differences alone. | [Contact increase below the rank bound](../Lean/MOC/DeficitContactTransfer.lean#L256) · [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L327) | No |
+| Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) | No |
+| The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) | No |
 
 Two curve results support the local argument. Over an algebraically
 closed field of characteristic zero, fix the values of fewer
@@ -208,4 +208,4 @@ remains open.
 [Negative weight](../Lean/MOC/StationaryPivot.lean#L430) ·
 [Terminal equivalence](../Lean/MOC/StationaryPivot.lean#L478)
 
-[Lean check status](README.md#lean-check-status): **Yes** for the 28 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (18/28)** for the 28 linked source modules.

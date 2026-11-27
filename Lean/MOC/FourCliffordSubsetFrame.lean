@@ -321,7 +321,7 @@ theorem smallFrame_mul_transpose (O : Matrix (Fin 4) (Fin 4) ℝ) (hO : Oᵀ * O
     rw [Matrix.mul_assoc, h, mul_one]
   fin_cases a <;> fin_cases b <;>
     norm_num [smallFrame, smallXorTable_eq, smallReverseSign_eq, smallXorTable, smallReverseSign, Matrix.transpose_mul] <;>
-    first | rfl | simp only [← Matrix.mul_assoc, h10, h20, h21, hsq0, hsq1, hsq2, slide h10, slide h20,
+    simp only [← Matrix.mul_assoc, h10, h20, h21, hsq0, hsq1, hsq2, slide h10, slide h20,
       slide h21, cancel hsq0, cancel hsq1, cancel hsq2, mul_one, one_mul, neg_mul, mul_neg,
       neg_neg, neg_smul, one_smul, Matrix.cons_val] <;> rfl
 

@@ -18,14 +18,14 @@ For two subsets of the label set, the subset-image indicator is one
 when a permutation maps the first subset onto the second. It is zero
 otherwise. Let $V$ be the real span of these indicators. The
 noncrossing coordinates give $V$ dimension 14.
-[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L203) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L57)
+[Indicator span](../Lean/MOC/RealMatchingSquares.lean#L202) · [Dimension](../Lean/MOC/RealMatchingSquares.lean#L57)
 
 Use the auxiliary values $\beta=(0,1,-1,w)$, with $w$ a real variable.
 For a permutation $\pi$ and a subset $I$, take the constant and
 linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
 matrix that has these 32 coefficients in row $\pi$. Its column space
 is $V$. Write $j_\pi$ for the transpose of that row.
-[Coefficient matrix](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L170)
+[Coefficient matrix](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L168)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
 directions in each block of $J$. Its two directions, with
@@ -47,7 +47,7 @@ $R=E^\mathsf{T}TE$. The real auxiliary test requires that the range
 of $T$ lie in the row space of $J$ and that the partial transpose of
 $R$ be positive semidefinite. The partial transpose exchanges the
 first tensor index of the row and column.
-[Embedding](../Lean/MOC/RealMatchingSquares.lean#L273) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L319) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L478)
+[Embedding](../Lean/MOC/RealMatchingSquares.lean#L272) · [Partial transpose](../Lean/MOC/RealMatchingSquares.lean#L320) · [Auxiliary test](../Lean/MOC/RealMatchingSquares.lean#L479)
 
 ```mermaid
 flowchart LR
@@ -66,7 +66,7 @@ flowchart LR
 For $g\in V$, the real auxiliary test is equivalent to the existence
 of a finite list of functions $f_k\in V$ with
 $g_\pi=\sum_k f_k(\pi)^2$ for every $\pi$.
-[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L484)
+[Lean equivalence](../Lean/MOC/RealMatchingSquares.lean#L485)
 
 The sign of a permutation is $1$ for an even permutation and $-1$
 for an odd one. The signed sum of a cost in $V$ is zero. Let
@@ -76,7 +76,7 @@ $K$ and the symmetric corner $R$ is zero. It is twice the difference
 between entries $(00,11)$ and $(01,10)$ of $R$. This difference also
 multiplies $K$ in the partial-transpose defect. Thus the partial
 transpose fixes $R$.
-[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L307) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L400) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L440)
+[Alternating sum](../Lean/MOC/RealMatchingSquares.lean#L308) · [Gram pairing](../Lean/MOC/RealMatchingSquares.lean#L401) · [Fixed corner](../Lean/MOC/RealMatchingSquares.lean#L441)
 
 ## From a positive moment to a support inequality
 
@@ -87,7 +87,7 @@ cost $g$ lies in $V$ and is a sum of matching squares, then
 $\sum_\pi c_\pi g_\pi\ge0$. The added alternating term has zero
 pairing with $g$. The rank-one partial-transpose defect is a separate
 identity that can help construct such a scalar.
-[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L578) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L547)
+[Positive-moment implication](../Lean/MOC/RealMatchingSquares.lean#L579) · [Rank-one defect](../Lean/MOC/RealMatchingSquares.lean#L548)
 
 Suppose the real moment is the sum of a positive semidefinite matrix
 and the embedded partial transpose of $uu^\mathsf T$, for a real
@@ -159,8 +159,8 @@ of squares. Each additional ordinary term with a nonnegative
 coefficient adds one matching square. These are source statements;
 their module has no verified current build.
 [Indicator identity](../Lean/MOC/FourSupportCostProfiles.lean#L102) ·
-[Four-function certificate](../Lean/MOC/FourMatchingGramBudget.lean#L171) ·
-[Additional ordinary term](../Lean/MOC/FourMatchingGramBudget.lean#L219)
+[Four-function certificate](../Lean/MOC/FourMatchingGramBudget.lean#L172) ·
+[Additional ordinary term](../Lean/MOC/FourMatchingGramBudget.lean#L220)
 
 ### Remaining spectral premise
 
@@ -175,13 +175,13 @@ for general support costs.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 11 source modules linked in this map | Partial (2/11) |
+| The 11 source modules linked in this map | Partial (6/11) |
 | [FourMatchingCompensation.lean](../Lean/MOC/FourMatchingCompensation.lean#L94) | No |
-| [FourMatchingGramBudget.lean](../Lean/MOC/FourMatchingGramBudget.lean#L171) | No |
+| [FourMatchingGramBudget.lean](../Lean/MOC/FourMatchingGramBudget.lean#L172) | Yes |
 | [FourMatchingIndicatorBasis.lean](../Lean/MOC/FourMatchingIndicatorBasis.lean#L55) | No |
 | [FourMatchingPhysicalPositivity.lean](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L76) | No |
-| [FourMixedRayCancellation.lean](../Lean/MOC/FourMixedRayCancellation.lean#L544) | No |
+| [FourMixedRayCancellation.lean](../Lean/MOC/FourMixedRayCancellation.lean#L544) | Yes |
 | [FourOrthogonalMatchingMomentTransport.lean](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12) | No |
-| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | No |
+| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | Yes |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

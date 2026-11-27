@@ -157,6 +157,6 @@ identity for arbitrary complex lists.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 16 source modules linked in this map | Yes |
+| The 16 source modules linked in this map | Partial (4/16) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

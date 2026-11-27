@@ -35,7 +35,7 @@ theorem three_position_antisymmetrizer {κ : Type*} [Fintype κ] [DecidableEq κ
   · have hnone (p : Equiv.Perm (Fin 3)) :
         ¬ ∀ j, x ((p.sumCongr (Equiv.refl κ)) j) = y j :=
       fun h => hout fun j => h (.inr j)
-    simp [hnone]
+    simp only [hnone, if_false, mul_zero, Finset.sum_const_zero]
 
 /-- The five Catalan numbers in the reported dimension table. -/
 theorem catalan_table : catalan 3 = 5 ∧ catalan 4 = 14 ∧ catalan 5 = 42 ∧

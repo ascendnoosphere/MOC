@@ -122,7 +122,7 @@ private theorem orderedRatioGapProfile_eq_minorSum (g : Fin 24 → ℝ) (u v : �
   case' «23» => change -g 8 + g 9 + g 22 = rhs 23
   all_goals
     norm_num [rhs, orderedRatioMinorSupports, orderedRatioMinorWeights, Fin.sum_univ_succ, Matrix.cons_val] <;>
-      (first | rfl | ring_nf <;> rfl)
+      ring
 
 set_option maxHeartbeats 2000000 in
 private theorem orderedRatioGapProfile_eq_mixedSum (g : Fin 24 → ℝ)
@@ -159,7 +159,7 @@ private theorem orderedRatioGapProfile_eq_mixedSum (g : Fin 24 → ℝ)
   case' «23» => change -g 8 + g 9 + g 22 = rhs 23
   all_goals
     norm_num [rhs, h17, orderedRatioMinorSupports, orderedRatioMixedWeights, Fin.sum_univ_succ, Matrix.cons_val] <;>
-      (first | rfl | ring_nf <;> rfl)
+      ring
 
 private theorem orderedRatio_exists_nonnegative_weights (g : Fin 24 → ℝ) (hg : ∀ i, 0 ≤ g i)
     (hprofile : ∀ i, g i = orderedRatioGapProfile g i) (hA : 0 ≤ g 16 - g 0) :

@@ -44,7 +44,7 @@ if and only if each block has a law realizing its own selected expectations. -/
 theorem block_event_feasible_iff {C : B → Type*} (selected : ∀ k, Finset (C k))
     (event : ∀ k, C k → X k → ℝ) (target : ∀ k, C k → ℝ) :
     (∃ W : (∀ k, X k) → ℝ, (∀ x, 0 ≤ W x) ∧ (∑ x, W x) = 1 ∧
-      ∀ k c ∈ selected k, (∑ x, W x * event k c (x k)) = target k c) ↔
+      ∀ k, ∀ c ∈ selected k, (∑ x, W x * event k c (x k)) = target k c) ↔
     ∀ k, ∃ w : X k → ℝ, (∀ y, 0 ≤ w y) ∧ (∑ y, w y) = 1 ∧
       ∀ c ∈ selected k, (∑ y, w y * event k c y) = target k c := by
   classical
@@ -92,7 +92,7 @@ The subsets in these constraints can have any cardinality. -/
 theorem block_subsetImage_feasible_iff [∀ k, Fintype (ι k)] {C : B → Type*}
     (selected : ∀ k, Finset (C k)) (I J : ∀ k, C k → Finset (ι k)) (target : ∀ k, C k → ℝ) :
     (∃ W : (∀ k, Equiv.Perm (ι k)) → ℝ, (∀ ρ, 0 ≤ W ρ) ∧ (∑ ρ, W ρ) = 1 ∧
-      ∀ k c ∈ selected k, (∑ ρ, W ρ * subsetImageEvent
+      ∀ k, ∀ c ∈ selected k, (∑ ρ, W ρ * subsetImageEvent
         ((I k c).map (Function.Embedding.sigmaMk k)) ((J k c).map (Function.Embedding.sigmaMk k))
         (Equiv.sigmaCongrRight ρ)) = target k c) ↔
     ∀ k, ∃ w : Equiv.Perm (ι k) → ℝ, (∀ σ, 0 ≤ w σ) ∧ (∑ σ, w σ) = 1 ∧

@@ -97,7 +97,10 @@ theorem triple_dual_tied_cycle_common_offDiag
       have hc : ({i, k, j, p j} : Finset (Fin 3)).card ≤ (Finset.univ : Finset (Fin 3)).card :=
         Finset.card_le_card (Finset.subset_univ _)
       simp [Finset.card_insert_of_not_mem, hik, hh.1, hh.2, hkj, hkp, Ne.symm (hCycle j)] at hc
-    have hki : S k i = 0 := by rcases hi with rfl | rfl <;> first | exact hj _ | exact hp _ _
+    have hki : S k i = 0 := by
+      rcases hi with rfl | rfl
+      · exact hj _
+      · exact hp _ _
     have hHerm : S.IsHermitian := (hPSD j).isHermitian
     rw [← hHerm.apply k i] at hki
     exact star_eq_zero.mp hki

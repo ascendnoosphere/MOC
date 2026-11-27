@@ -167,7 +167,7 @@ private def coreFactors : TwoFactorTerms :=
   scaleTerms (-2048) (mul (mul p q) z)
 
 set_option maxRecDepth 100000 in
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 private theorem coreFactorCertificate :
     (normalizedKeys (coreDeterminant 7 coreEntry) == normalizedKeys coreFactors) = true := by
   decide +kernel

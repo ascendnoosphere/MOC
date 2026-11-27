@@ -71,7 +71,7 @@ private theorem unitary_of_gram {n : ℕ} (V : Matrix (Fin n) (Fin n) GaussianIn
 
 theorem fiveNumerator_unitary : IsUnitary (normalizedMixer fiveNumerator) := by
   apply unitary_of_gram
-  ext i j
+  ext i j : 1
   fin_cases i <;> fin_cases j <;> decide +kernel
 
 private theorem corner_value {n : ℕ} (V : Matrix (Fin n) (Fin n) GaussianInt)
@@ -162,7 +162,8 @@ def CommonOppositeCoordinateWeights {n : ℕ} [NeZero n]
     ∀ x y : ℂ, weightedMatchingValue (Function.update a 0 x) (Function.update b 0 y) w =
       determinantValue (Function.update a 0 x) (Function.update b 0 y) U
 
-set_option maxHeartbeats 0 in
+set_option synthInstance.maxSize 4096 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem fourVertexBound (σ : Equiv.Perm (Fin 4)) :
     score fourDirection (vertex firstFour secondFour σ) ≤ (-4898 : ℤ) := by
@@ -175,7 +176,7 @@ private theorem fourVertexBound (σ : Equiv.Perm (Fin 4)) :
   rw [← hv]
   apply h (σ 0) (σ 1) (σ 2) (σ 3) <;> simp
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 /-- Independent variation of opposite spectral coordinates fails in order four. -/
 theorem no_common_opposite_coordinates_four :
@@ -198,20 +199,22 @@ theorem no_common_opposite_coordinates_four :
     fin_cases j <;> simp [Function.update, secondFour]
   simpa only [ha, hb] using hh (GaussianInt.toComplex (xCorner q)) (GaussianInt.toComplex (yCorner q))
 
-set_option maxHeartbeats 0 in
+set_option synthInstance.maxSize 4096 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem fiveVertexBound (σ : Equiv.Perm (Fin 5)) :
     score fiveDirection (vertex firstFive secondFive σ) ≤ (-48365 : ℤ) := by
   have h : ∀ i0 i1 i2 i3 i4 : Fin 5, i0 ≠ i1 → i0 ≠ i2 → i0 ≠ i3 → i0 ≠ i4 → i1 ≠ i2 → i1 ≠ i3 → i1 ≠ i4 → i2 ≠ i3 → i2 ≠ i4 → i3 ≠ i4 →
       score fiveDirection (vertex firstFive secondFive ![i0,i1,i2,i3,i4]) ≤ (-48365 : ℤ) := by
-    decide +kernel
+    intro i0 i1
+    fin_cases i0 <;> fin_cases i1 <;> decide +kernel
   have hv : ![σ 0,σ 1,σ 2,σ 3,σ 4] = (σ : Fin 5 → Fin 5) := by
     funext j
     fin_cases j <;> rfl
   rw [← hv]
   apply h (σ 0) (σ 1) (σ 2) (σ 3) (σ 4) <;> simp
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 /-- Independent variation of opposite spectral coordinates fails in order five. -/
 theorem no_common_opposite_coordinates_five :

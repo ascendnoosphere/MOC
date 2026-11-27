@@ -7,6 +7,36 @@ import MOC.FourNegativeDefectMinor
 namespace MOC
 
 set_option maxHeartbeats 2500000 in
+private theorem negativeDefect_defect_ratio_identity
+    (x t r u v f G L V W J C : ℂ) (hv : v ≠ 0) (hfnz : f ≠ 0) (hLnz : L ≠ 0)
+    (hf : f = x - t * v) (hG : G = (u + t) * v - x) (hL : L = u - G)
+    (hV : V = v - 1 - r) (hW : W = f - r * u) (hJ : J = u - t * G)
+    (hC : C = 1 - t * v) :
+    t * (-(x / v + (1 - x - t)) + r * u * (1 - t * v) / f +
+      (-V * f / v + C) - (W * (v - 1) * J / (f * L) + C) +
+      (W * (v - 1) * G / (v * L) + C)) -
+      (t * V * (x - v) * G / (v * L) + C) =
+        -r * t ^ 2 + r * t * u + r * t + t - 1 := by
+  field_simp (discharger := simp [hv, hfnz, hLnz]) only [hv, hfnz, hLnz]
+  rw [hW, hV, hJ, hL, hC, hf, hG]
+  ring
+
+set_option maxHeartbeats 2500000 in
+private theorem negativeDefect_residue_ratio_identity
+    (x t r u v f G L V W J C : ℂ) (hfnz : f ≠ 0) (hLnz : L ≠ 0)
+    (hf : f = x - t * v) (hG : G = (u + t) * v - x) (hL : L = u - G)
+    (hV : V = v - 1 - r) (hW : W = f - r * u) (hJ : J = u - t * G)
+    (hC : C = 1 - t * v) :
+    (t - x) * ((-W * (x - v) * J / (f * L) + C) -
+      (V * ((1 - t) * u) / L + (1 - t * (1 + r)))) +
+      x * (1 - t) * (r * u * (1 - t * v) / f) -
+      (1 - x) * (-t - u) * (V * ((1 - t) * u) / L + (1 - t * (1 + r))) =
+        t * (r * t * x - r * x + x ^ 2 - 2 * x + 1) := by
+  field_simp (discharger := simp [hfnz, hLnz]) only [hfnz, hLnz]
+  rw [hW, hV, hJ, hL, hC, hf, hG]
+  ring
+
+set_option maxHeartbeats 2500000 in
 /-- The exact negative-defect pattern capacity on the normalized projective chart. -/
 theorem fourNegativeDefect_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     (hv : v ≠ 0) (hzw : z ≠ w) (hf : (x : ℂ) - t * v ≠ 0) (ht : t ≠ 0)
@@ -18,6 +48,7 @@ theorem fourNegativeDefect_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     let g (i : Fin 24) := (η * (F i - F 0)).re
     (∀ i, 0 ≤ g i) → g 21 = g 9 + fourNegativeDefectMinorDefect g → fourNegativeDefectMinorDefect g < 0 →
       (fourNegativeDefectMinorDefect g) ^ 2 ≤ g 6 * g 22 := by
+  classical
   intro F g hg h21 hA
   let D := v * (z - w)
   let R (i : Fin 24) := (F i - F 0) / D
@@ -74,7 +105,10 @@ theorem fourNegativeDefect_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     rw [Complex.div_im]
     have hVi : V.im = v.im := by simp [V, Complex.sub_im]
     have hVr : V.re = v.re - 1 - r := by simp [V, Complex.sub_re]
-    have hLi : L.im = -(u + t) * v.im := by simp [L, G, Complex.sub_im, Complex.mul_im, neg_mul]
+    have hLi : L.im = -(u + t) * v.im := by
+      simp only [L, G, Complex.sub_im, Complex.mul_im, Complex.ofReal_im,
+        Complex.ofReal_re, Complex.add_im, Complex.add_re]
+      ring
     have hLr : L.re = u - ((u + t) * v.re - x) := by simp [L, G, Complex.sub_re, Complex.mul_re]
     rw [hVi, hVr, hLi, hLr]
     ring
@@ -105,10 +139,10 @@ theorem fourNegativeDefect_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
   have hAc : (t : ℂ) * (-R 4 + R 6 + R 10 - R 12 + R 18) - R 22 =
       ((-r * t ^ 2 + r * t * u + r * t + t - 1 : ℝ) : ℂ) := by
     rw [hR4, hR6, hR10, hR12, hR18, hR22]
-    field_simp [hv, hf', hL']
-    dsimp only [W, V, J, L, f, G, C]
-    push_cast
-    ring
+    simpa only [Complex.ofReal_add, Complex.ofReal_sub, Complex.ofReal_mul,
+      Complex.ofReal_neg, Complex.ofReal_pow, Complex.ofReal_one] using
+      negativeDefect_defect_ratio_identity (x : ℂ) t r u v f G L V W J C
+        hv hf' hL' rfl rfl rfl rfl rfl rfl rfl
   have h22c : -R 22 - (t : ℂ) * R 14 + (t : ℂ) * R 20 =
       ((r * t + t - 1 : ℝ) : ℂ) := by
     rw [hR22, hR14, hR20]
@@ -128,10 +162,10 @@ theorem fourNegativeDefect_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
       (((1 - x) * (-t - u) : ℝ) : ℂ) * R 14 =
       ((t * (r * t * x - r * x + x ^ 2 - 2 * x + 1) : ℝ) : ℂ) := by
     rw [hR13, hR14, hR6]
-    field_simp [hf', hL']
-    dsimp only [W, V, J, L, f, G, C]
-    push_cast
-    ring
+    simpa only [Complex.ofReal_add, Complex.ofReal_sub, Complex.ofReal_mul,
+      Complex.ofReal_neg, Complex.ofReal_pow, Complex.ofReal_one, Complex.ofReal_ofNat] using
+      negativeDefect_residue_ratio_identity (x : ℂ) t r u v f G L V W J C
+        hf' hL' rfl rfl rfl rfl rfl rfl rfl
   have h9 : g 9 = -x * g 6 := by
     have h := congrArg Complex.im h9c
     simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_im, Complex.ofReal_re, zero_mul, add_zero] at h

@@ -18,9 +18,9 @@ open SparsePolynomialCertificate
 
 private abbrev CoefficientList := SparsePolynomialCertificate.Polynomial 8
 
-set_option maxRecDepth 16384
-set_option maxHeartbeats 12000000
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 -- The eight variables are the coordinates of the two quaternions.
 private def entries : Fin 4 → Fin 4 → CoefficientList :=
   ![![[⟨1, ![1, 0, 0, 0, 1, 0, 0, 0]⟩,
@@ -88,6 +88,8 @@ private def entries : Fin 4 → Fin 4 → CoefficientList :=
       ⟨1, ![0, 0, 1, 0, 0, 0, 1, 0]⟩,
       ⟨-1, ![0, 0, 0, 1, 0, 0, 0, 1]⟩]]]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private def blocks : Fin 8 → Fin 8 → CoefficientList :=
   ![![[⟨1, ![2, 0, 0, 0, 0, 0, 0, 1]⟩,
       ⟨-1, ![1, 1, 0, 0, 0, 0, 1, 0]⟩,
@@ -354,6 +356,8 @@ private def blocks : Fin 8 → Fin 8 → CoefficientList :=
       ⟨1, ![1, 0, 0, 0, 0, 0, 2, 0]⟩,
       ⟨1, ![1, 0, 0, 0, 0, 0, 0, 2]⟩]]]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 -- The quotients multiply the two norm-minus-one polynomials.
 private def normQuotients : Fin 7 → Fin 2 → CoefficientList :=
   ![![[⟨1, ![2, 0, 0, 0, 0, 0, 0, 2]⟩,
@@ -868,6 +872,8 @@ private def normQuotients : Fin 7 → Fin 2 → CoefficientList :=
 private def negative (p : CoefficientList) : CoefficientList :=
   mul (constant 8 (-1)) p
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem eval_negative (x : Fin 8 → ℝ) (p : CoefficientList) :
     eval x (negative p) = -eval x p := by simp [negative]
 
@@ -899,17 +905,23 @@ private def doubleResponsePolynomials : Fin 8 → CoefficientList :=
 private def quaternionCoords (x y : Fin 4 → ℝ) : Fin 8 → ℝ :=
   ![x 0, x 1, x 2, x 3, y 0, y 1, y 2, y 3]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem eval_entries (x y : Fin 4 → ℝ) (i j : Fin 4) :
     eval (quaternionCoords x y) (entries i j) = quaternionRotation x y i j := by
   fin_cases i <;> fin_cases j <;>
     simp [entries, eval, Term.eval, quaternionCoords, quaternionRotation, Matrix.mul_apply,
       Fin.prod_univ_succ, Fin.sum_univ_four] <;> ring
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem eval_minorPolynomial (x y : Fin 4 → ℝ) (i j k l : Fin 4) :
     eval (quaternionCoords x y) (minorPolynomial i j k l) =
       minor (quaternionRotation x y) i j k l := by
   simp [minorPolynomial, minor, eval_entries, eval_negative, sub_eq_add_neg]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem eval_doubleResponse (x y : Fin 4 → ℝ) (i : Fin 8) :
     eval (quaternionCoords x y) (doubleResponsePolynomials i) =
       doubleResponse (quaternionRotation x y) i := by
@@ -938,12 +950,17 @@ private def secondNorm : CoefficientList :=
   pow (indeterminate 4) 2 ++ pow (indeterminate 5) 2 ++ pow (indeterminate 6) 2 ++
     pow (indeterminate 7) 2 ++ constant 8 (-1)
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem exact_gram_identity : ∀ i : Fin 7,
     (normalizedKeys (gramPolynomials i) ==
       normalizedKeys (doubleResponsePolynomials (costIndex i) ++ mul firstNorm (normQuotients i 0) ++
         mul secondNorm (normQuotients i 1))) = true := by
-  decide +kernel
+  intro i
+  fin_cases i <;> decide +kernel
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem evaluate_gram (x y : Fin 4 → ℝ)
     (hx : (∑ i, x i ^ 2) = 1) (hy : (∑ i, y i ^ 2) = 1) (i : Fin 7) :
     eval (quaternionCoords x y) (gramPolynomials i) =
@@ -965,10 +982,14 @@ private theorem evaluate_gram (x y : Fin 4 → ℝ)
     eval_doubleResponse x y (costIndex i)
   simpa only [eval_append, eval_mul, h₀, h₁, zero_mul, add_zero, hcost] using h
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem gramProduct_eval (x y : Fin 4 → ℝ) (j k : Fin 8) :
     eval (quaternionCoords x y) (gramProduct j k) =
       ∑ i : Fin 8, feature x y i j * feature x y i k := by simp [gramProduct, feature]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 /-- The PB path threshold gives nonnegativity on a quaternion rotation. -/
 theorem pathPB_nonneg (x y : Fin 4 → ℝ)
     (hx : (∑ i, x i ^ 2) = 1) (hy : (∑ i, y i ^ 2) = 1)
@@ -999,6 +1020,8 @@ theorem pathPB_nonneg (x y : Fin 4 → ℝ)
     nlinarith only [hg, mul_nonneg hd (sq_nonneg (F i 6))]
   simpa only [Finset.sum_add_distrib, ← Finset.mul_sum, h0, h2, h3, h6] using hsum
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 /-- The CQ path threshold gives nonnegativity on a quaternion rotation. -/
 theorem pathCQ_nonneg (x y : Fin 4 → ℝ)
     (hx : (∑ i, x i ^ 2) = 1) (hy : (∑ i, y i ^ 2) = 1)
@@ -1029,6 +1052,8 @@ theorem pathCQ_nonneg (x y : Fin 4 → ℝ)
     nlinarith only [hg, mul_nonneg hd (sq_nonneg (F i 6))]
   simpa only [Finset.sum_add_distrib, ← Finset.mul_sum, h2, h4, h5, h6] using hsum
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 /-- The first path certificate applies to every special orthogonal mixer. -/
 theorem pathPB_specialOrthogonal_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
     (hO : Oᵀ * O = 1) (hdet : O.det = 1)
@@ -1039,6 +1064,8 @@ theorem pathPB_specialOrthogonal_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
   obtain ⟨x, y, hx, hy, rfl⟩ := exists_quaternionRotation_of_specialOrthogonal O hO hdet
   exact pathPB_nonneg x y hx hy hp hb hd hcapacity
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 /-- The second path certificate applies to every special orthogonal mixer. -/
 theorem pathCQ_specialOrthogonal_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
     (hO : Oᵀ * O = 1) (hdet : O.det = 1)
@@ -1052,6 +1079,8 @@ theorem pathCQ_specialOrthogonal_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
 private def weightedRows : Fin 2 → FourPerm := ![fourPerm 4, fourPerm 8]
 private def weightedColumns : Fin 2 → FourPerm := ![fourPerm 20, fourPerm 11]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private def weightedQuotients : Fin 2 → Fin 3 → Fin 2 → CoefficientList :=
   ![![![[⟨4, ![1, 1, 0, 0, 3, 1, 0, 0]⟩,
       ⟨-4, ![1, 1, 0, 0, 2, 0, 1, 1]⟩,
@@ -1154,12 +1183,17 @@ private def weightedResponse (O : Matrix (Fin 4) (Fin 4) ℝ) : Fin 3 → ℝ :=
   ![2 * (O 1 2 ^ 2 + O 2 1 ^ 2 + minor O 2 3 2 3 ^ 2 - minor O 1 3 0 2 ^ 2),
     2 * minor O 1 2 1 2 ^ 2, 2 * minor O 2 3 2 3 ^ 2]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem exact_weighted_identity : ∀ (e : Fin 2) (i : Fin 3),
     (normalizedKeys (weightedPolynomials e i) ==
       normalizedKeys (doubleResponsePolynomials (weightedCostIndex e i) ++
         mul firstNorm (weightedQuotients e i 0) ++ mul secondNorm (weightedQuotients e i 1))) = true := by
-  decide +kernel
+  intro e i
+  fin_cases e <;> fin_cases i <;> decide +kernel
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem evaluate_weighted (x y : Fin 4 → ℝ) (e : Fin 2) (i : Fin 3) :
     eval (quaternionCoords x y) (weightedPolynomials e i) =
       weightedResponse ((quaternionRotation x y).submatrix (weightedRows e) (weightedColumns e)) i := by
@@ -1167,6 +1201,8 @@ private theorem evaluate_weighted (x y : Fin 4 → ℝ) (e : Fin 2) (i : Fin 3) 
     simp [weightedPolynomials, weightedResponse, Matrix.submatrix_apply, eval_entries,
       eval_minorPolynomial, eval_negative, minor, sub_eq_add_neg] <;> ring
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem weighted_response_transport (x y : Fin 4 → ℝ)
     (hx : (∑ i, x i ^ 2) = 1) (hy : (∑ i, y i ^ 2) = 1) (e : Fin 2) (i : Fin 3) :
     weightedResponse ((quaternionRotation x y).submatrix (weightedRows e) (weightedColumns e)) i =
@@ -1185,6 +1221,8 @@ private theorem weighted_response_transport (x y : Fin 4 → ℝ)
   simpa only [evaluate_weighted, eval_append, eval_mul, h₀, h₁, zero_mul, add_zero,
     eval_doubleResponse] using h
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem weighted_response_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
     (hO : Oᵀ * O = 1) (hdet : O.det = 1) :
     weightedResponse O 0 + weightedResponse O 1 +
@@ -1210,6 +1248,8 @@ private theorem weighted_response_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
   rw [hsqrt]
   linarith only [hmain]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 private theorem weighted_donor_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
     (hO : Oᵀ * O = 1) (hdet : O.det = 1) (e : Fin 2) :
     let f := doubleResponse O
@@ -1232,6 +1272,8 @@ private theorem weighted_donor_nonneg (O : Matrix (Fin 4) (Fin 4) ℝ)
     exact weighted_response_transport x y hx hy e i
   simpa [heq, weightedCostIndex] using hmain
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 /-- The weighted-minor bound applies to both donors of the T34 scalar case. -/
 theorem scalar_donor_bounds (O : Matrix (Fin 4) (Fin 4) ℝ)
     (hO : Oᵀ * O = 1) (hdet : O.det = 1) :
@@ -1256,6 +1298,8 @@ def doubleMinorForm {R : Type*} [CommRing R] (m : Finset (Fin 4) → Finset (Fin
 noncomputable def doubleMinorResponse (U : Matrix (Fin 4) (Fin 4) ℂ) : Fin 8 → ℝ :=
   doubleMinorForm (subsetMinorSq U)
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 theorem doubleMinorResponse_of_real (O : Matrix.orthogonalGroup (Fin 4) ℝ) :
     doubleMinorResponse (Complex.ofRealHom.mapMatrix O.val) = doubleResponse O.val := by
   let U := Complex.ofRealHom.mapMatrix O.val
@@ -1275,6 +1319,8 @@ theorem doubleMinorResponse_of_real (O : Matrix.orthogonalGroup (Fin 4) ℝ) :
   funext i
   fin_cases i <;> simp [doubleMinorResponse, doubleMinorForm, doubleResponse, hentry, hpair]
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 12000000 in
 /-- Flipping a row to fix the determinant preserves all the squared
 coordinates appearing in the response. -/
 theorem exists_specialOrthogonal_same_response (O : Matrix (Fin 4) (Fin 4) ℝ)

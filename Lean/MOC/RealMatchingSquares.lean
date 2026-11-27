@@ -71,9 +71,9 @@ set_option maxHeartbeats 8000000 in
 private theorem jetColumn_int (c : MatchingJetIndex) (p : Fin 24) :
     fourMatchingEvaluation (fourMatchingCoordinatesOfValues (fun q => matchingJetInt q c)) p =
       matchingJetInt p c := by
-  exact (by decide +kernel : ∀ c : MatchingJetIndex, ∀ p : Fin 24,
-    fourMatchingEvaluation (fourMatchingCoordinatesOfValues (fun q => matchingJetInt q c)) p =
-      matchingJetInt p c) c p
+  rcases c with ⟨d, m⟩
+  revert p
+  fin_cases d <;> fin_cases m <;> decide +kernel
 
 set_option maxRecDepth 12000 in
 set_option maxHeartbeats 14000000 in
@@ -81,10 +81,8 @@ private theorem indicatorColumn_int (a b : Fin 16) (p : Fin 24) :
     fourMatchingEvaluation (fourMatchingCoordinatesOfValues (matchingIndicatorInt a b)) p =
       matchingIndicatorInt a b p := by
   by_cases he : (matchingMask a).card = (matchingMask b).card
-  · exact (by decide +kernel : ∀ a b : Fin 16,
-      (matchingMask a).card = (matchingMask b).card →
-        ∀ p : Fin 24, fourMatchingEvaluation (fourMatchingCoordinatesOfValues (matchingIndicatorInt a b)) p =
-          matchingIndicatorInt a b p) a b he p
+  · revert he p
+    fin_cases a <;> fin_cases b <;> decide +kernel
   · have hz : matchingIndicatorInt a b = 0 := by
       funext j
       have hn : (matchingMask a).map (fourPerm j).toEmbedding ≠ matchingMask b := by
@@ -92,8 +90,7 @@ private theorem indicatorColumn_int (a b : Fin 16) (p : Fin 24) :
         exact he (by simpa only [Finset.card_map] using congrArg Finset.card hi)
       simp only [matchingIndicatorInt, if_neg hn, Pi.zero_apply]
     rw [hz]
-    exact (by decide +kernel : ∀ p : Fin 24,
-      fourMatchingEvaluation (fourMatchingCoordinatesOfValues (0 : Fin 24 → ℤ)) p = 0) p
+    fin_cases p <;> decide +kernel
 
 theorem realMatchingIndicator_mem (a b : Fin 16) :
     realMatchingIndicator a b ∈ realMatchingFunctionSpace := by
@@ -140,7 +137,8 @@ private theorem pivotWeight_int :
     ∀ k : Fin 14, ∀ p : Fin 24,
       ∑ j : Fin 14, matchingJetInt p (pivotColumn j) * pivotWeight k j =
         2 * fourMatchingEvaluation (Pi.single k (1 : ℤ)) p := by
-  decide +kernel
+  intro k
+  fin_cases k <;> decide +kernel
 
 private theorem realJet_range_generator (k : Fin 14) :
     realMatchingEvaluation (Pi.single k 1) ∈ LinearMap.range realMatchingJet.mulVecLin := by
@@ -196,7 +194,8 @@ set_option maxHeartbeats 8500000 in
 private theorem jet_indicator_expansion_int :
     ∀ c : MatchingJetIndex, ∀ p : Fin 24, matchingJetInt p c =
       ∑ b : Fin 16, specializedMonomial c.1 (matchingMask b) * matchingIndicatorInt c.2 b p := by
-  decide +kernel
+  rintro ⟨d, m⟩
+  fin_cases d <;> fin_cases m <;> decide +kernel
 
 /-- The noncrossing coordinate space is the span of the intrinsic
 subset-image indicators. -/
@@ -281,7 +280,8 @@ private theorem signedJetKernel_int :
         ∑ a : MatchingCornerIndex, ∑ b : MatchingCornerIndex,
           exceptionalEmbeddingInt i a * exceptionalEmbeddingInt j b *
             matchingCornerKernel (R := ℤ) a b := by
-  decide +kernel
+  rintro ⟨d, m⟩
+  fin_cases d <;> fin_cases m <;> decide +kernel
 
 private theorem signedJetKernel (i j : MatchingJetIndex) :
     ∑ p : Fin 24, matchingSign p * realMatchingJet p i * realMatchingJet p j =
@@ -299,10 +299,11 @@ set_option maxRecDepth 10000 in
 set_option maxHeartbeats 4000000 in
 private theorem signedJetColumn_zero (c : MatchingJetIndex) :
     ∑ p : Fin 24, matchingSign p * realMatchingJet p c = 0 := by
-  have h : ∀ a : MatchingJetIndex,
-      ∑ p : Fin 24, matchingSignInt p * matchingJetInt p a = 0 := by decide +kernel
+  have h : ∑ p : Fin 24, matchingSignInt p * matchingJetInt p c = 0 := by
+    rcases c with ⟨d, m⟩
+    fin_cases d <;> fin_cases m <;> decide +kernel
   simpa only [Int.cast_sum, Int.cast_mul, Int.cast_zero, matchingSign, realMatchingJet]
-    using congrArg (Int.cast : ℤ → ℝ) (h c)
+    using congrArg (Int.cast : ℤ → ℝ) h
 
 theorem realMatching_alternating_sum_zero {g : Fin 24 → ℝ}
     (hg : g ∈ realMatchingFunctionSpace) : ∑ p : Fin 24, matchingSign p * g p = 0 := by

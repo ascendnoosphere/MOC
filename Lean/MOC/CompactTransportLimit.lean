@@ -3,6 +3,7 @@ import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Topology.ContinuousMap.Lattice
+import Mathlib.Topology.Metrizable.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
@@ -70,14 +71,14 @@ private theorem isCompact_compactTransportFunctionSet
   have hpos (g : C(X × Y, ℝ)) (hg : 0 ≤ g) : 0 ≤ m g := hL.2.2.1 g hg
   have hhi : 0 ≤ ‖f‖ • (1 : C(X × Y, ℝ)) - f := by
     intro p
+    change 0 ≤ ‖f‖ * 1 - f p
     have hp := (le_abs_self (f p)).trans (ContinuousMap.norm_coe_le_norm f p)
-    simpa only [ContinuousMap.sub_apply, ContinuousMap.smul_apply, ContinuousMap.one_apply,
-      smul_eq_mul, mul_one, sub_nonneg] using hp
+    simpa only [mul_one, sub_nonneg] using hp
   have hlo : 0 ≤ ‖f‖ • (1 : C(X × Y, ℝ)) + f := by
     intro p
+    change 0 ≤ ‖f‖ * 1 + f p
     have hp := (neg_le_abs (f p)).trans (ContinuousMap.norm_coe_le_norm f p)
-    simp only [ContinuousMap.add_apply, ContinuousMap.smul_apply, ContinuousMap.one_apply,
-      smul_eq_mul, mul_one, ContinuousMap.zero_apply]
+    rw [mul_one]
     linarith only [hp]
   have ha := hpos _ hhi
   have hb := hpos _ hlo
@@ -102,12 +103,13 @@ theorem exists_common_compact_transport_functional
     exact ⟨L, ⟨L.map_add, L.map_smul, hp, h1, hx, hy⟩, ha⟩
   have hstep (n : ℕ) : T (n + 1) ⊆ T n := by
     intro L hL
-    refine ⟨hL.1, hL.2.trans ?_⟩
+    refine ⟨hL.1, ?_⟩
+    change a ≤ L (c n)
     let m := compactTransportLinearMap Lx Ly ⟨L, hL.1⟩
     have hpos : 0 ≤ m (c n - c (n + 1)) := hL.1.2.2.1 _
       (sub_nonneg.mpr (hc (Nat.le_succ n)))
     rw [map_sub] at hpos
-    exact sub_nonneg.mp hpos
+    exact hL.2.trans (sub_nonneg.mp hpos)
   have hcompact : IsCompact (T 0) :=
     (isCompact_compactTransportFunctionSet Lx Ly).inter_right
       (isClosed_le continuous_const (continuous_apply (c 0)))
@@ -165,7 +167,8 @@ end Measure
 
 section Marginals
 
-variable [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] [T2Space X] [T2Space Y]
+variable [TopologicalSpace.PseudoMetrizableSpace X] [TopologicalSpace.PseudoMetrizableSpace Y]
+  [T2Space X] [T2Space Y]
   [MeasurableSpace X] [MeasurableSpace Y] [BorelSpace X] [BorelSpace Y]
 
 /-- A transport functional with prescribed marginal integrals gives a probability coupling. -/
@@ -227,12 +230,13 @@ theorem compactLogDeficit_of_ne_zero (k : C(Z, ℂ)) (x : Z) (hx : k x ≠ 0) :
     exact Real.log_le_log hpos (le_max_right _ _)
   · obtain ⟨n, hn⟩ := exists_nat_gt (-Real.log ‖k x‖)
     have hn' : Real.exp (-(n : ℝ)) ≤ ‖k x‖ :=
-      (Real.log_le_iff_le_exp (Real.exp_pos _)).mp (by rw [Real.log_exp]; linarith)
+      (Real.le_log_iff_exp_le hpos).mp (by linarith only [hn])
     have he : compactLogTruncation k n x = Real.log ‖k x‖ := by
       change Real.log (max (Real.exp (-(n : ℝ))) ‖k x‖) = _
       rw [max_eq_right hn']
     rw [← he]
-    exact le_iSup _ n
+    exact le_iSup (fun m : ℕ => ENNReal.ofReal
+      (compactLogUpperBound k - compactLogTruncation k m x)) n
 
 theorem compactLogDeficit_of_zero (k : C(Z, ℂ)) (x : Z) (hx : k x = 0) :
     compactLogDeficit k x = ⊤ := by
@@ -279,16 +283,18 @@ theorem le_compactLogModulusIntegral_of_truncations (k : C(Z, ℂ)) (γ : Measur
     intro n
     have hpos : 0 ≤ᵐ[γ] fun x => M - c n x :=
       ae_of_all _ fun x => sub_nonneg.mpr (compactLogTruncation_le_upperBound k n x)
-    rw [show d n = fun x => ENNReal.ofReal (M - c n x) from rfl,
-      ← ofReal_integral_eq_lintegral_ofReal ((integrable_const M).sub (hci n)) hpos,
+    change (∫⁻ x, ENNReal.ofReal (M - c n x) ∂γ) ≤ _
+    rw [← ofReal_integral_eq_lintegral_ofReal
+      (show Integrable (fun x => M - c n x) γ from (integrable_const M).sub (hci n)) hpos,
       integral_sub (integrable_const M) (hci n), integral_const, measureReal_univ_eq_one, one_smul]
     exact ENNReal.ofReal_le_ofReal (sub_le_sub_left (h n) M)
   have he : ((∫⁻ x, compactLogDeficit k x ∂γ) : EReal) ≤ ((M - a : ℝ) : EReal) := by
     have hc := EReal.coe_ennreal_le_coe_ennreal_iff.mpr hi
-    have hn : (0 : EReal) ≤ ((M - a : ℝ) : EReal) := EReal.coe_nonneg.mpr (sub_nonneg.mpr haM)
-    rw [EReal.coe_ennreal_ofReal, max_eq_left hn] at hc
+    rw [EReal.coe_ennreal_ofReal, max_eq_left (sub_nonneg.mpr haM)] at hc
     exact hc
-  have hsub := add_le_add_left (neg_le_neg he) (M : EReal)
+  have hsub : (M : EReal) + -((M - a : ℝ) : EReal) ≤
+      (M : EReal) + -((∫⁻ x, compactLogDeficit k x ∂γ) : EReal) :=
+    add_le_add le_rfl (EReal.neg_le_neg_iff.mpr he)
   rw [← EReal.coe_neg, ← EReal.coe_add, show M + -(M - a) = a by ring] at hsub
   exact hsub
 

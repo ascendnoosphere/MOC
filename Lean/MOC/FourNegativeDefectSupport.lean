@@ -70,7 +70,11 @@ theorem fourNegativeDefect_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
     exact (by decide : (3 : Fin 4) ≠ 2) (hX (he.trans hX₂.symm))
   have hX' : X = ![z, 0, 1, x] := by
     funext i
-    fin_cases i <;> first | rfl | exact hX₁ | exact hX₂
+    fin_cases i
+    · rfl
+    · exact hX₁
+    · exact hX₂
+    · rfl
   have hscale (i : Fin 24) : η * matchingProduct a b (fourPerm i).symm = ξ * F i := by
     rw [hprod, show (Finset.univ : Finset (Fin 4)).erase 3 = {0, 1, 2} by decide +kernel,
       Finset.prod_insert (by decide : (0 : Fin 4) ∉ ({1, 2} : Finset (Fin 4))),
@@ -85,7 +89,6 @@ theorem fourNegativeDefect_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
     exact hc i hi
   have hg' (i : Fin 24) : g i = (ξ * (F i - F 0)).re := by
     rw [mul_sub, Complex.sub_re, ← hscale i, ← hscale 0, hc 0 (by decide)]
-    rfl
   obtain ⟨hti, hxi, hdir, r, u, _, _, hG, hK, hzEq, hwEq⟩ :=
     fourNegativeDefect_normalized_chart z x w v t ξ H hz hz₁ hzv hzw hv hvw htx ht₀ ht₁ hx₁ hξ hpc
   have htC : (t.re : ℂ) = t := Complex.ext (by simp) (by simpa using hti.symm)
@@ -93,10 +96,17 @@ theorem fourNegativeDefect_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
   have htR : t.re ≠ 0 := fun he => ht₀ (Complex.ext (by simpa using he) (by simpa using hti))
   have hcap := fourNegativeDefect_projective_capacity x.re t.re r u z w v ξ hv hzw
   simp only [htC, hxC] at hcap
-  have hh := hcap (sub_ne_zero.mpr htx) htR hG hK hzEq hwEq hdir
-    (fun i => (hg' i) ▸ (sub_nonneg.mpr (hn i) : 0 ≤ g i))
-    (by simpa only [← hg'] using fourNegativeDefect_gap_twenty_one a b η H hc)
-    (by simpa only [← hg'] using hA)
-  simpa only [← hg'] using hh
+  let poleGap (i : Fin 24) : ℝ := (ξ * (F i - F 0)).re
+  have hgap : poleGap = g := by
+    funext i
+    exact (hg' i).symm
+  have hbudget := hcap (sub_ne_zero.mpr htx) htR hG hK hzEq hwEq hdir
+  change (∀ i, 0 ≤ poleGap i) →
+    poleGap 21 = poleGap 9 + fourNegativeDefectMinorDefect poleGap →
+    fourNegativeDefectMinorDefect poleGap < 0 →
+    (fourNegativeDefectMinorDefect poleGap) ^ 2 ≤ poleGap 6 * poleGap 22 at hbudget
+  rw [hgap] at hbudget
+  exact hbudget (fun i => sub_nonneg.mpr (hn i))
+    (fourNegativeDefect_gap_twenty_one a b η H hc) hA
 
 end MOC

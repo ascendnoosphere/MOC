@@ -109,4 +109,4 @@ the fourth moments of the Haar minors. The Lean estimate takes the
 second-moment inequality as a premise.
 [Gaussian Gram–Schmidt construction, section 1.2](https://case.edu/artsci/math/esmeckes/Haar_book.pdf)
 
-[Lean check status](README.md#lean-check-status): **Yes** for the 2 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (1/2)** for the 2 linked source modules.

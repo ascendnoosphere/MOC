@@ -77,8 +77,8 @@ boundary of the matching polytope. [Historical certificate](https://github.com/a
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 3 source modules linked in this map | Partial (1/3) |
+| The 3 source modules linked in this map | Partial (2/3) |
 | [FourSupportConeClassification.lean](../Lean/MOC/FourSupportConeClassification.lean#L903) | No |
-| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | No |
+| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | Yes |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

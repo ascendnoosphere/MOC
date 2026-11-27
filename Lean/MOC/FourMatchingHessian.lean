@@ -11,6 +11,8 @@ noncomputable section
 
 open BigOperators
 
+attribute [local irreducible] fourMatchingHessian
+
 private theorem fourMatchingHessian_mulVec_self (m : Fin 14 → ℝ) (i : Fin 14) :
     (fourMatchingHessian m).mulVec m i = 2 * fourMatchingGradient m i := by
   rw [fourMatchingHessian_mulVec_apply]

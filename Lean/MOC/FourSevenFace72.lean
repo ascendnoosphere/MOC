@@ -75,7 +75,7 @@ private theorem face72MinorResponse_eq_sum (w : Fin 7 → ℝ) (i : Fin 24) :
   case' «23» => change w 0 + w 4 + w 6 = rhs 23
   all_goals
     norm_num [rhs, Fin.sum_univ_succ, face72MinorSupports, Matrix.cons_val, Fin.succ, Fin.val_mk] <;>
-      first | rfl | ring_nf <;> rfl
+      simp -failIfUnchanged only [add_assoc] <;> rfl
 
 set_option maxHeartbeats 2000000 in
 private theorem face72MinorResponse_of_contacts (m : Fin 14 → ℝ) (H : ℝ)
@@ -196,7 +196,7 @@ theorem fourSevenFace72_gap_eq_minors (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
       exact (hg i).trans (face72MinorResponse_eq_sum _ i))
   rw [h]
   norm_num [Fin.sum_univ_succ, face72MinorRows, face72MinorColumns, face72MinorWeights,
-    Matrix.cons_val, Fin.succ, Fin.val_mk] <;> first | rfl | ring_nf <;> rfl
+    Matrix.cons_val, Fin.succ, Fin.val_mk] <;> ring
 
 /-- The four-budget inequality transported to the face-72 minors. -/
 theorem fourSevenFace72_budget_minor_nonneg {a b c d : ℝ}

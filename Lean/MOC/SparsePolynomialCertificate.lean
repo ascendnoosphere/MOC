@@ -39,7 +39,7 @@ def eval {R : Type*} [CommRing R] {n : ℕ} (x : Fin n → R) (p : Polynomial n)
 def constant (n : ℕ) (c : ℤ) : Polynomial n := [⟨c, fun _ => 0⟩]
 
 def indeterminate {n : ℕ} (i : Fin n) : Polynomial n :=
-  [⟨1, fun j => if j = i then 1 else 0⟩]
+  [⟨1, fun j => if j.val == i.val then 1 else 0⟩]
 
 @[simp] theorem eval_constant {R : Type*} [CommRing R] {n : ℕ}
     (x : Fin n → R) (c : ℤ) : eval x (constant n c) = c := by
@@ -47,7 +47,8 @@ def indeterminate {n : ℕ} (i : Fin n) : Polynomial n :=
 
 @[simp] theorem eval_indeterminate {R : Type*} [CommRing R] {n : ℕ}
     (x : Fin n → R) (i : Fin n) : eval x (indeterminate i) = x i := by
-  simp only [indeterminate, eval_cons, eval_nil, add_zero, Term.eval, Int.cast_one, one_mul]
+  simp only [indeterminate, eval_cons, eval_nil, add_zero, Term.eval, Int.cast_one, one_mul,
+    beq_iff_eq, Fin.val_inj]
   rw [Finset.prod_eq_single i]
   · simp
   · intro j _ hj
@@ -116,15 +117,15 @@ private theorem eval_foldr_mul {R : Type*} [CommRing R] {n : ℕ}
 private def before : List ℕ → List ℕ → Bool
   | [], _ => true
   | _ :: _, [] => false
-  | a :: as, b :: bs => if a = b then before as bs else decide (a < b)
+  | a :: as, b :: bs => if a == b then before as bs else decide (a < b)
 
 private def mergeTerms {n : ℕ} : ℕ → Polynomial n → Polynomial n → Polynomial n
   | 0, p, q => p ++ q
   | _ + 1, [], q => q
   | _ + 1, p, [] => p
   | fuel + 1, a :: p, b :: q =>
-      if List.ofFn a.powers = List.ofFn b.powers then
-        if a.coefficient + b.coefficient = 0 then mergeTerms fuel p q
+      if List.ofFn a.powers == List.ofFn b.powers then
+        if a.coefficient + b.coefficient == 0 then mergeTerms fuel p q
         else ⟨a.coefficient + b.coefficient, a.powers⟩ :: mergeTerms fuel p q
       else if before (List.ofFn a.powers) (List.ofFn b.powers) then
         a :: mergeTerms fuel p (b :: q)
@@ -151,39 +152,40 @@ private theorem eval_mergeTerms {R : Type*} [CommRing R] {n : ℕ}
                 · have hzero : a.eval x + b.eval x = 0 := by
                     rw [← hadd]
                     simp [Term.eval, hz]
-                  simp only [mergeTerms, he, hz, if_true, ih, eval_cons]
+                  simp only [mergeTerms, beq_iff_eq, he, hz, if_true, ih, eval_cons]
                   calc
                     _ = (a.eval x + b.eval x) + (eval x p + eval x q) := by rw [hzero, zero_add]
                     _ = _ := by ring
-                · simp only [mergeTerms, he, hz, if_true, if_false, eval_cons, ih, hadd]
+                · simp only [mergeTerms, beq_iff_eq, he, hz, if_true, if_false, eval_cons, ih, hadd]
                   ring
               · by_cases hb : before (List.ofFn a.powers) (List.ofFn b.powers) = true <;>
-                  simp only [mergeTerms, he, hb, Bool.false_eq_true, if_false, if_true, ih,
+                  simp only [mergeTerms, beq_iff_eq, he, hb, Bool.false_eq_true, if_false, if_true, ih,
                     eval_cons] <;> ring
 
-private def mergeTermPairs {n : ℕ} : List (Polynomial n) → List (Polynomial n)
-  | p :: q :: rest => mergeTerms (p.length + q.length) p q :: mergeTermPairs rest
+private def mergeTermPairs {n : ℕ} (mergeFuel : ℕ) : List (Polynomial n) → List (Polynomial n)
+  | p :: q :: rest => mergeTerms mergeFuel p q :: mergeTermPairs mergeFuel rest
   | rest => rest
 
 private theorem eval_mergeTermPairs {R : Type*} [CommRing R] {n : ℕ}
-    (x : Fin n → R) (ps : List (Polynomial n)) :
-    eval x (mergeTermPairs ps).flatten = eval x ps.flatten := by
+    (x : Fin n → R) (mergeFuel : ℕ) (ps : List (Polynomial n)) :
+    eval x (mergeTermPairs mergeFuel ps).flatten = eval x ps.flatten := by
   match ps with
   | [] => rfl
   | [_] => rfl
   | p :: q :: rest =>
       simp only [mergeTermPairs, List.flatten_cons, eval_append, eval_mergeTerms,
-        eval_mergeTermPairs x rest, add_assoc]
+        eval_mergeTermPairs x mergeFuel rest, add_assoc]
 
-private def mergeTermRounds {n : ℕ} : ℕ → List (Polynomial n) → Polynomial n
+private def mergeTermRounds {n : ℕ} (mergeFuel : ℕ) : ℕ → List (Polynomial n) → Polynomial n
   | 0, ps => ps.flatten
   | _ + 1, [] => []
   | _ + 1, [p] => p
-  | fuel + 1, p :: q :: ps => mergeTermRounds fuel (mergeTermPairs (p :: q :: ps))
+  | fuel + 1, p :: q :: ps =>
+      mergeTermRounds mergeFuel fuel (mergeTermPairs mergeFuel (p :: q :: ps))
 
 private theorem eval_mergeTermRounds {R : Type*} [CommRing R] {n : ℕ}
-    (x : Fin n → R) (fuel : ℕ) (ps : List (Polynomial n)) :
-    eval x (mergeTermRounds fuel ps) = eval x ps.flatten := by
+    (x : Fin n → R) (mergeFuel fuel : ℕ) (ps : List (Polynomial n)) :
+    eval x (mergeTermRounds mergeFuel fuel ps) = eval x ps.flatten := by
   induction fuel generalizing ps with
   | zero => rfl
   | succ fuel ih =>
@@ -196,11 +198,12 @@ private theorem eval_mergeTermRounds {R : Type*} [CommRing R] {n : ℕ}
 
 /-- Merge equal powers and discard terms whose coefficients cancel. -/
 def normalize {n : ℕ} (p : Polynomial n) : Polynomial n :=
-  mergeTermRounds p.length (p.map fun t => if t.coefficient = 0 then [] else [t])
+  mergeTermRounds p.length p.length (p.map fun t => if t.coefficient == 0 then [] else [t])
 
 theorem eval_normalize {R : Type*} [CommRing R] {n : ℕ}
     (x : Fin n → R) (p : Polynomial n) : eval x (normalize p) = eval x p := by
   rw [normalize, eval_mergeTermRounds]
+  simp only [beq_iff_eq]
   induction p with
   | nil => rfl
   | cons a p ih =>

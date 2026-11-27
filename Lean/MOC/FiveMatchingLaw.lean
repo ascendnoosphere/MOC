@@ -19,9 +19,9 @@ private theorem linear_score {d : ℕ} (L : (Fin d → ℝ) →ₗ[ℝ] ℝ) (v 
   intro k _
   exact mul_comm _ _
 
-set_option maxRecDepth 24000
-set_option maxHeartbeats 8000000
 
+set_option maxRecDepth 24000 in
+set_option maxHeartbeats 8000000 in
 private theorem exists_coordinate_law {κ : Type*} [Fintype κ] {n m d : ℕ} (base : Fin d)
     (point : Fin n → Fin d → ℤ) (labelPoint : κ → Fin n)
     (finalRay : Fin m → Fin n → ℤ) (hbase : ∀ i, point i base = 1)
@@ -77,6 +77,8 @@ private theorem exists_coordinate_law {κ : Type*} [Fintype κ] {n m d : ℕ} (b
     simpa only [hb₀, mul_one, hv] using hwc base
   exact ⟨w, hw, hw₁, hwc⟩
 
+set_option maxRecDepth 24000 in
+set_option maxHeartbeats 8000000 in
 /-- A cone of nonnegative coefficient tests gives a single law for all evaluations
 of the matching polynomials. Each final ray must have nonnegative signed expectation. -/
 theorem exists_common_law {ι P : Type*} [Fintype ι] [DecidableEq ι]

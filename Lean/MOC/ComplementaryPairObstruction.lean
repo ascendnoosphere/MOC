@@ -53,6 +53,7 @@ theorem complementaryPairScore_le_one_of_mem_hull (M : PairTable ℝ)
       ((subsetPermutationOperator (R := ℤ) σ I J : ℤ) : ℝ) =
         subsetPermutationOperator (R := ℝ) σ I J := by
     simp only [subsetPermutationOperator, Matrix.of_apply, apply_ite, Int.cast_one, Int.cast_zero]
+    split_ifs <;> rfl
   have hcast : ((pairScore (subsetPermutationOperator (R := ℤ) σ) : ℤ) : ℝ) ≤ 1 := by
     exact_mod_cast pairScore_perm_integer σ
   simpa only [complementaryPairScore, LinearMap.coe_mk, AddHom.coe_mk, pairScore, pairUnionEntry,

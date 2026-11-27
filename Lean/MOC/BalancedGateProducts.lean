@@ -15,7 +15,8 @@ theorem gate_column_flip (Q : Matrix Bool Bool ℂ) (hQ : IsUnitary Q) (r c : Bo
   have h := congrFun (congrFun hQ.1 r) (!r)
   cases r <;> cases c <;>
     simp [Matrix.mul_apply, Matrix.conjTranspose_apply, Fintype.sum_bool] at h ⊢ <;>
-    first | exact eq_neg_of_add_eq_zero_left h | exact eq_neg_of_add_eq_zero_right h
+    apply eq_neg_of_add_eq_zero_left <;>
+    simpa only [add_comm] using h
 
 theorem gate_row_flip (Q : Matrix Bool Bool ℂ) (hQ : IsUnitary Q) (r c : Bool) :
     Q (!r) c * star (Q (!r) (!c)) = -(Q r c * star (Q r (!c))) := by

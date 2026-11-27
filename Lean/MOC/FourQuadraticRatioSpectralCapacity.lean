@@ -5,6 +5,12 @@ import Mathlib.Tactic.Linarith
 
 namespace MOC
 
+private theorem quadraticRatio_budget_scale (a b c d s : ℝ) :
+    (d / s) ^ 2 * (a / s + b / s + c / s + d / s) =
+      (d ^ 2 * (a + b + c + d)) / s ^ 3 ∧
+    (a / s) * (b / s) * (c / s - d / s) = (a * b * (c - d)) / s ^ 3 := by
+  constructor <;> simp only [div_eq_mul_inv, ← inv_pow] <;> ring
+
 set_option maxHeartbeats 4000000 in
 /-- In the distinct quadratic-ratio pattern chart, nonnegative supporting gaps force the
 four-budget capacity whenever `g₂ - g₁₃` is positive. -/
@@ -22,6 +28,7 @@ theorem fourQuadraticRatio_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     z = (r : ℂ) * v * f / Z → w = -f * ((r : ℂ) + 1 - t * v) / W →
     (η * D).re = 0 → (∀ i, 0 ≤ g i) → 0 < d → g 9 = g 15 + d →
     d ^ 2 * (g 15 + g 19 + g 10 + d) < g 15 * g 19 * (g 10 - d) := by
+  classical
   intro F D g d f T W Z hf hT hW hZ hz hw hdir hg hd h9
   let R (i : Fin 24) := (F i - F 0) / D
   let p := η * D
@@ -46,7 +53,8 @@ theorem fourQuadraticRatio_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     have him : (R 9).im = y * (R 10).im := by
       have he : R 9 = (y : ℂ) * R 10 + ((y ^ 2 - r * y + u : ℝ) : ℂ) := hR9
       rw [he]
-      simp [Complex.add_im, Complex.mul_im]
+      simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_re,
+        Complex.ofReal_im, zero_mul, add_zero]
     rw [hgR 9, hgR 10, him]
     ring
   have hyc : 0 < y * g 10 := by linarith only [h9real, h9, hg 15, hd]
@@ -63,8 +71,11 @@ theorem fourQuadraticRatio_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     rw [he, Complex.sub_im, Complex.ofReal_im, Complex.div_im]
     simp [Complex.ofReal_re, Complex.ofReal_im]
   have h2 : g 2 = s * (x / Complex.normSq v) := by rw [hgR, hIm2]; dsimp only [s]; ring
+  have h2pos : 0 < g 2 := by
+    have hd' : 0 < g 2 - g 13 := hd
+    linarith only [hd', hg 13]
   have hs : 0 < s := (mul_pos_iff_of_pos_right (div_pos hx₀ (Complex.normSq_pos.mpr hv))).mp
-    (by linarith only [h2, hd, hg 13])
+    (h2 ▸ h2pos)
   have hvi : v.im ≠ 0 := right_ne_zero_of_mul hs.ne'
   have hpi : p.im ≠ 0 := fun he => by simp [s, he] at hs
   have hIm6 : (R 6).im = r * t * y * v.im / Complex.normSq T := by
@@ -105,13 +116,12 @@ theorem fourQuadraticRatio_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     rw [h10] at hp'
     have hp := (mul_pos_iff_of_pos_left hs).mp hp'
     have hn := neg_pos.mp ((div_pos_iff_of_pos_right (Complex.normSq_pos.mpr hf)).mp hp)
-    by_contra! hnonneg
-    exact (not_lt_of_ge (mul_nonneg hnonneg hx₀.le)) hn
+    exact neg_of_mul_neg_left hn hx₀.le
   have hgC : g 16 = h * g 10 - t * (g 19 + d) := by
     have hi : (R 16).im - h * (R 10).im + t * ((R 19).im + ((R 2).im - (R 13).im)) = 0 := by
       have hh := congrArg Complex.im hRC
       simpa only [Complex.sub_im, Complex.add_im, Complex.mul_im, Complex.ofReal_re,
-        Complex.ofReal_im, mul_zero, add_zero] using hh
+        Complex.ofReal_im, mul_zero, zero_mul, add_zero] using hh
     dsimp only [d]
     simp only [hgR]
     linear_combination (-p.im) * hi
@@ -119,7 +129,7 @@ theorem fourQuadraticRatio_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     have hi : E * (R 14).im - t * y * H * (R 19).im + J * ((R 2).im - (R 13).im) = 0 := by
       have hh := congrArg Complex.im hRE
       simpa only [Complex.sub_im, Complex.add_im, Complex.mul_im, Complex.ofReal_re,
-        Complex.ofReal_im, mul_zero, add_zero] using hh
+        Complex.ofReal_im, mul_zero, zero_mul, add_zero] using hh
     dsimp only [d]
     simp only [hgR]
     linear_combination (-p.im) * hi
@@ -147,7 +157,8 @@ theorem fourQuadraticRatio_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     f hx hrt htu (div_nonneg (hg 19) hs.le) (div_pos hpos_c hs) (div_pos hd hs)
     (div_nonneg (hg 14) hs.le) (div_nonneg (hg 16) hs.le) ha hfinonzero
     hQ hBnorm hNnorm hk he
-  apply (div_lt_div_iff_of_pos_right (pow_pos hs 3)).mp
-  convert hcap using 1 <;> field_simp [hs.ne'] <;> ring
+  obtain ⟨hleft, hright⟩ := quadraticRatio_budget_scale (g 15) (g 19) (g 10) d s
+  rw [hleft, hright] at hcap
+  exact (div_lt_div_iff_of_pos_right (pow_pos hs 3)).mp hcap
 
 end MOC

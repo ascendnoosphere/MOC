@@ -24,8 +24,11 @@ private theorem realGateRotation_unitary {c d : ℝ} (h : c ^ 2 + d ^ 2 = 1) :
     ext i j
     cases i <;> cases j <;>
       simp [realGateRotation, Matrix.mul_apply, Matrix.conjTranspose_apply,
-        Fintype.sum_bool, Matrix.one_apply, Complex.star_def, neg_mul_neg] <;>
-      first | exact hsum | simpa only [add_comm] using hsum | ring
+        Fintype.sum_bool, Matrix.one_apply, Complex.star_def, neg_mul_neg]
+    · simpa only [add_comm] using hsum
+    · ring
+    · ring
+    · simpa only [add_comm] using hsum
   exact ⟨hm, mul_eq_one_comm.mp hm⟩
 
 private def rotationForGate (Q : Matrix Bool Bool ℂ) (negate : Bool) : Matrix Bool Bool ℂ :=
@@ -358,7 +361,11 @@ private theorem blockSwitch_preserves_equal_pair {ι : Type*} [DecidableEq ι]
   by_cases hl : l = k
   · subst l
     have hconstant (c d : Bool) : v (e (k, c)) = v (e (k, d)) := by
-      cases c <;> cases d <;> first | rfl | exact h | exact h.symm
+      cases c <;> cases d
+      · rfl
+      · exact h
+      · exact h.symm
+      · rfl
     exact hconstant _ _
   · rw [hxy l hl]
 

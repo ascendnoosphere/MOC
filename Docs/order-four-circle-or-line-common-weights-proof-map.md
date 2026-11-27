@@ -38,9 +38,9 @@ flowchart TD
 
 | Premise | Argument | Lean source | Lean Checked? |
 | --- | --- | --- | --- |
-| Four distinct real eigenvalues | Normalize to the finite facet test with a middle parameter $t$ in $(1,2]$. The certificate applies for $1<t<2$. Closedness includes $t=2$. | [Facet test](../Lean/MOC/HermitianByNormalFourProof.lean#L40) · [Conversion to weights](../Lean/MOC/HermitianByNormalFour.lean#L80) · [Common law](../Lean/MOC/FourCircleLineCommonWeights.lean#L54) | Yes |
-| A repeated entry in a real list of length four | Put the labels in three groups, one of which has one label. A coupling of squared minors of adjacent sizes gives common weights. | [Real-spectrum proof](../Lean/MOC/FourCircleLineCommonWeights.lean#L54) | Yes |
-| One circle or line contains the four eigenvalues | A fractional-linear change maps the fixed spectrum to real values. The law survives this change. Continuity includes partner values at the pole. | [Sufficiency](../Lean/MOC/FourCircleLineCommonWeights.lean#L92) | Yes |
+| Four distinct real eigenvalues | Normalize to the finite facet test with a middle parameter $t$ in $(1,2]$. The certificate applies for $1<t<2$. Closedness includes $t=2$. | [Facet test](../Lean/MOC/HermitianByNormalFourProof.lean#L40) · [Conversion to weights](../Lean/MOC/HermitianByNormalFour.lean#L80) · [Common law](../Lean/MOC/FourCircleLineCommonWeights.lean#L54) | Partial (1/3) |
+| A repeated entry in a real list of length four | Put the labels in three groups, one of which has one label. A coupling of squared minors of adjacent sizes gives common weights. | [Real-spectrum proof](../Lean/MOC/FourCircleLineCommonWeights.lean#L54) | No |
+| One circle or line contains the four eigenvalues | A fractional-linear change maps the fixed spectrum to real values. The law survives this change. Continuity includes partner values at the pole. | [Sufficiency](../Lean/MOC/FourCircleLineCommonWeights.lean#L92) | No |
 
 The finite certificate adds eleven permutation inequalities, one per
 transition. At each transition it uses the signs of the old ray
@@ -88,4 +88,4 @@ a homogeneous multiaffine polynomial of degree $k$ give such
 an objective by setting $c_S=0$ when $S$ has size different
 from $k$. [Hermitian maximum](../Lean/MOC/FourCircleLineCommonWeights.lean#L835) · [Real symmetric maximum](../Lean/MOC/FourCircleLineCommonWeights.lean#L873)
 
-[Lean check status](README.md#lean-check-status): **Yes** for the 4 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (1/4)** for the 4 linked source modules.

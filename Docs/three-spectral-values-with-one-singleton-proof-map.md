@@ -199,7 +199,7 @@ $2$, and $3/2$. The endpoints $1$ and $2$ each occur five times.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 10 source modules linked in this map | Partial (9/10) |
+| The 10 source modules linked in this map | Partial (5/10) |
 | [ReciprocalSegmentRounding.lean](../Lean/MOC/ReciprocalSegmentRounding.lean#L166) | No |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

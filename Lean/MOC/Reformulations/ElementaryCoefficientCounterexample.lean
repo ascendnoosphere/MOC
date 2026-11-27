@@ -176,7 +176,7 @@ private theorem firstFourCoefficients_correct (xs : List GaussianInt) :
 private def partialMatchScore (xs : List (Option (Fin 5))) : ℤ :=
   (firstFourCoefficients (partialMatchValues xs)).2.2.2.re
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem partialMatch_none_table :
     ((partialMatches 4 rowLabels).map (none :: ·)).all
@@ -184,7 +184,7 @@ private theorem partialMatch_none_table :
         true := by
   decide +kernel
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem partialMatch_some_table (i : Fin 5) :
     ((partialMatches 4 (rowLabels.erase i)).map (some i :: ·)).all
@@ -225,7 +225,7 @@ private theorem mixerGram : mixerᴴ * mixer = (49 : GaussianInt) • 1 := by
     decide +kernel
   exact Matrix.ext h
 
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 set_option maxRecDepth 100000 in
 private theorem numerator_score :
     (detCoefficient numerator 4).re = 9341473392272 := by

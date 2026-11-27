@@ -100,7 +100,9 @@ theorem fourThreeZeroMixer_no_positive_minor_law :
         · simp [hfix σ 1 (by decide) h1]
         · simp [hfix σ 2 (by decide) (hf h0 h1)]
     · rw [if_neg hb]
-      split_ifs <;> first | exact hw σ | exact le_rfl
+      split_ifs
+      · exact hw σ
+      · exact le_rfl
   have ha : (∑ σ ∈ A, w σ) = 1 / 441 :=
     (hm {0, 1} {0, 2}).trans fourThreeZeroMixer_minorA
   have hb : (∑ σ ∈ B, w σ) = 4 / 441 :=

@@ -64,14 +64,14 @@ directions of the form. The argument includes the case $b=c=0$.
 The absence of this compression gives $t\le a(b+c)-bc$. A convex
 combination of a diagonal Gram matrix and the rank-one Gram matrix of
 $(a,-b,-c)$ gives the mixed certificate. The formula allows equality at
-the threshold. [Mixed certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L190) · [All chart cases](../Lean/MOC/FourKleinChartSymmetry.lean#L455)
+the threshold. [Mixed certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L190) · [All chart cases](../Lean/MOC/FourKleinChartSymmetry.lean#L456)
 
 ## Lean check status
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 7 source modules linked in this map | Partial (2/7) |
-| [FourKleinChartSymmetry.lean](../Lean/MOC/FourKleinChartSymmetry.lean#L455) | No |
+| The 7 source modules linked in this map | Partial (5/7) |
+| [FourKleinChartSymmetry.lean](../Lean/MOC/FourKleinChartSymmetry.lean#L456) | Yes |
 | [FourKleinInversePencil.lean](../Lean/MOC/FourKleinInversePencil.lean#L130) | No |
 | [FourKleinSpectralSquares.lean](../Lean/MOC/FourKleinSpectralSquares.lean#L259) | No |
 

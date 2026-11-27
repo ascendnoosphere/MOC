@@ -185,9 +185,9 @@ set_option maxRecDepth 10000 in
 set_option maxHeartbeats 4000000 in
 private theorem rectangleConeMinorCoordinates_evaluation (k : Fin 9) (i : Fin 24) :
     ((fourMatchingEvaluation (rectangleConeMinorCoordinates k) i : ℤ) : ℝ) = rectangleConeMinorProfile k i := by
-  have h : ∀ (x : Fin 9) (y : Fin 24), fourMatchingEvaluation (rectangleConeMinorCoordinates x) y =
-      (if (rectangleConeMinorColumns x).map (fourPerm y).symm.toEmbedding = rectangleConeMinorRows x then 1 else 0) := by
-    decide +kernel
+  have h : fourMatchingEvaluation (rectangleConeMinorCoordinates k) i =
+      (if (rectangleConeMinorColumns k).map (fourPerm i).symm.toEmbedding = rectangleConeMinorRows k then 1 else 0) := by
+    fin_cases k <;> revert i <;> decide +kernel
   rw [h]
   unfold rectangleConeMinorProfile
   split_ifs <;> norm_num

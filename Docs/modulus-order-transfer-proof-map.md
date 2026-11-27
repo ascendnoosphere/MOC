@@ -184,6 +184,6 @@ Its square bounds $|D|^2$, so its modulus bounds $|D|$.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 9 source modules linked in this map | Yes |
+| The 9 source modules linked in this map | Partial (6/9) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

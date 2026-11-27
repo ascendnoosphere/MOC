@@ -52,7 +52,7 @@ theorem realCoordinateRotation_mulVec {ι : Type*} [Fintype ι] [DecidableEq ι]
     by_cases hkl : l = k
     · subst l
       simp [realCoordinateRotation, hi, hj]
-    · simp [realCoordinateRotation, Pi.single_apply, hi, hj, hkl, hkl.symm]
+    · simp [realCoordinateRotation, Pi.single_apply, hi, hj, hkl, Ne.symm hkl]
   rw [hr, single_dotProduct, one_mul, if_neg hi, if_neg hj]
 
 theorem realCoordinateRotation_transpose {ι : Type*} [DecidableEq ι]
@@ -119,8 +119,9 @@ theorem realCoordinateRotation_orthogonal_det {ι : Type*} [Fintype ι] [Decidab
       simp only [Matrix.transpose_zero, Matrix.transpose_one, Matrix.zero_mul, Matrix.mul_zero,
         add_zero, zero_add, Matrix.one_mul, hJ, Matrix.fromBlocks_one]
     ext k l
-    simpa only [Matrix.submatrix_apply, e.apply_symm_apply] using
-      congrArg (fun M : Matrix _ _ ℝ => M (e.symm k) (e.symm l)) hsub
+    obtain ⟨a, rfl⟩ := e.surjective k
+    obtain ⟨b, rfl⟩ := e.surjective l
+    exact congrArg (fun M : Matrix _ _ ℝ => M a b) hsub
   · rw [← Matrix.det_submatrix_equiv_self e R, hblock, Matrix.det_fromBlocks_zero₂₁,
       Matrix.det_one, mul_one, show J.det = c * c - (-s) * s from Matrix.det_fin_two_of c (-s) s c]
     nlinarith only [hcs]

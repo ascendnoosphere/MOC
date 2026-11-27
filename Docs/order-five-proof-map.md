@@ -60,7 +60,7 @@ transfer makes the full-support eight-contact test exact.
 | Principal coisometry of dimension four | $\mathrm{MOC}_5\Longleftrightarrow C_4$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L150) | Yes |
 | Rectangular compression with four rows | $\mathrm{MOC}_5\Longleftrightarrow C_4$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L228) | Yes |
 | Order four AND existence of normal order-five maximizers | $(\mathrm{MOC}_4\land N_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L119) | No |
-| Eight-contact support bound with no zero mixer entries | $\mathrm{MOC}_5\Longleftrightarrow \text{eight-contact full-support test}_5$ | [Equivalence with transfer premise](../Lean/MOC/OrderFiveContact.lean#L97) · [Transfer](../Lean/MOC/ProofRoutes.lean#L178) | Partial (1/2) |
+| Eight-contact support bound with no zero mixer entries | $\mathrm{MOC}_5\Longleftrightarrow \text{eight-contact full-support test}_5$ | [Equivalence with transfer premise](../Lean/MOC/OrderFiveContact.lean#L97) · [Transfer](../Lean/MOC/ProofRoutes.lean#L178) | No |
 | Distinct first spectrum on the standard parabola | $\mathrm{MOC}_5\Longleftrightarrow \text{parabola test}_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1348) | Yes |
 | Distinct first spectrum on the fixed hyperbola | $\mathrm{MOC}_5\Longleftrightarrow \text{hyperbola test}_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
 | Orthogonal minor convexification AND orthogonal order five | $(D_5\land O_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/Realification.lean#L79) | Yes |
@@ -460,4 +460,4 @@ Theorem 19 in Y. Shitov, *A further sufficient condition for the determinantal c
 
 </details>
 
-[Lean check status](README.md#lean-check-status): **Partial (19/21)** for the 21 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (13/21)** for the 21 linked source modules.

@@ -125,7 +125,7 @@ theorem finiteSimplicialLeray_link_singleton {K : Set (Finset α)} {d : ℕ}
       exact hs (by simp [finiteSimplicialCone, hvs, h])
     obtain ⟨⟨⟨_, hface⟩, hst⟩, hcard⟩ := hc _ he
     have hu : s.erase v ∪ {v} = s := by
-      rw [Finset.union_comm, Finset.singleton_union, Finset.insert_erase hvs]
+      rw [Finset.union_comm, ← Finset.insert_eq, Finset.insert_erase hvs]
     refine ⟨⟨hu ▸ hface, ?_⟩, ?_⟩
     · rw [← hu]
       exact Finset.union_subset (hst.trans (Finset.subset_insert _ _))
@@ -149,7 +149,8 @@ theorem finiteSimplicialLeray_link_singleton {K : Set (Finset α)} {d : ℕ}
       simp [finiteSimplicialCone]
     simpa only [hz₀, add_zero] using h
   have hz₀ : finiteSimplicialBoundary z = 0 := by
-    rw [z, finiteSimplicialBoundary_sub, hcCone, hb₀, sub_self]
+    change finiteSimplicialBoundary (finiteSimplicialCone v c - b) = 0
+    rw [finiteSimplicialBoundary_sub, hcCone, hb₀, sub_self]
   obtain ⟨w, hw, hw₀⟩ := hL T' (q + 1) (by omega) z hz hz₀
   refine ⟨-finiteSimplicialSection v w, ?_, ?_⟩
   · intro s hs
@@ -164,14 +165,15 @@ theorem finiteSimplicialLeray_link_singleton {K : Set (Finset α)} {d : ℕ}
       rw [Finset.disjoint_singleton_right]
       exact hvs
     refine ⟨⟨⟨hdis, ?_⟩, ?_⟩, ?_⟩
-    · simpa only [Finset.union_comm s {v}, Finset.singleton_union] using hface
+    · simpa only [Finset.union_comm s {v}, ← Finset.insert_eq] using hface
     · intro a ha
       have ht := hsub (Finset.mem_insert_of_mem ha)
       exact (Finset.mem_insert.mp ht).resolve_left (fun he => hvs (he ▸ ha))
     · rw [Finset.card_insert_of_not_mem hvs] at hcard
       omega
-  · rw [finiteSimplicialBoundary_neg, ← finiteSimplicialSection_boundary, hw₀, z,
-      finiteSimplicialSection_sub, finiteSimplicialSection_cone v c hcv,
+  · rw [finiteSimplicialBoundary_neg, ← finiteSimplicialSection_boundary, hw₀]
+    change finiteSimplicialSection v (finiteSimplicialCone v c - b) = c
+    rw [finiteSimplicialSection_sub, finiteSimplicialSection_cone v c hcv,
       finiteSimplicialSection_eq_zero v b hbv, sub_zero]
 
 /-- The link of any face inherits the Leray bound by taking one

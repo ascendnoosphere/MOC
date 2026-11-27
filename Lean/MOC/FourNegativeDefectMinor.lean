@@ -219,7 +219,7 @@ private theorem negativeDefectMinorResponse_eq_sum (w : Fin 13 → ℝ) (i : Fin
   case' «23» => change w 0 + w 1 + w 6 + w 10 = rhs 23
   all_goals
     norm_num [rhs, Fin.sum_univ_succ, negativeDefectMinorSupports, Matrix.cons_val, Fin.succ, Fin.val_mk] <;>
-      first | rfl | ring_nf <;> rfl
+      simp -failIfUnchanged only [add_assoc] <;> rfl
 
 private theorem negativeDefectGapProfile_eq_minorSum (g : Fin 24 → ℝ) (u v : ℝ) (i : Fin 24) :
     negativeDefectGapProfile g i = ∑ k, if i.val ∈ negativeDefectMinorSupports k then negativeDefectMinorWeights g u v k else 0 := by

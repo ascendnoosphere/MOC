@@ -8,8 +8,6 @@ namespace MOC.ScalarAnchor
 
 open scoped BigOperators
 
-set_option maxRecDepth 4096
-set_option maxHeartbeats 4000000
 
 private def slack3 (hr _hi fr fi kr ki : ℝ) : ℝ :=
   25 + 10 * hr - 40 * fr - 20 * fi - 40 * kr - 40 * ki
@@ -98,6 +96,8 @@ private def slack94 (hr hi fr fi kr ki : ℝ) : ℝ :=
 private def slack95 (hr hi fr fi kr ki : ℝ) : ℝ :=
   -2 - 1 * hr - 5 * hi + 9 * fr + 19 * fi + 14 * kr + 18 * ki
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 -- This identity is a certificate of infeasibility for the linear
 -- support bounds together with the real and imaginary rank equations.
 private theorem infeasible (hr hi fr fi kr ki : ℝ)
@@ -293,6 +293,8 @@ private noncomputable def witnessPermutation (f : Fin 5 → Fin 5)
   let hi : Function.Injective f := fun _ _ hf => h _ _ hf
   Equiv.ofBijective f ⟨hi, Finite.injective_iff_surjective.mp hi⟩
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 -- The scalar replacement matrix has rank one. Its coefficients satisfy
 -- the two equations used in the infeasibility certificate.
 private theorem scalarRank (c d h f k : ℂ) (hn : c + d ≠ 0)
@@ -302,6 +304,8 @@ private theorem scalarRank (c d h f k : ℂ) (hn : c + d ≠ 0)
   field_simp
   ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeFactor (c d h f k : ℂ) (hn : c + d ≠ 0)
     (hh : h = c * d / (c + d)) (hf : f = d / (c + d)) (hk : k = 1 / (c + d))
     (a b : ℂ) : (a + d) * (c + b) / (c + d) = a + h + f * (b - a) + k * a * b := by
@@ -309,6 +313,8 @@ private theorem exchangeFactor (c d h f k : ℂ) (hn : c + d ≠ 0)
   field_simp
   ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem slackOfExchange (c d h f k : ℂ) (hn : c + d ≠ 0)
     (hh : h = c * d / (c + d)) (hf : f = d / (c + d)) (hk : k = 1 / (c + d))
     (upper : ∀ τ : Equiv.Perm (Fin 5),
@@ -324,9 +330,13 @@ private theorem slackOfExchange (c d h f k : ℂ) (hn : c + d ≠ 0)
   rw [difference]
   exact sub_nonneg.mpr bound
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange3 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![0, 1, 2, 4, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct3 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange3 =
@@ -336,15 +346,21 @@ private theorem exchangeProduct3 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference3 (h f k : ℂ) :
     slack3 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-10) : ℝ), 0⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack3, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange4 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 1, 3, 2, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct4 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange4 =
@@ -354,15 +370,21 @@ private theorem exchangeProduct4 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference4 (h f k : ℂ) :
     slack4 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(2 : ℝ), 14⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack4, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange13 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![0, 4, 3, 1, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct13 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange13 =
@@ -372,15 +394,21 @@ private theorem exchangeProduct13 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference13 (h f k : ℂ) :
     slack13 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(4 : ℝ), 28⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack13, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange14 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![0, 2, 4, 1, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct14 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange14 =
@@ -390,15 +418,21 @@ private theorem exchangeProduct14 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference14 (h f k : ℂ) :
     slack14 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(8 : ℝ), (-4)⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack14, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange20 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 3, 2, 1, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct20 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange20 =
@@ -408,15 +442,21 @@ private theorem exchangeProduct20 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference20 (h f k : ℂ) :
     slack20 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-20) : ℝ), (-40)⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack20, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange21 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![0, 4, 2, 1, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct21 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange21 =
@@ -426,15 +466,21 @@ private theorem exchangeProduct21 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference21 (h f k : ℂ) :
     slack21 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(20 : ℝ), (-20)⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack21, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange22 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![0, 3, 4, 1, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct22 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange22 =
@@ -444,15 +490,21 @@ private theorem exchangeProduct22 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference22 (h f k : ℂ) :
     slack22 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-8) : ℝ), 44⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack22, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange23 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![0, 3, 2, 4, 1] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct23 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange23 =
@@ -462,15 +514,21 @@ private theorem exchangeProduct23 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference23 (h f k : ℂ) :
     slack23 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-30) : ℝ), 40⟩ : ℂ) * ((⟨(0 : ℝ), 2⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(0 : ℝ), 2⟩ : ℂ)) + k * (⟨(0 : ℝ), 2⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack23, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange27 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![1, 0, 2, 4, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct27 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange27 =
@@ -480,15 +538,21 @@ private theorem exchangeProduct27 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference27 (h f k : ℂ) :
     slack27 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-20) : ℝ), (-10)⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack27, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange33 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![1, 4, 0, 3, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct33 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange33 =
@@ -498,15 +562,21 @@ private theorem exchangeProduct33 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference33 (h f k : ℂ) :
     slack33 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(4 : ℝ), (-2)⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack33, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange44 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 3, 2, 0, 1] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct44 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange44 =
@@ -516,15 +586,21 @@ private theorem exchangeProduct44 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference44 (h f k : ℂ) :
     slack44 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-15) : ℝ), (-5)⟩ : ℂ) * ((⟨(0 : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨(0 : ℝ), 2⟩ : ℂ)) + k * (⟨(0 : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack44, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange47 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![1, 3, 2, 4, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct47 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange47 =
@@ -534,15 +610,21 @@ private theorem exchangeProduct47 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference47 (h f k : ℂ) :
     slack47 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-35) : ℝ), 5⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack47, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange50 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 0, 4, 3, 1] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct50 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange50 =
@@ -552,15 +634,21 @@ private theorem exchangeProduct50 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference50 (h f k : ℂ) :
     slack50 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(14 : ℝ), 2⟩ : ℂ) * ((⟨(0 : ℝ), 2⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨(0 : ℝ), 2⟩ : ℂ)) + k * (⟨(0 : ℝ), 2⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack50, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange56 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 1, 0, 3, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct56 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange56 =
@@ -570,15 +658,21 @@ private theorem exchangeProduct56 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference56 (h f k : ℂ) :
     slack56 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(0 : ℝ), (-2)⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack56, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange57 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 4, 0, 3, 1] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct57 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange57 =
@@ -588,15 +682,21 @@ private theorem exchangeProduct57 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference57 (h f k : ℂ) :
     slack57 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(4 : ℝ), 2⟩ : ℂ) * ((⟨(0 : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨(0 : ℝ), 2⟩ : ℂ)) + k * (⟨(0 : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack57, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange58 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 1, 4, 3, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct58 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange58 =
@@ -606,15 +706,21 @@ private theorem exchangeProduct58 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference58 (h f k : ℂ) :
     slack58 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(4 : ℝ), 2⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack58, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange59 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 1, 0, 4, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct59 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange59 =
@@ -624,15 +730,21 @@ private theorem exchangeProduct59 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference59 (h f k : ℂ) :
     slack59 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-1) : ℝ), 2⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack59, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange68 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 3, 1, 0, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct68 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange68 =
@@ -642,15 +754,21 @@ private theorem exchangeProduct68 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference68 (h f k : ℂ) :
     slack68 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-7) : ℝ), 1⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack68, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange69 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 4, 1, 0, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct69 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange69 =
@@ -660,15 +778,21 @@ private theorem exchangeProduct69 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference69 (h f k : ℂ) :
     slack69 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(3 : ℝ), (-1)⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack69, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange70 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 3, 4, 0, 1] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct70 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange70 =
@@ -678,15 +802,21 @@ private theorem exchangeProduct70 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference70 (h f k : ℂ) :
     slack70 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-10) : ℝ), 5⟩ : ℂ) * ((⟨(0 : ℝ), 2⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨(0 : ℝ), 2⟩ : ℂ)) + k * (⟨(0 : ℝ), 2⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack70, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange71 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![2, 3, 1, 4, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct71 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange71 =
@@ -696,15 +826,21 @@ private theorem exchangeProduct71 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference71 (h f k : ℂ) :
     slack71 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-15) : ℝ), (-5)⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack71, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange80 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 1, 0, 2, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct80 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange80 =
@@ -714,15 +850,21 @@ private theorem exchangeProduct80 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference80 (h f k : ℂ) :
     slack80 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-4) : ℝ), 2⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack80, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange88 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 2, 0, 1, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct88 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange88 =
@@ -732,15 +874,21 @@ private theorem exchangeProduct88 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference88 (h f k : ℂ) :
     slack88 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(2 : ℝ), (-2)⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack88, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange89 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![3, 4, 0, 1, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct89 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange89 =
@@ -750,15 +898,21 @@ private theorem exchangeProduct89 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference89 (h f k : ℂ) :
     slack89 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-2) : ℝ), 10⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack89, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange90 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![3, 2, 4, 1, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct90 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange90 =
@@ -768,15 +922,21 @@ private theorem exchangeProduct90 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference90 (h f k : ℂ) :
     slack90 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(2 : ℝ), (-10)⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack90, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange92 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![4, 2, 1, 0, 3] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct92 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange92 =
@@ -786,15 +946,21 @@ private theorem exchangeProduct92 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference92 (h f k : ℂ) :
     slack92 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(1 : ℝ), 1⟩ : ℂ) * ((⟨(2 : ℝ), (-2)⟩ : ℂ) + h + f * ((⟨(1 : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), (-2)⟩ : ℂ)) + k * (⟨(2 : ℝ), (-2)⟩ : ℂ) * (⟨(1 : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack92, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange93 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![3, 4, 1, 0, 2] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct93 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange93 =
@@ -804,15 +970,21 @@ private theorem exchangeProduct93 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference93 (h f k : ℂ) :
     slack93 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-5) : ℝ), (-1)⟩ : ℂ) * ((⟨((-2) : ℝ), 2⟩ : ℂ) + h + f * ((⟨(1 : ℝ), (-2)⟩ : ℂ) - (⟨((-2) : ℝ), 2⟩ : ℂ)) + k * (⟨((-2) : ℝ), 2⟩ : ℂ) * (⟨(1 : ℝ), (-2)⟩ : ℂ))).re := by
   norm_num [slack93, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange94 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![3, 2, 4, 0, 1] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct94 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange94 =
@@ -822,15 +994,21 @@ private theorem exchangeProduct94 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference94 (h f k : ℂ) :
     slack94 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨((-2) : ℝ), (-3)⟩ : ℂ) * ((⟨(0 : ℝ), 2⟩ : ℂ) + h + f * ((⟨((-1) : ℝ), (-1)⟩ : ℂ) - (⟨(0 : ℝ), 2⟩ : ℂ)) + k * (⟨(0 : ℝ), 2⟩ : ℂ) * (⟨((-1) : ℝ), (-1)⟩ : ℂ))).re := by
   norm_num [slack94, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private noncomputable def exchange95 : Equiv.Perm (Fin 5) :=
   witnessPermutation ![3, 2, 1, 4, 0] (by decide +kernel)
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeProduct95 (c d : ℂ) :
     matchingProduct (appendScalar DuplicateAnchor.leftSpectrum c)
       (appendScalar DuplicateAnchor.rightSpectrum d) exchange95 =
@@ -840,12 +1018,16 @@ private theorem exchangeProduct95 (c d : ℂ) :
   apply Complex.ext <;>
     norm_num [Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im] <;> ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 private theorem exchangeDifference95 (h f k : ℂ) :
     slack95 h.re h.im f.re f.im k.re k.im =
       5 - ((⟨(1 : ℝ), (-5)⟩ : ℂ) * ((⟨(2 : ℝ), 1⟩ : ℂ) + h + f * ((⟨((-2) : ℝ), 0⟩ : ℂ) - (⟨(2 : ℝ), 1⟩ : ℂ)) + k * (⟨(2 : ℝ), 1⟩ : ℂ) * (⟨((-2) : ℝ), 0⟩ : ℂ))).re := by
   norm_num [slack95, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
     Complex.mul_re, Complex.mul_im]; ring
 
+set_option maxRecDepth 4096 in
+set_option maxHeartbeats 4000000 in
 /-- Every scalar padding with nonzero sum creates a normalized matching
 product with real part greater than the original support of five. -/
 theorem scalar_support_exceeds (c d : ℂ) (hn : c + d ≠ 0) :

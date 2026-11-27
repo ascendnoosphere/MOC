@@ -67,12 +67,13 @@ theorem conjecture_iff_anchored_unit_spectral_norm (j₀ : ι) :
     · have hx (i : ι) : x i = 0 := norm_le_zero_iff.mp (hr ▸ hbound (.inl i))
       have hy (i : ι) : y i = 0 := norm_le_zero_iff.mp (hr ▸ hbound (.inr i))
       have hy' : y = 0 := funext hy
+      have hd : Matrix.diagonal (0 : ι → ℂ) = (0 : Matrix ι ι ℂ) := Matrix.diagonal_zero
       refine ⟨1, ?_⟩
       unfold determinantValue
-      rw [hy', Matrix.diagonal_zero, Matrix.mul_zero, Matrix.zero_mul, add_zero,
-        Matrix.det_diagonal]
+      simp only [hy', hd, Matrix.mul_zero,
+        Matrix.zero_mul, add_zero, Matrix.det_diagonal]
       simp only [matchingProduct, hx, Pi.zero_apply, add_zero, le_refl]
-    · have hrpos : 0 < r := lt_of_le_of_ne ((norm_nonneg _).trans (hbound (.inl j₀))) hr.symm
+    · have hrpos : 0 < r := lt_of_le_of_ne ((norm_nonneg _).trans (hbound (.inl j₀))) (Ne.symm hr)
       let x' := fun i => ((r⁻¹ : ℝ) : ℂ) * x i
       let y' := fun i => ((r⁻¹ : ℝ) : ℂ) * y i
       have hy₀ : y' j₀ = 0 := by simp only [y', y, sub_self, mul_zero]

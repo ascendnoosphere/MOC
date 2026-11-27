@@ -30,8 +30,9 @@ theorem fourHodgeCrossUnitary_isUnitary (a b : ℝ) (h : a ^ 2 + b ^ 2 = 1) :
   constructor <;> ext i j : 1 <;> fin_cases i <;> fin_cases j <;>
     norm_num [fourHodgeCrossUnitary, Matrix.mul_apply, Matrix.conjTranspose_apply,
       Matrix.one_apply, Matrix.of_apply, Matrix.cons_val, Fin.sum_univ_four,
+      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons,
       Complex.star_def, Complex.conj_ofReal] <;>
-    first | (ring; done) | linear_combination hc
+    ring_nf at hc ⊢ <;> exact hc
 
 private abbrev crossBlockEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4 := finSumFinEquiv
 
@@ -44,9 +45,7 @@ theorem fourHodgeCrossUnitary_det (a b : ℝ) (h : a ^ 2 + b ^ 2 = 1) :
     linear_combination (cross_norm_complex h)
   have hblock : (fourHodgeCrossUnitary a b).submatrix crossBlockEquiv crossBlockEquiv =
       Matrix.fromBlocks J 0 0 J := by
-    ext (i | i) (j | j) : 1 <;> fin_cases i <;> fin_cases j <;>
-      first | rfl | norm_num [fourHodgeCrossUnitary, crossBlockEquiv, finSumFinEquiv,
-        Matrix.fromBlocks, Matrix.submatrix_apply, Matrix.of_apply, Matrix.cons_val, J]
+    ext (i | i) (j | j) : 1 <;> fin_cases i <;> fin_cases j <;> rfl
   rw [← Matrix.det_submatrix_equiv_self crossBlockEquiv (fourHodgeCrossUnitary a b),
     hblock, Matrix.det_fromBlocks_zero₂₁, hJ, one_mul]
 
@@ -63,10 +62,12 @@ theorem fourHodgeRealRepresentation_cross (a b : ℝ) (h : a ^ 2 + b ^ 2 = 1) :
   ext ⟨i, k⟩ ⟨j, l⟩ : 1
   rw [fourHodgeRealRepresentation_block _ hu hd]
   fin_cases i <;> fin_cases k <;> fin_cases j <;> fin_cases l <;>
-    norm_num [hodgeRealBlock, fourHodgeCrossUnitary, fourHodgeCompound, fourHodgePair,
+    simp (config := { decide := true }) only [hodgeRealBlock, fourHodgeCrossUnitary, fourHodgeCompound, fourHodgePair,
       realCoordinateRotation, Matrix.of_apply, Matrix.cons_val, Fin.succ,
+      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons,
       Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im, Complex.neg_re, Complex.neg_im,
-      Complex.ofReal_re, Complex.ofReal_im] <;>
+      Complex.ofReal_re, Complex.ofReal_im, zero_add, add_zero, sub_zero, zero_sub,
+      zero_mul, mul_zero, one_mul, mul_one, neg_zero] <;>
     nlinarith only [h]
 
 private theorem exists_cross_half_angle (c s : ℝ) (hc : c ^ 2 + s ^ 2 = 1) :

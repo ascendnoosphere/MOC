@@ -118,7 +118,7 @@ private theorem numerator_score : integerScore numerator = 132800207858112018217
   decide +kernel
 
 set_option maxRecDepth 100000 in
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 private theorem matching_score_bound (σ : Equiv.Perm (Fin 4)) :
     integerScore (matched σ) ≤ 99657478674686397294013345 := by
   obtain ⟨p, rfl⟩ := fourPerm_surjective σ
@@ -143,7 +143,7 @@ private def triangleNumerator (k j : Fin 3) : ℕ :=
      ![588515664231890255, 5449235618971190496, 221790371639516608]] k) j
 
 set_option maxRecDepth 100000 in
-set_option maxHeartbeats 0 in
+set_option maxHeartbeats 20000000 in
 private theorem triangle_identity (k : Fin 3) :
     ∑ j : Fin 3, (triangleNumerator k j : GaussianInt) *
       integerCoefficient (matched (triangleVertex j)) k.val =

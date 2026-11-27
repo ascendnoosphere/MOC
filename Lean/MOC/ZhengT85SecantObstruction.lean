@@ -167,9 +167,21 @@ private theorem pure_hess_kernel (y : Fin 14 → ℝ)
   have h4 : y 4 = 0 := by linarith only [e7,h0,h10,h12,h3]
   have h8 : y 8 = 0 := by linarith only [e3,h0,h11,h12,h7]
   funext i
-  fin_cases i <;> simp only [Pi.zero_apply] <;>
-    (first | exact h0 | exact h1 | exact h2 | exact h3 | exact h4 | exact h5 | exact h6 |
-      exact h7 | exact h8 | exact h9 | exact h10 | exact h11 | exact h12 | exact h13)
+  fin_cases i <;> simp only [Pi.zero_apply]
+  · exact h0
+  · exact h1
+  · exact h2
+  · exact h3
+  · exact h4
+  · exact h5
+  · exact h6
+  · exact h7
+  · exact h8
+  · exact h9
+  · exact h10
+  · exact h11
+  · exact h12
+  · exact h13
 
 
 theorem pure_hess_injective :

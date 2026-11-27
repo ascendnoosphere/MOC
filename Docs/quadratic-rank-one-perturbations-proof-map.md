@@ -111,6 +111,6 @@ and any matrix $R$ of rank at most two, and every complex diagonal $E$.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 9 source modules linked in this map | Yes |
+| The 9 source modules linked in this map | Partial (2/9) |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

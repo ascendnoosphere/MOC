@@ -66,7 +66,11 @@ theorem fourOrderedRatio_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
     exact (by decide : (3 : Fin 4) ≠ 1) (hX (he.trans hX₁.symm))
   have hX' : X = ![z, 1, 0, x] := by
     funext i
-    fin_cases i <;> first | rfl | exact hX₁ | exact hX₂
+    fin_cases i
+    · rfl
+    · exact hX₁
+    · exact hX₂
+    · rfl
   have hscale (i : Fin 24) : η * matchingProduct a b (fourPerm i).symm = ζ * F i := by
     rw [hprod, show (Finset.univ : Finset (Fin 4)).erase 2 = {0, 1, 3} by decide +kernel,
       Finset.prod_insert (by decide : (0 : Fin 4) ∉ ({1, 3} : Finset (Fin 4))),
@@ -93,11 +97,17 @@ theorem fourOrderedRatio_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
   obtain ⟨h11, h19⟩ := fourOrderedRatio_gap_eleven_nineteen a b η H hc
   have h6 : g 6 = 0 := sub_eq_zero.mpr (hc 6 (by decide))
   have h7 : g 7 = 0 := sub_eq_zero.mpr (hc 7 (by decide))
-  have h := hcap (sub_ne_zero.mpr htx) hdir'
-    (fun i => (hg' i) ▸ (sub_nonneg.mpr (hn i) : 0 ≤ g i))
-    (by simpa only [← hg'] using h6) (by simpa only [← hg'] using h7)
-    (by simpa only [← hg'] using h11) (by simpa only [← hg'] using h19)
-    (by dsimp only [d] at hd; simpa only [← hg'] using hd)
-  simpa only [← hg', d] using h
+  let poleGap (i : Fin 24) : ℝ := (ξ * (F 1 - F i)).re
+  have hgap : poleGap = g := by
+    funext i
+    exact (hg' i).symm
+  have hbudget := hcap (sub_ne_zero.mpr htx) hdir'
+  change (∀ i, 0 ≤ poleGap i) → poleGap 6 = 0 → poleGap 7 = 0 →
+    poleGap 11 = poleGap 10 + poleGap 17 + (poleGap 0 - poleGap 16) →
+    poleGap 19 = poleGap 13 + poleGap 22 + (poleGap 0 - poleGap 16) →
+    0 < poleGap 0 - poleGap 16 → (poleGap 0 - poleGap 16) ^ 2 ≤ poleGap 10 * poleGap 13 at hbudget
+  rw [hgap] at hbudget
+  change (g 0 - g 16) ^ 2 ≤ g 10 * g 13
+  exact hbudget (fun i => sub_nonneg.mpr (hn i)) h6 h7 h11 h19 hd
 
 end MOC

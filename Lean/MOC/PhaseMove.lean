@@ -51,11 +51,11 @@ theorem arrowhead_phase_support_eq (x η z : ℂ) (d p q : ι → ℂ) (hd : ∀
   rw [hn]
   have hsum :
       (η * (∏ j, d j) * ∑ i, p i * q i / d i).re = 0 := by
-    simp only [Finset.mul_sum, map_sum (Complex.reAddGroupHom)] at *
-    rw [show (∑ i, η * (∏ j, d j) * (p i * q i / d i)).re =
-        ∑ i, (η * (∏ j, d j) * (p i * q i / d i)).re from
-      map_sum Complex.reAddGroupHom _ _]
-    simp only [hpair, Finset.sum_const_zero]
+    calc
+      _ = ∑ i, (η * (∏ j, d j) * (p i * q i / d i)).re := by
+        rw [Finset.mul_sum]
+        exact map_sum Complex.reAddGroupHom _ _
+      _ = 0 := Finset.sum_eq_zero fun i _ => hpair i
   rw [show η * ((x - (Complex.normSq (z - 1) : ℂ) * ∑ i, p i * q i / d i) *
       ∏ i, d i) = η * (x * ∏ i, d i) - (Complex.normSq (z - 1) : ℂ) *
         (η * (∏ i, d i) * ∑ i, p i * q i / d i) by ring]

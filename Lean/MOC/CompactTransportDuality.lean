@@ -116,7 +116,7 @@ theorem exists_compact_transport_functional
     rw [he, hF]
     by_cases hr0 : r = 0
     · exact hm uv (by simpa only [hr0, zero_smul] using hrs)
-    have hrp : 0 < r := lt_of_le_of_ne hr hr0.symm
+    have hrp : 0 < r := lt_of_le_of_ne hr (Ne.symm hr0)
     let u := r⁻¹ • uv.1 + z • (1 : C(X, ℝ))
     let v := r⁻¹ • uv.2
     have hmajor (p : X × Y) : c p ≤ u p.1 + v p.2 := by

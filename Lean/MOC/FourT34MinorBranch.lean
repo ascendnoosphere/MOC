@@ -64,8 +64,14 @@ theorem fourT34_support_of_contact_eleven (α β : Fin 4 → ℂ) (η : ℂ) (H 
   let m : Fin 14 → ℝ := fun i => (η * fourNoncrossingCoordinates (fourSpectralPoints α β) i).re
   have hw (i : Fin 7) : 0 ≤ w i := by
     have hg (j : Fin 24) : 0 ≤ g j := sub_nonneg.mpr (hn j)
-    fin_cases i <;> first | exact hg 18 | exact hg 16 | exact hg 13 | exact hg 8 |
-      exact hg 4 | exact hg 14 | exact hg 7
+    fin_cases i
+    · exact hg 18
+    · exact hg 16
+    · exact hg 13
+    · exact hg 8
+    · exact hg 4
+    · exact hg 14
+    · exact hg 7
   have hm (i : Fin 24) : fourMatchingEvaluation m i =
       (η * matchingProduct α β (fourPerm i).symm).re :=
     fourMatchingEvaluation_spectral_real_part α β η i
