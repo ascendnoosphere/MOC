@@ -538,7 +538,7 @@ Combining the blocks proves the convex-hull inclusion in every order.
   [Family and proof](Docs/order-four-symmetric-six-contact-proof-map.md)
 - For every real $t$, the lists $(t+i,-t+i,1,2+i)$ and
   $(-1+i,-2-2i,2-i,1+2i)$ satisfy the inclusion for every unitary.
-  The proof uses 89 exact parameter cells.
+  The proof uses 89 polygons on 173 rational bands.
   [Parameter family](Docs/order-four-real-parameter-spectra-proof-map.md)
 - In order five, the inclusion holds if the first list is real and at
   least one entry of the second list is real.

@@ -8,8 +8,174 @@ import Mathlib.Algebra.Polynomial.Eval.Defs
 /-! An order-four spectral family with a free real parameter.
 Integer-polynomial certificates cover a bounded interval and both tails. -/
 
+open BigOperators
+
+namespace MOC.RealParameterCertificate
+
+/-- Coefficients in ascending degree order. -/
+abbrev Univariate := List ℤ
+
+namespace Univariate
+
+def ofInt (c : ℤ) : Univariate := [c]
+
+def X : Univariate := [0, 1]
+
+def add : Univariate → Univariate → Univariate
+  | [], q => q
+  | p, [] => p
+  | a :: p, b :: q => (a + b) :: add p q
+
+def neg (p : Univariate) : Univariate := p.map (fun c => -c)
+
+def mul : Univariate → Univariate → Univariate
+  | [], _ => []
+  | a :: p, q => add (q.map (a * ·)) (0 :: mul p q)
+
+def pow (p : Univariate) : ℕ → Univariate
+  | 0 => ofInt 1
+  | n + 1 => mul p (pow p n)
+
+scoped instance (n : ℕ) : OfNat Univariate n := ⟨ofInt n⟩
+scoped instance : Add Univariate := ⟨add⟩
+scoped instance : Neg Univariate := ⟨neg⟩
+scoped instance : Sub Univariate := ⟨fun p q => add p (neg q)⟩
+scoped instance : Mul Univariate := ⟨mul⟩
+scoped instance : Pow Univariate ℕ := ⟨pow⟩
+
+def sum {n : ℕ} (p : Fin n → Univariate) : Univariate :=
+  (List.ofFn p).foldr add []
+
+def prod (ps : List Univariate) : Univariate := ps.foldr mul (ofInt 1)
+
+def eval {R : Type*} [CommRing R] (x : R) : Univariate → R
+  | [] => 0
+  | a :: p => (a : R) + x * eval x p
+
+theorem eval_cons {R : Type*} [CommRing R] (x : R) (a : ℤ) (p : Univariate) :
+    eval x (a :: p) = (a : R) + x * eval x p := rfl
+
+@[simp] theorem eval_ofInt {R : Type*} [CommRing R] (x : R) (c : ℤ) :
+    eval x (ofInt c) = c := by simp [ofInt, eval]
+
+@[simp] theorem eval_ofNat {R : Type*} [CommRing R] (x : R) (n : ℕ) :
+    eval x (OfNat.ofNat n : Univariate) = (n : R) := by
+  simpa only [Int.cast_natCast] using eval_ofInt x (n : ℤ)
+
+@[simp] theorem eval_zero {R : Type*} [CommRing R] (x : R) :
+    eval x (0 : Univariate) = 0 := by
+  simpa only [Int.cast_zero] using eval_ofInt x 0
+
+@[simp] theorem eval_X {R : Type*} [CommRing R] (x : R) : eval x X = x := by
+  simp [X, eval]
+
+@[simp] theorem eval_add {R : Type*} [CommRing R] (x : R) (p q : Univariate) :
+    eval x (p + q) = eval x p + eval x q := by
+  change eval x (add p q) = _
+  induction p generalizing q with
+  | nil => simp [add, eval]
+  | cons a p ih =>
+    cases q with
+    | nil => simp [add, eval]
+    | cons b q =>
+      simp only [add, eval_cons, ih, Int.cast_add]
+      ring
+
+@[simp] theorem eval_neg {R : Type*} [CommRing R] (x : R) (p : Univariate) :
+    eval x (-p) = -eval x p := by
+  change eval x (neg p) = _
+  induction p with
+  | nil => simp [neg, eval]
+  | cons a p ih =>
+    change eval x ((-a) :: neg p) = _
+    simp only [eval_cons, Int.cast_neg, ih]
+    ring
+
+@[simp] theorem eval_sub {R : Type*} [CommRing R] (x : R) (p q : Univariate) :
+    eval x (p - q) = eval x p - eval x q := by
+  change eval x (p + -q) = _
+  rw [eval_add, eval_neg, sub_eq_add_neg]
+
+private theorem eval_map_mul {R : Type*} [CommRing R] (x : R) (a : ℤ) (p : Univariate) :
+    eval x (p.map (a * ·)) = (a : R) * eval x p := by
+  induction p with
+  | nil => simp [eval]
+  | cons b p ih =>
+    simp only [List.map_cons, eval_cons, Int.cast_mul, ih]
+    ring
+
+@[simp] theorem eval_mul {R : Type*} [CommRing R] (x : R) (p q : Univariate) :
+    eval x (p * q) = eval x p * eval x q := by
+  change eval x (mul p q) = _
+  induction p with
+  | nil => simp [mul, eval]
+  | cons a p ih =>
+    change eval x (q.map (a * ·) + (0 :: mul p q : Univariate)) = _
+    simp only [eval_add, eval_map_mul, eval_cons, Int.cast_zero, ih]
+    ring
+
+@[simp] theorem eval_pow {R : Type*} [CommRing R] (x : R) (p : Univariate) (n : ℕ) :
+    eval x (p ^ n) = eval x p ^ n := by
+  induction n with
+  | zero =>
+    rw [pow_zero]
+    change eval x (ofInt 1) = 1
+    exact (eval_ofInt x 1).trans Int.cast_one
+  | succ n ih =>
+    change eval x (p * p ^ n) = eval x p ^ (n + 1)
+    rw [eval_mul, ih, pow_succ']
+
+@[simp] theorem eval_sum {R : Type*} [CommRing R] {n : ℕ} (x : R) (p : Fin n → Univariate) :
+    eval x (sum p) = ∑ i, eval x (p i) := by
+  have h (ps : List Univariate) : eval x (ps.foldr add []) = (ps.map (eval x)).sum := by
+    induction ps with
+    | nil => rfl
+    | cons p ps ih =>
+      change eval x (p + ps.foldr add []) = eval x p + (ps.map (eval x)).sum
+      rw [eval_add, ih]
+  rw [sum, h, List.map_ofFn, Fin.sum_ofFn]
+  rfl
+
+@[simp] theorem eval_prod {R : Type*} [CommRing R] (x : R) (ps : List Univariate) :
+    eval x (prod ps) = (ps.map (eval x)).prod := by
+  induction ps with
+  | nil => simpa only [List.map_nil, List.prod_nil, Int.cast_one] using eval_ofInt x 1
+  | cons p ps ih =>
+    change eval x (p * prod ps) = eval x p * (ps.map (eval x)).prod
+    rw [eval_mul, ih]
+
+private def trim : Univariate → Univariate
+  | [] => []
+  | a :: p =>
+    match trim p with
+    | [] => if a = 0 then [] else [a]
+    | b :: q => a :: b :: q
+
+private theorem eval_trim {R : Type*} [CommRing R] (x : R) (p : Univariate) :
+    eval x (trim p) = eval x p := by
+  induction p with
+  | nil => rfl
+  | cons a p ih =>
+    by_cases hz : trim p = []
+    · have hp : eval x p = 0 := by simpa only [hz, eval] using ih.symm
+      by_cases ha : a = 0 <;> simp [trim, hz, ha, eval, hp]
+    · obtain ⟨b, q, ht⟩ := List.exists_cons_of_ne_nil hz
+      simp only [trim, ht, eval_cons] at ih ⊢
+      rw [← ih]
+
+/-- Check coefficient equality after removal of trailing zeros. -/
+def same (p q : Univariate) : Bool := trim p == trim q
+
+theorem eval_eq {R : Type*} [CommRing R] (x : R) {p q : Univariate} (h : same p q = true) :
+    eval x p = eval x q := by
+  rw [← eval_trim x p, ← eval_trim x q, (eq_of_beq h : trim p = trim q)]
+
+end Univariate
+end MOC.RealParameterCertificate
+
 open BigOperators Matrix Polynomial
-open MOC.SparsePolynomialCertificate (Univariate)
+open MOC.RealParameterCertificate (Univariate)
+open scoped MOC.RealParameterCertificate.Univariate
 open scoped Topology Polynomial
 
 namespace MOC
@@ -110,14 +276,16 @@ private theorem evaluateParameterPlane_cross (t : ℝ) (a b : IntegerPlanePolyno
 
 private def parameterPairSum (i j : Fin 4) : IntegerPlanePolynomial :=
   let x := Univariate.X
-  (![x, -x, 1, 2] i + ![-1, -2, 2, 1] j, ![1, 1, 0, 1] i + ![1, -2, -1, 2] j)
+  let c := Univariate.ofInt
+  (![x, -x, c 1, c 2] i + ![c (-1), c (-2), c 2, c 1] j,
+    ![c 1, c 1, c 0, c 1] i + ![c 1, c (-2), c (-1), c 2] j)
 
 private theorem evaluateParameterPairSum (t : ℝ) (i j : Fin 4) :
     evaluateParameterPlane t (parameterPairSum i j) =
       fourRealParameterLeft t i + fourRealParameterRight j := by
   fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
     norm_num [evaluateParameterPlane, evaluateParameterPolynomial, parameterPairSum,
-      fourRealParameterLeft, fourRealParameterRight, Complex.mul_re, Complex.mul_im] <;> ring
+      fourRealParameterLeft, fourRealParameterRight, Complex.mul_re, Complex.mul_im]
 
 private def parameterVertex (p : ParameterPermutation) : IntegerPlanePolynomial :=
   polynomialPlaneMul
@@ -392,7 +560,7 @@ private theorem parameterHull_edge (t : ℝ) (ht0 : 0 ≤ t) (ht1 : t ≤ 1 / 20
     have hp := parameterEdgePolynomial_eq t i p
     simp only [parameterEdgePolynomial, evaluateParameterPlane_cross, evaluateParameterPlane_sub,
       evaluateParameterHullVertex, evaluateParameterVertex, parameterMinorPolynomial,
-      Univariate.eval_sum, apply_ite, Univariate.eval_ofNat, Nat.cast_zero] at hp
+      Univariate.eval_sum, apply_ite, Univariate.eval_zero] at hp
     rw [← planeCross_edge_direction l r]
     exact hp
   rw [planeCross_edge_direction l r]
@@ -556,9 +724,10 @@ private theorem holds_of_scaled_minor_polygon {ι κ : Type*} [Fintype ι] [None
 
 private def parameterTailPairSum (i j : Fin 4) : IntegerPlanePolynomial :=
   let x := Univariate.X
-  let scale : Univariate := ![x, x, 1, 1] i
-  (![5 - x, x - 5, 1, 2] i + scale * ![-1, -2, 2, 1] j,
-    ![x, x, 0, 1] i + scale * ![1, -2, -1, 2] j)
+  let c := Univariate.ofInt
+  let scale := ![x, x, c 1, c 1] i
+  (![c 5 - x, x - c 5, c 1, c 2] i + scale * ![c (-1), c (-2), c 2, c 1] j,
+    ![x, x, c 0, c 1] i + scale * ![c 1, c (-2), c (-1), c 2] j)
 
 private def parameterTailScale (s : ℝ) (i : Fin 4) : ℂ :=
   ![(s : ℂ), (s : ℂ), 1, 1] i
@@ -763,7 +932,7 @@ private theorem holds_fourRealParameter_positive_tail (t : ℝ) (ht : 99 ≤ t)
     evaluateParameterPolynomial s (parameterTailTerms i j).weight.polynomial
   have hw (i : Fin 8) (j : Fin 12) : 0 ≤ w i j := by
     rcases parameterTailBudget_lower i j with hzero | hpos
-    · simpa [w] using (Univariate.eval_eq s hzero).le
+    · simpa [w] using (Univariate.eval_eq s hzero).ge
     · dsimp only [w]
       rw [evaluateParameterWeight]
       exact mul_nonneg (pow_nonneg hs0.le _) (parameterWeight_sign (parameterTailTerms i j).weight
@@ -787,7 +956,7 @@ private theorem holds_fourRealParameter_positive_tail (t : ℝ) (ht : 99 ≤ t)
     have he := parameterTailEdge_eq s i p
     simp only [evaluateParameterPlane_cross, evaluateParameterPlane_sub, hv,
       evaluateParameterTailVertex s t hst, parameterTailMinorPolynomial, Univariate.eval_sum,
-      apply_ite, Univariate.eval_ofNat, Nat.cast_zero, w] at he
+      apply_ite, Univariate.eval_zero, w] at he
     exact he
 
 /-- Both unbounded tails of the real-parameter family satisfy the

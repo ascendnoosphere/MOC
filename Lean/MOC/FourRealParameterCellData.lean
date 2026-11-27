@@ -1,0 +1,1233 @@
+import MOC.ContactCensus
+import MOC.FourRealParameterFamily
+import Mathlib.Algebra.Polynomial.Roots
+
+set_option Elab.async false
+
+open BigOperators Matrix Polynomial
+open scoped Polynomial MOC.RealParameterCertificate.Univariate
+open MOC.RealParameterCertificate (Univariate)
+
+namespace MOC.FourRealParameterCellCertificate
+
+abbrev CellQuartic := Fin 5 → ℤ
+
+def cellQuartic (a : CellQuartic) : Univariate :=
+  [a 0, a 1, a 2, a 3, a 4]
+
+noncomputable abbrev cellEval (x : ℝ) : Univariate → ℝ := Univariate.eval x
+
+theorem cellEval_quartic (x : ℝ) (a : CellQuartic) :
+    cellEval x (cellQuartic a) = ∑ j : Fin 5, (a j : ℝ) * x ^ j.val := by
+  simp [cellEval, cellQuartic, Univariate.eval, Fin.sum_univ_succ]
+  ring
+
+structure CellBand where
+  lo : ℤ
+  hi : ℤ
+  den : ℤ
+  guard : ℕ
+  leftChart : ℕ
+  rightChart : ℕ
+
+def CellBand.left (b : CellBand) : ℚ := (b.lo : ℚ) / b.den
+
+def CellBand.right (b : CellBand) : ℚ := (b.hi : ℚ) / b.den
+
+def CellBand.chart (b : CellBand) (negative : Bool) : ℕ :=
+  if negative then b.leftChart else b.rightChart
+
+-- Positive numerators, with the common factor equal to twelve times the
+-- fourth power of the denominator.
+def bandBernstein (z : CellBand) (a : CellQuartic) : Fin 5 → ℤ :=
+  let l := z.lo
+  let w := z.hi - l
+  let d := z.den
+  let q₀ := a 0 * d ^ 4 + a 1 * l * d ^ 3 + a 2 * l ^ 2 * d ^ 2 +
+    a 3 * l ^ 3 * d + a 4 * l ^ 4
+  let q₁ := w * (a 1 * d ^ 3 + 2 * a 2 * l * d ^ 2 + 3 * a 3 * l ^ 2 * d + 4 * a 4 * l ^ 3)
+  let q₂ := w ^ 2 * (a 2 * d ^ 2 + 3 * a 3 * l * d + 6 * a 4 * l ^ 2)
+  let q₃ := w ^ 3 * (a 3 * d + 4 * a 4 * l)
+  let q₄ := w ^ 4 * a 4
+  ![12 * q₀, 12 * q₀ + 3 * q₁, 12 * q₀ + 6 * q₁ + 2 * q₂,
+    12 * q₀ + 9 * q₁ + 6 * q₂ + 3 * q₃, 12 * (q₀ + q₁ + q₂ + q₃ + q₄)]
+
+def bandNonnegative (z : CellBand) (a : CellQuartic) : Prop :=
+  (∀ j, 0 ≤ bandBernstein z a j) ∧ ∃ j, 0 < bandBernstein z a j
+
+instance (z : CellBand) (a : CellQuartic) : Decidable (bandNonnegative z a) := by
+  unfold bandNonnegative
+  infer_instance
+
+theorem cellEval_quartic_neg (x : ℝ) (a : CellQuartic) :
+    cellEval x (cellQuartic (fun j => -a j)) = -(cellEval x (cellQuartic a)) := by
+  simp [cellEval_quartic, Fin.sum_univ_succ]
+
+theorem intBernstein_positive (z : CellBand) (a : CellQuartic) (x : ℝ)
+    (hd : 0 < z.den) (hl : (z.left : ℝ) < x) (hr : x < (z.right : ℝ))
+    (h : bandNonnegative z a) : 0 < cellEval x (cellQuartic a) := by
+  have hdR : 0 < (z.den : ℝ) := by exact_mod_cast hd
+  have hl' : (z.lo : ℝ) < (z.den : ℝ) * x := by
+    change ((↑((z.lo : ℚ) / z.den) : ℝ)) < x at hl
+    push_cast at hl
+    simpa only [mul_comm] using (div_lt_iff₀ hdR).mp hl
+  have hr' : (z.den : ℝ) * x < (z.hi : ℝ) := by
+    change x < (↑((z.hi : ℚ) / z.den) : ℝ) at hr
+    push_cast at hr
+    simpa only [mul_comm] using (lt_div_iff₀ hdR).mp hr
+  have hw : 0 < (z.hi : ℝ) - z.lo := sub_pos.mpr (hl'.trans hr')
+  let y := ((z.den : ℝ) * x - z.lo) / ((z.hi : ℝ) - z.lo)
+  have hy0 : 0 < y := div_pos (sub_pos.mpr hl') hw
+  have hy1 : y < 1 := (div_lt_one hw).mpr (sub_lt_sub_right hr' _)
+  have hxy : (z.den : ℝ) * x = (z.lo : ℝ) + ((z.hi : ℝ) - z.lo) * y := by
+    have hy := div_mul_cancel₀ ((z.den : ℝ) * x - z.lo) hw.ne'
+    change y * ((z.hi : ℝ) - z.lo) = (z.den : ℝ) * x - z.lo at hy
+    linear_combination -hy
+  let e (j : Fin 5) : ℝ := ((bandBernstein z a j : ℤ) : ℝ) *
+    (Nat.choose 4 j.val : ℝ) * y ^ j.val * (1 - y) ^ (4 - j.val)
+  have hsum : 0 < ∑ j, e j := by
+    have hf (j : Fin 5) : 0 < (Nat.choose 4 j.val : ℝ) := by
+      exact_mod_cast Nat.choose_pos (Nat.le_of_lt_succ j.isLt)
+    have hp (j : Fin 5) : 0 < (Nat.choose 4 j.val : ℝ) * y ^ j.val * (1 - y) ^ (4 - j.val) :=
+      mul_pos (mul_pos (hf j) (pow_pos hy0 _)) (pow_pos (sub_pos.mpr hy1) _)
+    apply Finset.sum_pos'
+    · intro j _
+      have hn : (0 : ℝ) ≤ (bandBernstein z a j : ℝ) := by exact_mod_cast h.1 j
+      simpa only [e, mul_assoc] using mul_nonneg hn (hp j).le
+    · obtain ⟨j, hj⟩ := h.2
+      have hj' : (0 : ℝ) < (bandBernstein z a j : ℝ) := by exact_mod_cast hj
+      exact ⟨j, Finset.mem_univ _, by simpa only [e, mul_assoc] using mul_pos hj' (hp j)⟩
+  have he : 12 * (z.den : ℝ) ^ 4 * cellEval x (cellQuartic a) = ∑ j, e j := by
+    calc
+      _ = 12 * ((a 0 : ℝ) * (z.den : ℝ) ^ 4 + (a 1 : ℝ) * ((z.den : ℝ) * x) * (z.den : ℝ) ^ 3 +
+          (a 2 : ℝ) * ((z.den : ℝ) * x) ^ 2 * (z.den : ℝ) ^ 2 +
+          (a 3 : ℝ) * ((z.den : ℝ) * x) ^ 3 * (z.den : ℝ) +
+          (a 4 : ℝ) * ((z.den : ℝ) * x) ^ 4) := by
+        simp [cellEval_quartic, Fin.sum_univ_succ]
+        ring
+      _ = _ := by
+        rw [hxy]
+        norm_num [e, bandBernstein, Fin.sum_univ_succ,
+          show Nat.choose 4 2 = 6 by decide]
+        ring
+  rw [← he] at hsum
+  exact pos_of_mul_pos_right hsum (by positivity)
+
+structure SignedCellFactor where
+  index : ℕ
+  negative : Bool
+  deriving DecidableEq
+
+structure CellWeight where
+  content : ℕ
+  signed : List SignedCellFactor
+  squared : List ℕ
+
+structure CellTerm where
+  rows : Finset (Fin 4)
+  columns : Finset (Fin 4)
+  weight : CellWeight
+
+structure CellFacet where
+  left : Fin 24
+  right : Fin 24
+  terms : Fin 12 → CellTerm
+
+structure CellPolygon where
+  size : ℕ
+  label : Fin size → Fin 24
+  prev : Fin size → Fin size
+  next : Fin size → Fin size
+  facets : Fin size → ℕ
+  turns : Fin size → CellWeight
+
+abbrev CellPlanePolynomial := Univariate × Univariate
+
+def cellPlaneMul (a b : CellPlanePolynomial) : CellPlanePolynomial :=
+  (a.1 * b.1 - a.2 * b.2, a.1 * b.2 + a.2 * b.1)
+
+def cellPlaneSub (a b : CellPlanePolynomial) : CellPlanePolynomial :=
+  (a.1 - b.1, a.2 - b.2)
+
+def cellPlaneCross (a b : CellPlanePolynomial) : Univariate :=
+  a.1 * b.2 - a.2 * b.1
+
+noncomputable def cellPlaneEval (x : ℝ) (a : CellPlanePolynomial) : ℂ :=
+  ⟨cellEval x a.1, cellEval x a.2⟩
+
+theorem cellPlaneEval_mul (x : ℝ) (a b : CellPlanePolynomial) :
+    cellPlaneEval x (cellPlaneMul a b) = cellPlaneEval x a * cellPlaneEval x b := by
+  apply Complex.ext
+  · simp only [cellPlaneEval, cellPlaneMul, Univariate.eval_sub, Univariate.eval_mul, Complex.mul_re]
+  · simp only [cellPlaneEval, cellPlaneMul, Univariate.eval_add, Univariate.eval_mul, Complex.mul_im]
+
+theorem cellPlaneEval_sub (x : ℝ) (a b : CellPlanePolynomial) :
+    cellPlaneEval x (cellPlaneSub a b) = cellPlaneEval x a - cellPlaneEval x b := by
+  apply Complex.ext
+  · simp only [cellPlaneEval, cellPlaneSub, Univariate.eval_sub, Complex.sub_re]
+  · simp only [cellPlaneEval, cellPlaneSub, Univariate.eval_sub, Complex.sub_im]
+
+theorem cellPlaneCross_eval (x : ℝ) (a b : CellPlanePolynomial) :
+    cellEval x (cellPlaneCross a b) = planeCross (cellPlaneEval x a) (cellPlaneEval x b) := by
+  simp only [cellPlaneEval, cellPlaneCross, planeCross, Univariate.eval_mul, Univariate.eval_sub]
+
+def cellPairSum (i j : Fin 4) : CellPlanePolynomial :=
+  let x := Univariate.X
+  let c := Univariate.ofInt
+  let scale := ![c 1 - x, c 1 - x, c 1, c 1] i
+  (![x, -x, c 1, c 2] i + scale * ![c (-1), c (-2), c 2, c 1] j,
+    ![c 1 - x, c 1 - x, c 0, c 1] i + scale * ![c 1, c (-2), c (-1), c 2] j)
+
+noncomputable def cellRowScale (x : ℝ) (i : Fin 4) : ℂ :=
+  ![((1 - x : ℝ) : ℂ), ((1 - x : ℝ) : ℂ), 1, 1] i
+
+theorem cellPairSum_eval (x : ℝ) (hx : x < 1) (i j : Fin 4) :
+    cellPlaneEval x (cellPairSum i j) = cellRowScale x i *
+      (fourRealParameterLeft (x / (1 - x)) i + fourRealParameterRight j) := by
+  have he : (1 - x) * (x / (1 - x)) = x :=
+    mul_div_cancel₀ x (sub_ne_zero.mpr (ne_of_gt hx))
+  generalize x / (1 - x) = t at he ⊢
+  fin_cases i <;> fin_cases j <;> apply Complex.ext <;>
+    norm_num [cellPlaneEval, cellEval, cellPairSum, cellRowScale, fourRealParameterLeft,
+      fourRealParameterRight, Complex.mul_re, Complex.mul_im] <;>
+    nlinarith only [he]
+
+def cellVertex (p : Equiv.Perm (Fin 4)) : CellPlanePolynomial :=
+  cellPlaneMul
+    (cellPlaneMul (cellPairSum (p 0) 0) (cellPairSum (p 1) 1))
+    (cellPlaneMul (cellPairSum (p 2) 2) (cellPairSum (p 3) 3))
+
+theorem cellVertex_eval (x : ℝ) (hx : x < 1) (p : Equiv.Perm (Fin 4)) :
+    cellPlaneEval x (cellVertex p) = fourRealParameterCompactVertex x p := by
+  have hm : cellPlaneEval x (cellVertex p) =
+      ∏ j : Fin 4, cellRowScale x (p j) *
+        (fourRealParameterLeft (x / (1 - x)) (p j) + fourRealParameterRight j) := by
+    simp only [cellVertex, cellPlaneEval_mul, cellPairSum_eval x hx, Fin.prod_univ_four, mul_assoc]
+  rw [hm, Finset.prod_mul_distrib, Equiv.prod_comp p (cellRowScale x)]
+  simp [cellRowScale, fourRealParameterCompactVertex, matchingProduct, Fin.prod_univ_four, pow_two]
+
+-- Blocks hold 32 factors each, except the final block.
+abbrev CellFactorTable := Array (Array CellQuartic)
+
+def factorQuartic (table : CellFactorTable) (index : ℕ) : CellQuartic :=
+  let block := table[index / 32]?.getD #[]
+  block[index % 32]?.getD ![1, 0, 0, 0, 0]
+
+def signedFactorQuartic (table : CellFactorTable) (f : SignedCellFactor) : CellQuartic :=
+  if f.negative then fun j => -(factorQuartic table f.index j) else factorQuartic table f.index
+
+def cellWeightPolynomial (table : CellFactorTable) (w : CellWeight) : Univariate :=
+  Univariate.ofInt (w.content : ℤ) *
+    Univariate.prod (w.signed.map (fun f => cellQuartic (signedFactorQuartic table f))) *
+    Univariate.prod (w.squared.map (fun i => cellQuartic (factorQuartic table i))) ^ 2
+
+theorem listProd_pos_of_members {α : Type*} (l : List α) (f : α → ℝ)
+    (h : ∀ a ∈ l, 0 < f a) : 0 < (l.map f).prod := by
+  induction l with
+  | nil => simp only [List.map_nil, List.prod_nil, zero_lt_one]
+  | cons a l ih =>
+    simp only [List.map_cons, List.prod_cons]
+    exact mul_pos (h a List.mem_cons_self)
+      (ih (fun b hb => h b (List.mem_cons_of_mem a hb)))
+
+theorem cellWeight_nonneg (table : CellFactorTable) (w : CellWeight) (x : ℝ)
+    (h : ∀ f ∈ w.signed, 0 < cellEval x (cellQuartic (signedFactorQuartic table f))) :
+    0 ≤ cellEval x (cellWeightPolynomial table w) := by
+  simp only [cellWeightPolynomial, Univariate.eval_mul, Univariate.eval_pow, Univariate.eval_prod,
+    Univariate.eval_ofInt, Int.cast_natCast, List.map_map, Function.comp_def]
+  exact mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (listProd_pos_of_members w.signed _ h).le)
+    (sq_nonneg _)
+
+theorem cellWeight_positive (table : CellFactorTable) (w : CellWeight) (x : ℝ)
+    (hc : 0 < w.content) (hno : w.squared = [])
+    (h : ∀ f ∈ w.signed, 0 < cellEval x (cellQuartic (signedFactorQuartic table f))) :
+    0 < cellEval x (cellWeightPolynomial table w) := by
+  simp only [cellWeightPolynomial, hno, Univariate.eval_mul, Univariate.eval_pow,
+    Univariate.eval_prod, Univariate.eval_ofInt, Int.cast_natCast, List.map_map, Function.comp_def,
+    List.map_nil, List.prod_nil, one_pow, mul_one]
+  exact mul_pos (by exact_mod_cast hc) (listProd_pos_of_members w.signed _ h)
+
+def cellFactorValid (table : CellFactorTable) (b : CellBand) (negative : Bool)
+    (f : SignedCellFactor) : Prop :=
+  if f.index = b.guard then f.negative = negative
+    else bandNonnegative b (signedFactorQuartic table f)
+
+instance (table : CellFactorTable) (b : CellBand) (negative : Bool)
+    (f : SignedCellFactor) : Decidable (cellFactorValid table b negative f) := by
+  unfold cellFactorValid
+  split <;> infer_instance
+
+theorem cellFactor_positive (table : CellFactorTable) (b : CellBand) (negative : Bool)
+    (f : SignedCellFactor) (x : ℝ) (hd : 0 < b.den) (hl : (b.left : ℝ) < x)
+    (hr : x < (b.right : ℝ))
+    (hg : if negative then cellEval x (cellQuartic (factorQuartic table b.guard)) < 0
+                       else 0 < cellEval x (cellQuartic (factorQuartic table b.guard)))
+    (h : cellFactorValid table b negative f) :
+    0 < cellEval x (cellQuartic (signedFactorQuartic table f)) := by
+  by_cases hi : f.index = b.guard
+  · have hn : f.negative = negative := by simpa only [cellFactorValid, if_pos hi] using h
+    cases negative
+    · simpa [signedFactorQuartic, hn, hi] using hg
+    · have hnegative : cellEval x (cellQuartic (factorQuartic table b.guard)) < 0 := hg
+      simpa [signedFactorQuartic, hn, hi, cellEval_quartic_neg] using neg_pos.mpr hnegative
+  · exact intBernstein_positive b _ x hd hl hr
+      (by simpa only [cellFactorValid, if_neg hi] using h)
+
+def compactFactorBlock0 : Array CellQuartic := #[
+  ![1, 0, 0, 0, 0],
+  ![-1, 1, 0, 0, 0],
+  ![0, 1, 0, 0, 0],
+  ![30, -136, 83, 0, 0],
+  ![70, -300, 159, 0, 0],
+  ![30, -144, 91, 0, 0],
+  ![-2, 1, 0, 0, 0],
+  ![25, -90, 52, 0, 0],
+  ![-130, 100, 9, 0, 0],
+  ![330, -500, 141, 0, 0],
+  ![-6, 13, 0, 0, 0],
+  ![-36, 36, 11, 0, 0],
+  ![-18, 29, 0, 0, 0],
+  ![-2, 3, 0, 0, 0],
+  ![31, -58, 20, 0, 0],
+  ![-5, 6, 0, 0, 0],
+  ![150, -865, 1557, -1054, 220],
+  ![250, -1295, 2473, -2109, 710],
+  ![250, -1035, 1933, -1879, 738],
+  ![5, -8, 4, 0, 0],
+  ![10, -57, 60, 0, 0],
+  ![50, -625, 1559, -1422, 460],
+  ![-3, 2, 0, 0, 0],
+  ![5, -14, 10, 0, 0],
+  ![17, -26, 4, 0, 0],
+  ![5, -10, 4, 0, 0],
+  ![-100, 180, 365, -971, 546],
+  ![-20, 24, 85, -175, 90],
+  ![-25, 10, 28, 0, 0],
+  ![-14, 45, 0, 0, 0],
+  ![-1, 3, 0, 0, 0],
+  ![70, -173, 54, 80, 0]
+]
+
+def compactFactorBlock1 : Array CellQuartic := #[
+  ![2, -6, 5, 0, 0],
+  ![5, -39, 45, 0, 0],
+  ![9, -22, 10, 0, 0],
+  ![100, -428, 697, -534, 160],
+  ![-8, 9, 0, 0, 0],
+  ![22, -51, 30, 0, 0],
+  ![34, -77, 50, 0, 0],
+  ![75, -140, 78, 0, 0],
+  ![-10, 110, -179, 90, 0],
+  ![-100, -518, 1456, -1175, 282],
+  ![180, -666, 932, -597, 150],
+  ![-59, 82, 0, 0, 0],
+  ![10, -18, 9, 0, 0],
+  ![350, -1349, 1866, -1108, 228],
+  ![-1050, 3390, -3563, 1290, 0],
+  ![8, -23, 12, 0, 0],
+  ![460, -1772, 2428, -1429, 294],
+  ![5, -10, 6, 0, 0],
+  ![43, -78, 42, 0, 0],
+  ![67, -82, 18, 0, 0],
+  ![110, -278, 165, 0, 0],
+  ![30, -56, 43, 0, 0],
+  ![140, -646, 1141, -923, 297],
+  ![35, -62, 36, 0, 0],
+  ![20, -62, 93, -75, 27],
+  ![-10, 46, -55, 26, 0],
+  ![20, -70, 119, -111, 47],
+  ![-70, 236, -255, 96, 0],
+  ![-210, 478, -395, 118, 0],
+  ![22, -40, 27, 0, 0],
+  ![180, -632, 802, -452, 87],
+  ![10, -24, 37, 0, 0]
+]
+
+def compactFactorBlock2 : Array CellQuartic := #[
+  ![180, -740, 1086, -674, 133],
+  ![-6, 5, 0, 0, 0],
+  ![-6, 7, 0, 0, 0],
+  ![4, -4, 5, 0, 0],
+  ![1, -2, 2, 0, 0],
+  ![28, -108, 83, 0, 0],
+  ![-38, 37, 0, 0, 0],
+  ![-38, 65, 0, 0, 0],
+  ![-20, 4, 31, 0, 0],
+  ![-2, 5, 0, 0, 0],
+  ![10, -14, 5, 0, 0],
+  ![-10, 3, 0, 0, 0],
+  ![-14, 11, 0, 0, 0],
+  ![32, -108, 150, -92, 21],
+  ![180, -618, 880, -559, 138],
+  ![-160, 340, -254, 71, 0],
+  ![50, -63, 28, 0, 0],
+  ![-160, 234, -113, 9, 0],
+  ![20, 28, -52, 19, 0],
+  ![8, 1, 0, 0, 0],
+  ![-4, 22, -24, 9, 0],
+  ![76, -96, 41, 0, 0],
+  ![-35, 22, 0, 0, 0],
+  ![15, -49, 27, 0, 0],
+  ![-140, -82, 1384, -1699, 550],
+  ![140, -598, 864, -533, 114],
+  ![340, -2018, 3728, -2831, 742],
+  ![140, -643, 1066, -756, 190],
+  ![-65, 268, -324, 110, 0],
+  ![-55, 6, 0, 0, 0],
+  ![135, -322, 141, 0, 0],
+  ![55, -126, 53, 0, 0]
+]
+
+def compactFactorBlock3 : Array CellQuartic := #[
+  ![7, -14, 5, 0, 0],
+  ![340, -1578, 2280, -1399, 318],
+  ![-7, 4, 0, 0, 0],
+  ![-24, 13, 0, 0, 0],
+  ![-610, 1128, -693, 114, 0],
+  ![-810, 1688, -1203, 294, 0],
+  ![-35, 44, 0, 0, 0],
+  ![5, -6, 2, 0, 0],
+  ![-60, 1064, -1597, 578, 0],
+  ![-190, 1432, -1907, 646, 0],
+  ![-31, 38, 0, 0, 0],
+  ![50, 41, -163, 77, 0],
+  ![2, 1, 0, 0, 0],
+  ![-103, 61, 0, 0, 0],
+  ![60, 56, -163, 62, 0],
+  ![-65, 184, -155, 34, 0],
+  ![-13, 6, 0, 0, 0],
+  ![-1, 2, 0, 0, 0],
+  ![-50, 120, 1, -184, 120],
+  ![350, -2285, 5051, -4723, 1658],
+  ![250, -1845, 3958, -3334, 1020],
+  ![25, -185, 457, -486, 200],
+  ![-1070, 3483, -3815, 1466, 0],
+  ![13, -23, 12, 0, 0],
+  ![320, -1401, 2334, -1767, 522],
+  ![800, -3948, 7172, -5801, 1806],
+  ![60, -282, 488, -379, 114],
+  ![100, -1518, 4036, -3985, 1422],
+  ![-11, 30, 0, 0, 0],
+  ![-10, 15, 18, 0, 0],
+  ![-110, -81, 1016, -1204, 360],
+  ![23, -49, 18, 0, 0]
+]
+
+def compactFactorBlock4 : Array CellQuartic := #[
+  ![250, -1060, 1639, -1026, 180],
+  ![560, -3430, 7433, -6939, 2358],
+  ![-13, 83, -153, 90, 0],
+  ![59, -132, 72, 0, 0],
+  ![-890, 2325, -1113, -1167, 846],
+  ![-445, 1865, -2589, 1170, 0],
+  ![125, -260, 72, 0, 0],
+  ![-145, 126, 0, 0, 0],
+  ![118, -151, 51, 0, 0],
+  ![-5, 17, 0, 0, 0],
+  ![30, -64, 51, 0, 0],
+  ![190, -388, 173, 0, 0],
+  ![-45, 58, 0, 0, 0],
+  ![90, -176, 39, 0, 0],
+  ![35, -54, 6, 0, 0],
+  ![105, -262, 118, 0, 0],
+  ![-118, 601, -826, 330, 0],
+  ![-590, 1547, -842, -282, 180],
+  ![-5, 3, 0, 0, 0],
+  ![8, -18, 7, 6, 0],
+  ![75, -185, 162, 0, 0],
+  ![-575, 1195, -709, 18, 0],
+  ![-575, 2695, -4119, 2070, 0],
+  ![10, -41, 19, 0, 0],
+  ![70, -220, 119, 0, 0],
+  ![270, -700, 309, 0, 0],
+  ![-50, 20, 29, 0, 0],
+  ![125, -240, 52, 0, 0],
+  ![125, -340, 152, 0, 0],
+  ![120, -684, 1276, -993, 268],
+  ![-340, 1418, -1168, -209, 338],
+  ![30, -91, 48, 0, 0]
+]
+
+def compactFactorBlock5 : Array CellQuartic := #[
+  ![-110, 222, -157, 18, 0],
+  ![20, -119, 82, 0, 0],
+  ![30, -306, 691, -615, 178],
+  ![-170, 654, -623, 178, 0],
+  ![590, -4033, 8536, -6510, 1404],
+  ![361, -788, 360, 0, 0],
+  ![-265, 928, -990, 300, 0],
+  ![490, -2773, 5508, -4542, 1260],
+  ![-395, 1549, -1767, 630, 0],
+  ![-295, 824, -722, 180, 0],
+  ![560, -2252, 3197, -1653, 90],
+  ![5, 2, 0, 0, 0],
+  ![40, -89, 62, 0, 0],
+  ![-35, 86, -79, 18, 0],
+  ![20, -122, 216, -187, 66],
+  ![-5, 8, -9, 10, 0],
+  ![-180, 498, -425, 118, 0],
+  ![5, -9, 2, 0, 0],
+  ![-5, 18, 6, 0, 0],
+  ![50, -265, 546, -444, 108],
+  ![-8, 34, -43, 19, 0],
+  ![-40, 106, -93, 37, 0],
+  ![26, -43, 27, 0, 0],
+  ![38, -63, 34, 0, 0],
+  ![-20, 112, -131, 64, 0],
+  ![4, -7, 1, 0, 0],
+  ![140, -1318, 3936, -4181, 1410],
+  ![-140, 493, -426, -4, 80],
+  ![-130, 431, -172, -328, 210],
+  ![15, -41, 30, 0, 0],
+  ![250, -1015, 1673, -1183, 304],
+  ![-125, 315, -269, 72, 0]
+]
+
+def compactFactorBlock6 : Array CellQuartic := #[
+  ![-50, 105, 64, -252, 120],
+  ![-50, 35, 311, -538, 220],
+  ![-3, 4, 0, 0, 0],
+  ![-35, 30, 4, 0, 0],
+  ![31, -66, 28, 0, 0],
+  ![-20, 74, -57, -1, 8],
+  ![-10, 47, -73, 32, 0],
+  ![1, -6, 4, 0, 0],
+  ![-25, 145, -193, 70, 0],
+  ![5, -56, 56, 0, 0],
+  ![-25, 145, -223, 106, 0],
+  ![50, -525, 1388, -1236, 336],
+  ![25, -90, 22, 36, 0],
+  ![-125, 790, -1028, 376, 0],
+  ![-50, 265, -581, 358, 0],
+  ![150, -1155, 2570, -2106, 548],
+  ![-125, 945, -1829, 990, 0],
+  ![25, -110, 76, 0, 0],
+  ![25, -315, 757, -492, 36],
+  ![4, 1, 0, 0, 0],
+  ![-34, 7, 0, 0, 0],
+  ![-14, 17, 0, 0, 0],
+  ![55, -152, 96, 20, 0],
+  ![-25, 14, 0, 0, 0],
+  ![-4, 7, 0, 0, 0],
+  ![90, -289, 341, -204, 46],
+  ![110, -881, 2102, -1952, 640],
+  ![-50, 175, -178, -4, 44],
+  ![-165, 634, -484, 72, 0],
+  ![110, -236, 119, 30, 0],
+  ![-215, 644, -692, 244, 0],
+  ![290, -919, 570, 0, 0]
+]
+
+def compactFactorBlock7 : Array CellQuartic := #[
+  ![190, -509, 270, 0, 0],
+  ![-45, 37, 0, 0, 0],
+  ![-43, 24, 0, 0, 0],
+  ![160, -730, 1134, -769, 192],
+  ![40, -104, 51, 0, 0],
+  ![580, -2566, 4500, -3493, 966],
+  ![-860, 2658, -2352, 299, 234],
+  ![-15, -28, 27, 0, 0],
+  ![860, -2906, 4060, -2787, 762],
+  ![-2, -2, -13, 12, 0],
+  ![78, -176, 81, 0, 0],
+  ![230, -464, 201, 0, 0],
+  ![166, -512, 267, 0, 0],
+  ![-250, 685, -93, -761, 400],
+  ![-200, 440, 337, -1081, 480],
+  ![-25, 85, -73, 16, 0],
+  ![-100, 580, -675, 151, 64],
+  ![20, -136, 251, -187, 48],
+  ![10, -33, 19, 0, 0],
+  ![-15, 52, -54, 16, 0],
+  ![-25, 15, 8, 0, 0],
+  ![-20, 58, -64, 31, 0],
+  ![18, -39, 26, 0, 0],
+  ![48, -98, 59, 0, 0],
+  ![-20, 132, -201, 114, 0],
+  ![5, -14, 7, 0, 0],
+  ![-28, -4, 29, 0, 0],
+  ![-18, 11, 0, 0, 0],
+  ![40, -94, 43, 0, 0],
+  ![-4, 3, 0, 0, 0],
+  ![-5, 4, 0, 0, 0],
+  ![-60, 208, -229, 76, 0]
+]
+
+def compactFactorBlock8 : Array CellQuartic := #[
+  ![160, -742, 1338, -1087, 318],
+  ![-29, 16, 0, 0, 0],
+  ![-170, 866, -1197, 462, 0],
+  ![-860, 2242, -1348, -329, 306],
+  ![-20, -342, 1236, -1373, 474],
+  ![-910, 3396, -3027, 714, 0],
+  ![-115, 394, -363, 90, 0],
+  ![-630, 2208, -2099, 570, 0],
+  ![-150, 840, -675, 82, 0],
+  ![-580, 1728, -1419, 330, 0],
+  ![-580, 1768, -1403, 274, 0],
+  ![80, -442, 844, -725, 246],
+  ![-1036, 2860, -2811, 978, 0],
+  ![-80, 186, -116, -35, 42],
+  ![560, -2646, 4772, -3919, 1266],
+  ![120, -217, 118, 0, 0],
+  ![-32, 35, 0, 0, 0],
+  ![-320, 950, -973, 358, 0],
+  ![290, -503, 258, 0, 0],
+  ![-40, 99, -44, -72, 60],
+  ![42, -83, 50, 0, 0],
+  ![-30, 33, 10, 0, 0],
+  ![-70, 297, -232, 36, 0],
+  ![-60, 171, -178, 61, 0],
+  ![78, -136, 41, 0, 0],
+  ![78, -248, 153, 0, 0],
+  ![-100, 244, -241, 70, 0],
+  ![-10, -835, 2072, -1471, 282],
+  ![26, -45, 14, 0, 0],
+  ![-170, 457, -398, 81, 26],
+  ![-380, 1432, -1169, 214, 0],
+  ![100, -184, 19, 38, 0]
+]
+
+def compactFactorBlock9 : Array CellQuartic := #[
+  ![260, -252, -547, 450, 0],
+  ![-80, 298, -287, 70, 0],
+  ![-80, 198, -173, 54, 0],
+  ![50, -205, 396, -316, 88],
+  ![50, -365, 636, -356, 48],
+  ![-80, 254, -227, 63, 0],
+  ![8, -17, 5, 0, 0],
+  ![2, 21, 0, 0, 0],
+  ![8, -22, 11, 1, 0],
+  ![-37, 19, 0, 0, 0],
+  ![-435, 964, -744, 192, 0],
+  ![26, -45, 26, 0, 0],
+  ![-250, 695, -163, -661, 360],
+  ![-100, 90, 707, -1191, 480],
+  ![-250, 485, 227, -817, 336],
+  ![-125, 405, -419, 120, 0],
+  ![10, -51, 100, -84, 24],
+  ![200, -740, 1043, -623, 144],
+  ![5, -12, 8, 0, 0],
+  ![5, -15, 11, 0, 0],
+  ![-110, 341, -282, 60, 0],
+  ![5, -15, 6, 0, 0],
+  ![10, -11, 2, 0, 0],
+  ![154, -320, 141, 0, 0],
+  ![-150, 446, -459, 150, 0],
+  ![1500, -5826, 8596, -5863, 1530],
+  ![340, -1450, 2388, -1723, 444],
+  ![30, -43, 26, 0, 0],
+  ![-140, 404, -275, 34, 0],
+  ![-100, 280, -177, 2, 0],
+  ![-150, 462, -399, 100, 0],
+  ![22, -46, 19, 0, 0]
+]
+
+def compactFactorBlock10 : Array CellQuartic := #[
+  ![10, -26, 17, 0, 0],
+  ![-100, 20, -121, 126, 0],
+  ![-100, 480, -477, 102, 0],
+  ![300, -620, 339, 6, 0],
+  ![170, -397, 246, 0, 0],
+  ![-100, 180, -117, 42, 0],
+  ![10, -41, 30, 0, 0],
+  ![-150, 354, -225, 34, 0],
+  ![-150, 454, -475, 184, 0],
+  ![-70, 194, -125, 14, 0],
+  ![175, -155, -161, 112, 0],
+  ![-175, 555, -529, 120, 0],
+  ![300, -1474, 2684, -2105, 582],
+  ![-150, 434, -437, 140, 0],
+  ![430, -686, 137, 98, 0],
+  ![-15, -37, 36, 0, 0],
+  ![600, -2038, 2554, -1537, 396],
+  ![380, -1382, 1952, -1175, 236],
+  ![230, -456, 193, 0, 0],
+  ![340, -2142, 4692, -4255, 1326],
+  ![-810, 1592, -1055, 242, 0],
+  ![820, -3914, 7486, -5969, 1566],
+  ![-180, 388, -93, -146, 60],
+  ![500, -2434, 3302, -1495, 114],
+  ![-1540, 3506, -1546, -961, 606],
+  ![160, -596, 724, -311, 24],
+  ![-200, -908, 3778, -3449, 870],
+  ![-820, 2954, -2974, 689, 162],
+  ![50, -557, 1180, -824, 164],
+  ![670, -2207, 2662, -1244, 132],
+  ![-180, 676, -581, 118, 0],
+  ![310, -1931, 3376, -2069, 354]
+]
+
+def compactFactorBlock11 : Array CellQuartic := #[
+  ![-5, 8, 0, 0, 0],
+  ![-110, 369, -408, 140, 0],
+  ![-30, 111, -132, 52, 0],
+  ![-140, 288, -33, -146, 55],
+  ![20, -84, 126, -79, 16],
+  ![-20, 59, -57, 20, 0],
+  ![180, -488, 403, -144, 20],
+  ![-680, 1084, 850, -1727, 582],
+  ![-14, -25, 21, 0, 0],
+  ![2, -11, 6, 0, 0],
+  ![-170, 447, -234, -64, 48],
+  ![-340, 764, -185, -398, 186],
+  ![-20, 22, -25, 12, 0],
+  ![-10, -3, 6, 0, 0],
+  ![-340, 272, -47, 6, 0],
+  ![-680, 2044, -1038, -607, 390],
+  ![340, -612, 13, 150, 0],
+  ![-12, 29, -19, 5, 0],
+  ![40, -150, 199, -111, 20],
+  ![340, -1598, 2254, -1343, 294],
+  ![-20, 204, -305, 114, 0],
+  ![340, -476, 81, 54, 0],
+  ![12, -32, 15, 0, 0],
+  ![4, -8, 2, 1, 0],
+  ![10, 79, -218, 90, 0],
+  ![3, -22, 14, 0, 0],
+  ![-8, 37, -37, 9, 0],
+  ![-8, 28, -24, 5, 0],
+  ![6, -33, 37, 0, 0],
+  ![2, -2, 1, 0, 0],
+  ![-70, 282, -309, 90, 0],
+  ![-750, 1650, -1421, 458, 0]
+]
+
+def compactFactorBlock12 : Array CellQuartic := #[
+  ![820, -2694, 3156, -1899, 556],
+  ![430, -322, -275, 178, 0],
+  ![-300, 608, -492, 159, 0],
+  ![275, -300, -66, 92, 0],
+  ![340, -1298, 1704, -943, 174],
+  ![-20, -586, 2124, -2271, 694],
+  ![-23, 29, 0, 0, 0],
+  ![20, -49, 22, 0, 0],
+  ![10, 658, -1125, 398, 0],
+  ![120, -624, 1184, -947, 258],
+  ![65, -198, 120, 2, 0],
+  ![65, -102, -18, 44, 0],
+  ![-10, 52, -72, 31, 0],
+  ![35, -22, -35, 28, 0],
+  ![-10, -29, 28, 0, 0],
+  ![-10, -73, 66, 0, 0],
+  ![-13, 24, 0, 0, 0],
+  ![25, 10, -108, 66, 0],
+  ![168, -286, 147, 0, 0],
+  ![2, -19, 18, 0, 0],
+  ![100, -2190, 6042, -6195, 2262],
+  ![-20, 64, -91, 45, 0],
+  ![270, -469, 246, 0, 0],
+  ![620, -2124, 2495, -1188, 168],
+  ![60, -36, -101, 90, 0],
+  ![-40, 68, -35, 3, 0],
+  ![-300, 660, -671, 246, 0],
+  ![-20, -72, 93, 0, 0],
+  ![70, -141, 84, 0, 0],
+  ![-10, 47, -57, 21, 0],
+  ![180, -248, -55, 162, 0],
+  ![5, 7, 0, 0, 0]
+]
+
+def compactFactorBlock13 : Array CellQuartic := #[
+  ![10, 44, -131, 90, 0],
+  ![100, -100, -31, 66, 0],
+  ![-380, 1148, -1383, 642, 0],
+  ![20, 3, 0, 0, 0],
+  ![20, -2, -67, 60, 0],
+  ![210, -1121, 2678, -2824, 960],
+  ![-180, 628, -565, 134, 12],
+  ![-210, 65, 1306, -1964, 900],
+  ![-180, 608, -663, 224, 40],
+  ![100, -858, 1354, -577, 150],
+  ![-260, 660, -665, 302, 0],
+  ![-120, 374, -407, 130, 0],
+  ![260, -432, 167, 94, 0],
+  ![-260, 1272, -1991, 890, 0],
+  ![-50, 205, -236, 28, 40],
+  ![20, -24, -32, 45, 0],
+  ![-4, 16, -18, 5, 0],
+  ![-250, 490, -7, -286, 50],
+  ![40, -286, 625, -506, 115],
+  ![150, -630, 893, -446, 20],
+  ![-8, 11, 0, 0, 0],
+  ![40, -106, 63, 10, 0],
+  ![50, -78, 31, 0, 0],
+  ![170, -598, 737, -442, 150],
+  ![210, -538, 317, -2, 25],
+  ![85, 153, -525, 262, 0],
+  ![-75, 5, 414, -448, 100],
+  ![-680, 2244, -2453, 887, 54],
+  ![85, 255, -491, 122, 0],
+  ![175, -775, 1213, -698, 64],
+  ![25, -125, 78, 0, 0],
+  ![-550, 575, 1582, -2436, 872]
+]
+
+def compactFactorBlock14 : Array CellQuartic := #[
+  ![275, -500, 84, 184, 0],
+  ![75, -245, 346, -248, 76],
+  ![425, -410, -284, 296, 0],
+  ![130, -819, 1685, -1269, 222],
+  ![170, -833, 1400, -868, 104],
+  ![130, -1669, 4035, -3323, 818],
+  ![-170, -149, 1791, -2331, 834],
+  ![290, -710, 427, -34, 25],
+  ![55, -122, 60, 0, 0],
+  ![20, 37, -164, 100, 0],
+  ![40, -352, 830, -692, 155],
+  ![210, -338, -123, 198, 65],
+  ![250, -590, 297, 36, 10],
+  ![210, -818, 1157, -762, 225],
+  ![175, 130, -546, 232, 0],
+  ![-250, -95, 1681, -1677, 312],
+  ![125, 105, -589, 352, 0],
+  ![50, 125, -562, 384, 16],
+  ![25, 115, -413, 228, 56],
+  ![-400, 30, 2267, -2507, 576],
+  ![-250, 215, 1223, -1857, 640],
+  ![-100, 360, -199, -425, 384],
+  ![50, -75, -67, 112, 0],
+  ![-250, -85, 1643, -1641, 304],
+  ![250, 295, -1361, 453, 392],
+  ![-50, 45, 516, -852, 328],
+  ![-550, 185, 3149, -4263, 1456],
+  ![-50, 85, 34, -240, 176],
+  ![-400, 300, 1651, -2317, 760],
+  ![-5, -1, 8, 0, 0],
+  ![-550, -125, 3607, -4083, 1128],
+  ![25, -5, -87, 64, 0]
+]
+
+def compactFactorBlock15 : Array CellQuartic := #[
+  ![-250, 45, 1544, -2024, 672],
+  ![-550, 175, 3187, -4299, 1464],
+  ![100, -80, 325, -699, 344],
+  ![88, -244, 155, 0, 0],
+  ![-150, 95, 1352, -2376, 1040],
+  ![26, -77, 46, 0, 0],
+  ![-16, 7, 0, 0, 0],
+  ![-9, 8, 0, 0, 0],
+  ![-22, 64, -63, 22, 0],
+  ![10, -23, 11, 0, 0],
+  ![-155, 74, 164, 0, 0],
+  ![-550, 115, 2695, -2967, 696],
+  ![50, 215, -519, 35, 216],
+  ![35, -86, 38, 0, 0],
+  ![23, -57, 24, 0, 0],
+  ![-240, 440, 316, -999, 498],
+  ![-29, 42, 0, 0, 0],
+  ![340, -2118, 4508, -3977, 1230],
+  ![215, -504, 282, 0, 0],
+  ![13, -30, 18, 0, 0],
+  ![-100, 480, -535, -131, 306],
+  ![-20, 86, -93, -19, 50],
+  ![-10, 13, -5, 6, 0],
+  ![200, -1250, 2579, -2239, 746],
+  ![-35, 26, 0, 0, 0],
+  ![-35, 48, 0, 0, 0],
+  ![-100, 635, -1029, 470, 0],
+  ![-100, -30, 755, -1031, 426],
+  ![-10, 7, 7, 0, 0],
+  ![115, -190, 44, 0, 0],
+  ![35, -110, 76, 0, 0],
+  ![15, -19, 8, 0, 0]
+]
+
+def compactFactorBlock16 : Array CellQuartic := #[
+  ![-125, 435, -509, 206, 0],
+  ![-125, 345, -299, 98, 0],
+  ![75, -130, 36, 0, 0],
+  ![-25, 30, 4, 0, 0],
+  ![50, 275, -627, 35, 264],
+  ![-100, 120, 203, -455, 240],
+  ![50, -45, 494, -914, 408],
+  ![250, -785, 1103, -1003, 442],
+  ![-45, 76, 0, 0, 0],
+  ![250, -1235, 2333, -1999, 658],
+  ![250, -935, 1433, -1159, 418],
+  ![-190, 312, -147, 6, 0],
+  ![-390, 1268, -1255, 338, 0],
+  ![-190, 608, -595, 158, 0],
+  ![-300, 540, -491, 186, 0],
+  ![-55, 18, 0, 0, 0],
+  ![250, -985, 1583, -1329, 510],
+  ![45, -54, -17, 17, 0],
+  ![170, -319, 126, 0, 0],
+  ![125, 150, -520, 232, 0],
+  ![25, -160, -28, 168, 0],
+  ![125, 90, -382, 160, 0],
+  ![-5, 4, 4, 0, 0],
+  ![100, 230, -133, -879, 672],
+  ![340, -2258, 5576, -5391, 1710],
+  ![-20, -686, 2504, -2691, 834],
+  ![10, 32, -87, 46, 0],
+  ![2, -3, 2, 0, 0],
+  ![-30, 104, -139, 62, 0],
+  ![-10, 32, -45, 22, 0],
+  ![30, -131, 256, -225, 73],
+  ![-90, 153, 200, -437, 165]
+]
+
+def compactFactorBlock17 : Array CellQuartic := #[
+  ![110, 38, -375, 178, 0],
+  ![15, -28, 9, 0, 0],
+  ![50, -195, 366, -408, 200],
+  ![350, -1675, 3261, -3103, 1218],
+  ![250, -735, 1033, -1039, 498],
+  ![-70, 60, 41, 0, 0],
+  ![-5, 7, 0, 0, 0],
+  ![-40, 61, 0, 0, 0],
+  ![26, -52, 21, 0, 0],
+  ![-30, -24, 77, 0, 0],
+  ![-30, -16, 69, 0, 0],
+  ![130, -340, 191, 0, 0],
+  ![-45, 32, 0, 0, 0],
+  ![-18, 7, 0, 0, 0],
+  ![45, -119, 57, 0, 0],
+  ![70, -115, 36, 0, 0],
+  ![221, -371, 123, 0, 0],
+  ![97, -162, 53, 0, 0],
+  ![-170, 494, -425, 94, 0],
+  ![-1010, 2822, -2469, 654, 0],
+  ![-10, 70, -79, 10, 0],
+  ![-60, 262, -364, 161, 2],
+  ![-125, 310, -231, 49, 0],
+  ![-11, 15, 0, 0, 0],
+  ![50, -122, 75, 0, 0],
+  ![-130, 1008, -1339, 448, 0],
+  ![10, -16, 7, 0, 0],
+  ![-17, 9, 0, 0, 0],
+  ![200, -218, 29, 44, 0],
+  ![-360, 670, -443, 100, 0],
+  ![-25, 32, 0, 0, 0],
+  ![-45, 127, -105, 22, 0]
+]
+
+def compactFactorBlock18 : Array CellQuartic := #[
+  ![-520, 1494, -1339, 352, 0],
+  ![1, 1, 0, 0, 0],
+  ![-10, 32, -31, 8, 0],
+  ![-200, 740, -563, -241, 240],
+  ![125, -205, 29, 32, 0],
+  ![150, -216, 13, 0, 0],
+  ![36, -108, 61, 0, 0],
+  ![-250, 995, -1063, 179, 120],
+  ![250, -995, 1543, -1043, 264],
+  ![-250, 985, -993, 79, 160],
+  ![-100, 390, -193, -351, 240],
+  ![-5, -30, 28, 0, 0],
+  ![-40, 754, -1129, 404, 0],
+  ![40, 46, -119, 44, 0],
+  ![-430, 1240, -1129, 308, 0],
+  ![20, -51, 20, 0, 0],
+  ![168, -386, 247, 0, 0],
+  ![740, -2622, 3346, -1727, 250],
+  ![-20, 74, -101, 45, 0],
+  ![-860, 2664, -2821, 1002, 0],
+  ![460, -1892, 2787, -1726, 350],
+  ![60, -76, -61, 90, 0],
+  ![-40, 93, -70, 13, 0],
+  ![-300, 820, -751, 166, 0],
+  ![-20, -52, 73, 0, 0],
+  ![600, -3676, 7178, -5781, 1614],
+  ![-80, 284, -345, 149, 0],
+  ![-2, -9, 10, 0, 0],
+  ![16, -33, 20, 0, 0],
+  ![19, -38, 15, 0, 0],
+  ![1, -3, 3, 0, 0],
+  ![-5, 12, 0, 0, 0]
+]
+
+def compactFactorBlock19 : Array CellQuartic := #[
+  ![1, -1, 1, 0, 0],
+  ![-65, 16, 16, 0, 0],
+  ![-74, 43, 0, 0, 0],
+  ![-740, 2702, -3218, 1227, 42],
+  ![-120, 412, 22, -863, 562],
+  ![-60, 216, -301, 158, 0],
+  ![600, -3596, 7306, -6281, 1906]
+]
+
+def compactFactorData : CellFactorTable := #[
+  compactFactorBlock0,
+  compactFactorBlock1,
+  compactFactorBlock2,
+  compactFactorBlock3,
+  compactFactorBlock4,
+  compactFactorBlock5,
+  compactFactorBlock6,
+  compactFactorBlock7,
+  compactFactorBlock8,
+  compactFactorBlock9,
+  compactFactorBlock10,
+  compactFactorBlock11,
+  compactFactorBlock12,
+  compactFactorBlock13,
+  compactFactorBlock14,
+  compactFactorBlock15,
+  compactFactorBlock16,
+  compactFactorBlock17,
+  compactFactorBlock18,
+  compactFactorBlock19
+]
+
+def compactFacetData : Array CellFacet := #[
+  ⟨0, 6, ![⟨{0}, {2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨3, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨4, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨5, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨4, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨480, [⟨6, true⟩, ⟨1, true⟩], [2]⟩⟩, ⟨{2}, {3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨8, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨9, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨120, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨10, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨60, [⟨1, true⟩, ⟨2, false⟩, ⟨11, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨1920, [], [1, 2]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨60, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨12, true⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨14, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨192, [⟨1, true⟩, ⟨15, true⟩], [2]⟩⟩, ⟨{2}, {0}, ⟨4, [⟨16, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨17, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨18, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨21, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨60, [⟨1, true⟩, ⟨2, false⟩, ⟨24, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨26, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨10, [⟨27, true⟩], []⟩⟩]⟩,
+  ⟨7, 18, ![⟨{0}, {2}, ⟨4, [⟨13, true⟩, ⟨29, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨640, [⟨1, true⟩, ⟨2, false⟩, ⟨30, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨4, [⟨6, true⟩, ⟨31, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨40, [⟨6, true⟩, ⟨13, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨8, [⟨19, false⟩, ⟨33, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨20, [⟨34, false⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨20, [⟨35, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨200, [⟨6, true⟩, ⟨13, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨40, [⟨6, true⟩, ⟨36, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨160, [⟨1, true⟩, ⟨2, false⟩, ⟨34, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨37, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨38, false⟩], []⟩⟩]⟩,
+  ⟨18, 19, ![⟨{0}, {0}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨39, false⟩], []⟩⟩, ⟨{0}, {1}, ⟨5, [⟨13, true⟩, ⟨40, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨1, [⟨41, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨42, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨1, [⟨6, true⟩, ⟨43, true⟩, ⟨44, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨45, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨6, true⟩, ⟨46, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨48, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨68, [⟨1, true⟩, ⟨2, false⟩, ⟨49, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨50, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨51, false⟩], []⟩⟩]⟩,
+  ⟨19, 16, ![⟨{0}, {0}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨53, false⟩], []⟩⟩, ⟨{0}, {1}, ⟨2, [⟨54, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨55, false⟩], [6]⟩⟩, ⟨{2}, {1}, ⟨2, [⟨56, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨6, true⟩, ⟨57, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨58, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨6, true⟩, ⟨59, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨13, true⟩, ⟨60, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨62, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨63, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨2, [⟨64, false⟩], []⟩⟩]⟩,
+  ⟨16, 22, ![⟨{0}, {0}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨65, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨144, [], [1, 2]⟩⟩, ⟨{2}, {1}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨67, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨68, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨69, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨70, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨18, [⟨1, true⟩, ⟨2, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨71, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨72, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨64, [], [1, 2]⟩⟩, ⟨{0, 3}, {0, 3}, ⟨20, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨73, true⟩], []⟩⟩]⟩,
+  ⟨22, 15, ![⟨{0}, {0}, ⟨8, [⟨1, true⟩, ⟨13, true⟩, ⟨74, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨1, true⟩, ⟨75, true⟩], [6]⟩⟩, ⟨{1}, {3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨20, [⟨77, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨78, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, true⟩, ⟨79, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨80, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨2, [⟨13, true⟩, ⟨81, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨13, true⟩, ⟨82, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨83, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨20, [⟨6, true⟩, ⟨84, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨6, [⟨1, true⟩, ⟨2, false⟩, ⟨85, false⟩], []⟩⟩]⟩,
+  ⟨15, 21, ![⟨{0}, {0}, ⟨1, [⟨13, true⟩, ⟨86, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0}, {1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨87, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨88, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨90, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨91, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨13, true⟩, ⟨92, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨6, true⟩, ⟨93, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨10, [⟨6, true⟩, ⟨15, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨94, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨95, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨100, [⟨1, true⟩, ⟨2, false⟩, ⟨96, false⟩], []⟩⟩]⟩,
+  ⟨21, 0, ![⟨{1}, {0}, ⟨160, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨98, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨99, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨1, [⟨13, true⟩, ⟨100, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, true⟩, ⟨104, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨13, true⟩, ⟨105, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨4, [⟨13, true⟩, ⟨107, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨108, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨109, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨21, 0, ![⟨{0}, {1}, ⟨1, [⟨13, true⟩, ⟨104, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨13, true⟩, ⟨110, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨99, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨1, [⟨13, true⟩, ⟨100, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, true⟩, ⟨111, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨5, [⟨112, true⟩, ⟨13, true⟩], [13]⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨108, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨15, [⟨6, true⟩, ⟨113, true⟩], [13]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {3}, ⟨8, [⟨19, false⟩, ⟨33, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨192, [⟨1, true⟩, ⟨15, true⟩], [2]⟩⟩, ⟨{1}, {2}, ⟨4, [⟨21, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨114, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨17, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨115, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨116, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨8, [⟨117, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨2, false⟩, ⟨118, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨10, [⟨27, true⟩], []⟩⟩]⟩,
+  ⟨18, 19, ![⟨{0}, {0}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨39, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨136, [⟨1, true⟩, ⟨2, false⟩, ⟨119, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨42, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨4, [⟨120, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨121, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨19, false⟩, ⟨52, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨17, [⟨122, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨68, [⟨1, true⟩, ⟨2, false⟩, ⟨49, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨50, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨123, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨5, [⟨13, true⟩, ⟨40, false⟩], []⟩⟩]⟩,
+  ⟨6, 18, ![⟨{0}, {2}, ⟨6, [⟨13, true⟩, ⟨124, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨64, [⟨1, true⟩, ⟨2, false⟩, ⟨125, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨6, [⟨126, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨127, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨128, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨8, [⟨19, false⟩, ⟨33, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨10, [⟨127, false⟩], [13]⟩⟩, ⟨{3}, {1}, ⟨2, [⟨129, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨20, [⟨6, true⟩, ⟨130, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨131, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨132, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨133, true⟩], []⟩⟩]⟩,
+  ⟨22, 15, ![⟨{0}, {0}, ⟨8, [⟨1, true⟩, ⟨13, true⟩, ⟨74, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨1, true⟩, ⟨75, true⟩], [6]⟩⟩, ⟨{1}, {3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨40, [⟨1, true⟩, ⟨13, true⟩, ⟨74, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨97, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, true⟩, ⟨79, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨80, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨2, [⟨13, true⟩, ⟨81, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨20, [⟨6, true⟩, ⟨84, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨136, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨83, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨6, [⟨1, true⟩, ⟨2, false⟩, ⟨85, false⟩], []⟩⟩]⟩,
+  ⟨0, 6, ![⟨{0}, {2}, ⟨96, [], [1, 2]⟩⟩, ⟨{0}, {3}, ⟨48, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨137, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨48, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨137, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨138, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨139, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨48, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨140, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨141, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨5, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨142, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨1920, [], [1, 2]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨143, false⟩], []⟩⟩]⟩,
+  ⟨6, 18, ![⟨{0}, {2}, ⟨2, [⟨15, true⟩, ⟨144, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨64, [⟨1, true⟩, ⟨2, false⟩, ⟨125, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨145, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨127, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨128, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨8, [⟨19, false⟩, ⟨33, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨10, [⟨146, true⟩, ⟨147, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨148, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 2}, ⟨20, [⟨6, true⟩, ⟨130, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨131, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨13, true⟩, ⟨149, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨150, true⟩], []⟩⟩]⟩,
+  ⟨0, 6, ![⟨{0}, {2}, ⟨48, [⟨1, true⟩, ⟨2, false⟩, ⟨151, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨48, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨137, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨152, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨153, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨1200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨154, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨4, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨155, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨1920, [], [1, 2]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨156, false⟩], []⟩⟩, ⟨∅, ∅, ⟨0, [], []⟩⟩]⟩,
+  ⟨15, 21, ![⟨{0}, {0}, ⟨4, [⟨157, false⟩], []⟩⟩, ⟨{0}, {1}, ⟨1, [⟨158, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨159, false⟩], [6]⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨6, true⟩, ⟨160, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨161, true⟩], [6]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨162, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨10, [⟨6, true⟩, ⟨15, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨1, [⟨6, true⟩, ⟨163, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨1, [⟨97, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨100, [⟨1, true⟩, ⟨2, false⟩, ⟨96, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨1, [⟨90, true⟩], []⟩⟩]⟩,
+  ⟨6, 18, ![⟨{1}, {1}, ⟨2, [⟨164, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨165, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨127, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨6, [⟨13, true⟩, ⟨166, true⟩], []⟩⟩, ⟨{2}, {3}, ⟨2, [⟨167, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨168, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨148, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨13, true⟩, ⟨124, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨2, [⟨13, true⟩, ⟨169, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨13, true⟩, ⟨149, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨170, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨2, [⟨15, true⟩, ⟨144, false⟩], []⟩⟩]⟩,
+  ⟨19, 13, ![⟨{0}, {0}, ⟨1, [⟨171, false⟩, ⟨13, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0}, {1}, ⟨1, [⟨172, false⟩], [13]⟩⟩, ⟨{1}, {1}, ⟨2, [⟨6, true⟩, ⟨173, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨1, [⟨174, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨175, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨13, true⟩, ⟨176, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨10, [⟨1, true⟩, ⟨13, true⟩, ⟨177, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨10, [⟨13, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨178, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨2, [⟨179, false⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0}, {1}, ⟨10, [⟨6, true⟩, ⟨180, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨6, true⟩, ⟨181, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨182, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨6, true⟩, ⟨184, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨10, [⟨185, false⟩], [6]⟩⟩, ⟨{0, 2}, {0, 1}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨73, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨6, true⟩, ⟨181, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨20, [⟨113, true⟩, ⟨6, true⟩], [6]⟩⟩]⟩,
+  ⟨15, 21, ![⟨{0}, {0}, ⟨1, [⟨186, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨159, false⟩], [6]⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨187, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨188, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨162, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨10, [⟨6, true⟩, ⟨15, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨1, [⟨6, true⟩, ⟨163, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨1, [⟨97, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨100, [⟨1, true⟩, ⟨2, false⟩, ⟨96, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨87, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨1, [⟨158, false⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{1}, {0}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨190, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨192, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨193, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨13, true⟩, ⟨194, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨195, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨196, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨10, [⟨197, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨10, [⟨13, true⟩, ⟨198, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨199, true⟩], []⟩⟩]⟩,
+  ⟨1, 6, ![⟨{0}, {3}, ⟨2, [⟨13, true⟩, ⟨200, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨201, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨2, [⟨6, true⟩, ⟨202, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨6, [⟨203, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨204, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨4, [⟨13, true⟩, ⟨205, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, true⟩, ⟨206, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨6, [⟨207, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨6, true⟩, ⟨208, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨209, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨192, [⟨1, true⟩, ⟨15, true⟩], [2]⟩⟩]⟩,
+  ⟨16, 22, ![⟨{0}, {0}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨65, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨67, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨68, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨70, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨18, [⟨1, true⟩, ⟨2, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨211, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨212, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨213, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨20, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨73, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨69, true⟩], []⟩⟩]⟩,
+  ⟨6, 12, ![⟨{1}, {1}, ⟨6, [⟨203, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨6, [⟨6, true⟩, ⟨214, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨3, [⟨13, true⟩, ⟨215, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨15, [⟨22, true⟩, ⟨216, true⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨12, [⟨217, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨15, [⟨13, true⟩, ⟨215, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨51, [⟨6, true⟩, ⟨15, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨6, [⟨218, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨6, [⟨192, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨6, [⟨219, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨36, [⟨19, false⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨12, 18, ![⟨{0}, {1}, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨13, true⟩, ⟨220, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨13, true⟩, ⟨221, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨10, [⟨13, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨171, false⟩, ⟨13, true⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, true⟩, ⟨222, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨223, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨224, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨146, true⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨225, true⟩], []⟩⟩]⟩,
+  ⟨22, 21, ![⟨{0}, {0}, ⟨4, [⟨227, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨228, false⟩], [6]⟩⟩, ⟨{2}, {1}, ⟨2, [⟨229, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨97, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨230, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨231, true⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨232, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨10, [⟨6, true⟩, ⟨233, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨235, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨236, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨231, true⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {2}, ⟨10, [⟨197, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨237, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨238, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨239, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨240, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨10, [⟨241, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨242, false⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨199, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨6, true⟩, ⟨242, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨237, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨238, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨243, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨244, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0}, {1}, ⟨10, [⟨6, true⟩, ⟨180, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨4, [⟨6, true⟩, ⟨245, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨4, [⟨6, true⟩, ⟨2, false⟩, ⟨246, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨247, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨6, true⟩, ⟨248, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨10, [⟨185, false⟩], [6]⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨245, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨73, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨20, [⟨113, true⟩, ⟨6, true⟩], [6]⟩⟩]⟩,
+  ⟨16, 22, ![⟨{0}, {0}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨65, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨65, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨249, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨70, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨18, [⟨1, true⟩, ⟨2, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨211, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨20, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨73, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨250, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨213, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨69, true⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨6, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨251, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨6, true⟩, ⟨180, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨252, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨253, true⟩, ⟨13, true⟩, ⟨254, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨6, true⟩, ⟨255, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨10, [⟨185, false⟩], [6]⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨245, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨73, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨20, [⟨113, true⟩, ⟨6, true⟩], [6]⟩⟩]⟩,
+  ⟨22, 21, ![⟨{0}, {0}, ⟨4, [⟨228, false⟩], [13]⟩⟩, ⟨{1}, {0}, ⟨4, [⟨256, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨13, true⟩, ⟨257, true⟩, ⟨44, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨13, true⟩, ⟨258, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨230, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨231, true⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨259, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨260, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨235, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨236, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨231, true⟩], []⟩⟩]⟩,
+  ⟨12, 18, ![⟨{0}, {1}, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨1, [⟨13, true⟩, ⟨261, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨6, [⟨13, true⟩, ⟨262, true⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨13, true⟩, ⟨263, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨171, false⟩, ⟨13, true⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, true⟩, ⟨264, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨224, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨1, [⟨13, true⟩, ⟨265, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨1, [⟨13, true⟩, ⟨266, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨223, true⟩], []⟩⟩]⟩,
+  ⟨18, 13, ![⟨{0}, {0}, ⟨2, [⟨267, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨2, false⟩, ⟨268, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨269, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨270, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨271, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨8, [⟨13, true⟩, ⟨272, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨13, true⟩, ⟨273, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨2, false⟩, ⟨13, true⟩, ⟨274, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨4, [⟨275, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨10, [⟨2, false⟩, ⟨13, true⟩, ⟨276, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨4, [⟨19, false⟩, ⟨47, true⟩], []⟩⟩]⟩,
+  ⟨12, 18, ![⟨{0}, {1}, ⟨5, [⟨277, true⟩], [13]⟩⟩, ⟨{1}, {1}, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨277, true⟩], [13]⟩⟩, ⟨{2}, {2}, ⟨1, [⟨13, true⟩, ⟨263, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨171, false⟩, ⟨13, true⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨8, [⟨13, true⟩, ⟨279, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨224, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨1, [⟨13, true⟩, ⟨265, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨1, [⟨13, true⟩, ⟨266, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨223, true⟩], []⟩⟩]⟩,
+  ⟨16, 22, ![⟨{0}, {0}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨65, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨65, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨70, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨18, [⟨1, true⟩, ⟨2, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨211, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨68, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨280, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨213, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨249, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨281, true⟩], []⟩⟩]⟩,
+  ⟨1, 12, ![⟨{0}, {1}, ⟨6, [⟨203, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨1, [⟨13, true⟩, ⟨282, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨283, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨5, [⟨284, false⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨6, [⟨285, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨13, true⟩, ⟨286, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨6, [⟨6, true⟩, ⟨287, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨288, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, true⟩, ⟨289, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨6, true⟩, ⟨290, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨6, [⟨291, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨6, [⟨292, true⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨6, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨251, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨50, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨293, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨253, true⟩, ⟨13, true⟩, ⟨254, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨6, true⟩, ⟨255, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨10, [⟨294, false⟩], [6]⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨295, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨10, [⟨6, true⟩, ⟨296, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨20, [⟨113, false⟩, ⟨6, true⟩], [6]⟩⟩]⟩,
+  ⟨21, 0, ![⟨{0}, {1}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨109, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨297, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨99, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨15, [⟨6, true⟩, ⟨113, false⟩], [13]⟩⟩, ⟨{2}, {1}, ⟨1, [⟨13, true⟩, ⟨100, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, true⟩, ⟨298, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, true⟩, ⟨111, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨5, [⟨112, true⟩, ⟨13, true⟩], [13]⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨108, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨5, [⟨6, true⟩, ⟨13, true⟩, ⟨299, false⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {2}, ⟨2, [⟨300, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨2, [⟨237, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨6, true⟩, ⟨242, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨238, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨301, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨302, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨303, true⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {1}, ⟨2, [⟨238, false⟩], []⟩⟩, ⟨{0}, {2}, ⟨10, [⟨304, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨305, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨10, [⟨6, true⟩, ⟨113, false⟩, ⟨306, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨6, true⟩, ⟨242, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨20, [⟨6, true⟩, ⟨307, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨302, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨303, true⟩], []⟩⟩]⟩,
+  ⟨12, 18, ![⟨{0}, {1}, ⟨5, [⟨277, true⟩], [13]⟩⟩, ⟨{1}, {1}, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨4, [⟨13, true⟩, ⟨308, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨50, [⟨1, true⟩, ⟨13, true⟩, ⟨309, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨171, false⟩, ⟨13, true⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨8, [⟨13, true⟩, ⟨279, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨10, [⟨310, false⟩], [13]⟩⟩, ⟨{0, 2}, {2, 3}, ⟨1, [⟨13, true⟩, ⟨266, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨223, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨224, true⟩], []⟩⟩]⟩,
+  ⟨22, 21, ![⟨{1}, {0}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨311, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨6, [⟨13, true⟩, ⟨312, true⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨13, true⟩, ⟨312, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨230, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨231, true⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨313, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨314, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨235, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨4, [⟨228, true⟩], [13]⟩⟩, ⟨{0, 3}, {0, 2}, ⟨4, [⟨227, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨231, true⟩], []⟩⟩]⟩,
+  ⟨12, 18, ![⟨{0}, {1}, ⟨5, [⟨277, true⟩], [13]⟩⟩, ⟨{1}, {1}, ⟨5, [⟨6, true⟩, ⟨13, true⟩, ⟨315, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨13, true⟩, ⟨316, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨50, [⟨1, true⟩, ⟨13, true⟩, ⟨309, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨171, false⟩, ⟨13, true⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨8, [⟨13, true⟩, ⟨279, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨13, true⟩, ⟨266, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨10, [⟨310, false⟩], [13]⟩⟩, ⟨{0, 3}, {1, 2}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩, ⟨225, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨13, true⟩, ⟨317, true⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨6, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨251, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨50, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨6, true⟩, ⟨318, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨253, true⟩, ⟨13, true⟩, ⟨254, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨6, true⟩, ⟨255, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨6, true⟩, ⟨2, false⟩, ⟨319, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨293, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨295, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨8, [⟨6, true⟩, ⟨1, true⟩, ⟨320, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨252, false⟩], []⟩⟩]⟩,
+  ⟨12, 18, ![⟨{0}, {1}, ⟨5, [⟨277, true⟩], [13]⟩⟩, ⟨{1}, {1}, ⟨1, [⟨13, true⟩, ⟨321, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨13, true⟩, ⟨322, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨2, [⟨13, true⟩, ⟨317, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨277, true⟩], [13]⟩⟩, ⟨{2}, {2}, ⟨50, [⟨1, true⟩, ⟨13, true⟩, ⟨309, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨1, [⟨13, true⟩, ⟨323, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨13, true⟩, ⟨324, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨6, true⟩, ⟨13, true⟩, ⟨224, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, true⟩, ⟨325, true⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨10, [⟨310, false⟩], [13]⟩⟩, ⟨{0, 3}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨13, true⟩, ⟨326, true⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨50, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨253, true⟩, ⟨13, true⟩, ⟨254, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨1, [⟨6, true⟩, ⟨255, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨6, true⟩, ⟨2, false⟩, ⟨319, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨6, true⟩, ⟨328, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨8, [⟨6, true⟩, ⟨1, true⟩, ⟨320, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨1, [⟨6, true⟩, ⟨329, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨1, [⟨6, true⟩, ⟨318, false⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {1}, ⟨2, [⟨238, false⟩], []⟩⟩, ⟨{0}, {2}, ⟨10, [⟨13, true⟩, ⟨194, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨305, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨10, [⟨6, true⟩, ⟨243, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨6, true⟩, ⟨242, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨20, [⟨6, true⟩, ⟨307, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, true⟩, ⟨330, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨331, true⟩], []⟩⟩]⟩,
+  ⟨16, 21, ![⟨{0}, {0}, ⟨1, [⟨332, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨13, true⟩, ⟨333, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨13, true⟩, ⟨334, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨335, true⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨2, [⟨336, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨337, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨338, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨1, [⟨339, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨1, [⟨6, true⟩, ⟨163, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨335, true⟩], []⟩⟩]⟩,
+  ⟨1, 12, ![⟨{0}, {1}, ⟨1, [⟨341, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨4, [⟨342, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨1, [⟨343, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨5, [⟨284, false⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨1, [⟨344, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨8, [⟨345, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨6, [⟨6, true⟩, ⟨287, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨1, [⟨346, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨6, true⟩, ⟨290, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨6, [⟨291, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨1, [⟨347, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨288, true⟩], []⟩⟩]⟩,
+  ⟨1, 12, ![⟨{0}, {1}, ⟨1, [⟨341, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨4, [⟨342, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨6, [⟨348, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨5, [⟨284, false⟩], [6]⟩⟩, ⟨{3}, {1}, ⟨2, [⟨349, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨3, [⟨13, true⟩, ⟨350, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨6, [⟨6, true⟩, ⟨287, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨1, [⟨346, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨6, true⟩, ⟨290, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨6, [⟨291, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨2, [⟨351, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨288, true⟩], []⟩⟩]⟩,
+  ⟨1, 20, ![⟨{0}, {1}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨352, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨342, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨4, [⟨6, true⟩, ⟨353, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨20, [⟨6, true⟩, ⟨354, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨4, [⟨13, true⟩, ⟨65, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {2, 3}, ⟨4, [⟨355, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨80, [⟨356, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨4, [⟨13, true⟩, ⟨308, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨40, [⟨6, true⟩, ⟨357, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨4, [⟨358, false⟩], []⟩⟩]⟩,
+  ⟨20, 12, ![⟨{0}, {1}, ⟨1, [⟨359, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨360, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨361, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨6, [⟨362, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨4, [⟨342, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨361, true⟩], [13]⟩⟩, ⟨{3}, {1}, ⟨4, [⟨363, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨6, [⟨6, true⟩, ⟨13, true⟩, ⟨365, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨1, [⟨13, true⟩, ⟨366, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨1, [⟨367, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨1, [⟨6, true⟩, ⟨368, true⟩], []⟩⟩]⟩,
+  ⟨1, 20, ![⟨{0}, {1}, ⟨200, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨352, false⟩], []⟩⟩, ⟨{0}, {2}, ⟨4, [⟨358, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨40, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨352, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨4, [⟨6, true⟩, ⟨353, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨20, [⟨6, true⟩, ⟨354, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨40, [⟨6, true⟩, ⟨369, true⟩], []⟩⟩, ⟨{0, 1}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨80, [⟨356, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨40, [⟨370, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨40, [⟨6, true⟩, ⟨357, true⟩], []⟩⟩]⟩,
+  ⟨20, 12, ![⟨{1}, {2}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨360, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨361, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨371, true⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨13, true⟩, ⟨372, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨361, true⟩], [13]⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, true⟩, ⟨373, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨359, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨6, [⟨6, true⟩, ⟨13, true⟩, ⟨365, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨374, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨32, [⟨1, true⟩, ⟨2, false⟩, ⟨22, true⟩, ⟨75, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨48, [⟨1, true⟩, ⟨2, false⟩, ⟨146, true⟩, ⟨13, true⟩], []⟩⟩]⟩,
+  ⟨1, 20, ![⟨{0}, {1}, ⟨120, [⟨6, true⟩, ⟨13, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0}, {2}, ⟨4, [⟨13, true⟩, ⟨65, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨120, [⟨6, true⟩, ⟨375, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨4, [⟨6, true⟩, ⟨376, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨40, [⟨6, true⟩, ⟨369, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨377, true⟩], []⟩⟩, ⟨{0, 1}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨40, [⟨13, true⟩, ⟨378, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨40, [⟨13, true⟩, ⟨379, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨40, [⟨6, true⟩, ⟨253, true⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨13, 16, ![⟨{0}, {0}, ⟨10, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨380, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨6, true⟩, ⟨253, true⟩, ⟨13, true⟩, ⟨254, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨15, [⟨13, true⟩], [6]⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨2, false⟩, ⟨319, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨6, true⟩, ⟨328, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨20, [⟨6, true⟩, ⟨13, true⟩, ⟨381, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨1, [⟨6, true⟩, ⟨382, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨1, [⟨6, true⟩, ⟨318, false⟩], []⟩⟩]⟩,
+  ⟨16, 21, ![⟨{0}, {0}, ⟨1, [⟨13, true⟩, ⟨383, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨336, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨13, true⟩, ⟨333, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨1, [⟨13, true⟩, ⟨334, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨335, true⟩], [13]⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨384, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨10, [⟨1, true⟩, ⟨2, false⟩, ⟨338, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨1, [⟨13, true⟩, ⟨385, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨1, [⟨6, true⟩, ⟨163, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨13, true⟩, ⟨386, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨335, true⟩], []⟩⟩]⟩,
+  ⟨0, 21, ![⟨{0}, {1}, ⟨1, [⟨13, false⟩, ⟨104, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨13, false⟩, ⟨110, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨99, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨1, [⟨13, false⟩, ⟨100, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, false⟩, ⟨101, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, false⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, false⟩, ⟨111, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨5, [⟨112, true⟩, ⟨13, false⟩], [13]⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨108, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨15, [⟨6, true⟩, ⟨113, false⟩], [13]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨21, 15, ![⟨{0}, {1}, ⟨2, [⟨188, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨388, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨1, [⟨389, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨97, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨13, false⟩, ⟨390, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨5, [⟨391, true⟩], [13]⟩⟩, ⟨{0, 2}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨13, false⟩, ⟨392, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨92, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨5, [⟨393, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨36, [⟨103, false⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨15, 14, ![⟨{0}, {1}, ⟨2, [⟨6, true⟩, ⟨394, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨20, [⟨6, true⟩, ⟨1, true⟩], [2]⟩⟩, ⟨{1}, {2}, ⟨2, [⟨6, true⟩, ⟨395, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨8, [⟨6, true⟩, ⟨396, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨397, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨6, true⟩, ⟨13, false⟩, ⟨398, true⟩], []⟩⟩, ⟨{0, 1}, {2, 3}, ⟨1, [⟨6, true⟩, ⟨13, false⟩, ⟨399, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨20, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨2, [⟨6, true⟩, ⟨401, false⟩], []⟩⟩]⟩,
+  ⟨14, 18, ![⟨{1}, {2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨402, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, true⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨404, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨4, [⟨13, false⟩, ⟨405, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨406, false⟩], [13]⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨407, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, false⟩, ⟨408, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨8, [⟨13, false⟩, ⟨409, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨13, false⟩, ⟨410, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨411, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨5, [⟨13, false⟩, ⟨408, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨32, [⟨1, true⟩, ⟨2, false⟩, ⟨412, false⟩], []⟩⟩]⟩,
+  ⟨18, 12, ![⟨{1}, {1}, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨13, false⟩, ⟨414, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨415, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨5, [⟨13, false⟩, ⟨416, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨1, [⟨277, true⟩], [13]⟩⟩, ⟨{3}, {0}, ⟨1, [⟨13, false⟩, ⟨417, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, false⟩, ⟨418, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨6, true⟩, ⟨13, false⟩, ⟨224, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨419, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨10, [⟨310, false⟩], [13]⟩⟩, ⟨{0, 3}, {0, 3}, ⟨6, [⟨277, true⟩], [13]⟩⟩, ⟨{0, 3}, {1, 2}, ⟨8, [⟨13, false⟩, ⟨420, false⟩], []⟩⟩]⟩,
+  ⟨12, 7, ![⟨{0}, {0}, ⟨2, [⟨421, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨4, [⟨422, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨423, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨4, [⟨424, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨1, [⟨425, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, false⟩, ⟨426, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, false⟩, ⟨427, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨1, [⟨13, false⟩, ⟨428, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨1, [⟨13, false⟩, ⟨429, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨6, [⟨430, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨6, [⟨19, false⟩, ⟨20, true⟩], []⟩⟩]⟩,
+  ⟨7, 10, ![⟨{0}, {2}, ⟨4, [⟨13, false⟩, ⟨431, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨20, [⟨13, false⟩, ⟨432, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨4, [⟨433, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨8, [⟨434, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨435, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨8, [⟨6, true⟩, ⟨436, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨113, false⟩, ⟨437, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨23, false⟩, ⟨438, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨381, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨4, [⟨439, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨4, [⟨440, true⟩], []⟩⟩]⟩,
+  ⟨10, 0, ![⟨{0}, {2}, ⟨2, [⟨13, false⟩, ⟨441, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨8, [⟨442, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨2, [⟨443, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, false⟩, ⟨387, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨444, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨8, [⟨445, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨446, true⟩], [13]⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨447, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨448, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨8, [⟨449, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨13, false⟩, ⟨450, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨446, true⟩], []⟩⟩]⟩,
+  ⟨10, 0, ![⟨{0}, {2}, ⟨2, [⟨13, false⟩, ⟨441, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨8, [⟨442, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨451, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨452, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨8, [⟨445, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨446, true⟩], [13]⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨453, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨443, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨448, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨8, [⟨449, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨454, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨446, true⟩], []⟩⟩]⟩,
+  ⟨7, 10, ![⟨{0}, {2}, ⟨4, [⟨13, false⟩, ⟨431, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨4, [⟨455, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨12, [⟨381, false⟩, ⟨456, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨8, [⟨442, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨435, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨8, [⟨6, true⟩, ⟨436, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨113, false⟩, ⟨437, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨23, false⟩, ⟨438, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨381, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨8, [⟨6, true⟩, ⟨457, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨4, [⟨433, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨4, [⟨440, true⟩], []⟩⟩]⟩,
+  ⟨7, 10, ![⟨{0}, {2}, ⟨4, [⟨13, false⟩, ⟨431, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨4, [⟨458, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨8, [⟨442, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨4, [⟨455, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨435, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨8, [⟨6, true⟩, ⟨436, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨4, [⟨459, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨4, [⟨23, false⟩, ⟨438, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨4, [⟨460, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨4, [⟨461, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨4, [⟨433, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨4, [⟨440, true⟩], []⟩⟩]⟩,
+  ⟨7, 0, ![⟨{0}, {3}, ⟨2, [⟨463, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨442, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, false⟩, ⟨464, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨465, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨8, [⟨466, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨467, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨468, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨469, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨470, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨471, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨472, false⟩], []⟩⟩]⟩,
+  ⟨7, 0, ![⟨{0}, {2}, ⟨2, [⟨474, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨463, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨475, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨24, [⟨2, false⟩, ⟨254, true⟩], [13]⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨476, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨10, [⟨477, true⟩], [13]⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨478, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨6, true⟩, ⟨479, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨4, [⟨480, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{0, 3}, {1, 3}, ⟨2, [⟨481, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨482, false⟩], []⟩⟩]⟩,
+  ⟨12, 7, ![⟨{1}, {1}, ⟨6, [⟨473, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨483, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨2, [⟨484, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨2, [⟨421, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨5, [⟨485, true⟩], [13]⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, false⟩, ⟨426, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, false⟩, ⟨427, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨1, [⟨13, false⟩, ⟨428, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨1, [⟨13, false⟩, ⟨429, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨6, [⟨430, true⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨6, [⟨19, false⟩, ⟨20, true⟩], []⟩⟩]⟩,
+  ⟨15, 14, ![⟨{0}, {1}, ⟨12, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨486, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨20, [⟨6, true⟩, ⟨1, true⟩], [2]⟩⟩, ⟨{2}, {1}, ⟨8, [⟨6, true⟩, ⟨396, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨397, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨10, [⟨6, true⟩, ⟨487, true⟩], [1]⟩⟩, ⟨{0, 1}, {2, 3}, ⟨5, [⟨6, true⟩, ⟨488, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨6, true⟩, ⟨395, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨20, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨4, [⟨489, true⟩], [6]⟩⟩]⟩,
+  ⟨7, 0, ![⟨{0}, {2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨490, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨463, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨478, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨475, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨491, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨476, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨10, [⟨477, true⟩], [13]⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨6, true⟩, ⟨479, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨492, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{0, 3}, {1, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨482, false⟩], []⟩⟩]⟩,
+  ⟨12, 6, ![⟨{1}, {1}, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨494, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨3, [⟨13, false⟩, ⟨215, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨3, [⟨495, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨6, [⟨6, true⟩, ⟨496, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨36, [⟨19, false⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨15, [⟨13, false⟩, ⟨215, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨3, [⟨497, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨498, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨499, false⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {0}, ⟨2, [⟨500, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨10, [⟨501, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨10, [⟨6, true⟩, ⟨502, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨2, [⟨503, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨504, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨505, true⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨506, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨507, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨10, [⟨113, false⟩, ⟨13, false⟩, ⟨508, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨10, [⟨27, false⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {0}, ⟨60, [⟨1, true⟩, ⟨2, false⟩, ⟨24, false⟩], []⟩⟩, ⟨{0}, {3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨509, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨510, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨511, false⟩, ⟨23, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨507, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨504, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, false⟩, ⟨512, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨513, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨506, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨514, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨515, true⟩], []⟩⟩]⟩,
+  ⟨7, 0, ![⟨{0}, {2}, ⟨2, [⟨516, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨2, [⟨6, true⟩, ⟨479, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨463, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨478, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨517, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨491, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨10, [⟨477, true⟩], [13]⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨492, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{0, 3}, {1, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨518, false⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {0}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0}, {2}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨509, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨511, false⟩, ⟨23, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨501, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨504, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨519, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨513, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨506, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨514, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨515, true⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {0}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0}, {2}, ⟨2, [⟨13, false⟩, ⟨512, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨511, false⟩, ⟨23, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨501, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨6, true⟩, ⟨504, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨513, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, false⟩, ⟨520, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨521, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨2, [⟨522, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨519, true⟩], []⟩⟩]⟩,
+  ⟨0, 21, ![⟨{0}, {1}, ⟨1, [⟨13, false⟩, ⟨105, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨13, false⟩, ⟨523, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨99, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨1, [⟨13, false⟩, ⟨100, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, false⟩, ⟨101, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨2, [⟨13, false⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨111, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨1, [⟨13, false⟩, ⟨524, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨108, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨1, [⟨13, false⟩, ⟨525, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨18, 12, ![⟨{0}, {1}, ⟨5, [⟨277, false⟩], [13]⟩⟩, ⟨{1}, {1}, ⟨1, [⟨13, false⟩, ⟨526, true⟩], []⟩⟩, ⟨{1}, {2}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨527, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨415, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨1, [⟨277, false⟩], [13]⟩⟩, ⟨{2}, {2}, ⟨50, [⟨1, true⟩, ⟨13, false⟩, ⟨309, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨1, [⟨13, false⟩, ⟨417, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨13, false⟩, ⟨324, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨1, [⟨6, true⟩, ⟨13, false⟩, ⟨224, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨419, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨10, [⟨310, false⟩], [13]⟩⟩, ⟨{0, 3}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨13, false⟩, ⟨326, true⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {0}, ⟨2, [⟨500, false⟩], []⟩⟩, ⟨{0}, {2}, ⟨2, [⟨13, false⟩, ⟨512, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨10, [⟨6, true⟩, ⟨502, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨511, false⟩, ⟨23, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨528, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨513, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, false⟩, ⟨520, false⟩, ⟨19, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨521, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨10, [⟨501, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨2, [⟨522, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨6, true⟩, ⟨505, false⟩, ⟨19, false⟩], []⟩⟩]⟩,
+  ⟨21, 15, ![⟨{0}, {1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨87, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨388, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨1, [⟨389, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨97, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨13, false⟩, ⟨390, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨13, false⟩, ⟨92, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, false⟩, ⟨86, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨4, [⟨13, false⟩, ⟨529, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨13, false⟩, ⟨392, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨1, [⟨32, false⟩, ⟨530, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨36, [⟨103, false⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨7, 0, ![⟨{1}, {3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨490, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨2, [⟨516, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨463, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨4, [⟨13, false⟩, ⟨531, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, false⟩, ⟨532, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨4, [⟨13, false⟩, ⟨533, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨10, [⟨477, true⟩], [13]⟩⟩, ⟨{0, 3}, {0, 1}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨534, false⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{0, 3}, {1, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨535, false⟩], []⟩⟩]⟩,
+  ⟨21, 15, ![⟨{0}, {1}, ⟨1, [⟨536, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨1, [⟨388, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨1, [⟨389, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨97, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨13, false⟩, ⟨390, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨5, [⟨393, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨10, [⟨6, true⟩, ⟨15, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 2}, {0, 2}, ⟨1, [⟨537, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨13, false⟩, ⟨392, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨1, [⟨32, false⟩, ⟨530, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨36, [⟨103, false⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨7, 0, ![⟨{1}, {2}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨490, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨2, [⟨6, true⟩, ⟨479, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨468, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨4, [⟨13, false⟩, ⟨531, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, false⟩, ⟨532, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨4, [⟨13, false⟩, ⟨533, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨10, [⟨477, true⟩], [13]⟩⟩, ⟨{0, 3}, {0, 1}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{0, 3}, {1, 3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨482, false⟩], []⟩⟩]⟩,
+  ⟨15, 14, ![⟨{0}, {1}, ⟨12, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨486, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨20, [⟨6, true⟩, ⟨1, true⟩], [2]⟩⟩, ⟨{2}, {1}, ⟨3, [⟨6, true⟩, ⟨538, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨397, false⟩], []⟩⟩, ⟨{3}, {2}, ⟨5, [⟨6, true⟩, ⟨488, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨20, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨5, [⟨6, true⟩, ⟨13, false⟩, ⟨539, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨1, [⟨6, true⟩, ⟨540, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨2, [⟨6, true⟩, ⟨395, true⟩], []⟩⟩, ⟨{0, 2}, {1, 3}, ⟨20, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨3, [⟨6, true⟩, ⟨541, true⟩], []⟩⟩]⟩,
+  ⟨21, 15, ![⟨{0}, {1}, ⟨12, [⟨542, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨4, [⟨543, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨249, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨97, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨13, false⟩, ⟨390, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, false⟩, ⟨544, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨537, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨545, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨4, [⟨13, false⟩, ⟨529, false⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨36, [⟨103, false⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨6, 7, ![⟨{0}, {2}, ⟨2, [⟨13, false⟩, ⟨512, false⟩], []⟩⟩, ⟨{1}, {1}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨511, false⟩, ⟨23, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨528, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨6, [⟨546, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨547, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨22, true⟩, ⟨23, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨2, [⟨521, false⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨2, [⟨500, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨10, [⟨501, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨2, [⟨522, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨2, [⟨548, true⟩], []⟩⟩]⟩,
+  ⟨6, 0, ![⟨{0}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨549, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨48, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨550, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨24, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨551, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨180, [⟨1, true⟩, ⟨2, false⟩, ⟨552, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨53, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨360, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨142, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨553, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨554, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨3, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩⟩]⟩,
+  ⟨6, 0, ![⟨{0}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨549, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨554, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨549, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨555, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨48, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨556, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨53, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨360, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨60, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨557, true⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨553, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨3, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩⟩]⟩,
+  ⟨21, 15, ![⟨{0}, {1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨87, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨558, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨249, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨5, [⟨89, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨97, true⟩], []⟩⟩, ⟨{3}, {2}, ⟨4, [⟨13, false⟩, ⟨390, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, false⟩, ⟨86, true⟩, ⟨32, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨1, [⟨32, false⟩, ⟨530, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨4, [⟨13, false⟩, ⟨529, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨545, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨36, [⟨103, false⟩, ⟨32, false⟩], []⟩⟩]⟩,
+  ⟨21, 1, ![⟨{1}, {0}, ⟨32, [⟨1, true⟩, ⟨2, false⟩, ⟨559, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨560, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨561, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨3, [⟨13, false⟩, ⟨562, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨13, false⟩, ⟨563, false⟩], []⟩⟩, ⟨{3}, {3}, ⟨2, [⟨13, false⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, false⟩, ⟨564, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨3, [⟨565, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨4, [⟨13, false⟩, ⟨390, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨4, [⟨13, false⟩, ⟨566, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨2, false⟩, ⟨567, false⟩], [1]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨4, [⟨103, false⟩, ⟨568, false⟩], []⟩⟩]⟩,
+  ⟨1, 15, ![⟨{0}, {1}, ⟨2, [⟨13, false⟩, ⟨569, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨26, [⟨13, false⟩, ⟨570, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨571, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨13, false⟩, ⟨572, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, false⟩, ⟨573, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨4, [⟨13, false⟩, ⟨575, false⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨4, [⟨13, false⟩, ⟨390, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨576, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨577, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨26, [⟨13, false⟩, ⟨578, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨156, [⟨1, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {1}, ⟨2, [⟨579, false⟩], []⟩⟩, ⟨{0}, {2}, ⟨10, [⟨304, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨305, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨10, [⟨6, true⟩, ⟨113, false⟩, ⟨306, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨241, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, false⟩, ⟨102, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨20, [⟨6, true⟩, ⟨307, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨580, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨303, true⟩], []⟩⟩]⟩,
+  ⟨6, 0, ![⟨{0}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨549, false⟩], []⟩⟩, ⟨{1}, {2}, ⟨96, [], [1, 2]⟩⟩, ⟨{1}, {3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨549, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨553, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨555, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨48, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨556, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨53, false⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨581, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨60, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨557, true⟩], []⟩⟩, ⟨{0, 3}, {0, 2}, ⟨1920, [], [1, 2]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨60, [⟨1, true⟩, ⟨2, false⟩, ⟨582, true⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {1}, ⟨2, [⟨583, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨584, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨199, true⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨241, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, false⟩, ⟨102, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨10, [⟨304, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨13, false⟩, ⟨194, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨580, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨303, true⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {2}, ⟨2, [⟨583, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{1}, {3}, ⟨2, [⟨585, false⟩], []⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨241, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, false⟩, ⟨102, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨579, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨2, [⟨586, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨580, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨6, true⟩, ⟨303, true⟩], []⟩⟩]⟩,
+  ⟨0, 1, ![⟨{0}, {2}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨199, true⟩], []⟩⟩, ⟨{1}, {0}, ⟨192, [⟨1, true⟩, ⟨254, true⟩], [2]⟩⟩, ⟨{2}, {0}, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩⟩, ⟨{2}, {1}, ⟨10, [⟨241, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨2, [⟨13, false⟩, ⟨102, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨6, true⟩, ⟨191, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨585, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨579, true⟩], []⟩⟩, ⟨{0, 1}, {1, 2}, ⟨10, [⟨6, true⟩, ⟨243, true⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨244, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨120, [⟨1, true⟩, ⟨2, false⟩, ⟨25, true⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨20, [⟨1, true⟩, ⟨2, false⟩, ⟨587, true⟩], []⟩⟩]⟩,
+  ⟨1, 15, ![⟨{0}, {1}, ⟨2, [⟨13, false⟩, ⟨588, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨2, [⟨13, false⟩, ⟨589, false⟩], []⟩⟩, ⟨{1}, {3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨571, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨13, false⟩, ⟨572, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, false⟩, ⟨573, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨4, [⟨13, false⟩, ⟨575, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨4, [⟨13, false⟩, ⟨390, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨2, [⟨13, false⟩, ⟨590, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨577, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨2, [⟨591, true⟩], [13]⟩⟩, ⟨{0, 3}, {2, 3}, ⟨156, [⟨1, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨14, 4, ![⟨{0}, {1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨592, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨593, true⟩], []⟩⟩, ⟨{3}, {0}, ⟨4, [⟨13, false⟩, ⟨594, true⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨6, true⟩, ⟨595, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨596, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨13, false⟩, ⟨597, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨13, false⟩, ⟨598, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨1, [⟨13, false⟩, ⟨599, true⟩], []⟩⟩, ⟨{0, 2}, {2, 3}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨600, true⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨1, [⟨601, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨602, false⟩], []⟩⟩]⟩,
+  ⟨4, 18, ![⟨{0}, {1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨603, true⟩], []⟩⟩, ⟨{1}, {1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, false⟩], []⟩⟩, ⟨{2}, {3}, ⟨40, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨113, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨604, false⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨605, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨253, true⟩, ⟨194, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨606, false⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨40, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨607, false⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨608, false⟩], []⟩⟩, ⟨{0, 3}, {1, 3}, ⟨80, [], [1, 2]⟩⟩, ⟨∅, ∅, ⟨0, [], []⟩⟩]⟩,
+  ⟨1, 15, ![⟨{1}, {0}, ⟨64, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨215, true⟩], []⟩⟩, ⟨{1}, {3}, ⟨8, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨571, true⟩], []⟩⟩, ⟨{2}, {1}, ⟨2, [⟨13, false⟩, ⟨572, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨2, [⟨13, false⟩, ⟨573, true⟩], []⟩⟩, ⟨{3}, {3}, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨2, [⟨13, false⟩, ⟨588, true⟩], []⟩⟩, ⟨{0, 1}, {0, 3}, ⟨2, [⟨13, false⟩, ⟨569, true⟩], []⟩⟩, ⟨{0, 1}, {1, 3}, ⟨4, [⟨13, false⟩, ⟨390, false⟩, ⟨103, false⟩], []⟩⟩, ⟨{0, 2}, {0, 1}, ⟨12, [⟨1, true⟩, ⟨13, false⟩, ⟨609, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨80, [⟨1, true⟩, ⟨2, false⟩, ⟨577, false⟩, ⟨13, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨16, [⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩, ⟨610, true⟩], []⟩⟩, ⟨{0, 3}, {2, 3}, ⟨156, [⟨1, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩⟩]⟩,
+  ⟨14, 4, ![⟨{0}, {1}, ⟨12, [⟨1, true⟩, ⟨2, false⟩, ⟨592, false⟩], []⟩⟩, ⟨{1}, {0}, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, false⟩], []⟩⟩, ⟨{2}, {2}, ⟨1, [⟨611, false⟩], []⟩⟩, ⟨{3}, {0}, ⟨8, [⟨6, true⟩, ⟨396, false⟩], []⟩⟩, ⟨{3}, {1}, ⟨1, [⟨6, true⟩, ⟨595, true⟩], []⟩⟩, ⟨{0, 1}, {0, 1}, ⟨4, [⟨596, true⟩], []⟩⟩, ⟨{0, 1}, {0, 2}, ⟨1, [⟨612, false⟩], []⟩⟩, ⟨{0, 2}, {0, 3}, ⟨8, [⟨13, false⟩, ⟨598, true⟩], []⟩⟩, ⟨{0, 2}, {1, 2}, ⟨5, [⟨6, true⟩, ⟨613, false⟩], []⟩⟩, ⟨{0, 3}, {0, 1}, ⟨4, [⟨1, true⟩, ⟨2, false⟩, ⟨600, false⟩], []⟩⟩, ⟨{0, 3}, {0, 3}, ⟨1, [⟨614, true⟩], []⟩⟩, ⟨{0, 3}, {1, 2}, ⟨4, [⟨6, true⟩, ⟨602, false⟩], []⟩⟩]⟩
+]
+
+def compactPolygonData : Array CellPolygon := #[
+  ⟨9, ![0, 6, 7, 18, 19, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![0, 1, 2, 3, 4, 5, 6, 7, 8], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩, ⟨8, [⟨19, false⟩, ⟨33, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨52, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨9, ![0, 6, 7, 18, 19, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![0, 1, 2, 3, 4, 5, 6, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩, ⟨8, [⟨19, false⟩, ⟨33, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨52, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨9, ![0, 6, 7, 18, 19, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![0, 10, 2, 3, 4, 5, 6, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩, ⟨8, [⟨19, false⟩, ⟨33, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨52, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨9, ![0, 6, 7, 18, 19, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![0, 10, 2, 11, 4, 5, 6, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩, ⟨8, [⟨19, false⟩, ⟨33, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨52, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![0, 12, 11, 4, 5, 6, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![0, 12, 11, 4, 5, 13, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![14, 12, 11, 4, 5, 13, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![14, 12, 11, 4, 5, 13, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![14, 15, 11, 4, 5, 13, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![16, 15, 11, 4, 5, 13, 7, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![16, 15, 11, 4, 5, 13, 17, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨8, ![0, 6, 18, 19, 16, 22, 15, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![16, 18, 11, 4, 5, 13, 17, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨1, [⟨42, false⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨61, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨9, ![0, 6, 18, 19, 13, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![16, 18, 11, 19, 20, 5, 13, 17, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨9, ![0, 6, 18, 19, 13, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![16, 18, 11, 19, 20, 5, 13, 17, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨9, ![0, 6, 18, 19, 13, 16, 22, 15, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![16, 18, 11, 19, 20, 5, 13, 21, 9], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, true⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨134, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 18, 19, 13, 16, 22, 15, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![22, 23, 18, 11, 19, 20, 5, 13, 21, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨8, [⟨210, true⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 18, 19, 13, 16, 22, 15, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![22, 23, 18, 11, 19, 20, 24, 13, 21, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨8, [⟨210, true⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨135, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨11, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 15, 21], ![10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0], ![22, 23, 25, 26, 11, 19, 20, 24, 13, 21, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨76, true⟩], []⟩, ⟨1, [⟨97, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![22, 23, 25, 26, 11, 19, 20, 24, 27, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![28, 23, 25, 26, 11, 19, 20, 24, 27, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![29, 23, 25, 26, 11, 19, 20, 24, 27, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![29, 23, 25, 26, 11, 19, 30, 31, 27, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![29, 23, 25, 26, 11, 19, 32, 31, 27, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![29, 23, 25, 26, 11, 19, 32, 31, 33, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨10, ![0, 1, 6, 12, 18, 19, 13, 16, 22, 21], ![9, 0, 1, 2, 3, 4, 5, 6, 7, 8], ![1, 2, 3, 4, 5, 6, 7, 8, 9, 0], ![29, 23, 25, 34, 11, 19, 32, 31, 33, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨13, true⟩, ⟨226, true⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨19, false⟩, ⟨47, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨57, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨9, ![0, 1, 6, 12, 18, 13, 16, 22, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![29, 23, 25, 34, 35, 32, 31, 33, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨9, ![0, 1, 6, 12, 18, 13, 16, 22, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![29, 23, 25, 36, 35, 32, 31, 33, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨9, ![0, 1, 6, 12, 18, 13, 16, 22, 21], ![8, 0, 1, 2, 3, 4, 5, 6, 7], ![1, 2, 3, 4, 5, 6, 7, 8, 0], ![29, 23, 25, 36, 35, 32, 37, 33, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨6, [⟨203, true⟩], []⟩, ⟨6, [⟨13, true⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![29, 38, 36, 35, 32, 37, 33, 9], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![29, 38, 36, 35, 39, 37, 33, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![41, 38, 36, 35, 39, 37, 33, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 36, 35, 39, 37, 33, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 43, 35, 39, 37, 33, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 43, 35, 39, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 43, 35, 39, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 45, 35, 39, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 45, 35, 46, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 47, 35, 46, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![42, 38, 47, 35, 48, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 12, 18, 13, 16, 22, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 38, 47, 35, 48, 37, 44, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨66, true⟩], []⟩, ⟨2, [⟨1, true⟩, ⟨2, false⟩, ⟨234, false⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨101, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 12, 18, 13, 16, 21], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![49, 38, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 12, 18, 13, 16, 21], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![49, 51, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 12, 18, 13, 16, 21], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![49, 52, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨6, [⟨291, false⟩], []⟩, ⟨4, [⟨13, true⟩, ⟨278, false⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 53, 54, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 55, 54, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 55, 56, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 55, 56, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 57, 56, 47, 35, 48, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 57, 56, 47, 35, 58, 50, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 20, 12, 18, 13, 16, 21], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![49, 57, 56, 47, 35, 58, 59, 40], ![⟨2, [⟨13, true⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨103, false⟩, ⟨189, false⟩], []⟩, ⟨4, [⟨342, false⟩], []⟩, ⟨8, [⟨13, true⟩, ⟨364, true⟩], []⟩, ⟨48, [⟨6, true⟩, ⟨13, true⟩, ⟨19, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨2, false⟩, ⟨183, false⟩], []⟩, ⟨1, [⟨6, true⟩, ⟨327, true⟩], []⟩, ⟨1, [⟨13, true⟩, ⟨340, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 7, 10], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 62, 63, 64, 65, 66, 67], ![⟨2, [⟨13, false⟩, ⟨387, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨424, false⟩], []⟩, ⟨8, [⟨442, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 7, 10], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 62, 63, 64, 65, 66, 68], ![⟨2, [⟨13, false⟩, ⟨387, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨424, false⟩], []⟩, ⟨8, [⟨442, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 7, 10], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 62, 63, 64, 65, 69, 68], ![⟨2, [⟨13, false⟩, ⟨387, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨424, false⟩], []⟩, ⟨8, [⟨442, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 7, 10], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 62, 63, 64, 65, 70, 68], ![⟨2, [⟨13, false⟩, ⟨387, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨4, [⟨424, false⟩], []⟩, ⟨8, [⟨442, true⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 7], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![60, 61, 62, 63, 64, 65, 71], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨473, false⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 7], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![60, 61, 62, 63, 64, 65, 72], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨473, false⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 7], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![60, 61, 62, 63, 64, 73, 72], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨473, false⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 7], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![60, 61, 74, 63, 64, 73, 72], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨473, false⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 7], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![60, 61, 74, 63, 64, 73, 75], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨29, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨473, false⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 74, 63, 64, 76, 77, 75], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 74, 63, 64, 76, 78, 75], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 74, 63, 64, 76, 78, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 74, 63, 64, 76, 80, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 74, 63, 64, 76, 80, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![60, 61, 74, 63, 64, 76, 81, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 61, 74, 63, 64, 76, 81, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 61, 74, 63, 83, 76, 81, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 61, 74, 63, 83, 76, 84, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 85, 74, 63, 83, 76, 84, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 85, 74, 63, 83, 76, 84, 79], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 85, 74, 63, 83, 76, 84, 86], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 87, 74, 63, 83, 76, 84, 86], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 87, 74, 63, 83, 76, 84, 88], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 87, 89, 63, 83, 76, 84, 88], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 90, 89, 63, 83, 76, 84, 88], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 15, 14, 18, 12, 6, 7], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 90, 89, 63, 83, 76, 91, 88], ![⟨2, [⟨13, false⟩, ⟨462, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨6, [⟨19, false⟩, ⟨20, false⟩], []⟩, ⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨28, true⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![82, 90, 89, 63, 83, 76, 92], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![82, 90, 89, 63, 83, 76, 93], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 21, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![82, 94, 89, 63, 83, 76, 93], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨106, true⟩, ⟨103, false⟩], []⟩, ⟨2, [⟨6, true⟩, ⟨400, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨8, ![0, 21, 1, 15, 14, 18, 12, 6], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![82, 95, 96, 89, 63, 83, 76, 93], ![⟨600, [⟨6, true⟩, ⟨1, true⟩, ⟨2, false⟩, ⟨13, false⟩], []⟩, ⟨2, [⟨13, false⟩, ⟨102, true⟩, ⟨103, false⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨390, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![97, 96, 89, 63, 83, 76, 93], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![97, 96, 89, 63, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![99, 96, 89, 63, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![100, 96, 89, 63, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![101, 96, 89, 63, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨7, ![0, 1, 15, 14, 18, 12, 6], ![6, 0, 1, 2, 3, 4, 5], ![1, 2, 3, 4, 5, 6, 0], ![101, 102, 89, 63, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨413, false⟩], []⟩, ⟨6, [⟨6, true⟩, ⟨13, false⟩, ⟨315, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 15, 14, 4, 18, 12, 6], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![101, 102, 89, 103, 104, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨396, false⟩], []⟩, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, false⟩], []⟩, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 15, 14, 4, 18, 12, 6], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![101, 105, 89, 103, 104, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨396, false⟩], []⟩, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, false⟩], []⟩, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩,
+  ⟨8, ![0, 1, 15, 14, 4, 18, 12, 6], ![7, 0, 1, 2, 3, 4, 5, 6], ![1, 2, 3, 4, 5, 6, 7, 0], ![101, 105, 89, 106, 104, 83, 76, 98], ![⟨24, [⟨1, true⟩, ⟨2, false⟩, ⟨7, true⟩], []⟩, ⟨4, [⟨13, false⟩, ⟨574, false⟩, ⟨103, false⟩], []⟩, ⟨28, [⟨6, true⟩, ⟨13, false⟩, ⟨103, false⟩], []⟩, ⟨8, [⟨6, true⟩, ⟨396, false⟩], []⟩, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨403, false⟩], []⟩, ⟨40, [⟨1, true⟩, ⟨2, false⟩, ⟨171, false⟩, ⟨13, false⟩], []⟩, ⟨6, [⟨13, false⟩, ⟨124, false⟩, ⟨19, false⟩], []⟩, ⟨72, [⟨1, true⟩, ⟨2, false⟩, ⟨493, true⟩], []⟩]⟩
+]
+
+def compactBandData : Fin 173 → CellBand :=
+  ![⟨0, 266353455, 4294967296, 0, 0, 0⟩, ⟨532706910, 532911955, 8589934592, 104, 0, 1⟩, ⟨532911955, 901213784, 8589934592, 0, 1, 1⟩, ⟨450606892, 450647901, 4294967296, 21, 2, 1⟩, ⟨57682931328, 60072566767, 549755813888, 0, 2, 2⟩, ⟨120145133534, 120145994723, 1099511627776, 40, 2, 3⟩, ⟨120145994723, 172014043136, 1099511627776, 0, 3, 3⟩, ⟨41995616, 41995621, 268435456, 33, 4, 3⟩, ⟨5375439488, 8183637573, 34359738368, 0, 4, 4⟩, ⟨16367275146, 16367319541, 68719476736, 84, 4, 5⟩, ⟨16367319541, 16962174976, 68719476736, 0, 5, 5⟩, ⟨132516992, 132520407, 536870912, 5, 6, 5⟩, ⟨132520407, 141040149, 536870912, 0, 6, 6⟩, ⟨282080298, 282080981, 1073741824, 3, 7, 6⟩, ⟨1128323924, 1153725377, 4294967296, 0, 7, 7⟩, ⟨1153725377, 1153741086, 4294967296, 130, 7, 8⟩, ⟨1153741086, 1263217107, 4294967296, 0, 8, 8⟩, ⟨1263217107, 1263232816, 4294967296, 137, 8, 9⟩, ⟨20696806457344, 21064334802577, 70368744177664, 0, 9, 9⟩, ⟨21064334802577, 21064345468988, 70368744177664, 90, 10, 9⟩, ⟨5266086367247, 5574210060768, 17592186044416, 0, 10, 10⟩, ⟨174194064399, 174194174362, 549755813888, 144, 10, 11⟩, ⟨87097087181, 88843785216, 274877906944, 0, 11, 11⟩, ⟨86761509, 86761514, 268435456, 57, 11, 12⟩, ⟨86761514, 88213485, 268435456, 0, 12, 12⟩, ⟨1411415760, 1411422143, 4294967296, 186, 12, 13⟩, ⟨2822844286, 2872740197, 8589934592, 0, 13, 13⟩, ⟨5745480394, 5745499543, 17179869184, 158, 13, 14⟩, ⟨5745499543, 5971384064, 17179869184, 0, 14, 14⟩, ⟨93302876, 93302881, 268435456, 7, 15, 14⟩, ⟨22392691440, 23028939751, 64424509440, 0, 15, 15⟩, ⟨23028939751, 23029014758, 64424509440, 69, 16, 15⟩, ⟨11514507379, 11811160064, 32212254720, 0, 16, 16⟩, ⟨1476395008, 1524368625, 4026531840, 0, 17, 17⟩, ⟨101624575, 101624580, 268435456, 97, 18, 17⟩, ⟨203249160, 203991805, 536870912, 0, 18, 18⟩, ⟨407983610, 407984249, 1073741824, 197, 18, 19⟩, ⟨407984249, 419934188, 1073741824, 0, 19, 19⟩, ⟨104983547, 104984186, 268435456, 242, 20, 19⟩, ⟨3359493952, 3435966277, 8589934592, 0, 20, 20⟩, ⟨3435966277, 3435974584, 8589934592, 73, 20, 21⟩, ⟨429496823, 437513078, 1073741824, 0, 21, 21⟩, ⟨1750052312, 1750060619, 4294967296, 180, 21, 22⟩, ⟨7000242476, 7100350133, 17179869184, 0, 22, 22⟩, ⟨7100350133, 7100358440, 17179869184, 236, 23, 22⟩, ⟨887544805, 924519262, 2147483648, 0, 23, 23⟩, ⟨462259631, 462267938, 1073741824, 223, 24, 23⟩, ⟨231133969, 245135374, 536870912, 0, 24, 24⟩, ⟨122567687, 122567692, 268435456, 47, 25, 24⟩, ⟨1961083072, 1995956731, 4294967296, 0, 25, 25⟩, ⟨1995956731, 1995965572, 4294967296, 263, 25, 26⟩, ⟨31935449152, 31987354663, 68719476736, 0, 26, 26⟩, ⟨31987354663, 31987381186, 68719476736, 249, 27, 26⟩, ⟨15993690593, 16848147968, 34359738368, 0, 27, 27⟩, ⟨131626156, 131626161, 268435456, 203, 27, 28⟩, ⟨138020033396736, 140737459791381, 281474976710656, 0, 28, 28⟩, ⟨140737459791381, 140737489087056, 281474976710656, 113, 28, 29⟩, ⟨8796093067941, 8866473801756, 17592186044416, 0, 29, 29⟩, ⟨2216618450439, 2216618565324, 4398046511104, 237, 29, 30⟩, ⟨554154641331, 554475787456, 1099511627776, 0, 30, 30⟩, ⟨8663684179, 8663688434, 17179869184, 238, 30, 31⟩, ⟨8871616956416, 9020134774191, 17592186044416, 0, 31, 31⟩, ⟨9020134774191, 9020144496866, 17592186044416, 224, 32, 31⟩, ⟨18040288993732, 18097040247707, 35184372088832, 0, 32, 32⟩, ⟨36194080495414, 36194129108789, 70368744177664, 228, 33, 32⟩, ⟨36194129108789, 36350868352464, 70368744177664, 0, 33, 33⟩, ⟨2271929272029, 2271938994704, 4398046511104, 316, 33, 34⟩, ⟨36351023915264, 36789312381589, 70368744177664, 0, 34, 34⟩, ⟨73578624763178, 73579003947503, 140737488355328, 266, 34, 35⟩, ⟨1177264063160048, 1185547344739673, 2251799813685248, 0, 35, 35⟩, ⟨1185547344739673, 1185548482292648, 2251799813685248, 293, 35, 36⟩, ⟨148193560286581, 152302022447956, 281474976710656, 0, 36, 36⟩, ⟨38075505611989, 38075632006764, 70368744177664, 317, 36, 37⟩, ⟨609210112108224, 618849251829159, 1125899906842624, 0, 37, 37⟩, ⟨618849251829159, 618851777780124, 1125899906842624, 318, 37, 38⟩, ⟨154712944445031, 163305515983616, 281474976710656, 0, 38, 38⟩, ⟨637912171811, 637914116346, 1099511627776, 307, 39, 38⟩, ⟨318957058173, 340967948288, 549755813888, 0, 39, 39⟩, ⟨166488256, 166488261, 268435456, 234, 40, 39⟩, ⟨1331906088, 1335311393, 2147483648, 0, 40, 40⟩, ⟨5341245572, 5341252217, 8589934592, 288, 41, 40⟩, ⟨5341252217, 5382650124, 8589934592, 0, 41, 41⟩, ⟨1345662531, 1345662974, 2147483648, 346, 41, 42⟩, ⟨672831487, 673234676, 1073741824, 0, 42, 42⟩, ⟨168308669, 168308674, 268435456, 342, 42, 43⟩, ⟨8078816352, 8083798867, 12884901888, 0, 43, 43⟩, ⟨32335195468, 32335211063, 51539607552, 358, 44, 43⟩, ⟨64670422126, 64919240351, 103079215104, 0, 44, 44⟩, ⟨64919240351, 64919318326, 103079215104, 359, 44, 45⟩, ⟨32459659163, 32516191038, 51539607552, 0, 45, 45⟩, ⟨16258095519, 16258111114, 25769803776, 375, 46, 45⟩, ⟨520259555648, 521083860563, 824633720832, 0, 46, 46⟩, ⟨1042167721126, 1042168610041, 1649267441664, 369, 46, 47⟩, ⟨8337348880328, 8655583117073, 13194139533312, 0, 47, 47⟩, ⟨8655583117073, 8655610673438, 13194139533312, 319, 48, 47⟩, ⟨4327805336719, 4375257397249, 6597069766656, 0, 48, 48⟩, ⟨8750514794498, 8750542350863, 13194139533312, 336, 49, 48⟩, ⟨8750542350863, 8796093022208, 13194139533312, 0, 49, 49⟩, ⟨137438953472, 138138424643, 206158430208, 0, 50, 50⟩, ⟨138138424643, 138138848822, 206158430208, 443, 50, 51⟩, ⟨69069424411, 69590800999, 103079215104, 0, 51, 51⟩, ⟨69590800999, 69590807732, 103079215104, 433, 51, 52⟩, ⟨4453811694848, 4454575945147, 6597069766656, 0, 52, 52⟩, ⟨4454575945147, 4454575952840, 6597069766656, 455, 53, 52⟩, ⟨556821994105, 556825168896, 824633720832, 0, 53, 53⟩, ⟨362516386, 362516391, 536870912, 442, 53, 54⟩, ⟨47515748401152, 47517340260537, 70368744177664, 0, 54, 54⟩, ⟨47517340260537, 47517340971732, 70368744177664, 476, 54, 55⟩, ⟨11879335242933, 12261570456832, 17592186044416, 0, 55, 55⟩, ⟨47896759597, 47896807010, 68719476736, 421, 56, 55⟩, ⟨23948403505, 23981612128, 34359738368, 0, 56, 56⟩, ⟨1498850758, 1498853547, 2147483648, 395, 57, 56⟩, ⟨95926627008, 96121603209, 137438953472, 0, 57, 57⟩, ⟨96121603209, 96121622732, 137438953472, 478, 57, 58⟩, ⟨24030405683, 24663879296, 34359738368, 0, 58, 58⟩, ⟨192686557, 192686562, 268435456, 20, 58, 59⟩, ⟨394622078976, 399188188421, 549755813888, 0, 59, 59⟩, ⟨399188188421, 399188209796, 549755813888, 507, 59, 60⟩, ⟨3270149814648832, 3270278341177207, 4503599627370496, 0, 60, 60⟩, ⟨26162226729417656, 26162226792709031, 36028797018963968, 479, 61, 60⟩, ⟨26162226792709031, 26228762745798656, 36028797018963968, 0, 61, 61⟩, ⟨51228052237888, 51228053242513, 70368744177664, 509, 62, 61⟩, ⟨51228053242513, 51310499135488, 70368744177664, 0, 62, 62⟩, ⟨1565872166, 1565876441, 2147483648, 505, 62, 63⟩, ⟨3131752882, 3138896407, 4294967296, 0, 63, 63⟩, ⟨12555585628, 12555589903, 17179869184, 519, 64, 63⟩, ⟨12555589903, 12619060828, 17179869184, 0, 64, 64⟩, ⟨3154765207, 3154769482, 4294967296, 111, 64, 65⟩, ⟨100952623424, 102003302999, 137438953472, 0, 65, 65⟩, ⟨102003302999, 102003905774, 137438953472, 277, 65, 66⟩, ⟨3264124984768, 3273477440743, 4398046511104, 0, 66, 66⟩, ⟨6546954881486, 6546956287961, 8796093022208, 501, 67, 66⟩, ⟨6546956287961, 6639051266336, 8796093022208, 0, 67, 67⟩, ⟨829881408292, 829881609217, 1099511627776, 92, 68, 67⟩, ⟨829881609217, 835856114092, 1099511627776, 0, 68, 68⟩, ⟨26747395650944, 26747425990619, 35184372088832, 393, 69, 68⟩, ⟨13694682107196928, 13724476123142053, 18014398509481984, 0, 69, 69⟩, ⟨13724476123142053, 13724481432585178, 18014398509481984, 516, 70, 69⟩, ⟨6862240716292589, 6869381917295714, 9007199254740992, 0, 70, 70⟩, ⟨3434690958647857, 3434696268090982, 4503599627370496, 530, 71, 70⟩, ⟨439641122315645696, 445257732653756321, 576460752303423488, 0, 71, 71⟩, ⟨445257732653756321, 445257918484265696, 576460752303423488, 490, 71, 72⟩, ⟨13914309952633303, 13957273966400803, 18014398509481984, 0, 72, 72⟩, ⟨13957273966400803, 13957311132502678, 18014398509481984, 488, 72, 73⟩, ⟨6978655566251339, 7028912479396964, 9007199254740992, 0, 73, 73⟩, ⟨7028912479396964, 7028913237888839, 9007199254740992, 537, 74, 73⟩, ⟨224925223612442848, 224950142346012223, 288230376151711744, 0, 74, 74⟩, ⟨449900284692024446, 449900308205272571, 576460752303423488, 500, 75, 74⟩, ⟨449900308205272571, 451406317702086656, 576460752303423488, 0, 75, 75⟩, ⟨210202447, 210202452, 268435456, 28, 75, 76⟩, ⟨97533937728, 97829330933, 124554051584, 0, 76, 76⟩, ⟨97829330933, 97829597808, 124554051584, 554, 76, 77⟩, ⟨6114349863, 6167648613, 7784628224, 0, 77, 77⟩, ⟨49341188904, 49341227029, 62277025792, 529, 78, 77⟩, ⟨49341227029, 49392123904, 62277025792, 0, 78, 78⟩, ⟨1012, 1015, 1276, 0, 79, 79⟩, ⟨38482906972160, 38663756329205, 48378511622144, 0, 80, 80⟩, ⟨38663756329205, 38663816312408, 48378511622144, 553, 80, 81⟩, ⟨9665954078102, 9760507600431, 12094627905536, 0, 81, 81⟩, ⟨9760507600431, 9760527594832, 12094627905536, 304, 82, 81⟩, ⟨19521055189664, 20617191097629, 24189255811072, 0, 82, 82⟩, ⟨20617191097629, 20617193953972, 24189255811072, 583, 83, 82⟩, ⟨5154298488493, 5219874819136, 6047313952768, 0, 83, 83⟩, ⟨163121088098, 163121496147, 188978561024, 585, 84, 83⟩, ⟨41759103013632, 44954610221697, 48378511622144, 0, 84, 84⟩, ⟨8173565494854, 8173566719001, 8796093022208, 575, 85, 84⟩, ⟨8173566719001, 8241675173888, 8796093022208, 0, 85, 85⟩, ⟨251515966, 251515971, 268435456, 403, 85, 86⟩, ⟨251515971, 258409881, 268435456, 0, 86, 86⟩, ⟨516819762, 516821827, 536870912, 588, 87, 86⟩, ⟨16538298464, 16995561739, 17179869184, 0, 87, 87⟩, ⟨16995561739, 16995580324, 17179869184, 600, 87, 88⟩, ⟨4248895081, 4294967296, 4294967296, 0, 88, 88⟩]
+
+def compactFacet (i : ℕ) : CellFacet :=
+  compactFacetData[i]?.getD ⟨0, 0, fun _ => ⟨∅, ∅, ⟨0, [], []⟩⟩⟩
+
+def compactPolygon (i : ℕ) : CellPolygon :=
+  compactPolygonData[i]?.getD ⟨1, fun _ => 0, id, id, fun _ => 0, fun _ => ⟨1, [], []⟩⟩
+
+def compactVertexByIndex (i : Fin 24) : CellPlanePolynomial :=
+  cellVertex (fourPerm i).symm
+
+def compactFacetPolynomial (f : CellFacet) (p : Equiv.Perm (Fin 4)) : Univariate :=
+  cellPlaneCross
+    (cellPlaneSub (compactVertexByIndex f.right) (compactVertexByIndex f.left))
+    (cellPlaneSub (cellVertex p) (compactVertexByIndex f.left))
+
+def compactFacetMinorPolynomial (f : CellFacet) (p : Equiv.Perm (Fin 4)) : Univariate :=
+  Univariate.sum fun j : Fin 12 =>
+    let term := f.terms j
+    if term.columns.map p.toEmbedding = term.rows then
+      cellWeightPolynomial compactFactorData term.weight else 0
+
+def compactTurnPolynomial (p : CellPolygon) (i : Fin p.size) : Univariate :=
+  cellPlaneCross
+    (cellPlaneSub (compactVertexByIndex (p.label i)) (compactVertexByIndex (p.label (p.prev i))))
+    (cellPlaneSub (compactVertexByIndex (p.label (p.next i))) (compactVertexByIndex (p.label i)))
+
+def compactGuardPolynomial (z : CellBand) : Univariate :=
+  cellQuartic (factorQuartic compactFactorData z.guard)
+
+noncomputable def compactGuardReal (z : CellBand) : ℝ[X] :=
+  ∑ j : Fin 5, monomial j.val (factorQuartic compactFactorData z.guard j : ℝ)
+
+def compactWeightValid (b : CellBand) (negative : Bool) (w : CellWeight) : Bool :=
+  w.signed.all (fun f => decide (cellFactorValid compactFactorData b negative f))
+
+def checkAll {n : ℕ} (test : Fin n → Bool) : Bool :=
+  (List.ofFn test).all id
+
+theorem checkAll_at {n : ℕ} {test : Fin n → Bool}
+    (h : checkAll test = true) (i : Fin n) : test i = true :=
+  List.all_eq_true.mp h _ (List.mem_ofFn.mpr ⟨i, rfl⟩)
+
+def compactFacetValid (f : Fin 107) : Bool :=
+  checkAll fun j : Fin 24 =>
+    let facet := compactFacet f.val
+    let p := (fourPerm j).symm
+    Univariate.same (compactFacetPolynomial facet p) (compactFacetMinorPolynomial facet p)
+
+def compactBandSignValid (i : Fin 173) (negative : Bool) : Bool :=
+  let b := compactBandData i
+  let p := compactPolygon (b.chart negative)
+  checkAll fun k : Fin p.size =>
+    compactWeightValid b negative (p.turns k) &&
+      checkAll fun j : Fin 12 => compactWeightValid b negative ((compactFacet (p.facets k)).terms j).weight
+
+end MOC.FourRealParameterCellCertificate
