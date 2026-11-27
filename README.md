@@ -295,7 +295,7 @@ the proved subclasses and reductions.
 
 ## Computational counterexample search
 
-The [emergent-dimension search engine](search/README.md) searches variable-size spectral/unitary graphs without an order parameter or order sweep. It uses a numerical support oracle for discovery and Gaussian-integer arithmetic for exact directional witness verification.
+The [emergent-dimension search engine](search/README.md) searches variable-size spectral/unitary graphs without an order parameter or order sweep. The persistent parallel coordinator exchanges candidate populations and reuses cached computations across workers, dimensions, and restarts. Compressed cyclic graphs use arbitrary-precision multiplicities, including both even and odd orders, with logarithmic transfer-matrix determinant evaluation and rigorous interval-based grouped matching verification. The general dense representation remains available. See the search documentation for resource limits and validation.
 
 ## Check the Lean source
 
