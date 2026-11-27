@@ -46,19 +46,77 @@ def ordinaryCostColumns (r : Fin 34) : Finset (Fin 4) :=
     let J := fourCostPair ⟨(r.val - 16) % 6, Nat.mod_lt _ (by decide)⟩
     {J.1, J.2}
 
-set_option maxRecDepth 4096 in
-set_option maxHeartbeats 2000000 in
+private theorem finsetMapSymm_eq {α : Type*} (e : Equiv.Perm α) (I J : Finset α) :
+    J.map e.symm.toEmbedding = I ↔ I.map e.toEmbedding = J := by
+  constructor
+  · intro h
+    apply Finset.Subset.antisymm
+    · apply (Finset.subset_map_symm (f := e)).mp
+      rw [h]
+    · apply (Finset.map_symm_subset (f := e)).mp
+      rw [h]
+  · intro h
+    apply Finset.Subset.antisymm
+    · apply (Finset.map_symm_subset (f := e)).mpr
+      rw [h]
+    · apply (Finset.subset_map_symm (f := e)).mpr
+      rw [h]
+
+private theorem finsetPair_eq_iff {α : Type*} [DecidableEq α] {a b c d : α} (hcd : c ≠ d) :
+    ({a, b} : Finset α) = {c, d} ↔ (a = c ∧ b = d) ∨ (a = d ∧ b = c) := by
+  constructor
+  · intro h
+    have ha : a = c ∨ a = d := by
+      have : a ∈ ({c, d} : Finset α) := h ▸ (by simp : a ∈ ({a, b} : Finset α))
+      simpa only [Finset.mem_insert, Finset.mem_singleton] using this
+    rcases ha with hac | had
+    · left
+      refine ⟨hac, ?_⟩
+      have hd : d = a ∨ d = b := by
+        have : d ∈ ({a, b} : Finset α) := h.symm ▸ (by simp : d ∈ ({c, d} : Finset α))
+        simpa only [Finset.mem_insert, Finset.mem_singleton] using this
+      exact (hd.resolve_left (fun hda => hcd (hac.symm.trans hda.symm))).symm
+    · right
+      refine ⟨had, ?_⟩
+      have hc : c = a ∨ c = b := by
+        have : c ∈ ({a, b} : Finset α) := h.symm ▸ (by simp : c ∈ ({c, d} : Finset α))
+        simpa only [Finset.mem_insert, Finset.mem_singleton] using this
+      exact (hc.resolve_left (by rwa [had])).symm
+  · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+    · rfl
+    · ext x
+      simp only [Finset.mem_insert, Finset.mem_singleton, or_comm]
+
+private theorem fourCostPair_distinct (i : Fin 6) : (fourCostPair i).1 ≠ (fourCostPair i).2 := by
+  have hthree : ((3 : Fin 4) : ℕ) = 3 := rfl
+  fin_cases i <;> intro h <;> have hv := congrArg Fin.val h <;>
+    norm_num [fourCostPair, Matrix.cons_val, hthree] at hv
+
+private theorem integerIndicator_congr {P Q : Prop} [Decidable P] [Decidable Q]
+    (h : P ↔ Q) : (if P then (1 : ℤ) else 0) = if Q then 1 else 0 := by
+  by_cases hp : P
+  · rw [if_pos hp, if_pos (h.mp hp)]
+  · rw [if_neg hp, if_neg (fun hq => hp (h.mpr hq))]
+
 /-- Match the row-to-column profile with the column-to-row matching convention. -/
 theorem ordinaryCostRayInt_indicator (r : Fin 34) (p : Fin 24) :
     ordinaryCostRayInt r p =
       if (ordinaryCostColumns r).map (fourPerm p).symm.toEmbedding = ordinaryCostRows r
       then 1 else 0 := by
-  have h : ∀ (i : Fin 34) (j : Fin 24), ordinaryCostRayInt i j =
-      if (ordinaryCostColumns i).map (fourPerm j).symm.toEmbedding = ordinaryCostRows i
-      then 1 else 0 := by
-    intro i
-    fin_cases i <;> decide +kernel
-  exact h r p
+  by_cases hr : r.val < 16
+  · simp only [ordinaryCostRayInt, ordinaryCostRows, ordinaryCostColumns, if_pos hr,
+      fourCostPermutation]
+    apply integerIndicator_congr
+    symm
+    rw [finsetMapSymm_eq]
+    simp only [Finset.map_singleton, Finset.singleton_inj, Equiv.toEmbedding_apply]
+  · simp only [ordinaryCostRayInt, ordinaryCostRows, ordinaryCostColumns, if_neg hr,
+      fourCostPermutation]
+    apply integerIndicator_congr
+    symm
+    rw [finsetMapSymm_eq]
+    simp only [Finset.map_insert, Finset.map_singleton,
+      finsetPair_eq_iff (fourCostPair_distinct _), Equiv.toEmbedding_apply]
 
 /-- The initial mixed ray is the sum of three ordinary profiles minus one. -/
 def mixedCostSeedInt (p : Fin 24) : ℤ :=

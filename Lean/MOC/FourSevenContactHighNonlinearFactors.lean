@@ -1,4 +1,5 @@
-import MOC.FourInversePencilCertificates
+import MOC.FourMatchingGramBudget
+import Mathlib.Tactic.Positivity
 
 /-! The four-function Gram certificate for the seven-contact cost with
 ordinary ray indices 7, 13, 17, 20, 27, and 31. -/
@@ -17,10 +18,9 @@ theorem fourSevenContactHighCost_sos_of_gram_budget
         c * ordinaryCostRay 17 p + d * ordinaryCostRay 20 p +
         e * ordinaryCostRay 27 p + f * ordinaryCostRay 31 p) := by
   have hpos : 0 < (a + 1) * (b + 1) := by positivity
-  have hab : 1 < a * b := by
-    by_contra! hn
-    have hnonpos := mul_nonpos_of_nonneg_of_nonpos hf.le (sub_nonpos.mpr hn)
-    exact (not_lt_of_ge (hbudget.trans hnonpos)) hpos
+  have hab : 1 < a * b := lt_of_not_ge fun hn =>
+    (not_lt_of_ge (hbudget.trans
+      (mul_nonpos_of_nonneg_of_nonpos hf.le (sub_nonpos.mpr hn)))) hpos
   have hbase := fourMatchingSOS_of_gram_budget ha hab hbudget
   have hc' := fourMatchingSOS_add_ordinaryRay hbase 17 hc
   have hd' := fourMatchingSOS_add_ordinaryRay hc' 20 hd
