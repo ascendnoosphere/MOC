@@ -90,7 +90,7 @@ that works for every pair of lists with $a_0+b_0=0$.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 4 source modules linked in this map | Partial (3/4) |
+| The 4 source modules linked in this map | Partial (2/4) |
 | [FourOppositePairSupport.lean](../Lean/MOC/FourOppositePairSupport.lean#L396) | No |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

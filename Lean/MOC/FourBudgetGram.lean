@@ -6,8 +6,7 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 
-/-! The four-coefficient Gram certificate used in Zheng's contact cases T4
-and T5. The Gram form is an arrowhead after adding and subtracting its
+/-! The four-coefficient Gram certificate. The Gram form is an arrowhead after adding and subtracting its
 first two coordinates. The quaternion identity requires only equal norms. -/
 
 open BigOperators

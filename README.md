@@ -66,7 +66,7 @@ flowchart BT
 
 A reduction proves an implication. Its open premise still needs a proof.
 A restricted case proves inclusion under its stated hypotheses.
-[Combined route theorem](Lean/MOC/ProofRoutes.lean#L704)
+[Combined route theorem](Lean/MOC/ProofRoutes.lean#L679)
 
 “Lean Checked?” concerns the linked statement and its imports.
 **Yes** means that Lake validated a current cached build.
@@ -171,13 +171,13 @@ and mixed rays used in the certificates below.
 | Zero diagonal | Every diagonal entry of $U$ is zero. | [Inclusion](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) | Yes |
 | Complex Hadamard mixer | Every entry of $U$ has modulus $1/2$. One law works for all spectra. | [Common law](Lean/MOC/OrderFourComplexHadamard.lean#L259) | Yes |
 | Real-parameter family | For every real $t$, take $a=(t+i,-t+i,1,2+i)$ and $b=(-1+i,-2-2i,2-i,1+2i)$. Inclusion holds for every unitary. | [Parameter theorem](Lean/MOC/FourRealParameterCells.lean#L142) | Yes |
-| Weighted-minor center | The explicit complex lists in the linked map satisfy inclusion for every unitary. Nine edge certificates prove the result. | [Center theorem](Lean/MOC/FourWeightedMinorCenter.lean#L471) · [Spectra](Docs/order-four-weighted-minor-center-proof-map.md) | No |
+| Weighted-minor center | The explicit complex lists in the linked map satisfy inclusion for every unitary. Nine edge certificates prove the result. | [Center theorem](Lean/MOC/FourWeightedMinorCenter.lean#L471) · [Spectra](Docs/order-four-weighted-minor-center-proof-map.md) | Yes |
+| Eight six-contact support statements | For each specified pattern, the source states the directional determinant bound for every unitary. Additional contacts and repeated eigenvalues are allowed. | [Exact contact sets and check status](Docs/order-four-six-contact-support-proof-map.md) | Partial (3/8) |
 | Two real minor tables | Every complex unitary squared-minor table is a convex combination of two real orthogonal tables. Both real matrices have first row $(\lvert U_{1j}\rvert)_j$. | [Fixed-row theorem](Lean/MOC/FourMinorTransport.lean#L582) · [Hull equality](Lean/MOC/FourMinorTransport.lean#L602) | Yes |
 | Support-cost cone | The cone of nonnegative matching functions has 34 ordinary and 48 mixed extreme rays. Relabeling and cancellation give an ordinary sum or one mixed ray with at most thirteen ordinary coefficients. | [Classification](Lean/MOC/FourSupportConeClassification.lean#L827) · [Cancellation](Lean/MOC/FourMixedRayCancellation.lean#L515) | No |
 | Matching squares give support | If an actual spectral support gap is a sum of matching squares, the directional determinant bound holds for every complex unitary. | [Square evaluation](Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) · [Support bound](Lean/MOC/FourMatchingPhysicalPositivity.lean#L227) | No |
 | Four-function square certificate | Let $r_i$ be ordinary ray $i$ and $m$ the canonical mixed ray. Real $a,b,e$ with $a>0$, $ab>1$, and $(a+1)(b+1)\le e(ab-1)$ give a matching-square certificate for $m+a r_7+b r_{13}+e r_{31}$. | [Square certificate](Lean/MOC/FourMatchingGramBudget.lean#L171) | No |
 | Canonical support interval | The spectral gap is the fixed mixed ray plus a nonnegative sum of the thirteen specified ordinary rays. At normalized height in $[0,1/2]$, it is a sum of matching squares and gives the directional bound for every unitary. | [Squares](Lean/MOC/FourCanonicalHeightSquares.lean#L719) · [Bound](Lean/MOC/FourCanonicalHeightSquares.lean#L767) | No |
-| Contact patterns | The six permutations of any one pattern T1, T2, T3, T4, T5, T6, T15, or T21 attain one global supporting value. The directional bound follows. The statements define each pattern. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) | Partial — unchecked: `FourT15`, `FourT21ContactCone`, `FourT2Minor`, `FourT3`, `FourT4`, `FourT6Support` |
 | Klein-four contacts | The identity and the three products of disjoint transpositions attain the largest projection. The source gives matching squares. | [Certificate](Lean/MOC/FourKleinSpectralSquares.lean#L259) | No |
 | Symmetric six-contact family | The actual spectral gap has the seven ordinary terms and mixed term specified in the source, with nonnegative coefficients. The source gives the support bound. | [Support statement](Lean/MOC/FourSymmetricSixContactCertificate.lean#L384) | No |
 
@@ -227,7 +227,8 @@ Each row states the data that stay fixed and the values that vary.
 
 ## Equivalent tests and proved reductions
 
-In each row, $T_n$ is the complete test at order $n$ stated in that row.
+Each named test below includes all the hypotheses and quantifiers in
+its row. A subscript gives the matrix order.
 $C_m$ is the rectangular test with $m$ orthonormal rows and $m+1$
 columns. It compares the compressed determinant with the products over
 all injections of row labels into column labels. $N_n$ states that,
@@ -237,14 +238,16 @@ order $n$ and all complex spectra.
 
 | Test or premise | Exact relation | Lean statement | Lean Checked? |
 | --- | --- | --- | --- |
-| All matrix orders | $\mathrm{MOC}\Longleftrightarrow\bigl(\mathrm{MOC}_4\land\mathrm{MOC}_5\land\forall n\ge6,\ \mathrm{MOC}_n\bigr)$ | [Order split](Lean/MOC/ProofRoutes.lean#L315) | No |
+| All matrix orders | $\mathrm{MOC}\Longleftrightarrow\bigl(\mathrm{MOC}_4\land\mathrm{MOC}_5\land\forall n\ge6,\ \mathrm{MOC}_n\bigr)$ | [Order split](Lean/MOC/ConjectureOrderSplit.lean#L6) | Yes |
 | Rectangular compression | $\mathrm{MOC}_{n+1}\Longleftrightarrow C_n$ for every $n\ge0$ | [One-order reduction](Lean/MOC/PrincipalCoisometry.lean#L150) | Yes |
 | Normal maximizers | $\bigl((\forall m<n,\ \mathrm{MOC}_m)\land N_n\bigr)\Longrightarrow\mathrm{MOC}_n$ | [Induction theorem](Lean/MOC/NormalSupportMaximum.lean#L270) | Yes |
 | Real orthogonal mixers in order four | $\mathrm{MOC}_4\Longleftrightarrow O_4$ | [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L645) | Yes |
-| At least $2n-1$ contacts in every direction | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Terminal contact test](Lean/MOC/AffineGapCover.lean#L85) | Yes |
-| One free partner eigenvalue, with one law for its whole affine polynomial | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Free-entry equivalence](Lean/MOC/ProofRoutes.lean#L113) | No |
-| Equal second elementary spectral coefficients; or equal first and second coefficients | $\mathrm{MOC}_n\Longleftrightarrow T_n$ for each test separately | [Second coefficient](Lean/MOC/EqualSpectralCoefficients.lean#L91) · [Both coefficients](Lean/MOC/EqualSpectralCoefficients.lean#L428) | Yes |
-| Distinct first spectrum on the specified fixed parabola or hyperbola | $\mathrm{MOC}_n\Longleftrightarrow T_n$ for $n=4,5$, for each curve separately | [Order-four parabola](Lean/MOC/ConicSpectralReductions.lean#L330) · [Order-four hyperbola](Lean/MOC/ConicSpectralReductions.lean#L390) · [Order-five parabola](Lean/MOC/ConicSpectralReductions.lean#L1348) · [Order-five hyperbola](Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
+| At least $2n-1$ contacts in every direction | $\mathrm{MOC}_n\Longleftrightarrow \text{terminal-contact test}_n$ | [Terminal contact test](Lean/MOC/AffineGapCover.lean#L85) | Yes |
+| One free partner eigenvalue, with one law for its whole affine polynomial | $\mathrm{MOC}_n\Longleftrightarrow \text{one-free-entry law}_n$ | [Free-entry equivalence](Lean/MOC/FreeEntryEquivalence.lean#L19) | Yes |
+| Equal second elementary spectral coefficients | $\mathrm{MOC}_n\Longleftrightarrow \text{equal-second-coefficient test}_n$ | [Second coefficient](Lean/MOC/EqualSpectralCoefficients.lean#L91) | Yes |
+| Equal first and second elementary spectral coefficients | $\mathrm{MOC}_n\Longleftrightarrow \text{equal-first-and-second-coefficient test}_n$ | [Both coefficients](Lean/MOC/EqualSpectralCoefficients.lean#L428) | Yes |
+| Distinct first spectrum on the specified fixed parabola | $\mathrm{MOC}_n\Longleftrightarrow \text{parabola test}_n$ for $n=4,5$ | [Order four](Lean/MOC/ConicSpectralReductions.lean#L330) · [Order five](Lean/MOC/ConicSpectralReductions.lean#L1348) | Yes |
+| Distinct first spectrum on the specified fixed hyperbola | $\mathrm{MOC}_n\Longleftrightarrow \text{hyperbola test}_n$ for $n=4,5$ | [Order four](Lean/MOC/ConicSpectralReductions.lean#L390) · [Order five](Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
 
 The [all-order map](Docs/all-orders-proof-map.md) gives the complete
 public route list. The [contact map](Docs/contact-transfer-proof-map.md)
@@ -253,16 +256,23 @@ its two sides can remain open.
 
 ## Paper theorems
 
-These full arguments remain outside Lean. The maps give their hypotheses
-and identify any steps that have Lean proofs.
+These full arguments remain outside Lean. The table separates each paper
+conclusion from the available Lean result. A checked subcase or reduction
+does not check the full paper theorem.
 
-| Theorem | Scope and conclusion | Argument | Lean Checked? |
+A frame is a matrix with orthonormal columns. Its overlap $k$ is the
+common number of columns in the two compressed matrices. A principal
+minor uses the same set of row and column labels.
+
+| Theorem | Scope and conclusion | Argument and current Lean scope | Lean Checked? |
 | --- | --- | --- | --- |
-| Normal diagonal plus rank one | A normal matrix differs from a diagonal matrix by rank at most one in the partner basis. One law gives every principal minor and works for all complex diagonal partners. | [Rank-one argument](Docs/all-orders-proof-map.md#the-common-law-for-a-normal-rank-one-perturbation-of-a-complex-diagonal) | Paper only |
-| Strict rank-one laws | A real diagonal matrix has distinct entries and every entry of the rank-one vector is nonzero. For each nonzero real update coefficient, a common principal-minor law has positive mass on every permutation. This persists on an open set of Hermitian matrices. | [Strict laws and stability](Docs/all-orders-proof-map.md#strict-positivity-of-a-single-law) | Paper only |
-| Smaller frame reduction | At overlap $k$, square orders through $3k^2-k$ suffice for the scalar frame inclusion. At $k=3$ this is order 24. | [Frame argument](Docs/all-orders-proof-map.md#finite-overlap-compression) | Paper only |
-| Symmetric cube mixer | The symmetric cube of any determinant-one unitary of order two satisfies inclusion for all complex spectra in order four. | [Scalar certificate](Docs/order-four-symmetric-cube-mixer-proof-map.md) | Paper only |
-| Explicit open spectral sets | The order-four weighted-minor center has a complex neighborhood of radius $10^{-17}$. The order-five map gives a complex spectral neighborhood of radius $5\cdot10^{-16}$ and a separate open mixer ball. | [Order four](Docs/order-four-proof-map.md#an-open-set-of-spectra-with-a-uniform-proof) · [Order five](Docs/order-five-proof-map.md#exact-spectral-and-mixer-cases) | Paper only |
+| Normal diagonal plus rank one | A normal matrix differs from a diagonal matrix by rank at most one in the partner basis. One law gives every principal minor and works for all complex diagonal partners. | [Paper argument](Docs/all-orders-proof-map.md#the-common-law-for-a-normal-rank-one-perturbation-of-a-complex-diagonal). Lean proves a [simple Hermitian rank-one subcase](Lean/MOC/HermitianRankOneCauchyWeights.lean#L137). The general normal case and repeated-spectrum extension remain outside Lean. | Paper only |
+| Strict rank-one laws | A real diagonal matrix has distinct entries and every entry of the rank-one vector is nonzero. For each nonzero real update coefficient, a common principal-minor law has positive mass on every permutation. This persists on an open set of Hermitian matrices. | [Strict laws and stability](Docs/all-orders-proof-map.md#strict-positivity-of-a-single-law). The available [nonnegative law](Lean/MOC/HermitianRankOneCauchyWeights.lean#L137) does not establish strict positivity or the open neighborhood. | Paper only |
+| Smaller frame reduction | For every positive overlap $k$, square orders through $3k^2-k$ suffice for the scalar frame inclusion. At $k=3$ this is order 24. | [Paper argument](Docs/all-orders-proof-map.md#finite-overlap-compression). The [Lean reduction](Lean/MOC/FiniteFrameLabels.lean#L501) requires orders through $4k^2-k$, which gives order 33 at $k=3$. | Paper only |
+| Symmetric cube mixer | The symmetric cube of any determinant-one unitary of order two satisfies inclusion for all complex spectra in order four. | [Paper certificate](Docs/order-four-symmetric-cube-mixer-proof-map.md). Lean checks the [reduction to real rotations](Lean/MOC/BinaryCubicMixerReduction.lean#L152). The scalar spectral certificate remains outside Lean. | Paper only |
+| Order-four open spectral set | Each entry of the two weighted-minor center lists can vary by less than $10^{-17}$ in complex modulus. Inclusion holds for every unitary. | [Paper argument and center](Docs/order-four-proof-map.md#an-open-set-of-spectra-with-a-uniform-proof). The [Lean statement](Lean/MOC/FourWeightedMinorCenter.lean#L471) covers the center. It does not include the radius. | Paper only |
+| Order-five open spectral set | Each complex spectral entry can vary by at most $5\cdot10^{-16}$ from the specified center. Inclusion holds for every unitary. | [Center, radius, and paper certificate](Docs/order-five-proof-map.md#exact-spectral-and-mixer-cases). The uniform spectral neighborhood has no Lean statement. | Paper only |
+| Order-five open mixer ball | Each unitary at operator-norm distance less than $1/167772160$ from the specified rational orthogonal matrix has a common law for each real first list and all complex second lists. | [Center and paper certificate](Docs/order-five-proof-map.md#exact-verification). The [Lean Fourier neighborhood](Lean/MOC/FiveFourierNeighborhood.lean#L68) has a different center and no specified radius. | Paper only |
 
 ## Open all-order targets
 
@@ -297,7 +307,7 @@ documented modules. The complete build has not passed. Some source files
 are retained without a passing build. A source file alone is not a
 checked theorem.
 
-The [default target](Lean/MOC.lean#L519) audits the safe imported
+The [default target](Lean/MOC.lean#L506) audits the safe imported
 declarations. Its allowed axioms are propositional extensionality
 (`propext`), classical choice (`Classical.choice`), and quotient soundness
 (`Quot.sound`). The audit for the complete library remains pending with

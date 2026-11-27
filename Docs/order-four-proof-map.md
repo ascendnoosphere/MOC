@@ -18,8 +18,8 @@ order-four statement remains open in Lean.
 
 Write $\mathrm{MOC}_n$ for the conjecture in order $n$ and
 $\mathrm{MOC}$ for the conjecture in every finite order.
-In each table row, $T_n$ is its complete test at order $n$; $T$ is
-its complete all-order test. Each test includes its stated quantifiers.
+Each named test in a relation is the complete statement in that row,
+with its stated quantifiers. A subscript gives the matrix order.
 $C_m$ denotes the rectangular test with $m$ orthonormal rows and $m+1$
 columns. A checked relation can have an open premise.
 [Notation and check status](README.md#notation-and-proof-status)
@@ -57,29 +57,29 @@ spectra has nonzero pair sums and distinct matching products. The
 [contact map](contact-transfer-proof-map.md) defines contacts and strict
 witnesses. The all-order transfer gives the six-contact increase step.
 The six-contact inequality required by this route remains open.
-[Route register](../Lean/MOC/ProofRoutes.lean#L254) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L308) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L193)
+[Route register](../Lean/MOC/ProofRoutes.lean#L239) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L293) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L178)
 
 | Route in Lean | Relation | Lean proof | Lean Checked? |
 | --- | --- | --- | --- |
-| Real orthogonal mixers with complex spectra | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L645) | Yes |
-| Regular orthogonal support maximizers | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L90) | Yes |
-| Normal sum at a support maximizer | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L303) | Yes |
+| Real orthogonal mixers with complex spectra | $\mathrm{MOC}_4\Longleftrightarrow \text{real orthogonal mixers with complex spectra}_4$ | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L645) | Yes |
+| Regular orthogonal support maximizers | $\mathrm{MOC}_4\Longleftrightarrow \text{regular orthogonal support maximizers}_4$ | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L90) | Yes |
+| Normal sum at a support maximizer | $\mathrm{MOC}_4\Longleftrightarrow \text{normal sum at a support maximizer}_4$ | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L303) | Yes |
 | Principal coisometry of dimension three | $\mathrm{MOC}_4\Longleftrightarrow C_3$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L150) | Yes |
 | Rectangular compression with three rows | $\mathrm{MOC}_4\Longleftrightarrow C_3$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L228) | Yes |
-| Regular spectra and real orthogonal mixers | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/Reformulations/StationaryFour.lean#L43) | Yes |
-| Exclude all regular stationary orthogonal witnesses | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L231) | Yes |
-| Exclude regular stationary witnesses with a row and a column with no zero entries | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/StationaryDenseCross.lean#L64) | Yes |
-| Exclude orthogonal witnesses with at least seven contacts | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/ZhengContactReduction.lean#L14) | Yes |
-| Exclude stationary orthogonal witnesses with at least seven contacts and the inactive pivot constraints | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/StationaryPivot.lean#L221) | Yes |
-| Exclude regular terminal orthogonal witnesses | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L114) | No |
-| Exclude regular terminal orthogonal witnesses with canonical mixed cost | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L398) | No |
-| Six-contact support bound | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Registered equivalence](../Lean/MOC/ProofRoutes.lean#L254) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L193) | No |
-| First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L213) | Yes |
-| Distinct spectra and neither signed spectrum on a circle or line | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L128) | Yes |
-| Distinct first spectrum on the standard parabola | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L330) | Yes |
-| Distinct first spectrum on the fixed hyperbola | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L390) | Yes |
-| Distinct first spectrum on the ellipse with semiaxes $2+\sqrt 3$ and $1$ | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L946) | Yes |
-| Signed support gap on the realized bilinear chart | $\mathrm{MOC}_4\Longleftrightarrow T_4$ | [Statement and proof](../Lean/MOC/FourDirectSupportCertificate.lean#L118) | Yes |
+| Regular spectra and real orthogonal mixers | $\mathrm{MOC}_4\Longleftrightarrow \text{regular spectra and real orthogonal mixers}_4$ | [Statement and proof](../Lean/MOC/Reformulations/StationaryFour.lean#L43) | Yes |
+| Exclude all regular stationary orthogonal witnesses | $\mathrm{MOC}_4\Longleftrightarrow \text{stationary orthogonal test}_4$ | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L231) | Yes |
+| Exclude regular stationary witnesses with a row and a column with no zero entries | $\mathrm{MOC}_4\Longleftrightarrow \text{stationary full-row-and-column test}_4$ | [Statement and proof](../Lean/MOC/StationaryDenseCross.lean#L64) | Yes |
+| Exclude orthogonal witnesses with at least seven contacts | $\mathrm{MOC}_4\Longleftrightarrow \text{seven-contact orthogonal test}_4$ | [Statement and proof](../Lean/MOC/ZhengContactReduction.lean#L14) | Yes |
+| Exclude stationary orthogonal witnesses with at least seven contacts and the inactive pivot constraints | $\mathrm{MOC}_4\Longleftrightarrow \text{seven-contact stationary pivot test}_4$ | [Statement and proof](../Lean/MOC/StationaryPivot.lean#L221) | Yes |
+| Exclude regular terminal orthogonal witnesses | $\mathrm{MOC}_4\Longleftrightarrow \text{terminal orthogonal test}_4$ | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L114) | No |
+| Exclude regular terminal orthogonal witnesses with canonical mixed cost | $\mathrm{MOC}_4\Longleftrightarrow \text{canonical terminal orthogonal test}_4$ | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L398) | No |
+| Six-contact support bound | $\mathrm{MOC}_4\Longleftrightarrow \text{six-contact support bound}_4$ | [Registered equivalence](../Lean/MOC/ProofRoutes.lean#L239) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L178) | No |
+| First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | $\mathrm{MOC}_4\Longleftrightarrow \text{normalized antipodal test}_4$ | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L213) | Yes |
+| Distinct spectra and neither signed spectrum on a circle or line | $\mathrm{MOC}_4\Longleftrightarrow \text{distinct spectra and neither signed spectrum on a circle or line}_4$ | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L128) | Yes |
+| Distinct first spectrum on the standard parabola | $\mathrm{MOC}_4\Longleftrightarrow \text{parabola test}_4$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L330) | Yes |
+| Distinct first spectrum on the fixed hyperbola | $\mathrm{MOC}_4\Longleftrightarrow \text{hyperbola test}_4$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L390) | Yes |
+| Distinct first spectrum on the ellipse with semiaxes $2+\sqrt 3$ and $1$ | $\mathrm{MOC}_4\Longleftrightarrow \text{ellipse test}_4$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L946) | Yes |
+| Signed support gap on the realized bilinear chart | $\mathrm{MOC}_4\Longleftrightarrow \text{signed support gap on the realized bilinear chart}_4$ | [Statement and proof](../Lean/MOC/FourDirectSupportCertificate.lean#L118) | Yes |
 
 The conic conditions quantify over every unitary mixer and every
 second spectrum. The fixed-curve transport preserves the mixer.
@@ -204,17 +204,15 @@ Proposition 4.3 uses squared minors for 124 classes and individual
 arguments for the other 90. The full bound remains open in Lean.
 [Paper](https://doi.org/10.13140/RG.2.2.36790.25923) · [Pinned supplement](https://github.com/DongzheZheng/The-Marcus-de-Oliveira-conjecture-for-n-4/tree/53ec16567d2307266ce52a8e9678410b2457cc27) · [Scope of the exact checks](https://github.com/DongzheZheng/The-Marcus-de-Oliveira-conjecture-for-n-4/blob/53ec16567d2307266ce52a8e9678410b2457cc27/docs/verification-scope.md)
 
-Each T-label names a set of permutations in the linked Lean statements.
-For each of the eight complete pattern bounds, the six prescribed
-permutations must attain one global supporting value in the chosen
-direction.
+Eight support statements have descriptive names in the
+[six-contact support map](order-four-six-contact-support-proof-map.md).
+That map gives each exact contact set and its proof route. The labels
+in the table below identify the remaining patterns in Zheng's source.
 
 | Status | Named pattern | Bound or reduction | Lean Checked? |
 | --- | --- | --- | --- |
-| Proof in source | T1 | [Directional bound for the specified contacts](../Lean/MOC/ZhengT1Circle.lean#L184) | Yes |
-| Proof in source | T2, T3, T4, T5, T6 | [T2](../Lean/MOC/FourT2Minor.lean#L338) · [T3](../Lean/MOC/FourT3.lean#L25) · [T4](../Lean/MOC/FourT4.lean#L30) · [T5](../Lean/MOC/FourT5.lean#L26) · [T6](../Lean/MOC/FourT6Support.lean#L11) | Partial — unchecked: `FourT2Minor`, `FourT3`, `FourT4`, `FourT6Support` |
-| Proof in source | T15 and T21 | [T15](../Lean/MOC/FourT15.lean#L14) · [T21](../Lean/MOC/FourT21ContactCone.lean#L275) | No |
-| Partial | T34 | The bound holds at zero common projection, or with the additional contact specified in the theorem. [Zero projection](../Lean/MOC/FourT34MinorBranch.lean#L145) · [Additional contact](../Lean/MOC/FourT34MinorBranch.lean#L56) · [Hessian pivot block](../Lean/MOC/FourMatchingHessianMatrix.lean#L123) | Partial — unchecked: `FourT34MinorBranch` |
+| Source statements | Eight six-contact patterns | Each statement gives the directional bound for every unitary under its contact hypothesis. [Exact statements and check status](order-four-six-contact-support-proof-map.md) | Partial (3/8) |
+| Partial | T34 | The bound holds at zero common projection, or with the additional contact specified in the theorem. [Zero projection](../Lean/MOC/FourT34MinorBranch.lean#L145) · [Additional contact](../Lean/MOC/FourT34MinorBranch.lean#L56) · [Hessian pivot block](../Lean/MOC/FourMatchingHessianMatrix.lean#L123) | No |
 | Partial | T85 | The paired branch is excluded. A remaining strict witness reduces to eight or more contacts at positive projection. [Paired branch](../Lean/MOC/ZhengPairedContacts.lean#L905) · [Positive branch](../Lean/MOC/ZhengPairedContacts.lean#L915) | Yes |
 | Open | General seven-contact test | The bound must hold for every real orthogonal case at the threshold. [Exact endpoint](../Lean/MOC/ZhengContactReduction.lean#L14) | Yes |
 
@@ -371,4 +369,4 @@ For the finite lists write $f$ for the common chart factor. Changing each input 
 The paper proof uses exact arithmetic to check the nine edge identities
 on all 24 permutations, the face ranks, and the perturbation bound.
 
-[Lean check status](README.md#lean-check-status): **Partial (28/44)** for the 44 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (22/36)** for the 36 linked source modules.

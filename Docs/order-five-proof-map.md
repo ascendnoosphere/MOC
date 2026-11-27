@@ -20,8 +20,8 @@ disjoint index pairs is sharp for one integer example.
 
 Write $\mathrm{MOC}_n$ for the conjecture in order $n$ and
 $\mathrm{MOC}$ for the conjecture in every finite order.
-In each table row, $T_n$ is its complete test at order $n$; $T$ is
-its complete all-order test. Each test includes its stated quantifiers.
+Each named test in a relation is the complete statement in that row,
+with its stated quantifiers. A subscript gives the matrix order.
 $C_m$ denotes the rectangular test with $m$ orthonormal rows and $m+1$
 columns. A checked relation can have an open premise.
 [Notation and check status](README.md#notation-and-proof-status)
@@ -53,16 +53,16 @@ The table covers the tests specific to order five. The registry also
 includes the [tests at each order](all-orders-proof-map.md#tests-at-each-order).
 Each conjunction requires its two premises. The all-order contact
 transfer makes the full-support eight-contact test exact.
-[Route register](../Lean/MOC/ProofRoutes.lean#L289) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L311)
+[Route register](../Lean/MOC/ProofRoutes.lean#L274) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L296)
 
 | Route in Lean | Relation | Lean proof | Lean Checked? |
 | --- | --- | --- | --- |
 | Principal coisometry of dimension four | $\mathrm{MOC}_5\Longleftrightarrow C_4$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L150) | Yes |
 | Rectangular compression with four rows | $\mathrm{MOC}_5\Longleftrightarrow C_4$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L228) | Yes |
-| Order four AND existence of normal order-five maximizers | $(\mathrm{MOC}_4\land N_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L134) | No |
-| Eight-contact support bound with no zero mixer entries | $\mathrm{MOC}_5\Longleftrightarrow T_5$ | [Equivalence with transfer premise](../Lean/MOC/OrderFiveContact.lean#L97) · [Transfer](../Lean/MOC/ProofRoutes.lean#L193) | Partial — unchecked: `ProofRoutes` |
-| Distinct first spectrum on the standard parabola | $\mathrm{MOC}_5\Longleftrightarrow T_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1348) | Yes |
-| Distinct first spectrum on the fixed hyperbola | $\mathrm{MOC}_5\Longleftrightarrow T_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
+| Order four AND existence of normal order-five maximizers | $(\mathrm{MOC}_4\land N_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L119) | No |
+| Eight-contact support bound with no zero mixer entries | $\mathrm{MOC}_5\Longleftrightarrow \text{eight-contact full-support test}_5$ | [Equivalence with transfer premise](../Lean/MOC/OrderFiveContact.lean#L97) · [Transfer](../Lean/MOC/ProofRoutes.lean#L178) | Partial (1/2) |
+| Distinct first spectrum on the standard parabola | $\mathrm{MOC}_5\Longleftrightarrow \text{parabola test}_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1348) | Yes |
+| Distinct first spectrum on the fixed hyperbola | $\mathrm{MOC}_5\Longleftrightarrow \text{hyperbola test}_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
 | Orthogonal minor convexification AND orthogonal order five | $(D_5\land O_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/Realification.lean#L79) | Yes |
 
 For the regular spectral test, each pair sum is nonzero, different

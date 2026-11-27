@@ -70,7 +70,7 @@ the threshold. [Mixed certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L19
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 7 source modules linked in this map | Partial (4/7) |
+| The 7 source modules linked in this map | Partial (2/7) |
 | [FourKleinChartSymmetry.lean](../Lean/MOC/FourKleinChartSymmetry.lean#L455) | No |
 | [FourKleinInversePencil.lean](../Lean/MOC/FourKleinInversePencil.lean#L130) | No |
 | [FourKleinSpectralSquares.lean](../Lean/MOC/FourKleinSpectralSquares.lean#L259) | No |

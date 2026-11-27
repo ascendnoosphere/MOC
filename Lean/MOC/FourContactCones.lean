@@ -1,5 +1,4 @@
 import MOC.FourMatchingHessian
-import MOC.FourT21ContactCone
 
 /-! The contact lift and radial Hessian condition for T34. -/
 

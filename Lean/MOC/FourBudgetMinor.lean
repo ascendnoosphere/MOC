@@ -29,7 +29,7 @@ private theorem fourBudgetMinorForm_orthogonal {a b c d : ℝ}
   exact hGram
 
 /-- A four-budget minor inequality valid on all order-four unitary matrices.
-This is the uniform Gram bound used by the T4 and T5 contact certificates. -/
+This is the uniform Gram bound used by the quadratic-ratio pattern and mixed-budget pattern contact certificates. -/
 theorem four_budget_minor_nonneg {a b c d : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hd : 0 ≤ d)
     (hcapacity : d ^ 2 * (a + b + c + d) ≤ a * b * (c - d))
@@ -56,8 +56,8 @@ theorem four_budget_minor_nonneg {a b c d : ℝ}
   rw [hm', map_sum]
   exact Finset.sum_nonneg (fun k _ => by simpa only [map_smul, smul_eq_mul] using mul_nonneg (hw k) (hn k))
 
-/-- The same four-budget certificate in T4's row and column labels. -/
-theorem four_budget_minor_nonneg_t4 {a b c d : ℝ}
+/-- The same four-budget certificate in quadratic-ratio pattern's row and column labels. -/
+theorem four_budget_minor_nonneg_transpose_swap {a b c d : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hd : 0 ≤ d)
     (hcapacity : d ^ 2 * (a + b + c + d) ≤ a * b * (c - d))
     (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :

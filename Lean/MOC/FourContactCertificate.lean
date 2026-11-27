@@ -3,7 +3,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 
-/-! Polynomial certificates for the contact sets `T21` and `T34` in Zheng's
+/-! Polynomial certificates for the contact sets `rectangle-cone pattern` and `T34` in Zheng's
 order-four determinant argument. -/
 
 namespace MOC
@@ -19,27 +19,27 @@ def fourMatchingCubic {R : Type*} [CommRing R] (m : Fin 14 → R) : R :=
     m 12 * (-m 0 * m 9 + m 1 * m 7 - m 2 * m 6 - m 2 * m 9 + m 3 * m 5 + m 3 * m 7) +
     m 2 * m 10 * m 11 - m 3 * m 8 * m 10 - m 4 * m 7 * m 11 + m 4 * m 8 * m 9
 
-/-- The `T21` lift after absorbing the two ordinary profiles that can
+/-- The `rectangle-cone pattern` lift after absorbing the two ordinary profiles that can
 cancel the mixed profile. The retained profile indices are
 `0, 2, 7, 12, 29, 39, 40, 41` in that order. -/
-def t21CanonicalLift (q a b c e f d h : ℝ) : Fin 14 → ℝ :=
+def rectangleConeCanonicalLift (q a b c e f d h : ℝ) : Fin 14 → ℝ :=
   ![-c - d - f, a + c + d + e + f, f - q, -a - d - f, d + f, 0, -a - d - e,
     0, c - h, a + d, -b - d, -a - c + h, b + c + d, q]
 
 /-- The restricted cubic written as a sum of products of the retained coefficients. -/
-theorem t21_restricted_cubic (q a b c e f d h : ℝ) :
-    fourMatchingCubic (t21CanonicalLift q a b c e f d h) =
+theorem rectangleCone_restricted_cubic (q a b c e f d h : ℝ) :
+    fourMatchingCubic (rectangleConeCanonicalLift q a b c e f d h) =
       (f + d + h) * ((b + d) * (q + a + d) + c * (a + d)) +
         e * ((q + a + c + d) * (f + d) + a * c) := by
-  simp [fourMatchingCubic, t21CanonicalLift]
+  simp [fourMatchingCubic, rectangleConeCanonicalLift]
   ring
 
 /-- At zero height, cubic vanishing excludes the surviving positive mixed
-coefficient on the canonical `T21` lift. -/
-theorem t21_mixed_coefficient_zero {q a b c e f d h : ℝ}
+coefficient on the canonical `rectangle-cone pattern` lift. -/
+theorem rectangleCone_mixed_coefficient_zero {q a b c e f d h : ℝ}
     (hq : 0 ≤ q) (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c)
     (he : 0 ≤ e) (hf : 0 ≤ f) (hd : 0 ≤ d) (hh : 0 ≤ h)
-    (hcubic : fourMatchingCubic (t21CanonicalLift q a b c e f d h) = 0) :
+    (hcubic : fourMatchingCubic (rectangleConeCanonicalLift q a b c e f d h) = 0) :
     d = 0 := by
   by_contra hne
   have hd' := lt_of_le_of_ne hd (Ne.symm hne)
@@ -53,7 +53,7 @@ theorem t21_mixed_coefficient_zero {q a b c e f d h : ℝ}
     (add_nonneg
       (mul_nonneg (add_nonneg (add_nonneg (add_nonneg hq ha) hc) hd) (add_nonneg hf hd))
       (mul_nonneg ha hc))
-  rw [t21_restricted_cubic] at hcubic
+  rw [rectangleCone_restricted_cubic] at hcubic
   exact (ne_of_gt (add_pos_of_pos_of_nonneg hfirst hsecond)) hcubic
 
 /-- The coefficient of the common support height in the restricted cubic for `T34`. -/

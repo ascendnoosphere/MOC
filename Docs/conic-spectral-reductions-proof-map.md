@@ -18,7 +18,7 @@ for all spectra at that unitary. Then the test for all unitary
 matrices is equivalent to the conjecture at that order. The converse
 uses the conjecture on the restricted lists. This gives the equivalence
 for each conic below.
-[Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27) · [Order-four routes](../Lean/MOC/ProofRoutes.lean#L254) · [Order-five routes](../Lean/MOC/ProofRoutes.lean#L289)
+[Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27) · [Order-four routes](../Lean/MOC/ProofRoutes.lean#L239) · [Order-five routes](../Lean/MOC/ProofRoutes.lean#L274)
 
 ## Order-four equivalences
 
@@ -163,6 +163,6 @@ an arbitrary second list. The curve inequalities remain open.
 | Lean scope | Lean Checked? |
 | --- | --- |
 | The 4 source modules linked in this map | Partial (3/4) |
-| [ProofRoutes.lean](../Lean/MOC/ProofRoutes.lean#L254) | No |
+| [ProofRoutes.lean](../Lean/MOC/ProofRoutes.lean#L239) | No |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

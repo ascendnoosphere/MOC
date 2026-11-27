@@ -1,6 +1,7 @@
 import MOC.AffineGapCover
 import MOC.BilinearPencil
 import MOC.ConicSpectralReductions
+import MOC.ConjectureOrderSplit
 import MOC.EqualSpectralCoefficients
 import MOC.Extremal
 import MOC.FourContactRay
@@ -8,6 +9,7 @@ import MOC.FourDirectSupportCertificate
 import MOC.FourAntipodalSpectra
 import MOC.FourTerminalCoverage
 import MOC.FreeEigenvalueSlopeSlice
+import MOC.FreeEntryEquivalence
 import MOC.GaussianCayley
 import MOC.GaussianIntegerDeterminantTest
 import MOC.HermitianByNormalFourProof
@@ -102,27 +104,10 @@ theorem some_labelledAt_iff (n : ℕ) :
 
 /-- Fix one partner entry. The law may depend on all the other input
 coordinates and on the mixer; it need not preserve unrelated spectra. -/
-def OneEntryLaw (n : ℕ) : Prop :=
-  ∀ (a b : Fin n → ℂ) (j : Fin n) (U : Matrix (Fin n) (Fin n) ℂ),
-    IsUnitary U → ∃ k : ℕ, k ≤ 5 ∧
-      ∃ (p : Fin k → Equiv.Perm (Fin n)) (w : Fin k → ℝ),
-        (∀ i, 0 ≤ w i) ∧ (∑ i, w i = 1) ∧ ∀ z : ℂ,
-          (∑ i, (w i : ℂ) * matchingProduct a (Function.update b j z) (p i)) =
-            determinantValue a (Function.update b j z) U
+abbrev OneEntryLaw (n : ℕ) : Prop := OneFreePartnerEntryLaw n
 
-theorem oneEntryLaw_iff (n : ℕ) : OneEntryLaw n ↔ Conjecture (Fin n) := by
-  constructor
-  · intro h a b U hU
-    by_cases hn : n = 0
-    · subst n
-      exact conjecture_zero a b U hU
-    let j : Fin n := ⟨0, Nat.pos_of_ne_zero hn⟩
-    have h' := (one_free_partner_entry_iff_common_law a b j U hU).mpr
-      (h a b j U hU) (b j)
-    simpa only [Function.update_eq_self] using h'
-  · intro h a b j U hU
-    exact (one_free_partner_entry_iff_common_law a b j U hU).mp
-      (fun z => h a (Function.update b j z) U hU)
+theorem oneEntryLaw_iff (n : ℕ) : OneEntryLaw n ↔ Conjecture (Fin n) :=
+  oneFreePartnerEntryLaw_iff n
 
 def NormalMaximizers (n : ℕ) : Prop :=
   ∀ (a b : Fin n → ℂ) (η : ℂ),
@@ -314,18 +299,8 @@ theorem five_routes_iff : AnyRoute fiveRoutes ↔ Conjecture (Fin 5) :=
 /-- Solving orders four and five leaves the orders at least six. -/
 theorem all_iff_four_and_five_and_higher :
     MOCIsTrue ↔ Conjecture (Fin 4) ∧ Conjecture (Fin 5) ∧
-      ∀ n, 6 ≤ n → Conjecture (Fin n) := by
-  refine ⟨fun h => ⟨h 4, h 5, fun n _ => h n⟩, ?_⟩
-  rintro ⟨h4, h5, hhi⟩
-  apply mocIsTrue_iff_from_four.mpr
-  intro n hn
-  by_cases h : n = 4
-  · subst n
-    exact h4
-  by_cases h : n = 5
-  · subst n
-    exact h5
-  exact hhi n (by omega)
+      ∀ n, 6 ≤ n → Conjecture (Fin n) :=
+  mocIsTrue_iff_four_five_and_higher
 
 open Reformulations
 

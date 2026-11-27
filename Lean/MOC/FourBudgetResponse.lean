@@ -14,7 +14,7 @@ private theorem vector_two {α : Type*} (a b c d : α) : ![a, b, c, d] 2 = c := 
 private theorem vector_three {α : Type*} (a b c d : α) : ![a, b, c, d] 3 = d := rfl
 
 /-- The four-budget inequality on the two entries and three signed minors
-of the order-four quaternion rotation. These are the T5 ray coordinates. -/
+of the order-four quaternion rotation. -/
 theorem quaternionRotation_four_budget_nonneg {a b c d : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hd : 0 ≤ d)
     (hcapacity : d ^ 2 * (a + b + c + d) ≤ a * b * (c - d))

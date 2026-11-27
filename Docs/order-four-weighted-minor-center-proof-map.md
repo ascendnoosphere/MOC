@@ -88,7 +88,7 @@ uniform neighborhood argument remains outside Lean.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 2 source modules linked in this map | Partial (1/2) |
-| [FourWeightedMinorCenter.lean](../Lean/MOC/FourWeightedMinorCenter.lean#L37) | No |
+| The 2 source modules linked in this map | Yes |
+| [FourWeightedMinorCenter.lean](../Lean/MOC/FourWeightedMinorCenter.lean#L37) | Yes |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

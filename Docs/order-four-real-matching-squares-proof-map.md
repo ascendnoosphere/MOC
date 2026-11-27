@@ -175,7 +175,7 @@ for general support costs.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 11 source modules linked in this map | Partial (4/11) |
+| The 11 source modules linked in this map | Partial (2/11) |
 | [FourMatchingCompensation.lean](../Lean/MOC/FourMatchingCompensation.lean#L94) | No |
 | [FourMatchingGramBudget.lean](../Lean/MOC/FourMatchingGramBudget.lean#L171) | No |
 | [FourMatchingIndicatorBasis.lean](../Lean/MOC/FourMatchingIndicatorBasis.lean#L55) | No |

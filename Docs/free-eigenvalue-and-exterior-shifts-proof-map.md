@@ -12,7 +12,7 @@ a free eigenvalue. The law may depend on the fixed entries and the
 unitary matrix that changes the eigenbasis. The exterior shift route
 adds a common scalar to all the entries of one list and gives
 determinant inclusion for shifts outside a disk.
-[Exact one-entry route at a fixed order](../Lean/MOC/ProofRoutes.lean#L113) · [Exterior radius](../Lean/MOC/HermitianExteriorShift.lean#L1188)
+[Exact one-entry route at a fixed order](../Lean/MOC/FreeEntryEquivalence.lean#L19) · [Exterior radius](../Lean/MOC/HermitianExteriorShift.lean#L1188)
 
 ## One law for a free eigenvalue
 
@@ -232,7 +232,7 @@ The determinant inclusion holds for every unitary mixer when $|z|\ge 123$.
 
 | Lean scope | Lean Checked? |
 | --- | --- |
-| The 15 source modules linked in this map | Partial (14/15) |
-| [ProofRoutes.lean](../Lean/MOC/ProofRoutes.lean#L113) | No |
+| The 15 source modules linked in this map | Yes |
+| [ProofRoutes.lean](../Lean/MOC/FreeEntryEquivalence.lean#L19) | Yes |
 
 [Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

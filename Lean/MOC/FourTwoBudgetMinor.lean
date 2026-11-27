@@ -4,7 +4,7 @@ import MOC.FourTwoBudget
 import MOC.ContactCensus
 
 /-! Transport the order-four two-budget certificate to complex unitary
-minor tables, including the relabelings used in paper cases T3 and T5. -/
+minor tables, including the relabelings used in paper cases negative-defect pattern and mixed-budget pattern. -/
 
 open BigOperators Matrix
 
@@ -78,8 +78,8 @@ private theorem four_two_budget_minor_nonneg_reindex {a b c : ℝ}
   exact h
 
 /-- The two-budget response for historical facets `f1`, `f11`, and `f17`
-in the T3 matching labels. -/
-theorem four_two_budget_minor_nonneg_t3 {a b c : ℝ}
+in the negative-defect pattern matching labels. -/
+theorem four_two_budget_minor_nonneg_negative_defect {a b c : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hcap : c ^ 2 ≤ a * b)
     (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
     let m := subsetMinorSq U
@@ -100,8 +100,8 @@ theorem four_two_budget_minor_nonneg_t3 {a b c : ℝ}
   convert h using 1 <;> ring
 
 /-- The two-budget response for historical facets `f5`, `f2`, and `f54`
-in the T5 matching labels. -/
-theorem four_two_budget_minor_nonneg_t5 {a b c : ℝ}
+in the mixed-budget pattern matching labels. -/
+theorem four_two_budget_minor_nonneg_mixed_budget {a b c : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hcap : c ^ 2 ≤ a * b)
     (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
     let m := subsetMinorSq U

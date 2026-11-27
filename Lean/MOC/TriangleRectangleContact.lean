@@ -109,7 +109,7 @@ theorem matchingProduct_triangle_rectangle_contact_height_eq_zero
     linear_combination η ^ 2 * h
 
 /-- The six-label pattern forces both missing contacts when all matching
-products are nonzero. In order four this rules out the exact regular T15
+products are nonzero. In order four this rules out the exact regular ordered-ratio pattern
 contact set, represented in lexicographic indices by `{1,2,3,4,6,7}`. -/
 theorem matchingProduct_triangle_rectangle_complete_contacts
     (a b : ι → ℂ) (r : Equiv.Perm ι) (i j k l : ι)

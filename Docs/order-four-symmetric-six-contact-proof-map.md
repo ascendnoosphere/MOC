@@ -54,9 +54,9 @@ flowchart BT
 
 | Step | Scope | Lean Checked? |
 | --- | --- | --- |
-| Noncrossing coordinates | The lift evaluates to the prescribed gap minus $h$ for all real coefficients and all permutations. [Lean source](../Lean/MOC/FourSymmetricSixContact.lean#L54) | Yes |
-| Height | Assume $\lambda>0$ and let $e_k$ be the elementary symmetric polynomial of degree $k$ in $(b_0,b_1,b_2,b_3)$. The gap hypothesis forces $h=(\lambda^3+e_1\lambda^2+e_2\lambda+e_3+pqr)/(\lambda^2+pq+pr+qr)>0$. [Lean source](../Lean/MOC/FourSymmetricSixContact.lean#L97) | Yes |
-| Hessian singularity | The Hessian of the matching cubic at the lifted real coordinates is singular. This includes repeated eigenvalues and repeated products. [Lean source](../Lean/MOC/FourSymmetricSixContact.lean#L128) | Yes |
+| Noncrossing coordinates | The lift evaluates to the prescribed gap minus $h$ for all real coefficients and all permutations. [Lean source](../Lean/MOC/FourSymmetricSixContact.lean#L54) | No |
+| Height | Assume $\lambda>0$ and let $e_k$ be the elementary symmetric polynomial of degree $k$ in $(b_0,b_1,b_2,b_3)$. The gap hypothesis forces $h=(\lambda^3+e_1\lambda^2+e_2\lambda+e_3+pqr)/(\lambda^2+pq+pr+qr)>0$. [Lean source](../Lean/MOC/FourSymmetricSixContact.lean#L97) | No |
+| Hessian singularity | The Hessian of the matching cubic at the lifted real coordinates is singular. This includes repeated eigenvalues and repeated products. [Lean source](../Lean/MOC/FourSymmetricSixContact.lean#L128) | No |
 | Inverse pencil | The spectral data make a real symmetric matrix of order nine singular. Its entries represent the nine signed minor evaluations in cofactor coordinates. The complex determinant of order two gives four complex squares. Their real and imaginary linear forms have a common nonzero zero in dimension nine. [Lean source](../Lean/MOC/FourSymmetricSixContactPencil.lean#L273) | No |
 | Compensator budget | An actual spectral gap satisfies $\lambda^2\le p(q+r)$, $\lambda^2\le q(p+r)$, or $\lambda^2\le r(p+q)$. Zero $\lambda$ satisfies the first condition. All four singleton coefficients remain independent. [Lean source](../Lean/MOC/FourSymmetricSixContactCertificate.lean#L355) | No |
 | Unitary bound | For all seven independent ordinary coefficients, the determinant projection is at least $-h$. Coincident eigenvalues and coefficient boundaries are included. [Lean source](../Lean/MOC/FourSymmetricSixContactCertificate.lean#L384) | No |
@@ -86,4 +86,4 @@ three compensator inequalities fail. Actual spectra force $P=0$.
 [Compensation from pencil singularity](../Lean/MOC/FourSymmetricSixContactCertificate.lean#L326) ·
 [Full paper closure](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/six_symmetric_general_closure.txt) · [Independent paper audit](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/six_symmetric_general_independent_review.txt)
 
-[Lean check status](README.md#lean-check-status): **Partial (2/4)** for the 4 linked source modules.
+[Lean check status](README.md#lean-check-status): **Partial (1/4)** for the 4 linked source modules.

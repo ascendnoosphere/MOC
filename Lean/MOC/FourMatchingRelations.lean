@@ -437,17 +437,17 @@ theorem fourMatchingCubic_zero_of_evaluation_eq_spectral
   rw [heq]
   exact fourMatchingCubic_of_spectral_real_part a b η
 
-/-- For the paper's `T21` lift, agreement with actual zero-height matching
+/-- For the paper's `rectangle-cone pattern` lift, agreement with actual zero-height matching
 values rules out its sole mixed coefficient. -/
-theorem t21_mixed_coefficient_zero_of_spectral
+theorem rectangleCone_mixed_coefficient_zero_of_spectral
     (α β : Fin 4 → ℂ) (η : ℂ) {q a b c e f d h : ℝ}
     (hq : 0 ≤ q) (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c)
     (he : 0 ≤ e) (hf : 0 ≤ f) (hd : 0 ≤ d) (hh : 0 ≤ h)
     (hmatch : ∀ i,
-      fourMatchingEvaluation (t21CanonicalLift q a b c e f d h) i =
+      fourMatchingEvaluation (rectangleConeCanonicalLift q a b c e f d h) i =
         (η * matchingProduct α β (fourPerm i).symm).re) :
     d = 0 :=
-  t21_mixed_coefficient_zero hq ha hb hc he hf hd hh
+  rectangleCone_mixed_coefficient_zero hq ha hb hc he hf hd hh
     (fourMatchingCubic_zero_of_evaluation_eq_spectral α β η _ hmatch)
 
 /-- The paper's `T34` radial division is valid on the positive mixed branch

@@ -104,40 +104,6 @@ theorem thresholds23 {a b c d e f g : ℝ}
     linarith only [hC,hu,hv]
 
 
-/-- Gap coordinates at labels (1,2,6,7,8,13,16,18) for T21. -/
-def lift21 {R : Type*} [CommRing R] (a b c d e f g h : R) : Fin 14 → R :=
-  ![-a-c+d,a+b+c-d+f,a-h,-a+d-f,a-d,0,c-e-f+g,0,c-d,
-    -b-c+e+f-g,b+c-e,-c+d-f,-b+e,b+c-d-e+g+h]
-
-theorem cubic21 {R : Type*} [CommRing R] (a b c d e f g h : R) :
-    let x := a-d; let y := h-d; let v := e-b-c; let k := v-g
-    fourMatchingCubic (lift21 a b c d e f g h) =
-      b*(c*(f+x)+x*(f+y))+c*(d+x)*(f+k)+v*(d+x)*(f+y) := by
-  simp [fourMatchingCubic,lift21]
-  ring
-
-/-- The sole extra inequality for a minor decomposition at T21. -/
-theorem threshold21 {a b c d e f g h : ℝ}
-    (hb : 0 ≤ b) (hc : 0 ≤ c) (hd : 0 ≤ d) (hf : 0 ≤ f) (hg : 0 ≤ g)
-    (h17 : 0 ≤ a+b+c-d-e+g) (h23 : 0 ≤ b+c-d-e+g+h)
-    (hC : fourMatchingCubic (lift21 a b c d e f g h) = 0) :
-    e-b-c ≤ g := by
-  by_contra! hn
-  let x := a-d
-  let y := h-d
-  let v := e-b-c
-  let k := v-g
-  have hk : 0 < k := by dsimp [k,v]; linarith
-  have hv : 0 < v := by dsimp [k] at hk; linarith
-  have hx : 0 < x := by dsimp [k,v] at hk; dsimp [x]; linarith
-  have hy : 0 < y := by dsimp [k,v] at hk; dsimp [y]; linarith
-  have h₁ : 0 ≤ b*(c*(f+x)+x*(f+y)) := by positivity
-  have h₂ : 0 ≤ c*(d+x)*(f+k) := by positivity
-  have h₃ : 0 < v*(d+x)*(f+y) := by positivity
-  rw [cubic21] at hC
-  change b*(c*(f+x)+x*(f+y))+c*(d+x)*(f+k)+v*(d+x)*(f+y)=0 at hC
-  linarith only [hC,h₁,h₂,h₃]
-
 /-- The constructive interval for the coefficients of the eight ordinary
 minor markers at T22. The eight inequalities express their nonnegativity. -/
 theorem minor_coefficients22 {a b c d e f g : ℝ}
@@ -188,27 +154,6 @@ theorem minor_coefficients23 {a b c d e f g : ℝ}
   have hsd := hs d hd (by linarith) (by linarith) (by linarith)
   have hsf := hs (f-e+c) hB (by linarith) (by linarith) (by linarith)
   exact ⟨s,by linarith,by linarith,by linarith,by linarith,h₀,by linarith,by linarith,by linarith⟩
-
-/-- Constructive minor coefficients at T21. -/
-theorem minor_coefficients21 {a b c d e f g h : ℝ}
-    (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hd : 0 ≤ d)
-    (hf : 0 ≤ f) (hg : 0 ≤ g) (hh : 0 ≤ h)
-    (h14 : 0 ≤ -b-c+e) (h15 : 0 ≤ a-d+f) (h17 : 0 ≤ a+b+c-d-e+g)
-    (h21 : 0 ≤ -d+f+h) (h23 : 0 ≤ b+c-d-e+g+h)
-    (hC : fourMatchingCubic (lift21 a b c d e f g h) = 0) :
-    ∃ s : ℝ, 0 ≤ h-s ∧ 0 ≤ e-b-c ∧ 0 ≤ s ∧ 0 ≤ g-(e-b-c)-d+s ∧
-      0 ≤ b ∧ 0 ≤ f-d+s ∧ 0 ≤ a-s ∧ 0 ≤ d-s ∧ 0 ≤ c := by
-  have hB := threshold21 hb hc hd hf hg h17 h23 hC
-  let s := max 0 (max (d-f) (d+(e-b-c)-g))
-  have hs (t : ℝ) (h₀ : 0 ≤ t) (h₁ : d-f ≤ t) (h₂ : d+(e-b-c)-g ≤ t) :
-      s ≤ t := max_le h₀ (max_le h₁ h₂)
-  have h₀ : 0 ≤ s := le_max_left _ _
-  have h₁ : d-f ≤ s := (le_max_left _ _).trans (le_max_right _ _)
-  have h₂ : d+(e-b-c)-g ≤ s := (le_max_right _ _).trans (le_max_right _ _)
-  have hsa := hs a ha (by linarith) (by linarith)
-  have hsd := hs d hd (by linarith) (by linarith)
-  have hsh := hs h hh (by linarith) (by linarith)
-  exact ⟨s,by linarith,by linarith,h₀,by linarith,hb,by linarith,by linarith,by linarith,hc⟩
 
 end ZhengGroupIV
 end MOC
