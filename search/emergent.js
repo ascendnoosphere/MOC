@@ -59,7 +59,7 @@ function buildCore() {
       for(let i=0;i<h.length;i++){const p=h[i],v=sub(h[(i+1)%h.length],p),l=norm2(v);
         if(!l)continue;const t=Math.max(0,Math.min(1,dot(sub(d,p),v)/l)),q=add(p,scale(v,t)),dd=abs(sub(d,q));
         if(dd<dist){nearest=q;dist=dd;}}
-      if(nearest&&dist>0){dir=scale(sub(d,nearest),1/dist);best=dot(dir,d)-Math.max(...h.map(p=>dot(dir,p)));}
+      if(nearest&&dist>0){dir=scale(sub(d,nearest),1/dist);let support=-Infinity;for(const p of h)support=Math.max(support,dot(dir,p));best=dot(dir,d)-support;}
     }
     return {gap:best,dir,radius};
   }
@@ -249,10 +249,25 @@ function buildCore() {
     return true;
   }
   function restart(r){
-    let g={a:[],b:[],gates:[],mode:r.int(5)};
+    let g={a:[],b:[],gates:[],mode:r.int(8)};
     // Grow a graph from no labels. The only lower bound is the checked n<=3 theorem.
     do{g=birth(g,r);}while(g.a.length<4||r()<.58);
-    for(let k=0;k<g.a.length;k++){const [i,j]=pair(g.a.length,r);g.gates.push(randomGate(i,j,r));}
+    const n=g.a.length;
+    for(let k=0;k<n;k++){const [i,j]=pair(n,r);g.gates.push(randomGate(i,j,r));}
+    if(g.mode===5){
+      // Open all-order family: two Householder reflections.
+      let U=identity(n);
+      for(let k=0;k<2;k++){
+        let v=Array.from({length:n},()=>r.point());const l=Math.sqrt(v.reduce((a,x)=>a+norm2(x),0));v=v.map(x=>scale(x,1/l));
+        const w=Array.from({length:n},(_,j)=>{let s=[0,0];for(let i=0;i<n;i++)s=add(s,mul(conj(v[i]),U[i][j]));return s;});
+        U=U.map((row,i)=>row.map((x,j)=>sub(x,scale(mul(v[i],w[j]),2))));
+      }
+      g.gates=compact(U);
+    }else if(g.mode===6){
+      // Open Fourier family in arbitrary order; no order is selected for it.
+      const U=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>{const t=2*Math.PI*i*j/n;return [Math.cos(t)/Math.sqrt(n),Math.sin(t)/Math.sqrt(n)];}));
+      g.gates=compact(U);
+    }else if(g.mode===7)g.gates=g.gates.map(e=>[e[0],e[1],e[2],0]);
     return g;
   }
   function clip(poly,line,h){
@@ -336,14 +351,73 @@ function buildCore() {
     if(g.a.some(x=>abs(add(one,mul(t,x)))<.2)||g.b.some(x=>abs(sub(one,mul(t,x)))<.2))return g;
     return normalize({...g,a:g.a.map(fa),b:g.b.map(fb)});
   }
+  function solveReal(A,b){
+    const n=b.length,M=A.map((r,i)=>r.concat(b[i]));
+    for(let k=0;k<n;k++){
+      let p=k;for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[p][k]))p=i;
+      if(Math.abs(M[p][k])<1e-20)return null;[M[p],M[k]]=[M[k],M[p]];
+      for(let i=k+1;i<n;i++){const v=M[i][k]/M[k][k];for(let j=k+1;j<=n;j++)M[i][j]-=v*M[k][j];}
+    }
+    const x=Array(n).fill(0);for(let i=n-1;i>=0;i--){let v=M[i][n];for(let j=i+1;j<n;j++)v-=M[i][j]*x[j];x[i]=v/M[i][i];}return x;
+  }
+  function productDerivatives(C,p){
+    const n=p.length,pre=[[1,0]],suf=Array(n+1);suf[n]=[1,0];
+    for(let i=0;i<n;i++)pre.push(mul(pre[i],C.z[i][p[i]]));
+    for(let i=n-1;i>=0;i--)suf[i]=mul(C.z[i][p[i]],suf[i+1]);
+    const grad=Array(2*n);
+    for(let i=0;i<n;i++){const d=scale(mul(pre[i],suf[i+1]),1/C.rows[i]);grad[i]=d;grad[n+p[i]]=d;}
+    return {p:pre[n],grad};
+  }
+  // Terminal-contact proposal: linearize the 2n-1 top contact equalities
+  // while preserving the complex D-P_pivot to first order. This is a
+  // regularized numerical continuation step, not the exact transfer theorem.
+  function contactStep(E,r,step){
+    const {g,C,U,dir}=E,n=g.a.length,ps=[],keys=new Set();
+    function addPerm(p){const key=p.join(",");if(keys.has(key))return;keys.add(key);const z=product(C.z,p);ps.push({p,z,h:dot(dir,z)});}
+    for(const p of C.ps)addPerm(p);
+    if(C.full)for(const p of C.full.points)addPerm(unpack(p));
+    ps.sort((a,b)=>b.h-a.h);
+    const seeds=ps.slice(0,4);
+    for(const {p} of seeds)for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const q=p.slice();[q[i],q[j]]=[q[j],q[i]];addPerm(q);}
+    ps.sort((a,b)=>b.h-a.h);
+    const pivot=productDerivatives(C,ps[0].p),R=Math.max(abs(pivot.p),abs(E.D),1e-100),rows=[],rhs=[];
+    const realRow=(grad,e)=>grad.flatMap(v=>[dot(e,v)/R,dot(e,mul([0,1],v))/R]);
+    for(const {p} of ps.slice(1,2*n-1)){
+      const z=productDerivatives(C,p),delta=z.grad.map((v,i)=>sub(v,pivot.grad[i]));
+      rows.push(realRow(delta,dir));rhs.push(-dot(dir,sub(z.p,pivot.p))/R);
+    }
+    const inv=E.inverse||(E.inverse=detInv(E.M,true)),K=inv.inv;
+    if(K){
+      const dg=Array(2*n);
+      for(let i=0;i<n;i++)dg[i]=mul(E.D,K[i][i]);
+      for(let j=0;j<n;j++){
+        let z=[0,0];
+        for(let i=0;i<n;i++)for(let k=0;k<n;k++)z=add(z,mul(conj(U[i][j]),mul(K[i][k],U[k][j])));
+        dg[n+j]=mul(E.D,z);
+      }
+      const d=dg.map((v,i)=>sub(v,pivot.grad[i]));
+      rows.push(realRow(d,[1,0]).map(x=>1.5*x),realRow(d,[0,1]).map(x=>1.5*x));rhs.push(0,0);
+    }
+    if(!rows.length)return g;
+    const inner=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+    const A=rows.map(a=>rows.map(b=>inner(a,b))),trace=A.reduce((s,row,i)=>s+row[i],0),lambda=Math.max(1e-10,trace/rows.length*1e-5);
+    for(let i=0;i<A.length;i++)A[i][i]+=lambda;
+    const y=solveReal(A,rhs);if(!y)return g;
+    const d=Array.from({length:4*n},(_,j)=>rows.reduce((s,row,i)=>s+y[i]*row[j],0));
+    let m=0;for(let j=0;j<2*n;j++)m=Math.max(m,Math.hypot(d[2*j],d[2*j+1]));
+    if(!Number.isFinite(m)||m<1e-13)return g;
+    const t=Math.min(1,step/m),a=g.a.map((v,i)=>add(v,[t*d[2*i],t*d[2*i+1]])),b=g.b.map((v,i)=>add(v,[t*d[2*(n+i)],t*d[2*(n+i)+1]]));
+    return normalize({...g,a,b});
+  }
   function mutate(E,r,o){
     const g=E.g,n=g.a.length,u=r(),step=Math.exp(-3.3+3*r());
-    if(u<.17)return birth(g,r);
+    if(u<.17){let child=birth(g,r);while(r()<.12)child=birth(child,r);return child;}
     if(u<.28)return death(g,r);
     if(u<.48){const [i,j]=pair(n,r),e=orbitGate(g,E,i,j)||randomGate(i,j,r,step);return {...g,gates:g.gates.concat([e])};}
-    if(u<.63)return freeEntry(E,r,step,o);
-    if(u<.71)return projective(g,r);
-    if(u<.84){
+    if(u<.61)return freeEntry(E,r,step,o);
+    if(u<.71)return contactStep(E,r,step);
+    if(u<.77)return projective(g,r);
+    if(u<.88){
       const gates=g.gates.slice();
       if(gates.length&&r()<.65){const i=r.int(gates.length),e=gates[i];if(r()<.20)gates.splice(i,1);else gates[i]=[e[0],e[1],e[2]+step*r.normal(),e[3]+step*r.normal()];}
       else{const [i,j]=pair(n,r);gates.splice(r.int(gates.length+1),0,randomGate(i,j,r,step));}
@@ -397,11 +471,24 @@ function buildCore() {
   function diskSeparate(z,e,target,den,limit){
     const n=z.length,m=meter(limit),sq=z.map(r=>r.map(norm2)),e2=norm2(e),d2=den*den,T2=target*target;
     let pruned=0,leaves=0;
+    // Scalar max-product assignment DP is much cheaper than polygon DP.
+    // Use it when its transition count fits the budget; otherwise use a
+    // cached independent-row relaxation. Both are exact upper bounds.
+    const full=(1n<<BigInt(n))-1n,exactMod=target>0n&&BigInt(n)*(full+1n)<=BigInt(Math.floor(limit/3)),bounds=new Map([[0n,1n]]);
+    function tailBound(mask,i){
+      const old=bounds.get(mask);if(old!==undefined)return old;
+      let v=exactMod?0n:1n;
+      if(exactMod){
+        for(let j=0;j<n;j++)if(mask&(1n<<BigInt(j))){m.tick();const x=sq[i][j]*tailBound(mask^(1n<<BigInt(j)),i+1);if(x>v)v=x;}
+      }else{
+        for(let k=i;k<n;k++){let max=0n;for(let j=0;j<n;j++)if((mask&(1n<<BigInt(j)))&&sq[k][j]>max)max=sq[k][j];v*=max;m.tick(n);}
+      }
+      bounds.set(mask,v);return v;
+    }
     function rec(mask,i,p){
       m.tick();if(i===n){leaves++;return dot(e,p)*den<target;}
       if(target>0n){
-        let bound=norm2(p)*e2*d2;
-        for(let k=i;k<n;k++){let max=0n;for(let j=0;j<n;j++)if((mask&(1n<<BigInt(j)))&&sq[k][j]>max)max=sq[k][j];bound*=max;m.tick(n);}
+        const bound=norm2(p)*e2*d2*tailBound(mask,i);
         if(bound<T2){pruned++;return true;}
       }
       const js=[];for(let j=0;j<n;j++)if(mask&(1n<<BigInt(j)))js.push(j);
@@ -409,7 +496,7 @@ function buildCore() {
       for(const j of js)if(!rec(mask^(1n<<BigInt(j)),i+1,mul(p,z[i][j])))return false;
       return true;
     }
-    return {strict:rec((1n<<BigInt(n))-1n,0,[1n,0n]),work:m.used,pruned,leaves};
+    return {strict:rec(full,0,[1n,0n]),work:m.used,pruned,leaves,exactModulusAssignment:exactMod};
   }
   function rationalize(E,Q){
     const q=x=>String(BigInt(Math.round(x*Q))),v=x=>x.map(q);
@@ -523,6 +610,12 @@ function buildCore() {
     for(let k=0;k<10;k++){
       const g=restart(r),o={samples:12,work:10000},E=evaluate(g,null,r,o),[i,j]=pair(g.a.length,r),g2={...g,gates:g.gates.concat([randomGate(i,j,r)])},F=evaluate(g2,E,r,o),M=sumMatrix(g2.a,g2.b,mixer(g2));
       for(let i=0;i<M.length;i++)for(let j=0;j<M.length;j++)assert(abs(sub(F.M[i][j],M[i][j]))<1e-9,"incremental orbit update");tests++;
+    }
+    for(let k=0;k<8;k++){
+      const g=restart(r),E=evaluate(g,null,r,{samples:20,work:10000}),p=E.C.ps[0],v=productDerivatives(E.C,p);
+      const j=r.int(g.a.length),Z=E.C.z.map(row=>row.slice()),eps=1e-6;Z[j]=Z[j].map(x=>add(x,[eps/E.C.rows[j],0]));
+      assert(abs(sub(scale(sub(product(Z,p),v.p),1/eps),v.grad[j]))<1e-7,"contact derivative");tests++;
+      const h=contactStep(E,r,.1);assert(h.a.length===g.a.length&&h.a.every(x=>x.every(Number.isFinite)),"contact continuation");tests++;
     }
     const cert={format:"moc-emergent-v1",a:[["1","2"],["2","0"]],b:[["3","1"],["-1","4"]],gates:[],direction:["1","0"]};
     assert(verify(cert).status==="NOT_SEPARATED","identity not violation");tests++;
