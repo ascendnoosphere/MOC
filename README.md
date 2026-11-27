@@ -293,6 +293,10 @@ the proved subclasses and reductions.
 - In a fixed basis, $A$ is normal and differs from a complex diagonal
   matrix by rank at most two; its partner is arbitrary complex diagonal.
 
+## Computational counterexample search
+
+The [emergent-dimension search engine](search/README.md) searches variable-size spectral/unitary graphs without an order parameter or order sweep. It uses a numerical support oracle for discovery and Gaussian-integer arithmetic for exact directional witness verification.
+
 ## Check the Lean source
 
 Use the version in [lean-toolchain](lean-toolchain): Lean 4.19.0.
