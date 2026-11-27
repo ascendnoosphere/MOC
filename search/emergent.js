@@ -541,8 +541,16 @@ function buildCore() {
     function fitness(a){return a.score+.08*novelty(a,pool);}
     function insert(E){
       if(pool.length<o.population){pool.push(E);return;}
-      if(r()<.15){pool[r.int(pool.length)]=E;return;}
-      if(r()<.50){
+      const route=r();
+      if(route<.12){pool[r.int(pool.length)]=E;return;}
+      if(route<.38){
+        // Protect a structural frontier even when large new graphs start
+        // with poor gaps. This uses continuous novelty, never order buckets.
+        let crowded=0;for(let i=1;i<pool.length;i++)if(novelty(pool[i],pool)<novelty(pool[crowded],pool))crowded=i;
+        if(novelty(E,pool)>novelty(pool[crowded],pool))pool[crowded]=E;
+        return;
+      }
+      if(route<.70){
         let nearest=0;for(let i=1;i<pool.length;i++)if(dist(E,pool[i])<dist(E,pool[nearest]))nearest=i;
         if(dist(E,pool[nearest])<.18){if(E.score>=pool[nearest].score)pool[nearest]=E;return;}
       }
@@ -554,7 +562,9 @@ function buildCore() {
       let parent=null,g;
       if(!pool.length||r()<.12)g=restart(r);
       else{
-        parent=pool[r.int(pool.length)];if(r()<.65)for(let i=0;i<2;i++){const x=pool[r.int(pool.length)];if(fitness(x)>fitness(parent))parent=x;}
+        parent=pool[r.int(pool.length)];
+        const route=r(),metric=route<.26?x=>novelty(x,pool):fitness;
+        if(route<.78)for(let i=0;i<2;i++){const x=pool[r.int(pool.length)];if(metric(x)>metric(parent))parent=x;}
         g=mutate(parent,r,o);
       }
       // The size guard is an operation budget, not a fixed order or order sweep.
@@ -592,6 +602,13 @@ function buildCore() {
         const h=max(all);assert(diskSeparate(z,e,h+1n,1n,1000000).strict,"disk strict");assert(!diskSeparate(z,e,h,1n,1000000).strict,"disk equality rejection");tests+=3;
       }
     }
+    // Independent Leibniz determinant cross-check, including pivot swaps.
+    for(let n=2;n<=5;n++)for(let k=0;k<4;k++){
+      const A=Array.from({length:n},()=>Array.from({length:n},()=>[BigInt(r.int(5)-2),BigInt(r.int(5)-2)]));
+      if(k===0)A[0][0]=[0n,0n];
+      let d=[0n,0n];for(const p of permutations(n)){let parity=0;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)parity^=Number(p[i]>p[j]);d=add(d,scale(product(A,p,-1,true),parity?-1n:1n));}
+      assert(norm2(sub(d,bareiss(A)))===0n,"Bareiss versus Leibniz");tests++;
+    }
     const z=[[2n,1n],[3n,-2n]],w=[[1n,4n],[-1n,1n]];
     assert(norm2(sub(bareiss([z,w]),sub(mul(z[0],w[1]),mul(z[1],w[0]))))===0n,"Bareiss determinant");tests++;
     for(let k=0;k<25;k++){
@@ -628,7 +645,7 @@ function buildCore() {
 }
 
 if (require.main === module) {
-  const fs=require("node:fs"), os=require("node:os");
+  const fs=require("node:fs");
   const {Worker,isMainThread,parentPort,workerData}=require("node:worker_threads");
   const core=buildCore();
   function args(v) {
