@@ -110,7 +110,7 @@ function buildCyclic(core){
     if(d<-1070n)return [0,0];return sc(x,2**Number(d>100n?100n:d));
   }
   function evaluate(g,o={}){
-    const samples=o.cycleSamples??12,store=o.cache,key=store?"cycle-eval-v1:"+samples+":"+JSON.stringify(g.runs):null,hit=key?store.get(key):undefined;if(hit!==undefined)return hit;
+    const samples=o.cycleSamples??12,store=o.cache,key=store?"cycle-eval-v2:"+samples+":"+JSON.stringify(g.runs):null,hit=key?store.get(key):undefined;if(hit!==undefined)return hit;
     const n=dimension(validate(g)),d=determinant(g,store),p=matchSamples(g,samples,store);
     const nz=p.filter(x=>!zero(x));const ref=nz.length?nz.map(x=>BigInt(x[2])).reduce((x,y)=>x>y?x:y):BigInt(d[2]);
     const G=core.gapFromPoints(p.map(x=>relative(x,ref)),relative(d,ref));
@@ -118,7 +118,7 @@ function buildCyclic(core){
     const out={dimension:String(n),runs:g.runs.length,gap:Number.isFinite(gap)?gap:null,dir:G.dir,determinant:d,
       // Never interpret this as an exact support gap. Matching samples
       // form only an inner hull; accumulated floating phase error is unbounded.
-      status:"UNRESOLVED_NUMERICAL",score:Math.max(-1,Math.min(0,Number.isFinite(gap)?gap:0))+.06*Math.log1p(logOrder)+.02*Math.log1p(g.runs.length),logOrder};
+      status:"UNRESOLVED_NUMERICAL",score:Math.max(-1,Math.min(0,Number.isFinite(gap)?gap:0))+.06*Math.tanh(Math.log1p(logOrder)/4)+.02*Math.log1p(g.runs.length),logOrder};
     if(key)store.set(key,out);return out;
   }
   function randomType(r){
@@ -160,7 +160,7 @@ function buildCyclic(core){
     return {dense:{a,b,gates,mode:0},cert:{format:"moc-emergent-v1",a:a.map(x=>x.map(String)),b:b.map(x=>x.map(String)),gates:exact,direction:["1","0"]}};
   }
   function search(o={}){
-    const r=rng(o.seed??1),steps=o.steps??1000,pop=o.population??24,pool=[],stats={evaluated:0,exactChecks:0,exactUnresolved:0,largeUnresolved:0,maxDimension:"0",bestOptimisticGap:null};
+    const r=rng(o.seed??1),steps=o.steps??1000,pop=o.population??24,pool=[],stats={evaluated:0,exactChecks:0,exactUnresolved:0,compressedChecks:0,compressedDirectionRejected:0,compressedInconclusive:0,largeUnresolved:0,maxDimension:"0",bestOptimisticGap:null};
     function put(x){
       if(pool.length<pop){pool.push(x);return;}
       // Keep a large-structure frontier as well as fit local proposals.
@@ -177,8 +177,16 @@ function buildCyclic(core){
       if(e.gap!==null&&(stats.bestOptimisticGap===null||e.gap>stats.bestOptimisticGap))stats.bestOptimisticGap=e.gap;
       if(e.gap!==null&&e.gap>1e-10){
         const x=expand(g,o.work??80000);
-        if(!x)stats.largeUnresolved++;
-        else{
+        if(!x){
+          stats.largeUnresolved++;
+          if(o.compressedVerify&&k%(o.proofEvery??8)===0){
+            stats.compressedChecks++;
+            const r=o.compressedVerify(g,e.dir,o.proofWork??3000,o.precision??192);
+            if(r.proof.status==="CERTIFIED")return {status:"CERTIFIED",certificate:r.certificate,stats};
+            if(r.proof.status==="NOT_SEPARATED")stats.compressedDirectionRejected++;
+            else stats.compressedInconclusive++;
+          }
+        }else{
           stats.exactChecks++;x.cert.direction=e.dir.map(x=>String(BigInt(Math.round(1e9*x))));
           if(x.cert.direction.every(x=>x==="0"))x.cert.direction=["1","0"];
           const proof=core.verify(x.cert,o.exactWork??1000000,true);
