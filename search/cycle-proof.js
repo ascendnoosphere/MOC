@@ -58,10 +58,11 @@ function buildCycleProof(cyclic){
       }return out;
     }
     const I=[O,Z,Z,O],mm=(a,b)=>[add(mul(a[0],b[0]),mul(a[1],b[2])),add(mul(a[0],b[1]),mul(a[1],b[3])),add(mul(a[2],b[0]),mul(a[3],b[2])),add(mul(a[2],b[1]),mul(a[3],b[3]))];
-    return {Z,O,I,integer,rational,add,neg,mul,compare,project,mm,cp:(a,n)=>pow(a,n,O,mul,"c"),mp:(a,n)=>pow(a,n,I,mm,"m")};
+    return {Z,O,I,integer,rational,add,neg,mul,compare,project,mm,conj:a=>[a[0],-a[1],a[2],a[3]],cp:(a,n)=>pow(a,n,O,mul,"c"),mp:(a,n)=>pow(a,n,I,mm,"m")};
   }
   const vadd=(a,b)=>[a[0]+b[0],a[1]+b[1]],vsub=(a,b)=>[a[0]-b[0],a[1]-b[1]],vmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]],vs=(a,s)=>[a[0]*s,a[1]*s];
   function determinant(g,A){
+    if(g.extra)return cyclic.oddDeterminant(g,A);
     const {Z,O,I,rational,add,neg,mul,mm,mp,cp}=A;
     function block(x,y,gate,inverse=false){
       x=x.map(BigInt);y=y.map(BigInt);let [s,t,q]=gate.map(BigInt);
@@ -83,7 +84,9 @@ function buildCycleProof(cyclic){
     return add(add(T[0],T[3]),neg(add(u,v)));
   }
   function types(g,side){
-    const m=new Map();for(const t of g.runs)for(const z of t[side]){const k=JSON.stringify(z),v=m.get(k)||{z:z.map(BigInt),count:0n};v.count+=BigInt(t.count);m.set(k,v);}return [...m.values()];
+    const m=new Map();for(const t of g.runs)for(const z of t[side]){const k=JSON.stringify(z),v=m.get(k)||{z:z.map(BigInt),count:0n};v.count+=BigInt(t.count);m.set(k,v);}
+    if(g.extra){const z=g.extra[side],k=JSON.stringify(z),v=m.get(k)||{z:z.map(BigInt),count:0n};v.count++;m.set(k,v);}
+    return [...m.values()];
   }
   function verify(cert,work=10000){
     if(cert.format!=="moc-cycle-interval-v1")throw Error("unknown compressed certificate");
@@ -130,8 +133,8 @@ function buildCycleProof(cyclic){
           cap[j]+=l;return result;
         }
         const mid=(l+h)>>1n;
-        // Larger counts of large factors first: quickly find obstructing
-        // matching products instead of exhausting the entire tree.
+        // Explore high-count intervals first; a single obstructing
+        // matching product disproves the proposed strict direction.
         const first=range(mid+1n,h);if(first===false)return false;
         const second=range(l,mid);if(second===false)return false;
         return first===true&&second===true?true:null;
@@ -164,15 +167,19 @@ function buildCycleProof(cyclic){
     const g={format:"moc-cycle-rle-v1",runs:[{count:"1",a:[[1,2],[3,1]],b:[[2,-1],[1,3]],p:[1,2,3],q:[2,1,3]},{count:"1",a:[[3,-1],[-2,1]],b:[[1,-1],[2,3]],p:[2,1,4],q:[1,3,4]}]};
     for(let j=0;j<12;j++){
       g.runs[0].a[0]=[j-4,j%3];g.runs[1].count=String(1+j%3);
+      if(j%2)g.extra={a:[2,-1],b:[3,2],gate:[1,2,4]};else delete g.extra;
       const x=cyclic.expand(g,1000000),raw=core.verify(x.cert,1000000),d=raw.determinantNumerator.map(BigInt),den=BigInt(raw.denominator);
       ok(inside(determinant(g,A),d[0],d[1],den),"interval determinant contains exact rational determinant");
       const r=verify({format:"moc-cycle-interval-v1",genome:g,direction:["1","0"],precision:96},100000);
       if(raw.status==="NOT_SEPARATED")ok(r.status!=="CERTIFIED","no false certificate");else ok(r.status!=="NOT_SEPARATED","no false rejection");
     }
-    g.runs[0].count="499999999";g.runs[1].count="1";
+    delete g.extra;g.runs[0].count="499999999";g.runs[1].count="1";
     const r=verify({format:"moc-cycle-interval-v1",genome:g,direction:["1","0"],precision:192},400);
     ok(r.dimension==="1000000000","large exact dimension");ok(r.status!=="CERTIFIED","test fixture not falsely certified");
-    return {status:"PASS",assertions:count,billion:r};
+    g.extra={a:[2,-1],b:[3,2],gate:[1,2,4]};
+    const odd=verify({format:"moc-cycle-interval-v1",genome:g,direction:["1","0"],precision:192},400);
+    ok(odd.dimension==="1000000001","large odd exact dimension");ok(odd.status!=="CERTIFIED","odd fixture not falsely certified");
+    return {status:"PASS",assertions:count,billion:r,billionPlusOne:odd};
   }
   return {verify,propose,selftest,arithmetic};
 }
