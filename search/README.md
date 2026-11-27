@@ -1,56 +1,127 @@
 # Emergent-dimension counterexample search
 
 This directory contains a dependency-free Node.js research engine for the
-Marcus–de Oliveira conjecture. It searches one population of variable-size
-spectral/unitary graphs. **There is no dimension input, dimension sweep, or
+Marcus–de Oliveira conjecture. It searches shared populations of variable-size
+spectral/unitary graphs, including compressed arbitrary-order cyclic graphs. **There is no dimension input, dimension sweep, or
 dimension-specific worker.** Dimension is the number of live spectral
 labels in a graph, not a parameter that the user selects.
 
 The program is a heuristic discovery engine with an exact arithmetic
 separation verifier. A finite search that finds nothing does not prove MOC.
 
-## Run
+## Run the persistent parallel engine
 
-From the repository root, with Node.js 18 or later:
+Use Node.js 18 or later. There are no third-party packages.
 
 ```sh
-node search/emergent.js selftest
-node search/emergent.js search --steps 100000 --workers 4 --seed 2026
-node search/emergent.js verify moc-counterexample.json --work 2000000
+node search/parallel.js selftest
+node search/native-smoke.js
+
+node search/parallel.js search \
+  --steps 1000000 --workers 8 --batch 250 \
+  --population 48 --archive 256 \
+  --cache-dir .moc-cache --run-id moc \
+  --work 200000 --exact-work 1000000 \
+  --cycle-share 0.5 --proof-work 20000 \
+  --proof-every 2 --precision 256
 ```
 
-The last command requires a certificate from a successful search. Each
-worker maintains an independent population with variable order and a
-different random seed. Workers stop when one produces an exact witness
-or when all proposal budgets are exhausted. No worker is assigned an
-order.
+The step target is cumulative **across all workers**, not per worker.
+No worker has a dimension or an order range. The coordinator dispatches
+batches dynamically and returns completed migrants to a shared archive.
+A batch selects either the general dense gate-graph representation or the
+unbounded compressed cyclic representation. This choice is not an order
+selection.
 
-| Option | Default | Meaning |
+To extend the same run after an interruption or after the previous target
+is complete, use the same cache directory, run ID and seed with a larger
+step target:
+
+```sh
+node search/parallel.js search --steps 2000000 --workers 8 \
+  --cache-dir .moc-cache --run-id moc --seed 2026
+```
+
+The command restores the archive, totals, next batch ID and outstanding
+jobs from the checkpoint. Ctrl-C requests a checkpointed stop after
+in-flight jobs finish. After a hard crash, remove the stale
+`coordinator.lock` only after confirming the old coordinator is no longer
+running; the pending jobs will then be replayed. Different run IDs can
+share one cache directory without sharing a checkpoint. Separate hosts
+can use a shared filesystem if it provides atomic rename semantics;
+their coordinators and archives remain independent.
+
+```sh
+node search/parallel.js inspect .moc-cache/runs/moc/checkpoint.json
+node search/parallel.js verify moc-counterexample.json --exact-work 5000000
+```
+
+The last command requires a certificate from a successful search. It
+independently recomputes the proof, without a discovery cache. The legacy
+`search/emergent.js` CLI is also available for a standalone dense search.
+
+| Parallel option | Default | Meaning |
 | --- | ---: | --- |
-| `--steps` | 1000 | Proposals per worker, including rejected proposals |
-| `--workers` | 1 | Number of parallel populations |
-| `--seed` | 1 | Pseudorandom seed |
-| `--population` | 24 | Archive size per worker |
-| `--samples` | 40 | Random matching permutations per new spectral pair, plus deterministic and locally optimized samples |
-| `--work` | 80000 | Main floating subset-hull work limit per new spectral pair |
-| `--exact-work` | 1000000 | Work limit for each exact support oracle |
-| `--report-every` | 100 | Progress interval in proposals (0 disables) |
-| `--out` | moc-counterexample.json | Destination of a certified witness |
+| `--steps` | 100000 | Cumulative proposal target over all workers |
+| `--workers` | up to 8 | Local worker threads, dynamically assigned batches |
+| `--batch` | 250 | Proposals per scheduled batch |
+| `--seed` | 2026 | Stable run seed; batch seeds derive from batch IDs |
+| `--population` | 24 | Population size in each batch |
+| `--archive` | 128 | Shared migrant capacity per representation |
+| `--cycle-share` | 0.4 | Fraction of batches assigned to compressed cyclic graphs |
+| `--samples` | 40 | Dense random matching samples |
+| `--cycle-samples` | 12 | Compressed transportation matching samples |
+| `--work` | 80000 | Main floating hull work limit; also determines dense allocation guard |
+| `--exact-work` | 1000000 | Work limit for dense exact or independent final verification |
+| `--proof-work` | 3000 | Transportation-tree visits per compressed proof attempt |
+| `--proof-every` | 8 | Eligible compressed proof attempt interval within a batch |
+| `--precision` | 192 | Dyadic interval mantissa bits for compressed verification |
+| `--cache-dir` | .moc-cache | Persistent content-addressed object and checkpoint directory |
+| `--run-id` | default | Independent resumable archive/checkpoint name |
+| `--memory-mb` | 32 | Approximate worker-local cache memory target |
+| `--cache-max-mb` | 4096 | Approximate shared disk cache write limit, not a strict quota |
+| `--out` | moc-counterexample.json | Certified witness file |
 
-The limits count operations in the support oracles, not CPU seconds.
-They do not bound all matrix operations, BigInt arithmetic, or the
-additional contact-proposal oracles. A rough cubic matrix-operation
-guard derives its limit from `--work`; this is a resource guard,
-not an independently chosen dimension cutoff. Raise the work and
-population budgets for broader exploration. More workers also require
-more memory.
+Work limits count algorithmic work, not CPU time. Dense allocation still
+has a resource guard. The compressed representation has no numerical
+dimension cap; the run counts, dimension, transportation capacities,
+and scaled arithmetic exponents are BigInts. Its actual runtime depends
+on the number of runs, the bit length of counts, distinct spectral
+values, precision and proof complexity. Raise budgets when necessary.
 
-The JSON progress records include the histogram of realized dimensions,
-not a schedule of dimensions. `complete` counts candidates evaluated
-against a full **floating-point** matching hull. `best.gap` is the
-largest relative floating support gap among them. It is not a
-certificate. `oracleWork` counts the main hull work, including capped
-attempts, not all computational work.
+### Shared caching and upward reuse
+
+The coordinator exchanges elite and diverse candidates after every batch.
+Each worker has a bounded local LRU cache and all workers can read the
+same persistent content-addressed store. Cache entries have checksums;
+writes are published atomically and incomplete/corrupt entries are not
+used. Cache objects are immutable computations, not proof premises.
+
+The cache contains:
+
+- completed numerical candidate evaluations and determinants;
+- dense partial convex hulls keyed by their actual remaining factor
+  matrix, with local matching labels (not by matrix dimension);
+- repeated cyclic transfer-matrix and complex scalar powers;
+- budget-specific compressed proof-attempt results.
+
+Dense label births prepend a new label and keep the old spectral
+entries where possible. Row scaling depends only on the corresponding
+first-spectrum value, so an unchanged suffix retains its factor-matrix
+cache key after a birth. Local edits avoid global normalization unless
+values drift outside the working scale. A mixer-only mutation also reuses
+its parent's spectral hull and incrementally updates the sum matrix.
+
+Cyclic run growth reuses binary powers of the same local transfer
+matrix. For example, changing a run count from \(m\) to \(2m\)
+requires only the new combinations of cached powers, not a new
+dimension-sized calculation. Completed partial states remain reusable
+even if their original search exhausted its work budget.
+
+Small objects stay in local memory until reused; expensive objects are
+batched to disk. The disk limit is a soft write limit and can overshoot
+with concurrent writers. It does not automatically evict old files.
+The checkpoint directory is separate from cached computation objects.
 
 ## 1. Structural genome
 
@@ -71,7 +142,7 @@ second diagonal spectrum.
 A restart begins with no labels. Birth operations add labels and
 incident gates. The only minimum is the proved MOC theorem in orders
 0 through 3. A random continuation after that minimum produces an
-unassigned initial order. Subsequent mutations insert or delete
+unassigned initial order in the dense representation. Subsequent mutations insert or delete
 labels, rewire or modify gates, or change spectral values. Mutations
 can increase or decrease the order of the same lineage.
 
@@ -227,31 +298,145 @@ Verifier exit codes: 0 = `CERTIFIED`; 1 = `NOT_SEPARATED`
 (the supplied direction is not strict); 2 = `INCONCLUSIVE` or input
 error. A nonseparating direction is not a proof of full hull inclusion.
 
-## 5. Validation and limits
+## 5. Arbitrary-order compressed search and rigorous verification
 
-The core self-test passed 996 assertions in a V8 JavaScript runtime.
-It cross-checks exact hull support and disk bounds against direct
-permutations through order six, verifies matching paths, compares
-Bareiss with direct Leibniz determinants, tests analytic two-row ascent
-against random gates, tests QR compression and incremental updates,
-checks derivatives and rational unitarity, and runs a mixed-size
-search. The CLI search and verify paths were also exercised with
-mocked Node I/O; the actual Node worker-thread integration was not
-run in that environment.
+The dense representation is general but cannot allocate an arbitrary
+large matrix. The second representation searches a structured open
+family related to [two-layer cyclic gate laws](../Lean/MOC/TwoBiasedCyclicGateLaw.lean)
+and [cyclic antipodal spectral cases](../Lean/MOC/CyclicAntipodalSpectra.lean).
+It does not treat either restricted result as a proof for arbitrary
+cyclic data.
 
-Two 5,000-proposal runs of this revision, using the default population
-and main oracle budget and an exact budget of 300,000:
+A run stores a pair of first-spectrum values, a pair of second-spectrum
+values, two rational two-coordinate gate parameters, and an arbitrary
+positive integer multiplicity. The first mixer layer joins the two
+coordinates in each cell. The second layer joins one cell to its
+neighbor, including the closing edge of the ring. Mutations grow,
+shrink, split and alter runs. A nontrivial extra coordinate in a
+three-coordinate boundary block is also allowed.
 
-| Seed | Evaluated | Full numerical hull | Realized orders | Best relative numerical gap | Certified |
-| --- | ---: | ---: | --- | ---: | --- |
-| 2026 | 4712 | 4153 | 4–13, 16, 17 | -3.4311e-11 | 0 |
-| 314159 | 4578 | 3922 | 4–13, 16 | -8.5704e-7 | 0 |
+\[
+n=2\sum_{j=1}^r m_j+\varepsilon,\qquad
+\varepsilon\in\{0,1\}.
+\]
 
-These are smoke/throughput measurements, not a coverage claim.
-No exact certificate attempts were triggered by either run.
-Near-zero gaps can result from commuting or other proved limits.
-The method is stochastic and not exhaustive. Subset hull work and
-exact integer sizes can still grow rapidly. Rounding can miss a very
-small violation; exact verification may exhaust its budget; a fixed
-finite run cannot exclude any general order. The verifier is an
-arithmetic implementation, not a Lean kernel certificate.
+Thus both parities are unbounded. These structures are not made large by
+appending independent scalar blocks. Repeated run types can still have
+additional reducing symmetries; no irreducibility claim is made.
+
+Conjugate the sum by the second layer. The even-order result is cyclic
+tridiagonal, since the two normal summands are now made of alternating
+two-coordinate blocks. For diagonal entries \(d_i\) and directed edge
+entries \(u_i,v_i\), put \(w_i=u_iv_i\). With cyclic indexing,
+
+\[
+T_i=\begin{pmatrix}d_i&-w_{i-1}\\1&0\end{pmatrix},
+\qquad
+D=\operatorname{tr}(T_{n-1}\cdots T_0)
+-\prod_i u_i-\prod_i v_i.
+\]
+
+The trace enumerates the monomer/dimer terms. The two oriented full
+cycles have sign minus in even order. An odd-order defect adds a
+triangle at the closing edge. The determinant then has the core-ring
+terms, tail monomer/dimer terms, the two triangle orientations, and
+the two enlarged-cycle orientations. The implementation expands these
+terms using path transfer products, without division by the tail
+diagonal entry.
+
+Within a homogeneous run, the same two-node transfer matrix repeats.
+Binary exponentiation gives an operation count logarithmic in each run
+multiplicity. Explicit boundaries are processed separately. A fixed
+number of runs does not require dimension-sized storage. Complex
+mantissas have arbitrary integer binary exponents, so determinant
+magnitude does not overflow solely because the dimension is large.
+
+### Matching without listing labels
+
+Group equal values in the two spectra. A matching is represented by a
+nonnegative integer transportation table \(x_{ij}\) with the prescribed
+row and column multiplicities. Its matching product is
+
+\[
+P(x)=\prod_{i,j}(a_i+b_j)^{x_{ij}}.
+\]
+
+Every labelled permutation induces a feasible table and every feasible
+table lifts to a labelled permutation. Greedy feasible transportation
+samples provide optimistic inner-hull search scores. These scores can
+be very inaccurate: sampling can miss large products, and floating
+arithmetic can lose phase accuracy over huge powers. They are never
+certificates. The compressed search does not interpret a negative,
+zero or positive sampled gap as a rigorous hull decision.
+
+The compressed exact verifier avoids dense expansion. It uses dyadic
+complex balls \((r,i,\rho,e)\) with BigInt centers, nonnegative outward
+error radii, and arbitrary integer exponents:
+
+\[
+|\operatorname{Re}(z2^{-e})-r|
++|\operatorname{Im}(z2^{-e})-i|\le\rho.
+\]
+
+Rational gate coefficients are enclosed by directed integer rounding.
+Addition aligns exponents with outward rounding; multiplication
+propagates the L1 error bound. Binary matrix powers enclose the exact
+determinant. The grouped support verifier branches on integer count
+intervals, not individual labels. It uses squared-modulus upper bounds
+to prune entire intervals. For positive determinant lower projection,
+an interval can be eliminated when its upper squared modulus, multiplied
+by the squared norm of the direction, is strictly below the square of
+the determinant's lower projection.
+
+At a completed transportation table, compare the upper matching
+projection with the lower determinant projection. Only when **all**
+feasible tables are strictly separated (by certified bounds or leaf
+comparisons) can the verifier return `CERTIFIED`. If a matching lower
+projection is at least the determinant upper projection, it returns
+`NOT_SEPARATED` for that direction. Budget exhaustion or overlapping
+intervals return `INCONCLUSIVE`.
+
+A compressed certificate has format `moc-cycle-interval-v1` and includes
+the genome, integer direction and precision. The coordinator
+independently reverifies it before publishing the certificate.
+Unlike an exact dense determinant, it need not store integer numerators
+with bit length proportional to the dimension. The worst-case
+transportation search can still be prohibitively large. Neither
+logarithmic determinant evaluation nor large-order representation
+implies logarithmic complete separation or arbitrary dense search.
+
+## 6. Validation and limits
+
+The following were executed in a V8 JavaScript runtime:
+
+| Test | Result |
+| --- | --- |
+| Dense mathematical core | 998 assertions passed, including reuse of a partial hull across dimensions |
+| Compressed cyclic determinant | 58 assertions passed; 50 dense comparisons with maximum relative error about \(1.39\cdot10^{-14}\) |
+| Rigorous interval verifier | 31 assertions passed, including enclosure of exact rational determinants in even and odd orders |
+| Dimension 1,000,000,000 | Compressed determinant evaluated; one proposed direction rigorously rejected after 67 transportation-tree visits |
+| Dimension 1,000,000,001 | Compressed determinant evaluated; one proposed direction rigorously rejected after 88 visits |
+| Compressed representation | Evaluated a test fixture of dimension 2,000,000,000,000,000,000,000,000,000,003 |
+| Coordinator/cache simulation | Three-worker scheduling, 100-to-160 proposal resume, 1,363 persistent-cache hits, corruption rejection, and recovery of 60 pending proposals |
+
+A final 180-proposal compressed-only run (seed 41, work 2,000, exact
+work 3,000, proof work 200, proof interval 2, precision 192) evaluated
+180 candidates. It reached dimension 7,685,131,763,883,640,887,311,251,538,516.
+Eight compressed verification attempts rejected their proposed
+directions; no counterexample was certified. Large unresolved
+candidates remain unresolved: these statistics do not prove inclusion
+in those dimensions.
+
+The coordinator simulation used the real search kernels and mocked
+worker events and filesystem operations. Native Node worker threads and
+filesystem concurrency were not executed in this development
+environment. Run `node search/native-smoke.js` on the target machine
+to test actual parallel dispatch, persistence and resume.
+
+The implementation is stochastic, not exhaustive, and its speedup
+has not been benchmarked against an optimized native implementation.
+Exact interval verification can fail to resolve a sign; increase
+precision and work budgets where justified. A billion-dimensional
+compressed cycle is not equivalent to searching a billion-dimensional
+general dense unitary. The arithmetic verifier is not a Lean kernel
+certificate. No unrestricted conjecture or open family has been proved.
