@@ -3,7 +3,8 @@
 Let $A$ and $B$ be complex normal matrices of the same finite order $n$.
 A matrix $M$ is normal if $MM^*=M^*M$, where $M^*$ is the conjugate transpose.
 Let $a_1,\ldots,a_n$ and $b_1,\ldots,b_n$ be the eigenvalues of $A$ and $B$,
-counted with multiplicity. Let $S_n$ be the set of permutations of
+counted with multiplicity. Let $I$ be the identity matrix of order $n$.
+Let $S_n$ be the set of permutations of
 $\{1,\ldots,n\}$. For each $\sigma\in S_n$, define the matching product
 $P_\sigma=\prod_{j=1}^n(a_{\sigma(j)}+b_j)$.
 
@@ -317,6 +318,26 @@ can be a rank-one unitary phase, including a Householder reflection,
 or any unitary matrix of order at most three.
 [Ordered composition](Lean/MOC/StarPortComposition.lean#L80) · [Rank-one phases](Lean/MOC/StarPortComposition.lean#L35) · [Small blocks](Lean/MOC/StarPortComposition.lean#L42)
 
+The shared coordinate can change at each step of a recursive construction.
+Join two covered mixers at one selected coordinate. Repeat this operation
+with the resulting mixers. The starting blocks can be identities,
+unitaries of order at most three, or the proved order-four flat,
+zero-diagonal, and two-by-two tensor mixers. They can also lie in the
+proved order-five Fourier neighborhood. Every mixer constructed in this
+way satisfies the inclusion for all complex spectra.
+[Recursive construction and proof](Lean/MOC/UnitaryBlockTree.lean#L121) ·
+[Construction map](Docs/sparse-unitary-proof-map.md#recursive-joins-at-one-shared-coordinate)
+
+There is also a direct zero-pattern test in every positive order $n$.
+Choose a finite list of integers from $0$ through $2$ with sum $n-1$.
+Use indices $0,\ldots,n-1$. At each prefix sum $k$ of this list,
+require $U_{ij}=0$ whenever $i>k$ and $j<k$.
+Every unitary with these zero rectangles satisfies the inclusion for
+all complex spectra. Taking every step equal to one includes upper
+Hessenberg unitary matrices.
+[Staircase theorem](Lean/MOC/StaircaseZeroCorners.lean#L91) ·
+[Zero-pattern map](Docs/sparse-unitary-proof-map.md#staircase-of-zero-rectangles)
+
 In any order, take a forest whose vertices are the coordinate labels.
 For each of any number of distinct edges, choose a determinant-one
 unitary matrix on its two endpoints. Extend it by the identity on the
@@ -340,6 +361,17 @@ of both blocks, one probability law on permutations gives the
 determinant for every choice of the levels and diagonal entries.
 The overlap $H$ can have any dimension.
 [Common law](Lean/MOC/OverlappingProjectionBlocks.lean#L636) · [Inclusion](Lean/MOC/OverlappingProjectionBlocks.lean#L671) · [Proof map](Docs/projection-leaf-deletion-proof-map.md#two-overlapping-projection-blocks)
+
+Start with unitary diagonal blocks of arbitrary orders. In each block,
+specify at most four row labels. A generalized circle is a circle, a
+point, or a line. In each block, one generalized circle must contain
+all second-list values and the negatives of the first-list values
+outside the specified rows. Different blocks can use different circles.
+Apply determinant-one two-row unitary gates between the specified rows.
+The unordered pairs of joined blocks must be distinct edges of a forest.
+The resulting mixer satisfies the inclusion. The gate order is arbitrary.
+[Forest bridge theorem](Lean/MOC/FourOutlierForestBridges.lean#L76) ·
+[Premises and proof](Docs/overlapping-circle-blocks-proof-map.md#forest-of-bridges-between-spectral-blocks)
 
 On a simple even cycle with at least four coordinates, choose a
 two-by-two unitary gate on each edge. All gates except possibly two
@@ -392,11 +424,14 @@ diagonal permutation of the spectrum.
 ### Matrices and eigenvalues
 
 For any two complex normal matrices $A$ and $B$, the inclusion holds if
-$AB$ is normal. The order is arbitrary. Singular matrices and repeated
-eigenvalues are allowed. The inclusion also holds if $A$ is invertible
-and $A^{-1}B$ is normal.
-[Normal product](Lean/MOC/NormalProductInclusion.lean#L199) ·
-[Normal relative product](Lean/MOC/NormalProductInclusion.lean#L220) ·
+$(A-cI)(B-dI)$ is normal for some complex scalars $c,d$.
+The shifts are independent. The order is arbitrary. Singular matrices
+and repeated eigenvalues are allowed. Taking $c=d=0$ gives the normal
+product case. The inclusion also holds if $A$ is invertible and
+$A^{-1}B$ is normal.
+[Shifted normal product](Lean/MOC/NormalProductInclusion.lean#L251) ·
+[Normal product](Lean/MOC/NormalProductInclusion.lean#L282) ·
+[Normal relative product](Lean/MOC/NormalProductInclusion.lean#L292) ·
 [Complete proof map](Docs/normal-products-proof-map.md)
 
 Suppose one matrix is diagonal. In that basis, let the other matrix
@@ -475,6 +510,12 @@ Combining the blocks proves the convex-hull inclusion in every order.
   a list paired with its negation. In any order, an opposite pair suffices
   if the sum of its two eigenvalue multiplicities is at least $n-2$.
   [Order four](Lean/MOC/FourCoincidence.lean#L360) · [Negated list](Lean/MOC/FourNegativeCopy.lean#L147) · [Multiplicity bound](Lean/MOC/OppositePair.lean#L25)
+- In every order, the inclusion holds for lists $a$ and $-a$ if
+  $U$ differs from some diagonal matrix by rank at most two.
+  In odd order, it also holds if nonzero scalars $d_i$ satisfy
+  $d_iU_{ij}=d_jU_{ji}$ whenever $a_i\ne a_j$.
+  [Rank condition](Lean/MOC/NegativeCopyInclusion.lean#L116) ·
+  [Odd-order symmetry](Lean/MOC/NegativeCopyInclusion.lean#L60)
 - One fixed pair of complex lists of length four satisfies the inclusion
   for every unitary. A weighted-minor inequality certifies two of the
   nine hull edges. One of those edges has no certificate made only of
@@ -673,6 +714,29 @@ stated extension steps. The three scripts have not been compiled.
   dense row with a regular pole gives a nonnormal reciprocal
   compression.
   [Pole compression obstruction](Docs/spectral-support-proof-map.md#deletion-and-padding-tests)
+
+## Open all-order targets
+
+The following statements remain open in this library. Each statement
+asks for the full determinant inclusion in every finite order.
+The proved reductions and restricted cases do not discharge these goals.
+
+| Hypothesis | Remaining conclusion |
+| --- | --- |
+| Each spectrum has at most one nonreal eigenvalue, counted with multiplicity. | Inclusion for every relative unitary matrix. |
+| The relative unitary is a product of two arbitrary Householder reflections. | Inclusion for arbitrary complex spectra. |
+| The relative unitary is the discrete Fourier matrix. | Inclusion for arbitrary complex spectra and every order. |
+| Fix arbitrary complex spectra $a,b$. | There is $R\ge0$ such that $\det(zI+\mathrm{diag}(a)+U\mathrm{diag}(b)U^*)$ lies in the hull of $\prod_j(z+a_{\sigma(j)}+b_j)$ for all unitary $U$ and all $|z|>R$. |
+| Each row of the relative unitary has at most four nonzero entries. | Inclusion for arbitrary complex spectra. |
+| Some eigenvalue pair satisfies $a_i+b_j=0$. | Inclusion for arbitrary remaining eigenvalues and every relative unitary. |
+| The spectra of $A$ and $-B$ lie on the same union of two parallel lines. | Inclusion for every normal pair with these spectra. |
+| $A$, $B$, and $A+B$ are normal. | Inclusion without further spectral or maximality conditions. |
+| $A=D+R$ is normal, $D,E$ are complex diagonal matrices, and $\mathrm{rank}(R)\le2$. | Inclusion for $A$ and $E$. |
+
+The normal-product result is a proved case. The block, forest, staircase,
+and negative-spectrum extensions above are also proved under their stated
+conditions. No numerical sample or refutation of a stronger weight rule
+is a proof of an open statement in this table.
 
 ## Paper proofs and exact certificates
 

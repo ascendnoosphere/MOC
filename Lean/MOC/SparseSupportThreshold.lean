@@ -99,7 +99,7 @@ theorem exists_no_common_squared_minor_law_of_card_ge_four
   apply hfail
   refine ⟨w, hnonnegative, hmass, fun a b => ?_⟩
   simpa only [weightedMatchingValue, id_eq] using
-    determinantValue_eq_sum_of_indexed_minor_law a b U hU id w hminor
+    (determinantValue_eq_sum_of_indexed_minor_law a b U hU id w hminor).symm
 
 /-- For each order of at least four, the largest total support bound
 that guarantees universal matching weights is the order plus eight. -/

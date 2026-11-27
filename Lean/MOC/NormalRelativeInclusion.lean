@@ -41,14 +41,15 @@ private theorem normal_conjugated_diagonal {ι : Type*} [Fintype ι] [DecidableE
       simp only [B, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
 
 /-- Common Gram matrices and a scalar common Hermitian commutant force
-constant spectral moduli and give the inclusion. -/
-theorem holds_of_commuting_grams_of_scalar_hermitian_commutant {n : ℕ} (a b : Fin n → ℂ)
+constant spectral moduli in each spectrum. -/
+theorem exists_constant_spectral_normSq_of_commuting_grams {n : ℕ} (a b : Fin n → ℂ)
     (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U)
     (hBP : Commute (U * diagonal b * Uᴴ) ((diagonal a)ᴴ * diagonal a))
     (hAQ : Commute (diagonal a) ((U * diagonal b * Uᴴ)ᴴ * (U * diagonal b * Uᴴ)))
     (hcentral : ∀ Y : Matrix (Fin n) (Fin n) ℂ, Y.IsHermitian →
       Commute (diagonal a) Y → Commute (U * diagonal b * Uᴴ) Y →
-      ∃ c : ℂ, Y = c • (1 : Matrix (Fin n) (Fin n) ℂ)) : Holds a b U := by
+      ∃ c : ℂ, Y = c • (1 : Matrix (Fin n) (Fin n) ℂ)) :
+    ∃ A B : ℝ, (∀ i, Complex.normSq (a i) = A) ∧ (∀ i, Complex.normSq (b i) = B) := by
   let A := diagonal a
   let B := U * diagonal b * Uᴴ
   let c (i : Fin n) := (Complex.normSq (b i) : ℂ)
@@ -80,7 +81,20 @@ theorem holds_of_commuting_grams_of_scalar_hermitian_commutant {n : ℕ} (a b : 
   have hb' (i : Fin n) : Complex.normSq (b i) = β.re := by
     simpa only [c, Matrix.diagonal_apply_eq, Matrix.smul_apply, smul_eq_mul, Matrix.one_apply_eq,
       mul_one, Complex.ofReal_re] using congrArg (fun M : Matrix (Fin n) (Fin n) ℂ => (M i i).re) hDβ
-  exact holds_of_concentric_circles a b α.re β.re ha' hb' U hU
+  exact ⟨α.re, β.re, ha', hb'⟩
+
+/-- Common Gram matrices and a scalar common Hermitian commutant give
+the inclusion by the theorem for two concentric spectral circles. -/
+theorem holds_of_commuting_grams_of_scalar_hermitian_commutant {n : ℕ} (a b : Fin n → ℂ)
+    (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U)
+    (hBP : Commute (U * diagonal b * Uᴴ) ((diagonal a)ᴴ * diagonal a))
+    (hAQ : Commute (diagonal a) ((U * diagonal b * Uᴴ)ᴴ * (U * diagonal b * Uᴴ)))
+    (hcentral : ∀ Y : Matrix (Fin n) (Fin n) ℂ, Y.IsHermitian →
+      Commute (diagonal a) Y → Commute (U * diagonal b * Uᴴ) Y →
+      ∃ c : ℂ, Y = c • (1 : Matrix (Fin n) (Fin n) ℂ)) : Holds a b U := by
+  obtain ⟨A, B, ha, hb⟩ := exists_constant_spectral_normSq_of_commuting_grams a b U hU
+    hBP hAQ hcentral
+  exact holds_of_concentric_circles a b A B ha hb U hU
 
 /-- If the common Hermitian commutant contains only scalars, normality of
 the relative product forces concentric spectra and gives the inclusion. -/

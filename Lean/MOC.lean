@@ -33,6 +33,10 @@ import MOC.AlternatingMinorLaw
 import MOC.OneBridge
 import MOC.WeightedPermutationCycle
 import MOC.ForestGates
+import MOC.FourOutlierForestBridges
+import MOC.UnitaryBlockTree
+import MOC.StaircaseZeroCorners
+import MOC.NegativeCopyInclusion
 import MOC.ProjectionLeafPivot
 import MOC.OverlappingProjectionBlocks
 import MOC.BalancedCyclicGateLaw

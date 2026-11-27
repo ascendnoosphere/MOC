@@ -8,35 +8,35 @@ $M^*M=MM^*$. Let $a_1,\ldots,a_n$ and $b_1,\ldots,b_n$ enumerate the
 eigenvalues of $A$ and $B$, with algebraic multiplicity. Let $S_n$ be the
 permutation group on these labels.
 
-Suppose $AB$ is normal. Then
+Let $\mathrm{conv}_{\mathbb R}$ denote the real convex hull. If $AB$ is
+normal, then
 
 $$
 \det(A+B)\in\mathrm{conv}_{\mathbb R}
 \left\{\prod_{j=1}^n(a_{\sigma(j)}+b_j):\sigma\in S_n\right\}.
 $$
 
-There is no bound on $n$. Either matrix can be singular. Both spectra can
-have repeated eigenvalues. No commutation of $A$ and $B$ is required.
-[Matrix theorem](../Lean/MOC/NormalProductInclusion.lean#L199) ·
-[Spectral theorem](../Lean/MOC/NormalProductInclusion.lean#L165)
+The theorem allows all finite orders, singular matrices, and repeated
+eigenvalues.
+[Matrix theorem](../Lean/MOC/NormalProductInclusion.lean#L282) ·
+[Spectral theorem](../Lean/MOC/NormalProductInclusion.lean#L222)
 
 ## Proof route
 
-The Gram matrices are $P=A^*A$ and $Q=B^*B$. Both commute with both
-summands. A Hermitian matrix equals its conjugate transpose. A common
-Hermitian commuter is a Hermitian matrix that commutes with $A$ and $B$.
-A reducing subspace is a subspace preserved by both matrices and their
-adjoints.
+Set $P=A^*A$ and $Q=B^*B$. Both Gram matrices belong to the common
+commutant, the set of matrices that commute with $A$ and $B$. A Hermitian
+matrix equals its conjugate transpose. A common reducing subspace is
+preserved by $A$, $B$, and both conjugate transposes.
 
 ```mermaid
 flowchart TD
     N["A, B, and AB normal"]
     P["B commutes with P = A* A"]
     Q["A commutes with Q = B* B"]
-    C["P and Q belong to the common Hermitian commutant"]
-    R["OR"]
-    S["Every common Hermitian commuter is scalar"]
-    H["A nonscalar common Hermitian commuter exists"]
+    C{{"AND<br/>P and Q belong to the common commutant"}}
+    R{{"OR"}}
+    S["Every Hermitian matrix in the common commutant is scalar"]
+    H["The common commutant contains a nonscalar Hermitian matrix"]
     G["P and Q are scalar"]
     B["Proper common reducing blocks"]
     T["Both spectra have constant modulus"]
@@ -44,7 +44,9 @@ flowchart TD
     F["Concentric-circle inclusion"]
     D["Multiply the block convex combinations"]
     M["Determinant inclusion for this pair"]
-    N --> P --> Q --> C --> R
+    N --> P --> C
+    N --> Q --> C
+    C --> R
     R --> S --> G --> T --> F --> M
     R --> H --> B --> I --> D --> M
 ```
@@ -52,8 +54,7 @@ flowchart TD
 The induction hypothesis covers only smaller pairs with a normal
 product. The restriction of $AB$ to a common reducing block is the
 product of the restricted matrices. That restriction remains normal.
-Thus the proof does not assume unrestricted MOC in smaller orders.
-[Complete induction](../Lean/MOC/NormalProductInclusion.lean#L165)
+[Complete induction](../Lean/MOC/NormalProductInclusion.lean#L200)
 
 ### Gram commutation
 
@@ -87,34 +88,51 @@ This argument includes zero eigenvalues.
 
 ### Reduction and assembly
 
-If the common Hermitian commutant contains only scalar matrices, then
+If every Hermitian matrix in the common commutant is scalar, then
 $P=r^2I$ and $Q=s^2I$ for nonnegative real numbers $r,s$. Every eigenvalue
 of $A$ has modulus $r$. Every eigenvalue of $B$ has modulus $s$.
 The concentric-circle theorem gives the inclusion.
 [Scalar commutant](../Lean/MOC/NormalRelativeInclusion.lean#L45) ·
 [Concentric circles](../Lean/MOC/ConcentricPerturbation.lean#L131)
 
-Otherwise, diagonalize a nonscalar common Hermitian commuter. Its
-eigenspaces give proper common reducing blocks. Apply the same theorem
-in the smaller orders. If the block weights are $u_\sigma$ and
+Otherwise, diagonalize a nonscalar Hermitian matrix in the common
+commutant. Its eigenspaces give proper common reducing blocks. Apply the
+theorem in the smaller orders. If the block weights are $u_\sigma$ and
 $v_\tau$, use the products $u_\sigma v_\tau$. These weights are
 nonnegative and sum to one. Each block matching extends to a matching
 of the full spectra.
-[Block assembly](../Lean/MOC/Blocks.lean#L31)
+[Block assembly](../Lean/MOC/Blocks.lean#L32)
+
+## Independent scalar shifts
+
+Let $c,d$ be arbitrary complex numbers and let $I$ be the identity matrix.
+If $(A-cI)(B-dI)$ is normal, the same determinant inclusion holds for
+$\det(A+B)$ with the original eigenvalue lists $a$ and $b$. The two
+shifts can differ. The theorem allows singular shifted matrices.
+[Matrix theorem](../Lean/MOC/NormalProductInclusion.lean#L251) ·
+[Spectral theorem](../Lean/MOC/NormalProductInclusion.lean#L213)
+
+Put $C=A-cI$ and $D=B-dI$. Their Gram matrices $C^*C$ and $D^*D$
+commute with $C$, $D$, and each other. The simultaneous Gram eigenspaces
+give common reducing blocks, and the shifts preserve those blocks. On
+each block the eigenvalues of $A$ have constant distance from $c$ and
+those of $-B$ have constant distance from $-d$. Apply the two-circle
+theorem and combine the block laws.
+[Scalar moduli](../Lean/MOC/NormalRelativeInclusion.lean#L45) ·
+[Two-circle theorem](../Lean/MOC/TwoSpectralCircles.lean#L100) ·
+[Induction with offsets](../Lean/MOC/NormalProductInclusion.lean#L200)
 
 ## Normal relative products
 
 Suppose $A$ is invertible and $A^{-1}B$ is normal. The existing relative
 Gram theorem gives $BP=PB$ and $AQ=QA$. These two equalities make $AB$
-normal. Apply the normal-product theorem. This proves the determinant
-inclusion without a scalar-commutant assumption and without any
-lower-order MOC assumption.
-[Spectral relative-product theorem](../Lean/MOC/NormalProductInclusion.lean#L177) ·
-[Matrix relative-product theorem](../Lean/MOC/NormalProductInclusion.lean#L220)
+normal. The normal-product theorem gives the determinant inclusion.
+[Spectral relative-product theorem](../Lean/MOC/NormalProductInclusion.lean#L229) ·
+[Matrix relative-product theorem](../Lean/MOC/NormalProductInclusion.lean#L292)
 
 ```mermaid
 flowchart LR
-    R["A and B normal; A invertible; A inverse B normal"]
+    R["A and B normal<br/>A invertible, A inverse B normal"]
     G["Each matrix commutes with the other Gram matrix"]
     P["AB normal"]
     M["Determinant inclusion"]
@@ -142,6 +160,3 @@ and Section 3 of Aurelian Gheondea,
 (2009). The paper attributes the finite-dimensional structure theorem
 to Gantmaher and Krein (1930). Publication novelty of the determinant
 corollary has not been established.
-
-The unrestricted conjecture and the other proposed proof targets remain
-separate claims. The normal-product theorem does not establish them.
