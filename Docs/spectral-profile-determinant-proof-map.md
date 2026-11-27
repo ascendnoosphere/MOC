@@ -139,7 +139,7 @@ If $X$ has rank eight, $Y$ kills its kernel. On an invertible
 eight-dimensional principal block the corresponding matrices satisfy
 $YX^{-1}Y=-X$. All five-by-five lifted minors vanish at every rank.
 These are necessary spectral conditions.
-[Ordinary rays](../Lean/MOC/FourSupportCostProfiles.lean#L76) · [Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Ordinary span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight identity](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor identity](../Lean/MOC/FourInversePencilRankLift.lean#L117)
+[Ordinary rays](../Lean/MOC/FourSupportCostProfiles.lean#L134) · [Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Ordinary span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight identity](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor identity](../Lean/MOC/FourInversePencilRankLift.lean#L117)
 
 Write the compressed imaginary part as $Y=\sum_i x_i B_i$, where
 the $B_i$ are real matrices and the $x_i$ are real coefficients.
@@ -159,7 +159,21 @@ matching products makes the pencil singular. Each zero factor gives
 a sum of matching squares for that cost. The general order-four
 sum-of-squares theorem then gives the support bound at every
 unitary mixer.
-[Factorization](../Lean/MOC/FourInversePencilCertificates.lean#L186) · [Cost in the matching space](../Lean/MOC/FourInversePencilCertificates.lean#L315) · [Spectral square certificate](../Lean/MOC/FourInversePencilCertificates.lean#L493) · [Support bound](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227)
+[Factorization](../Lean/MOC/FourInversePencilCertificates.lean#L187) · [Cost in the matching space](../Lean/MOC/FourInversePencilCertificates.lean#L302) · [Spectral square certificate](../Lean/MOC/FourInversePencilCertificates.lean#L419) · [Support bound](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227)
 
 The Lean source for the inverse pencil, the moment conditions, and the
 two-factor square certificate awaits a build check.
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 9 source modules linked in this map | Partial (3/9) |
+| [FourInversePencil.lean](../Lean/MOC/FourInversePencil.lean#L166) | No |
+| [FourInversePencilCertificates.lean](../Lean/MOC/FourInversePencilCertificates.lean#L187) | No |
+| [FourMatchingIndicatorBasis.lean](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) | No |
+| [FourMatchingPhysicalPositivity.lean](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227) | No |
+| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | No |
+| [InversePencilMoments.lean](../Lean/MOC/InversePencilMoments.lean#L51) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

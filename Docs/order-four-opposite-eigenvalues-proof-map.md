@@ -85,3 +85,12 @@ The matching coordinates use Appendix A of Zheng's preprint.
 For each fixed unitary $U$, the opposite-pair law gives one distribution
 that works for every pair of lists with $a_0+b_0=0$.
 [Common distribution](../Lean/MOC/FourCoincidence.lean#L338)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 4 source modules linked in this map | Partial (3/4) |
+| [FourOppositePairSupport.lean](../Lean/MOC/FourOppositePairSupport.lean#L396) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

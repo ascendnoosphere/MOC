@@ -17,7 +17,7 @@ ordinary rays are the 16 singleton-image indicators and the 18 pair-image
 indicators with source pair containing zero. Complementing both pairs
 gives the other pair indicators. The mixed rays are a relabeling orbit of the sum of three
 ordinary indicators minus a fourth.
-[Ordinary rays](../Lean/MOC/FourSupportCostProfiles.lean#L52) · [Mixed rays](../Lean/MOC/FourSupportCostProfiles.lean#L70)
+[Ordinary rays](../Lean/MOC/FourSupportCostProfiles.lean#L134) · [Mixed rays](../Lean/MOC/FourSupportCostProfiles.lean#L137)
 
 ## Proof map
 
@@ -72,3 +72,13 @@ ray. The two indexed families therefore account for all the extreme rays.
 
 The historical certificate records a closed oriented chain in the
 boundary of the matching polytope. [Historical certificate](https://github.com/ascendnoosphere/MOC/blob/14cf959d/data/certificates/geometry/cone82_completeness_certificate.json)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 3 source modules linked in this map | Partial (1/3) |
+| [FourSupportConeClassification.lean](../Lean/MOC/FourSupportConeClassification.lean#L903) | No |
+| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

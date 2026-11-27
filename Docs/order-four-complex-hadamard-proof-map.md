@@ -64,3 +64,11 @@ The determinant expansion then gives the inclusion for every pair of
 spectra.
 [Lifted probability law](../Lean/MOC/OrderFourComplexHadamard.lean#L259) ·
 [Transfer to determinants](../Lean/MOC/FiniteMinorLaw.lean#L37)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 3 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

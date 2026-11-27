@@ -194,3 +194,12 @@ and zero on the other rows. The second list can have five entries
 equal to $1$, five equal to $1/2$, one equal to $2/3$, and one arbitrary
 entry. The shifted reciprocals off the exceptional label are $1$,
 $2$, and $3/2$. The endpoints $1$ and $2$ each occur five times.
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 10 source modules linked in this map | Partial (9/10) |
+| [ReciprocalSegmentRounding.lean](../Lean/MOC/ReciprocalSegmentRounding.lean#L166) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

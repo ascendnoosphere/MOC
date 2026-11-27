@@ -80,10 +80,10 @@ Each sum $a_j+b_j$ uses its own pair of independent entries. The product
 law of the pairs gives independence of these sums.
 [Gaussian convolution](../Lean/MOC/GaussianHaarContainment.lean#L995) · [Gamma formula](../Lean/MOC/GaussianHaarContainment.lean#L1032) · [Gamma bound](../Lean/MOC/GaussianHaarContainment.lean#L868)
 
-| Premise | Consequence | Lean source |
-| --- | --- | --- |
-| The spectral entries are independent standard complex Gaussians. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../Lean/MOC/GaussianHaarContainment.lean#L1159) |
-| The squared magnitude $|d|^2$ is almost everywhere measurable and its integral is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../Lean/MOC/GaussianHaarContainment.lean#L742) |
+| Premise | Consequence | Lean source | Lean Checked? |
+| --- | --- | --- | --- |
+| The spectral entries are independent standard complex Gaussians. | The probability that $\lvert z_0\rvert $ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../Lean/MOC/GaussianHaarContainment.lean#L1159) | Yes |
+| The squared magnitude $\lvert d\rvert ^2$ is almost everywhere measurable and its integral is at most $(n+2)(n+3)/6$. | The probability that $\lvert d\rvert $ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../Lean/MOC/GaussianHaarContainment.lean#L742) | Yes |
 
 Assume independent standard complex Gaussian spectral entries. If
 $|d|^2$ is almost everywhere measurable and has the stated integral
@@ -108,3 +108,5 @@ the expansion by squared unitary minors. Gaussian Gram–Schmidt gives
 the fourth moments of the Haar minors. The Lean estimate takes the
 second-moment inequality as a premise.
 [Gaussian Gram–Schmidt construction, section 1.2](https://case.edu/artsci/math/esmeckes/Haar_book.pdf)
+
+[Lean check status](README.md#lean-check-status): **Yes** for the 2 linked source modules.

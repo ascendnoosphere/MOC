@@ -106,3 +106,11 @@ flowchart BT
 The unrestricted diagonal-plus-rank-two case remains open. It asks for
 the inclusion for every normal $A=D+R$, with any complex diagonal $D$
 and any matrix $R$ of rank at most two, and every complex diagonal $E$.
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 9 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

@@ -109,3 +109,11 @@ but at most four labels of the negated second spectrum. The theorem
 for four omitted labels gives the inclusion in each block. Combine
 the block inclusions by multiplying their convex combinations.
 [Inclusion with four omitted labels](../Lean/MOC/HermitianByNormalFourProof.lean#L82) · [Block composition](../Lean/MOC/ExtendedCases.lean#L78)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 9 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

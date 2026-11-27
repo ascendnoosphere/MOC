@@ -131,58 +131,10 @@ remaining order-four case, the real parts of the signed determinant
 weights are nonnegative.
 [Small orders](../Lean/MOC/UniversalMatchingWeights.lean#L133) · [Row deletion](../Lean/MOC/SparseRowUniversalWeights.lean#L11) · [Independent blocks](../Lean/MOC/PairedBlockUniversalWeights.lean#L37) · [Order four](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L17)
 
-## Three zeros in order four
-
-The following real orthogonal matrix has exactly three zero entries.
-Its thirteen nonzero entries exceed the order-four bound by one.
-
-$$
-U=\frac{1}{\sqrt{21}}
-\begin{pmatrix}
-0&4&-1&2\\
--1&0&4&2\\
-4&-1&0&2\\
-2&2&2&-3
-\end{pmatrix}.
-$$
-
-[Matrix](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L19) · [Unitarity](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L36) · [Zero positions](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L40)
-
-Suppose one law works for all spectra. For sets of labels $I,J$ of
-equal size, choose spectra with entries zero and one to isolate
-the event $\sigma(J)=I$. Its probability must be the squared absolute
-value of the minor with rows $I$ and columns $J$. The three diagonal
-zeros therefore imply that the first three labels have zero probability
-of being fixed.
-[Spectral test](../Lean/MOC/SubsetMarkerTest.lean#L43) · [Minor probabilities](../Lean/MOC/SubsetMarkerTest.lean#L28)
-
-Number the labels from one through four. On permutations of positive
-probability, $\sigma(\{3,4\})=\{1,3\}$ implies
-$\sigma(\{1,3\})=\{1,2\}$. The two minors prescribe probabilities
-$4/441$ and $1/441$, respectively. The first event cannot have the
-larger probability. This refutes one law for all spectra. The
-determinant inclusion allows the weights to depend on the two spectra.
-[Contradictory probabilities](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L65) · [Failure of a common law](../Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L112)
-
-## Exact threshold in each order
-
-Fix an order $n\ge 4$ and a nonnegative integer $t$. Every unitary of
-order $n$ with at most $t$ nonzero entries has a common probability law
-for all complex spectra if and only if $t\le n+8$.
-[Exact threshold](../Lean/MOC/SparseSupportThreshold.lean#L106)
-
-For the upper bound, put the preceding order-four matrix and the
-identity matrix of order $n-4$ on the diagonal. This unitary has
-$13+(n-4)=n+9$ nonzero entries. A common law would give probability
-zero to every permutation that sends a label across the two blocks,
-because each such matrix entry is zero. The restriction to the first
-block would give a law for the order-four example. Its two minor
-probabilities contradict that conclusion.
-[Construction](../Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction of a law to a block](../Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
-
-The determinant inclusion with weights that can depend on the spectra
-remains open for all unitary matrices with at most four nonzero entries
-per row in every order.
+A common law for a block diagonal unitary restricts to a common law
+on each block. A permutation of positive mass uses only nonzero matrix
+entries, so it cannot send a label from one block to another.
+[Restriction to a block](../Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
 
 ## Recursive joins at one shared coordinate
 
@@ -245,3 +197,11 @@ row and column relabeling permits any such rectangle. If each
 integer is one, the condition is $U_{ij}=0$ whenever $i>j+1$. This
 is the upper Hessenberg condition.
 [Order-five zero rectangle](../Lean/MOC/SinglePortZeroCorner.lean#L242) · [Upper Hessenberg case](../Lean/MOC/SparseRow.lean#L275)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 26 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

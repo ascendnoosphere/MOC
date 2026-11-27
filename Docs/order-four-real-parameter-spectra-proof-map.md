@@ -96,3 +96,11 @@ $s=5/(1+|t|)$. Both use a coefficient bound for polynomials on
 $0<s\le 1/20$, with $s=|t|$ in the bounded interval. Closedness covers
 $t=0$.
 [Bounded interval](../Lean/MOC/FourRealParameterFamily.lean#L630) · [Unbounded tails](../Lean/MOC/FourRealParameterFamily.lean#L964)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 9 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

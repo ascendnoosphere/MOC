@@ -76,3 +76,11 @@ weighted angle is nonzero, a unitary matrix attains the point.
 See Kovacec for the straight-segment calculation and the graph of
 matching products. The square and averaging proof gives an inner bound
 on attainable determinant values. [Preprint](https://www.mat.uc.pt/preprints/ps/p2611.pdf)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 1 source module linked in this map | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

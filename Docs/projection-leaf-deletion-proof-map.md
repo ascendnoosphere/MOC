@@ -124,3 +124,11 @@ for one spectrum with at most two values.
 [Determinant step](../Lean/MOC/OverlappingProjectionBlocks.lean#L446) ·
 [Induction](../Lean/MOC/OverlappingProjectionBlocks.lean#L608) ·
 [Base common law](../Lean/MOC/TwoValues.lean#L285)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 6 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

@@ -77,24 +77,18 @@ determinant projection. Thus the determinant lies in the hull of
 the nine selected products and in the full matching hull.
 [Strict turns](../Lean/MOC/FourWeightedMinorCenter.lean#L252) · [Edge bounds](../Lean/MOC/FourWeightedMinorCenter.lean#L418) · [Plane hull criterion](../Lean/MOC/PlaneHullEdges.lean#L55)
 
-## Obstruction to an ordinary certificate
-
-Let $g$ be the cost for the edge $2\to0$. For a cost $v$ on the 24
-permutations define
-
-$$
-L(v)=v_{10}-v_4+\sum_{k\in\{0,1,2,7,8,13,19\}}v_k.
-$$
-
-The functional $L$ is nonnegative on every ordinary indicator and
-negative on $g$. Linearity excludes a nonnegative combination of
-ordinary indicators for this edge, with arbitrary finite support.
-[Functional on indicators](../Lean/MOC/FourWeightedMinorCenter.lean#L266) · [Edge gap](../Lean/MOC/FourWeightedMinorCenter.lean#L485) · [No ordinary certificate](../Lean/MOC/FourWeightedMinorCenter.lean#L504)
-
 ## Verification status
 
-Lean checks the fixed-spectrum inclusion and the obstruction to an
-ordinary certificate. A separate paper argument permits independent
+The Lean source proves the fixed-spectrum inclusion. A separate paper argument permits independent
 perturbations of each spectral entry by less than $10^{-17}$. The
 uniform neighborhood argument remains outside Lean.
 [Neighborhood argument](order-four-proof-map.md#an-open-set-of-spectra-with-a-uniform-proof)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 2 source modules linked in this map | Partial (1/2) |
+| [FourWeightedMinorCenter.lean](../Lean/MOC/FourWeightedMinorCenter.lean#L37) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

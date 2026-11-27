@@ -23,7 +23,7 @@ and let $U$ be a unitary matrix of the same order. Write $C\circ U$ for
 the matrix with entries $C_{ij}U_{ij}$. Then
 
 $$
-|\det(C\circ U)|\leq\max_p\prod_j|C_{p(j),j}|.
+| \det(C\circ U) | \leq\max_p\prod_j | C_{p(j),j} |
 $$
 
 Lean proves this bound and $R(n)$ for every finite order.
@@ -180,32 +180,10 @@ Its square bounds $|D|^2$, so its modulus bounds $|D|$.
 [Factorization](../Lean/MOC/DoubledMatching.lean#L27) ·
 [From order $2m$ to order $m$](../Lean/MOC/RealOrthogonalModulus.lean#L72)
 
-## Failure of duplicate anchors in order four
+## Lean check status
 
-Let $i^2=-1$. Take the two eigenvalue lists
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 9 source modules linked in this map | Yes |
 
-$$
-a=(2+i,2i,-2+2i,2-2i),\qquad b=(1,1-2i,-1-i,-2).
-$$
-
-Among the 24 matching products, the largest real part is five. The
-reverse permutation attains it. Choose any entry $c$ from $a$ and any
-entry $d$ from $b$. Append these entries to the corresponding lists.
-For each of the 16 choices, $c+d\ne 0$ and some enlarged matching
-product $Q$ satisfies $\mathrm{Re}(Q/(c+d))>5$.
-[Lists](../Lean/MOC/DuplicateAnchorObstruction.lean#L29) ·
-[Upper bound](../Lean/MOC/DuplicateAnchorObstruction.lean#L97) ·
-[Attainment](../Lean/MOC/DuplicateAnchorObstruction.lean#L104) ·
-[Enlarged matchings](../Lean/MOC/DuplicateAnchorObstruction.lean#L112)
-
-The enlarged determinant is $(c+d)D$. Division recovers $D$, but the
-enlarged matching hull extends past the original supporting line.
-This refutes the duplicate-anchor criterion for transferring the
-convex-hull bound from order five to order four. The order-four
-conjecture remains open.
-
-The same two lists exclude every pair of complex scalars $c,d$ with
-$c+d\ne0$. The proof uses 29 enlarged matchings and a polynomial
-identity for their real parts.
-[Arbitrary scalar padding](../Lean/MOC/ScalarAnchorObstruction.lean#L851) ·
-[Order-four proof map](order-four-scalar-padding-proof-map.md)
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

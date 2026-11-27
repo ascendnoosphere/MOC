@@ -147,3 +147,11 @@ $b\in\mathbb C^n$ that give assignment sums in general position also
 form an open dense set in the full space of lists. If the original
 first spectrum $a$ is simple and invertible, take $x_i=1/a_i$.
 [Open dense set of partner lists](../Lean/MOC/GenericExteriorShift.lean#L97) · [Exterior shift proof map](free-eigenvalue-and-exterior-shifts-proof-map.md#generic-assignment-sums)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 6 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

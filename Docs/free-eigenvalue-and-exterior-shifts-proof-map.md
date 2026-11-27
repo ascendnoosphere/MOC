@@ -97,9 +97,6 @@ how the joint hull changes when the lists and mixer change.
 
 ### Generic assignment sums
 
-The Lean source for the generic and uniform assignment theorems
-awaits a build check.
-
 Fix any first list $a$ with pairwise distinct complex entries. In every
 finite order $n$, there is an open dense set of partner lists
 $b\in\mathbb C^n$ with the following property. For each such $b$ there
@@ -230,3 +227,12 @@ $(0,1,-1,i,-i)$ before the shift, take $M=2$, $L=3$, and $g=1/(2\sqrt2)$.
 The triangle gap applies to all ordered triangles in the partner list.
 The determinant inclusion holds for every unitary mixer when $|z|\ge 123$.
 [Order-five arithmetic](../Lean/MOC/HermitianExteriorShift.lean#L1090) · [Order-five inclusion](../Lean/MOC/HermitianExteriorShift.lean#L1168)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 15 source modules linked in this map | Partial (14/15) |
+| [ProofRoutes.lean](../Lean/MOC/ProofRoutes.lean#L113) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

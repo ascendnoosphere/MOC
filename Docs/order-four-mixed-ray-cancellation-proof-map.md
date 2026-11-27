@@ -97,10 +97,10 @@ ordinary ray indices and the order of their coefficients. The premises
 use the mixed-sign factors of the inverse-pencil determinants. Each
 factor has a positive constant term.
 
-| Ordinary ray indices | Premise and conclusion |
-| --- | --- |
-| $(13,17,18,27,30)$ | If the first determinant factor is nonpositive, the coefficients on rays 13, 18 and 27 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L167) |
-| $(7,13,20,27,31)$ | If the second determinant factor is nonpositive, the coefficients on rays 7, 13 and 31 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L219) |
+| Ordinary ray indices | Premise and conclusion | Lean Checked? |
+| --- | --- | --- |
+| $(13,17,18,27,30)$ | If the first determinant factor is nonpositive, the coefficients on rays 13, 18 and 27 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L167) | No |
+| $(7,13,20,27,31)$ | If the second determinant factor is nonpositive, the coefficients on rays 7, 13 and 31 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L219) | No |
 
 Both certificates allow zero coefficients. The determinant factorizations
 and square identities use exact arithmetic on all 24 permutations.
@@ -112,12 +112,12 @@ Each table row uses positive ordinary coefficients. The proofs expand
 the determinant identities and verify the square decompositions on
 the 24 permutations.
 
-| Ordinary ray indices | Premise and result |
-| --- | --- |
-| $(13,18,23,28,30)$ | A zero mixed determinant factor forces one of three square bounds. [Lean statement](../Lean/MOC/FourEightContactReducedFactors.lean#L397) |
-| $(7,18,20,23,28)$ | A zero mixed determinant factor forces one of four square bounds. [Lean statement](../Lean/MOC/FourEightContactReducedFactors.lean#L423) |
-| $(13,17,18,27,28)$ | A zero mixed determinant factor and the cubic height equation at positive height give one of three square bounds. [Lean scalar certificate](../Lean/MOC/FourEightContactHigherFactors.lean#L48) |
-| $(7,13,17,27,31)$ | A zero mixed determinant factor gives a matching sum of squares through an explicit four-by-four Gram matrix. [Lean statement](../Lean/MOC/FourEightContactLargestFactors.lean#L45) |
+| Ordinary ray indices | Premise and result | Lean Checked? |
+| --- | --- | --- |
+| $(13,18,23,28,30)$ | A zero mixed determinant factor forces one of three square bounds. [Lean statement](../Lean/MOC/FourEightContactReducedFactors.lean#L397) | No |
+| $(7,18,20,23,28)$ | A zero mixed determinant factor forces one of four square bounds. [Lean statement](../Lean/MOC/FourEightContactReducedFactors.lean#L423) | No |
+| $(13,17,18,27,28)$ | A zero mixed determinant factor and the cubic height equation at positive height give one of three square bounds. [Lean scalar certificate](../Lean/MOC/FourEightContactHigherFactors.lean#L48) | Yes |
+| $(7,13,17,27,31)$ | A zero mixed determinant factor gives a matching sum of squares through an explicit four-by-four Gram matrix. [Lean statement](../Lean/MOC/FourEightContactLargestFactors.lean#L45) | No |
 
 A rectangle bound gives squares for the whole
 family $(7,13,18,27,31)$ on its mixed factor sublevel. For six
@@ -139,7 +139,7 @@ coefficient on ray 31 is at most one. For four seven-contact classes,
 affine factor equations have a nonzero slope or give a pair bound on
 the zero-slope branch. Shared Gram terms give further sufficient
 conditions in seven-contact classes.
-[Eight-contact bound](../Lean/MOC/FourEightContactAffineFactors.lean#L216) · [Affine charts](../Lean/MOC/FourSevenContactAffineChambers.lean#L37) · [Shared compensation](../Lean/MOC/FourSevenContactMiddleNonlinearFactors.lean#L77) · [Four-feature Gram client](../Lean/MOC/FourSevenContactHighNonlinearFactors.lean#L10)
+[Eight-contact bound](../Lean/MOC/FourEightContactAffineFactors.lean#L216) · [Affine charts](../Lean/MOC/FourSevenContactAffineChambers.lean#L37) · [Shared compensation](../Lean/MOC/FourSevenContactMiddleNonlinearFactors.lean#L77) · [Four-feature Gram client](../Lean/MOC/FourSevenContactHighNonlinearFactors.lean#L11)
 
 In twelve seven-contact profiles the matching cubic fixes the height
 as a quotient with positive numerator. Positive height requires a
@@ -147,3 +147,5 @@ positive denominator. Some rank-eight matrices at roots of the
 determinant factors satisfy this test. The test leaves open whether
 the corresponding spectral gaps satisfy the support bound.
 [First six profiles](../Lean/MOC/FourSevenContactSmallNonlinearFactors.lean#L85) · [Second six profiles](../Lean/MOC/FourSevenContactLargeNonlinearFactors.lean#L65)
+
+[Lean check status](README.md#lean-check-status): **Partial (2/14)** for the 14 linked source modules.

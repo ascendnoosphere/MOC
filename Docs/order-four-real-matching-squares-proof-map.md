@@ -36,7 +36,7 @@ u_1(01)=u_1(23)=1,\quad u_1(02)=u_1(13)=-1,
 $$
 
 $$
-u_2(01)=u_2(23)=u_2(02)=u_2(13)=1,quad
+u_2(01)=u_2(23)=u_2(02)=u_2(13)=1,\quad
 u_2(03)=u_2(12)=-2 .
 $$
 
@@ -132,7 +132,7 @@ Let $r_i$ be the ordinary matching indicator of index $i$. Define
 $h=1-r_0-r_1-r_4+r_{10}+r_{16}-r_{23}$. For all real $c,q>0$ and
 $a\ge 1/c+1/q$, the cost $h+a r_{27}+c r_{29}+q r_5$ is a sum
 of real matching squares.
-[Ordinary indicators](../Lean/MOC/FourSupportCostProfiles.lean#L76) · [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94)
+[Ordinary indicators](../Lean/MOC/FourSupportCostProfiles.lean#L134) · [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94)
 
 Let $L_U$ be the signed evaluation at an order-four unitary $U$.
 Put $A=\sqrt{L_U(r_{27})}$, $B=\sqrt{L_U(r_{29})}$, and
@@ -144,9 +144,44 @@ $L_U(h)+2A(B+C)\ge0$. The bound includes zero radicands.
 
 ## Scope
 
+### Four-function square certificate
+
+Let $r_i$ be the ordinary ray of index $i$, and let $m$ be the
+canonical mixed ray. For real coefficients $a,b,e$, suppose
+
+$$
+a>0,\qquad ab>1,\qquad (a+1)(b+1)\le e(ab-1).
+$$
+
+Then $m+a r_7+b r_{13}+e r_{31}$ is a sum of four matching squares.
+The proof uses the subset-image indicator identities and completion
+of squares. Each additional ordinary term with a nonnegative
+coefficient adds one matching square. These are source statements;
+their module has no verified current build.
+[Indicator identity](../Lean/MOC/FourSupportCostProfiles.lean#L102) ·
+[Four-function certificate](../Lean/MOC/FourMatchingGramBudget.lean#L171) ·
+[Additional ordinary term](../Lean/MOC/FourMatchingGramBudget.lean#L219)
+
+### Remaining spectral premise
+
 The Lean source uses the real auxiliary triple $(0,1,-1)$. The
 correspondence with the complex auxiliary triple $(0,1,i)$ uses a
 separate fractional linear change of coordinates. For a determinant
 proof, a further step must place the actual spectral support costs in
 the matching sum-of-squares cone. This spectral test remains open
 for general support costs.
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 11 source modules linked in this map | Partial (4/11) |
+| [FourMatchingCompensation.lean](../Lean/MOC/FourMatchingCompensation.lean#L94) | No |
+| [FourMatchingGramBudget.lean](../Lean/MOC/FourMatchingGramBudget.lean#L171) | No |
+| [FourMatchingIndicatorBasis.lean](../Lean/MOC/FourMatchingIndicatorBasis.lean#L55) | No |
+| [FourMatchingPhysicalPositivity.lean](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L76) | No |
+| [FourMixedRayCancellation.lean](../Lean/MOC/FourMixedRayCancellation.lean#L544) | No |
+| [FourOrthogonalMatchingMomentTransport.lean](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12) | No |
+| [FourSupportCostProfiles.lean](../Lean/MOC/FourSupportCostProfiles.lean#L134) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

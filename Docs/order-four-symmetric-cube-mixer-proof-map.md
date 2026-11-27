@@ -15,7 +15,6 @@ flowchart BT
     Real["Real binary cubic matrix<br/>Unitary"]
     Chart["All spectra for real rotations<br/>Scalar certificate remains outside Lean"]
     General["All spectra for the symmetric cube<br/>of any special unitary factor"]
-    Obstruction["Squared sine 2/5<br/>Full squared-minor law fails"]
     Normalize["Signed expansion and radius inequalities<br/>imply positive cost at one selected permutation"]
     Vanish["Degree-nine equation for actual spectral costs"]
     Positive["Positive Bernstein bound on the simplex"]
@@ -23,7 +22,6 @@ flowchart BT
     Gate{{"AND"}}
     Real -->|eligible unitary position| Chart
     Chart <-->|iff by phase reduction| General
-    Obstruction -.->|rules out a common minor law| Chart
     Normalize --> Gate
     Vanish --> Gate
     Positive --> Gate
@@ -40,18 +38,6 @@ spectra at these real rotations is equivalent to inclusion for
 all spectra at the symmetric cubes of the complex matrices $G$.
 [Equivalence](../Lean/MOC/BinaryCubicMixerReduction.lean#L152) · [Unitarity](../Lean/MOC/BinaryCubicMixerReduction.lean#L57)
 
-At $s^2=2/5$, write $m(I,J)$ for the squared modulus of the minor at rows $I$ and columns $J$, with indices from zero. The linear expression
-
-$$
-m(01,03)+m(12,03)+m(23,13)+m(23,03)-m(02,23)
-$$
-
-is at most one on each permutation matrix. At the symmetric cube
-mixer it equals $132/125$. Thus no single probability law on
-permutations gives all squared minors of this mixer. The scalar
-determinant inclusion can use different weights for different
-pairs of spectra. [Common-law obstruction](../Lean/MOC/BinaryCubicMixerReduction.lean#L247)
-
 For a finite list of costs, let $a\ge0$ be the cost at one selected
 permutation. Let $h_i\ge0$ be the other costs. Suppose $p<0$ and a
 signed sum uses weight $p/2$ at the selected permutation and weights
@@ -64,6 +50,14 @@ inside the region of the simplex certificate.
 The all-spectra proof uses a signed expansion for the symmetric cube,
 the corresponding radius inequalities, a degree-nine equation for
 actual spectral costs, and a certificate with 497,420 Bernstein
-coefficients. This argument remains outside Lean. Kernel verification
-of the reduction source is pending.
+coefficients. This argument remains outside Lean. The Lean check status
+below concerns the reduction and the conditional cost normalization.
 [Paper proof](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/Docs/spin/PROOF.md) · [Certificate calculation](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/Code/spin/verify_scalar.py)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 1 source module linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

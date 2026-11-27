@@ -158,5 +158,12 @@ The block structure for normal products is classical. See Theorem 1.1
 and Section 3 of Aurelian Gheondea,
 [When are the products of normal operators normal?](https://ssmr.ro/bulletin/pdf/52-2/Gheondeamod.pdf)
 (2009). The paper attributes the finite-dimensional structure theorem
-to Gantmaher and Krein (1930). Publication novelty of the determinant
-corollary has not been established.
+to Gantmaher and Krein (1930).
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 6 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

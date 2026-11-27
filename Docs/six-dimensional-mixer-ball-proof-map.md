@@ -31,13 +31,13 @@ flowchart TD
     Radius --> Hull
 ```
 
-| Step | Claim | Source |
-| --- | --- | --- |
-| Center | The integer numerator divided by $8389$ is unitary. All 90 center weights are at least $3/70375321$. They give the required 50 squared-minor coordinates. | [Center unitarity](../Lean/MOC/SixDimensionalMixerBall.lean#L581) · [Weight bound](../Lean/MOC/SixDimensionalMixerBall.lean#L624) · [Center coordinates](../Lean/MOC/SixDimensionalMixerBall.lean#L727) |
-| Repair | Selected coordinates determine every vector in the interval incidence image. The inverse on the selected coordinates has maximum absolute row sum at most $82$. | [Recovery](../Lean/MOC/SixDimensionalMixerBall.lean#L769) · [Row bound](../Lean/MOC/SixDimensionalMixerBall.lean#L614) |
-| Compatibility | Group the real signed matching weights by the images of the first two and first four columns. This gives the actual target as a linear combination of interval columns. | [Signed target proof](../Lean/MOC/SixDimensionalMixerBall.lean#L915) |
-| Variation | Changing one minor column at a time and using the determinant norm bound gives a target change of at most twelve times the change in operator norm. | [Variation proof](../Lean/MOC/SixDimensionalMixerBall.lean#L1472) |
-| Evaluation | The interval law agrees on four subset monomials for each placement. A common linear substitution then gives the paired matching products for distinct values. The two-value theorem covers repeated values. | [Determinant evaluation](../Lean/MOC/SixDimensionalMixerBall.lean#L1228) |
+| Step | Claim | Source | Lean Checked? |
+| --- | --- | --- | --- |
+| Center | The integer numerator divided by $8389$ is unitary. All 90 center weights are at least $3/70375321$. They give the required 50 squared-minor coordinates. | [Center unitarity](../Lean/MOC/SixDimensionalMixerBall.lean#L581) · [Weight bound](../Lean/MOC/SixDimensionalMixerBall.lean#L624) · [Center coordinates](../Lean/MOC/SixDimensionalMixerBall.lean#L727) | No |
+| Repair | Selected coordinates determine every vector in the interval incidence image. The inverse on the selected coordinates has maximum absolute row sum at most $82$. | [Recovery](../Lean/MOC/SixDimensionalMixerBall.lean#L769) · [Row bound](../Lean/MOC/SixDimensionalMixerBall.lean#L614) | No |
+| Compatibility | Group the real signed matching weights by the images of the first two and first four columns. This gives the actual target as a linear combination of interval columns. | [Signed target proof](../Lean/MOC/SixDimensionalMixerBall.lean#L915) | No |
+| Variation | Changing one minor column at a time and using the determinant norm bound gives a target change of at most twelve times the change in operator norm. | [Variation proof](../Lean/MOC/SixDimensionalMixerBall.lean#L1472) | No |
+| Evaluation | The interval law agrees on four subset monomials for each placement. A common linear substitution then gives the paired matching products for distinct values. The two-value theorem covers repeated values. | [Determinant evaluation](../Lean/MOC/SixDimensionalMixerBall.lean#L1228) | No |
 
 For a subset of rows of size two, the target uses the squared minor
 from the first two columns. At size three, it uses the sum of the
@@ -48,3 +48,5 @@ rows. Its two middle sets have three rows. The incidence column for
 this interval has a one at the coordinate for each of these four
 sets and zero at all other coordinates. The 90 intervals give a
 matrix with 50 rows and 90 columns.
+
+[Lean check status](README.md#lean-check-status): **No** for the 1 linked source module.

@@ -61,12 +61,12 @@ Positive semidefiniteness of a real symmetric two-by-two matrix is
 equivalent to nonnegative determinant and trace.
 [Determinant and trace](../Lean/MOC/FourSupportCostRealLift.lean#L22) · [Determinant polynomial](../Lean/MOC/FourSupportCostRealLift.lean#L181)
 
-| Direction | Feasibility test |
-| --- | --- |
-| $D<0$ | Test the determinant and trace at $r=-B/(2D)$. This test includes the repeated-root case. [Midpoint](../Lean/MOC/FourSupportCostRealLift.lean#L292) |
-| $D>0$ | A positive semidefinite point exists. For large parameters of the appropriate sign, the determinant and trace are positive. [Definite direction](../Lean/MOC/FourSupportCostRealLift.lean#L419) |
-| $D=0$, $B\ne 0$ | Test the trace at $r=-C/B$. It must be nonnegative. [Single determinant root](../Lean/MOC/FourSupportCostRealLift.lean#L350) |
-| $D=B=0$ and $W\ne 0$ | A positive semidefinite point exists exactly when $C=0$. [Constant determinant](../Lean/MOC/FourSupportCostRealLift.lean#L373) |
+| Direction | Feasibility test | Lean Checked? |
+| --- | --- | --- |
+| $D<0$ | Test the determinant and trace at $r=-B/(2D)$. This test includes the repeated-root case. [Midpoint](../Lean/MOC/FourSupportCostRealLift.lean#L292) | Yes |
+| $D>0$ | A positive semidefinite point exists. For large parameters of the appropriate sign, the determinant and trace are positive. [Definite direction](../Lean/MOC/FourSupportCostRealLift.lean#L419) | Yes |
+| $D=0$, $B\ne 0$ | Test the trace at $r=-C/B$. It must be nonnegative. [Single determinant root](../Lean/MOC/FourSupportCostRealLift.lean#L350) | Yes |
+| $D=B=0$ and $W\ne 0$ | A positive semidefinite point exists exactly when $C=0$. [Constant determinant](../Lean/MOC/FourSupportCostRealLift.lean#L373) | Yes |
 
 For $D<0$, the midpoint determinant is $-(B^2-4DC)/(4D)$.
 When the discriminant is positive, its trace decides the sign of the
@@ -109,3 +109,5 @@ for each nonzero complex critical vector also remains a paper argument.
 An infeasible line excludes an actual spectral profile. A feasible line
 still requires further conditions to establish the determinant support
 inequality.
+
+[Lean check status](README.md#lean-check-status): **Yes** for the 3 linked source modules.

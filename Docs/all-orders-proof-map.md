@@ -5,7 +5,7 @@
 - [How routes connect](#how-routes-connect)
 - [Tests at each order](#tests-at-each-order)
 - [Matrix and operator formulations](#matrix-and-operator-formulations)
-- [Normalization and least-order counterexamples](#normalization-and-least-order-counterexamples)
+- [Normalization and order reduction](#normalization-and-order-reduction)
 - [Induction through normal maximizers](#induction-through-normal-maximizers)
 - [Polynomial and coefficient conditions](#polynomial-and-coefficient-conditions)
 - [Spectral realizations and implications](#spectral-realizations-and-implications)
@@ -30,6 +30,14 @@ use the common equivalence for arbitrary evaluators. A proved arrow
 transfers a proof from one statement to another. The tables give the
 status of each premise.
 [General route list](../Lean/MOC/ProofRoutes.lean#L337) · [Combined route theorem](../Lean/MOC/ProofRoutes.lean#L704)
+
+Write $\mathrm{MOC}_n$ for the conjecture in order $n$ and
+$\mathrm{MOC}$ for the conjecture in every finite order.
+In each table row, $T_n$ is its complete test at order $n$; $T$ is
+its complete all-order test. Each test includes its stated quantifiers.
+$C_m$ denotes the rectangular test with $m$ orthonormal rows and $m+1$
+columns. A checked relation can have an open premise.
+[Notation and check status](README.md#notation-and-proof-status)
 
 ## How routes connect
 
@@ -87,13 +95,12 @@ flowchart LR
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
 ```
 
-| Relation | Consequence | Lean source |
-| --- | --- | --- |
-| Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../Lean/MOC/ProofRoutes.lean#L65) |
-| A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../Lean/MOC/ProofRoutes.lean#L60) |
-| Refutation of an exact route | The parent is false. | [Transfer of refutation](../Lean/MOC/ProofRoutes.lean#L70) |
-| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../Lean/MOC/ProofRoutes.lean#L728) |
-| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../Lean/MOC/ProofRoutes.lean#L718) · [Order five](../Lean/MOC/ProofRoutes.lean#L723) |
+| Relation | Consequence | Lean source | Lean Checked? |
+| --- | --- | --- | --- |
+| Two exact routes for one root | Their complete statements are equivalent. | [Equivalence of exact routes](../Lean/MOC/ProofRoutes.lean#L65) | No |
+| A sufficient route and an exact route | The sufficient premise implies the exact premise. | [Transfer to exact route](../Lean/MOC/ProofRoutes.lean#L60) | No |
+| An all-order route and an exact route at order $n$ | The all-order premise implies the fixed-order test. | [Restriction to an order](../Lean/MOC/ProofRoutes.lean#L728) | No |
+| All-order and fixed-order alternatives | Either a direct order-four route or an all-order route suffices for order four. The corresponding statement holds for order five. | [Order four](../Lean/MOC/ProofRoutes.lean#L718) · [Order five](../Lean/MOC/ProofRoutes.lean#L723) | No |
 
 ## Tests at each order
 
@@ -106,36 +113,36 @@ the largest matching projection in a given direction. A strict witness
 has a determinant projection larger than that maximum.
 [Common tests](../Lean/MOC/ProofRoutes.lean#L206) · [Fixed-order disjunction](../Lean/MOC/ProofRoutes.lean#L248)
 
-| Exact test at order $n$ | Lean source |
-| --- | --- |
-| Normal complex matrices | [Normal matrix form](../Lean/MOC/Normal.lean#L280) |
-| One set of weights for one free partner eigenvalue | [One-entry law](../Lean/MOC/ProofRoutes.lean#L113) |
-| A planar intercept hull for one free partner eigenvalue | [Finite test](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L205) · [Equivalence](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L282) |
-| If both spectra are in the open unit disk, require $\lvert 1+D\rvert\le\max_\sigma\lvert 1+P_\sigma\rvert$. | [Disk test](../Lean/MOC/TranslatedDeterminantPowers.lean#L40) |
-| Under the same spectral restriction, require $\lvert 1+D\rvert^{2k}\le\sum_\sigma\lvert 1+P_\sigma\rvert^{2k}$ for every nonnegative integer $k$. | [Power test](../Lean/MOC/TranslatedDeterminantPowers.lean#L112) |
-| Spectral evaluations on a nonempty sample type | [Spectral evaluation test](../Lean/MOC/ProofRoutes.lean#L95) |
-| Equal traces | [Trace condition](../Lean/MOC/Core.lean#L167) |
-| Equal second elementary coefficients | [Second coefficient](../Lean/MOC/EqualSpectralCoefficients.lean#L91) |
-| Equal first and second elementary coefficients | [Both coefficients](../Lean/MOC/EqualSpectralCoefficients.lean#L428) |
-| Bound in the real direction | [Real-part bound](../Lean/MOC/Support.lean#L84) |
-| All pair sums nonzero | [Nonopposite spectra](../Lean/MOC/Support.lean#L101) |
-| All pair sums nonzero and distinct matching products | [Regular products](../Lean/MOC/SpectralPerturbation.lean#L146) |
-| Regular matching products and no zero mixer entries | [Full support](../Lean/MOC/FullSupportReduction.lean#L118) |
-| Bilinear determinant pencil for every complex coefficient tuple | [Bilinear pencil](../Lean/MOC/BilinearPencil.lean#L203) |
-| Balanced spectra and a nonnormal sum | [Balanced nonnormal test](../Lean/MOC/SpectralGap.lean#L314) |
-| Regular spectra in the Möbius-balanced normalization | [Möbius balance](../Lean/MOC/MobiusOrbitMinimum.lean#L836) |
-| One anchored coordinate in each normalized spectrum | [Anchored test](../Lean/MOC/Reformulations/Anchored.lean#L53) |
-| Three fixed coordinates in the rank-one kernel | [Three-anchor test](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) |
-| Exclude strict witnesses with at least $2n-2$ contacts and nonzero matching products | [Nonzero-product bound](../Lean/MOC/SaturatedContactReduction.lean#L70) |
-| Exclude strict witnesses with at least $2n-2$ contacts | [Global contact bound](../Lean/MOC/GlobalContactSlice.lean#L243) |
-| The same contact count with spectral and direction normalization and moment balance | [Balanced contact bound](../Lean/MOC/BalancedContactReduction.lean#L46) |
-| Contact count, rank at least $2n-3$, and moment balance | [Rank and moments](../Lean/MOC/ContactDifferenceRank.lean#L201) |
-| Contact count, rank, moment balance, and an isolated contact point | [Isolated contact point](../Lean/MOC/ContactFibreIsolation.lean#L215) |
-| Exclude strict witnesses with at least $2n-1$ contacts | [Sharp terminal bound](../Lean/MOC/AffineGapCover.lean#L85) |
-| Exclude strict witnesses with contact difference rank at least $2n-2$ | [Sharp rank bound](../Lean/MOC/SharpContactRank.lean#L65) |
-| At least $2n-1$ contacts, rank at least $2n-2$, moments, and isolation | [Sharp isolated bound](../Lean/MOC/SharpContactRank.lean#L80) |
-| At least $2n-1$ contacts, a global maximum, and negative inactive pivots | [Terminal stationary test](../Lean/MOC/StationaryPivot.lean#L478) |
-| Regular spectra with no assignment common to all maximizing permutations | [Common-edge exclusion](../Lean/MOC/FourContactRay.lean#L614) |
+| Exact test at order $n$ | Relation | Lean source | Lean Checked? |
+| --- | --- | --- | --- |
+| Normal complex matrices | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Normal matrix form](../Lean/MOC/Normal.lean#L280) | Yes |
+| One set of weights for one free partner eigenvalue | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [One-entry law](../Lean/MOC/ProofRoutes.lean#L113) | No |
+| A planar intercept hull for one free partner eigenvalue | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Finite test](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L205) · [Equivalence](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L282) | Yes |
+| If both spectra are in the open unit disk, require $\lvert 1+D\rvert\le\max_\sigma\lvert 1+P_\sigma\rvert$. | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Disk test](../Lean/MOC/TranslatedDeterminantPowers.lean#L40) | Yes |
+| Under the same spectral restriction, require $\lvert 1+D\rvert^{2k}\le\sum_\sigma\lvert 1+P_\sigma\rvert^{2k}$ for every nonnegative integer $k$. | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Power test](../Lean/MOC/TranslatedDeterminantPowers.lean#L112) | Yes |
+| Spectral evaluations on a nonempty sample type | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Spectral evaluation test](../Lean/MOC/ProofRoutes.lean#L95) | No |
+| Equal traces | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Trace condition](../Lean/MOC/Core.lean#L167) | Yes |
+| Equal second elementary coefficients | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Second coefficient](../Lean/MOC/EqualSpectralCoefficients.lean#L91) | Yes |
+| Equal first and second elementary coefficients | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Both coefficients](../Lean/MOC/EqualSpectralCoefficients.lean#L428) | Yes |
+| Bound in the real direction | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Real-part bound](../Lean/MOC/Support.lean#L84) | Yes |
+| All pair sums nonzero | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Nonopposite spectra](../Lean/MOC/Support.lean#L101) | Yes |
+| All pair sums nonzero and distinct matching products | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Regular products](../Lean/MOC/SpectralPerturbation.lean#L146) | Yes |
+| Regular matching products and no zero mixer entries | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Full support](../Lean/MOC/FullSupportReduction.lean#L118) | Yes |
+| Bilinear determinant pencil for every complex coefficient tuple | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Bilinear pencil](../Lean/MOC/BilinearPencil.lean#L203) | Yes |
+| Balanced spectra and a nonnormal sum | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Balanced nonnormal test](../Lean/MOC/SpectralGap.lean#L314) | Yes |
+| Regular spectra in the Möbius-balanced normalization | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Möbius balance](../Lean/MOC/MobiusOrbitMinimum.lean#L836) | Yes |
+| One anchored coordinate in each normalized spectrum | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Anchored test](../Lean/MOC/Reformulations/Anchored.lean#L53) | Yes |
+| Three fixed coordinates in the rank-one kernel | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Three-anchor test](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L11) | Yes |
+| Exclude strict witnesses with at least $2n-2$ contacts and nonzero matching products | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Nonzero-product bound](../Lean/MOC/SaturatedContactReduction.lean#L70) | Yes |
+| Exclude strict witnesses with at least $2n-2$ contacts | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Global contact bound](../Lean/MOC/GlobalContactSlice.lean#L243) | Yes |
+| The same contact count with spectral and direction normalization and moment balance | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Balanced contact bound](../Lean/MOC/BalancedContactReduction.lean#L46) | Yes |
+| Contact count, rank at least $2n-3$, and moment balance | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Rank and moments](../Lean/MOC/ContactDifferenceRank.lean#L201) | Yes |
+| Contact count, rank, moment balance, and an isolated contact point | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Isolated contact point](../Lean/MOC/ContactFibreIsolation.lean#L215) | Yes |
+| Exclude strict witnesses with at least $2n-1$ contacts | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Sharp terminal bound](../Lean/MOC/AffineGapCover.lean#L85) | Yes |
+| Exclude strict witnesses with contact difference rank at least $2n-2$ | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Sharp rank bound](../Lean/MOC/SharpContactRank.lean#L65) | Yes |
+| At least $2n-1$ contacts, rank at least $2n-2$, moments, and isolation | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Sharp isolated bound](../Lean/MOC/SharpContactRank.lean#L80) | Yes |
+| At least $2n-1$ contacts, a global maximum, and negative inactive pivots | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Terminal stationary test](../Lean/MOC/StationaryPivot.lean#L478) | Yes |
+| Regular spectra with no assignment common to all maximizing permutations | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Common-edge exclusion](../Lean/MOC/FourContactRay.lean#L614) | Yes |
 
 ## Matrix and operator formulations
 
@@ -162,79 +169,79 @@ degrees. Degree one supplies the reverse implication.
 
 ### Matrix and spectral constructions
 
-| Route in Lean | Relation | Lean proof |
-| --- | --- | --- |
-| Normal complex matrices | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L46) |
-| Normal eigenframes | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L70) |
-| Nonnormal inputs with normal spectral representatives | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L86) |
-| Commuting tuple scalar projections | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L103) |
-| Normalized pencils | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L121) |
-| Complex base change of commutative-ring matrices | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L141) |
-| Exterior-power spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L44) |
-| Symmetric-power spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L76) |
-| Tensor spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L100) |
-| Direct sum | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L117) |
-| Kronecker sum | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L145) |
-| Selected adjoint spectrum | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L175) |
-| Selected conjugation spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L96) |
-| Finite mixed discriminant | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L202) |
+| Route in Lean | Relation | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Normal complex matrices | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L46) | Yes |
+| Normal eigenframes | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L70) | Yes |
+| Nonnormal inputs with normal spectral representatives | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L86) | Yes |
+| Commuting tuple scalar projections | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L103) | Yes |
+| Normalized pencils | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L121) | Yes |
+| Complex base change of commutative-ring matrices | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstMatrix.lean#L141) | Yes |
+| Exterior-power spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L44) | Yes |
+| Symmetric-power spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L76) | Yes |
+| Tensor spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L100) | Yes |
+| Direct sum | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L117) | Yes |
+| Kronecker sum | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L145) | Yes |
+| Selected adjoint spectrum | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L175) | Yes |
+| Selected conjugation spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L96) | Yes |
+| Finite mixed discriminant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstStructured.lean#L202) | Yes |
 
 ### Algebras and representations
 
-| Route in Lean | Relation | Lean proof |
-| --- | --- | --- |
-| Normal left regular representations | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAAlgebra.lean#L48) |
-| Frobenius algebra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAAlgebra.lean#L119) |
-| Monic matrix polynomial roots | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L61) |
-| Top exterior power | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L96) |
-| Complex scalar extension and splitting | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L77) |
-| Division ring block representations | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L124) |
-| Finite complex representation | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L23) |
-| Finite star representation | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L45) |
+| Route in Lean | Relation | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Normal left regular representations | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAAlgebra.lean#L48) | Yes |
+| Frobenius algebra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAAlgebra.lean#L119) | Yes |
+| Monic matrix polynomial roots | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L61) | Yes |
+| Top exterior power | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L96) | Yes |
+| Complex scalar extension and splitting | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L77) | Yes |
+| Division ring block representations | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L124) | Yes |
+| Finite complex representation | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L23) | Yes |
+| Finite star representation | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstARepresentations.lean#L45) | Yes |
 
 ### Finite operators and other realizations
 
-| Route in Lean | Relation | Lean proof |
-| --- | --- | --- |
-| Finite Fredholm determinant | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L41) |
-| Finite regularized determinant at order two | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L99) |
-| Finite atomic normalized kernel | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAAtomicKernels.lean#L50) |
-| Finite perturbation determinant | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstB.lean#L110) |
-| Exponentiated determinant path | Iff | [Statement and proof](../Lean/MOC/Reformulations/DeterminantPath.lean#L229) |
-| Normal degree components of finite chain endomorphisms | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstBHomology.lean#L30) |
-| Invertible normal projective lifts | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L29) |
-| Actual integral torus characters | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBTorus.lean#L88) |
-| Joint Hermitian integrals | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L83) |
-| Gaussian integer spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
-| Gaussian integer spectra and Gaussian rational mixers | Iff | [Statement and proof](../Lean/MOC/GaussianCayley.lean#L306) |
-| Gaussian integer spectra and an integral matrix with $V^*V=d^2I$, $d>0$, with division-free comparisons | Iff | [Exact integer test](../Lean/MOC/GaussianIntegerDeterminantTest.lean#L185) |
-| Newton monomials | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L64) |
-| Projective toric section weights | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
-| Loopless complex directed adjacency | Iff | [Statement and proof](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
-| Constant-generator monodromy | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCFlow.lean#L20) |
-| Finite bipartite matching | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L85) |
-| Weighted bipartite determinant | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L66) |
-| Finite Euler determinant | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L188) |
-| Finite Euler determinant at parameter one | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L210) |
-| Normal word products | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L253) |
-| Almost-sure finite spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L271) |
-| Joint tuple projections | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L289) |
-| Invertible representatives | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondReal.lean#L93) |
+| Route in Lean | Relation | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Finite Fredholm determinant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L41) | Yes |
+| Finite regularized determinant at order two | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L99) | Yes |
+| Finite atomic normalized kernel | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstAAtomicKernels.lean#L50) | Yes |
+| Finite perturbation determinant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstB.lean#L110) | Yes |
+| Exponentiated determinant path | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/DeterminantPath.lean#L229) | Yes |
+| Normal degree components of finite chain endomorphisms | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstBHomology.lean#L30) | Yes |
+| Invertible normal projective lifts | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L29) | Yes |
+| Actual integral torus characters | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBTorus.lean#L88) | Yes |
+| Joint Hermitian integrals | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksB.lean#L83) | Yes |
+| Gaussian integer spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) | Yes |
+| Gaussian integer spectra and Gaussian rational mixers | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/GaussianCayley.lean#L306) | Yes |
+| Gaussian integer spectra and an integral matrix with $V^*V=d^2I$, $d>0$, with division-free comparisons | $\mathrm{MOC}\Longleftrightarrow T$ | [Exact integer test](../Lean/MOC/GaussianIntegerDeterminantTest.lean#L185) | Yes |
+| Newton monomials | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L64) | Yes |
+| Projective toric section weights | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) | Yes |
+| Loopless complex directed adjacency | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) | Yes |
+| Constant-generator monodromy | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCFlow.lean#L20) | Yes |
+| Finite bipartite matching | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L85) | Yes |
+| Weighted bipartite determinant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L66) | Yes |
+| Finite Euler determinant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L188) | Yes |
+| Finite Euler determinant at parameter one | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L210) | Yes |
+| Normal word products | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L253) | Yes |
+| Almost-sure finite spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L271) | Yes |
+| Joint tuple projections | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L289) | Yes |
+| Invertible representatives | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondReal.lean#L93) | Yes |
 
 ### Finite star algebra and compound matrices
 
-| Form | Exact comparison | Lean proof |
-| --- | --- | --- |
-| Matrices | Two normal matrices with arbitrary relative unitary position | [Matrix form](../Lean/MOC/Reformulations/CStar.lean#L11) |
-| Unitary orbits | A normal matrix with a fixed spectrum with multiplicities | [Orbit form](../Lean/MOC/Reformulations/CStar.lean#L25) |
-| Commuting positions | Determinants at commuting positions of the two matrices | [Commutant form](../Lean/MOC/Reformulations/Commutant.lean#L92) |
-| Spectral multiplicities | Integer tables with the two lists of spectral multiplicities as marginals | [Integer couplings](../Lean/MOC/Reformulations/Coupling.lean#L119) |
-| Hermitian real and imaginary parts | Two commuting pairs of Hermitian real and imaginary parts | [Cartesian form](../Lean/MOC/Reformulations/CStar.lean#L41) |
-| Functions on the spectra | Two functions on the actual spectra, each constant on equal eigenvalues | [Functional calculus](../Lean/MOC/Reformulations/CStar.lean#L72) |
-| Affine transforms | Affine changes of the inputs and pointwise characteristic determinants | [Affine form](../Lean/MOC/Reformulations/CStar.lean#L82) · [Pointwise form](../Lean/MOC/Reformulations/CStar.lean#L95) |
-| Representations of function algebras | Two finite function-algebra representations with fixed spectral multiplicities | [Representation form](../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L129) |
-| Squared minors | One scalar projection of the squared minors for each spectral pair | [Compound form](../Lean/MOC/Reformulations/Compounds.lean#L32) · [Scalar weights](../Lean/MOC/Reformulations/CStar.lean#L110) |
-| Sums of represented functions | A sum of two functions, one in each represented factor | [Abelianization determinant](../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L151) |
+| Form | Exact comparison | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Matrices | Two normal matrices with arbitrary relative unitary position | [Matrix form](../Lean/MOC/Reformulations/CStar.lean#L11) | Yes |
+| Unitary orbits | A normal matrix with a fixed spectrum with multiplicities | [Orbit form](../Lean/MOC/Reformulations/CStar.lean#L25) | Yes |
+| Commuting positions | Determinants at commuting positions of the two matrices | [Commutant form](../Lean/MOC/Reformulations/Commutant.lean#L92) | Yes |
+| Spectral multiplicities | Integer tables with the two lists of spectral multiplicities as marginals | [Integer couplings](../Lean/MOC/Reformulations/Coupling.lean#L119) | Yes |
+| Hermitian real and imaginary parts | Two commuting pairs of Hermitian real and imaginary parts | [Cartesian form](../Lean/MOC/Reformulations/CStar.lean#L41) | Yes |
+| Functions on the spectra | Two functions on the actual spectra, each constant on equal eigenvalues | [Functional calculus](../Lean/MOC/Reformulations/CStar.lean#L72) | Yes |
+| Affine transforms | Affine changes of the inputs and pointwise characteristic determinants | [Affine form](../Lean/MOC/Reformulations/CStar.lean#L82) · [Pointwise form](../Lean/MOC/Reformulations/CStar.lean#L95) | Yes |
+| Representations of function algebras | Two finite function-algebra representations with fixed spectral multiplicities | [Representation form](../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L129) | Yes |
+| Squared minors | One scalar projection of the squared minors for each spectral pair | [Compound form](../Lean/MOC/Reformulations/Compounds.lean#L32) · [Scalar weights](../Lean/MOC/Reformulations/CStar.lean#L110) | Yes |
+| Sums of represented functions | A sum of two functions, one in each represented factor | [Abelianization determinant](../Lean/MOC/Reformulations/SecondCoefficientFree.lean#L151) | Yes |
 
 Each row is equivalent to unrestricted MOC. The two representation
 forms use spectral bases of the represented functions.
@@ -244,7 +251,7 @@ property identifies a pair of representations with one representation of
 the free product. Its commutative quotient restricts the two ranges to
 commute. Lean verifies the finite matrix forms in the table.
 
-## Normalization and least-order counterexamples
+## Normalization and order reduction
 
 ```mermaid
 flowchart BT
@@ -262,28 +269,26 @@ flowchart BT
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
 ```
 
-A proper block split of a least-order counterexample would give two
+A proper block split of a least-order strict violation would give two
 smaller orders that both satisfy the conjecture. A row or column with at
 most two nonzero entries also reduces to smaller order. Every matrix that
 commutes with both summands must be a scalar multiple of the identity.
 [Block reduction](../Lean/MOC/Claim.lean#L43) · [Least order](../Lean/MOC/Claim.lean#L51) · [Rows](../Lean/MOC/SparseRow.lean#L339) · [Columns](../Lean/MOC/SparseRow.lean#L346) · [Common commutant](../Lean/MOC/ReducingCommutant.lean#L70)
 
-Every counterexample, in any order, needs both a row and a column with
+Every strict violation, in any order, needs both a row and a column with
 at least four nonzero entries. This follows from the inclusion for
 arbitrary complex spectra when all rows, or all columns, have at most
 three nonzero entries. In order four, the required row and column
 have no zero entries.
-[Counterexample restriction](../Lean/MOC/SparseUnitary.lean#L54) · [Order four](../Lean/MOC/SparseUnitary.lean#L66) · [Sparse unitary proof](sparse-unitary-proof-map.md)
+[Strict violation restriction](../Lean/MOC/SparseUnitary.lean#L54) · [Order four](../Lean/MOC/SparseUnitary.lean#L66) · [Sparse unitary proof](sparse-unitary-proof-map.md)
 
-In each order $n\ge 4$, the largest total count of nonzero entries that
-guarantees one matching law for all spectra is $n+8$. At $n+9$ there
-is a unitary for which the common law fails. The unrestricted conjecture
-allows a separate law for each pair of spectra.
-[Exact support threshold](../Lean/MOC/SparseSupportThreshold.lean#L106) · [Witness in each order](../Lean/MOC/SparseSupportThreshold.lean#L72)
+In each order $n$, at most $n+8$ nonzero entries guarantee one
+matching law for all spectra. The weights depend only on the mixer.
+[Common law](../Lean/MOC/SparseUnitaryUniversalWeights.lean#L121)
 
 Let $R$ be a nonempty set of rows with at least two rows outside it.
 A column supports $R$ if it has a nonzero entry in a row of $R$.
-In a least-order counterexample, at least $|R|+2$ columns support $R$.
+In a least-order strict violation, at least $|R|+2$ columns support $R$.
 Failure of this bound is equivalent to a zero submatrix with positive
 side lengths $r,l$ such that $r+l=n-1$. Such a submatrix gives two
 unitary factors of orders $l+1$ and $r+1$. Their coordinate blocks
@@ -424,33 +429,6 @@ complementary pair, the linear terms cancel and the constant term
 gives the minor's interference.
 [Two-gate interference bound](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L73) · [Affine correction](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L149) · [Squared minors](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L240) · [Common law](../Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331)
 
-The two-gate allowance is sharp for a common law. Number the four
-coordinates from $0$ to $3$. For $t\in\{-1,1\}$, define the real
-rotation $G_t=\frac1{13}\begin{pmatrix}12&-5t\\5t&12\end{pmatrix}$.
-Let $i$ be the imaginary unit. The left layer uses the fair gate
-$\frac{1+i}{2}\begin{pmatrix}1&-1\\1&1\end{pmatrix}$ on $(0,1)$
-and $G_1$ on $(2,3)$. The right layer uses $G_{-1}$ on $(1,2)$ and
-$G_1$ on $(3,0)$, in these orders.
-For a permutation, write $E(I,J)=1$ if it maps the column set $J$
-onto the row set $I$, and zero otherwise. Write $01$ for the set
-$\{0,1\}$, and use the same notation for other pairs. Every
-permutation satisfies
-
-$$
-E(01,01)+E(01,02)+E(13,02)+E(23,02)-E(12,03)\le1.
-$$
-
-The same combination of squared minor moduli of this gate product
-is $9768743/9653618>1$. Therefore no probability law on the
-permutations represents all the minors. The inequality also
-excludes one determinant law for every pair of spectra.
-[Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L154) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L216) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L242)
-
-If the left gate on $(0,1)$ is also $G_1$, the same combination is
-$831869471/815730721>1$. This gives a second obstruction with four
-biased gates.
-[Gate product](../Lean/MOC/BiasedCyclicGateObstruction.lean#L30) · [Minor score](../Lean/MOC/BiasedCyclicGateObstruction.lean#L76) · [Obstruction](../Lean/MOC/BiasedCyclicGateObstruction.lean#L130)
-
 For any gate biases, write $T$ for the real interference scalar in the
 squared-minor formula. The signed mass of each switch choice $x$ is
 $P(x)+T(-1)^{N(x)}$. Summing these masses against the matching products
@@ -520,35 +498,35 @@ requires each entry of $U$ to be nonzero. The rectangular test instead
 uses a matrix with at least three orthonormal rows and one extra column.
 [Three-coordinate normalization](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) · [Rectangular test](../Lean/MOC/PrincipalCoisometry.lean#L258)
 
-| Route in Lean | Relation | Lean proof |
-| --- | --- | --- |
-| Affine linear parts | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L26) |
-| Actual affine derivatives | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstBGeometry.lean#L53) |
-| Nonzero spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L48) |
-| Invertible projective diagonal lifts | Iff | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L71) |
-| Traceless Cartan spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) |
-| Traceless real-part bound | Iff | [Statement and proof](../Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
-| Regular anchored spectra | Iff | [Statement and proof](../Lean/MOC/Reformulations/Anchored.lean#L70) |
-| Three-anchor rank-one kernel in all orders | Iff | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
-| Nonzero contact-saturated support bounds in every order | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L333) |
-| Normal maximizers in every order | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L314) |
-| Principal coisometries in all orders | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L258) |
-| No paired block split | Iff | [Statement and proof](../Lean/MOC/Claim.lean#L63) |
-| At least $\lvert R\rvert+2$ supporting columns for every nonempty row set $R$ with $\lvert R\rvert\leq n-2$ | Iff | [Statement and proof](../Lean/MOC/SinglePortHallExpansion.lean#L72) |
-| Every row and column has degree at least three | Iff | [Statement and proof](../Lean/MOC/SparseRow.lean#L358) |
-| Strict expansion of the support of every proper nonempty set of rows | Iff | [Statement and proof](../Lean/MOC/SupportBlocks.lean#L124) |
-| Balanced spectra and strict support expansion | Iff | [Statement and proof](../Lean/MOC/Extremal.lean#L82) |
-| Scalar common commutant | Iff | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L107) |
-| Regular spectra with scalar common commutant | Iff | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L124) |
-| Regular spectra with scalar common commutant and nonnormal pole compressions | Iff | [Statement and proof](../Lean/MOC/NonnormalPoleReduction.lean#L33) |
-| Terminal matching chart support | Iff | [Statement and proof](../Lean/MOC/MatchingContactTransfer.lean#L123) |
-| Terminal matching chart with threshold $2n-1$ in matrix order $n$ | Iff | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L303) |
-| Terminal matching chart with old gap rank | Iff | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L327) |
-| Terminal matching chart with old gap rank and no common active edge | Iff | [Statement and proof](../Lean/MOC/TerminalActiveEdges.lean#L27) |
-| Terminal matching chart with constraint rank | Iff | [Statement and proof](../Lean/MOC/MatchingContactRank.lean#L110) |
-| Terminal matching chart with minimal prime isolation | Iff | [Statement and proof](../Lean/MOC/IsolatedContactFiber.lean#L61) |
-| Regular contact covers AND the terminal chart bound | If | [Statement and proof](../Lean/MOC/HighContact.lean#L276) |
-| All three order ranges | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L315) |
+| Route in Lean | Relation | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Affine linear parts | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L26) | Yes |
+| Actual affine derivatives | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeFirstBGeometry.lean#L53) | Yes |
+| Nonzero spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L48) | Yes |
+| Invertible projective diagonal lifts | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/FirstGeometric.lean#L71) | Yes |
+| Traceless Cartan spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) | Yes |
+| Traceless real-part bound | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/TracelessSupport.lean#L14) | Yes |
+| Regular anchored spectra | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/Anchored.lean#L70) | Yes |
+| Three-anchor rank-one kernel in all orders | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) | Yes |
+| Nonzero contact-saturated support bounds in every order | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L333) | No |
+| Normal maximizers in every order | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L314) | Yes |
+| Principal coisometries in all orders | $\mathrm{MOC}\Longleftrightarrow(\forall m\ge3,\ C_m)$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L258) | Yes |
+| No paired block split | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Claim.lean#L63) | Yes |
+| At least $\lvert R\rvert+2$ supporting columns for every nonempty row set $R$ with $\lvert R\rvert\leq n-2$ | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/SinglePortHallExpansion.lean#L72) | Yes |
+| Every row and column has degree at least three | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/SparseRow.lean#L358) | Yes |
+| Strict expansion of the support of every proper nonempty set of rows | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/SupportBlocks.lean#L124) | Yes |
+| Balanced spectra and strict support expansion | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Extremal.lean#L82) | Yes |
+| Scalar common commutant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L107) | Yes |
+| Regular spectra with scalar common commutant | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/ReducingCommutant.lean#L124) | Yes |
+| Regular spectra with scalar common commutant and nonnormal pole compressions | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/NonnormalPoleReduction.lean#L33) | Yes |
+| Terminal matching chart support | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/MatchingContactTransfer.lean#L123) | Yes |
+| Terminal matching chart with threshold $2n-1$ in matrix order $n$ | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L303) | Yes |
+| Terminal matching chart with old gap rank | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/DeficitContactTransfer.lean#L327) | Yes |
+| Terminal matching chart with old gap rank and no common active edge | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/TerminalActiveEdges.lean#L27) | Yes |
+| Terminal matching chart with constraint rank | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/MatchingContactRank.lean#L110) | Yes |
+| Terminal matching chart with minimal prime isolation | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/IsolatedContactFiber.lean#L61) | Yes |
+| Regular contact covers AND the terminal chart bound | $T\Longrightarrow\mathrm{MOC}$ | [Statement and proof](../Lean/MOC/HighContact.lean#L276) | Yes |
+| All three order ranges | $\mathrm{MOC}\Longleftrightarrow(\mathrm{MOC}_4\land\mathrm{MOC}_5\land\forall n\ge6,\ \mathrm{MOC}_n)$ | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L315) | No |
 
 ## Real orthogonal induction
 
@@ -611,29 +589,6 @@ parts. Existence of the required normal maximum remains open.
 [Stationary equation](../Lean/MOC/HermitianNormalSupportDescent.lean#L151) ·
 [Coefficient route](free-eigenvalue-and-exterior-shifts-proof-map.md#one-law-for-a-free-eigenvalue)
 
-### Refuted extension steps
-
-Lean verifies three counterexamples to proposed steps in proofs of
-determinant inclusion.
-
-For a four-switch word $x$, put $s_i(x)=(-1)^{x_i}$ and
-$\chi(x)=\prod_i s_i(x)$. The degree-three Walsh conditions are
-$\sum_x\delta(x)\chi(x)s_i(x)=0$ for every coordinate $i$.
-For the capacity evaluation below, give each false bit a factor two
-and each true bit a factor one half. Sum the deficit times the product
-of these four factors.
-
-| Proposed step | Exact obstruction | Lean source |
-| --- | --- | --- |
-| Nonnegative deficits and vanishing degree-three Walsh coefficients imply the four-switch capacity bound. | Let the deficit be one on each word with three true bits, two on the all-true word, and zero elsewhere. Every required Walsh coefficient vanishes. The top Walsh sum is $-2$. At positive coordinate scalings two and one half, the capacity evaluation is $9/8<2$. | [Deficit and cancellations](../Lean/MOC/CyclicSupportCapacityObstruction.lean#L55) · [Refuted implication](../Lean/MOC/CyclicSupportCapacityObstruction.lean#L79) |
-| Replace diagonal unit phases by real signs while keeping the two surrounding bases fixed. | In order three, let $J$ have every entry one, $A=I-J/3$, and $B=J/3$. The phases are the three cube roots of one. They give determinant zero. Every sign choice gives a real determinant at least $1/9$. The unrestricted order-three inclusion still holds. | [Determinant identity](../Lean/MOC/OrthogonalPhaseSignObstruction.lean#L39) · [Real normal matrices and unitary phases](../Lean/MOC/OrthogonalPhaseSignObstruction.lean#L72) |
-| Fixed-mass bounds at every real evaluation imply the corresponding complex affine-pencil bound. | Average the three segments with endpoints $\pm(z-1)$, $\pm zi$, and $\pm(z+1)(1+i)$, each with mass $1/3$. The point $z/8$ is in this average for every real $z$. At $z=(1-2i)/5$, multiplication by $1+2i$ gives real part zero on the whole average and real part $1/8$ at $z/8$. The example concerns three scalar affine functions. | [Real evaluations](../Lean/MOC/HermitianPencilRealSliceObstruction.lean#L22) · [Complex separation](../Lean/MOC/HermitianPencilRealSliceObstruction.lean#L67) |
-
-Thus the cycle proof must use the neighboring spectral factors in
-addition to the Walsh identities. An orthogonal reduction must permit
-changes of basis beyond sign substitution. A Hermitian pencil proof
-must use more than the real evaluation bounds.
-
 ### Stationary support and spectral exchange
 
 At a unitary support maximum, sum the complex signed determinant
@@ -672,20 +627,11 @@ homogeneous polynomial of degree six.
 
 ```mermaid
 flowchart BT
-    accTitle: Pointwise, separate, and simultaneous polynomial comparisons
-    accDescr: Pointwise comparisons are equivalent to MOC. Counterexamples refute the full characteristic-polynomial hull and the separate elementary coefficient condition.
-    Goal["Unrestricted MOC"]:::goal
-    Pt["Pointwise characteristic<br/>comparison"]
-    Char["One law for the full characteristic polynomial<br/>Refuted in order four"]:::refuted
-    Sep["Separate elementary coefficients<br/>Refuted in every order ≥ 5"]:::refuted
-    Mixed["One set of weights for<br/>the mixed determinant polynomial"]:::open
-    Pt <-->|iff| Goal
-    Char -->|project to each coefficient| Sep
-    Sep -->|top coefficient| Goal
-    Mixed -->|evaluate at 1| Goal
-    classDef goal fill:#18344b,stroke:#18344b,color:#fff
-    classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
-    classDef refuted fill:#fbe7e7,stroke:#aa4949,color:#5b2020
+    Goal["Unrestricted MOC: open"]
+    Pointwise["Pointwise characteristic comparison"]
+    Mixed["One law for the mixed determinant polynomial: open"]
+    Pointwise <-->|equivalent| Goal
+    Mixed -->|evaluate at one| Goal
 ```
 
 For complex eigenvalue lists $a,b$ and a unitary change of eigenbasis
@@ -714,8 +660,7 @@ The first three bounds use the same weights for all spectra at a fixed
 $U$. Each of their matching values is a constant plus a sum of functions
 of individual matched pairs. Birkhoff weights preserve that sum. The
 fourth coefficient is zero in orders below four and equals the
-determinant in order four. The counterexample below refutes the bound
-at index four in every order above four.
+determinant in order four.
 [Coefficient definition](../Lean/MOC/Reformulations/SecondCoefficient.lean#L66) ·
 [Separate coefficient form](../Lean/MOC/Reformulations/SecondCoefficient.lean#L84) ·
 [First three coefficients](../Lean/MOC/Reformulations/SecondCoefficient.lean#L248) ·
@@ -726,108 +671,10 @@ conjunction of MOC and the bounds for $4\le k<n$. Thus only the
 determinant bound is needed for the separate form through order four.
 [Exact split](../Lean/MOC/Reformulations/SecondCoefficient.lean#L293)
 
-| Route in Lean | Relation | Lean proof |
-| --- | --- | --- |
-| Pointwise characteristic polynomial of the spectral sum | Iff | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L145) |
-| Separate elementary coefficients | Refuted sufficient condition | [Top-coefficient implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L91) · [Exact counterexample](#counterexample-to-the-fourth-elementary-coefficient-bound) |
-| Simultaneous characteristic hull | Refuted sufficient condition | [Implication](../Lean/MOC/Reformulations/SecondCoefficient.lean#L54) · [Exact counterexample](#counterexample-to-the-common-characteristic-polynomial-law) |
-| Simultaneous mixed-pencil coefficients | If | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
-
-### Counterexample to the common characteristic-polynomial law
-
-Take the orthogonal matrix
-
-$$
-U=\frac{1}{7}\begin{pmatrix}
-1&4&4&4\\
--4&1&4&-4\\
--4&-4&1&4\\
--4&4&-4&1
-\end{pmatrix}.
-$$
-
-Divide all entries of the following lists by $10^4$.
-
-| List | Numerators |
-| --- | --- |
-| $a$ | $560+17062i$, $-13061-19835i$, $-13135-19794i$, $25636+22567i$ |
-| $b$ | $10341+21575i$, $-15084-9084i$, $-5643-34138i$, $10386+21647i$ |
-| $(c_2,c_3,c_4)$ | $4970-2858i$, $-11115+829i$, $-24243-13124i$ |
-
-Define $L(M)=\mathrm{Re}\sum_{k=2}^4 c_k e_k(M)$. Compute each $e_k$
-by summing the principal minors of size $k$. For
-$M=\mathrm{diag}(a)+U\mathrm{diag}(b)U^{\mathsf T}$ this gives
-
-$$
-L(M)=\frac{276551869758667259929}{1200500000000000000000}.
-$$
-
-On the 24 matched lists $a_j+b_{\sigma(j)}$, the largest value is
-$3457447314302311469/20000000000000000000$. This value is less than
-$18/100$. The value at $M$ is greater than $23/100$. The three
-permutations $(1,2,3,4)$, $(1,2,4,3)$ and $(1,3,4,2)$ give a triangle
-that contains the actual value for each separate coefficient of
-index $2$, $3$ or $4$. The trace is constant. This exact arithmetic
-example refutes the simultaneous characteristic-polynomial law and the
-stronger law for all squared minors.
-[Coefficient hulls and common-law obstruction](../Lean/MOC/CommonCharacteristicPolynomialObstruction.lean#L305) · [Implication from the squared-minor law](../Lean/MOC/Reformulations/NativeLinksD.lean#L48)
-
-### Counterexample to the fourth elementary coefficient bound
-
-Let $Q$ be the four-by-four orthogonal matrix in the previous example.
-Use $U=Q\oplus I_1$, where $\oplus$ denotes a block diagonal sum and
-$I_1$ is the identity matrix of order one. Write $\mathrm i$ for the
-imaginary unit. Use these lists of Gaussian integers in order five.
-
-| List | Entries |
-| --- | --- |
-| $a$ | $33+22\mathrm i$, $0$, $-11+8\mathrm i$, $60+17\mathrm i$, $-14-68\mathrm i$ |
-| $b$ | $-3+20\mathrm i$, $-70+10\mathrm i$, $-60-47\mathrm i$, $16+20\mathrm i$, $16+20\mathrm i$ |
-
-Set $W=7U$. The entries of $W$ are integers and $W^{\mathsf T}W=49I$.
-For these lists set $M=\mathrm{diag}(a)+U\mathrm{diag}(b)U^{\mathsf T}$.
-The matrix $N=49\mathrm{diag}(a)+W\mathrm{diag}(b)W^{\mathsf T}$ equals
-$49M$. The fourth coefficient is homogeneous of degree four. The exact
-replay sums the determinants of the order-four principal submatrices
-of $N$. Their sum has real part $9341473392272$. Thus
-$\mathrm{Re}(e_4(M))=9341473392272/49^4$.
-[Exact numerator score](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L230)
-
-For any integer $n\geq5$, append $n-5$ zeros to each spectrum and append
-an identity block to $U$. The new sum is $M\oplus0$, so its polynomial
-$\det(I+x(M\oplus0))$ is still $\det(I+xM)$.
-
-Restrict a permutation of the enlarged labels to pairs of original
-labels. This gives an injection $d$ from a subset $J$ of the original
-$b$ labels into the original $a$ labels. A matched pair contributes
-$a_{d(j)}+b_j$. An unmatched original label contributes its single
-eigenvalue. A pair of padded labels gives a factor of one. Thus the
-matching polynomial of the enlarged lists is
-
-$$
-P_d(x)=
-\prod_{j\in J}(1+x(a_{d(j)}+b_j))
-\prod_{j\notin J}(1+xb_j)
-\prod_{i\notin d(J)}(1+xa_i).
-$$
-
-Choose $r$ labels from each list and match them bijectively. This
-gives $\binom{5}{r}^2r!$ partial injections of size $r$. The exact replay
-checks all 1,546 injections. Let $[x^4]$ extract the coefficient of $x^4$.
-The maximum of $\mathrm{Re}([x^4]P_d)$ is $1604790$. The real part of
-$e_4(M)$ exceeds this maximum by $90178395482/49^4$. Therefore $e_4(M)$
-is outside the closed half-plane that contains all the matching
-coefficients. In every order $n>5$, the padded sum has determinant zero.
-A matching that pairs the padded zeros with each other also gives
-determinant zero.
-
-Lean verifies the finite score bound and its extension to every order
-at least five.
-[Finite score bound](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L241) ·
-[Counterexample in every order at least five](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L339) ·
-[Zero padding from the partial-matching bound](../Lean/MOC/Reformulations/ZeroPaddingElementaryCoefficient.lean#L106) ·
-[Refutation of the separate form](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L348) ·
-[Refutation of the simultaneous form](../Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L353)
+| Route in Lean | Relation | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Pointwise characteristic polynomial of the spectral sum | $\mathrm{MOC}\Longleftrightarrow T$ | [Statement and proof](../Lean/MOC/Reformulations/SecondNative.lean#L145) | Yes |
+| Simultaneous mixed-pencil coefficients | $T\Longrightarrow\mathrm{MOC}$ | [Statement and proof](../Lean/MOC/Reformulations/NativeLinksA.lean#L237) | Yes |
 
 ## Spectral realizations and implications
 
@@ -841,60 +688,39 @@ comparison is exact. The weights can depend on the scalar parameter.
 ```mermaid
 flowchart BT
     accTitle: Determinant comparisons on realized spectra
-    accDescr: Some realizations give equivalent determinant comparisons. Others give only restrictions of MOC. The native product and regularization candidates need separate proofs and can fail.
+    accDescr: Some realizations give equivalent determinant comparisons. Others give only restrictions of MOC. Each converse requires the stated realization hypotheses.
     M["Unrestricted MOC"]:::goal
     N["Normal pencils, determinant lines,<br/>toric section weights, loopless adjacency"]
     E["Real, positive, or circular spectra<br/>Proved restrictions"]
     R["Other normal spectral restrictions<br/>Converse not established"]
-    X["Tensor and regularized determinant candidates<br/>Separate comparisons"]
     N <-->|iff| M
     M -->|specialize| E
     M -->|specialize| R
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
 ```
 
-| Spectral data | Relation and scope | Lean source |
-| --- | --- | --- |
-| Characteristic roots of nonnormal matrices | Iff for the normal diagonal matrices of characteristic roots. The statement for arbitrary original nonnormal sums is false. | [Representative equivalence](../Lean/MOC/Reformulations/FirstMatrix.lean#L86) · [Nonnormal counterexample](../Lean/MOC/Reformulations/SecondNative.lean#L32) |
-| Joint spectra of commuting tuples | Iff for one complex linear projection of joint spectra at a time. A single coordinate gives the converse. | [Commuting tuple projections](../Lean/MOC/Reformulations/FirstMatrix.lean#L103) · [Joint numerical range](../Lean/MOC/Reformulations/SecondNative.lean#L289) |
-| Matrix pencils and top exterior powers | Iff for normal matrices obtained by normalizing regular pencils with invertible denominators, and for the action of the top exterior power of the sum. | [Pencils](../Lean/MOC/Reformulations/FirstMatrix.lean#L121) · [Determinant line](../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L96) |
-| Scaled and shifted determinants | Iff for pointwise determinants of scaled sums or shifted generators. Weights can depend on the scalar parameter. The separate mixed determinant coefficients have the boundary cases stated above. | [Mixed determinants](../Lean/MOC/Reformulations/FirstStructured.lean#L202) · [Pointwise characteristic comparison](../Lean/MOC/Reformulations/SecondNative.lean#L145) |
-| Weighted entries of a unitary matrix | Iff for the determinant of the matrix with entries $(a_i+b_j)U_{ij}$, divided by $det U$. The comparison values are the products over perfect matchings. | [Weighted entry identity](../Lean/MOC/Weights.lean#L29) · [Weighted entry equivalence](../Lean/MOC/Reformulations/SecondNative.lean#L66) |
-| Hermitian, positive, and circular spectra | Proved restrictions for Hermitian, positive definite, and unitary matrices, positive square roots of rectangular Gram matrices, Gram matrices, and the positive log-determinant interval. | [Hermitian](../Lean/MOC/Reformulations/FirstHermitian.lean#L28) · [Positive definite](../Lean/MOC/Reformulations/FirstHermitian.lean#L60) · [Unitary](../Lean/MOC/Reformulations/FirstUnitary.lean#L43) · [Gram](../Lean/MOC/Reformulations/FirstHermitian.lean#L70) · [Absolute value](../Lean/MOC/Reformulations/FirstHermitian.lean#L82) · [Log determinant](../Lean/MOC/Reformulations/NativeFirstAHermitian.lean#L37) |
-| Adjoint differences and conjugation ratios | MOC implies the tests on the full lists of differences and ratios. A restriction to a selected column of matrix units gives an equivalent test. | [Adjoint differences](../Lean/MOC/Reformulations/FirstStructured.lean#L161) · [Conjugation ratios](../Lean/MOC/Reformulations/FirstStructured.lean#L189) · [Selected adjoint spectrum](../Lean/MOC/Reformulations/FirstStructured.lean#L175) · [Selected conjugation spectrum](../Lean/MOC/Reformulations/FirstGeometric.lean#L96) |
-| Fredholm and perturbation determinants | The finite determinant variants are equivalent to MOC. The paper extension to infinite spaces uses finite-rank approximation and the closed hull. The infinite-only converse needs an additional argument because zero modes can enlarge the matching hull. | [Finite Fredholm determinant](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L41) · [Finite regularized determinant at index two](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L99) · [Finite perturbation determinant](../Lean/MOC/Reformulations/NativeFirstB.lean#L110) |
-| Tensor and regularized determinant comparisons | A resultant comparison fails for binary cubics. A stationary-value comparison fails for binary quartics. A hyperdeterminant comparison fails for a two-by-two-by-two tensor. Schatten regularization at index three fails in finite order and with infinitely many zero modes. | [Tensor resultant](../Lean/MOC/Reformulations/FirstResultant.lean#L86) · [Tensor stationary values](../Lean/MOC/Reformulations/FirstTensorStationary.lean#L178) · [Hyperdeterminant](../Lean/MOC/Reformulations/FirstHyperdeterminant.lean#L54) · [Finite regularized determinant](../Lean/MOC/Reformulations/NativeLinksASchatten.lean#L180) · [Infinite case](#schatten-regularization-with-zero-modes) |
-
-### Schatten regularization with zero modes
-
-This is a paper proof for the infinite list. Lean proves the finite
-calculation linked below. Take two copies of the list $(-1/2,-2,0,\ldots)$.
-Mix the two nonzero coordinates by a rotation with cosine
-$\sqrt{5}/3$ and sine $2/3$. The resulting two by two block of
-the sum has trace $-5$ and determinant $5$. Its regularized
-determinant of index three is $e^{25/2}$.
-
-The factor for a spectral value $t$ is $(1+t)e^{-t+t^2/2}$.
-A permutation makes zero, one, or two matches between nonzero
-entries of the two lists. With zero matches the product is
-$e^{37/4}/4$. With one match it is zero, negative, or
-$3e^{41/4}/4$. With two matches it is zero or $9e^{45/4}/4$.
-All these values are less than $e^{25/2}$. For the last one, use
-$e^{5/4}>1+5/4$. There are finitely many distinct comparison values,
-so taking the closed hull preserves the strict separation.
-[Finite-order calculation](../Lean/MOC/Reformulations/NativeLinksASchatten.lean#L180)
+| Spectral data | Relation and scope | Lean source | Lean Checked? |
+| --- | --- | --- | --- |
+| Characteristic roots of nonnormal matrices | $\mathrm{MOC}\Longleftrightarrow T$. Test the normal diagonal matrices of characteristic roots. | [Representative equivalence](../Lean/MOC/Reformulations/FirstMatrix.lean#L86) | Yes |
+| Joint spectra of commuting tuples | $\mathrm{MOC}\Longleftrightarrow T$. Test one complex linear projection of joint spectra at a time. A single coordinate gives the converse. | [Commuting tuple projections](../Lean/MOC/Reformulations/FirstMatrix.lean#L103) · [Joint numerical range](../Lean/MOC/Reformulations/SecondNative.lean#L289) | Yes |
+| Matrix pencils and top exterior powers | $\mathrm{MOC}\Longleftrightarrow T$. Test normal matrices obtained by normalizing regular pencils with invertible denominators, and for the action of the top exterior power of the sum. | [Pencils](../Lean/MOC/Reformulations/FirstMatrix.lean#L121) · [Determinant line](../Lean/MOC/Reformulations/NativeFirstAPolynomial.lean#L96) | Yes |
+| Scaled and shifted determinants | $\mathrm{MOC}\Longleftrightarrow T$. Test pointwise determinants of scaled sums or shifted generators. Weights can depend on the scalar parameter. The separate mixed determinant coefficients have the boundary cases stated above. | [Mixed determinants](../Lean/MOC/Reformulations/FirstStructured.lean#L202) · [Pointwise characteristic comparison](../Lean/MOC/Reformulations/SecondNative.lean#L145) | Yes |
+| Weighted entries of a unitary matrix | $\mathrm{MOC}\Longleftrightarrow T$. Test the determinant of the matrix with entries $(a_i+b_j)U_{ij}$, divided by $\det U$. The comparison values are the products over perfect matchings. | [Weighted entry identity](../Lean/MOC/Weights.lean#L29) · [Weighted entry equivalence](../Lean/MOC/Reformulations/SecondNative.lean#L66) | Yes |
+| Hermitian, positive, and circular spectra | Proved restrictions for Hermitian, positive definite, and unitary matrices, positive square roots of rectangular Gram matrices, Gram matrices, and the positive log-determinant interval. | [Hermitian](../Lean/MOC/Reformulations/FirstHermitian.lean#L28) · [Positive definite](../Lean/MOC/Reformulations/FirstHermitian.lean#L60) · [Unitary](../Lean/MOC/Reformulations/FirstUnitary.lean#L43) · [Gram](../Lean/MOC/Reformulations/FirstHermitian.lean#L70) · [Absolute value](../Lean/MOC/Reformulations/FirstHermitian.lean#L82) · [Log determinant](../Lean/MOC/Reformulations/NativeFirstAHermitian.lean#L37) | Yes |
+| Adjoint differences and conjugation ratios | MOC implies the tests on the full lists of differences and ratios. A restriction to a selected column of matrix units gives an equivalent test. | [Adjoint differences](../Lean/MOC/Reformulations/FirstStructured.lean#L161) · [Conjugation ratios](../Lean/MOC/Reformulations/FirstStructured.lean#L189) · [Selected adjoint spectrum](../Lean/MOC/Reformulations/FirstStructured.lean#L175) · [Selected conjugation spectrum](../Lean/MOC/Reformulations/FirstGeometric.lean#L96) | Yes |
+| Fredholm and perturbation determinants | The finite determinant variants are equivalent to MOC. The paper extension to infinite spaces uses finite-rank approximation and the closed hull. The infinite-only converse needs an additional argument because zero modes can enlarge the matching hull. | [Finite Fredholm determinant](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L41) · [Finite regularized determinant at index two](../Lean/MOC/Reformulations/NativeFirstAFredholm.lean#L99) · [Finite perturbation determinant](../Lean/MOC/Reformulations/NativeFirstB.lean#L110) | Yes |
 
 ### Realizations of arbitrary spectral lists
 
-| Spectral data | Realization for the converse | Evidence |
-| --- | --- | --- |
-| Holomorphic endomorphisms and torus actions | Use a flat complex torus with Gaussian lattice. Its holomorphic diagonal endomorphisms act by Gaussian integers in bidegree $(1,0)$. Use a trivial action for the torus action case. The indicated bidegree gives a preserved free submodule, which the statement permits. Homogeneity and density give all complex lists. | [Lean density argument](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) |
-| Quantization of complex observables | If observables admit complex functions, use a finite disjoint union of points as a zero-dimensional symplectic manifold. Its quantization has one line per point. Multiplication by two complex functions gives arbitrary diagonal spectra. Self-adjoint observables alone give the proved real restriction. | Paper realization |
-| Toric section weights | Use the two line bundles obtained from the two copies of projective space of dimension $n-1$ in a product. Their coordinate sections give the two lists. Add two projective line factors and twist each linearization by a character on a different extra factor. The two twists give independent scales. An opposite spectral shift removes zeros. | [Lean section-weight model](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) |
-| Flag valuations of line-bundle sections | Two big line bundles on one projective variety give arbitrary evaluated valuation lists at degree one. The construction uses a common flag and a common real-linear evaluation. | [Paper proof](#newtonokounkov-valuation-realization) |
-| Obstruction theories on a point | On a point, the zero map from $\mathbb C^n$ in degree $-1$ to the cotangent complex is a perfect obstruction theory. The degree-zero cohomology is zero on both sides. The map in degree $-1$ surjects onto zero. Every endomorphism of the obstruction space is compatible. The degree $-1$ hull recovers MOC. | [Definition of perfect obstruction theory](https://arxiv.org/abs/alg-geom/9601010) |
-| Continuous Galois characters | With continuous $\ell$-adic coefficients and a complex scalar embedding, use unramified characters of the absolute Galois group of a finite field. A local unit can have any prescribed value in the dense set of Gaussian rationals that are local units. Usual complex continuity instead forces unit-circle spectra. | [Paper proof](#galois-scalar-realization) |
-| Loopless adjacency matrices | Require normal adjacency matrices of loopless directed graphs with complex edge weights. Conjugate each traceless spectrum by the discrete Fourier matrix. Each resulting diagonal entry is the mean of that spectrum and is zero. The traceless spectral test is exact. | [Adjacency equivalence](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) · [Traceless test](../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) |
+| Spectral data | Realization for the converse | Evidence | Lean Checked? |
+| --- | --- | --- | --- |
+| Holomorphic endomorphisms and torus actions | Use a flat complex torus with Gaussian lattice. Its holomorphic diagonal endomorphisms act by Gaussian integers in bidegree $(1,0)$. Use a trivial action for the torus action case. The indicated bidegree gives a preserved free submodule, which the statement permits. Homogeneity and density give all complex lists. | [Lean density argument](../Lean/MOC/Reformulations/NativeLinksBGaussian.lean#L73) | Yes |
+| Quantization of complex observables | If observables admit complex functions, use a finite disjoint union of points as a zero-dimensional symplectic manifold. Its quantization has one line per point. Multiplication by two complex functions gives arbitrary diagonal spectra. Self-adjoint observables alone give the proved real restriction. | Paper realization | Paper only |
+| Toric section weights | Use the two line bundles obtained from the two copies of projective space of dimension $n-1$ in a product. Their coordinate sections give the two lists. Add two projective line factors and twist each linearization by a character on a different extra factor. The two twists give independent scales. An opposite spectral shift removes zeros. | [Lean section-weight model](../Lean/MOC/Reformulations/NativeLinksCMonomial.lean#L46) | Yes |
+| Flag valuations of line-bundle sections | Two big line bundles on one projective variety give arbitrary evaluated valuation lists at degree one. The construction uses a common flag and a common real-linear evaluation. | [Paper proof](#newtonokounkov-valuation-realization) | Paper only |
+| Obstruction theories on a point | On a point, the zero map from $\mathbb C^n$ in degree $-1$ to the cotangent complex is a perfect obstruction theory. The degree-zero cohomology is zero on both sides. The map in degree $-1$ surjects onto zero. Every endomorphism of the obstruction space is compatible. The degree $-1$ hull recovers MOC. | [Definition of perfect obstruction theory](https://arxiv.org/abs/alg-geom/9601010) | Paper only |
+| Continuous Galois characters | With continuous $\ell$-adic coefficients and a complex scalar embedding, use unramified characters of the absolute Galois group of a finite field. A local unit can have any prescribed value in the dense set of Gaussian rationals that are local units. Usual complex continuity instead forces unit-circle spectra. | [Paper proof](#galois-scalar-realization) | Paper only |
+| Loopless adjacency matrices | Require normal adjacency matrices of loopless directed graphs with complex edge weights. Conjugate each traceless spectrum by the discrete Fourier matrix. Each resulting diagonal entry is the mean of that spectrum and is zero. The traceless spectral test is exact. | [Adjacency equivalence](../Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) · [Traceless test](../Lean/MOC/Reformulations/NativeLinksCTraceless.lean#L187) | Yes |
 
 For the toric section weights, choose the effective torus on the two projective spaces and the
 two projective lines. In each set of $n$ sections the weights are the
@@ -1056,7 +882,6 @@ reduction gives order 33. [Lean frame bound](../Lean/MOC/FiniteFrameLabels.lean#
 [Square bridge](../Lean/MOC/ReducedTwoFrame.lean#L382)
 
 
-
 <details>
 <summary>Proof of the smaller label bound</summary>
 
@@ -1100,16 +925,6 @@ rows by the square roots of their weights. The identity constraints
 keep the frames isometric. The new comparison products are a subset of
 the original ones, so the strict inequality is preserved.
 
-#### Limit of the argument
-
-For $k\ge 2$, the real space of matrices $H+itI_k$ with $H$ Hermitian,
-$\mathrm{tr}(H)=0$, and $t$ real has dimension $k^2$. It contains no
-complex line and no nonzero matrix of rank one. At $I_k$ the first
-variation of the real determinant vanishes. The quadratic term is
-$-\mathrm{tr}(H^2)/2-k(k-1)t^2/2$, which is strictly negative away
-from zero. A further reduction must use restrictions on weight spaces of
-actual frames.
-
 </details>
 
 The restricted overlap-three theorem starts with positive ranks $r,s$
@@ -1127,13 +942,12 @@ adjacent minor laws then gives a three-edge matching.
 This section gives paper arguments. Where a Lean result covers a step
 or a full theorem, the link gives its hypotheses and conclusion.
 
-| Premise | Conclusion and proof |
-| --- | --- |
-| A normal matrix differs from a diagonal matrix by rank at most one. | One probability law on its eigenvalue labels represents every principal minor and works for every complex diagonal partner in the same basis. The Hermitian case uses the secular equation on a fixed-spectrum interlacing chamber. The normal case uses a common fractional linear map that preserves the rank-one difference. |
-| One summand has fixed nonzero eigenvalues $a_i$. The other has eigenvalues $t\beta_j$. The values $\sum_i a_i^{-1}\beta_{\pi(i)}$ are distinct with no three collinear. | For all sufficiently small complex $t$, the inclusion holds uniformly over all relative unitaries. [Lean statement](../Lean/MOC/SmallSpectralPerturbation.lean#L757) · [Paper argument](#small-summands) |
-| Form a block diagonal unitary. Apply a unitary gate on one row from each block. Each block satisfies the inclusion for all lists. At the chosen port spectrum, one law for the gate works for all partners. | The new matrix satisfies the inclusion for that port spectrum and all partners. The signed determinant coefficients factor through a port permutation and independent in-block permutations. [Paper factorization](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/UnitaryPortGates.md) · [Lean two-port case](../Lean/MOC/OneBridge.lean#L307) |
-| Use nested column sets of a unitary with a one-column difference. | The positive full-flag law gives the same covariance of the two subset scores as the signed law. Their separate second moments agree by the minor law. The increment selects a single row with the diagonal distribution of the rank-one projection difference. Polarization therefore gives the covariance identity. For a real spectrum with three levels and a singleton class, put that class between the two prefixes. The resulting positive score law matches the signed mean and variance. The variance is at least the product of the distances from the mean to the nearest attainable scores below and above it. [Lean flag law](../Lean/MOC/FullFlagLaw.lean#L209) · [Lean single-assignment moment](../Lean/MOC/SignedPairMoments.lean#L16) |
-
+| Premise | Conclusion and proof | Lean Checked? |
+| --- | --- | --- |
+| A normal matrix differs from a diagonal matrix by rank at most one. | One probability law on its eigenvalue labels represents every principal minor and works for every complex diagonal partner in the same basis. The Hermitian case uses the secular equation on a fixed-spectrum interlacing chamber. The normal case uses a common fractional linear map that preserves the rank-one difference. | Paper only |
+| One summand has fixed nonzero eigenvalues $a_i$. The other has eigenvalues $t\beta_j$. The values $\sum_i a_i^{-1}\beta_{\pi(i)}$ are distinct with no three collinear. | For all sufficiently small complex $t$, the inclusion holds uniformly over all relative unitaries. [Lean statement](../Lean/MOC/SmallSpectralPerturbation.lean#L757) · [Paper argument](#small-summands) | Yes |
+| Form a block diagonal unitary. Apply a unitary gate on one row from each block. Each block satisfies the inclusion for all lists. At the chosen port spectrum, one law for the gate works for all partners. | The new matrix satisfies the inclusion for that port spectrum and all partners. The signed determinant coefficients factor through a port permutation and independent in-block permutations. [Paper factorization](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/UnitaryPortGates.md) · [Lean two-port case](../Lean/MOC/OneBridge.lean#L307) | Paper only |
+| Use nested column sets of a unitary with a one-column difference. | The positive full-flag law gives the same covariance of the two subset scores as the signed law. Their separate second moments agree by the minor law. The increment selects a single row with the diagonal distribution of the rank-one projection difference. Polarization therefore gives the covariance identity. For a real spectrum with three levels and a singleton class, put that class between the two prefixes. The resulting positive score law matches the signed mean and variance. The variance is at least the product of the distances from the mean to the nearest attainable scores below and above it. [Lean flag law](../Lean/MOC/FullFlagLaw.lean#L209) · [Lean single-assignment moment](../Lean/MOC/SignedPairMoments.lean#L16) | Paper only |
 
 
 <details>
@@ -1427,3 +1241,5 @@ only propositional extensionality, classical choice, and quotient
 soundness. Each open route is a proposition. A proof of that proposition
 supplies the premise of its registered implication.
 [Default target](../lakefile.toml) · [Registry import](../Lean/MOC.lean#L246) · [Axiom audit](../Lean/MOC.lean#L519)
+
+[Lean check status](README.md#lean-check-status): **Partial (106/112)** for the 112 linked source modules.

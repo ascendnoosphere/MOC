@@ -52,3 +52,11 @@ identity gives the probabilities for larger subsets. Row and column
 permutations transport the law to the original labels. Unit phases
 preserve squared moduli of minors.
 [Entries](../Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L117) · [Minors of order two](../Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L133) · [Complementary minors](../Lean/MOC/FiniteMinorLaw.lean#L99) · [Relabeling](../Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L207)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 2 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

@@ -38,11 +38,11 @@ flowchart BT
     classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
 ```
 
-| Open test | Proved step from a strict witness | Lean source |
-| --- | --- | --- |
-| Bound witnesses with at least $2n-2$ contacts. | Below the threshold, keep the mixer $U$, direction, one maximizing permutation as a pivot, the complex determinant difference from that pivot, and the old complex differences from the pivot. Add a contact. The transfer can also keep selected polynomial values fixed within the count bound. | [Transfer and count bound](../Lean/MOC/GlobalContactSlice.lean#L159) · [Exact test](../Lean/MOC/GlobalContactSlice.lean#L243) |
-| Bound witnesses with at least $2n-2$ contacts and all products nonzero. | First restrict to spectra with no zero pair sums. The transfer stays where every matching product is nonzero and increases the count below the threshold. | [Nonzero transfer](../Lean/MOC/SaturatedContactReduction.lean#L18) · [Exact test](../Lean/MOC/SaturatedContactReduction.lean#L70) |
-| Bound witnesses with at least $2n-1$ contacts. | At or below $2n-2$ contacts, keep $U$, the direction, pivot, and old complex differences. Allow the determinant difference to vary. The proved continuation on a complex affine curve supplies the new witness. | [Continuation](../Lean/MOC/AffineGapCover.lean#L80) · [Varying-difference transfer](../Lean/MOC/VaryingGapTerminal.lean#L110) · [Exact test](../Lean/MOC/AffineGapCover.lean#L85) |
+| Open test | Proved step from a strict witness | Lean source | Lean Checked? |
+| --- | --- | --- | --- |
+| Bound witnesses with at least $2n-2$ contacts. | Below the threshold, keep the mixer $U$, direction, one maximizing permutation as a pivot, the complex determinant difference from that pivot, and the old complex differences from the pivot. Add a contact. The transfer can also keep selected polynomial values fixed within the count bound. | [Transfer and count bound](../Lean/MOC/GlobalContactSlice.lean#L159) · [Exact test](../Lean/MOC/GlobalContactSlice.lean#L243) | Yes |
+| Bound witnesses with at least $2n-2$ contacts and all products nonzero. | First restrict to spectra with no zero pair sums. The transfer stays where every matching product is nonzero and increases the count below the threshold. | [Nonzero transfer](../Lean/MOC/SaturatedContactReduction.lean#L18) · [Exact test](../Lean/MOC/SaturatedContactReduction.lean#L70) | Yes |
+| Bound witnesses with at least $2n-1$ contacts. | At or below $2n-2$ contacts, keep $U$, the direction, pivot, and old complex differences. Allow the determinant difference to vary. The proved continuation on a complex affine curve supplies the new witness. | [Continuation](../Lean/MOC/AffineGapCover.lean#L80) · [Varying-difference transfer](../Lean/MOC/VaryingGapTerminal.lean#L110) · [Exact test](../Lean/MOC/AffineGapCover.lean#L85) | Yes |
 
 Iteration uses the number of contacts still needed. The same induction
 can keep an additional condition when the transfer preserves it.
@@ -52,7 +52,7 @@ can keep an additional condition when the transfer preserves it.
 
 ```mermaid
 flowchart BT
-    accTitle: Stronger restrictions on terminal counterexamples
+    accTitle: Stronger restrictions on terminal strict violations
     accDescr: These are all exact exclusion tests. Each successive reduction imposes further conditions on a witness while retaining its needed contacts.
     Goal["MOC in order n"]:::goal
     Base["Exclude strict witnesses<br/>at ≥ 2n − 2 contacts"]
@@ -123,14 +123,14 @@ flowchart BT
 Here $n$ denotes matrix order. The chart has $n-2$ free entries on each
 side. The ranks count independent polynomial constraints.
 
-| Additional restriction on a regular chart | Lean source |
-| --- | --- |
-| At least $2n-2$ contacts. | [Base terminal chart](../Lean/MOC/MatchingContactTransfer.lean#L123) |
-| At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L303) |
-| Constraint rank at least $2n-2$, including the determinant deficit constraint. | [Full constraint rank](../Lean/MOC/MatchingContactRank.lean#L110) |
-| Rank at least $2n-2$ for the old matching differences alone. | [Contact increase below the rank bound](../Lean/MOC/DeficitContactTransfer.lean#L256) · [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L327) |
-| Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) |
-| The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) |
+| Additional restriction on a regular chart | Lean source | Lean Checked? |
+| --- | --- | --- |
+| At least $2n-2$ contacts. | [Base terminal chart](../Lean/MOC/MatchingContactTransfer.lean#L123) | Yes |
+| At least $2n-1$ contacts. | [Increased count](../Lean/MOC/DeficitContactTransfer.lean#L303) | Yes |
+| Constraint rank at least $2n-2$, including the determinant deficit constraint. | [Full constraint rank](../Lean/MOC/MatchingContactRank.lean#L110) | Yes |
+| Rank at least $2n-2$ for the old matching differences alone. | [Contact increase below the rank bound](../Lean/MOC/DeficitContactTransfer.lean#L256) · [Old-difference rank](../Lean/MOC/DeficitContactTransfer.lean#L327) | Yes |
+| Old-difference rank at least $2n-2$ and no row-column assignment shared by all contacts. | [No common assignment](../Lean/MOC/TerminalActiveEdges.lean#L27) | Yes |
+| The ideal of the chart point is a minimal prime of the ideal obtained by fixing the old matching differences. | [Minimal-prime condition](../Lean/MOC/IsolatedContactFiber.lean#L61) | Yes |
 
 Two curve results support the local argument. Over an algebraically
 closed field of characteristic zero, fix the values of fewer
@@ -207,3 +207,5 @@ This last step preserves every contact. The exclusion in the diagram
 remains open.
 [Negative weight](../Lean/MOC/StationaryPivot.lean#L430) ·
 [Terminal equivalence](../Lean/MOC/StationaryPivot.lean#L478)
+
+[Lean check status](README.md#lean-check-status): **Yes** for the 28 linked source modules.

@@ -1,4 +1,4 @@
-# Normal Klein-four matching squares
+# Order-four Klein-four matching squares
 
 [Proof map index](README.md) · [Order-four proof map](order-four-proof-map.md) · [Conjecture](../README.md)
 
@@ -16,7 +16,7 @@ flowchart TD
     Contacts["Actual support cost with normal Klein-four contacts"]
     Chart["Ten-coordinate matching chart"]
     Ordinary["Both absolute-sum bounds hold"]
-    Mixed["One absolute-sum bound fails"]
+    Mixed["One absolute-sum bound is exceeded"]
     Source["Actual inverse quadratic has four complex squares"]
     Prism["No five-dimensional subspace with a strictly negative form"]
     Threshold["Mixed coefficient at or below its bound"]
@@ -51,9 +51,9 @@ extends the identity across singular coordinates. In the actual
 spectral form, the real part of four complex linear squares represents
 the form. The four imaginary parts give a linear map to $\mathbb R^4$.
 On a five-dimensional real subspace, that map has a nonzero kernel.
-[Cofactors](../Lean/MOC/FourKleinInversePencil.lean#L130) · [Extension](../Lean/MOC/FourKleinSpectralSquares.lean#L181) · [Four-square obstruction](../Lean/MOC/FourKleinNegativeCompression.lean#L136)
+[Cofactors](../Lean/MOC/FourKleinInversePencil.lean#L130) · [Extension](../Lean/MOC/FourKleinSpectralSquares.lean#L181) · [Four-square rank bound](../Lean/MOC/FourKleinNegativeCompression.lean#L136)
 
-When one absolute-sum bound fails, coordinate changes reduce the cost
+When one absolute-sum bound is exceeded, coordinate changes reduce the cost
 to one mixed case. Write its three square coefficients as $a^2,b^2,c^2$
 with $a\ge b,c\ge0$, and let $t>0$ be the mixed coefficient. If
 $t>a(b+c)-bc$, an explicit plane has a strictly negative form.
@@ -65,3 +65,14 @@ The absence of this compression gives $t\le a(b+c)-bc$. A convex
 combination of a diagonal Gram matrix and the rank-one Gram matrix of
 $(a,-b,-c)$ gives the mixed certificate. The formula allows equality at
 the threshold. [Mixed certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L190) · [All chart cases](../Lean/MOC/FourKleinChartSymmetry.lean#L455)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 7 source modules linked in this map | Partial (4/7) |
+| [FourKleinChartSymmetry.lean](../Lean/MOC/FourKleinChartSymmetry.lean#L455) | No |
+| [FourKleinInversePencil.lean](../Lean/MOC/FourKleinInversePencil.lean#L130) | No |
+| [FourKleinSpectralSquares.lean](../Lean/MOC/FourKleinSpectralSquares.lean#L259) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

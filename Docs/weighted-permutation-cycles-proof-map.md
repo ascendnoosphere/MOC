@@ -56,3 +56,11 @@ the set of matching products.
 [Finite block closure](../Lean/MOC/ExtendedCases.lean#L78) ·
 [Relabeling](../Lean/MOC/Normal.lean#L151) ·
 [Finite block matrix theorem](../Lean/MOC/WeightedPermutationCycle.lean#L191)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 4 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

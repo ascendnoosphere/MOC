@@ -1,783 +1,304 @@
 # Marcus–de Oliveira conjecture
 
-Let $A$ and $B$ be complex normal matrices of the same finite order $n$.
-A matrix $M$ is normal if $MM^*=M^*M$, where $M^*$ is the conjugate transpose.
-Let $a_1,\ldots,a_n$ and $b_1,\ldots,b_n$ be the eigenvalues of $A$ and $B$,
-counted with multiplicity. Let $I$ be the identity matrix of order $n$.
-Let $S_n$ be the set of permutations of
-$\{1,\ldots,n\}$. For each $\sigma\in S_n$, define the matching product
-$P_\sigma=\prod_{j=1}^n(a_{\sigma(j)}+b_j)$.
+This repository records Lean proofs and paper arguments about determinants
+of sums of complex normal matrices. The unrestricted conjecture remains
+open in this library. The tables below state the main theorems.
+The [proof map index](Docs/README.md) links to the arguments and proof routes.
 
-The conjecture states that
+Let $n$ be a nonnegative integer. A complex matrix $A$ is **normal** if
+$AA^*=A^*A$, where $A^*$ is its conjugate transpose. Let $A,B$ be normal
+matrices of order $n$. List their eigenvalues as $a_1,\ldots,a_n$ and
+$b_1,\ldots,b_n$, with multiplicity. Let $S_n$ be the permutations of
+the $n$ labels. For $\sigma\in S_n$, define the **matching product**
 
 $$
-\det(A+B)\in\mathrm{conv}_{\mathbb R}\{P_\sigma\mid\sigma\in S_n\}.
+P_\sigma=\prod_{j=1}^n(a_{\sigma(j)}+b_j).
 $$
 
-Membership in the real convex hull means that the determinant is a sum of
-matching products with nonnegative real weights whose sum is one.
-[Conjecture in Lean](Lean/MOC/Core.lean#L33)
+The Marcus–de Oliveira conjecture in order $n$, written $\mathrm{MOC}_n$,
+states that every such pair satisfies
+
+$$
+\det(A+B)\in\mathrm{conv}_{\mathbb R}\{P_\sigma:\sigma\in S_n\}.
+$$
+
+Here $\mathrm{conv}_{\mathbb R}$ is the real convex hull. Membership means
+that $\det(A+B)=\sum_\sigma w_\sigma P_\sigma$ for real weights
+$w_\sigma\ge0$ with $\sum_\sigma w_\sigma=1$. Write
+$\mathrm{MOC}$ for $\forall n\ge0,\ \mathrm{MOC}_n$.
+[Lean statement](Lean/MOC/Core.lean#L33) · [All-order goal](Lean/MOC/Claim.lean#L9)
+
+Choose unitary eigenbases and set
+$D=\det(\mathrm{diag}(a)+U\mathrm{diag}(b)U^*)$.
+The **mixer** $U$ is the unitary change between the eigenbases.
+The notation $\mathrm{diag}(a)$ means the diagonal matrix with entries
+$a_i$. Write $I$ for the identity matrix of the required order.
+The spectral inclusion for $D$ is equivalent to the matrix conjecture.
+[Spectral equivalence](Lean/MOC/Normal.lean#L280)
+
+For a direction $\eta\in\mathbb C$, set
+$H=\max_\sigma\mathrm{Re}(\eta P_\sigma)$.
+A **directional bound** is $\mathrm{Re}(\eta D)\le H$.
+A **contact** is a permutation that attains $H$. Count permutations
+even when their products coincide. The **support gap** at $\sigma$ is
+$H-\mathrm{Re}(\eta P_\sigma)$.
 
 ## Proof tree
 
-[All orders](#all-orders) · [Equivalent formulations](Docs/all-orders-proof-map.md#matrix-and-operator-formulations) · [Spectral realizations](Docs/all-orders-proof-map.md#spectral-realizations-and-implications) · [Order four](#order-four) · [Order five](#order-five) · [Proved cases](#cases-proved-in-lean) · [Counterexamples](#counterexamples-to-stronger-statements)
-
-The [proof map index](Docs/README.md) lists the general routes and
-restricted results with links to their Lean sources.
-Lean checks the reductions for three spectral values, alternating
-unitary cycles, Hermitian–normal pairs, and real orthogonal mixers.
-Their all-order conclusions still require the open bounds shown below.
-
-The unrestricted Marcus–de Oliveira conjecture (MOC) is open in this
-library. Lean proves the unrestricted result through order three.
-[General goal](Lean/MOC/Claim.lean#L9) · [Orders zero through three](Lean/MOC/Small.lean#L68)
-
-Verification of the current source is incomplete. The complete library
-build has not passed. The Hessian determinant certificate, Klein symmetry,
-opposite-pair certificate, winding proof, and six-dimensional mixer ball
-still need checks after repair. The nine all-order targets listed below
-remain open.
-
-In every order $n\ge 4$, Lean determines exactly how many nonzero
-entries in the change of eigenbasis guarantee one matching law for
-all spectra. The largest such bound is $n+8$. At $n+9$ an explicit
-unitary has no common law. A separate result proves the inclusion
-whenever each row, or each column, has at most three nonzero entries.
-[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L106) · [Witness at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Row and column cases](Docs/sparse-unitary-proof-map.md)
-
-The certificate map gives finite integer comparisons for all orders, an
-order-four enclosure within one twenty-seventh of the matching width in
-each direction, and a sharp order-five support example. Lean checks the
-order-five example and the counterexample to the universal disjoint-pair
-certificate. The default target imports every documented Lean module.
-[Certificate statements and hypotheses](Docs/determinant-inclusion-certificates-proof-map.md) · [Source scope](Docs/all-orders-proof-map.md#scope-of-the-lean-source)
-
-The proof maps state the proved steps and the open implications for
-spectral reductions, support bounds, and determinant identities.
-They include order-four spectral equations and all-order reductions.
-In every positive order, two complex functions on permutations differ
-by a constant if their signed evaluations agree on every complex matrix
-with zero row and column sums. A signed evaluation is the determinant
-expansion with each permutation term multiplied by the function value.
-[Balanced evaluation](Lean/MOC/BalancedMatchingProbes.lean#L203) ·
-[Proof routes](Docs/research-attempts-proof-map.md) ·
-[Determinant methods](Docs/determinant-research-reports-proof-map.md)
-
-Choose a unitary eigenbasis for each matrix. In the basis for $A$, write
-$A=\mathrm{diag}(a)$ and $B=U\mathrm{diag}(b)U^*$.
-Here $\mathrm{diag}(a)$ is the diagonal matrix with entries $a_i$.
-The unitary matrix $U$ gives the change between the two eigenbases.
-The inclusion in these coordinates is equivalent to the matrix conjecture.
-[Proof](Lean/MOC/Normal.lean#L280)
-
-Read the arrows toward the goal. An **iff** arrow gives implications in
-both directions. An **if** arrow gives a sufficient condition. At an
-**AND** node, all incoming conditions are required. At an **OR** node,
-one complete input suffices. A yellow box marks an open statement.
-The status tables identify the steps and cases that Lean proves.
-
-### All orders
-
 ```mermaid
 flowchart BT
-    accTitle: Proof routes to unrestricted MOC
-    accDescr: One complete all-order route suffices. The other option needs a complete route at each order from four on. Different orders can use different tests.
-    Goal["Unrestricted MOC<br/>Open"]:::goal
-    Any{{"OR<br/>One complete alternative"}}:::join
-    Ranges{{"AND<br/>All order ranges"}}:::join
-    Tests["One registered<br/>all-order route"]:::open
-    Base["Orders 0–3<br/>Proved"]:::proved
-    Four["Order 4"]:::open
-    Five["Order 5"]:::open
-    Higher["Orders 6 and higher"]:::open
-
-    Any <-->|iff| Goal
-    Ranges --- Any
-    Tests --- Any
-    Base --- Ranges
-    Four --- Ranges
-    Five --- Ranges
-    Higher --- Ranges
-
-    classDef goal fill:#18344b,stroke:#18344b,color:#ffffff
-    classDef join fill:#e7f0fa,stroke:#52779d,color:#142e47
-    classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
-    classDef proved fill:#e3f4e8,stroke:#41905b,color:#163c24
+    Goal["Unrestricted MOC: open"]
+    Routes{{"OR: one complete route"}}
+    General["One all-order test, with its premise proved"]
+    Split{{"AND: every order range"}}
+    Small["Orders zero through three: proved"]
+    Four["Order four: open"]
+    Five["Order five: open"]
+    Higher["Every order at least six: open"]
+    General --> Routes
+    Small --> Split
+    Four --> Split
+    Five --> Split
+    Higher --> Split
+    Split --> Routes
+    Routes --> Goal
 ```
 
-Because the base orders are proved, the order split requires proofs in
-order four, order five, and every order at least six.
-Use any one complete route for each order. A single route that proves
-all orders suffices on its own.
-[Combined route theorem](Lean/MOC/ProofRoutes.lean#L704) · [Order split](Lean/MOC/ProofRoutes.lean#L315)
+A reduction proves an implication. Its open premise still needs a proof.
+A restricted case proves inclusion under its stated hypotheses.
+[Combined route theorem](Lean/MOC/ProofRoutes.lean#L704)
 
-A **directional bound** compares $\mathrm{Re}(\eta\det(A+B))$ with the
-largest $\mathrm{Re}(\eta P_\sigma)$ for a complex direction $\eta$.
-A **strict violation** occurs if the determinant projection exceeds that value.
-A **contact** is a permutation that attains this largest value. Two
-permutations with the same product count as two contacts. The determinant
-is in the hull if and only if the bound holds in every direction.
-[Directional equivalence](Lean/MOC/Support.lean#L52)
+“Lean Checked?” concerns the linked statement and its imports.
+**Yes** means that Lake validated a current cached build.
+**No** means that no current build was verified. **Partial** means that
+a row has both checked and unchecked sources. **Paper only** means that
+the full claim has a paper argument. A checked reduction can have an
+open premise. See the [check-status rules](Docs/README.md#lean-check-status).
 
-| Relation to unrestricted MOC | Open statement | Lean proof of the relation |
-| --- | --- | --- |
-| Iff | In orders at least four, prove the directional bound for $\eta=1$ if both eigenvalue lists sum to zero and every entry of $U$ is nonzero. | [Traceless form](Lean/MOC/Reformulations/TracelessSupport.lean#L14) |
-| Iff | In each order $n$, prove the directional bound when there are at least $2n-1$ contacts. Another exact test uses at least $2n-2$ contacts and requires every matching product to be nonzero. | [General contact test](Lean/MOC/AffineGapCover.lean#L85) · [Nonzero-product test](Lean/MOC/ProofRoutes.lean#L333) |
-| Iff | At the $2n-1$ threshold, exclude a strict matching-hull violation at an orbit maximum in which every nonzero mixer entry lies on an inactive permutation with negative real signed weight. The orbit maximum may be attained by several mixers. | [Terminal stationary test](Lean/MOC/StationaryPivot.lean#L478) · [Signed score identity](Docs/contact-transfer-proof-map.md#complex-stationary-score) |
-| Iff | For every pair of lists and every direction in orders at least four, some maximizing $U$ gives a normal sum. The maximum is over all unitary $U$ for the fixed lists. | [Normal maximizers](Lean/MOC/NormalSupportMaximum.lean#L314) |
-| Iff | In each order, fix $U$ and all eigenvalues except one entry of $b$. Find one set of convex weights on at most five permutations that works for every complex value of that entry. | [One free entry](Lean/MOC/ProofRoutes.lean#L113) |
-| Iff | For every $m\ge3$, lists $\alpha\in\mathbb C^m$, $\beta\in\mathbb C^{m+1}$, and matrix $Y\in\mathbb C^{m\times(m+1)}$ with $YY^*=I$, place $\det(\mathrm{diag}(\alpha)+Y\mathrm{diag}(\beta)Y^*)$ in the hull of $\prod_{k=1}^m(\alpha_k+\beta_{e(k)})$ over all injections $e:\{1,\ldots,m\}\hookrightarrow\{1,\ldots,m+1\}$. | [Rectangular determinant bound](Lean/MOC/PrincipalCoisometry.lean#L258) |
-| Iff | In each order $n\geq 4$, it suffices to test unitary matrices $U$ for which every nonempty set of at most $n-2$ rows has nonzero entries in at least two more columns than the number of rows. | [Support expansion](Lean/MOC/SinglePortHallExpansion.lean#L72) |
-| Iff | In orders at least four, use lists $x,y$ with $x_1=0$, $x_2=1$, and $y_1=0$. For every unitary $U$ with no zero entries, place $\det(U-XUY)/\det U$ in the hull of the products $\prod_j(1-x_{\sigma(j)}y_j)$. Here $X=\mathrm{diag}(x)$ and $Y=\mathrm{diag}(y)$. | [Three fixed coordinates](Lean/MOC/Reformulations/ThreeAnchorKernel.lean#L61) |
-| Iff, new Lean source | Use normal adjacency matrices of loopless complex weighted directed graphs. Keep all relative unitary positions. | [Loopless adjacency](Lean/MOC/Reformulations/LooplessAdjacency.lean#L23) |
-| If | Use one set of convex weights for the full polynomial $\det(A+zB)$ and the polynomials from the matchings. Evaluation at $z=1$ gives the determinant. | [Mixed determinant implication](Lean/MOC/Reformulations/NativeLinksA.lean#L237) |
+## Main spectral theorems
 
-| Status | Result | Lean source |
-| --- | --- | --- |
-| Proved | A strict violation with at most $2n-2$ contacts can gain a contact by changing the lists. The new violation keeps the same $U$, direction, and previous contacts. | [Contact transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Proof of the continuation premise](Lean/MOC/AffineGapCover.lean#L80) |
-| Partial | A counterexample of least order has no proper diagonal block split after independent row and column permutations. Each row and column of $U$ has at least three nonzero entries. Every matrix that commutes with both summands is a scalar multiple of the identity. | [Block split](Lean/MOC/Claim.lean#L51) · [Rows](Lean/MOC/SparseRow.lean#L339) · [Columns](Lean/MOC/SparseRow.lean#L346) · [Commuting matrices](Lean/MOC/ReducingCommutant.lean#L70) |
-| Partial | For $\det(A+zB)$ in positive order $n$, the separate coefficient bounds hold at degrees $0$, $1$, $n-1$, and $n$. This covers every coefficient through order three. | [First](Lean/MOC/Reformulations/NativeLinksA.lean#L107) · [Penultimate](Lean/MOC/Reformulations/NativeLinksA.lean#L150) · [Endpoints](Lean/MOC/Reformulations/NativeLinksA.lean#L162) |
-| Partial, new Lean source | In every order, each unitary $U$ has one probability law on permutations that gives the first three elementary coefficients for all pairs of spectra. | [Uniform coefficient law](Lean/MOC/Reformulations/SecondCoefficient.lean#L248) |
-| Partial, new Lean source | The complex stationary score marginal, exchange identities, and spectral multiplier equations restrict a strict counterexample. Smaller-order inclusion also gives one law for a free eigenvalue when its column meets at most two distinct opposing eigenvalues. | [Stationary tests](Docs/all-orders-proof-map.md#stationary-support-and-spectral-exchange) · [Free eigenvalue](Lean/MOC/GroupedEigenvalueMoments.lean#L88) |
-| Open | The directional bound at the contact thresholds remains to be proved in general. The order split also leaves every order at least six to prove. | [Contact endpoint](Lean/MOC/AffineGapCover.lean#L85) · [Higher orders](Lean/MOC/ProofRoutes.lean#L315) |
+Each row quantifies over all normal pairs in its stated class.
+The conclusion is the determinant inclusion, unless the row states a
+different conclusion. The order is arbitrary unless the row restricts it.
+Spectra can repeat.
 
-Two iff routes for the same goal imply each other. A sufficient route
-implies every iff route for that goal. An all-order route also implies
-each iff route at a fixed order. Refuting an iff route refutes its goal.
-A sufficient condition can fail while the goal still holds. In Lean,
-apply the selected implication to its proof to obtain `MOCIsTrue`.
-Open route goals are propositions in the registry. A successful build
-of the default target checks the imported implications and their axiom dependencies.
-[Transfer between routes](Lean/MOC/ProofRoutes.lean#L60) · [Transfer to a fixed order](Lean/MOC/ProofRoutes.lean#L728)
+| Theorem | Hypotheses and conclusion | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| Small orders | $0\le n\le3$. No further hypotheses. | [Small orders](Lean/MOC/Small.lean#L68) | Yes |
+| Determinant modulus | $\lvert D\rvert\le\max_\sigma\lvert P_\sigma\rvert$ in every order. | [Drury bound](Lean/MOC/DeterminantModulusBound.lean#L141) | Yes |
+| Singular sum | $A+B$ is singular. | [Singular sum](Lean/MOC/Singular.lean#L417) | Yes |
+| Common eigenbasis | The matrices have a common unitary eigenbasis. | [Common eigenbasis](Lean/MOC/Normal.lean#L240) | Yes |
+| Two circles or lines | Each spectrum lies on a circle or a line. The two sets can differ. This includes two Hermitian matrices and two spectra with at most three distinct values each. | [Circle or line case](Lean/MOC/TwoSpectralCircles.lean#L153) · [Hermitian case](Lean/MOC/Hermitian.lean#L53) · [Parallel lines](Lean/MOC/Collinear.lean#L62) · [Three values each](Lean/MOC/TwoSpectralCircles.lean#L161) | Yes |
+| Two-circle cover | For circles or lines $C_1,C_2$, all $a_i$ lie in $C_1$ and all $-b_j$ lie in $C_1\cup C_2$. | [Cover theorem](Lean/MOC/TwoCircleCover.lean#L10) | Yes |
+| Four omitted labels | One circle or line contains every $a_i$ and all but at most four entries of $-b$. Count entries with multiplicity. | [Four labels](Lean/MOC/HermitianByNormalFourProof.lean#L82) | Yes |
+| Three omitted values | One circle or line contains every $a_i$. The entries of $-b$ outside it take at most three distinct values. | [Three values](Lean/MOC/HermitianByNormalGeneral.lean#L90) | Yes |
+| Small multiplicities | Either spectrum has at most two values; or deleting one entry leaves at most two values; or one list is constant outside at most two positions. | [Two values](Lean/MOC/TwoValues.lean#L348) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247) | Yes |
+| Shifted rank sum | For some $t\in\mathbb C$, $\mathrm{rank}(A+tI)+\mathrm{rank}(B-tI)\le n+2$. | [Rank sum](Lean/MOC/RankTwoOverlap.lean#L724) | Yes |
+| Opposite scalar padding | Start with lists of length $d$. Append $m$ copies of $c$ and $m$ copies of $-c$. Let $r,s$ be their original multiplicities. Inclusion holds for every enlarged mixer if $d\le m+2+r+s$. If the original pair satisfies inclusion for every mixer and $d\le r+s+3$, every $m$ is allowed. | [Rank condition](Lean/MOC/MarkedPadding.lean#L21) · [Extension](Lean/MOC/MarkedPadding.lean#L60) | Yes |
+| Opposite pair with multiplicity | Some $a_i+b_j=0$. The multiplicities of these two eigenvalues sum to at least $n-2$. | [Multiplicity bound](Lean/MOC/OppositePair.lean#L25) | Yes |
+| Shifted normal product | $(A-cI)(B-dI)$ is normal for some independent $c,d\in\mathbb C$. Singular matrices are allowed. The case $c=d=0$ covers a normal product $AB$. | [Shifted product](Lean/MOC/NormalProductInclusion.lean#L251) | Yes |
+| Normal relative product | $A$ is invertible and $A^{-1}B$ is normal. | [Relative product](Lean/MOC/NormalProductInclusion.lean#L292) | Yes |
+| Quadratic rank-one family | Let $H=\mathrm{diag}(d)+sww^*$, with real $d$, complex $w$, and $s\in\{-1,1\}$. Inclusion holds for $H^2+cH+eI$ and every complex diagonal partner, for all $c,e\in\mathbb C$. | [Quadratic inclusion](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L178) | Yes |
+| A spectrum and its negative | Let $b=-a$. Inclusion holds if $U-E$ has rank at most two for some complex diagonal $E$. In odd order it also holds if nonzero $d_i$ satisfy $d_iU_{ij}=d_jU_{ji}$ whenever $a_i\ne a_j$. | [Rank condition](Lean/MOC/NegativeCopyInclusion.lean#L116) · [Odd-order symmetry](Lean/MOC/NegativeCopyInclusion.lean#L60) | Yes |
+| Weighted permutation cycles | In the basis where one matrix is diagonal, the other is a block sum of normal weighted permutation cycles. Each block can have its own scalar shift. | [Block theorem](Lean/MOC/WeightedPermutationCycle.lean#L191) | Yes |
 
-For all complex normal matrices $A,B$ of the same finite order,
-Drury's modulus bound gives $|\det(A+B)|\leq\max_\sigma |P_\sigma|$.
-The Lean source uses positive row and column factors and the
-arithmetic–geometric mean inequality.
-[Drury (1994)](https://doi.org/10.1016/0024-3795(94)90356-5) · [Normal-matrix statement](Lean/MOC/DeterminantModulusBound.lean#L141) · [Proof map](Docs/modulus-order-transfer-proof-map.md)
+The [spectral maps](Docs/README.md#spectral-and-mixer-cases) give the proofs.
+The [quadratic map](Docs/quadratic-rank-one-perturbations-proof-map.md)
+also proves normality and a rank bound for every real $s$.
 
-The order-transfer theorem sends a modulus bound at order $n$ to every
-order $m\leq n$. The bound for all unitary changes of eigenbasis in every
-order is equivalent to the bound for real orthogonal changes of
-eigenbasis on any unbounded set of orders. Both statements allow
-arbitrary complex eigenvalues.
-[Order transfer](Lean/MOC/ModulusOrderTransfer.lean#L140) · [Real orthogonal equivalence](Lean/MOC/RealOrthogonalModulus.lean#L94)
+## Common permutation weights
 
-### Order four
+A **common law** fixes the weights before the stated spectral values
+vary. Each row specifies which data stay fixed. The notation
+$v^{\mathsf T}$ means the transpose of a real column vector $v$.
 
-```mermaid
-flowchart BT
-    accTitle: Equivalent tests for order four
-    accDescr: The real orthogonal, seven-contact, stationary seven-contact, and normal-maximizer tests each imply and follow from order four.
-    Four["Order 4<br/>Open"]:::goal
-    Real["Bound for real<br/>orthogonal U"]:::open
-    Seven["Bound for real orthogonal U<br/>at 7 or more contacts"]:::open
-    Pivots["Exclude stationary violations<br/>at 7 or more contacts"]:::open
-    Normal["Find a normal sum at<br/>some maximum in each direction"]:::open
+| Fixed data | Values allowed to vary and conclusion | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| A mixer and two fixed groups in one spectrum | One law works for both complex group values and every opposing spectrum. | [Two-group law](Lean/MOC/TwoValues.lean#L285) | Yes |
+| A mixer and three fixed groups, one a singleton | One law works for all three complex group values and every opposing spectrum. | [Three-group law](Lean/MOC/ThreeValues.lean#L51) | Yes |
+| A mixer and shifted supports of total size at most $n+2$, with $n\ge2$ | One law works for all values on the allowed labels. Additional zeros are allowed. | [Shifted-support law](Lean/MOC/RankTwoOverlap.lean#L709) | Yes |
+| A unitary eigenbasis of $\mathrm{diag}(d)+vv^{\mathsf T}$ | Let $d,v$ be real, with $v_i\ge0$. Require distinct update eigenvalues. One law works for every pair of complex spectra at this mixer. Repeated entries of $d$ and zero entries of $v$ are allowed. | [Cauchy eigenbasis law](Lean/MOC/HermitianRankOneCauchyWeights.lean#L137) | Yes |
+| A normal matrix of order four with spectrum on one circle or line | One law works for every complex diagonal partner. For Hermitian matrices it gives all principal minors together. Every real linear objective on those minors has a diagonal permutation maximizer. | [Common law](Lean/MOC/FourCircleLineCommonWeights.lean#L92) · [Principal minors](Lean/MOC/FourCircleLineCommonWeights.lean#L767) · [Maximum](Lean/MOC/FourCircleLineCommonWeights.lean#L835) | Yes |
+| A partition of coordinates into $X,H,Y$ and fixed orthogonal projections on $X\cup H$ and $H\cup Y$ | The first matrix is a scalar plus a multiple of its projection on $X\cup H$, and is diagonal on $Y$. The second has this form on $H\cup Y$, and is diagonal on $X$. One law works for all complex levels and private diagonal entries. The overlap $H$ has arbitrary dimension. | [Overlapping-block law](Lean/MOC/OverlappingProjectionBlocks.lean#L636) | Yes |
 
-    Real <-->|iff| Four
-    Seven <-->|iff| Real
-    Pivots <-->|iff| Seven
-    Normal <-->|iff| Four
+See the maps for [Cauchy eigenbases](Docs/cauchy-eigenbasis-permutation-laws-proof-map.md),
+[three groups](Docs/three-spectral-values-with-one-singleton-proof-map.md),
+and [projection blocks](Docs/projection-leaf-deletion-proof-map.md).
 
-    classDef goal fill:#18344b,stroke:#18344b,color:#ffffff
-    classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
-```
+## Mixer theorems
 
-For every unitary $U$ of order four, two real orthogonal matrices suffice.
-Their first rows both equal $(|U_{1j}|)_{j=1}^4$. A single weight gives
-every squared minor of $U$ as a convex combination of the two corresponding
-squared minors. The two sets of complete minor tables thus have the same
-real convex hull. The resulting reduction allows both lists of eigenvalues
-to be arbitrary complex numbers.
-[Fixed first row](Lean/MOC/FourMinorTransport.lean#L582) · [Equality of hulls](Lean/MOC/FourMinorTransport.lean#L602) · [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L645)
+Each row gives inclusion for every pair of complex spectra, except where
+it states a spectral restriction. The **operator norm** is the Euclidean
+operator norm. A **generalized circle** is a circle, a point circle, or
+a straight line.
 
-A second formula writes the determinant using thirteen nonnegative
-squared-minor weights and one signed correction. A geometric-mean bound
-controls the correction for every order-four unitary. Explicit complex
-spectra refute the proposed companion bound on the matching heights.
-The full support inequality remains open.
-[Signed formula and exact counterexample](Docs/order-four-proof-map.md#thirteen-squared-minors-and-a-signed-correction)
+| Mixer or construction | Hypotheses and conclusion | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| Sparse rows or columns | Every row has at most three nonzero entries, or every column has at most three. One common law works for all spectra. | [Inclusion](Lean/MOC/SparseUnitary.lean#L27) · [Row law](Lean/MOC/SparseUnitaryUniversalWeights.lean#L69) · [Column law](Lean/MOC/SparseUnitaryUniversalWeights.lean#L84) | Yes |
+| Small total support | There are at most $n+8$ nonzero entries. One common law works for all spectra. In order four, four zeros in any positions suffice. | [Total support](Lean/MOC/SparseUnitaryUniversalWeights.lean#L121) · [Four zeros](Lean/MOC/SparseUnitaryUniversalWeights.lean#L138) | Yes |
+| Rank-one unitary phase | $U=I+(z-1)vv^*$, with $v$ a unit vector and $\lvert z\rvert=1$. This includes a Householder reflection. | [Rank-one phase](Lean/MOC/HouseholderSupport.lean#L360) | Yes |
+| Small diagonal blocks | Independent row and column permutations give diagonal blocks of orders at most three. This includes a mixer that differs from the identity only on one principal block of order at most three. | [Block theorem](Lean/MOC/ExtendedCases.lean#L91) · [Principal block](Lean/MOC/IdentityPadding.lean#L52) | Yes |
+| One shared coordinate | Two unitary blocks share exactly one coordinate. Inclusion for all spectra at each factor gives inclusion for their product. | [Composition](Lean/MOC/SinglePortComposition.lean#L132) | Yes |
+| Recursive block joins | Start with identities, unitaries of orders at most three, the order-four zero-diagonal or complex Hadamard mixers, two-by-two tensor mixers, or mixers in the order-five Fourier ball. Apply any finite sequence of joins at one shared coordinate. That coordinate can change at each step. | [Construction and theorem](Lean/MOC/UnitaryBlockTree.lean#L121) | Yes |
+| Staircase zeros | In positive order, use indices $0,\ldots,n-1$. Choose steps in $\{0,1,2\}$ with sum $n-1$. At each prefix sum $k$, require $U_{ij}=0$ for $i>k$, $j<k$. This includes upper Hessenberg unitaries. | [Staircase theorem](Lean/MOC/StaircaseZeroCorners.lean#L91) | Yes |
+| Gates on a forest | Apply determinant-one two-coordinate unitary gates on distinct forest edges, in any order. One law works for all spectra. | [Forest law](Lean/MOC/ForestGates.lean#L167) | Yes |
+| Two layers on an even cycle | The cycle has at least four coordinates. All gates except at most two have squared entry moduli $1/2$. One law works for all spectra. | [Cycle law](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331) | Yes |
+| Opposite pair sums on a cycle | Each first-layer spectral pair has sum $c$ and each second-layer pair has sum $-c$. Gate probabilities and phases are arbitrary. | [Spectral cycle theorem](Lean/MOC/CyclicAntipodalSpectra.lean#L149) | Yes |
+| Tensor product | $U$ is the tensor product of two order-two unitaries. A common law on at most ten permutations works for all spectra. | [Tensor law](Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L437) | Yes |
+| Overlapping circle blocks | Let $S,T$ cover the coordinates. The normal matrices $A,B$ act on these respective blocks and are diagonal elsewhere. One generalized circle contains the spectrum of $A$ on $S$ and $-B_{jj}$ for $j\in S\setminus T$. Another contains the negative spectrum of $B$ on $T$ and $A_{ii}$ for $i\in T\setminus S$. | [Block theorem](Lean/MOC/OverlappingCircleBlocks.lean#L83) | Yes |
+| Forest bridges between spectral blocks | Start with unitary diagonal blocks. In each block, choose at most four row labels. One generalized circle contains every second-spectrum value and the negatives of the first-spectrum values outside those rows. Apply determinant-one two-row gates between chosen rows. The joined block pairs are distinct edges of a forest. | [Forest bridge theorem](Lean/MOC/FourOutlierForestBridges.lean#L76) | Yes |
 
-| Status | Result | Lean source |
-| --- | --- | --- |
-| Proved | The inclusion holds if one list lies on a circle or a line, if an eigenvalue pair sums to zero, or if the complex unitary matrix $U$ has zero diagonal. | [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Opposite pair](Lean/MOC/FourCoincidence.lean#L360) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) |
-| Proved | If every entry of the unitary change of eigenbasis $U$ has modulus $1/2$, one probability law on permutations gives the determinant for all complex spectra. These are the normalized complex Hadamard matrices of order four. | [Common law](Lean/MOC/OrderFourComplexHadamard.lean#L259) · [Inclusion](Lean/MOC/OrderFourComplexHadamard.lean#L272) · [Proof map](Docs/order-four-complex-hadamard-proof-map.md) |
-| Proved | The directional bound holds when the six permutations in any one of the linked patterns attain the same global supporting value. The pattern labels identify these sets. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) |
-| Partial | It suffices to exclude strict violations at real orthogonal maximizers with at least seven contacts. For each nonzero entry $U_{ij}$, some permutation with $\sigma(j)=i$ does not attain the maximum. Lean proves these restrictions on the same witness. | [Seven-contact reduction](Lean/MOC/ZhengContactReduction.lean#L14) · [Stationary reduction](Lean/MOC/StationaryPivot.lean#L221) |
-| Partial | Any order-four violation yields a real orthogonal witness with nonzero, distinct matching products and at least seven contacts in the canonical mixed-ray section. Its normalized support height is negative or greater than one half. | [Canonical witness](Lean/MOC/FourTerminalCoverage.lean#L363) · [Height exclusion](Lean/MOC/FourTerminalHeightInterval.lean#L11) |
-| Proved | A directional gap that is the fixed mixed ray with coefficient one plus a nonnegative sum of the thirteen prescribed ordinary rays gives the support bound for every order-four unitary if its normalized height lies in $[0,1/2]$. | [Canonical gap](Lean/MOC/FourCanonicalHeightSquares.lean#L22) · [Unitary support bound](Lean/MOC/FourCanonicalHeightSquares.lean#L767) |
-| Proved | Subtract the smallest directional matching value from each projected product. In the 14-dimensional matching-function space, the cone of nonnegative costs has 34 ordinary and 48 mixed extreme rays. An ordinary ray is a subset assignment indicator. Up to relabeling, a cost outside the ordinary cone uses one mixed ray and at most 13 ordinary rays. | [Cone and cancellation](Docs/spectral-support-proof-map.md#order-four-support-costs) |
-| Proved | A determinant of size $n-2$ represents the transformed spectral polynomial for $n\ge2$. In order four its quadratic form has complex rank at most four. Its real form has positive and negative indices at most four. | [Spectral determinant and rank](Docs/spectral-profile-determinant-proof-map.md) · [Tetrahedral coordinate identity](Lean/MOC/SpectralProfileDeterminant.lean#L557) |
-| Partial, new Lean source | Actual spectral gaps give a singular nine-by-nine inverse pencil. For two contact families, the verified factorization and rank bound yield matching sums of squares. | [Inverse pencil and two-factor certificates](Docs/spectral-profile-determinant-proof-map.md#order-four-inverse-pencil-certificates) |
-| New Lean source | The four contacts given by the identity and the three products of two disjoint transpositions force an actual spectral cost to be a sum of real matching squares. | [Klein-four contacts](Docs/order-four-klein-four-matching-squares-proof-map.md) |
-| Proved reduction | For every real orthogonal matrix of order four, an explicit multiple of the permutation sign makes the matching moment positive semidefinite. For every complex unitary of order four, a cost in the real matching-function space evaluates nonnegatively if it is a sum of matching squares. The corresponding certificate for a spectral support gap gives the directional bound. | [Corrected moment](Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12) · [Unitary evaluation](Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) · [Directional bound](Lean/MOC/FourMatchingPhysicalPositivity.lean#L227) |
-| Partial | Exact factor arguments supply matching squares in several canonical contact families. For one eight-contact family with strictly positive parameters $a,b,c,d,e,h$, the cubic height equation and a zero determinant factor imply one of three square bounds. | [Checked eight-contact factor](Lean/MOC/FourEightContactHigherFactors.lean#L48) · [Canonical contact certificates](Docs/order-four-mixed-ray-cancellation-proof-map.md#canonical-contact-certificates) |
-| Proved case and reduction | The order-four inclusion holds at a mixer where each mixed ray evaluates nonnegatively. A separate bilinear spectral chart retains the full support test. | [Signed formula and spectral chart](Docs/order-four-proof-map.md#signed-weights-and-the-bilinear-spectral-chart) |
-| Partial, new Lean source | One five-parameter contact family has eight specified tied permutations. At negative signed height, an actual spectral lift is impossible if the first two ordinary weights are equal. The unequal case reduces to a sign of the spectral Hessian pencil. | [Contact family](Docs/order-four-five-parameter-contact-proof-map.md) |
-| Proved | The real and imaginary parts of an exact spectral bracket profile satisfy two equations. A small integer example passes the cubic and Hessian kernel tests and fails the second equation for every candidate imaginary part. | [Lift equations](Lean/MOC/FourMatchingHessianKernel.lean#L128) · [Exact obstruction](Lean/MOC/FourMatchingHessianKernel.lean#L174) |
-| Partial | For the contact pattern T34, Lean proves the bound at zero common projection. For T85, Lean excludes one branch and reduces the remaining case to at least eight contacts with positive common projection. | [T34 at zero projection](Lean/MOC/FourT34MinorBranch.lean#L145) · [T85 branch exclusion](Lean/MOC/ZhengPairedContacts.lean#L905) · [T85 reduction](Lean/MOC/ZhengPairedContacts.lean#L915) |
-| Open | Prove the bound for every remaining real orthogonal case with at least seven contacts. An alternative is to show that a normal sum occurs at some maximum for every pair of lists and direction. | [Contact endpoint](Lean/MOC/ZhengContactReduction.lean#L14) · [Normal-maximizer equivalence](Lean/MOC/NormalSupportMaximum.lean#L303) |
+The [sparse mixer map](Docs/sparse-unitary-proof-map.md) lists the base
+mixers for recursive joins. The
+[overlapping-circle map](Docs/overlapping-circle-blocks-proof-map.md)
+defines the block conditions and spectral signs.
 
-Other exact routes include the test on stationary real orthogonal
-violations with one row and one column free of zeros, the one-free-entry
-law, and the rectangular test with three rows and four columns.
-[Stationary row and column test](Lean/MOC/StationaryDenseCross.lean#L64) · [One free entry](Lean/MOC/ProofRoutes.lean#L113) · [Rectangular test](Lean/MOC/PrincipalCoisometry.lean#L228)
+## Order four
 
-### Order five
+The full statement $\mathrm{MOC}_4$ remains open in this library.
+A **cost profile** is a real function on the 24 permutations. A ray
+consists of the nonnegative multiples of one such function. A
+**subset-image indicator** is one when a permutation sends a specified
+subset onto another specified subset, and zero otherwise. These
+indicators span the real matching-function space. A **matching square**
+is the square of a function in this space. The maps define the ordinary
+and mixed rays used in the certificates below.
 
-```mermaid
-flowchart BT
-    accTitle: Proof routes to order five
-    accDescr: The two tests with no zero entries in U are equivalent to order five. Order four together with normal order-five maximizers also suffices.
-    Five["Order 5<br/>Open"]:::goal
-    Contacts["Bound at 8 or more contacts<br/>with no zero entries in U"]:::open
-    Regular["Bound regular spectra<br/>with no zero entries in U"]:::open
-    Both{{"AND<br/>Both premises"}}:::join
-    Four["Order 4"]:::open
-    Normal["Find a normal sum at<br/>some order-5 maximum<br/>in each direction"]:::open
+| Result | Hypotheses and conclusion | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| Circle or line | Either spectrum lies on a circle or a line. The other spectrum and mixer are arbitrary. | [Inclusion](Lean/MOC/HermitianByNormalFourProof.lean#L64) | Yes |
+| Opposite pair | Some $a_i+b_j=0$. All other values and the mixer are arbitrary. | [Inclusion](Lean/MOC/FourCoincidence.lean#L360) | Yes |
+| Zero diagonal | Every diagonal entry of $U$ is zero. | [Inclusion](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196) | Yes |
+| Complex Hadamard mixer | Every entry of $U$ has modulus $1/2$. One law works for all spectra. | [Common law](Lean/MOC/OrderFourComplexHadamard.lean#L259) | Yes |
+| Real-parameter family | For every real $t$, take $a=(t+i,-t+i,1,2+i)$ and $b=(-1+i,-2-2i,2-i,1+2i)$. Inclusion holds for every unitary. | [Parameter theorem](Lean/MOC/FourRealParameterCells.lean#L142) | Yes |
+| Weighted-minor center | The explicit complex lists in the linked map satisfy inclusion for every unitary. Nine edge certificates prove the result. | [Center theorem](Lean/MOC/FourWeightedMinorCenter.lean#L471) · [Spectra](Docs/order-four-weighted-minor-center-proof-map.md) | No |
+| Two real minor tables | Every complex unitary squared-minor table is a convex combination of two real orthogonal tables. Both real matrices have first row $(\lvert U_{1j}\rvert)_j$. | [Fixed-row theorem](Lean/MOC/FourMinorTransport.lean#L582) · [Hull equality](Lean/MOC/FourMinorTransport.lean#L602) | Yes |
+| Support-cost cone | The cone of nonnegative matching functions has 34 ordinary and 48 mixed extreme rays. Relabeling and cancellation give an ordinary sum or one mixed ray with at most thirteen ordinary coefficients. | [Classification](Lean/MOC/FourSupportConeClassification.lean#L827) · [Cancellation](Lean/MOC/FourMixedRayCancellation.lean#L515) | No |
+| Matching squares give support | If an actual spectral support gap is a sum of matching squares, the directional determinant bound holds for every complex unitary. | [Square evaluation](Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) · [Support bound](Lean/MOC/FourMatchingPhysicalPositivity.lean#L227) | No |
+| Four-function square certificate | Let $r_i$ be ordinary ray $i$ and $m$ the canonical mixed ray. Real $a,b,e$ with $a>0$, $ab>1$, and $(a+1)(b+1)\le e(ab-1)$ give a matching-square certificate for $m+a r_7+b r_{13}+e r_{31}$. | [Square certificate](Lean/MOC/FourMatchingGramBudget.lean#L171) | No |
+| Canonical support interval | The spectral gap is the fixed mixed ray plus a nonnegative sum of the thirteen specified ordinary rays. At normalized height in $[0,1/2]$, it is a sum of matching squares and gives the directional bound for every unitary. | [Squares](Lean/MOC/FourCanonicalHeightSquares.lean#L719) · [Bound](Lean/MOC/FourCanonicalHeightSquares.lean#L767) | No |
+| Contact patterns | The six permutations of any one pattern T1, T2, T3, T4, T5, T6, T15, or T21 attain one global supporting value. The directional bound follows. The statements define each pattern. | [T1](Lean/MOC/ZhengT1Circle.lean#L184) · [T2](Lean/MOC/FourT2Minor.lean#L338) · [T3](Lean/MOC/FourT3.lean#L25) · [T4](Lean/MOC/FourT4.lean#L30) · [T5](Lean/MOC/FourT5.lean#L26) · [T6](Lean/MOC/FourT6Support.lean#L11) · [T15](Lean/MOC/FourT15.lean#L14) · [T21](Lean/MOC/FourT21ContactCone.lean#L275) | Partial — unchecked: `FourT15`, `FourT21ContactCone`, `FourT2Minor`, `FourT3`, `FourT4`, `FourT6Support` |
+| Klein-four contacts | The identity and the three products of disjoint transpositions attain the largest projection. The source gives matching squares. | [Certificate](Lean/MOC/FourKleinSpectralSquares.lean#L259) | No |
+| Symmetric six-contact family | The actual spectral gap has the seven ordinary terms and mixed term specified in the source, with nonnegative coefficients. The source gives the support bound. | [Support statement](Lean/MOC/FourSymmetricSixContactCertificate.lean#L384) | No |
 
-    Contacts <-->|iff| Five
-    Regular <-->|iff| Five
-    Both -->|if| Five
-    Four --- Both
-    Normal --- Both
+The [order-four map](Docs/order-four-proof-map.md) gives the contact tests,
+spectral equations, and conditional certificates.
 
-    classDef goal fill:#18344b,stroke:#18344b,color:#ffffff
-    classDef join fill:#e7f0fa,stroke:#52779d,color:#142e47
-    classDef open fill:#fff3d6,stroke:#9a6516,color:#432e0f
-```
+## Order five and order six
 
-Here **regular spectra** means that all sums $a_i+b_j$ are nonzero and
-all matching products are distinct. The eight-contact test in the diagram
-uses the condition on the entries of $U$. The separate eight-contact test
-in the all-order table uses the condition on the matching products.
-[Regular spectra](Lean/MOC/FullSupportReduction.lean#L118) · [Nonzero entries in $U$](Lean/MOC/OrderFiveContact.lean#L51) · [Nonzero matching products](Lean/MOC/SaturatedContactReduction.lean#L63)
+The full statement $\mathrm{MOC}_5$ remains open in this library.
 
-| Status | Result | Lean source |
-| --- | --- | --- |
-| Proved | In order five, the all-order contact transfer increases the contact count of a strict violation below eight and keeps the same $U$. This supplies the premise in the equivalence for the eight-contact test with no zero entries in $U$. | [Transfer](Lean/MOC/VaryingGapTerminal.lean#L110) · [Continuation](Lean/MOC/AffineGapCover.lean#L80) · [Eight-contact equivalence with the step premise](Lean/MOC/OrderFiveContact.lean#L97) |
-| Proved | The inclusion holds for all complex spectra throughout an open operator-norm ball of unitary matrices about the order-five Fourier matrix. It also holds if the first spectrum is real and the second has at least one real entry. | [Fourier ball](Lean/MOC/FiveFourierNeighborhood.lean#L68) · [Real eigenvalue](Lean/MOC/HermitianByNormalFourProof.lean#L104) |
-| Proved | The inclusion holds for arbitrary complex spectra in order five if $U$ contains a two-by-two zero submatrix. The two factors have order three. The result does not require order four. | [Zero submatrix](Lean/MOC/SinglePortZeroCorner.lean#L242) |
-| Partial | If order four holds, a counterexample in order five has at most seven zero entries in $U$. Under the same premise, order five is equivalent to the existence of normal maximizers. | [Zero count](Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Conditional equivalence](Lean/MOC/NormalSupportMaximum.lean#L270) · [Order-five implication](Lean/MOC/ProofRoutes.lean#L134) |
-| Partial | Lean expresses each directional determinant value through squared absolute values of two-by-two minors. A bound on the associated pair costs certifies the desired inequality when one permutation attains the bound. | [Pair-cost formula](Lean/MOC/OrderFivePairCost.lean#L247) · [Certificate](Lean/MOC/OrderFivePairCost.lean#L284) |
-| Open | Prove the general directional bound on the eight-contact test in the diagram. Another exact test uses at least nine contacts with arbitrary unitary $U$. | [Eight-contact test](Lean/MOC/OrderFiveContact.lean#L51) · [Nine-contact test at $n=5$](Lean/MOC/AffineGapCover.lean#L85) |
+| Order | Hypotheses and conclusion | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| Five | Every unitary in some open operator-norm ball about the normalized Fourier matrix has a common law for all spectra. | [Fourier neighborhood](Lean/MOC/FiveFourierNeighborhood.lean#L68) | Yes |
+| Five | A two-by-two zero submatrix of $U$ gives inclusion for all spectra. The proof uses two factors of order three. | [Zero rectangle](Lean/MOC/SinglePortZeroCorner.lean#L242) | Yes |
+| Five | Zero diagonal and off-diagonal magnitudes $1/2$ give inclusion for all spectra. | [Equal magnitudes](Lean/MOC/ConferenceFive.lean#L260) | Yes |
+| Five | One real spectrum and at least one real entry in the other spectrum give inclusion. | [Real entry theorem](Lean/MOC/HermitianByNormalFourProof.lean#L104) | Yes |
+| Six | The source gives a closed mixer ball of radius $1/23083105288$ about a specified rational orthogonal matrix. The first spectrum is arbitrary. The second is constant on each of three specified pairs. | [Ball statement](Lean/MOC/SixDimensionalMixerBall.lean#L1499) | No |
 
-A further sufficient route needs **both** the bound for order-five real
-orthogonal matrices and a decomposition of every unitary squared-minor
-table into a convex combination of two real orthogonal tables.
-The proposed route through one nonnegative permutation law for all
-spectra of every fixed $U$ is refuted in order five.
-[Orthogonal transfer](Lean/MOC/Realification.lean#L79) · [Refuted common-law premise](Lean/MOC/ProofRoutes.lean#L156)
+The [order-five map](Docs/order-five-proof-map.md#exact-spectral-and-mixer-cases)
+also gives paper theorems for an explicit open mixer ball, two free
+complex entries in every order at least five, and a complex spectral
+neighborhood. The [order-six map](Docs/six-dimensional-mixer-ball-proof-map.md)
+gives the ball certificate and its verification limit.
 
-Lean also records further equivalent formulations and sufficient
-conditions, including routes through finite representations, matrix
-polynomials, and matching problems. The branch lists give the complete
-statements and the proof of each connection to its goal.
-[All-order branches](Lean/MOC/ProofRoutes.lean#L695) · [Tests at each order](Docs/all-orders-proof-map.md#tests-at-each-order) · [Order-four branches](Lean/MOC/ProofRoutes.lean#L254) · [Order-five branches](Lean/MOC/ProofRoutes.lean#L289)
+## Spectral perturbations and determinant identities
 
-## Cases proved in Lean
+Each row states the data that stay fixed and the values that vary.
 
-### At most three nonzero entries per row or per column
+| Result | Quantifiers and conclusion | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| Small spectral parameter | Fix nonzero $a_i$ and a complex list $b$. The sums $\sum_j b_j/a_{\sigma(j)}$ are distinct, with no three collinear. Some $r>0$ gives inclusion for $a,tb$ for every $U$ and every complex $\lvert t\rvert<r$. | [Uniform perturbation](Lean/MOC/SmallSpectralPerturbation.lean#L757) | Yes |
+| Generic affine centers | Fix lists $a,b$ with distinct entries. On a dense open set of centers $z$, some $r>0$ gives inclusion for $a,(z+tb_j)_j$ for every $U$ and $\lvert t\rvert<r$. | [Affine perturbation](Lean/MOC/ReciprocalSpectralPerturbation.lean#L233) | Yes |
+| Uniform large shifts | If the assignment sums $\sum_j a_{\sigma(j)}b_j$ are distinct with no three collinear, some $R>0$ gives inclusion for $(a_i+z)_i,b$ for every $U$ and $\lvert z\rvert>R$. For fixed distinct $a$, these partners form an open dense set. | [Uniform shift](Lean/MOC/UniformExteriorShift.lean#L67) · [Generic partners](Lean/MOC/GenericExteriorShift.lean#L97) | Yes |
+| Large shifts with one real spectrum | Fix a real first spectrum and any complex second spectrum. One radius gives inclusion for every mixer and every complex shift outside that radius. The radius follows from a positive triangle gap of the second spectrum. | [Uniform real-spectrum radius](Lean/MOC/HermitianExteriorShift.lean#L1188) | Yes |
+| Fixed-mixer large shifts | Fix $a,b,U$, with every entry of $U$ nonzero. Inclusion holds for $(a_i-z)_i,b$ for all sufficiently large $\lvert z\rvert$. The radius can depend on $U$. | [Fixed-mixer theorem](Lean/MOC/ExtendedCases.lean#L428) | Yes |
+| Collinear matching products | All $P_\sigma$ lie on one real affine line in the complex plane. Then inclusion holds. | [Hull inclusion](Lean/MOC/CollinearKernelSupport.lean#L190) | Yes |
+| Normal maximizing sum | Fix spectra and a direction. At a directional maximum, the sum is normal and has the largest Frobenius norm among the maximizing sums. Inclusion holds at this mixer. The Frobenius norm is the square root of the sum of squared entry moduli. | [Maximum theorem](Lean/MOC/NormalOrbit.lean#L408) | Yes |
+| Fractional-linear transport | Apply $f(z)=(\alpha z+\beta)/(\gamma z+\delta)$ to $a$ and $-b$. Require $\alpha\delta-\beta\gamma\ne0$ and no pole on either list. Inclusion for $f(a),-f(-b)$ is equivalent to the original inclusion at the same $U$. | [Transport](Lean/MOC/ProjectiveTransport.lean#L61) | Yes |
+| Transposition winding | A closed walk of matching products uses transposition edges, avoids a point, and has nonzero winding about it. Some unitary attains that point as its determinant. Repeated eigenvalues are allowed. | [Attainment statement](Lean/MOC/TranspositionWinding.lean#L681) | No |
+| Spectral profile determinant | For $n\ge2$, the transformed spectral polynomial is a determinant of order $n-2$. In order four its complex quadratic form has rank at most four. Its real positive and negative indices are at most four. | [Determinant](Lean/MOC/SpectralProfileDeterminant.lean#L347) · [Rank and indices](Lean/MOC/SpectralProfileDeterminant.lean#L437) | Yes |
+| First three elementary coefficients | Fix $U$. One law gives the first three coefficients of $\det(I+x(A+B))$ for every pair of spectra. Here $x$ is the polynomial variable. | [Coefficient law](Lean/MOC/Reformulations/SecondCoefficient.lean#L248) | Yes |
+| Balanced matrix evaluations | In positive order, two complex functions on permutations differ by a constant if their signed determinant evaluations agree on every complex matrix with zero row and column sums. | [Recovery theorem](Lean/MOC/BalancedMatchingProbes.lean#L203) | Yes |
+| Nested subset law | Fix a unitary and nested column sets that increase one label at a time. One permutation law gives the squared-minor distribution at every set in the chain. | [Full-flag law](Lean/MOC/FullFlagLaw.lean#L209) | Yes |
+| Forced eigenvalue multiplicity | Let $m_a(c)$ count entries of $a$ equal to $c$. For $z\in\mathbb C$ and an integer $k\ge0$, every mixer gives eigenvalue $z$ in the sum with algebraic multiplicity at least $k+1$ exactly when some $c$ has $m_a(c)+m_b(z-c)>n+k$. | [Multiplicity criterion](Lean/MOC/ForcedSpectralMultiplicity.lean#L171) | Yes |
+| Singularity criterion | For fixed lists $a,b$, some mixer gives a singular sum exactly when the real convex hulls of $(a_i,\lvert a_i\rvert^2)$ and $(-b_j,\lvert b_j\rvert^2)$ intersect. | [Moment-hull criterion](Lean/MOC/Singular.lean#L496) | Yes |
+| Gaussian spectra | Independent standard complex Gaussian eigenvalues give the stated matching-triangle probability and product lower-tail bounds. The containment estimate also assumes measurability and the stated determinant second-moment bound. | [Triangle bound](Lean/MOC/GaussianHaarContainment.lean#L635) · [Product tail](Lean/MOC/GaussianHaarContainment.lean#L1159) · [Conditional containment](Lean/MOC/GaussianHaarContainment.lean#L1197) | Yes |
 
-In every finite order, the inclusion holds for all complex spectra if
-each row of the unitary matrix $U$ has at most three nonzero entries.
-The same conclusion holds if each column has at most three nonzero entries.
-Thus any counterexample needs both a row and a column with at least four
-nonzero entries. In order four, every entry of this row and this column
-must be nonzero.
-[Row bound](Lean/MOC/SparseUnitary.lean#L27) · [Column bound](Lean/MOC/SparseUnitary.lean#L44) · [Counterexamples](Lean/MOC/SparseUnitary.lean#L54) · [Order four](Lean/MOC/SparseUnitary.lean#L66) · [Proof map](Docs/sparse-unitary-proof-map.md)
+## Equivalent tests and proved reductions
 
-A separate count also suffices. In order $n$, the inclusion holds if $U$
-has at most $n+8$ nonzero entries in total. In order four, four zeros
-in any positions suffice for all complex spectra.
-[Total count](Lean/MOC/SparseSupportCardinality.lean#L58) · [Four zeros](Lean/MOC/SparseSupportCardinality.lean#L74)
+In each row, $T_n$ is the complete test at order $n$ stated in that row.
+$C_m$ is the rectangular test with $m$ orthonormal rows and $m+1$
+columns. It compares the compressed determinant with the products over
+all injections of row labels into column labels. $N_n$ states that,
+for every pair of spectra and direction, some maximizing mixer gives
+a normal sum. $O_n$ is inclusion for every real orthogonal mixer of
+order $n$ and all complex spectra.
 
-Under any of these three bounds, fix $U$ once. One probability law on
-permutations then gives the determinant for every pair of complex spectra.
-Four zeros suffice for this stronger statement in order four. An exact
-orthogonal matrix with three zeros has no such law.
-[Row bound](Lean/MOC/SparseUnitaryUniversalWeights.lean#L69) · [Column bound](Lean/MOC/SparseUnitaryUniversalWeights.lean#L84) · [Total count](Lean/MOC/SparseUnitaryUniversalWeights.lean#L121) · [Four zeros](Lean/MOC/SparseUnitaryUniversalWeights.lean#L138) · [Three-zero obstruction](Lean/MOC/OrderFourThreeZeroMinorObstruction.lean#L112)
+| Test or premise | Exact relation | Lean statement | Lean Checked? |
+| --- | --- | --- | --- |
+| All matrix orders | $\mathrm{MOC}\Longleftrightarrow\bigl(\mathrm{MOC}_4\land\mathrm{MOC}_5\land\forall n\ge6,\ \mathrm{MOC}_n\bigr)$ | [Order split](Lean/MOC/ProofRoutes.lean#L315) | No |
+| Rectangular compression | $\mathrm{MOC}_{n+1}\Longleftrightarrow C_n$ for every $n\ge0$ | [One-order reduction](Lean/MOC/PrincipalCoisometry.lean#L150) | Yes |
+| Normal maximizers | $\bigl((\forall m<n,\ \mathrm{MOC}_m)\land N_n\bigr)\Longrightarrow\mathrm{MOC}_n$ | [Induction theorem](Lean/MOC/NormalSupportMaximum.lean#L270) | Yes |
+| Real orthogonal mixers in order four | $\mathrm{MOC}_4\Longleftrightarrow O_4$ | [Orthogonal equivalence](Lean/MOC/FourMinorTransport.lean#L645) | Yes |
+| At least $2n-1$ contacts in every direction | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Terminal contact test](Lean/MOC/AffineGapCover.lean#L85) | Yes |
+| One free partner eigenvalue, with one law for its whole affine polynomial | $\mathrm{MOC}_n\Longleftrightarrow T_n$ | [Free-entry equivalence](Lean/MOC/ProofRoutes.lean#L113) | No |
+| Equal second elementary spectral coefficients; or equal first and second coefficients | $\mathrm{MOC}_n\Longleftrightarrow T_n$ for each test separately | [Second coefficient](Lean/MOC/EqualSpectralCoefficients.lean#L91) · [Both coefficients](Lean/MOC/EqualSpectralCoefficients.lean#L428) | Yes |
+| Distinct first spectrum on the specified fixed parabola or hyperbola | $\mathrm{MOC}_n\Longleftrightarrow T_n$ for $n=4,5$, for each curve separately | [Order-four parabola](Lean/MOC/ConicSpectralReductions.lean#L330) · [Order-four hyperbola](Lean/MOC/ConicSpectralReductions.lean#L390) · [Order-five parabola](Lean/MOC/ConicSpectralReductions.lean#L1348) · [Order-five hyperbola](Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
 
-For every $n\ge 4$, $n+8$ is the exact total count that guarantees
-one probability law for all spectra. To see why the next count fails,
-place the order-four example beside an identity block of order $n-4$.
-The resulting unitary has exactly $n+9$ nonzero entries. Any common
-law would restrict to a common law on the order-four block.
-[Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L106) · [Counterexample at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction to a block](Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
+The [all-order map](Docs/all-orders-proof-map.md) gives the complete
+public route list. The [contact map](Docs/contact-transfer-proof-map.md)
+explains each threshold. A checked equivalence verifies the relation;
+its two sides can remain open.
 
-### Eigenbases of Hermitian rank-one updates
+## Paper theorems
 
-Let $d,v,h$ be real lists of length $n$, with $v_i\ge0$ for every $i$
-and pairwise distinct entries of $h$. Regard $v$ as a column and write
-$v^{\mathsf T}$ for its transpose. Suppose the unitary matrix $U$
-satisfies $\mathrm{diag}(d)+vv^{\mathsf T}=U\mathrm{diag}(h)U^*$.
-Then one probability law on permutations represents the determinant
-for every pair of complex spectra at this $U$. Repeated entries of
-$d$ and zero entries of $v$ are allowed. The spectra in the determinant
-comparison are arbitrary; $h$ specifies the eigenbasis.
-[Common weights](Lean/MOC/HermitianRankOneCauchyWeights.lean#L137) ·
-[Proof map](Docs/cauchy-eigenbasis-permutation-laws-proof-map.md)
+These full arguments remain outside Lean. The maps give their hypotheses
+and identify any steps that have Lean proofs.
 
-### Mixing blocks with one shared coordinate
-
-Take two unitary matrices that each satisfy the inclusion for all pairs
-of spectra. Extend each matrix by the identity outside its coordinate
-block. If the blocks have exactly one shared coordinate, their product
-also satisfies the inclusion for all pairs of spectra. This includes
-two Householder reflections on such blocks in any order, by
-[Drury's theorem](https://doi.org/10.1016/S0024-3795(99)00173-1).
-[Composition](Lean/MOC/SinglePortComposition.lean#L132) · [Reflections](Lean/MOC/SinglePortComposition.lean#L160)
-
-The composition extends to any finite sequence of unitary gates on
-blocks that share one fixed coordinate and are pairwise disjoint away
-from it. If each gate satisfies the inclusion for all spectra on its
-block, their ordered product satisfies it for all spectra. Each gate
-can be a rank-one unitary phase, including a Householder reflection,
-or any unitary matrix of order at most three.
-[Ordered composition](Lean/MOC/StarPortComposition.lean#L80) · [Rank-one phases](Lean/MOC/StarPortComposition.lean#L35) · [Small blocks](Lean/MOC/StarPortComposition.lean#L42)
-
-The shared coordinate can change at each step of a recursive construction.
-Join two covered mixers at one selected coordinate. Repeat this operation
-with the resulting mixers. The starting blocks can be identities,
-unitaries of order at most three, or the proved order-four flat,
-zero-diagonal, and two-by-two tensor mixers. They can also lie in the
-proved order-five Fourier neighborhood. Every mixer constructed in this
-way satisfies the inclusion for all complex spectra.
-[Recursive construction and proof](Lean/MOC/UnitaryBlockTree.lean#L121) ·
-[Construction map](Docs/sparse-unitary-proof-map.md#recursive-joins-at-one-shared-coordinate)
-
-There is also a direct zero-pattern test in every positive order $n$.
-Choose a finite list of integers from $0$ through $2$ with sum $n-1$.
-Use indices $0,\ldots,n-1$. At each prefix sum $k$ of this list,
-require $U_{ij}=0$ whenever $i>k$ and $j<k$.
-Every unitary with these zero rectangles satisfies the inclusion for
-all complex spectra. Taking every step equal to one includes upper
-Hessenberg unitary matrices.
-[Staircase theorem](Lean/MOC/StaircaseZeroCorners.lean#L91) ·
-[Zero-pattern map](Docs/sparse-unitary-proof-map.md#staircase-of-zero-rectangles)
-
-In any order, take a forest whose vertices are the coordinate labels.
-For each of any number of distinct edges, choose a determinant-one
-unitary matrix on its two endpoints. Extend it by the identity on the
-other coordinates. Multiply these matrices in any order to form $U$.
-One set of nonnegative weights with sum one represents the determinant
-for every pair of complex spectra at this $U$.
-[Common weights](Lean/MOC/ForestGates.lean#L101) · [Inclusion](Lean/MOC/ForestGates.lean#L143) · [Ordered product](Lean/MOC/ForestGates.lean#L167)
-
-Suppose one summand acts by a scalar on a coordinate and the other
-is a scalar plus a multiple of an orthogonal projection. Delete that
-coordinate. The determinant is a weighted sum of two smaller
-determinants. Each term includes the eigenvalue sum for that
-coordinate. The weights depend only on the projection.
-[Determinant reduction](Lean/MOC/ProjectionLeafPivot.lean#L110) · [Projection and rank formulas](Docs/projection-leaf-deletion-proof-map.md)
-
-Partition the coordinates into three sets $X$, $H$, and $Y$. The first
-summand has a two-level normal block on $X\cup H$ and arbitrary
-diagonal entries on $Y$. The second has a two-level normal block on
-$H\cup Y$ and arbitrary diagonal entries on $X$. For fixed eigenspaces
-of both blocks, one probability law on permutations gives the
-determinant for every choice of the levels and diagonal entries.
-The overlap $H$ can have any dimension.
-[Common law](Lean/MOC/OverlappingProjectionBlocks.lean#L636) · [Inclusion](Lean/MOC/OverlappingProjectionBlocks.lean#L671) · [Proof map](Docs/projection-leaf-deletion-proof-map.md#two-overlapping-projection-blocks)
-
-Start with unitary diagonal blocks of arbitrary orders. In each block,
-specify at most four row labels. A generalized circle is a circle, a
-point, or a line. In each block, one generalized circle must contain
-all second-list values and the negatives of the first-list values
-outside the specified rows. Different blocks can use different circles.
-Apply determinant-one two-row unitary gates between the specified rows.
-The unordered pairs of joined blocks must be distinct edges of a forest.
-The resulting mixer satisfies the inclusion. The gate order is arbitrary.
-[Forest bridge theorem](Lean/MOC/FourOutlierForestBridges.lean#L76) ·
-[Premises and proof](Docs/overlapping-circle-blocks-proof-map.md#forest-of-bridges-between-spectral-blocks)
-
-On a simple even cycle with at least four coordinates, choose a
-two-by-two unitary gate on each edge. All gates except possibly two
-must have squared entry moduli $1/2$. Each set of alternating edges
-forms one layer of disjoint gates. For the product of the two layers,
-one probability law gives all squared minor moduli and hence the
-determinant for every pair of complex spectra.
-[Squared minors](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L240) · [Common law](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L331) · [Inclusion](Lean/MOC/TwoBiasedCyclicGateLaw.lean#L357) · [Cycle and weight formula](Docs/all-orders-proof-map.md#normalization-and-least-order-counterexamples)
-
-For arbitrary biases on one alternating cycle, two real orthogonal
-products give a convex combination of the squared-minor tables. The
-source also gives inclusion if the absolute interference is at most
-each independent switch weight. If either spectrum has equal entries
-at the two coordinates of one gate in its layer, the independent
-switch weights give inclusion for every bias. The general real endpoint
-bound is open.
-[Endpoints](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L301) ·
-[Interference bound](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L138) ·
-[Equal spectral pair](Lean/MOC/TwoLayerOrthogonalEndpoints.lean#L367)
-
-On an even cycle of order at least four, the gate probabilities and
-phases can be arbitrary under the following spectral condition.
-Choose a complex number $c$. Each first-layer gate must join two
-eigenvalues with sum $c$. Each second-layer gate must join two
-eigenvalues with sum $-c$. Complementary switch assignments then give
-the same matching product. Their combined masses are nonnegative.
-The resulting probability law proves the inclusion in every such order.
-[Spectral condition and inclusion](Lean/MOC/CyclicAntipodalSpectra.lean#L149) ·
-[Positive paired masses](Lean/MOC/CyclicAntipodalSpectra.lean#L28)
-
-### A common law at small shifted rank sum
-
-Fix the relative unitary and a scalar shift. Fix the allowed nonzero
-labels in both shifted spectra. If their total number is at most
-two above the matrix order, one permutation law works for every
-choice of the values on those labels. The law also permits additional
-zeros. The new source states this common law in orders at least two.
-[Common law](Lean/MOC/RankTwoOverlap.lean#L709) · [Matrix-rank restriction](Lean/MOC/RankTwoOverlap.lean#L724)
-
-### Common weights for all diagonal partners
-
-Fix one list of four eigenvalues. Every normal matrix with this list
-has one law that works for all diagonal partners if and only if the
-four eigenvalues lie on one circle or line. For a Hermitian matrix of
-order four, the law also represents all principal minors together.
-Each real linear objective on those minors attains a maximum at a
-diagonal permutation of the spectrum.
-[Criterion and consequences](Docs/order-four-circle-or-line-common-weights-proof-map.md)
-
-### Matrices and eigenvalues
-
-For any two complex normal matrices $A$ and $B$, the inclusion holds if
-$(A-cI)(B-dI)$ is normal for some complex scalars $c,d$.
-The shifts are independent. The order is arbitrary. Singular matrices
-and repeated eigenvalues are allowed. Taking $c=d=0$ gives the normal
-product case. The inclusion also holds if $A$ is invertible and
-$A^{-1}B$ is normal.
-[Shifted normal product](Lean/MOC/NormalProductInclusion.lean#L251) ·
-[Normal product](Lean/MOC/NormalProductInclusion.lean#L282) ·
-[Normal relative product](Lean/MOC/NormalProductInclusion.lean#L292) ·
-[Complete proof map](Docs/normal-products-proof-map.md)
-
-Let $d$ be a real list and $w$ a complex vector of any finite length.
-Set $H=\mathrm{diag}(d)+sww^*$, where $s\in\{-1,1\}$.
-For every $c,e\in\mathbb C$ and every complex diagonal matrix $E$,
-the inclusion holds for $H^2+cH+eI$ and $E$.
-Repeated eigenvalues and zero vector entries are allowed.
-This proves a family of normal diagonal-plus-rank-two matrices.
-[Inclusion](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L178) ·
-[Normality and rank](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L234) ·
-[Complete proof map](Docs/quadratic-rank-one-perturbations-proof-map.md)
-
-Suppose one matrix is diagonal. In that basis, let the other matrix
-be a block sum of normal weighted permutation cycles. Each cycle can
-have its own scalar shift. Within each block the determinant equals
-the uniform mean of the matching products, for every diagonal partner.
-Combining the blocks proves the convex-hull inclusion in every order.
-[Uniform mean](Lean/MOC/WeightedPermutationCycle.lean#L148) · [Block theorem](Lean/MOC/WeightedPermutationCycle.lean#L191) · [Proof map](Docs/weighted-permutation-cycles-proof-map.md)
-
-- The inclusion holds in any order if $A+B$ is singular or if $A$ and $B$
-  have a common unitary eigenbasis.
-  [Singular sum](Lean/MOC/Singular.lean#L417) · [Common eigenbasis](Lean/MOC/Normal.lean#L240)
-- The inclusion holds in any order if each eigenvalue list lies on a
-  circle or a line. The choice of circle or line can differ between the
-  lists. This includes two real lists, lists on parallel lines, and
-  lists that each have at most three distinct values.
-  [Circles and lines](Lean/MOC/TwoSpectralCircles.lean#L153) · [Real eigenvalues](Lean/MOC/Hermitian.lean#L53) · [Parallel lines](Lean/MOC/Collinear.lean#L62) · [Three distinct values](Lean/MOC/TwoSpectralCircles.lean#L161)
-- Let $C$ and $D$ each be a circle or a line. The inclusion holds in
-  any order if all $a_i$ lie in $C$ and all $-b_j$ lie in $C\cup D$.
-  [Proof](Lean/MOC/TwoCircleCover.lean#L10)
-- Let the coordinate sets $S$ and $T$ cover the basis. Let $A$ have a
-  normal block on $S$ and be diagonal elsewhere. Let $B$ have a normal
-  block on $T$ and be diagonal elsewhere. The inclusion holds in any
-  order under two conditions. One generalized circle contains the
-  spectrum of $A$ on $S$ and the negatives of the entries of $B$ on
-  $S\setminus T$. The other contains the negative spectrum of $B$ on
-  $T$ and the entries of $A$ on $T\setminus S$. A generalized circle
-  can be a circle, a point circle, or a line.
-  [Overlapping circle blocks](Lean/MOC/OverlappingCircleBlocks.lean#L83) · [Proof map](Docs/overlapping-circle-blocks-proof-map.md)
-- Suppose all $a_i$ lie on one circle or line $C$. The inclusion holds
-  in any order if at most four entries $-b_j$, counted with multiplicity,
-  lie outside $C$. It also holds if the entries outside $C$ take at most
-  three distinct values. The four-entry proof uses the kernel-checked
-  order-four Hermitian–normal theorem.
-  [Four entries](Lean/MOC/HermitianByNormalFourProof.lean#L82) · [Three distinct values](Lean/MOC/HermitianByNormalGeneral.lean#L90) · [Certificate status](Docs/order-four-circle-or-line-common-weights-proof-map.md#the-two-implications)
-- The inclusion holds in any order if either list has at most two
-  distinct values. Fix the relative unitary and a partition of the
-  second list into two groups. One set of nonnegative matching weights
-  with sum one works for all complex group values and all first lists.
-  The inclusion also holds if deleting one entry from the second list
-  leaves at most two distinct values, or if the first list is constant
-  except at up to two positions.
-  [Common law](Lean/MOC/TwoValues.lean#L285) · [Two distinct values in the second list](Lean/MOC/TwoValues.lean#L348) · [Two distinct values in the first list](Lean/MOC/TwoValues.lean#L362) · [One deletion](Lean/MOC/ThreeValues.lean#L14) · [Two exceptions](Lean/MOC/TwoExceptions.lean#L247)
-- Partition one spectrum into three fixed groups with the last group
-  of size one. For a fixed mixer, one law works for all three group
-  values and every opposing spectrum.
-  [Common law for three values](Docs/three-spectral-values-with-one-singleton-proof-map.md)
-- For three fixed groups of arbitrary size and three distinct levels, the subset-interval equations
-  characterize one common law. The all-order inclusion for one
-  three-value spectrum reduces to mixers in which every row meets
-  each spectral group. Both routes have open premises.
-  [Exact weight test](Lean/MOC/ThreeValueIntervalCoupling.lean#L171) ·
-  [Deletion route](Lean/MOC/SpectralSupportDeletion.lean#L219)
-- Let the first list equal a scalar `α` outside a row set `E`. In
-  the second list, set aside one entry. Require that each remaining
-  entry `b` has `α + b ≠ 0` and that its shifted reciprocal
-  `1 / (α + b)` lies in one segment with distinct nonzero endpoints.
-  If each endpoint occurs at least `|E|` times, one law works for all
-  allowed first lists and all values of the entry set aside.
-  [Reciprocal segment proof](Docs/three-spectral-values-with-one-singleton-proof-map.md#shifted-reciprocals-in-a-segment)
-- Under the stated assignment-sum genericity condition, a sufficiently
-  small complex spectral parameter gives inclusion uniformly over
-  all mixers in the fixed order.
-  [Small-spectrum theorem](Docs/small-spectral-perturbation-proof-map.md)
-- Fix any two complex lists $a,b$ of the same finite length, each with
-  pairwise distinct entries. There is a dense open set of centers
-  $z\in\mathbb C$ such that for each center some $r>0$ works for all
-  unitary changes of eigenbasis and all $|t|<r$. The two spectra
-  are $a$ and $(z+t b_j)_j$.
-  [Affine perturbation theorem](Lean/MOC/ReciprocalSpectralPerturbation.lean#L233) · [Proof map](Docs/small-spectral-perturbation-proof-map.md)
-- In order four, the inclusion holds if either list lies on a circle or
-  a line. This includes a Hermitian matrix with an arbitrary normal
-  partner and the case where either list has a repeated value.
-  [Circle or line](Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Hermitian matrix](Lean/MOC/HermitianByNormalFourProof.lean#L59) · [Repeated value](Lean/MOC/TwoExceptions.lean#L287)
-- In order four, the inclusion holds if any $a_i+b_j=0$. This includes
-  a list paired with its negation. In any order, an opposite pair suffices
-  if the sum of its two eigenvalue multiplicities is at least $n-2$.
-  [Order four](Lean/MOC/FourCoincidence.lean#L360) · [Negated list](Lean/MOC/FourNegativeCopy.lean#L147) · [Multiplicity bound](Lean/MOC/OppositePair.lean#L25)
-- In every order, the inclusion holds for lists $a$ and $-a$ if
-  $U$ differs from some diagonal matrix by rank at most two.
-  In odd order, it also holds if nonzero scalars $d_i$ satisfy
-  $d_iU_{ij}=d_jU_{ji}$ whenever $a_i\ne a_j$.
-  [Rank condition](Lean/MOC/NegativeCopyInclusion.lean#L116) ·
-  [Odd-order symmetry](Lean/MOC/NegativeCopyInclusion.lean#L60)
-- One fixed pair of complex lists of length four satisfies the inclusion
-  for every unitary. A weighted-minor inequality certifies two of the
-  nine hull edges. One of those edges has no certificate made only of
-  nonnegative coefficients on ordinary minor indicators.
-  [Spectra and proof](Docs/order-four-weighted-minor-center-proof-map.md)
-- The source states that, for an order-four support cost in the symmetric
-  six-contact family, the spectral equations force one of three minor
-  coefficient bounds. The full certificate still requires kernel
-  verification. [Statement and proof route](Docs/order-four-symmetric-six-contact-proof-map.md)
-- For every real $t$, the lists $(t+i,-t+i,1,2+i)$ and
-  $(-1+i,-2-2i,2-i,1+2i)$ satisfy the inclusion for every unitary.
-  The proof uses 89 polygons on 173 rational bands.
-  [Parameter family](Docs/order-four-real-parameter-spectra-proof-map.md)
-- In order five, the inclusion holds if the first list is real and at
-  least one entry of the second list is real.
-  [Proof](Lean/MOC/HermitianByNormalFourProof.lean#L104)
-- Let $I$ be the identity matrix. The inclusion holds in any order if
-  the ranks of $A+tI$ and $B-tI$ sum to at most $n+2$ for some complex $t$.
-  [Proof](Lean/MOC/RankTwoOverlap.lean#L724)
-- Start with lists of length $d$. Add $m$ copies of $c$ to the first list
-  and $m$ copies of $-c$ to the second. The inclusion holds for every
-  unitary of order $d+m$ if $d\le m+2+r+s$, where $r$ and $s$ are the
-  original multiplicities of $c$ and $-c$, respectively. If the original
-  inclusion holds for every unitary and $d\le r+s+3$, the inclusion holds
-  for every $m$.
-  [Rank condition](Lean/MOC/MarkedPadding.lean#L21) · [Extension from a known case](Lean/MOC/MarkedPadding.lean#L60)
-
-### Change of eigenbasis
-
-- The inclusion holds if independent row and column permutations put
-  $U$ into diagonal blocks of order at most three.
-  [Proof](Lean/MOC/ExtendedCases.lean#L91)
-- Start with two diagonal blocks that each satisfy the inclusion for all
-  eigenvalue lists. Apply a two-by-two unitary matrix of determinant one
-  to one row from each block. The resulting matrix also satisfies the
-  inclusion for all eigenvalue lists.
-  [Proof](Lean/MOC/OneBridge.lean#L307)
-- The inclusion holds if independent row and column permutations make
-  all entries of $U$ below the first subdiagonal zero.
-  [Proof](Lean/MOC/SparseRow.lean#L311)
-- Let $v$ be a unit column vector and $z$ a complex number of modulus
-  one. The inclusion holds if $U=I+(z-1)vv^*$. It also holds if $U-I$
-  is zero outside one principal block of order at most three.
-  [Rank-one change](Lean/MOC/HouseholderSupport.lean#L360) · [Principal block](Lean/MOC/IdentityPadding.lean#L52)
-- In order four, the inclusion holds if a row or column of $U$ has at
-  most two nonzero entries. It also holds if all four diagonal entries
-  of $U$ are zero.
-  [Sparse row](Lean/MOC/SparseRow.lean#L339) · [Sparse column](Lean/MOC/SparseRow.lean#L346) · [Zero diagonal](Lean/MOC/OrderFourZeroDiagonalUnitary.lean#L196)
-- In order five, the inclusion holds for all unitary matrices sufficiently
-  close to the discrete Fourier matrix in operator norm.
-  It also holds for each unitary with zero diagonal and off-diagonal
-  entries of absolute value $1/2$.
-  [Fourier ball](Lean/MOC/FiveFourierNeighborhood.lean#L68) · [Zero diagonal and equal magnitudes](Lean/MOC/ConferenceFive.lean#L260)
-- If $U$ is the tensor product of two order-two unitaries, one
-  probability law on at most ten permutations works for all pairs of spectra.
-  [Common law](Lean/MOC/TwoByTwoTensorPermutationLaw.lean#L437) · [Tensor-product proof map](Docs/two-by-two-tensor-mixer-proof-map.md)
-- A specified rational orthogonal matrix of order six has a closed
-  operator-norm ball of radius $1/23083105288$. Every unitary in this
-  ball satisfies the inclusion when the second spectrum is constant
-  on each of three specified pairs. The first spectrum is arbitrary.
-  [Mixer ball](Docs/six-dimensional-mixer-ball-proof-map.md)
-
-### Determinant and matching products
-
-- The inclusion holds if all matching products lie on one line in the
-  complex plane. It also holds if each product has the form
-  $P_\sigma=c+\sum_j f(j,\sigma(j))$ for a fixed $c$ and a fixed function $f$.
-  [Collinear products](Lean/MOC/CollinearKernelSupport.lean#L190) · [Sum over matched pairs](Lean/MOC/Weights.lean#L185)
-- Fix $a$, $b$, and $U$, with all entries of $U$ nonzero. The inclusion
-  holds for the lists $(a_i-z)$ and $(b_j)$ for every complex $z$ of
-  sufficiently large modulus. The lower bound can depend on $a$, $b$, and $U$.
-  [Proof](Lean/MOC/ExtendedCases.lean#L428)
-- Fix complex eigenvalue lists $a,b$. For each permutation $p$, form
-  the sum $s_p=\sum_j a_{p(j)}b_j$. If the sums are distinct and no
-  three lie on one real affine line, a single $R>0$ gives inclusion for
-  $(a_i+z)_i$ and $b$ for every $|z|>R$ and every unitary change of
-  eigenbasis. For every fixed $a$ with distinct entries, the partners
-  $b$ satisfying this condition form an open dense subset of
-  $\mathbb C^n$.
-  [Uniform exterior shift](Lean/MOC/UniformExteriorShift.lean#L67) · [Open dense partners](Lean/MOC/GenericExteriorShift.lean#L97) · [Proof map](Docs/free-eigenvalue-and-exterior-shifts-proof-map.md#generic-assignment-sums)
-- Fix a real spectrum and a complex partner spectrum. The exterior
-  shift bound gives inclusion for every mixer outside an explicit
-  radius computed from the two lists and a triangle gap of the
-  partner spectrum.
-  [Exterior shifts](Docs/free-eigenvalue-and-exterior-shifts-proof-map.md#exterior-shifts)
-- Fix a complex direction $\eta$. The inclusion holds at a maximum of
-  $\mathrm{Re}(\eta\det(A+B))$ over relative unitaries if the sum
-  at that maximum is normal and has the largest Frobenius norm among
-  all maximizing sums. The Frobenius norm is the square root of the sum
-  of the squared absolute values of the entries. In order four, a normal
-  sum at a nonzero maximum is sufficient.
-  [Norm condition](Lean/MOC/NormalOrbit.lean#L408) · [Order four](Lean/MOC/NormalSupportMaximum.lean#L198)
-
-## Other proved reductions
-
-- The real orthogonal inclusion in all orders reduces to one terminal
-  test for each order $n\ge4$. A failure of least order gives a mixer
-  that expands every nonempty row set of size at most $n-2$ by at least
-  two columns. The same mixer has a strict violation with at least
-  $2n-1$ contacts.
-  The terminal comparison remains open.
-  [Real orthogonal reduction](Lean/MOC/RealOrthogonalInduction.lean#L130)
-- If one matrix is Hermitian and the sum is normal, the source proves
-  inclusion by splitting along the imaginary parts of the partner
-  spectrum. The all-order Hermitian–normal inclusion is equivalent to
-  existence of such a sum at some maximum in every support direction.
-  Take a simple Hermitian spectrum and a real partner pivot that occurs once and cancels no Hermitian eigenvalue.
-  Under smaller-order Hermitian–normal inclusion, score bounds for each pivot assignment give a directional bound with prescribed masses.
-  [Normal maximizer test](Lean/MOC/HermitianNormalSupportDescent.lean#L103) ·
-  [Prescribed masses](Lean/MOC/HermitianNormalPencil.lean#L171) ·
-  [Proof map](Docs/all-orders-proof-map.md#a-hermitian-matrix-and-a-normal-partner)
-- In orders four and five, fixed parabola and hyperbola tests give
-  equivalent forms of the conjecture for that order. In order four,
-  a cross-ratio inequality characterizes which lists with distinct
-  entries can be transformed onto a prescribed ellipse.
-  [Conic tests and ellipse criterion](Docs/conic-spectral-reductions-proof-map.md)
-- Suppose the smaller-order conjecture holds. Choose a row of $U$.
-  The inclusion follows if the partner eigenvalues on its nonzero
-  columns lie on one circle or line through the negative of the
-  corresponding first eigenvalue. The written reduction allows
-  repeated values.
-  [Proof map](Docs/spectral-support-proof-map.md#deletion-and-padding-tests)
-- Apply the same map $f(z)=(\alpha z+\beta)/(\gamma z+\delta)$ to
-  $a_i$ and $-b_j$. If $\alpha\delta-\beta\gamma\ne0$ and the denominators
-  are nonzero on both lists, the inclusion for the lists $(f(a_i))$ and
-  $(-f(-b_j))$ is equivalent to the original inclusion with the same $U$.
-  [Proof](Lean/MOC/ProjectiveTransport.lean#L61)
-- For fixed $a$ and $b$, a singular sum is possible for some $U$ if and
-  only if the convex hulls of the lists $(a_i,|a_i|^2)$ and
-  $(-b_j,|b_j|^2)$ intersect.
-  [Proof](Lean/MOC/Singular.lean#L496)
-- Join matching products when their permutations differ by a
-  transposition. If a closed walk avoids a point and has nonzero
-  winding about it, some unitary gives that point as its determinant
-  value. This result includes repeated eigenvalues.
-  [Transposition winding](Docs/transposition-winding-proof-map.md)
-- For independent standard complex Gaussian eigenvalues, Lean bounds
-  the probability of no matching triangle block and the lower tail of
-  the identity matching product. The containment estimate assumes that the
-  squared determinant magnitude is almost everywhere measurable and has integral at most $(n+2)(n+3)/6$.
-  [Block probability](Lean/MOC/GaussianHaarContainment.lean#L635) · [Identity product](Lean/MOC/GaussianHaarContainment.lean#L1159) · [Conditional containment](Lean/MOC/GaussianHaarContainment.lean#L1197) · [Gaussian ensemble proof map](Docs/gaussian-spectra-and-haar-mixers-proof-map.md)
-
-## Counterexamples to stronger statements
-
-Lean refutes three extension steps: deduction of a four-switch cycle bound
-from nonnegative deficits, a zero value at the all-false switch word,
-and degree-three cancellations; replacement of phases by signs in a fixed chart; and transfer
-from real to complex evaluations of an affine pencil. Each counterexample
-applies to the stronger statement specified in its Lean theorem.
-[Exact claims and source status](Docs/all-orders-proof-map.md#refuted-extension-steps)
-
-- On four coordinates, an alternating cycle with three biased
-  unitary gates and one fair gate can fail to have one set of
-  probability weights for every pair of spectra. Thus the
-  two-gate allowance for the common law is sharp.
-  [Gate product](Lean/MOC/BiasedCyclicGateObstruction.lean#L154) · [Failure of common weights](Lean/MOC/BiasedCyclicGateObstruction.lean#L242)
-- For one pair of order-four eigenvalue lists, the largest real part of a
-  matching product is five. Append any complex scalars $c,d$ with
-  $c+d\ne0$. Some enlarged matching product has real part greater than
-  five after division by $c+d$. Thus no choice of one scalar block
-  preserves this supporting line.
-  [Upper bound](Lean/MOC/DuplicateAnchorObstruction.lean#L97) · [Attained value](Lean/MOC/DuplicateAnchorObstruction.lean#L104) · [Duplicate labels](Lean/MOC/DuplicateAnchorObstruction.lean#L112) · [Arbitrary scalars](Lean/MOC/ScalarAnchorObstruction.lean#L851) · [Proof map](Docs/order-four-scalar-padding-proof-map.md)
-
-- In order four, a real orthogonal $U$ and two complex spectra give a
-  characteristic polynomial outside the convex hull of the matching
-  characteristic polynomials. Each coefficient of the example is in its
-  own matching hull.
-  [Lean counterexample](Lean/MOC/CommonCharacteristicPolynomialObstruction.lean#L305) ·
-  [Exact certificate](Docs/all-orders-proof-map.md#counterexample-to-the-common-characteristic-polynomial-law)
-
-- For every order $n\geq5$, there are two complex normal matrices $A,B$
-  for which the coefficient of $x^4$ in $\det(I+x(A+B))$ lies outside
-  its matching hull. Here $I$ is the identity. This refutes the
-  sufficient condition that asks for the hull bounds at every index.
-  In order four this coefficient is the determinant.
-  [Counterexample](Lean/MOC/Reformulations/ElementaryCoefficientCounterexample.lean#L339) ·
-  [Proof map](Docs/all-orders-proof-map.md#counterexample-to-the-fourth-elementary-coefficient-bound) ·
-  [Top coefficient](Lean/MOC/Reformulations/SecondCoefficient.lean#L76) ·
-  [Separate-coefficient implication](Lean/MOC/Reformulations/SecondCoefficient.lean#L91)
-
-- In order five, let $U=I-2vv^*$ with $v=(1,1,1,1,1)^{\mathsf T}/\sqrt{5}$.
-  For this $U$, every pair of lists satisfies the determinant inclusion.
-  There is no one set of nonnegative weights with sum one that represents
-  the determinant for all pairs of lists.
-  [Inclusion](Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Failure of common weights](Lean/MOC/OrderFiveCommonLawObstruction.lean#L163)
-- In order five, the assignment bound with disjoint-pair transport
-  constraints need not reach the largest matching score. For the lists
-  $(2,2,1,1,1)$ and $(0,0,-1,-1,-1)$ in the real direction, every
-  matching product is zero and every bound from these constraints is at
-  least $4/45$.
-  [Refuted certificate test](Lean/MOC/OrderFiveDisjointPairObstruction.lean#L122) · [Pair-cost proof map](Docs/order-five-proof-map.md#squared-minors-and-permutation-weights)
-- In order four, some pairs of lists have nonzero and distinct matching
-  products, with eight permutations that attain the directional maximum.
-  The eight permutations have no common nonempty proper subset of the
-  index set that they all map onto itself.
-  [Proof](Lean/MOC/ContactCountObstruction.lean#L48)
-- The partner list $(0,1,1+i,2i)$ forms a convex quadrilateral. Every
-  dense row with a regular pole gives a nonnormal reciprocal
-  compression.
-  [Pole compression obstruction](Docs/spectral-support-proof-map.md#deletion-and-padding-tests)
+| Theorem | Scope and conclusion | Argument | Lean Checked? |
+| --- | --- | --- | --- |
+| Normal diagonal plus rank one | A normal matrix differs from a diagonal matrix by rank at most one in the partner basis. One law gives every principal minor and works for all complex diagonal partners. | [Rank-one argument](Docs/all-orders-proof-map.md#the-common-law-for-a-normal-rank-one-perturbation-of-a-complex-diagonal) | Paper only |
+| Strict rank-one laws | A real diagonal matrix has distinct entries and every entry of the rank-one vector is nonzero. For each nonzero real update coefficient, a common principal-minor law has positive mass on every permutation. This persists on an open set of Hermitian matrices. | [Strict laws and stability](Docs/all-orders-proof-map.md#strict-positivity-of-a-single-law) | Paper only |
+| Smaller frame reduction | At overlap $k$, square orders through $3k^2-k$ suffice for the scalar frame inclusion. At $k=3$ this is order 24. | [Frame argument](Docs/all-orders-proof-map.md#finite-overlap-compression) | Paper only |
+| Symmetric cube mixer | The symmetric cube of any determinant-one unitary of order two satisfies inclusion for all complex spectra in order four. | [Scalar certificate](Docs/order-four-symmetric-cube-mixer-proof-map.md) | Paper only |
+| Explicit open spectral sets | The order-four weighted-minor center has a complex neighborhood of radius $10^{-17}$. The order-five map gives a complex spectral neighborhood of radius $5\cdot10^{-16}$ and a separate open mixer ball. | [Order four](Docs/order-four-proof-map.md#an-open-set-of-spectra-with-a-uniform-proof) · [Order five](Docs/order-five-proof-map.md#exact-spectral-and-mixer-cases) | Paper only |
 
 ## Open all-order targets
 
-The following statements remain open in this library. Each statement
-asks for the full determinant inclusion in every finite order.
-The proved reductions and restricted cases do not discharge these goals.
+The full inclusion remains open for each class below. The maps record
+the proved subclasses and reductions.
 
-| Hypothesis | Remaining conclusion |
-| --- | --- |
-| Each spectrum has at most one nonreal eigenvalue, counted with multiplicity. | Inclusion for every relative unitary matrix. |
-| The relative unitary is a product of two arbitrary Householder reflections. | Inclusion for arbitrary complex spectra. |
-| The relative unitary is the discrete Fourier matrix. | Inclusion for arbitrary complex spectra and every order. |
-| Fix arbitrary complex spectra $a,b$. | There is $R\ge0$ such that $\det(zI+\mathrm{diag}(a)+U\mathrm{diag}(b)U^*)$ lies in the hull of $\prod_j(z+a_{\sigma(j)}+b_j)$ for all unitary $U$ and all $|z|>R$. |
-| Each row of the relative unitary has at most four nonzero entries. | Inclusion for arbitrary complex spectra. |
-| Some eigenvalue pair satisfies $a_i+b_j=0$. | Inclusion for arbitrary remaining eigenvalues and every relative unitary. |
-| The spectra of $A$ and $-B$ lie on the same union of two parallel lines. | Inclusion for every normal pair with these spectra. |
-| $A$, $B$, and $A+B$ are normal. | Inclusion without further spectral or maximality conditions. |
-| $A=D+R$ is normal, $D,E$ are complex diagonal matrices, and $\mathrm{rank}(R)\le2$. | Inclusion for $A$ and $E$. |
+- Each spectrum has at most one nonreal eigenvalue, with multiplicity.
+- The mixer is a product of two arbitrary Householder reflections.
+- The mixer is the discrete Fourier matrix in arbitrary order.
+- For fixed spectra, one exterior-shift radius works for every mixer
+  without a genericity hypothesis.
+- Every row of the mixer has at most four nonzero entries.
+- Some $a_i+b_j=0$, without a multiplicity restriction.
+- The spectra of $A$ and $-B$ lie on the same two parallel lines.
+- $A,B,A+B$ are normal, without a maximality hypothesis.
+- In a fixed basis, $A$ is normal and differs from a complex diagonal
+  matrix by rank at most two; its partner is arbitrary complex diagonal.
 
-The normal-product result is a proved case. The block, forest, staircase,
-negative-spectrum, and quadratic rank-one extensions above are also proved under their stated
-conditions. No numerical sample or refutation of a stronger weight rule
-is a proof of an open statement in this table.
+## Check the Lean source
 
-## Paper proofs and exact certificates
+Use the version in [lean-toolchain](lean-toolchain): Lean 4.19.0.
+The [Lake configuration](lakefile.toml) pins mathlib. From the repository
+root, fetch the dependency cache and check a selected module:
 
-The proof maps state the following paper arguments and exact certificates
-with their hypotheses. Each map identifies the corresponding Lean
-statements and the proof obligations that remain outside Lean.
+```sh
+lake exe cache get
+lake build MOC.Small
+```
 
-| Result | Scope |
-| --- | --- |
-| [Smaller overlap reduction](Docs/all-orders-proof-map.md#finite-overlap-compression) | The paper reduction uses square order at most $3k^2-k$ for two frames with $k$ columns. At overlap three the bound is 24, compared with 33 in the existing Lean source. Restricted overlap-three cases have a separate direct proof. |
-| [Spectral and mixer families](Docs/all-orders-proof-map.md#paper-cases-in-any-order) | A uniformly small summand under a general-position condition, a common law for a normal diagonal-plus-rank-one matrix, and a one-port block factorization. |
-| [Order-four support cases](Docs/order-four-proof-map.md#paper-support-bounds-and-exact-examples) | A global maximizer with a zero entry, specified high-contact patterns, and an open set of complex spectra that needs a weighted minor certificate. |
-| [Exact order-five families](Docs/order-five-proof-map.md#exact-spectral-and-mixer-cases) | An open set of mixers for all real first lists and complex partners, two free complex partner entries at fixed starting spectra, and a complex spectral neighborhood beyond the ordinary minor cone. |
+Use `lake build` for the complete default target. It imports the
+documented modules. The complete build has not passed. Some source files
+are retained without a passing build. A source file alone is not a
+checked theorem.
+
+The [default target](Lean/MOC.lean#L519) audits the safe imported
+declarations. Its allowed axioms are propositional extensionality
+(`propext`), classical choice (`Classical.choice`), and quotient soundness
+(`Quot.sound`). The audit for the complete library remains pending with
+the complete build.

@@ -157,3 +157,12 @@ $-1$ and conjugates the second diagonal matrix to the same matrix.
 
 Lean verifies the fixed-curve reductions with the same unitary and
 an arbitrary second list. The curve inequalities remain open.
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 4 source modules linked in this map | Partial (3/4) |
+| [ProofRoutes.lean](../Lean/MOC/ProofRoutes.lean#L254) | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

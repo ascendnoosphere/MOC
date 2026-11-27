@@ -152,3 +152,11 @@ The joint law therefore gives every squared minor as a permutation
 probability. The squared-minor expansion gives the determinant
 identity for arbitrary complex lists.
 [Interpolation](../Lean/MOC/SecularCauchyEigenbasis.lean#L44) · [Zero-one determinant test](../Lean/MOC/SubsetMarkerTest.lean#L28) · [Test for all spectra](../Lean/MOC/SubsetMarkerTest.lean#L43) · [Common permutation law](../Lean/MOC/HermitianRankOneCauchyWeights.lean#L137)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 16 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

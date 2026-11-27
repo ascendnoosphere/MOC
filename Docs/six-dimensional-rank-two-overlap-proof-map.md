@@ -55,3 +55,11 @@ and exact rational arithmetic for the two compressed matrices.
 [Reciprocal compression](../Lean/MOC/RankTwoOverlapExample.lean#L274) ·
 [Exact determinant](../Lean/MOC/RankTwoOverlapExample.lean#L292) ·
 [Hull membership](../Lean/MOC/RankTwoOverlapExample.lean#L331)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 1 source module linked in this map | No |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

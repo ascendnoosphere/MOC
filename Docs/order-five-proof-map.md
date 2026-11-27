@@ -1,6 +1,6 @@
 # Order-five proof maps
 
-[Proof map index](README.md) · [README overview](../README.md#order-five) · [All-order routes](all-orders-proof-map.md) · [Contact transfer](contact-transfer-proof-map.md) · [Order four](order-four-proof-map.md) · [Spectral and support results](spectral-support-proof-map.md#spectra-mixers-and-attainable-values)
+[Proof map index](README.md) · [README overview](../README.md#order-five-and-order-six) · [All-order routes](all-orders-proof-map.md) · [Contact transfer](contact-transfer-proof-map.md) · [Order four](order-four-proof-map.md) · [Spectral and support results](spectral-support-proof-map.md#spectra-mixers-and-attainable-values)
 
 - [Registered routes](#registered-routes)
 - [Contact thresholds](#contact-thresholds)
@@ -14,10 +14,23 @@ $\prod_{j=1}^5(a_{\sigma(j)}+b_j)$. Here $a_j,b_j$ are eigenvalues,
 and $\sigma$ runs over the permutations of five labels. In this
 formulation, $U$ is the unitary change between eigenbases. The full
 order-five statement remains open in Lean. A transport bound on
-disjoint index pairs is sharp for one integer example. A second
-example refutes the corresponding universal certificate condition.
+disjoint index pairs is sharp for one integer example.
 [Certificates](determinant-inclusion-certificates-proof-map.md#order-four-and-order-five-support-bounds)
 [Source scope](all-orders-proof-map.md#scope-of-the-lean-source)
+
+Write $\mathrm{MOC}_n$ for the conjecture in order $n$ and
+$\mathrm{MOC}$ for the conjecture in every finite order.
+In each table row, $T_n$ is its complete test at order $n$; $T$ is
+its complete all-order test. Each test includes its stated quantifiers.
+$C_m$ denotes the rectangular test with $m$ orthonormal rows and $m+1$
+columns. A checked relation can have an open premise.
+[Notation and check status](README.md#notation-and-proof-status)
+
+Let $N_5$ state that every pair of spectra and direction has a
+maximizing mixer with normal sum. Let $O_5$ be inclusion for all real
+orthogonal mixers and complex spectra in order five. Let $D_5$ state
+that every unitary squared-minor table in order five is a convex
+combination of two real orthogonal tables.
 
 ## Registered routes
 
@@ -42,15 +55,15 @@ Each conjunction requires its two premises. The all-order contact
 transfer makes the full-support eight-contact test exact.
 [Route register](../Lean/MOC/ProofRoutes.lean#L289) · [Disjunction](../Lean/MOC/ProofRoutes.lean#L311)
 
-| Route in Lean | Relation | Lean proof |
-| --- | --- | --- |
-| Principal coisometry of dimension four | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L150) |
-| Rectangular compression with four rows | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L228) |
-| Order four AND existence of normal order-five maximizers | If | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L134) |
-| Eight-contact support bound with no zero mixer entries | Iff | [Equivalence with transfer premise](../Lean/MOC/OrderFiveContact.lean#L97) · [Transfer](../Lean/MOC/ProofRoutes.lean#L193) |
-| Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1348) |
-| Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1369) |
-| Orthogonal minor convexification AND orthogonal order five | If | [Statement and proof](../Lean/MOC/Realification.lean#L79) |
+| Route in Lean | Relation | Lean proof | Lean Checked? |
+| --- | --- | --- | --- |
+| Principal coisometry of dimension four | $\mathrm{MOC}_5\Longleftrightarrow C_4$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L150) | Yes |
+| Rectangular compression with four rows | $\mathrm{MOC}_5\Longleftrightarrow C_4$ | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L228) | Yes |
+| Order four AND existence of normal order-five maximizers | $(\mathrm{MOC}_4\land N_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L134) | No |
+| Eight-contact support bound with no zero mixer entries | $\mathrm{MOC}_5\Longleftrightarrow T_5$ | [Equivalence with transfer premise](../Lean/MOC/OrderFiveContact.lean#L97) · [Transfer](../Lean/MOC/ProofRoutes.lean#L193) | Partial — unchecked: `ProofRoutes` |
+| Distinct first spectrum on the standard parabola | $\mathrm{MOC}_5\Longleftrightarrow T_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1348) | Yes |
+| Distinct first spectrum on the fixed hyperbola | $\mathrm{MOC}_5\Longleftrightarrow T_5$ | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L1369) | Yes |
+| Orthogonal minor convexification AND orthogonal order five | $(D_5\land O_5)\Longrightarrow\mathrm{MOC}_5$ | [Statement and proof](../Lean/MOC/Realification.lean#L79) | Yes |
 
 For the regular spectral test, each pair sum is nonzero, different
 permutations give different products, and $U$ has no zero entries. The
@@ -95,7 +108,7 @@ flowchart BT
     Both{{"AND<br/>Both premises"}}:::gate
     Four["Order 4"]:::open
     Norm["Normal sum at a maximizing U<br/>for each pair and direction"]:::open
-    Sparse["Counterexample has ≤ 7 zeros<br/>and at least 3 nonzero entries<br/>per row and column"]
+    Sparse["Strict violation has ≤ 7 zeros<br/>and at least 3 nonzero entries<br/>per row and column"]
     Base["Order 3<br/>Proved"]
     Zero["Inclusion if U contains<br/>a 2-by-2 zero submatrix"]
     Four --- Both
@@ -111,7 +124,7 @@ flowchart BT
 Under order four, a proper block split, or a row or column with at
 most two nonzero entries, gives a lower-order proof. The normal-maximizer
 criterion also becomes an equivalence under the order-four premise.
-[Counterexample structure](../Lean/MOC/OrderFiveContact.lean#L34) · [Zero count](../Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Normal maxima](../Lean/MOC/NormalSupportMaximum.lean#L270)
+[Strict violation structure](../Lean/MOC/OrderFiveContact.lean#L34) · [Zero count](../Lean/MOC/OrderFiveSparseGeometry.lean#L189) · [Normal maxima](../Lean/MOC/NormalSupportMaximum.lean#L270)
 
 Suppose that two distinct rows of $U$ both vanish in two distinct
 columns. Then the inclusion holds for arbitrary complex spectra,
@@ -125,20 +138,10 @@ The proved order-three result applies to each factor.
 
 ```mermaid
 flowchart BT
-    accTitle: Order-five bounds through squared minors
-    accDescr: A cost certificate proves one directional bound. Two sufficient premises for order five are refuted.
-    Direction["One directional bound"]:::goal
-    Pair["Explicit pair costs from<br/>the two eigenvalue lists"]
-    Dual["Upper bounds on all pair costs<br/>with equality at one permutation"]
-    Goal["Order 5"]:::goal
-    Uniform["Universal nonnegative law<br/>for squared 2-by-2 minors"]:::refuted
-    Transport["Disjoint-pair dual bound reaches a<br/>matching score for every objective"]:::refuted
-    Pair -. gives cost data .-> Dual
-    Dual -->|if| Direction
-    Uniform -->|if| Goal
-    Transport -->|if| Goal
-    classDef goal fill:#18344b,stroke:#18344b,color:#fff
-    classDef refuted fill:#fae5e5,stroke:#a33434,color:#361010
+    Pair["Pair costs from the two eigenvalue lists"]
+    Dual["Upper bound on pair costs, attained by one permutation"]
+    Bound["Directional determinant bound"]
+    Pair --> Dual --> Bound
 ```
 
 Lean represents both the matching score and the determinant projection
@@ -148,24 +151,10 @@ the assignment induced by one actual permutation gives the desired
 directional inequality.
 [Matching score](../Lean/MOC/OrderFivePairCost.lean#L217) · [Determinant projection](../Lean/MOC/OrderFivePairCost.lean#L247) · [Tight cost bound](../Lean/MOC/OrderFivePairCost.lean#L284)
 
-One set of weights for all spectra of a fixed $U$ would reproduce the
-squared absolute values of the two-by-two minors. The reflection
-$U=I-2vv^*$, where every entry of the unit vector $v$ is $1/\sqrt{5}$,
-refutes that premise. The determinant inclusion for this reflection
-holds for every pair of lists. A separate pair-assignment example
-shows that the best assignment on pairs can exceed every assignment
-induced by a permutation of the individual indices.
-[Pair-minor equivalence](../Lean/MOC/OrderFivePairMarkers.lean#L324) · [Refuted law](../Lean/MOC/ProofRoutes.lean#L156) · [Inclusion for the reflection](../Lean/MOC/OrderFiveCommonLawObstruction.lean#L38) · [Pair-assignment example](../Lean/MOC/PairAssignmentObstruction.lean#L116)
-
-The disjoint-pair constraints give a stronger bound. They require a
-transport between the two columns of the pair table for every two
-disjoint column pairs. Each transport has support on disjoint row
-pairs. For the lists $(2,2,1,1,1)$ and $(0,0,-1,-1,-1)$ in the real
-direction, every matching product is zero. A doubly stochastic pair
-table satisfies all these transport constraints and has score $4/45$.
-Every bound from the corresponding dual constraints is therefore at
-least $4/45$ for these spectra.
-[Transport bound](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L145) · [Conditional implication](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L343) · [Refuted certificate test](../Lean/MOC/OrderFiveDisjointPairObstruction.lean#L122)
+For a fixed order-five unitary, one probability law gives the determinant
+for every pair of spectra exactly when it gives every squared modulus
+of a two-by-two minor. The equivalence concerns the common law.
+[Pair-minor equivalence](../Lean/MOC/OrderFivePairMarkers.lean#L324)
 
 Lean also gives inclusion for unitary matrices with zero diagonal and
 off-diagonal magnitudes $1/2$, and for pairs with one real list and at
@@ -193,12 +182,12 @@ flowchart BT
     Tube -->|if| Hull
 ```
 
-| Family | Exact conclusion |
-| --- | --- |
-| Open Fourier ball | There is an operator-norm ball about the normalized order-five Fourier matrix. Each unitary in the ball has one probability law that represents all squared minor moduli. The law gives the determinant for every pair of complex spectra. [Minor law](../Lean/MOC/FiveFourierNeighborhood.lean#L28) · [Inclusion](../Lean/MOC/FiveFourierNeighborhood.lean#L68) |
-| Open mixer ball | An explicit real orthogonal matrix $V$ has an operator-norm ball of radius $1/167772160$. For each unitary in the ball and each real first list, one probability law works for all complex second lists. The law may depend on every entry of the real list. Five exact separating tests show that this dependence is necessary for the stated replacements. |
-| Two free complex entries | In every order $n\ge5$, use $h=(-1,1,2,0,\ldots,0)$ and $b=(i,\ldots,i,-1+i,v,w)$ with $n-3$ copies of $i$. For every unitary, one law works for all $(v,w)\in\mathbb C^2$. The order-five proof checks the hull of the four complex coefficients. |
-| Spectral neighborhood beyond ordinary minors | Each complex spectral entry can move by at most $5\cdot10^{-16}$ from the center specified below. For every unitary the determinant lies inside the hull. Exactly three of its sixteen edge costs lie outside the cone of singleton and two-element subset indicators. |
+| Family | Exact conclusion | Lean Checked? |
+| --- | --- | --- |
+| Open Fourier ball | There is an operator-norm ball about the normalized order-five Fourier matrix. Each unitary in the ball has one probability law that represents all squared minor moduli. The law gives the determinant for every pair of complex spectra. [Minor law](../Lean/MOC/FiveFourierNeighborhood.lean#L28) · [Inclusion](../Lean/MOC/FiveFourierNeighborhood.lean#L68) | Yes |
+| Open mixer ball | An explicit real orthogonal matrix $V$ has an operator-norm ball of radius $1/167772160$. For each unitary in the ball and each real first list, one probability law works for all complex second lists. The law may depend on every entry of the real list. | Paper only |
+| Two free complex entries | In every order $n\ge5$, use $h=(-1,1,2,0,\ldots,0)$ and $b=(i,\ldots,i,-1+i,v,w)$ with $n-3$ copies of $i$. For every unitary, one law works for all $(v,w)\in\mathbb C^2$. The order-five proof checks the hull of the four complex coefficients. | Paper only |
+| Complex spectral neighborhood | Each complex spectral entry can move by at most $5\cdot10^{-16}$ from the center specified below. For every unitary the determinant lies inside the hull. | Paper only |
 
 To transfer the Fourier law to a nearby unitary, add the change of
 each real signed permutation weight to the corresponding Fourier
@@ -209,16 +198,6 @@ continuous at the Fourier matrix. A sufficiently small ball keeps
 all 120 weights at least half the positive lower bound at the center.
 [Positive Fourier law](../Lean/MOC/FourierProfiles.lean#L308) · [Weight correction](../Lean/MOC/FiveFourierNeighborhood.lean#L28)
 
-The fixed-anchor extension of order-four realification fails in order
-five. An actual unitary with a fixed full-support first row has
-singleton and anchor-pair minor data that no mixture of real
-orthogonal tables with the same first-row magnitudes can reproduce.
-The graph independence theorem proves the finite algebraic step.
-The paper argument realizes its limiting effects in a family of
-unitary matrices.
-[Graph independence](../Lean/MOC/GraphEffectIndependence.lean#L37) ·
-[Paper proof](https://github.com/ascendnoosphere/MOC/blob/e9a3f721a577ce14d5c899e0997066e7470d1640/Lean/FixedAnchorOrderFiveObstruction.md)
-
 ### Exact verification
 
 The paper proofs use exact arithmetic on 98 rational rectangles for
@@ -226,7 +205,7 @@ the mixer ball, 419 facets for the two free entries, and 16 edges
 throughout the spectral neighborhood.
 
 <details>
-<summary>Open mixer ball and its strict separation examples</summary>
+<summary>Open mixer ball</summary>
 
 #### 1. An open set of relative eigenbases, with both spectral lists unrestricted
 
@@ -246,8 +225,6 @@ Skew symmetry makes $V$ orthogonal. All 25 entries are nonzero.
 $$
  d_U(h,b)=\mathbb E\prod_{i=1}^5 (b_i+h_{\pi(i)})\qquad(b\in\mathbb C^5).
 $$
-Throughout this ball, fix $h=(1,2,3,4,5)$. For each index $j$, a law that is required to hold for every $b$ cannot cover both replacements $h_j=0$ and $h_j=1$ with the other four entries fixed. Thus allowing one selected eigenvalue to vary with a common law is a strictly stronger requirement even on a set where all real spectra satisfy the theorem.
-
 #### Reducing the real spectrum to two variables
 
 Write $Q_{S,J}(U)=|\det U[S,J]|^2$. The coefficient of $\prod_{i\notin S} b_i$ in the determinant is $\sum_{|J|=|S|} h_J Q_{S,J}(U)$, where $h_J=\prod_{j\in J}h_j$. The same coefficient under a permutation replaces $Q_{S,J}$ by $P_{S,J}(\pi)=1_{\pi(S)=J}$. This follows by expanding in principal minors and applying Cauchy–Binet.
@@ -292,18 +269,6 @@ $$
  \max_\pi|\omega_\pi(U)-\omega_\pi(V)|\le 2n\|U-V\|_{\mathrm{op}} .
 $$
 For the determinant bound, change one column at a time and apply Hadamard's inequality. The determinants of the endpoints have modulus one. At $n=5$ the claimed radius is $2^{-24}/10$. This proves positivity throughout the stated neighborhood.
-
-#### Why one more freely variable label fails at the same eigenbasis
-
-For each proposed $j$, take separately $h_j=0,1$, always keeping the other entries of $(1,2,3,4,5)$. Stack the two vectors of principal-minor coefficients, including a constant row per vector. Existence of one law for both tests would place this stacked vector in the convex hull of the 120 corresponding stacked permutation vectors. The certificate uses one integer linear functional per $j$. Its value at the true vector exceeds its largest value on the 120 vertices by the following strict rational lower bounds, expressed in the units of that functional.
-
-| Free position | 1 | 2 | 3 | 4 | 5 |
-|---|---:|---:|---:|---:|---:|
-| Separation exceeds | 79 | 93 | 114 | 95 | 18 |
-
-The accompanying exact verifier also supplies a positive law at the original $h=(1,2,3,4,5)$. The five separations persist on the whole stated ball. Specifically, if $U$ moves by $\varepsilon$, then $UD_hU^*$ moves by at most $10\varepsilon$ for all ten tests. The principal minor on $k$ rows changes by at most $10k5^{k-1}\varepsilon$ by column telescoping. Weighting by the absolute values of the five separating functionals gives respective Lipschitz bounds $23543210,25568690,12199530,24380720,262927580$. Each bound times the radius is smaller than its certified separation. The permutation vertices do not depend on $U$.
-
-This example tests the unrestricted real spectrum through the complete two-parameter space. Restricting the proof in advance to laws that can ignore at least one Hermitian eigenvalue would exclude this example however that position was selected.
 
 </details>
 
@@ -379,14 +344,14 @@ The supplement treats four independent values $(\beta,\beta,z_1,z_2,z_3)$, the p
 
 
 <details>
-<summary>Complex spectral neighborhood beyond ordinary minors</summary>
+<summary>Complex spectral neighborhood</summary>
 
 Let
 $$
  h=(-23,-13,1,17,31),\quad x=(14,37,48,91,123),\quad
  v=(52440003,-6726720,-177802625,-1637862200,-3190187000).
 $$
-Allow each of the ten entries of $h$ and $x+10^{-9}iv$ to move independently in the closed complex disk of radius $5\cdot10^{-16}$ about its stated value. For every resulting pair of normal matrices, determinant inclusion holds. Their permutation polygon has 16 edges. Exactly three of these edges have area tables outside the cone generated by the 125 subset-assignment indicators of sizes one and two. In zero-based lexicographic order, they run from 81 to 57, 57 to 72, and 72 to 47.
+Allow each of the ten entries of $h$ and $x+10^{-9}iv$ to move independently in the closed complex disk of radius $5\cdot10^{-16}$ about its stated value. For every resulting pair of normal matrices, determinant inclusion holds. Their permutation polygon has 16 edges.
 
 **Proof.** Use counterclockwise orientation and let $G_{ij}(r)=\Im(\overline{P_j-P_i}(P_r-P_i))$ denote the area table for an edge. Its expectation under the signed unitary functional gives the same area evaluated on the determinant. As in the real-pivot argument, this functional takes nonnegative values on the indicator cone and on each nonnegative auxiliary real-pivot table. The latter assertion continues to apply when the actual spectral data are both complex, since the functional depends only on the unitary. No pivot in the actual spectra is required.
 
@@ -394,7 +359,7 @@ Each of the 16 central edges has exactly two incident labels $i,j$. Let $T$ cons
 
 For precision, on writing $d=10^9$, let $B_{k,p}=|h_{p(k)}+x_k|+\lceil |v_k|/d\rceil+1$ and put $L_p=3\sum_k\prod_{s\ne k}B_{s,p}$. When each eigenvalue changes by at most $\rho=5\cdot10^{-16}$, each factor changes by at most $2\sqrt2\rho<3\rho$ in the complex norm $\|z\|_1=|\Re z|+|\Im z|$. The original and changed factors have norm at most $B_{k,p}$. Telescoping the products bounds the change in $P_p$ by $L_p\rho$. Let $D_{ij}=\lceil\|P_i-P_j\|_1\rceil$. The check $2\rho\max_p L_p<1$ bounds the perturbed difference norm by $D_{ij}+1$. Hence the area table changes by at most $\Delta_{ij}=\rho\max_r[(D_{ij}+1)(L_i+L_r)+D_{ir}(L_i+L_j)]$ in maximum norm.
 
-The verifier compares rational numbers and establishes three strict bounds on each applicable edge. First, $\Delta_{ij}$ is smaller than the least positive original area. Thus all original oriented edges persist with exactly the same incidence. Their directed cycle encloses all remaining labeled points and is the entire new boundary. Second, $\Delta_{ij}\|A_{ij}^{-1}\|_\infty<10^{-10}\max_r G_{ij}(r)$. The new area table belongs to the same 42-dimensional space by determinant expansion, and its difference from the original vanishes at $i,j$. Absorb this difference in the forty basis coefficients. They retain positive weights and the unchanged residual continues to have nonnegative evaluation on every unitary. This proves all sixteen inequalities. Third, on each of the three mixed edges, the strict negative value under the fixed signed witness $L=( -\delta_4+\delta_{23}+\delta_{28}+\delta_{59}+\delta_{81}+\delta_{102})/4$ has magnitude larger than $\|L\|_1\Delta_{ij}$. Its negativity survives throughout the disk. The witness is nonnegative on every indicator. The other thirteen edges retain positive indicator representations, proving the exact count.
+The verifier compares rational numbers and establishes two bounds on each edge. First, $\Delta_{ij}$ is smaller than the least positive original area. Thus all original oriented edges persist with exactly the same incidence. Their directed cycle encloses all remaining labeled points and is the entire new boundary. Second, $\Delta_{ij}\|A_{ij}^{-1}\|_\infty<10^{-10}\max_r G_{ij}(r)$. The new area table belongs to the same 42-dimensional space by determinant expansion, and its difference from the original vanishes at $i,j$. Absorb this difference in the forty basis coefficients. They retain positive weights and the unchanged residual continues to have nonnegative evaluation on every unitary. This proves all sixteen inequalities.
 
 The calculation uses integer and rational arithmetic.
 
@@ -494,3 +459,5 @@ Apply the same Möbius map to $\sigma(A)$ and $-\sigma(B)$. The determinant and 
 Theorem 19 in Y. Shitov, *A further sufficient condition for the determinantal conjecture*, lifts the Hermitian dimension-four base case to all orders when $A$ is Hermitian and at most four eigenvalues of $B$ are nonreal. Möbius covariance extends this to a common generalized circle containing all $a_i$ and at least $n-4$ of the reflected values $-b_j$. The proof leaves unrestricted order four with two nonconcyclic spectra unresolved.
 
 </details>
+
+[Lean check status](README.md#lean-check-status): **Partial (19/21)** for the 21 linked source modules.

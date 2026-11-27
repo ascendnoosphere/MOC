@@ -62,3 +62,11 @@ gives a root outside the perturbed signed lists. Use it as the pole,
 then take a limit. Orders zero and one follow from the proved
 small-order inclusion.
 [Regular spectra](../Lean/MOC/SpectralPerturbation.lean#L146) · [Root outside both signed lists](../Lean/MOC/EqualSpectralCoefficients.lean#L241) · [Nonconstant numerator](../Lean/MOC/EqualSpectralCoefficients.lean#L377) · [Small orders](../Lean/MOC/Small.lean#L68)
+
+## Lean check status
+
+| Lean scope | Lean Checked? |
+| --- | --- |
+| The 4 source modules linked in this map | Yes |
+
+[Status definitions](README.md#lean-check-status). Paper arguments retain their stated scope.

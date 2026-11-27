@@ -1,4 +1,4 @@
-# Research attempts for unrestricted MOC
+# General proof routes
 
 [Proof map index](README.md) · [Conjecture](../README.md) · [All-order routes](all-orders-proof-map.md) · [Order four](order-four-proof-map.md)
 
@@ -11,23 +11,23 @@ permutation that attains that largest projection.
 
 ## Proof routes
 
-| Subject | Step in Lean | Remaining implication or scope limit |
-| --- | --- | --- |
-| Contact geometry | A strict violation can be transferred to one with at least $2n-1$ contacts in order $n$. The contact differences have a lower bound on the dimension of their span. [Contact threshold](../Lean/MOC/AffineGapCover.lean#L85) · [Difference rank](../Lean/MOC/ContactDifferenceRank.lean#L42) | Exclude every witness at the threshold. The rank estimate applies to the span of the specified differences. |
-| Spectral realization in order four | A violation reduces to the canonical mixed-ray section in the terminal-witness route. The directional bound holds for all unitary mixers when the canonical gap has normalized height from zero through one half. A complex spectral profile satisfies the real and imaginary lift equations. [Canonical reduction](../Lean/MOC/FourTerminalCoverage.lean#L398) · [Height interval](../Lean/MOC/FourCanonicalHeightSquares.lean#L767) · [Lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L128) | Apply a spectral exclusion or a sign certificate at the remaining heights. |
-| Reciprocal overlap | Opposite shifts give a common minor law when the sum of the two nonzero spectral counts is at most $n+2$. The scalar comparison at overlap three reduces to square orders through 33. [Common law](../Lean/MOC/RankTwoOverlap.lean#L709) · [Finite reduction](../Lean/MOC/FiniteFrameLabels.lean#L528) | Prove the scalar inclusion for arbitrary pairs of frames at overlap three. The stronger common law for all minors has an exact obstruction. [Overlap discussion](all-orders-proof-map.md#finite-overlap-compression) |
-| Stationarity and induction | At a unitary maximum, each complex signed score marginal is the support score times the squared entry modulus. The two-phase determinant test applies when each base determinant for the inner phase is nonzero. [Marginal](../Lean/MOC/StationaryPivot.lean#L329) · [Two-phase test](../Lean/MOC/RankTwoPhaseEscape.lean#L138) | For a strict terminal maximum, derive ascent, a proper reducing block, or a normal sum from the actual spectra and the smaller-order bounds. |
-| Certificates for one objective | A law for nested subset images gives nonnegative evaluation of a nonnegative flag score. One order-five spectral example has an exact disjoint-pair support certificate. [Flag score](../Lean/MOC/FullFlagLaw.lean#L291) · [Order-five bound](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L289) | The disjoint-pair dual cannot certify every objective. Find a certificate that covers the remaining support gaps. [Refuted test](../Lean/MOC/OrderFiveDisjointPairObstruction.lean#L122) |
-| Assignment-score variance | For nonnegative weights of total mass one, an interval with no score gives a lower variance bound, and an interval containing all scores gives an upper bound. Rank-one costs have a signed covariance formula and an integer lattice bound. [Variance bounds](../Lean/MOC/ThresholdVariance.lean#L156) · [Rank-one variance](../Lean/MOC/RankOneVariance.lean#L78) · [Lattice bound](../Lean/MOC/RankOneLattice.lean#L19) | Prove the nearest-score lower bound for the signed variance of every actual rank-one assignment. A positive law for richer joint statistics needs further conditions. |
-| One free eigenvalue | A planar slice tests for a single law for one free eigenvalue. The law follows from the smaller-order inclusion when the supported partners have at most two distinct values. [Slice](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L205) · [Two supported values](../Lean/MOC/GroupedEigenvalueMoments.lean#L88) | Prove the slice condition for an arbitrary number of groups. |
-| Wall inequality in order four | A bound on reciprocal leaf weights gives a matching sum of squares. The amplitude inequality includes zero amplitudes and assumes a positive corrected moment at the given mixer. Lean gives such a moment for every real orthogonal mixer and gives nonnegative evaluation of matching sums of squares for every complex unitary mixer. [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94) · [Amplitude bound](../Lean/MOC/FourMatchingCompensation.lean#L173) · [Orthogonal correction](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12) · [Unitary evaluation](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) | Identify the spectral gaps to which the wall coefficient budget applies. |
-| Projective changes and limits | A common fractional linear map of the signed spectral points preserves the test if its determinant is nonzero and it has no pole on either list. A four-point swap relation gives a cross-ratio test. [Transport](../Lean/MOC/ProjectiveTransport.lean#L61) · [Swap relation](../Lean/MOC/ContactCrossRatios.lean#L16) | For a proposed boundary argument, prove the spectral and remainder conditions on its chosen stratum. |
-| Zero rectangles and modulus | Color multiplicities test for a nonzero matching. With one unit of slack at every color, every allowed edge extends. A column degree gives a lower bound on the number of nonzero matchings. [Existence](../Lean/MOC/UnequalColorHall.lean#L102) · [Extension](../Lean/MOC/UnequalColorHall.lean#L127) · [Count](../Lean/MOC/UnequalColorHall.lean#L162) | A factorial lower bound or a stronger modulus comparison requires an additional argument. |
-| Indicator span and Fourier tests | A sign-aligned entrywise phase test proves nonnegativity of the signed masses of the score groups. An order-five Fourier mixer has a strictly positive minor law. [Sign alignment](../Lean/MOC/UnitaryPhaseCuts.lean#L164) · [Fourier law](../Lean/MOC/FourierProfiles.lean#L308) | Find compatible signs for the score groups of a general spectral objective. The all-order dimension formula for the indicator span is outside these lemmas. |
-| Brackets and phase derivatives | A normalized spectral maximizer obeys cofactor equations even when a cross sum is zero. The formal Gram determinant gives a fourth-order sign test when the first Gram coefficient vanishes. [Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Gram test](../Lean/MOC/PhaseGramJet.lean#L191) | Combine the phase and spectral multiplier equations on a common strict witness. |
-| Exact search and positive neighborhoods | Density and scaling reduce unrestricted inclusion to Gaussian integer spectra and Gaussian rational mixers. In dimension six the mixer ball gives a common law for three pairs of eigenspaces. [Exact test](../Lean/MOC/GaussianCayley.lean#L361) · [Mixer ball](six-dimensional-mixer-ball-proof-map.md) | Extend the local law to every mixer in dimension six, or prove coverage of a larger region by certified neighborhoods. |
-| Stability and coefficients | Every first-list entry with positive imaginary part and every second-list entry with nonnegative imaginary part force a nonzero determinant. Independent entry variables give an order-two counterexample to the corresponding nonvanishing claim. [Spectral nonvanishing](../Lean/MOC/SpectralDeterminantStability.lean#L37) · [Independent entries](../Lean/MOC/SpectralDeterminantStability.lean#L60) | Spectral nonvanishing alone supplies no directional hull inequality. |
-| Swaps and cycles | Each transposition segment is attained. A closed transposition walk that avoids a point and has nonzero winding about it forces attainment of that point. [Segment formula](../Lean/MOC/TranspositionWinding.lean#L262) · [Winding implication](../Lean/MOC/TranspositionWinding.lean#L681) | A global description of the determinant range requires a further argument. [Graph interpretation](transposition-winding-proof-map.md) |
+| Subject | Step in Lean | Remaining implication or scope limit | Lean Checked? |
+| --- | --- | --- | --- |
+| Contact geometry | A strict violation can be transferred to one with at least $2n-1$ contacts in order $n$. The contact differences have a lower bound on the dimension of their span. [Contact threshold](../Lean/MOC/AffineGapCover.lean#L85) · [Difference rank](../Lean/MOC/ContactDifferenceRank.lean#L42) | Exclude every witness at the threshold. The rank estimate applies to the span of the specified differences. | Yes |
+| Spectral realization in order four | A violation reduces to the canonical mixed-ray section in the terminal-witness route. The directional bound holds for all unitary mixers when the canonical gap has normalized height from zero through one half. A complex spectral profile satisfies the real and imaginary lift equations. [Canonical reduction](../Lean/MOC/FourTerminalCoverage.lean#L398) · [Height interval](../Lean/MOC/FourCanonicalHeightSquares.lean#L767) · [Lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L128) | Apply a spectral exclusion or a sign certificate at the remaining heights. | Partial — unchecked: `FourCanonicalHeightSquares`, `FourTerminalCoverage` |
+| Reciprocal overlap | Opposite shifts give a common minor law when the sum of the two nonzero spectral counts is at most $n+2$. The scalar comparison at overlap three reduces to square orders through 33. [Common law](../Lean/MOC/RankTwoOverlap.lean#L709) · [Finite reduction](../Lean/MOC/FiniteFrameLabels.lean#L528) | Prove the scalar inclusion for arbitrary pairs of frames at overlap three. [Overlap discussion](all-orders-proof-map.md#finite-overlap-compression) | Yes |
+| Stationarity and induction | At a unitary maximum, each complex signed score marginal is the support score times the squared entry modulus. The two-phase determinant test applies when each base determinant for the inner phase is nonzero. [Marginal](../Lean/MOC/StationaryPivot.lean#L329) · [Two-phase test](../Lean/MOC/RankTwoPhaseEscape.lean#L138) | For a strict terminal maximum, derive ascent, a proper reducing block, or a normal sum from the actual spectra and the smaller-order bounds. | Partial — unchecked: `RankTwoPhaseEscape` |
+| Certificates for one objective | A law for nested subset images gives nonnegative evaluation of a nonnegative flag score. One order-five spectral example has an exact disjoint-pair support certificate. [Flag score](../Lean/MOC/FullFlagLaw.lean#L291) · [Order-five bound](../Lean/MOC/OrderFiveDisjointPairSupport.lean#L289) | Find a certificate that covers the remaining support gaps. | Yes |
+| Assignment-score variance | For nonnegative weights of total mass one, an interval with no score gives a lower variance bound, and an interval containing all scores gives an upper bound. Rank-one costs have a signed covariance formula and an integer lattice bound. [Variance bounds](../Lean/MOC/ThresholdVariance.lean#L156) · [Rank-one variance](../Lean/MOC/RankOneVariance.lean#L78) · [Lattice bound](../Lean/MOC/RankOneLattice.lean#L19) | Prove the nearest-score lower bound for the signed variance of every actual rank-one assignment. A positive law for richer joint statistics needs further conditions. | Yes |
+| One free eigenvalue | A planar slice tests for a single law for one free eigenvalue. The law follows from the smaller-order inclusion when the supported partners have at most two distinct values. [Slice](../Lean/MOC/FreeEigenvalueSlopeSlice.lean#L205) · [Two supported values](../Lean/MOC/GroupedEigenvalueMoments.lean#L88) | Prove the slice condition for an arbitrary number of groups. | Yes |
+| Wall inequality in order four | A bound on reciprocal leaf weights gives a matching sum of squares. The amplitude inequality includes zero amplitudes and assumes a positive corrected moment at the given mixer. Lean gives such a moment for every real orthogonal mixer and gives nonnegative evaluation of matching sums of squares for every complex unitary mixer. [Square certificate](../Lean/MOC/FourMatchingCompensation.lean#L94) · [Amplitude bound](../Lean/MOC/FourMatchingCompensation.lean#L173) · [Orthogonal correction](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12) · [Unitary evaluation](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) | Identify the spectral gaps to which the wall coefficient budget applies. | No |
+| Projective changes and limits | A common fractional linear map of the signed spectral points preserves the test if its determinant is nonzero and it has no pole on either list. A four-point swap relation gives a cross-ratio test. [Transport](../Lean/MOC/ProjectiveTransport.lean#L61) · [Swap relation](../Lean/MOC/ContactCrossRatios.lean#L16) | For a proposed boundary argument, prove the spectral and remainder conditions on its chosen stratum. | Yes |
+| Zero rectangles and modulus | Color multiplicities test for a nonzero matching. With one unit of slack at every color, every allowed edge extends. A column degree gives a lower bound on the number of nonzero matchings. [Existence](../Lean/MOC/UnequalColorHall.lean#L102) · [Extension](../Lean/MOC/UnequalColorHall.lean#L127) · [Count](../Lean/MOC/UnequalColorHall.lean#L162) | A factorial lower bound or a stronger modulus comparison requires an additional argument. | Yes |
+| Indicator span and Fourier tests | A sign-aligned entrywise phase test proves nonnegativity of the signed masses of the score groups. An order-five Fourier mixer has a strictly positive minor law. [Sign alignment](../Lean/MOC/UnitaryPhaseCuts.lean#L164) · [Fourier law](../Lean/MOC/FourierProfiles.lean#L308) | Find compatible signs for the score groups of a general spectral objective. The all-order dimension formula for the indicator span is outside these lemmas. | Yes |
+| Brackets and phase derivatives | A normalized spectral maximizer obeys cofactor equations even when a cross sum is zero. The formal Gram determinant gives a fourth-order sign test when the first Gram coefficient vanishes. [Cofactor equations](../Lean/MOC/SpectralMultiplierRigidity.lean#L118) · [Gram test](../Lean/MOC/PhaseGramJet.lean#L191) | Combine the phase and spectral multiplier equations on a common strict witness. | Partial — unchecked: `SpectralMultiplierRigidity` |
+| Exact search and positive neighborhoods | Density and scaling reduce unrestricted inclusion to Gaussian integer spectra and Gaussian rational mixers. In dimension six the mixer ball gives a common law for three pairs of eigenspaces. [Exact test](../Lean/MOC/GaussianCayley.lean#L361) · [Mixer ball](six-dimensional-mixer-ball-proof-map.md) | Extend the local law to every mixer in dimension six, or prove coverage of a larger region by certified neighborhoods. | Yes |
+| Stability and coefficients | Every first-list entry with positive imaginary part and every second-list entry with nonnegative imaginary part force a nonzero determinant. [Spectral nonvanishing](../Lean/MOC/SpectralDeterminantStability.lean#L37) | Spectral nonvanishing alone supplies no directional hull inequality. | No |
+| Swaps and cycles | Each transposition segment is attained. A closed transposition walk that avoids a point and has nonzero winding about it forces attainment of that point. [Segment formula](../Lean/MOC/TranspositionWinding.lean#L262) · [Winding implication](../Lean/MOC/TranspositionWinding.lean#L681) | A global description of the determinant range requires a further argument. [Graph interpretation](transposition-winding-proof-map.md) | No |
 
 ## Spectral realization and matching squares
 
@@ -35,19 +35,12 @@ permutation that attains that largest projection.
 flowchart BT
     Spectra["Actual spectral gap"]
     Rank["Inverse pencil with complex rank at most four"]
-    Moment["Positive semidefinite moment on an invertible size-eight block"]
-    Eqns["Three specified affine test equations"]
-    NoMoment["No positive semidefinite moment satisfies the equations"]
-    Reject["No rank-four lift imposing those equations"]
     Star["Scalar factor bound and matching-function identity"]
     Squares["Matching sum of squares"]
     Both{{"AND"}}
     Corr["Positive corrected mixer moment"]
     Bound["Nonnegative support gap"]
     Spectra --> Rank
-    Rank --> Moment
-    Eqns --> NoMoment
-    NoMoment -->|"contrapositive of the moment condition"| Reject
     Star --> Squares
     Squares --> Both
     Corr --> Both
@@ -64,22 +57,6 @@ flowchart BT
   [Invariance space](../Lean/MOC/SpectralProfileDeterminant.lean#L362) ·
   [Balanced evaluation](../Lean/MOC/BalancedMatchingProbes.lean#L203) ·
   [Profile recovery](spectral-profile-determinant-proof-map.md#recover-the-profile-from-balanced-matrices)
-- **Rank lift and affine moment planes in order four.** Let $X$ be
-  an invertible real symmetric matrix of order eight. Let $Y$ be
-  real symmetric and lie in a specified real matrix span. If $X+iY$
-  has complex rank at most four, there is a real positive semidefinite
-  moment matrix for the equation $YX^{-1}Y=-X$. Each of four tests
-  gives three affine equations for quadratic evaluations of a real
-  matrix of order four. The equations are incompatible with positive
-  semidefiniteness. To apply a test to a spectral gap, prove its three
-  equations for the moment matrix of that gap. The Lean module for
-  this step awaits verification in the library build.
-  [Outer-product identity](../Lean/MOC/InversePencilMoments.lean#L23) ·
-  [Moment condition](../Lean/MOC/InversePencilMoments.lean#L51) ·
-  [Test at vector $(3,10,-15,-6)$](../Lean/MOC/InversePencilMoments.lean#L141) ·
-  [Test at vector $(16,-4,-15,-5)$](../Lean/MOC/InversePencilMoments.lean#L123) ·
-  [Test at vector $(0,21,-19,-15)$](../Lean/MOC/InversePencilMoments.lean#L105) ·
-  [Test at vector $(12,9,2,-26)$](../Lean/MOC/InversePencilMoments.lean#L87)
 - **Determinant factors and matching squares.** A central feature
   with weight $b$ and leaf weights $d_i>0$ gives a square certificate
   when $\sum_i e_i^2/d_i\le b$, where $e_i$ are the couplings.
@@ -98,16 +75,5 @@ flowchart BT
   dimension six have the local mixer-ball result.
   [Singleton and two-value laws](three-spectral-values-with-one-singleton-proof-map.md) ·
   [Mixer ball](six-dimensional-mixer-ball-proof-map.md)
-- **Tests that fail for stronger claims.** The stationary reflection
-  control, the order-four minor-law obstructions, and the
-  characteristic-polynomial obstruction concern stronger statements.
-  A nonnegative cubic in an order-three assignment score has signed
-  expectation $-4/9$. It excludes a positive law matching the first
-  three signed moments of that score.
-  For a variation by two rank-one phases, the Lean test applies
-  when the base determinant for each inner phase is nonzero.
-  [Reflection control](order-four-proof-map.md#other-exact-obstructions) ·
-  [Third-moment obstruction](../Lean/MOC/AssignmentScoreThirdMoment.lean#L27) ·
-  [Minor-law obstruction](order-four-circle-or-line-common-weights-proof-map.md) ·
-  [Characteristic-polynomial obstruction](../Lean/MOC/CommonCharacteristicPolynomialObstruction.lean#L305) ·
-  [Two-phase criterion](../Lean/MOC/RankTwoPhaseEscape.lean#L138)
+
+[Lean check status](README.md#lean-check-status): **Partial (22/31)** for the 31 linked source modules.
