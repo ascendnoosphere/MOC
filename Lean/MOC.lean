@@ -37,6 +37,7 @@ import MOC.FourOutlierForestBridges
 import MOC.UnitaryBlockTree
 import MOC.StaircaseZeroCorners
 import MOC.NegativeCopyInclusion
+import MOC.QuadraticHermitianRankOneInclusion
 import MOC.ProjectionLeafPivot
 import MOC.OverlappingProjectionBlocks
 import MOC.BalancedCyclicGateLaw

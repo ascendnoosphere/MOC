@@ -434,6 +434,16 @@ $A^{-1}B$ is normal.
 [Normal relative product](Lean/MOC/NormalProductInclusion.lean#L292) ·
 [Complete proof map](Docs/normal-products-proof-map.md)
 
+Let $d$ be a real list and $w$ a complex vector of any finite length.
+Set $H=\mathrm{diag}(d)+sww^*$, where $s\in\{-1,1\}$.
+For every $c,e\in\mathbb C$ and every complex diagonal matrix $E$,
+the inclusion holds for $H^2+cH+eI$ and $E$.
+Repeated eigenvalues and zero vector entries are allowed.
+This proves a family of normal diagonal-plus-rank-two matrices.
+[Inclusion](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L178) ·
+[Normality, eigenvalues, and rank for the real-vector form](Lean/MOC/QuadraticHermitianRankOneInclusion.lean#L129) ·
+[Complete proof map](Docs/quadratic-rank-one-perturbations-proof-map.md)
+
 Suppose one matrix is diagonal. In that basis, let the other matrix
 be a block sum of normal weighted permutation cycles. Each cycle can
 have its own scalar shift. Within each block the determinant equals
@@ -734,7 +744,7 @@ The proved reductions and restricted cases do not discharge these goals.
 | $A=D+R$ is normal, $D,E$ are complex diagonal matrices, and $\mathrm{rank}(R)\le2$. | Inclusion for $A$ and $E$. |
 
 The normal-product result is a proved case. The block, forest, staircase,
-and negative-spectrum extensions above are also proved under their stated
+negative-spectrum, and quadratic rank-one extensions above are also proved under their stated
 conditions. No numerical sample or refutation of a stronger weight rule
 is a proof of an open statement in this table.
 
