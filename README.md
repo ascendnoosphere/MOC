@@ -300,6 +300,19 @@ The resulting unitary has exactly $n+9$ nonzero entries. Any common
 law would restrict to a common law on the order-four block.
 [Exact threshold](Lean/MOC/SparseSupportThreshold.lean#L106) · [Counterexample at the next count](Lean/MOC/SparseSupportThreshold.lean#L72) · [Restriction to a block](Lean/MOC/UniversalWeightsBlockRestriction.lean#L15)
 
+### Eigenbases of Hermitian rank-one updates
+
+Let $d,v,h$ be real lists of length $n$, with $v_i\ge0$ for every $i$
+and pairwise distinct entries of $h$. Regard $v$ as a column and write
+$v^{\mathsf T}$ for its transpose. Suppose the unitary matrix $U$
+satisfies $\mathrm{diag}(d)+vv^{\mathsf T}=U\mathrm{diag}(h)U^*$.
+Then one probability law on permutations represents the determinant
+for every pair of complex spectra at this $U$. Repeated entries of
+$d$ and zero entries of $v$ are allowed. The spectra in the determinant
+comparison are arbitrary; $h$ specifies the eigenbasis.
+[Common weights](Lean/MOC/HermitianRankOneCauchyWeights.lean#L137) ·
+[Proof map](Docs/cauchy-eigenbasis-permutation-laws-proof-map.md)
+
 ### Mixing blocks with one shared coordinate
 
 Take two unitary matrices that each satisfy the inclusion for all pairs

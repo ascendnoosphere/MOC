@@ -43,6 +43,7 @@ The mixer is the unitary change between the two eigenbases.
 
 - [Normal products and normal relative products](normal-products-proof-map.md)
 - [Quadratic images of Hermitian rank-one perturbations](quadratic-rank-one-perturbations-proof-map.md)
+- [Common permutation weights for Cauchy eigenbases](cauchy-eigenbasis-permutation-laws-proof-map.md)
 - [Circle-or-line common weights in order four](order-four-circle-or-line-common-weights-proof-map.md)
 - [Complex Hadamard matrices in order four](order-four-complex-hadamard-proof-map.md)
 - [Conic spectral reductions](conic-spectral-reductions-proof-map.md)
