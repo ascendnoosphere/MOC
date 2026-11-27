@@ -26,7 +26,7 @@ private theorem colorMultiplicity_pair_eq_sum {C : Type*} [DecidableEq C]
   have h := Equiv.sum_comp σ (fun j => if a j = c then (1 : ℕ) else 0)
   change (∑ j, if a (σ j) = c then 1 else 0) = ∑ j, if a j = c then 1 else 0 at h
   rw [Finset.sum_add_distrib, h]
-  simp only [Finset.sum_boole, colorMultiplicity]
+  simp only [Finset.sum_boole, colorMultiplicity, Nat.cast_id]
 
 private theorem colorMultiplicity_add_le_card_add_matchCount {C : Type*} [DecidableEq C]
     (a b : ι → C) (σ : Equiv.Perm ι) (c : C) :
@@ -103,7 +103,7 @@ theorem exists_colorMatchCount_le_iff {C : Type*} [DecidableEq C]
             by_cases ha : a (σ j) = b i
             · by_cases hb : b j = b i
               · simp [ha, hb]
-              · simp [ha, hb, show b i ≠ b j from hb.symm]
+              · simp [ha, hb, Ne.symm hb]
             · have hb := (htouch j).resolve_left ha
               simp [ha, hb]
           _ = _ := by rw [Finset.sum_add_distrib]; simp
@@ -149,7 +149,8 @@ private theorem rootMultiplicity_matching_polynomial (a b : ι → ℂ) (σ : Eq
   exact ⟨fun h => eq_sub_iff_add_eq.mpr h.symm, fun h => (eq_sub_iff_add_eq.mp h).symm⟩
 
 private theorem charpoly_spectralSum_perm (a b : ι → ℂ) (σ : Equiv.Perm ι) :
-    (diagonal a + σ.symm.permMatrix ℂ * diagonal b * (σ.symm.permMatrix ℂ)ᴴ).charpoly =
+    (diagonal a + Equiv.Perm.permMatrix ℂ σ.symm * diagonal b *
+      (Equiv.Perm.permMatrix ℂ σ.symm)ᴴ).charpoly =
       ∏ j, (X - Polynomial.C (a (σ j) + b j)) := by
   rw [permMatrix_conjugates, Matrix.submatrix_diagonal_equiv, Matrix.diagonal_add]
   let v (i : ι) := a i + b (σ.symm i)
@@ -177,7 +178,7 @@ theorem forced_rootMultiplicity_iff (a b : ι → ℂ) (z : ℂ) (k : ℕ) :
     by_contra hcolor
     push_neg at hcolor
     obtain ⟨σ, hσ⟩ := (exists_colorMatchCount_le_iff a (fun j => z - b j) k).mpr hcolor
-    have hu := hall (σ.symm.permMatrix ℂ) (isUnitary_permMatrix σ.symm)
+    have hu := hall (Equiv.Perm.permMatrix ℂ σ.symm) (isUnitary_permMatrix σ.symm)
     rw [charpoly_spectralSum_perm a b σ, rootMultiplicity_matching_polynomial] at hu
     omega
   · rintro ⟨c, hc⟩ U hU

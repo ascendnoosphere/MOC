@@ -113,8 +113,8 @@ def fiberEndomorphismMatrix {R E : Type*} [CommRing R] [Algebra R ℂ]
     (A : E →ₗ[R] E) : Matrix (Fin n) (Fin n) ℂ :=
   LinearMap.toMatrix e e (A.baseChange ℂ)
 
-/-- Atlas 036 at a chosen scalar fiber. Projectivity is source data, not
-an additional hypothesis on the MOC implication. -/
+/-- The determinant hull on a chosen finite complex fiber of a projective
+module, under the normality hypotheses on that fiber. -/
 theorem nativeProjectiveFiberHull_of_moc (h : MOCIsTrue)
     {R E : Type} [CommRing R] [Algebra R ℂ] [AddCommGroup E] [Module R E]
     [Module.Projective R E] {n : ℕ}

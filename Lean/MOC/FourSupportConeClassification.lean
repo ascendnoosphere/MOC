@@ -11,7 +11,7 @@ import Mathlib.Tactic.Push
 import Mathlib.Tactic.Ring
 
 /-! An exact halfspace-intersection proof for the order-four support-cost cone. -/
-
+set_option Elab.async false -- Check the large certificates in sequence to limit memory use.
 open BigOperators
 
 namespace MOC

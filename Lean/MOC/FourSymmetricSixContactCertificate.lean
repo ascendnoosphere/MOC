@@ -336,40 +336,40 @@ private theorem pencil_singularity_forces_compensation (u : Fin 7 → ℝ) (hu :
   · push_neg at hbig
     exact (det_pos_in_cube u hu (hbig 0) (hbig 1) (hbig 2)).ne' hz
 
-private theorem normalized_gap (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7 → ℝ) (λ h : ℝ)
-    (hλ : λ ≠ 0)
+private theorem normalized_gap (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7 → ℝ) (mixedWeight h : ℝ)
+    (hMixedWeight : mixedWeight ≠ 0)
     (hgap : ∀ i, (η * matchingProduct a c (fourPerm i).symm).re + h =
-      symmetricSixContactProfile b λ i) (i : Fin 24) :
-    ((η / (λ : ℂ)) * matchingProduct a c (fourPerm i).symm).re + h / λ =
-      symmetricSixContactProfile (fun j => b j / λ) 1 i := by
-  have hw (k : Fin 9) : symmetricSixContactWeights (fun j => b j / λ) 1 k =
-      symmetricSixContactWeights b λ k / λ := by
+      symmetricSixContactProfile b mixedWeight i) (i : Fin 24) :
+    ((η / (mixedWeight : ℂ)) * matchingProduct a c (fourPerm i).symm).re + h / mixedWeight =
+      symmetricSixContactProfile (fun j => b j / mixedWeight) 1 i := by
+  have hw (k : Fin 9) : symmetricSixContactWeights (fun j => b j / mixedWeight) 1 k =
+      symmetricSixContactWeights b mixedWeight k / mixedWeight := by
     fin_cases k <;>
       simp only [symmetricSixContactWeights, Matrix.cons_val_zero, Matrix.cons_val_succ] <;>
-      field_simp [hλ] <;> ring
+      field_simp [hMixedWeight] <;> ring
   rw [div_mul_eq_mul_div, Complex.div_ofReal_re, ← add_div, hgap i]
   simp only [symmetricSixContactProfile, hw, Finset.sum_div, ite_div, zero_div]
 
 /-- On the full seven-parameter symmetric six-contact family, the
 spectral condition forces one of the three compensator budgets. -/
 theorem symmetricSixContact_spectral_compensation (a c : Fin 4 → ℂ) (η : ℂ)
-    (b : Fin 7 → ℝ) {λ h : ℝ} (hb : ∀ k, 0 ≤ b k) (hλ : 0 ≤ λ)
+    (b : Fin 7 → ℝ) {mixedWeight h : ℝ} (hb : ∀ k, 0 ≤ b k) (hMixedWeight : 0 ≤ mixedWeight)
     (hgap : ∀ i, (η * matchingProduct a c (fourPerm i).symm).re + h =
-      symmetricSixContactProfile b λ i) :
-    λ ^ 2 ≤ b 4 * (b 5 + b 6) ∨
-      λ ^ 2 ≤ b 5 * (b 4 + b 6) ∨ λ ^ 2 ≤ b 6 * (b 4 + b 5) := by
-  by_cases hz : λ = 0
+      symmetricSixContactProfile b mixedWeight i) :
+    mixedWeight ^ 2 ≤ b 4 * (b 5 + b 6) ∨
+      mixedWeight ^ 2 ≤ b 5 * (b 4 + b 6) ∨ mixedWeight ^ 2 ≤ b 6 * (b 4 + b 5) := by
+  by_cases hz : mixedWeight = 0
   · left
     rw [hz, zero_pow (by decide : 2 ≠ (0 : ℕ))]
     exact mul_nonneg (hb 4) (add_nonneg (hb 5) (hb 6))
-  let u (k : Fin 7) := b k / λ
-  have hp : 0 < λ := lt_of_le_of_ne hλ hz.symm
-  have hu (k : Fin 7) : 0 ≤ u k := div_nonneg (hb k) hλ
-  have hs := symmetricSixContact_spectralPencil_singular a c (η / (λ : ℂ)) u 1 (h / λ)
-    (normalized_gap a c η b λ h hz hgap)
+  let u (k : Fin 7) := b k / mixedWeight
+  have hp : 0 < mixedWeight := lt_of_le_of_ne hMixedWeight hz.symm
+  have hu (k : Fin 7) : 0 ≤ u k := div_nonneg (hb k) hMixedWeight
+  have hs := symmetricSixContact_spectralPencil_singular a c (η / (mixedWeight : ℂ)) u 1 (h / mixedWeight)
+    (normalized_gap a c η b mixedWeight h hz hgap)
   have hscale (i j k : Fin 7) (hc : 1 ≤ u i * (u j + u k)) :
-      λ ^ 2 ≤ b i * (b j + b k) := by
-    have he : u i * (u j + u k) = (b i * (b j + b k)) / λ ^ 2 := by
+      mixedWeight ^ 2 ≤ b i * (b j + b k) := by
+    have he : u i * (u j + u k) = (b i * (b j + b k)) / mixedWeight ^ 2 := by
       dsimp only [u]
       field_simp [hz] <;> ring
     rw [he] at hc
@@ -381,13 +381,13 @@ theorem symmetricSixContact_spectral_compensation (a c : Fin 4 → ℂ) (η : �
 
 /-- The lower determinant support bound for every point of the symmetric
 six-contact family with seven independent ordinary weights. -/
-theorem symmetricSixContact_support (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7 → ℝ) {λ h : ℝ}
-    (hb : ∀ k, 0 ≤ b k) (hλ : 0 ≤ λ)
+theorem symmetricSixContact_support (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7 → ℝ) {mixedWeight h : ℝ}
+    (hb : ∀ k, 0 ≤ b k) (hMixedWeight : 0 ≤ mixedWeight)
     (hgap : ∀ i, (η * matchingProduct a c (fourPerm i).symm).re + h =
-      symmetricSixContactProfile b λ i)
+      symmetricSixContactProfile b mixedWeight i)
     (U : Matrix (Fin 4) (Fin 4) ℂ) (hU : IsUnitary U) :
     -h ≤ (η * determinantValue a c U).re :=
-  symmetricSixContact_support_of_compensator_budget a c η b hb hλ hgap
-    (symmetricSixContact_spectral_compensation a c η b hb hλ hgap) U hU
+  symmetricSixContact_support_of_compensator_budget a c η b hb hMixedWeight hgap
+    (symmetricSixContact_spectral_compensation a c η b hb hMixedWeight hgap) U hU
 
 end MOC

@@ -21,7 +21,7 @@ private theorem holds_of_equiv {ι κ : Type} [Fintype ι] [DecidableEq ι]
     Holds a b U :=
   (holds_reindex_iff e e a b U).mp h
 
-/-- Atlas 013: in the exterior eigenbasis the entries are products over
+/-- In the exterior eigenbasis the entries are products over
 subsets, counted once for each exterior basis vector. -/
 def exteriorSpectrum : Prop :=
   ∀ (n k m : ℕ) (_ : 1 ≤ k) (_ : k ≤ n)
@@ -53,7 +53,7 @@ theorem moc_iff_exteriorSpectrum : MOCIsTrue ↔ exteriorSpectrum := by
       simpa only [Finset.prod_singleton] using hh
     · exact conjecture_le_three (by omega) a b U hU
 
-/-- Atlas 015: multiset-indexed eigenvalue monomials of the symmetric
+/-- Multiset-indexed eigenvalue monomials of the symmetric
 power. A multiset records the exponents of exactly one basis monomial. -/
 def symmetricSpectrum : Prop :=
   ∀ (n k m : ℕ) (_ : 1 ≤ k) (e : Fin m ≃ Sym (Fin n) k)
@@ -83,7 +83,7 @@ theorem moc_iff_symmetricSpectrum : MOCIsTrue ↔ symmetricSpectrum := by
       (fun i => (({i} : Multiset (Fin n)).map b).prod) U at hh
     simpa only [Multiset.map_singleton, Multiset.prod_singleton] using hh
 
-/-- Atlas 016: the full tensor-product spectrum, with multiplicity indexed by
+/-- The full tensor-product spectrum, with multiplicity indexed by
 pairs of eigenvectors. -/
 def tensorSpectrum : Prop :=
   ∀ (m n : ℕ) (a c : Fin m → ℂ) (b d : Fin n → ℂ)
@@ -107,7 +107,7 @@ theorem moc_iff_tensorSpectrum : MOCIsTrue ↔ tensorSpectrum := by
       (unitary_reindex e e hU)
     exact holds_of_equiv e a b U hU (by simpa [e, prodFinOne, Function.comp_def] using hh)
 
-/-- Atlas 017: direct sums of two nonempty spectral lists. The relative
+/-- Direct sums of two nonempty spectral lists. The relative
 unitary is allowed to mix between the two blocks. -/
 def directSumSpectrum : Prop :=
   ∀ (m n : ℕ) (_ : 0 < m) (_ : 0 < n) (a c : Fin m → ℂ) (b d : Fin n → ℂ)
@@ -135,8 +135,8 @@ theorem moc_iff_directSumSpectrum : MOCIsTrue ↔ directSumSpectrum := by
         simpa only [hsplit] using hh
       · exact conjecture_le_three (by omega) a b U hU
 
-/-- Atlas 018: spectrum of the Kronecker sum, not the pointwise sum of the
-tensor-product spectra. -/
+/-- The Kronecker sum spectrum consists of every sum of one eigenvalue
+from each factor, counted by the pair of labels. -/
 def kroneckerSumSpectrum : Prop :=
   ∀ (m n : ℕ) (a c : Fin m → ℂ) (b d : Fin n → ℂ)
     (U : Matrix (Fin m × Fin n) (Fin m × Fin n) ℂ),
@@ -152,7 +152,7 @@ theorem moc_iff_kroneckerSumSpectrum : MOCIsTrue ↔ kroneckerSumSpectrum := by
       (unitary_reindex e e hU)
     exact holds_of_equiv e a b U hU (by simpa [e, prodFinOne, Function.comp_def] using hh)
 
-/-- Atlas 019: on the full matrix-unit basis the adjoint eigenvalues are
+/-- On the full matrix-unit basis the adjoint eigenvalues are
 differences, using spectra of the same order on both sides. -/
 def adjointSpectrum : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ),
@@ -179,7 +179,7 @@ theorem moc_iff_selectedAdjointSpectrum : MOCIsTrue ↔ selectedAdjointSpectrum 
   · intro h n a b U hU
     simpa using h n (Sum.elim a (fun _ => 0)) (Sum.elim b (fun _ => 0)) U hU
 
-/-- Atlas 020: eigenvalues of conjugation by an invertible normal matrix
+/-- The eigenvalues of conjugation by an invertible normal matrix
 are ratios in the full matrix-unit basis. -/
 def conjugationSpectrum : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ), (∀ i, a i ≠ 0) → (∀ i, b i ≠ 0) →
@@ -193,8 +193,8 @@ theorem conjugationSpectrum_of_moc (h : MOCIsTrue) : conjugationSpectrum := by
 theorem not_moc_of_not_conjugationSpectrum (h : ¬ conjugationSpectrum) : ¬ MOCIsTrue :=
   fun hm => h (conjugationSpectrum_of_moc hm)
 
-/-- Atlas 048: pointwise hull for each evaluation of the homogeneous
-determinant polynomial, not simultaneous or separate coefficient hulls. -/
+/-- The hull for each evaluation of the homogeneous determinant polynomial.
+The convex weights can depend on the evaluation point. -/
 def pointwiseMixedDiscriminant : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (s t : ℂ) (U : Matrix (Fin n) (Fin n) ℂ),
     IsUnitary U → Holds (fun i => s * a i) (fun i => t * b i) U

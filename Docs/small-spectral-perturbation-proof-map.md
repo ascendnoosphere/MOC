@@ -2,18 +2,21 @@
 
 [Proof map index](README.md) · [Marcus–de Oliveira conjecture and proof tree](../README.md#proof-tree)
 
-Let $a$ and $b$ be two complex eigenvalue lists indexed by the same finite
-set. Suppose the entries of each list are pairwise distinct. Keep the
-first list $a$ fixed. There is a dense open set of centers $z\in\mathbb C$.
+Let $a$ and $b$ be two complex eigenvalue lists of the same finite
+length $n$. Suppose the entries of each list are pairwise distinct. The
+Marcus–de Oliveira inclusion places the determinant of a sum of normal
+matrices in the real convex hull of its eigenvalue matching products.
+Keep the first list $a$ fixed. There is a dense open set of centers $z\in\mathbb C$.
 For each such $z$, there is a radius $r>0$ such that the conjecture
 holds for $a$ and $(z+t b_j)_j$ for every complex $|t|<r$ and every
-unitary mixer. The second list can contain zero before the transformation.
-At $t\ne0$, translation, rotation, and uniform scaling preserve its
-shape. The radius may depend on the lists and the center.
+unitary change between the eigenbases. The second list can contain
+zero before the transformation. For $t\ne0$ the change is a complex
+affine map with nonzero slope. The radius may depend on the lists
+and the center.
 [Translated and scaled spectra](../Lean/MOC/ReciprocalSpectralPerturbation.lean#L233)
 
 Apply the dense pole result below with weights $b_j$ and poles $-a_i$.
-Replacing each permutation by its inverse gives
+For a permutation $p$, changing the summation index gives
 
 $$
 \sum_j\frac{b_{p(j)}}{z+a_j}
@@ -44,8 +47,9 @@ values are distinct and no three lie on one real affine line in
 $\mathbb C$. The result gives a radius $r>0$ such that the determinant of
 $\mathrm{diag}(a)+tU\mathrm{diag}(b)U^*$ lies in its matching hull for
 every unitary matrix $U$ and every complex parameter $t$ with $|t|<r$.
-This is a case of the conjecture in every finite order.
-[Lean hypotheses](../Lean/MOC/SmallSpectralPerturbation.lean#L568) · [Lean result](../Lean/MOC/SmallSpectralPerturbation.lean#L757)
+Here $\mathrm{diag}(a)$ is the diagonal matrix with entries $a_j$, and
+$U^*$ is the conjugate transpose. This holds in every finite order.
+[General position](../Lean/MOC/SmallSpectralPerturbation.lean#L572) · [Uniform perturbation theorem](../Lean/MOC/SmallSpectralPerturbation.lean#L757)
 
 ```mermaid
 flowchart BT
@@ -55,18 +59,25 @@ flowchart BT
     Gap["Strict score gap<br/>at every other assignment"]
     Direction["Determinant support bound<br/>near one direction"]
     Uniform["One disk works for all directions<br/>and all relative unitaries"]
-    Assignment --> Error
-    Law --> Error
+    Both{{"AND"}}
+    Local{{"AND"}}
+    Assignment --> Both
+    Law --> Both
+    Both --> Error
     Assignment --> Gap
-    Error --> Direction
-    Gap --> Direction
+    Error --> Local
+    Gap --> Local
+    Local --> Direction
     Direction --> Uniform
 ```
 
-The maximizing assignments are the ones with largest real projection.
-Call their union of matching edges the allowed set. Measure the mass of
-the Birkhoff law on all other assignments. If there is one maximizing
-assignment, use it twice in the two-assignment estimate.
+For a fixed unit projection direction, call the permutations with
+largest projected assignment value the maximizing assignments. Call
+the union of their matching edges the allowed set. The Birkhoff law
+expresses the squared moduli of the entries of $U$ as a convex
+combination of permutation matrices. Measure its mass on the other
+assignments. If there is one maximizing assignment, use it twice in
+the estimate for two assignments.
 
 For each other assignment, at least one edge lies outside the allowed
 set. In the involutive case, at least two do. In the remaining case,
@@ -77,24 +88,15 @@ edges have small squared modulus. Every different matching differs in
 at least two columns. The product of two small entries bounds its
 signed coefficient. Equality of the singleton sums gives the same
 order of error on the maximizing assignments.
-[Individual signed coefficient bound](../Lean/MOC/SmallSpectralPerturbation.lean#L171) · [Total variation bound](../Lean/MOC/SmallSpectralPerturbation.lean#L364)
+[Individual signed coefficient bound](../Lean/MOC/SmallSpectralPerturbation.lean#L171) · [Total variation bound](../Lean/MOC/SmallSpectralPerturbation.lean#L363)
 
 The assignment score gives a strict gap away from the maximizing
 assignments. For a small change of the scores, the gap pays for the
-signed-law error. The first coefficient of each normalized matching
-polynomial is the reciprocal assignment sum. Its continuity gives
+signed-law error. The coefficient of degree one in each normalized
+matching polynomial is the reciprocal assignment sum. Continuity gives
 a neighborhood of each unit support direction. Compactness of the
 unit circle gives one disk for all directions.
-[Support stability](../Lean/MOC/SmallSpectralPerturbation.lean#L493) · [Uniform disk](../Lean/MOC/SmallSpectralPerturbation.lean#L659)
-
-The source theorem is in sections 1–8 of the local
-`variational_notes.txt`. The finite-law proof above gives the same
-existential radius by a different argument. Exact arithmetic checked
-the law estimates on 16 matrix and assignment pairs. It also checked
-the note's order-four example. Its 24 assignment sums are distinct.
-All 2024 orientations of triples are nonzero. The minimum absolute
-orientation is 315. The source note gives an explicit radius. The Lean
-result above proves existence of a radius.
+[Support stability](../Lean/MOC/SmallSpectralPerturbation.lean#L497) · [Uniform disk](../Lean/MOC/SmallSpectralPerturbation.lean#L663)
 
 ## Fractional linear maps with a prescribed center
 
@@ -136,7 +138,8 @@ interior. After clearing denominators, its complement is open.
 The finite intersection of these dense open sets supplies $S$. At each
 pole in $S$, the small spectral perturbation theorem applies.
 This proves density for the pole parameter with both original lists
-fixed.
+fixed. The fractional-linear and affine perturbation theorems use
+the same dense-pole argument.
 [Permutation vectors on a sphere](../Lean/MOC/AssignmentSphere.lean#L21) · [Dense open set of poles](../Lean/MOC/ReciprocalSpectralPerturbation.lean#L121)
 
 For every fixed list of distinct weights $x_i$, the partner lists

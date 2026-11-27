@@ -1,5 +1,6 @@
 import MOC.Normal
 import MOC.StrongSupport
+import MOC.Support
 import MOC.Variational
 import Mathlib.Analysis.Complex.Circle
 
@@ -123,7 +124,9 @@ theorem fixed_coordinateTorusConj_iff (X : Matrix ι ι ℂ) :
     (∀ t : ι → Circle, coordinateTorusConj t X = X) ↔ ∃ d : ι → ℂ, X = diagonal d := by
   constructor
   · intro h
-    let z : Circle := ⟨-1, Metric.mem_sphere_zero_iff_norm.mpr (by simp)⟩
+    let z : Circle := ⟨-1, by
+      change (-1 : ℂ) ∈ Metric.sphere 0 1
+      rw [Metric.mem_sphere, dist_zero_right, norm_neg, norm_one]⟩
     refine ⟨X.diag, ?_⟩
     ext i j : 1
     by_cases hij : i = j
@@ -179,8 +182,8 @@ theorem flagDeterminantScore_torusInvariant (a : ι → ℂ) (η : ℂ) (t : ι 
 
 theorem flagDeterminantScore_permutation (a b : ι → ℂ) (η : ℂ) (p : Equiv.Perm ι) :
     flagDeterminantScore a η (diagonal (b ∘ p)) = (η * matchingProduct a b p.symm).re := by
-  rw [flagDeterminantScore, ← Matrix.diagonal_add, Matrix.det_diagonal,
-    matchingProduct_inverse] <;> rfl
+  simp only [flagDeterminantScore, Matrix.diagonal_add, Matrix.det_diagonal,
+    matchingProduct_inverse, Function.comp_apply]
 
 /-- The strict support superlevel, as a subset of the ambient matrix space. -/
 def flagDeterminantSuperlevel (a b : ι → ℂ) (η : ℂ) (r : ℝ) : Set (Matrix ι ι ℂ) :=
@@ -197,9 +200,11 @@ theorem flagDeterminantSuperlevel_relativelyOpen (a b : ι → ℂ) (η : ℂ) (
 
 theorem coordinateTorusConj_mem_flagDeterminantSuperlevel {a b : ι → ℂ} {η : ℂ} {r : ℝ}
     {X : Matrix ι ι ℂ} (hX : X ∈ flagDeterminantSuperlevel a b η r) (t : ι → Circle) :
-    coordinateTorusConj t X ∈ flagDeterminantSuperlevel a b η r :=
-  ⟨coordinateTorusConj_mem_spectralFlagOrbit hX.1 t,
-    (flagDeterminantScore_torusInvariant a η t X).symm ▸ hX.2⟩
+    coordinateTorusConj t X ∈ flagDeterminantSuperlevel a b η r := by
+  refine ⟨coordinateTorusConj_mem_spectralFlagOrbit hX.1 t, ?_⟩
+  change r < flagDeterminantScore a η (coordinateTorusConj t X)
+  rw [flagDeterminantScore_torusInvariant a η t X]
+  exact hX.2
 
 /-- For a simple spectrum, the fixed points above the threshold are in
 bijection with the permutation labels whose matching products exceed it. -/
@@ -212,6 +217,7 @@ def flagSuperlevelFixedEquiv (a b : ι → ℂ) (η : ℂ) (r : ℝ) (hb : Funct
         ∀ t : ι → Circle, coordinateTorusConj t X = X} := by
     have h := (spectralFlagOrbit_fixed_iff b (diagonal (b ∘ p.val.symm))).mpr ⟨_, rfl⟩
     refine ⟨_, ⟨h.1, ?_⟩, h.2⟩
+    change r < flagDeterminantScore a η (diagonal (b ∘ p.val.symm))
     simpa only [flagDeterminantScore_permutation, Equiv.symm_symm] using p.property
   refine Equiv.ofBijective f ⟨?_, ?_⟩
   · intro p q hpq
@@ -242,13 +248,15 @@ theorem conjecture_iff_flagSuperlevel_fixed : Conjecture ι ↔
     refine ⟨_, ⟨hfix.1, ?_⟩, hfix.2⟩
     change r < flagDeterminantScore a η (diagonal (b ∘ p.symm))
     rw [flagDeterminantScore_permutation, Equiv.symm_symm]
+    change r < (η * determinantValue a b U).re at hX
     exact hX.trans_le hp
   · intro h a b U hU
     apply (holds_iff_directional a b U).mpr
     intro η
     by_contra! hbad
     obtain ⟨p, _, hmax⟩ := Finset.exists_max_image Finset.univ
-      (fun p : Equiv.Perm ι => (η * matchingProduct a b p).re) Finset.univ_nonempty
+      (fun p : Equiv.Perm ι => (η * matchingProduct a b p).re)
+      ⟨Equiv.refl ι, Finset.mem_univ _⟩
     let r := (η * matchingProduct a b p).re
     have hnonempty : (flagDeterminantSuperlevel a b η r).Nonempty :=
       ⟨U * diagonal b * Uᴴ, ⟨U, hU, rfl⟩, hbad p⟩

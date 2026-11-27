@@ -1,7 +1,7 @@
 import MOC.Claim
 import Mathlib.LinearAlgebra.Matrix.Block
 
-/-! Atlas 182: a triangular-preserving relative position has exactly a
+/-! For incidence algebras, a relative position that preserves triangular form has exactly a
 matching product as determinant. This is a structural triangular proof,
 not a claim about arbitrary nonnormal conjugates or a proof of MOC. -/
 

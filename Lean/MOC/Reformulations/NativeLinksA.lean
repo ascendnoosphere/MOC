@@ -101,9 +101,9 @@ private theorem mixedPencilVertex_coeff_one (a b : ι → ℂ) (σ : Equiv.Perm 
   intro k hk
   simp [Finset.ne_of_mem_erase hk]
 
-/-- First-order polarization is an unconditional native case of Atlas 048.
-Its permutation values are the independent first coefficients, not evaluations
-of the determinant polynomial and not a simultaneous all-coefficient law. -/
+/-- The first mixed coefficient is in the convex hull of the first coefficients
+of the matching polynomials. The weights in this proof represent
+this coefficient. -/
 theorem mixedPencil_first_coeff_hull (a b : ι → ℂ) (U : Matrix ι ι ℂ) (hU : IsUnitary U) :
     (mixedPencilPolynomial a b U).coeff 1 ∈
       convexHull ℝ (Set.range (fun σ => (mixedPencilVertex a b σ).coeff 1)) := by
@@ -181,14 +181,14 @@ theorem mixedPencil_boundary_coeff_hulls (a b : ι → ℂ) (U : Matrix ι ι �
     simp
 
 
-/-- The simultaneous strengthening of Atlas 048 is a hull of actual
+/-- The simultaneous mixed coefficient condition is a hull of
 determinant polynomials. Independent coefficient hulls do not imply it
 by an abstract convexity argument. -/
 def SimultaneousMixedPencilHull : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
     mixedPencilPolynomial a b U ∈ convexHull ℝ (Set.range (mixedPencilVertex a b))
 
-/-- Atlas 048 with a separate convex hull for each mixed coefficient. -/
+/-- A separate convex hull for each mixed determinant coefficient. -/
 def SeparateMixedPencilHull : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
     ∀ k : ℕ, k ≤ n →

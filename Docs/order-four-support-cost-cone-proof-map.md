@@ -3,9 +3,9 @@
 [Proof map index](README.md)
 
 Let a matching be a permutation of four labels. A matching profile assigns
-one number to each of the 24 matchings. A graded-minor indicator is one
-when the permutation sends the source subset to the target subset. It is
-zero otherwise. The two subsets have the same size. The noncrossing
+one number to each of the 24 matchings. A subset-image indicator is one
+when the permutation sends a specified subset onto another subset of
+the same size. It is zero otherwise. The noncrossing
 matching evaluation gives 14 coordinates for the space of profiles that
 these indicators span. A support cost is a profile in this space whose
 entries are nonnegative. [Matching evaluation](../Lean/MOC/FourMatchingRelations.lean#L196)
@@ -16,7 +16,8 @@ The cone has 34 ordinary extreme rays and 48 mixed extreme rays. The
 ordinary rays are the 16 singleton-image indicators and the 18 pair-image
 indicators with source pair containing zero. Complementing both pairs
 gives the other pair indicators. The mixed rays are a relabeling orbit of the sum of three
-ordinary indicators minus a fourth. [Ray definitions](../Lean/MOC/FourSupportCostProfiles.lean)
+ordinary indicators minus a fourth.
+[Ordinary rays](../Lean/MOC/FourSupportCostProfiles.lean#L52) · [Mixed rays](../Lean/MOC/FourSupportCostProfiles.lean#L70)
 
 ## Proof map
 
@@ -25,14 +26,14 @@ flowchart TD
     Coordinates["14 independent matching evaluations"]
     Initial["Nonnegative values at the 14 selected matchings"]
     Cuts["Intersect with one coordinate halfspace at a time"]
-    Replay["Verify each carry and crossing candidate"]
+    Candidates["Express each candidate as a nonnegative combination of retained profiles"]
     Cone["All 24 nonnegative values give a sum of the 82 rays"]
     Supports["Distinct minimal supports on the 82 profiles"]
     Extreme["Each listed ray is extreme and the list is complete"]
     Coordinates --> Initial
     Initial --> Cuts
-    Cuts --> Replay
-    Replay --> Cone
+    Cuts --> Candidates
+    Candidates --> Cone
     Cone --> Extreme
     Supports --> Extreme
 ```

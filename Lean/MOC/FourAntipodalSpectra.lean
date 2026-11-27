@@ -61,8 +61,12 @@ theorem exists_four_fractional_antipodal (a : Fin 4 → ℂ) (ha : Function.Inje
     ring
   have hregular (i : Fin 4) : s * y i - x i ≠ 0 := by
     fin_cases i
-    · simpa only [hx₀, sub_zero] using mul_ne_zero hs₀ (hy 0 (by decide))
-    · simpa only [hy₁, mul_zero, zero_sub, neg_ne_zero] using hx 1 (by decide)
+    · change s * y 0 - x 0 ≠ 0
+      rw [hx₀, sub_zero]
+      exact mul_ne_zero hs₀ (hy 0 (by decide))
+    · change s * y 1 - x 1 ≠ 0
+      rw [hy₁, mul_zero, zero_sub]
+      exact neg_ne_zero.mpr (hx 1 (by decide))
     · exact havoid 2 3 (by decide) (by decide) hcross
     · apply havoid 3 2 (by decide) (by decide)
       simpa only [mul_comm (x 3) (x 2), mul_comm (y 3) (y 2)] using hcross
@@ -120,7 +124,8 @@ theorem fourAntipodalSpectrum_generalizedCircle_iff (z : ℂ) :
     by_cases hz : z.im = 0
     · exact Or.inl hz
     · right
-      have hvprod : v * z.im = 0 := by linear_combination (h₃ - h₂) / 4
+      have hvprod : v * z.im = 0 := by
+        linear_combination (h₃ - h₂) / 4 - z.re * hu
       have hv : v = 0 := (mul_eq_zero.mp hvprod).resolve_right hz
       have hq : q ≠ 0 := by simpa [hu, hv] using hnonzero
       have hnormprod : q * (Complex.normSq z - 1) = 0 := by

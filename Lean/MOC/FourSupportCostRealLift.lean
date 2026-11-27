@@ -1,5 +1,6 @@
 import MOC.FourMatchingLift
 import Mathlib.LinearAlgebra.Dimension.Free
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-! The rank-two moment equations for a real order-four matching profile. -/
@@ -432,6 +433,20 @@ theorem binaryMomentLine_psd_of_pos_det (A W : Fin 3 → ℝ) (hW : 0 < binaryMo
     exact ⟨-t, by simpa only [smul_neg, neg_smul] using ht⟩
   · exact binaryMomentLine_psd_of_positive_direction A W hW hT
 
+private theorem fourBracketCoordinates_rescale {R : Type*} [CommRing R]
+    (d : Fin 8 → Fin 8 → R) (h : Fin 8 → R) :
+    fourBracketCoordinates (fun i j => d i j * (h i * h j)) =
+      fun k => (∏ i, h i) * fourBracketCoordinates d k := by
+  have hprod : (∏ i, h i) = h 0 * h 1 * h 2 * h 3 * h 4 * h 5 * h 6 * h 7 := by
+    simp only [Fin.prod_univ_succ, Fin.prod_univ_zero, mul_one]
+    change h 0 * (h 1 * (h 2 * (h 3 * (h 4 * (h 5 * (h 6 * h 7)))))) = _
+    ac_rfl
+  rw [hprod]
+  funext k
+  fin_cases k <;>
+    simp only [fourBracketCoordinates, Matrix.cons_val, Matrix.cons_val_zero',
+      Matrix.cons_val_succ'] <;> ac_rfl
+
 /-- A bracket profile of eight nonzero two-coordinate vectors is a common
 nonzero multiple of the matching profile of two finite complex spectra. -/
 theorem fourBracketCoordinates_exists_finite_spectra (p q : Fin 8 → ℂ)
@@ -441,7 +456,7 @@ theorem fourBracketCoordinates_exists_finite_spectra (p q : Fin 8 → ℂ)
         fun k => η * fourNoncrossingCoordinates (fourSpectralPoints a b) k := by
   classical
   letI : Infinite ℂ := Infinite.of_injective (fun n : ℕ => (n : ℂ)) Nat.cast_injective
-  let bad := Finset.univ.image (fun i : Fin 8 => -q i / p i)
+  let bad : Finset ℂ := Finset.univ.image (fun i : Fin 8 => -q i / p i)
   obtain ⟨t, ht⟩ := Infinite.exists_not_mem_finset bad
   let h (i : Fin 8) := q i + t * p i
   have hh (i : Fin 8) : h i ≠ 0 := by
@@ -458,18 +473,20 @@ theorem fourBracketCoordinates_exists_finite_spectra (p q : Fin 8 → ℂ)
   let b (i : Fin 4) := -z (Fin.natAdd 4 i)
   have hlegs : fourSpectralPoints a b = z := by
     funext i
-    fin_cases i <;> simp [fourSpectralPoints, a, b] <;> rfl
-  refine ⟨a, b, ∏ i, h i, Finset.prod_ne_zero_iff.mpr (fun i _ => hh i), ?_⟩
-  rw [hlegs]
+    fin_cases i <;> simp only [fourSpectralPoints, Matrix.cons_val,
+      Matrix.cons_val_zero', Matrix.cons_val_succ', a, b, neg_neg] <;> rfl
   have hbracket (i j : Fin 8) : p i * q j - p j * q i =
       (z i - z j) * (h i * h j) := by
     calc
       _ = p i * h j - p j * h i := by dsimp only [h]; ring
       _ = _ := by rw [← hz i, ← hz j]; ring
-  funext k
-  fin_cases k <;>
-    simp [fourNoncrossingCoordinates, fourBracketCoordinates, hbracket, Fin.prod_univ_succ] <;>
-    ring
+  have hscale : (fun i j => p i * q j - p j * q i) =
+      (fun i j => (z i - z j) * (h i * h j)) :=
+    funext fun i => funext (hbracket i)
+  have hprod : (∏ i, h i) ≠ 0 := Finset.prod_ne_zero_iff.mpr (fun i _ => hh i)
+  refine ⟨a, b, ∏ i, h i, hprod, ?_⟩
+  rw [hlegs, hscale]
+  exact fourBracketCoordinates_rescale (fun i j => z i - z j) h
 
 private theorem fourMatchingMomentEvaluation_of_kernel (f g : Fin 14 → ℝ)
     (K : Basis (Fin 2) ℝ (LinearMap.ker (fourMatchingHessian f).mulVecLin))
@@ -478,18 +495,40 @@ private theorem fourMatchingMomentEvaluation_of_kernel (f g : Fin 14 → ℝ)
   obtain ⟨s, t, rfl⟩ := fourMatchingKernelBasis_spans f K g hg
   let x : Fin 14 → ℝ := K 0
   let y : Fin 14 → ℝ := K 1
+  let xs (j : Fin 14) : ℝ := s * x j
+  let yt (j : Fin 14) : ℝ := t * y j
   refine ⟨![s ^ 2, s * t, t ^ 2], funext fun i => ?_⟩
   change s ^ 2 * fourMatchingGradient x i +
     (s * t) * (fourMatchingGradient (fun j => x j + y j) i -
       fourMatchingGradient x i - fourMatchingGradient y i) +
     t ^ 2 * fourMatchingGradient y i =
-    fourMatchingGradient (fun j => s * x j + t * y j) i
-  fin_cases i <;> simp [fourMatchingGradient] <;> ring
+    fourMatchingGradient (fun j => xs j + yt j) i
+  have hcross : fourMatchingGradient (fun j => xs j + yt j) i -
+      fourMatchingGradient xs i - fourMatchingGradient yt i =
+      (s * t) * (fourMatchingGradient (fun j => x j + y j) i -
+        fourMatchingGradient x i - fourMatchingGradient y i) := by
+    rw [← fourMatchingHessian_mulVec_apply, ← fourMatchingHessian_mulVec_apply,
+      show fourMatchingHessian xs = s • fourMatchingHessian x from fourMatchingHessian_scale s x,
+      show yt = t • y from rfl, Matrix.smul_mulVec_assoc, Matrix.mulVec_smul]
+    simp only [Pi.smul_apply, smul_eq_mul]
+    ring
+  have hs : fourMatchingGradient xs i = s ^ 2 * fourMatchingGradient x i :=
+    fourMatchingGradient_scale x s i
+  have ht : fourMatchingGradient yt i = t ^ 2 * fourMatchingGradient y i :=
+    fourMatchingGradient_scale y t i
+  linear_combination -hcross - hs - ht
 
+private theorem fourMatchingHessian_mulVec_swap (u v : Fin 14 → ℝ) :
+    (fourMatchingHessian u).mulVec v = (fourMatchingHessian v).mulVec u := by
+  funext i
+  rw [fourMatchingHessian_mulVec_apply, fourMatchingHessian_mulVec_apply,
+    show (fun j => u j + v j) = (fun j => v j + u j) from funext fun j => add_comm _ _]
+  ring
+
+set_option maxHeartbeats 1500000 in
 /-- The real midpoint of complex critical profiles with opposite imaginary
 parts has a compatible real moment target on any two-vector Hessian kernel
 basis. Compatibility does not require a rank assumption on the moment map. -/
-set_option maxHeartbeats 1500000 in
 theorem fourMatchingSecant_real_moment_compatible (u v y : Fin 14 → ℝ)
     (hu : ∀ i, fourMatchingGradient (fun j => (⟨u j, y j⟩ : ℂ)) i = 0)
     (hv : ∀ i, fourMatchingGradient (fun j => (⟨v j, -y j⟩ : ℂ)) i = 0) :
@@ -511,28 +550,50 @@ theorem fourMatchingSecant_real_moment_compatible (u v y : Fin 14 → ℝ)
     simpa only [neg_one_mul, neg_one_sq, one_mul] using
       fourMatchingGradient_scale y (-1 : ℝ) i
   have hy : (fourMatchingHessian f).mulVec y = 0 := by
-    funext i
-    have h : (fourMatchingHessian f).mulVec y i =
-        ((fourMatchingHessian u).mulVec y i + (fourMatchingHessian v).mulVec y i) / 2 := by
-      simp only [fourMatchingHessian_mulVec_apply]
-      fin_cases i <;> simp [f, fourMatchingGradient] <;> ring
-    rw [h, hYu, hYv]
-    simp only [Pi.zero_apply, add_zero, zero_div]
+    have hhalf : f = (1 / 2 : ℝ) • (u + v) := by
+      funext i
+      change (u i + v i) / 2 = (1 / 2 : ℝ) * (u i + v i)
+      ring
+    calc
+      _ = (fourMatchingHessian y).mulVec f := fourMatchingHessian_mulVec_swap f y
+      _ = (1 / 2 : ℝ) • ((fourMatchingHessian y).mulVec u +
+          (fourMatchingHessian y).mulVec v) := by
+        rw [hhalf, Matrix.mulVec_smul, Matrix.mulVec_add]
+      _ = 0 := by
+        rw [fourMatchingHessian_mulVec_swap y u, fourMatchingHessian_mulVec_swap y v,
+          hYu, hYv, add_zero, smul_zero]
+  have hplus : (fun j => f j + z j) = u := by
+    funext j
+    dsimp only [f, z]
+    ring
+  have hminus : (fun j => f j + (-z) j) = v := by
+    funext j
+    simp only [f, z, Pi.neg_apply]
+    ring
+  have hpos (i : Fin 14) : (fourMatchingHessian f).mulVec z i =
+      fourMatchingGradient u i - fourMatchingGradient f i - fourMatchingGradient z i := by
+    rw [fourMatchingHessian_mulVec_apply, hplus]
+  have hneg (i : Fin 14) : -((fourMatchingHessian f).mulVec z i) =
+      fourMatchingGradient v i - fourMatchingGradient f i - fourMatchingGradient z i := by
+    have hgrad : fourMatchingGradient (-z) i = fourMatchingGradient z i := by
+      simpa only [neg_one_mul, neg_one_sq, one_mul, Pi.neg_apply] using
+        fourMatchingGradient_scale z (-1 : ℝ) i
+    change (-((fourMatchingHessian f).mulVec z)) i = _
+    rw [← Matrix.mulVec_neg, fourMatchingHessian_mulVec_apply, hminus, hgrad]
   have hz : (fourMatchingHessian f).mulVec z = 0 := by
     funext i
-    have h : (fourMatchingHessian f).mulVec z i =
-        (fourMatchingGradient u i - fourMatchingGradient v i) / 2 := by
-      rw [fourMatchingHessian_mulVec_apply]
-      fin_cases i <;> simp [f, z, fourMatchingGradient] <;> ring
-    rw [h, hGu, hGv', sub_self, zero_div] <;> rfl
+    change (fourMatchingHessian f).mulVec z i = 0
+    have hp := hpos i
+    have hm := hneg i
+    rw [hGu] at hp
+    rw [hGv'] at hm
+    linarith only [hp, hm]
   have hf : fourMatchingGradient f = fourMatchingGradient y - fourMatchingGradient z := by
     funext i
-    have h : fourMatchingGradient f i + fourMatchingGradient z i =
-        (fourMatchingGradient u i + fourMatchingGradient v i) / 2 := by
-      fin_cases i <;> simp [f, z, fourMatchingGradient] <;> ring
-    rw [hGu, hGv'] at h
+    have h := hpos i
+    rw [hGu, hz, Pi.zero_apply] at h
     change fourMatchingGradient f i = fourMatchingGradient y i - fourMatchingGradient z i
-    linarith only [h]
+    linear_combination h
   obtain ⟨m, hm⟩ := fourMatchingMomentEvaluation_of_kernel f y K hy
   obtain ⟨n, hn⟩ := fourMatchingMomentEvaluation_of_kernel f z K hz
   exact ⟨m - n, by rw [map_sub, hm, hn, hf]⟩

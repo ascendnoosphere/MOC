@@ -2,7 +2,7 @@ import MOC.Claim
 import MOC.Normal
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
-/-! Matrix-analysis entries of the reformulation atlas. A proposition defined here is
+/-! Matrix formulations of the Marcus–de Oliveira conjecture. A proposition defined here is
 not asserted unconditionally. Restricted spectral forms and verified logical links
 to the unrestricted conjecture are stated separately. -/
 
@@ -34,7 +34,7 @@ private theorem hull_of_realizations (h : MOCIsTrue) {n : ℕ}
   rw [he, determinantValue_relative a b V (U * W) hV]
   exact h n a b _ (relative_unitary V _ hV (unitary_mul hU hW))
 
-/-- Atlas 001: actual complex normal summands and their characteristic roots.
+/-- Complex normal summands and their characteristic roots.
 The unrotated case is the existing intrinsic matrix formulation. -/
 def complexMatrices : Prop :=
   ∀ (n : ℕ) (A B U : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n → ℂ),
@@ -59,7 +59,7 @@ theorem moc_iff_complexMatrices : MOCIsTrue ↔ complexMatrices := by
     intro A B a b hA hB ha hb
     simpa using h n A B 1 a b hA hB isUnitary_one ha hb
 
-/-- Atlas 002 in orthonormal mode coordinates; repeated entries record the ranks
+/-- Normal spectra in orthonormal mode coordinates. Repeated entries record the ranks
 of their spectral projections. The two diagonalizing frames need not agree. -/
 def normalFrames : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (V W U : Matrix (Fin n) (Fin n) ℂ),
@@ -75,8 +75,8 @@ theorem moc_iff_normalFrames : MOCIsTrue ↔ normalFrames := by
     simpa [Holds, determinantValue] using
       h n a b 1 1 U isUnitary_one isUnitary_one hU
 
-/-- Atlas 006: arbitrary complex matrices supply root lists, not the determinant
-of the original, potentially nonnormal, matrix sum. -/
+/-- Use the characteristic roots of arbitrary complex matrices. The determinant
+is that of the sum of their diagonal representatives in unitary position. -/
 def nonnormalSpectralRepresentatives : Prop :=
   ∀ (n : ℕ) (A B U : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n → ℂ),
     A.charpoly.roots = (Finset.univ : Finset (Fin n)).val.map a →
@@ -93,7 +93,7 @@ theorem moc_iff_nonnormalSpectralRepresentatives : MOCIsTrue ↔ nonnormalSpectr
       simpa using roots_unitary_diagonalization s isUnitary_one
     exact h n (diagonal a) (diagonal b) U a b (hroots a) (hroots b) hU
 
-/-- Atlas 008 in a joint spectral frame. Each side is diagonal in its own
+/-- Two commuting normal tuples. Each side is diagonal in its own
 frame. The condition is a separate hull for each linear evaluation. -/
 def commutingTupleProjections : Prop :=
   ∀ (n k : ℕ) (a b : Fin n → Fin k → ℂ) (c : Fin k → ℂ)
@@ -107,7 +107,7 @@ theorem moc_iff_commutingTupleProjections : MOCIsTrue ↔ commutingTupleProjecti
   · intro h n a b U hU
     simpa using h n 1 (fun i _ => a i) (fun i _ => b i) (fun _ => 1) U hU
 
-/-- Atlas 009 uses normalized pencils; the invertible denominators can be
+/-- For normalized pencils the invertible denominators can be
 the identity. The roots are those of the normalized matrices. -/
 def normalizedPencils : Prop :=
   ∀ (n : ℕ) (A B C D U : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n → ℂ),
@@ -128,7 +128,7 @@ theorem moc_iff_normalizedPencils : MOCIsTrue ↔ normalizedPencils := by
       (by simpa using hA) (by simpa using hC) hU
       (by simpa using ha) (by simpa using hb)
 
-/-- Atlas 012: scalar realizations of matrices over any commutative ring.
+/-- Complex scalar realizations of matrices over any commutative ring.
 The complex hull does not live over the original coefficient ring. -/
 def commutativeRingMatrices : Prop :=
   ∀ (R : Type) [CommRing R], ∀ (e : R →+* ℂ) (n : ℕ)

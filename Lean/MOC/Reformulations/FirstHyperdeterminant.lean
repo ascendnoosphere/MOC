@@ -2,7 +2,7 @@ import MOC.StrongSupport
 import Mathlib.Data.Matrix.Notation
 import Mathlib.Tactic.NormNum
 
-/-! The intrinsic 2 × 2 × 2 specialization of atlas entry 023 is false.
+/-! A counterexample to the Cayley hyperdeterminant hull in format 2 × 2 × 2.
 The invariant here is Cayley's polynomial, in its two-slice discriminant
 normalization. The evaluated finite spectral layer is a different statement. -/
 

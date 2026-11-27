@@ -9,7 +9,7 @@ import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 The scalar equations of the order-four contact family with ordinary rays
-0, 7, 10, 18, and 22 in the archived cone enumeration. The mixed ray
+0, 7, 10, 18, and 22 of the order-four support-cost cone. The mixed ray
 has coefficient one. The scalar deformation stays in the region where
 the rational height is defined.
 -/

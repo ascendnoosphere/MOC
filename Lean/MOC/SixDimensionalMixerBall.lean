@@ -15,7 +15,7 @@ namespace MOC.SixDimensionalMixerBall
 
 noncomputable section
 
--- The archive path is recorded in the proof map.
+-- Integer numerator of the rational orthogonal center.
 private def centerNumerator : Matrix (Fin 6) (Fin 6) ℤ := !![
   863, 3348, (-1506), 984, 1266, 7320;
   (-2664), 1223, (-2700), (-2046), 6882, (-1716);

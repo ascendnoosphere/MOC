@@ -5,7 +5,7 @@ open Matrix
 
 namespace MOC.Reformulations
 
-/-- Atlas 005: the intrinsic restriction to unit-circle spectra. -/
+/-- The determinant hull for two spectra on the unit circle. -/
 theorem unitarySpectralHull {n : ℕ} (a b : Fin n → ℂ)
     (ha : ∀ i, Complex.normSq (a i) = 1) (hb : ∀ i, Complex.normSq (b i) = 1)
     (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) : Holds a b U := by
@@ -39,7 +39,7 @@ private theorem unitarySpectrum {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ)
   simpa only [Matrix.diagonal_apply_eq, Matrix.one_apply_eq, Function.comp_apply, Pi.star_apply,
     Complex.star_def, ← Complex.normSq_eq_conj_mul_self, Complex.ofReal_re, Complex.one_re] using hi
 
-/-- Atlas 005 for actual unitary inputs and any relative unitary position. -/
+/-- The determinant hull for unitary summands at any relative unitary position. -/
 theorem unitaryMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)
     (a b : Fin n → ℂ) (hA : IsUnitary A) (hB : IsUnitary B) (hU : IsUnitary U)
     (ha : A.charpoly.roots = (Finset.univ : Finset (Fin n)).val.map a)

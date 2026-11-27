@@ -23,12 +23,12 @@ private theorem starMatrix_symmetric (o : κ) (t : κ → ℂ) (i j : κ) :
     rfl
   · by_cases hi : i = o
     · subst i
-      simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg hij.symm]
+      simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg (Ne.symm hij), if_neg hij]
     · by_cases hj : j = o
       · subst j
-        simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg hi]
+        simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg hi, if_neg (Ne.symm hi)]
       · simp only [starMatrix, Matrix.of_apply, if_neg hi, if_neg hj, if_neg hij,
-          if_neg hij.symm]
+          if_neg (Ne.symm hij)]
 
 private theorem starMatrix_row_sum (o : κ) (t : κ → ℂ) (i : κ) :
     ∑ j, starMatrix o t i j = 0 := by
@@ -40,7 +40,8 @@ private theorem starMatrix_row_sum (o : κ) (t : κ → ℂ) (i : κ) :
         ∑ j ∈ Finset.univ.erase o, -t j := by
       apply Finset.sum_congr rfl
       intro j hj
-      simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg (Finset.mem_erase.mp hj).1]
+      simp only [starMatrix, Matrix.of_apply, if_pos rfl,
+        if_neg (Finset.mem_erase.mp hj).1, if_true]
     rw [he, Finset.sum_neg_distrib]
     simp [starMatrix]
   · rw [Finset.sum_eq_single i]
@@ -83,7 +84,7 @@ private theorem star_product_one (o : κ) (t : κ → ℂ) :
   congr 1
   apply Finset.prod_congr rfl
   intro j hj
-  simp only [if_neg (Finset.mem_erase.mp hj).1]
+  simp only [if_neg (Finset.mem_erase.mp hj).1, if_true]
 
 private theorem star_product_swap (o : κ) (t : κ → ℂ) (i : κ) (hi : i ≠ o) :
     (∏ j, starMatrix o t (Equiv.swap o i j) j) =
@@ -104,7 +105,7 @@ private theorem star_product_swap (o : κ) (t : κ → ℂ) (i : κ) (hi : i ≠
     rw [Equiv.swap_apply_of_ne_of_ne hjo hji]
     simp [starMatrix, hjo]
   rw [ht]
-  simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg hi]
+  simp only [starMatrix, Matrix.of_apply, if_pos rfl, if_neg hi, if_neg (Ne.symm hi), if_true]
   ring
 
 private theorem signedEvaluation_starMatrix (g : Equiv.Perm κ → ℂ) (o : κ) (t : κ → ℂ) :

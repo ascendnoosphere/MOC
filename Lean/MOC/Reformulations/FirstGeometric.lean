@@ -11,7 +11,7 @@ open Matrix
 namespace MOC.Reformulations
 noncomputable section
 
-/-- Atlas 100: the determinant of the sum of affine linear parts is
+/-- The determinant of the sum of affine linear parts is
 insensitive to their translation parts. -/
 def affineLinearParts : Prop :=
   ∀ (n : ℕ) (f g : (Fin n → ℂ) →ᵃ[ℂ] (Fin n → ℂ))
@@ -65,7 +65,7 @@ theorem moc_iff_nonzeroSpectra : MOCIsTrue ↔ nonzeroSpectra := by
         ⟨i, Finset.mem_univ _, sub_eq_zero.mp he⟩))
     exact (holds_shift_iff a b hU t).mp (h n _ _ U hU ha hb)
 
-/-- Atlas 101 in spectral coordinates: an invertible normal projective lift
+/-- In spectral coordinates, an invertible normal projective lift
 has nonzero diagonal entries. Opposite shifts prove the exact equivalence
 without a limiting argument. -/
 theorem moc_iff_projectiveDiagonalLifts :
@@ -85,9 +85,9 @@ theorem moc_iff_projectiveDiagonalLifts :
     · rw [isUnit_iff_ne_zero, Matrix.det_diagonal]
       exact Finset.prod_ne_zero_iff.mpr fun i _ => hb i
 
-/-- Atlas 020 with the reference-column restriction stipulated in its
-equivalence paragraph. Unlike the full ratio family, this restriction
-allows an arbitrary list of nonzero ratios in the working space. -/
+/-- The spectrum of conjugation on the selected reference column. An
+invertible diagonal matrix realizes any nonzero ratio list on this
+subspace. -/
 def selectedConjugationSpectrum : Prop :=
   ∀ (n : ℕ) (a b : Fin n ⊕ Fin 1 → ℂ), (∀ i, a i ≠ 0) → (∀ i, b i ≠ 0) →
     ∀ (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
@@ -112,7 +112,7 @@ theorem moc_iff_selectedConjugationSpectrum : MOCIsTrue ↔ selectedConjugationS
       | inr i => exact one_ne_zero
     simpa using h n _ _ ha' hb' U hU
 
-/-- Atlas 127: on one complex line the scalar determinant comparison is
+/-- On one complex line the scalar determinant comparison is
 unconditional. No conclusion about unrestricted orders follows from it. -/
 theorem lineFiberHull (a b : Fin 1 → ℂ) (U : Matrix (Fin 1) (Fin 1) ℂ)
     (hU : IsUnitary U) : Holds a b U :=

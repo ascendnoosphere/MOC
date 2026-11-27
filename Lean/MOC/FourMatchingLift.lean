@@ -240,7 +240,8 @@ private theorem realSecantExample_kernel_squares (v : Fin 14 → ℝ)
   have h₉ := hrow 9
   have h₁₀ := hrow 10
   have h₁₂ := hrow 12
-  norm_num [fourMatchingGradient, realSecantExample] at h₁ h₂ h₃ h₄ h₅ h₆ h₈ h₉ h₁₀ h₁₂
+  simp only [fourMatchingGradient, realSecantExample, Matrix.cons_val,
+    Matrix.cons_val_zero', Matrix.cons_val_succ'] at h₁ h₂ h₃ h₄ h₅ h₆ h₈ h₉ h₁₀ h₁₂
   ring_nf at h₁ h₂ h₃ h₄ h₅ h₆ h₈ h₉ h₁₀ h₁₂
   have h9 : v 9 = 0 := by linarith only [h₈]
   have h11 : v 11 = 0 := by linarith only [h₄, h9]
@@ -250,7 +251,9 @@ private theorem realSecantExample_kernel_squares (v : Fin 14 → ℝ)
   have h5 : v 5 = -v 0 := by linarith only [h₁, h₆, h10, h12]
   have h27 : v 2 = v 0 - v 7 := by linarith only [h₅, h₆, h₁₀, h3, h9]
   have h4 : v 4 = -4 * v 8 := by linarith only [h₉, h3, h5, h27, h9, h10, h11, h12]
-  norm_num [fourMatchingGradient, h3, h4, h5, h27, h9, h10, h11, h12] <;> ring
+  simp only [fourMatchingGradient, Matrix.cons_val, Matrix.cons_val_zero',
+    Matrix.cons_val_succ', h3, h4, h5, h27, h9, h10, h11, h12]
+  ring
 
 /-- A sum of two real matching profiles with zero gradient can fail the
 real-lift equations. The gradient at index 9 of any proposed imaginary
@@ -264,9 +267,11 @@ theorem exists_real_matching_secant_without_complex_lift :
   let q : Fin 14 → ℝ := ![3, 1, 0, 0, -4, -3, -1, 0, 0, 0, 0, 0, 0, 0]
   refine ⟨p, q, ?_, ?_, ?_⟩
   · intro i
-    fin_cases i <;> norm_num [fourMatchingGradient, p]
+    fin_cases i <;> simp only [fourMatchingGradient, p, Matrix.cons_val,
+      Matrix.cons_val_zero', Matrix.cons_val_succ'] <;> norm_num1
   · intro i
-    fin_cases i <;> norm_num [fourMatchingGradient, q]
+    fin_cases i <;> simp only [fourMatchingGradient, q, Matrix.cons_val,
+      Matrix.cons_val_zero', Matrix.cons_val_succ'] <;> norm_num1
   · have hsum : (fun j => p j + q j) = realSecantExample := by
       funext i
       fin_cases i <;> norm_num [p, q, realSecantExample]
@@ -276,7 +281,9 @@ theorem exists_real_matching_secant_without_complex_lift :
       simpa only [← hsum] using hv
     obtain ⟨hk, hG⟩ := (fourMatchingGradient_lift_iff realSecantExample v).mp hv'
     have he : fourMatchingGradient realSecantExample 9 = 13 := by
-      norm_num [fourMatchingGradient, realSecantExample]
+      simp only [fourMatchingGradient, realSecantExample, Matrix.cons_val,
+        Matrix.cons_val_zero', Matrix.cons_val_succ']
+      norm_num1
     rw [hG, realSecantExample_kernel_squares v hk] at he
     nlinarith [sq_nonneg (v 0), sq_nonneg (v 8)]
 

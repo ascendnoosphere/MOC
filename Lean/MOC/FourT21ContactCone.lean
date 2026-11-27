@@ -13,7 +13,7 @@ open BigOperators
 
 noncomputable section
 
-/-- The six contacts of paper case T21, called T20 in the archive. -/
+/-- The six matching permutations of contact pattern T21. -/
 def fourT21ContactIndices : Finset (Fin 24) := {0, 3, 5, 9, 11, 12}
 
 /-- The contact rectangle 3, 5, 9, 11 forces zero height in case T21. -/

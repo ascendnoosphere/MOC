@@ -9,13 +9,13 @@ open scoped ComplexOrder
 namespace MOC.Reformulations
 noncomputable section
 
-/-- Atlas 003: real spectra give the Hermitian determinant hull, without assuming MOC. -/
+/-- The Hermitian determinant hull for real spectra. -/
 theorem hermitianSpectralHull {n : ℕ} (a b : Fin n → ℝ)
     (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
     Holds (fun i => (a i : ℂ)) (fun i => (b i : ℂ)) U :=
   holds_of_real_spectra a b U hU
 
-/-- Atlas 004: the positive definite restriction of the real-spectral theorem. -/
+/-- The determinant hull for two positive spectra. -/
 theorem positiveDefiniteSpectralHull {n : ℕ} (a b : Fin n → ℝ)
     (_ha : ∀ i, 0 < a i) (_hb : ∀ i, 0 < b i)
     (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
@@ -56,7 +56,7 @@ theorem hermitianMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)
   rw [hv]
   exact holds_of_real_spectra hA.eigenvalues hB.eigenvalues _ (relative_unitary V _ hV hUW)
 
-/-- Atlas 004 for actual positive definite inputs. -/
+/-- The determinant hull for two positive definite matrices. -/
 theorem positiveDefiniteMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)
     (hA : A.PosDef) (hB : B.PosDef) (hU : IsUnitary U) :
     (A + U * B * Uᴴ).det ∈ convexHull ℝ
@@ -65,8 +65,8 @@ theorem positiveDefiniteMatrixHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ
         (fun i => (hB.isHermitian.eigenvalues i : ℂ)))) :=
   hermitianMatrixHull A B U hA.isHermitian hB.isHermitian hU
 
-/-- Atlas 024: the inputs are actual rectangular Gram matrices. This is an
-unconditional theorem, not an equivalence to the complex conjecture. -/
+/-- The determinant hull for Gram matrices of rectangular maps.
+The Hermitian theorem applies to their squared singular values. -/
 theorem gramMatrixHull {n p q : ℕ}
     (X : Matrix (Fin p) (Fin n) ℂ) (Y : Matrix (Fin q) (Fin n) ℂ)
     (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
@@ -77,8 +77,8 @@ theorem gramMatrixHull {n p q : ℕ}
   hermitianMatrixHull _ _ U (Matrix.isHermitian_transpose_mul_self X)
     (Matrix.isHermitian_transpose_mul_self Y) hU
 
-/-- Atlas 007: the actual positive semidefinite square roots of rectangular
-Gram matrices, not a determinant of the original rectangular maps. -/
+/-- The determinant hull for the positive semidefinite square roots of
+rectangular Gram matrices. -/
 theorem rectangularAbsoluteHull {n p q : ℕ}
     (X : Matrix (Fin p) (Fin n) ℂ) (Y : Matrix (Fin q) (Fin n) ℂ)
     (U : Matrix (Fin n) (Fin n) ℂ) (hU : IsUnitary U) :
@@ -93,7 +93,7 @@ theorem rectangularAbsoluteHull {n p q : ℕ}
     (Matrix.posSemidef_conjTranspose_mul_self X).posSemidef_sqrt.isHermitian
     (Matrix.posSemidef_conjTranspose_mul_self Y).posSemidef_sqrt.isHermitian hU
 
-/-- Atlas 011 in complex spectral coordinates. Skew-symmetric real matrices
+/-- The hull for purely imaginary spectra. Skew-symmetric real matrices
 have purely imaginary complex spectra; the direction comparison holds for
 arbitrary unitary mixing of those lists, without a Pfaffian strengthening. -/
 theorem imaginarySpectralHull {n : ℕ} (a b : Fin n → ℝ)

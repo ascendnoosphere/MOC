@@ -7,30 +7,28 @@ determinant of their sum in the real convex hull of all products
 obtained by matching their eigenvalues. The real coefficients in a
 convex combination are nonnegative and sum to one.
 
-The research note *An arbitrary fifth eigenvalue* gives two separate
-targets. One target fixes nine eigenvalues in order five and leaves the
-last one free. The other adds one scalar to an arbitrary diagonal
-partner of a Hermitian matrix.
-
-The one-entry route to the full conjecture requires a law for every
-choice of the fixed entries and every mixer. The exterior shift theorem
-gives pointwise inclusion for a fixed pair of lists outside a disk in
-the shift parameter.
-[Exact one-entry route at a fixed order](../Lean/MOC/ProofRoutes.lean#L113) · [Exterior radius](../Lean/MOC/HermitianExteriorShift.lean#L1186)
+The one-entry route requires one probability law for every value of
+a free eigenvalue. The law may depend on the fixed entries and the
+unitary matrix that changes the eigenbasis. The exterior shift route
+adds a common scalar to all the entries of one list and gives
+determinant inclusion for shifts outside a disk.
+[Exact one-entry route at a fixed order](../Lean/MOC/ProofRoutes.lean#L113) · [Exterior radius](../Lean/MOC/HermitianExteriorShift.lean#L1188)
 
 ## One law for a free eigenvalue
 
 ~~~mermaid
 flowchart BT
-    C["One law for every free entry"]
-    Y["Joint hull of two complex coefficients"]
+    C["One law for every free entry and every complex first list"]
+    Y["Joint hull of two coefficients for every complex first list"]
+    H["Joint hull with a real first list<br/>Open"]
     S["One real pivot gives positive coefficient costs"]
     I["Interlacing injection law"]
-    D["Exact facet and neighborhood certificates"]
+    D["Joint hull for every mixer at the specified order-five lists<br/>Open"]
     C <-->|iff| Y
     I --> S
-    S --> D
-    D -.->|unreplayed certificate| Y
+    Y -->|"Restrict the first list to real values"| H
+    S -.->|"open comparison for complex free entries"| H
+    H -->|"Specialize the lists"| D
 ~~~
 
 Let the first list be $h=(-2,-1,0,1,2)$, and let the first four
@@ -43,18 +41,19 @@ assignments when the joint hull test holds.
 
 Suppose the conjecture holds in smaller orders. If the mixer column
 for the free eigenvalue meets at most two distinct values in the
-other spectrum, the reciprocal compression is normal at each
-regular parameter. Continuity covers the exceptional values. One
-nonnegative law on at most five permutations then works for every
-value of the free eigenvalue. Exact rational checks included singular
-and repeated free values. The new Lean source awaits verification.
+other spectrum, the reciprocal compression is normal whenever the
+free entry is distinct from the other partner entries and cancels no
+eigenvalue in the first list. Continuity covers the exceptional
+values. One probability law on at most five permutations then works
+for every value of the free eigenvalue.
 [Smaller-order reduction](../Lean/MOC/GroupedEigenvalueMoments.lean#L40) · [Common law](../Lean/MOC/GroupedEigenvalueMoments.lean#L88)
 
-For two real lists of lengths $n+1$ and $n$, suppose each shorter
-entry lies between consecutive entries of the longer list. The
-new proof gives a convex combination of injection products in the
-space of functions of the entire complex partner list. Thus the
-injection weights are fixed before any partner entry is chosen.
+Let $a$ and $\alpha$ be real lists of lengths $n+1$ and $n$. Suppose
+$a_j\le\alpha_j\le a_{j+1}$ for each $j$. For every complex list $b$
+of length $n$, the product $\prod_j(\alpha_j+b_j)$ is a convex
+combination of the products $\prod_j(a_{f(j)}+b_j)$ over injections
+$f$ from the shorter index set to the longer index set. The weights
+work for every $b$.
 The result includes equal consecutive endpoints. This is the
 interlacing step used to lift a lower-order law at a real pivot.
 [Uniform interlacing law](../Lean/MOC/InterlacingCommonLaw.lean#L108) · [Scalar real-pivot case](../Lean/MOC/HermitianByNormalFourProof.lean#L104)
@@ -77,6 +76,9 @@ directional bound. The joint coefficient comparison for arbitrary
 complex free values remains open.
 [Real-pivot bound with prescribed weights](../Lean/MOC/HermitianNormalPencil.lean#L171)
 
+The real-pivot branch has a real first list. Its open joint hull
+comparison is a restricted case of the general one-entry route.
+
 When two groups are allowed positive mass, evaluation at the negative
 of one Hermitian value leaves only the other group. If both such real
 evaluations belong to their prescribed scaled group hulls, the two
@@ -87,16 +89,16 @@ eigenvalues and the smaller-order Hermitian–normal inclusion holds.
 [Two real evaluations](../Lean/MOC/HermitianNormalPencil.lean#L309) ·
 [Two supported Hermitian values](../Lean/MOC/SpectralSupportDeletion.lean#L252)
 
-The joint hull claim for the displayed center still needs the exact
-facet replay. The note gives the size of its certificate as 201
-facets, 404 ridges, and 2,663 positive-cost summands. The radius
-$10^{-2000}$ also needs the reversible-direction and coordinate
-certificate for the moving spectra. The source for these two
-finite certificates was unavailable in the workspace.
+The joint hull at the displayed order-five lists for every unitary
+mixer is open in Lean. A neighborhood result also needs a bound on
+how the joint hull changes when the lists and mixer change.
 
 ## Exterior shifts
 
 ### Generic assignment sums
+
+The Lean source for the generic and uniform assignment theorems
+awaits a build check.
 
 Fix any first list $a$ with pairwise distinct complex entries. In every
 finite order $n$, there is an open dense set of partner lists
@@ -104,7 +106,7 @@ $b\in\mathbb C^n$ with the following property. For each such $b$ there
 is one radius $R(a,b)>0$. For every complex shift $|z|>R(a,b)$ and
 every unitary mixer, the conjecture holds for $(a_i+z)_i$ and $b$.
 The set of partners is open and dense with $a$ held fixed.
-[Generic partners and uniform exterior radius](../Lean/MOC/GenericExteriorShift.lean#L155)
+[Open dense partner set](../Lean/MOC/GenericExteriorShift.lean#L97) · [Uniform exterior radius](../Lean/MOC/GenericExteriorShift.lean#L155)
 
 Fix two complex spectral lists $a,b$ of order $n$. For each permutation
 $\sigma$, let $s_\sigma=\sum_j a_{\sigma(j)}b_j$. Suppose these sums
@@ -211,7 +213,7 @@ Join two labels when their projected values differ by less than $g$.
 Each connected group lies on one affine line. Distinct groups have
 projected separation at least $g$. This construction also covers
 repeated spectral values.
-[Positive gap](../Lean/MOC/HermitianExteriorShift.lean#L834) · [Altitude bound](../Lean/MOC/HermitianExteriorShift.lean#L1041) · [Collinear groups](../Lean/MOC/HermitianExteriorShift.lean#L759)
+[Positive gap](../Lean/MOC/HermitianExteriorShift.lean#L834) · [Altitude bound](../Lean/MOC/HermitianExteriorShift.lean#L1043) · [Collinear groups](../Lean/MOC/HermitianExteriorShift.lean#L759)
 
 Diagonalize the Hermitian summand within each group. The affine-line
 theorem places each block determinant in its matching hull. Products
@@ -221,12 +223,10 @@ the determinant inclusion for every unitary mixer. The exact support
 inequality follows if $|z|>2L+8L^2/g$. Consequently, each fixed pair of
 spectra where one spectrum is real has an exterior disk bound that
 works for every mixer.
-[Affine-line theorem](../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../Lean/MOC/HermitianExteriorShift.lean#L985) · [Explicit radius](../Lean/MOC/HermitianExteriorShift.lean#L1058) · [Uniform radius](../Lean/MOC/HermitianExteriorShift.lean#L1186)
+[Affine-line theorem](../Lean/MOC/DruryHermitianPencil.lean#L385) · [Exterior inclusion](../Lean/MOC/HermitianExteriorShift.lean#L987) · [Explicit radius](../Lean/MOC/HermitianExteriorShift.lean#L1060) · [Uniform radius](../Lean/MOC/HermitianExteriorShift.lean#L1188)
 
 For the real spectrum $(-2,-1,0,1,2)$ and the partner spectrum
 $(0,1,-1,i,-i)$ before the shift, take $M=2$, $L=3$, and $g=1/(2\sqrt2)$.
-An exact check covers all ordered triangles. The determinant inclusion
-holds for every unitary mixer when $|z|\ge 123$.
-[Order-five arithmetic](../Lean/MOC/HermitianExteriorShift.lean#L1088) · [Order-five inclusion](../Lean/MOC/HermitianExteriorShift.lean#L1166)
-
-The Lean module compiles with Lean 4.19.
+The triangle gap applies to all ordered triangles in the partner list.
+The determinant inclusion holds for every unitary mixer when $|z|\ge 123$.
+[Order-five arithmetic](../Lean/MOC/HermitianExteriorShift.lean#L1090) · [Order-five inclusion](../Lean/MOC/HermitianExteriorShift.lean#L1168)

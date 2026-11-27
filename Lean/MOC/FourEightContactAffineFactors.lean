@@ -200,13 +200,12 @@ theorem fourEightContactAffine_sos_of_budget {a b c d e : ℝ}
         m ^ 2 + c * x ^ 2 + d * y ^ 2 + e * z ^ 2 - x * (m - y - z) := by
       dsimp only [remainder]
       field_simp [hd.ne', he.ne'] <;> ring
-    simp only [w, f, Fin.sum_univ_succ, Fin.sum_univ_zero, Matrix.cons_val,
+    simp only [w, f, Fin.sum_univ_succ, Fin.sum_univ_zero, Matrix.cons_val_zero, Matrix.cons_val_succ,
       Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, one_mul, add_zero,
-      one_div, div_eq_mul_inv]
+      one_div, div_eq_mul_inv, ray_square]
     have hcomp := hsq (mixed p) (ray 23 p) (ray 30 p) (ray 31 p)
     simp only [ray_square, div_eq_mul_inv] at hcomp
-    linarith only [hmixed, hcomp, congrArg (fun x => a * x) (ray_square 7 p),
-      congrArg (fun x => b * x) (ray_square 13 p)]
+    linear_combination hmixed - hcomp
   change IsRealMatchingSOS (fun p =>
     mixed p + a * ray 7 p + b * ray 13 p + c * ray 23 p +
       d * ray 30 p + e * ray 31 p)

@@ -96,7 +96,7 @@ private theorem exists_larger_affine_boundary
     refine ⟨fun k hk => (mem_affineBoundaryCoordinates y.val k).mpr (hold k hk), ?_⟩
     intro he
     have hiy := (mem_affineBoundaryCoordinates y.val i).mpr (him.symm.trans hy)
-    exact (Finset.mem_compl.mp hi) (he.symm ▸ hiy)
+    exact (Finset.mem_compl.mp hi) ((congrArg (fun s : Finset σ => i ∈ s) he).mpr hiy)
 
 /-- On an irreducible complex affine variety of dimension `d`, each
 nonempty polynomial level in the closed right half-planes contains a point

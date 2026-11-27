@@ -18,8 +18,8 @@ flowchart TD
     Ordinary["Both absolute-sum bounds hold"]
     Mixed["One absolute-sum bound fails"]
     Source["Actual inverse quadratic has four complex squares"]
-    Prism["No strictly negative five-dimensional prism compression"]
-    Threshold["Mixed budget at or below the strong threshold"]
+    Prism["No five-dimensional subspace with a strictly negative form"]
+    Threshold["Mixed coefficient at or below its bound"]
     Squares["Real matching sum of squares"]
     Contacts --> Chart
     Contacts --> Source
@@ -34,31 +34,34 @@ flowchart TD
 
 The ten coordinates give three rectangle groups and two cycle groups.
 Each rectangle has values $\beta_i\pm p_i\pm q_i$, so nonnegativity
-gives $\beta_i\ge |p_i|+|q_i|$. The two cycle baselines add to
-$\sum_i\beta_i$. The ordinary certificate allocates this total
-between the two groups if each baseline bounds the sum of absolute
-sign coordinates in that group.
-[Chart](../Lean/MOC/FourKleinMatchingChart.lean#L74) · [Ordinary certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L79)
+gives $\beta_i\ge |p_i|+|q_i|$. The constant parts of the two cycle
+groups add to $\sum_i\beta_i$. The ordinary certificate allocates this
+total between the groups if each constant part bounds the sum of the
+absolute values of the other coordinates in that group.
+The chart reconstruction checks an integer identity on the coordinate
+basis. Linearity extends the identity to all real matching evaluations.
+Its correction terms vanish at the four prescribed contacts.
+[Chart](../Lean/MOC/FourKleinMatchingChart.lean#L176) · [Ordinary certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L79)
 
-The spectral source gives a quadratic form in nine real matrix entries.
-The signed matching polynomial equals the prism in the cofactor entries.
+The spectral data give a quadratic form in nine real matrix entries.
+The signed matching polynomial equals this form in the cofactor entries.
 For an invertible matrix, the determinant factor converts these
 cofactors to inverse coordinates. A shift by a real scalar matrix
 extends the identity across singular coordinates. In the actual
 spectral form, the real part of four complex linear squares represents
-the prism. Every linear map from a real space of dimension five has a
-nonzero vector that sets the four imaginary parts to zero.
-[Cofactors](../Lean/MOC/FourKleinInversePencil.lean#L130) · [Extension](../Lean/MOC/FourKleinSpectralSquares.lean#L181) · [Four-square obstruction](../Lean/MOC/FourKleinNegativeCompression.lean#L135)
+the form. The four imaginary parts give a linear map to $\mathbb R^4$.
+On a five-dimensional real subspace, that map has a nonzero kernel.
+[Cofactors](../Lean/MOC/FourKleinInversePencil.lean#L130) · [Extension](../Lean/MOC/FourKleinSpectralSquares.lean#L181) · [Four-square obstruction](../Lean/MOC/FourKleinNegativeCompression.lean#L136)
 
-When one absolute-sum bound fails, coordinate changes put the cost in
-one mixed cap. Write its critical budgets as $a^2,b^2,c^2$ with
-$a\ge b,c\ge0$, and let $t>0$ be its mixed budget. If
+When one absolute-sum bound fails, coordinate changes reduce the cost
+to one mixed case. Write its three square coefficients as $a^2,b^2,c^2$
+with $a\ge b,c\ge0$, and let $t>0$ be the mixed coefficient. If
 $t>a(b+c)-bc$, an explicit plane has a strictly negative form.
 Completion of squares joins this plane to the three diagonal
-directions of the prism. The argument includes the case $b=c=0$.
-[Negative plane](../Lean/MOC/FourKleinNegativeCompression.lean#L52) · [Five-dimensional compression](../Lean/MOC/FourKleinPrism.lean#L61)
+directions of the form. The argument includes the case $b=c=0$.
+[Negative plane](../Lean/MOC/FourKleinNegativeCompression.lean#L53) · [Five-dimensional compression](../Lean/MOC/FourKleinPrism.lean#L61)
 
 The absence of this compression gives $t\le a(b+c)-bc$. A convex
 combination of a diagonal Gram matrix and the rank-one Gram matrix of
 $(a,-b,-c)$ gives the mixed certificate. The formula allows equality at
-the threshold. [Mixed certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L152) · [All chart cases](../Lean/MOC/FourKleinChartSymmetry.lean#L339)
+the threshold. [Mixed certificate](../Lean/MOC/FourKleinMatchingSquares.lean#L190) · [All chart cases](../Lean/MOC/FourKleinChartSymmetry.lean#L455)

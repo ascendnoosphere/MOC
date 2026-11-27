@@ -41,7 +41,9 @@ private theorem unitaryOfDiagonal_mem_coordinateTorus (U : Matrix.unitaryGroup �
     simp only [Matrix.diagonal_apply_eq, Matrix.one_apply_eq, Complex.star_def,
       Complex.mul_conj, Complex.ofReal_re, Complex.one_re, Complex.normSq_eq_norm_sq] at he
     exact (sq_eq_sq₀ (norm_nonneg _) zero_le_one).mp (by simpa only [one_pow] using he)
-  let t (i : ι) : Circle := ⟨d i, Metric.mem_sphere_zero_iff_norm.mpr (hnorm i)⟩
+  let t (i : ι) : Circle := ⟨d i, by
+    change d i ∈ Metric.sphere 0 1
+    simpa only [Metric.mem_sphere, dist_zero_right] using hnorm i⟩
   exact ⟨t, Subtype.ext h.symm⟩
 
 private def flagOrbitMap (b : ι → ℂ) (U : Matrix.unitaryGroup ι ℂ) : spectralFlagOrbit b :=
@@ -62,6 +64,8 @@ private theorem flagOrbitMap_eq_iff (b : ι → ℂ) (hb : Function.Injective b)
     let W := V⁻¹ * U
     have hW : (flagOrbitMap b W).val = diagonal b := by
       have he := congrArg (fun X : spectralFlagOrbit b => V.valᴴ * X.val * V.val) h
+      change V.valᴴ * (flagOrbitMap b V).val * V.val =
+        V.valᴴ * (flagOrbitMap b U).val * V.val at he
       have hVV : V.valᴴ * V.val = 1 := Matrix.mem_unitaryGroup_iff'.mp V.property
       have hleft : V.valᴴ * (flagOrbitMap b V).val * V.val = diagonal b := by
         change V.valᴴ * (V.val * diagonal b * V.valᴴ) * V.val = _
@@ -88,7 +92,7 @@ private theorem flagOrbitMap_eq_iff (b : ι → ℂ) (hb : Function.Injective b)
       change (W.val * diagonal b) i j = (diagonal b * W.val) i j at hentry
       rw [Matrix.mul_diagonal, Matrix.diagonal_mul] at hentry
       have hzero : W.val i j * (b j - b i) = 0 := by linear_combination hentry
-      exact (mul_eq_zero.mp hzero).resolve_right (sub_ne_zero.mpr (hb.ne hne.symm))
+      exact (mul_eq_zero.mp hzero).resolve_right (sub_ne_zero.mpr (hb.ne (Ne.symm hne)))
   · rintro ⟨t, ht⟩
     have hU : V * coordinateTorusEmbedding t = U := by
       rw [ht]

@@ -35,7 +35,7 @@ theorem quadraticPencil_factor (q : QuadraticForm ℝ E) (e : E) (he : q e = 1)
   unfold quadraticSpectralVariance quadraticSpectralMean at *
   linear_combination h
 
-/-- Atlas 044 in degree two. With the actual roots (mean ± square root of
+/-- The degree-two hyperbolic polynomial bound. With roots (mean ± square root of
 the variance), the two matching products bound the actual quadratic
 determinant of the sum. This uses no matrix conjecture or lifted labels. -/
 theorem hyperbolicQuadratic_matching_bounds (q : QuadraticForm ℝ E) (e x y : E)

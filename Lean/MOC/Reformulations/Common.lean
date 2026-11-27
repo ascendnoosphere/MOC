@@ -2,7 +2,7 @@ import MOC.Claim
 
 namespace MOC.Reformulations
 
-/-- The atlas's common labelled finite layer. The mode index lets the evaluator
+/-- An evaluated comparison for finite labelled samples. The mode index lets the evaluator
 distinguish repeated labels. This does not assert the native geometric or
 operator statement from which the samples were chosen. -/
 def LabelledSpectralForm (Sample : ℕ → Type) : Prop :=

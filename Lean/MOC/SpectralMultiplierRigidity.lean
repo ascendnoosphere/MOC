@@ -36,7 +36,7 @@ private theorem matchingProduct_update_add_one (a b : ι → ℂ)
       ring
     | inr i =>
       simp only [a', b', reduceCtorEq, if_false, add_zero, Sum.inr.injEq, f, j,
-        Sum.elim_inr, eq_comm]
+        Sum.elim_inr, id_eq, eq_comm]
       ring
   have hp : (∏ l ∈ Finset.univ.erase j, (f l + if l = j then 1 else 0)) =
       ∏ l ∈ Finset.univ.erase j, f l := by
@@ -69,15 +69,15 @@ private theorem real_signed_coordinate_coefficient (a b : ι → ℂ) (U : Matri
 
 /-- Cofactor marginal of the signed law minus an active matching law. -/
 def spectralMultiplierStress (a b : ι → ℂ) (U : Matrix ι ι ℂ) (η : ℂ)
-    (λ : Equiv.Perm ι → ℝ) (i j : ι) : ℂ :=
+    (activeWeight : Equiv.Perm ι → ℝ) (i j : ι) : ℂ :=
   ∑ σ : Equiv.Perm ι, if σ j = i then
-    η * ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+    η * ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
       matchingCoordinateCoefficient a b σ (.inr j) else 0
 
 private theorem sum_spectralMultiplierStress_row (a b : ι → ℂ) (U : Matrix ι ι ℂ)
-    (η : ℂ) (λ : Equiv.Perm ι → ℝ) (i : ι) :
-    ∑ j, spectralMultiplierStress a b U η λ i j =
-      ∑ σ : Equiv.Perm ι, η * ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+    (η : ℂ) (activeWeight : Equiv.Perm ι → ℝ) (i : ι) :
+    ∑ j, spectralMultiplierStress a b U η activeWeight i j =
+      ∑ σ : Equiv.Perm ι, η * ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
         matchingCoordinateCoefficient a b σ (.inl i) := by
   unfold spectralMultiplierStress
   rw [Finset.sum_comm]
@@ -93,9 +93,9 @@ private theorem sum_spectralMultiplierStress_row (a b : ι → ℂ) (U : Matrix 
     matchingCoordinateCoefficient]
 
 private theorem sum_spectralMultiplierStress_col (a b : ι → ℂ) (U : Matrix ι ι ℂ)
-    (η : ℂ) (λ : Equiv.Perm ι → ℝ) (j : ι) :
-    ∑ i, spectralMultiplierStress a b U η λ i j =
-      ∑ σ : Equiv.Perm ι, η * ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+    (η : ℂ) (activeWeight : Equiv.Perm ι → ℝ) (j : ι) :
+    ∑ i, spectralMultiplierStress a b U η activeWeight i j =
+      ∑ σ : Equiv.Perm ι, η * ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
         matchingCoordinateCoefficient a b σ (.inr j) := by
   unfold spectralMultiplierStress
   rw [Finset.sum_comm]
@@ -104,11 +104,11 @@ private theorem sum_spectralMultiplierStress_col (a b : ι → ℂ) (U : Matrix 
   simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
 
 private theorem stress_sum_eq_coordinate_balance (a b : ι → ℂ) (U : Matrix ι ι ℂ)
-    (hU : IsUnitary U) (η : ℂ) (λ : Equiv.Perm ι → ℝ) (k : ι ⊕ ι) :
-    (∑ σ : Equiv.Perm ι, η * ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+    (hU : IsUnitary U) (η : ℂ) (activeWeight : Equiv.Perm ι → ℝ) (k : ι ⊕ ι) :
+    (∑ σ : Equiv.Perm ι, η * ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
       matchingCoordinateCoefficient a b σ k) =
     η * (determinantCoordinateCoefficient a b U k -
-      ∑ σ : Equiv.Perm ι, (λ σ : ℂ) * matchingCoordinateCoefficient a b σ k) := by
+      ∑ σ : Equiv.Perm ι, (activeWeight σ : ℂ) * matchingCoordinateCoefficient a b σ k) := by
   simp only [Complex.ofReal_sub, mul_assoc η, sub_mul, ← Finset.mul_sum,
     Finset.sum_sub_distrib, real_signed_coordinate_coefficient a b U hU k]
 
@@ -116,20 +116,20 @@ private theorem stress_sum_eq_coordinate_balance (a b : ι → ℂ) (U : Matrix 
 zero. The row and column equations use the spectral multiplier. The entry
 equation uses the same mixer's directional maximum. -/
 theorem spectralMultiplierStress_equations (a b : ι → ℂ) (U : Matrix ι ι ℂ)
-    (hU : IsUnitary U) (η : ℂ) (g H : ℝ) (λ : Equiv.Perm ι → ℝ)
-    (hactive : ∀ σ, λ σ ≠ 0 → (η * matchingProduct a b σ).re = H)
+    (hU : IsUnitary U) (η : ℂ) (g H : ℝ) (activeWeight : Equiv.Perm ι → ℝ)
+    (hactive : ∀ σ, activeWeight σ ≠ 0 → (η * matchingProduct a b σ).re = H)
     (hmax : ∀ V : Matrix ι ι ℂ, IsUnitary V →
       (η * determinantValue a b V).re ≤ (η * determinantValue a b U).re)
     (hcoord : ∀ k : ι ⊕ ι, η * (determinantCoordinateCoefficient a b U k -
-      ∑ σ : Equiv.Perm ι, (λ σ : ℂ) * matchingCoordinateCoefficient a b σ k) =
+      ∑ σ : Equiv.Perm ι, (activeWeight σ : ℂ) * matchingCoordinateCoefficient a b σ k) =
       (((Fintype.card ι : ℝ) * g : ℝ) : ℂ) * conj (Sum.elim a b k)) :
-    (∀ i, (∑ j, spectralMultiplierStress a b U η λ i j) =
+    (∀ i, (∑ j, spectralMultiplierStress a b U η activeWeight i j) =
       (((Fintype.card ι : ℝ) * g : ℝ) : ℂ) * conj (a i)) ∧
-    (∀ j, (∑ i, spectralMultiplierStress a b U η λ i j) =
+    (∀ j, (∑ i, spectralMultiplierStress a b U η activeWeight i j) =
       (((Fintype.card ι : ℝ) * g : ℝ) : ℂ) * conj (b j)) ∧
-    (∀ i j, ((a i + b j) * spectralMultiplierStress a b U η λ i j).re =
+    (∀ i j, ((a i + b j) * spectralMultiplierStress a b U η activeWeight i j).re =
       Complex.normSq (U i j) * (η * determinantValue a b U).re -
-      H * (∑ σ : Equiv.Perm ι, if σ j = i then λ σ else 0)) := by
+      H * (∑ σ : Equiv.Perm ι, if σ j = i then activeWeight σ else 0)) := by
   refine ⟨?_, ?_, ?_⟩
   · intro i
     rw [sum_spectralMultiplierStress_row, stress_sum_eq_coordinate_balance a b U hU]
@@ -145,20 +145,20 @@ theorem spectralMultiplierStress_equations (a b : ι → ℂ) (U : Matrix ι ι 
       rw [← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ j), hσ]
     have hterm (σ : Equiv.Perm ι) :
         ((a i + b j) * (if σ j = i then
-          η * ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+          η * ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
             matchingCoordinateCoefficient a b σ (.inr j) else 0)).re =
         (if σ j = i then realSignedWeight U σ * (η * matchingProduct a b σ).re else 0) -
-        H * (if σ j = i then λ σ else 0) := by
+        H * (if σ j = i then activeWeight σ else 0) := by
       by_cases hσ : σ j = i
       · simp only [if_pos hσ]
-        rw [show (a i + b j) * (η * ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+        rw [show (a i + b j) * (η * ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
             matchingCoordinateCoefficient a b σ (.inr j)) =
-          ((realSignedWeight U σ - λ σ : ℝ) : ℂ) *
+          ((realSignedWeight U σ - activeWeight σ : ℝ) : ℂ) *
             (η * ((a i + b j) * matchingCoordinateCoefficient a b σ (.inr j))) by ring,
           he σ hσ, Complex.re_ofReal_mul]
-        by_cases hλ : λ σ = 0
-        · simp only [hλ, sub_zero, mul_zero]
-        · rw [hactive σ hλ]
+        by_cases hActiveWeight : activeWeight σ = 0
+        · simp only [hActiveWeight, sub_zero, mul_zero]
+        · rw [hactive σ hActiveWeight]
           ring
       · simp only [if_neg hσ, mul_zero, Complex.zero_re, sub_zero]
     unfold spectralMultiplierStress
@@ -213,7 +213,7 @@ unitary stationarity. The active matching law gives the same matrix in
 all three stress equations. -/
 theorem exists_spectralMultiplierStress_of_not_holds [Nonempty ι]
     (a₀ b₀ : ι → ℂ) (U₀ : Matrix ι ι ℂ) (hU₀ : IsUnitary U₀) (hbad : ¬ Holds a₀ b₀ U₀) :
-    ∃ (a b : ι → ℂ) (U : Matrix ι ι ℂ) (η : ℂ) (g H : ℝ) (λ : Equiv.Perm ι → ℝ),
+    ∃ (a b : ι → ℂ) (U : Matrix ι ι ℂ) (η : ℂ) (g H : ℝ) (activeWeight : Equiv.Perm ι → ℝ),
       IsUnitary U ∧ spectralEnergy a b = 1 ∧ Complex.normSq η = 1 ∧ 0 < g ∧
       (∑ i, a i) = (∑ i, b i) ∧
       (∑ i, (Complex.normSq (a i) : ℂ) * a i) =
@@ -221,45 +221,45 @@ theorem exists_spectralMultiplierStress_of_not_holds [Nonempty ι]
       ¬ IsStarNormal (diagonal a + U * diagonal b * Uᴴ) ∧
       (η * determinantValue a b U).re = H + g ∧
       (∀ σ, (η * matchingProduct a b σ).re ≤ H) ∧
-      (∀ σ, 0 ≤ λ σ) ∧ (∑ σ, λ σ) = 1 ∧
-      (∀ σ, λ σ ≠ 0 → (η * matchingProduct a b σ).re = H) ∧
-      (∀ i, (∑ j, spectralMultiplierStress a b U η λ i j) =
+      (∀ σ, 0 ≤ activeWeight σ) ∧ (∑ σ, activeWeight σ) = 1 ∧
+      (∀ σ, activeWeight σ ≠ 0 → (η * matchingProduct a b σ).re = H) ∧
+      (∀ i, (∑ j, spectralMultiplierStress a b U η activeWeight i j) =
         (((Fintype.card ι : ℝ) * g : ℝ) : ℂ) * conj (a i)) ∧
-      (∀ j, (∑ i, spectralMultiplierStress a b U η λ i j) =
+      (∀ j, (∑ i, spectralMultiplierStress a b U η activeWeight i j) =
         (((Fintype.card ι : ℝ) * g : ℝ) : ℂ) * conj (b j)) ∧
-      (∀ i j, ((a i + b j) * spectralMultiplierStress a b U η λ i j).re =
+      (∀ i j, ((a i + b j) * spectralMultiplierStress a b U η activeWeight i j).re =
         Complex.normSq (U i j) * (η * determinantValue a b U).re -
-        H * (∑ σ : Equiv.Perm ι, if σ j = i then λ σ else 0)) := by
+        H * (∑ σ : Equiv.Perm ι, if σ j = i then activeWeight σ else 0)) := by
   classical
   obtain ⟨a, b, U, η, g, hU, hE, hη, hg, htrace, hcubic, hnormal, hgap, hglobal⟩ :=
     exists_balanced_support_gap_maximizer a₀ b₀ U₀ hU₀ hbad
   obtain ⟨s, w, hw, hw₁, _, hcoord⟩ := exists_active_matching_coordinate_balance a b U hU η g
     hE hgap (fun c d he => hglobal c d U η he hU hη)
   let H := (η * determinantValue a b U).re - g
-  let λ (σ : Equiv.Perm ι) : ℝ := ∑ τ ∈ s, if τ.val = σ then w τ else 0
-  have hλ (σ : Equiv.Perm ι) : 0 ≤ λ σ := by
-    unfold λ
+  let activeWeight (σ : Equiv.Perm ι) : ℝ := ∑ τ ∈ s, if τ.val = σ then w τ else 0
+  have hActiveWeight (σ : Equiv.Perm ι) : 0 ≤ activeWeight σ := by
+    unfold activeWeight
     apply Finset.sum_nonneg
     intro τ hτ
     split_ifs
     · exact hw τ hτ
     · exact le_rfl
-  have hλ₁ : (∑ σ, λ σ) = 1 := by
-    unfold λ
+  have hActiveWeight₁ : (∑ σ, activeWeight σ) = 1 := by
+    unfold activeWeight
     rw [Finset.sum_comm]
     simpa only [Finset.sum_ite_eq, Finset.mem_univ, if_true] using hw₁
-  have hλsum (F : Equiv.Perm ι → ℂ) :
-      (∑ σ, (λ σ : ℂ) * F σ) = ∑ τ ∈ s, (w τ : ℂ) * F τ.val := by
-    simp only [λ, Complex.ofReal_sum, Finset.sum_mul]
+  have hActiveWeightsum (F : Equiv.Perm ι → ℂ) :
+      (∑ σ, (activeWeight σ : ℂ) * F σ) = ∑ τ ∈ s, (w τ : ℂ) * F τ.val := by
+    simp only [activeWeight, Complex.ofReal_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro τ _
     simp only [apply_ite, Complex.ofReal_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
       Finset.mem_univ, if_true]
-  have ha (σ : Equiv.Perm ι) (hλσ : λ σ ≠ 0) : (η * matchingProduct a b σ).re = H := by
+  have ha (σ : Equiv.Perm ι) (hActiveWeightσ : activeWeight σ ≠ 0) : (η * matchingProduct a b σ).re = H := by
     by_contra hσ
-    apply hλσ
-    unfold λ
+    apply hActiveWeightσ
+    unfold activeWeight
     apply Finset.sum_eq_zero
     intro τ _
     split_ifs with he
@@ -270,7 +270,7 @@ theorem exists_spectralMultiplierStress_of_not_holds [Nonempty ι]
     · rfl
   have hbalance (k : ι ⊕ ι) :
       η * (determinantCoordinateCoefficient a b U k -
-        ∑ σ : Equiv.Perm ι, (λ σ : ℂ) * matchingCoordinateCoefficient a b σ k) =
+        ∑ σ : Equiv.Perm ι, (activeWeight σ : ℂ) * matchingCoordinateCoefficient a b σ k) =
         (((Fintype.card ι : ℝ) * g : ℝ) : ℂ) * conj (Sum.elim a b k) := by
     have hk := hcoord k
     have hterm (τ : _) :
@@ -280,11 +280,11 @@ theorem exists_spectralMultiplierStress_of_not_holds [Nonempty ι]
           (w τ : ℂ) * matchingCoordinateCoefficient a b τ.val k) := by ring
     simp only [hterm, ← Finset.mul_sum, Finset.sum_sub_distrib, ← Finset.sum_mul,
       ← Complex.ofReal_sum, hw₁, Complex.ofReal_one, one_mul] at hk
-    rw [hλsum]
+    rw [hActiveWeightsum]
     exact hk
   have hmax := orbit_support_maximum_of_global_spectral_gap a b U η g hE.le hη hgap hglobal
-  refine ⟨a, b, U, η, g, H, λ, hU, hE, hη, hg, htrace, hcubic, hnormal, ?_, ?_, hλ, hλ₁, ha,
-    spectralMultiplierStress_equations a b U hU η g H λ ha hmax hbalance⟩
+  refine ⟨a, b, U, η, g, H, activeWeight, hU, hE, hη, hg, htrace, hcubic, hnormal, ?_, ?_, hActiveWeight, hActiveWeight₁, ha,
+    spectralMultiplierStress_equations a b U hU η g H activeWeight ha hmax hbalance⟩
   · dsimp only [H]
     ring
   · intro σ

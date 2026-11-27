@@ -11,7 +11,7 @@ abbrev GrassmannianVector := Fin 5 → ℂ
 abbrev GrassmannianMatrix := Matrix (Fin 5) (Fin 5) ℂ
 
 /-- Skew matrices represent bivectors in five coordinates. -/
-def bivectorSkewSpace : Submodule ℂ GrassmannianMatrix where
+noncomputable def bivectorSkewSpace : Submodule ℂ GrassmannianMatrix where
   carrier := {A | ∀ i j, A j i = -A i j}
   zero_mem' := by simp
   add_mem' := by
@@ -31,11 +31,11 @@ def bivectorSkew (x y : GrassmannianVector) : bivectorSkewSpace :=
 def grassmannianBasisVector (i : Fin 5) : GrassmannianVector := Pi.single i 1
 
 /-- The Hermitian pairing on the underlying coordinate vectors. -/
-def bivectorPair (x y : GrassmannianVector) : ℂ := ∑ i, star (x i) * y i
+noncomputable def bivectorPair (x y : GrassmannianVector) : ℂ := ∑ i, star (x i) * y i
 
 /-- The Frobenius pairing of the skew coordinate matrices. It is twice
 the exterior pairing in the basis of increasing coordinate pairs. -/
-def bivectorMatrixPair (A B : GrassmannianMatrix) : ℂ := ∑ i, ∑ j, star (A i j) * B i j
+noncomputable def bivectorMatrixPair (A B : GrassmannianMatrix) : ℂ := ∑ i, ∑ j, star (A i j) * B i j
 
 theorem bivectorMatrixPair_wedges (x y z w : GrassmannianVector) :
     bivectorMatrixPair (bivectorMatrix x y) (bivectorMatrix z w) =
@@ -43,19 +43,19 @@ theorem bivectorMatrixPair_wedges (x y z w : GrassmannianVector) :
   have h (a b c d : GrassmannianVector) :
       (∑ i, ∑ j, (star (a i) * star (b j)) * (c i * d j)) =
         bivectorPair a c * bivectorPair b d := by
-    simp only [bivectorPair, Finset.sum_mul, Finset.mul_sum]
+    rw [bivectorPair, bivectorPair, Fintype.sum_mul_sum]
     apply Finset.sum_congr rfl
     intro i _
     apply Finset.sum_congr rfl
     intro j _
     ring
-  simp only [bivectorMatrixPair, bivectorMatrix, star_sub, star_mul, sub_mul, mul_sub,
+  simp only [bivectorMatrixPair, bivectorMatrix, star_sub, star_mul', sub_mul, mul_sub,
     Finset.sum_sub_distrib, h]
   ring
 
 theorem bivectorMatrixPair_smul_left (c : ℂ) (A B : GrassmannianMatrix) :
     bivectorMatrixPair (c • A) B = star c * bivectorMatrixPair A B := by
-  simp only [bivectorMatrixPair, Matrix.smul_apply, smul_eq_mul, star_mul, mul_assoc,
+  simp only [bivectorMatrixPair, Matrix.smul_apply, smul_eq_mul, star_mul', mul_assoc,
     Finset.mul_sum]
 
 theorem bivectorMatrixPair_smul_right (c : ℂ) (A B : GrassmannianMatrix) :
@@ -69,7 +69,7 @@ theorem bivectorMatrixPair_smul_right (c : ℂ) (A B : GrassmannianMatrix) :
 
 private theorem bivectorPair_smul_left (c : ℂ) (x y : GrassmannianVector) :
     bivectorPair (c • x) y = star c * bivectorPair x y := by
-  simp only [bivectorPair, Pi.smul_apply, smul_eq_mul, star_mul, mul_assoc, Finset.mul_sum]
+  simp only [bivectorPair, Pi.smul_apply, smul_eq_mul, star_mul', mul_assoc, Finset.mul_sum]
 
 private theorem bivectorPair_smul_right (c : ℂ) (x y : GrassmannianVector) :
     bivectorPair x (c • y) = c * bivectorPair x y := by
@@ -151,7 +151,7 @@ private theorem normalized_star_axis (x : GrassmannianVector) (hx : x ≠ 0) :
   simp only [c, star_inv, Complex.star_def, Complex.conj_ofReal]
   field_simp [hrC] <;> ring
 
-private def bivectorImageStarMap (W : bivectorSkewSpace ≃ₗ[ℂ] bivectorSkewSpace)
+private noncomputable def bivectorImageStarMap (W : bivectorSkewSpace ≃ₗ[ℂ] bivectorSkewSpace)
     (x : GrassmannianVector) : GrassmannianVector →ₗ[ℂ] GrassmannianMatrix :=
   (bivectorSkewSpace.subtype.comp W.toLinearMap).comp
     ((bivectorStarMap x).codRestrict bivectorSkewSpace (fun y => (bivectorSkew x y).property))
@@ -190,9 +190,9 @@ private theorem exists_imageStar_axis (W : bivectorSkewSpace ≃ₗ[ℂ] bivecto
   have hr := LinearMap.finrank_range_add_finrank_ker F
   have hs := LinearMap.finrank_range_add_finrank_ker (bivectorStarMap x)
   rw [show LinearMap.ker F = LinearMap.ker (bivectorStarMap x) from imageStarMap_ker W x] at hr
-  change Module.finrank ℂ (bivectorStar x) + _ = _ at hs
-  rw [finrank_bivectorStar x hx, Fintype.card_fin] at hs
-  have hdim : Module.finrank ℂ (LinearMap.range F) = 4 := by omega
+  have hdim : Module.finrank ℂ (LinearMap.range F) = 4 := calc
+    _ = Module.finrank ℂ (bivectorStar x) := Nat.add_right_cancel (hr.trans hs.symm)
+    _ = 4 := by rw [finrank_bivectorStar x hx, Fintype.card_fin]
   obtain ⟨u, hu, he⟩ := decomposable_finrank_four_eq_bivectorStar (LinearMap.range F)
     (by
       rintro _ ⟨y, rfl⟩
@@ -313,10 +313,13 @@ private theorem exists_common_orthogonal_vector (u v : GrassmannianVector) :
   have hp := Submodule.one_le_finrank_iff.mpr hk
   obtain ⟨z, hz⟩ := Module.finrank_pos_iff_exists_ne_zero.mp hp
   have hzn : (z : GrassmannianVector) ≠ 0 := fun h => hz (Subtype.ext h)
-  have h := LinearMap.mem_ker.mp z.property
+  have h : M *ᵥ (z : GrassmannianVector) = 0 := LinearMap.mem_ker.mp z.property
   refine ⟨z, hzn, ?_, ?_⟩
-  · simpa [Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct, M, bivectorPair] using congrFun h (0 : Fin 2)
-  · simpa [Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct, M, bivectorPair] using congrFun h (1 : Fin 2)
+  · simpa only [Matrix.mulVec, dotProduct, M, if_pos rfl, Pi.zero_apply, bivectorPair]
+      using congrFun h (0 : Fin 2)
+  · have h₁ : (1 : Fin 2) ≠ 0 := by decide
+    simpa only [Matrix.mulVec, dotProduct, M, if_neg h₁, Pi.zero_apply, bivectorPair]
+      using congrFun h (1 : Fin 2)
 
 private theorem imageStar_axes_orthogonal (W : bivectorSkewSpace ≃ₗ[ℂ] bivectorSkewSpace)
     (hPair : ∀ A B : bivectorSkewSpace,
@@ -349,8 +352,11 @@ private theorem imageStar_axes_orthogonal (W : bivectorSkewSpace ≃ₗ[ℂ] biv
   rw [hx, hEX] at he
   have hxj : x j = 0 := by
     have h : (2 : ℂ) * x j = 0 := by
-      simpa [E, bivectorSkew, bivectorMatrixPair_wedges, bivectorPair_basis_left,
-        grassmannianBasisVector, Pi.single_apply, hij, Ne.symm hij] using he.symm
+      change 0 = bivectorMatrixPair (bivectorMatrix (grassmannianBasisVector i)
+        (grassmannianBasisVector j)) (bivectorMatrix (grassmannianBasisVector i) x) at he
+      simp only [bivectorMatrixPair_wedges, bivectorPair_basis_left] at he
+      simpa only [grassmannianBasisVector, Pi.single_eq_same, Pi.single_eq_of_ne hij,
+        Pi.single_eq_of_ne (Ne.symm hij), one_mul, mul_zero, sub_zero] using he.symm
     exact (mul_eq_zero.mp h).resolve_left two_ne_zero
   have hxy : bivectorMatrixPair (bivectorMatrix (grassmannianBasisVector i) x)
       (bivectorMatrix (grassmannianBasisVector j) y) = 0 := by
@@ -398,8 +404,9 @@ theorem grassmannian_image_star_axes (W : bivectorSkewSpace ≃ₗ[ℂ] bivector
       bivectorMatrixPair_smul_left, bivectorMatrixPair_smul_right, bivectorMatrixPair_wedges,
       bivectorMatrixPair_wedges] at h
     have he : star c * (c * 2) = 2 := by
-      simpa [hunit, horth i j hij, horth j i (Ne.symm hij), bivectorPair_basis_left,
-        grassmannianBasisVector, Pi.single_apply, hij, Ne.symm hij] using h
+      simp only [hunit, horth i j hij, horth j i (Ne.symm hij), bivectorPair_basis_left] at h
+      simpa only [grassmannianBasisVector, Pi.single_eq_same, Pi.single_eq_of_ne hij,
+        Pi.single_eq_of_ne (Ne.symm hij), mul_one, zero_mul, sub_zero] using h
     have hc' : star c * c = 1 := by linear_combination (1 / 2 : ℂ) * he
     apply Complex.ofReal_injective
     rw [← Complex.mul_conj, mul_comm]

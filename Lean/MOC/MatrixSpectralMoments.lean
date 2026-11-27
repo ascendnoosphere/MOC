@@ -3,7 +3,7 @@ import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.LinearAlgebra.Matrix.PosDef
 
 open BigOperators Matrix
-open scoped ComplexInnerProductSpace
+open scoped ComplexInnerProductSpace ComplexOrder
 
 namespace MOC
 
@@ -103,9 +103,8 @@ private theorem matrixSpectralMomentPair_snd_eq_gram (a : ι → ℂ) (X : Matri
   have hdiag : (diagonal a)ᴴ * diagonal a =
       diagonal (fun i => (Complex.normSq (a i) : ℂ)) := by
     rw [Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal]
-    congr 1
-    funext i
-    exact (Complex.normSq_eq_conj_mul_self (a i)).symm
+    exact congrArg Matrix.diagonal (funext fun i =>
+      (Complex.normSq_eq_conj_mul_self (z := a i)).symm)
   change Xᴴ * (diagonal (fun i => (Complex.normSq (a i) : ℂ)) * X) = _
   rw [Matrix.conjTranspose_mul, ← hdiag]
   simp only [Matrix.mul_assoc]
@@ -150,6 +149,8 @@ theorem exists_unitary_kernelFrame_iff_inter_matrixSpectralMomentSets
     have hM : U * fromCols Y (diagonal c * Y) = fromCols X (diagonal a * X) := by
       rw [Matrix.mul_fromCols, hUY, hUC]
     have hg := congrArg (fun Z : Matrix ι (κ ⊕ κ) ℂ => Zᴴ * Z) hM
+    change (U * fromCols Y (diagonal c * Y))ᴴ * (U * fromCols Y (diagonal c * Y)) =
+      (fromCols X (diagonal a * X))ᴴ * fromCols X (diagonal a * X) at hg
     rw [Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Uᴴ U,
       hU.2, Matrix.one_mul] at hg
     have hm := (frame_gram_eq_fromCols_iff a c X Y hX hY).mp hg.symm
@@ -179,10 +180,9 @@ theorem le_finrank_ker_toEuclideanLin_iff (M : Matrix ι ι ℂ) (k : ℕ) :
     let X : Matrix ι (Fin k) ℂ := Matrix.of fun i j => WithLp.equiv 2 _ (b (e j)).val i
     refine ⟨X, ?_, ?_⟩
     · ext i j
-      have h := orthonormal_iff_ite.mp b.orthonormal (e i) (e j)
-      rw [e.injective.eq_iff, ← Matrix.one_apply] at h
-      rw [← h]
-      change (Xᴴ * X) i j = ⟪(b (e i)).val, (b (e j)).val⟫_ℂ
+      have h : ⟪(b (e i)).val, (b (e j)).val⟫ = (if i = j then 1 else 0) := by
+        simpa only [e.injective.eq_iff] using orthonormal_iff_ite.mp b.orthonormal (e i) (e j)
+      rw [Matrix.one_apply, ← h]
       rw [EuclideanSpace.inner_eq_star_dotProduct, dotProduct_comm]
       rfl
     · ext i j
@@ -216,14 +216,20 @@ theorem exists_unitary_rankDefect_iff_inter_matrixSpectralMomentSets
     (∃ U : Matrix ι ι ℂ, IsUnitary U ∧
       k ≤ Module.finrank ℂ (LinearMap.ker ((diagonal a + U * diagonal b * Uᴴ).toEuclideanLin))) ↔
     (matrixSpectralMomentSet (κ := Fin k) a ∩ matrixSpectralMomentSet (fun i => -b i)).Nonempty := by
-  rw [← exists_unitary_kernelFrame_iff_inter_matrixSpectralMomentSets,
-    show diagonal (fun i => -b i) = -diagonal b from Matrix.diagonal_neg b,
-    Matrix.mul_neg, Matrix.neg_mul, sub_neg_eq_add]
+  have hdiff (U : Matrix ι ι ℂ) :
+      diagonal a - U * diagonal (fun i => -b i) * Uᴴ =
+        diagonal a + U * diagonal b * Uᴴ := by
+    rw [← Matrix.diagonal_neg b, Matrix.mul_neg U (diagonal b),
+      Matrix.neg_mul (U * diagonal b) Uᴴ, sub_neg_eq_add]
+  rw [← exists_unitary_kernelFrame_iff_inter_matrixSpectralMomentSets]
   constructor
   · rintro ⟨U, hU, hk⟩
     obtain ⟨X, hX, hkX⟩ := (le_finrank_ker_toEuclideanLin_iff _ k).mp hk
-    exact ⟨U, X, hU, hX, hkX⟩
+    refine ⟨U, X, hU, hX, ?_⟩
+    rw [hdiff U]
+    exact hkX
   · rintro ⟨U, X, hU, hX, hkX⟩
+    rw [hdiff U] at hkX
     exact ⟨U, hU, (le_finrank_ker_toEuclideanLin_iff _ k).mpr ⟨X, hX, hkX⟩⟩
 
 private theorem posSemidef_rank_le_one_iff_outer (E : Matrix κ κ ℂ) :
@@ -231,31 +237,31 @@ private theorem posSemidef_rank_le_one_iff_outer (E : Matrix κ κ ℂ) :
   classical
   constructor
   · rintro ⟨hE, hrank⟩
-    let λ := hE.1.eigenvalues
+    let eigenvalue := hE.1.eigenvalues
     let V : Matrix κ κ ℂ := hE.1.eigenvectorUnitary
-    have hV (j l : κ) : E j l = ∑ i, V j i * (λ i : ℂ) * star (V l i) := by
-      have he : E = V * diagonal (fun i => (λ i : ℂ)) * Vᴴ := by
+    have hV (j l : κ) : E j l = ∑ i, V j i * (eigenvalue i : ℂ) * star (V l i) := by
+      have he : E = V * diagonal (fun i => (eigenvalue i : ℂ)) * Vᴴ := by
         simpa only [Matrix.star_eq_conjTranspose] using hE.1.spectral_theorem
       calc
-        _ = (V * diagonal (fun i => (λ i : ℂ)) * Vᴴ) j l := congrArg (fun A => A j l) he
+        _ = (V * diagonal (fun i => (eigenvalue i : ℂ)) * Vᴴ) j l := congrArg (fun A => A j l) he
         _ = _ := by
           rw [Matrix.mul_apply]
           simp only [Matrix.mul_diagonal, Matrix.conjTranspose_apply]
-    by_cases h : ∃ i, λ i ≠ 0
+    by_cases h : ∃ i, eigenvalue i ≠ 0
     · obtain ⟨i, hi⟩ := h
-      have hs : Subsingleton {j // λ j ≠ 0} :=
+      have hs : Subsingleton {j // eigenvalue j ≠ 0} :=
         Fintype.card_le_one_iff_subsingleton.mp (by rwa [← hE.1.rank_eq_card_non_zero_eigs])
-      have hz (j : κ) (hj : j ≠ i) : λ j = 0 := by
-        by_contra hλ
-        exact hj (congrArg Subtype.val (hs.elim (⟨j, hλ⟩ : {l // λ l ≠ 0}) ⟨i, hi⟩))
-      let r : ℝ := Real.sqrt (λ i)
+      have hz (j : κ) (hj : j ≠ i) : eigenvalue j = 0 := by
+        by_contra hnonzero
+        exact hj (congrArg Subtype.val (hs.elim (⟨j, hnonzero⟩ : {l // eigenvalue l ≠ 0}) ⟨i, hi⟩))
+      let r : ℝ := Real.sqrt (eigenvalue i)
       let v (j : κ) : ℂ := (r : ℂ) * star (V j i)
-      have hr : (r : ℂ) * (r : ℂ) = (λ i : ℂ) := by
+      have hr : (r : ℂ) * (r : ℂ) = (eigenvalue i : ℂ) := by
         rw [← Complex.ofReal_mul, ← pow_two, Real.sq_sqrt (hE.eigenvalues_nonneg i)]
       refine ⟨v, ?_⟩
       ext j l
       rw [hV, Finset.sum_eq_single i]
-      · simp only [Matrix.vecMulVec_apply, Pi.star_apply, v, star_mul, Complex.star_def,
+      · simp only [Matrix.vecMulVec_apply, Pi.star_apply, v, Complex.star_def, map_mul,
           Complex.conj_ofReal, Complex.conj_conj]
         calc
           _ = (r : ℂ) * (r : ℂ) * (V j i * (starRingEnd ℂ) (V l i)) := by rw [hr]; ring

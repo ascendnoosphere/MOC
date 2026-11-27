@@ -3,8 +3,8 @@ import Mathlib.Analysis.Normed.Operator.LinearIsometry
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
-/-! Atlas 042: the native spin-factor determinant comparison is a theorem
-already at rank two, independent of unrestricted MOC. -/
+/-! The determinant comparison for spin factors of rank two.
+The proof uses the norm and inner product of the real vector part. -/
 
 namespace MOC.Reformulations
 

@@ -94,9 +94,9 @@ def symmetricSixContactRayPencil (k : Fin 9) : Matrix (Fin 9) (Fin 9) ℤ :=
       2, 0, 0, 0, 0, 0, 0, -2, 0;
       0, 0, 0, 0, 0, 0, 0, 0, 0]] k
 
-def symmetricSixContactPencil {R : Type*} [CommRing R] (b : Fin 7 → R) (λ : R) :
+def symmetricSixContactPencil {R : Type*} [CommRing R] (b : Fin 7 → R) (mixedWeight : R) :
     Matrix (Fin 9) (Fin 9) R :=
-  fun i j => ∑ k, (![b 0, b 1 + λ, b 2 + λ, b 3, b 4, b 5, b 6, λ, -λ] : Fin 9 → R) k *
+  fun i j => ∑ k, (![b 0, b 1 + mixedWeight, b 2 + mixedWeight, b 3, b 4, b 5, b 6, mixedWeight, -mixedWeight] : Fin 9 → R) k *
     (symmetricSixContactRayPencil k i j : R)
 
 noncomputable section
@@ -120,11 +120,11 @@ private def pencilUnvecLinear : (Fin 9 → ℝ) →ₗ[ℝ] Matrix (Fin 3) (Fin 
 private def rayIndicator (k : Fin 9) (i : Fin 24) : ℝ :=
   if k ∈ symmetricSixContactActiveMinors i then 1 else 0
 
-private theorem signedCost_profile (b : Fin 7 → ℝ) (λ : ℝ) (S : Matrix (Fin 4) (Fin 4) ℝ) :
-    kleinSignedCost (symmetricSixContactProfile b λ) S =
-      ∑ k, symmetricSixContactWeights b λ k * kleinSignedCost (rayIndicator k) S := by
-  have hterm (i : Fin 24) : symmetricSixContactProfile b λ i =
-      ∑ k, symmetricSixContactWeights b λ k * rayIndicator k i := by
+private theorem signedCost_profile (b : Fin 7 → ℝ) (mixedWeight : ℝ) (S : Matrix (Fin 4) (Fin 4) ℝ) :
+    kleinSignedCost (symmetricSixContactProfile b mixedWeight) S =
+      ∑ k, symmetricSixContactWeights b mixedWeight k * kleinSignedCost (rayIndicator k) S := by
+  have hterm (i : Fin 24) : symmetricSixContactProfile b mixedWeight i =
+      ∑ k, symmetricSixContactWeights b mixedWeight k * rayIndicator k i := by
     simp only [symmetricSixContactProfile, symmetricSixContactMinorAgreement, rayIndicator,
       mul_ite, mul_one, mul_zero]
   simp only [kleinSignedCost, hterm, Finset.mul_sum, Finset.sum_mul]
@@ -150,11 +150,11 @@ private theorem ray_pencil_identity (k : Fin 9) (K : Matrix (Fin 3) (Fin 3) ℝ)
       Fin.sum_univ_succ, Fin.prod_univ_four, Matrix.cons_val] <;>
     ring
 
-private theorem pencil_form_sum (b : Fin 7 → ℝ) (λ : ℝ) (x : Fin 9 → ℝ) :
-    x ⬝ᵥ (symmetricSixContactPencil b λ *ᵥ x) =
-      ∑ k, symmetricSixContactWeights b λ k *
+private theorem pencil_form_sum (b : Fin 7 → ℝ) (mixedWeight : ℝ) (x : Fin 9 → ℝ) :
+    x ⬝ᵥ (symmetricSixContactPencil b mixedWeight *ᵥ x) =
+      ∑ k, symmetricSixContactWeights b mixedWeight k *
         (x ⬝ᵥ ((fun i j => (symmetricSixContactRayPencil k i j : ℝ)) *ᵥ x)) := by
-  let term (i j k : Fin 9) := x i * (symmetricSixContactWeights b λ k *
+  let term (i j k : Fin 9) := x i * (symmetricSixContactWeights b mixedWeight k *
     (symmetricSixContactRayPencil k i j : ℝ)) * x j
   calc
     _ = ∑ i, ∑ j, ∑ k, term i j k := by
@@ -187,8 +187,8 @@ private theorem pencil_ray_symm (k i j : Fin 9) :
   revert k i j
   decide +kernel
 
-private theorem pencil_symm (b : Fin 7 → ℝ) (λ : ℝ) :
-    (symmetricSixContactPencil b λ)ᵀ = symmetricSixContactPencil b λ := by
+private theorem pencil_symm (b : Fin 7 → ℝ) (mixedWeight : ℝ) :
+    (symmetricSixContactPencil b mixedWeight)ᵀ = symmetricSixContactPencil b mixedWeight := by
   ext i j
   simp only [Matrix.transpose_apply, symmetricSixContactPencil]
   apply Finset.sum_congr rfl
@@ -210,11 +210,11 @@ private theorem pencil_form_scale (Q : Matrix (Fin 9) (Fin 9) ℝ)
   intro j _
   ring
 
-private theorem pencil_form_of_inverse (b : Fin 7 → ℝ) (λ : ℝ)
+private theorem pencil_form_of_inverse (b : Fin 7 → ℝ) (mixedWeight : ℝ)
     (K H : Matrix (Fin 3) (Fin 3) ℝ) (hKH : K * Hᵀ = 1) :
-    32 * kleinSignedCost (symmetricSixContactProfile b λ) (kleinCenteredMatrix K) =
+    32 * kleinSignedCost (symmetricSixContactProfile b mixedWeight) (kleinCenteredMatrix K) =
       K.det ^ 2 * ((pencilCoordinates H) ⬝ᵥ
-        (symmetricSixContactPencil b λ *ᵥ pencilCoordinates H)) := by
+        (symmetricSixContactPencil b mixedWeight *ᵥ pencilCoordinates H)) := by
   rw [signedCost_profile, Finset.mul_sum, ← pencil_form_scale,
     ← pencil_scale, ← kleinCofactor_eq_det_smul K H hKH, pencil_form_sum]
   apply Finset.sum_congr rfl
@@ -222,13 +222,13 @@ private theorem pencil_form_of_inverse (b : Fin 7 → ℝ) (λ : ℝ)
   rw [← ray_pencil_identity]
   ring
 
-private theorem pencil_form_spectral (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7 → ℝ) (λ h : ℝ)
+private theorem pencil_form_spectral (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7 → ℝ) (mixedWeight h : ℝ)
     (hgap : ∀ i, (η * matchingProduct a c (fourPerm i).symm).re + h =
-      symmetricSixContactProfile b λ i) (H : Matrix (Fin 3) (Fin 3) ℝ) :
-    pencilCoordinates H ⬝ᵥ (symmetricSixContactPencil b λ *ᵥ pencilCoordinates H) =
+      symmetricSixContactProfile b mixedWeight i) (H : Matrix (Fin 3) (Fin 3) ℝ) :
+    pencilCoordinates H ⬝ᵥ (symmetricSixContactPencil b mixedWeight *ᵥ pencilCoordinates H) =
       ((32 * η) * SpectralProfile.tetrahedralInverseProfile a c (kleinComplexification H)).re := by
   let Q (H : Matrix (Fin 3) (Fin 3) ℝ) :=
-    pencilCoordinates H ⬝ᵥ (symmetricSixContactPencil b λ *ᵥ pencilCoordinates H)
+    pencilCoordinates H ⬝ᵥ (symmetricSixContactPencil b mixedWeight *ᵥ pencilCoordinates H)
   have hQ : Continuous Q := by
     dsimp only [Q, dotProduct, Matrix.mulVec, pencilCoordinates]
     simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, Matrix.cons_val_zero, Matrix.cons_val_succ]
@@ -245,16 +245,16 @@ private theorem pencil_form_spectral (a c : Fin 4 → ℂ) (η : ℂ) (b : Fin 7
     intro hz
     rw [hz, zero_mul] at hm
     exact zero_ne_one hm
-  have hcost : kleinRealCost a c (-η) h = symmetricSixContactProfile b λ := by
+  have hcost : kleinRealCost a c (-η) h = symmetricSixContactProfile b mixedWeight := by
     funext i
     simpa only [kleinRealCost, neg_mul, Complex.neg_re, sub_neg_eq_add, add_comm] using hgap i
-  have hcal := pencil_form_of_inverse b λ K W hKW
+  have hcal := pencil_form_of_inverse b mixedWeight K W hKW
   rw [← hcost, kleinSignedCost_spectral a c (-η) h K W hWK hKW] at hcal
   have hphase (z : ℂ) : ((32 * η) * z).re = 32 * (η * z).re := by
     rw [mul_assoc, show (32 : ℂ) = ((32 : ℝ) : ℂ) by norm_num]
     simp only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   rw [hphase]
-  change pencilCoordinates W ⬝ᵥ (symmetricSixContactPencil b λ *ᵥ pencilCoordinates W) = _
+  change pencilCoordinates W ⬝ᵥ (symmetricSixContactPencil b mixedWeight *ᵥ pencilCoordinates W) = _
   simp only [neg_mul, Complex.neg_re, mul_neg, neg_neg] at hcal
   apply mul_left_cancel₀ (pow_ne_zero 2 hK)
   linear_combination -hcal
@@ -271,11 +271,11 @@ private theorem symmetric_form_polar (Q : Matrix (Fin 9) (Fin 9) ℝ)
 /-- Every actual spectral profile in this family has a singular real
 inverse pencil. This includes all zero coefficient boundaries. -/
 theorem symmetricSixContact_spectralPencil_singular (a c : Fin 4 → ℂ) (η : ℂ)
-    (b : Fin 7 → ℝ) (λ h : ℝ)
+    (b : Fin 7 → ℝ) (mixedWeight h : ℝ)
     (hgap : ∀ i, (η * matchingProduct a c (fourPerm i).symm).re + h =
-      symmetricSixContactProfile b λ i) :
-    (symmetricSixContactPencil b λ).det = 0 := by
-  let Q := symmetricSixContactPencil b λ
+      symmetricSixContactProfile b mixedWeight i) :
+    (symmetricSixContactPencil b mixedWeight).det = 0 := by
+  let Q := symmetricSixContactPencil b mixedWeight
   obtain ⟨L, hL⟩ := SpectralProfile.tetrahedralInverseProfile_four_squares a c (32 * η)
   let A (k : Fin 4) : (Fin 9 → ℝ) →ₗ[ℝ] ℂ :=
     ((L k).restrictScalars ℝ).comp (kleinComplexification.comp pencilUnvecLinear)
@@ -298,7 +298,7 @@ theorem symmetricSixContact_spectralPencil_singular (a c : Fin 4 → ℂ) (η : 
     · exact congrFun hTx (.inr k)
   have hform (z : Fin 9 → ℝ) :
       z ⬝ᵥ (Q *ᵥ z) = (∑ k, (A k z) ^ 2).re := by
-    have hf := pencil_form_spectral a c η b λ h hgap (pencilUnvec z)
+    have hf := pencil_form_spectral a c η b mixedWeight h hgap (pencilUnvec z)
     rw [pencilCoordinates_unvec, hL] at hf
     exact hf
   have hQx : Q *ᵥ x = 0 := by
@@ -309,7 +309,7 @@ theorem symmetricSixContact_spectralPencil_singular (a c : Fin 4 → ℂ) (η : 
     let e : Fin 9 → ℝ := Pi.single i 1
     have hadd : (x + e) ⬝ᵥ (Q *ᵥ (x + e)) = e ⬝ᵥ (Q *ᵥ e) := by
       simp only [hform, map_add, hAx, zero_add]
-    rw [symmetric_form_polar Q (pencil_symm b λ) x e, hxform, zero_add] at hadd
+    rw [symmetric_form_polar Q (pencil_symm b mixedWeight) x e, hxform, zero_add] at hadd
     change (Q *ᵥ x) i = 0
     rw [show e ⬝ᵥ (Q *ᵥ x) = (Q *ᵥ x) i by simp only [e, single_dotProduct, one_mul]]
       at hadd

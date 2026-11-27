@@ -319,6 +319,7 @@ theorem conjecture_iff_gaussian_rational_real_bound [Nonempty ι] :
       have he : D = Set.univ.pi (fun _ : ι => (gaussianRationalSubfield : Set ℂ)) := by
         ext x
         simp only [D, Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, forall_const]
+        rfl
       rw [he]
       exact dense_pi _ fun _ _ => dense_gaussianRationalSubfield
     let O (σ : Equiv.Perm ι) : Set ((ι → ℂ) × (ι → ℂ)) :=

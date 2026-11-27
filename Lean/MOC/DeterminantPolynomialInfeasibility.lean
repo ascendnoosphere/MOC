@@ -147,9 +147,9 @@ theorem eval_determinantGapPolynomial (x : DeterminantWitnessVariable ι → ℝ
   rw [determinantGapPolynomial, eval_polynomialComponent, map_sub, RingHom.map_det,
     map_add, map_mul, map_mul, eval_mixerPolynomial, eval_mixerAdjointPolynomial,
     map_prod]
-  simp only [firstPolynomial, secondPolynomial, eval_diagonalPolynomial, map_add,
-    eval_coordinatePolynomial, witnessFirstSpectrum, witnessSecondSpectrum, determinantValue, matchingProduct,
-    Complex.reLm_coe]
+  delta firstPolynomial secondPolynomial determinantValue matchingProduct
+  delta witnessFirstSpectrum witnessSecondSpectrum
+  simp only [eval_diagonalPolynomial, map_add, eval_coordinatePolynomial, Complex.reLm_coe]
 
 /-- Assign Cartesian real variables from two spectra, a mixer, and slack values. -/
 def witnessValuation (a b : ι → ℂ) (U : Matrix ι ι ℂ)
@@ -255,7 +255,8 @@ theorem conjecture_iff_no_polynomial_equation_witness [Nonempty ι] :
           MvPolynomial.eval x (determinantGapPolynomial σ) := by
         rw [eval_determinantGapPolynomial, eval_determinantGapPolynomial, ha, hb, hU]
       change MvPolynomial.eval y (determinantGapPolynomial σ) * t σ ^ 2 - 1 = 0
-      rw [he, t, inv_pow, Real.sq_sqrt (hgap σ).le, mul_inv_cancel₀ (hgap σ).ne', sub_self]
+      dsimp only [t]
+      rw [he, inv_pow, Real.sq_sqrt (hgap σ).le, mul_inv_cancel₀ (hgap σ).ne', sub_self]
 
 /-- An exact sum-of-squares identity in the real polynomial ring proves
 the conjecture in the stated order. -/

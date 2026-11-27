@@ -446,10 +446,11 @@ theorem conjecture_iff_no_unit_margin_equation_witness [Nonempty ι] :
     · simp only [determinantUnitMarginEquation, map_sub, map_pow, MvPolynomial.eval_X]
       have he : MvPolynomial.eval y (determinantUnitMargin σ) =
           MvPolynomial.eval x (determinantUnitMargin σ) := by
-        simp only [determinantUnitMargin, map_sub, map_one, eval_determinantGapPolynomial,
-          ha, hb, hU]
+        simp only [determinantUnitMargin, map_sub, map_one, eval_determinantGapPolynomial]
+        rw [ha, hb, hU]
       change MvPolynomial.eval y (determinantUnitMargin σ) - t σ ^ 2 = 0
-      rw [he, t, Real.sq_sqrt (hgap σ), sub_self]
+      dsimp only [t]
+      rw [he, Real.sq_sqrt (hgap σ), sub_self]
 
 /-- The extra variables are a common strict margin and its reciprocal square-root witness. -/
 abbrev DeterminantCommonMarginVariable (ι : Type*) := DeterminantWitnessVariable ι ⊕ Bool
@@ -519,8 +520,10 @@ theorem conjecture_iff_no_common_margin_witness [Nonempty ι] :
         MvPolynomial.eval_rename]
       change MvPolynomial.eval z (determinantGapPolynomial σ) - δ - t σ ^ 2 = 0
       have he : MvPolynomial.eval z (determinantGapPolynomial σ) = g σ := by
-        rw [g, eval_determinantGapPolynomial, eval_determinantGapPolynomial, ha, hb, hU]
-      rw [he, t, Real.sq_sqrt (sub_nonneg.mpr (hδle σ)), sub_self]
+        dsimp only [g]
+        rw [eval_determinantGapPolynomial, eval_determinantGapPolynomial, ha, hb, hU]
+      dsimp only [t]
+      rw [he, Real.sq_sqrt (sub_nonneg.mpr (hδle σ)), sub_self]
     · simp only [determinantCommonMarginPolynomial, map_sub, map_mul, map_pow,
         MvPolynomial.eval_X, map_one]
       change δ * (Real.sqrt δ)⁻¹ ^ 2 - 1 = 0
@@ -540,7 +543,8 @@ theorem no_unit_margin_witness_of_preordering_certificate
     ¬ ∃ x : DeterminantWitnessVariable ι → ℝ,
       (∀ i j c, MvPolynomial.eval x (determinantGramPolynomial i j c) = 0) ∧
       (∀ σ, 0 ≤ MvPolynomial.eval x (determinantUnitMargin σ)) := by
-  rintro ⟨s, hs, a, he⟩ ⟨x, hGram, hmargin⟩
+  obtain ⟨s, hs, a, he⟩ := h
+  rintro ⟨x, hGram, hmargin⟩
   have hEval := congrArg (MvPolynomial.eval x) he
   simp only [map_neg, map_one, map_add, map_sum, map_mul, map_prod, hGram,
     mul_zero, Finset.sum_const_zero, add_zero] at hEval
@@ -648,9 +652,9 @@ theorem determinant_certificate_completeness_iff_ordered_field_descent [Nonempty
           (e : ℝ →+* K) (x : DeterminantWitnessVariable ι → K),
           ∀ j, MvPolynomial.eval₂ e x (f j) = 0) →
         ∃ x : DeterminantWitnessVariable ι → ℝ, ∀ j, MvPolynomial.eval x (f j) = 0) := by
-  dsimp only
-  rw [determinant_certificate_completeness_iff_semireal_real_point,
-    semireal_polynomial_quotient_iff_ordered_extension_point,
+  have h := determinant_certificate_completeness_iff_semireal_real_point (ι := ι)
+  dsimp only at h ⊢
+  rw [h, semireal_polynomial_quotient_iff_ordered_extension_point,
     ← real_zeros_iff_real_algebra_point]
 
 end

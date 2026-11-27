@@ -31,8 +31,8 @@ theorem finiteEntropyScore_gibbs [Nonempty κ] (w : κ → ℝ) (hw : ∀ i, 0 <
   let g (i : κ) := w i / Z
   have hg (i : κ) : 0 < g i := div_pos (hw i) hZ
   have hgs : ∑ i, g i = 1 := by
-    simp only [g, ← Finset.sum_div]
-    exact div_self hZ.ne'
+    simp only [g, div_eq_mul_inv, ← Finset.sum_mul]
+    exact (mul_inv_cancel₀ hZ.ne' : Z * Z⁻¹ = 1)
   have hlg (i : κ) : Real.log (g i) = Real.log (w i) - Real.log Z :=
     Real.log_div (hw i).ne' hZ.ne'
   constructor
@@ -49,7 +49,7 @@ theorem finiteEntropyScore_gibbs [Nonempty κ] (w : κ → ℝ) (hw : ∀ i, 0 <
       have he : q i * (g i / q i - 1) = g i - q i := by
         field_simp [hpos.ne'] <;> ring
       rw [he] at hmul
-      rw [Real.negMulLog_eq_neg]
+      unfold Real.negMulLog
       nlinarith only [hmul]
     calc
       finiteEntropyScore w q ≤ ∑ i, (q i * Real.log Z + g i - q i) :=
@@ -58,9 +58,11 @@ theorem finiteEntropyScore_gibbs [Nonempty κ] (w : κ → ℝ) (hw : ∀ i, 0 <
         rw [Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.sum_mul, hq.2, hgs]
         ring
   · refine ⟨g, ⟨fun i => (hg i).le, hgs⟩, ?_⟩
+    change finiteEntropyScore w g = Real.log Z
     have he (i : κ) :
         g i * Real.log (w i) + Real.negMulLog (g i) = g i * Real.log Z := by
-      rw [Real.negMulLog_eq_neg, hlg]
+      unfold Real.negMulLog
+      rw [hlg i]
       ring
     simp only [finiteEntropyScore, he, ← Finset.sum_mul, hgs, one_mul]
 
@@ -125,26 +127,27 @@ theorem exists_finiteEntropyScore_of_potential_bounds [Nonempty κ]
   have hnot : (m, z) ∉ N '' S := by
     rintro ⟨p, hp, he⟩
     rw [hN] at he
-    have hm := congrArg Prod.fst he
-    have hz := congrArg Prod.snd he
+    have hm : M p.1 = m := congrArg Prod.fst he
+    have hz : p.2 = z := congrArg Prod.snd he
+    have hpz : p.2 ≤ F p.1 := hp.2
     rw [hM] at hm
-    exact (not_le_of_gt (hfail p.1 hp.1.1 hm)) (hz ▸ hp.2)
+    rw [hz] at hpz
+    exact (not_le_of_gt (hfail p.1 hp.1.1 hm)) hpz
   obtain ⟨L, c, hsmall, hlarge⟩ := geometric_hahn_banach_closed_point
     (hSv.linear_image N.toLinearMap) (hSc.image N.continuous).isClosed hnot
   have htop (q : κ → ℝ) (hq : q ∈ stdSimplex ℝ κ) : L (M q, F q) < c := by
-    have hmem : (q, F q) ∈ S := ⟨⟨hq, hlo hq, hhi hq⟩, le_rfl⟩
+    have hmem : (q, F q) ∈ S := ⟨⟨hq, hlo hq, hhi hq⟩, show F q ≤ F q from le_rfl⟩
     exact hsmall _ ⟨(q, F q), hmem, hN _⟩
   let l := L.comp (ContinuousLinearMap.inl ℝ E ℝ)
   let d := L (0, 1)
   have hL (x : E) (t : ℝ) : L (x, t) = l x + t * d := by
     have he : (x, t) = (x, 0) + t • ((0, 1) : E × ℝ) := by simp
-    exact (congrArg L he).trans (by simp [l, d, smul_eq_mul])
+    exact (congrArg L he).trans (by rw [L.map_add, L.map_smul]; rfl)
   have hqsmall := htop q₀ hq₀
   rw [hM, hm₀, hL] at hqsmall
   rw [hL] at hlarge
   have hz₀ : F q₀ < z := hfail q₀ hq₀ hm₀
-  have hd : 0 < d := by
-    by_contra! hneg
+  have hd : 0 < d := lt_of_not_ge fun hneg => by
     have hrev := mul_le_mul_of_nonpos_right hz₀.le hneg
     linarith only [hqsmall, hlarge, hrev]
   let f : E →L[ℝ] ℝ := (-d⁻¹) • l

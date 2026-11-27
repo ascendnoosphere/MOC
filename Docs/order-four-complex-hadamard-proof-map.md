@@ -1,5 +1,7 @@
 # Order-four complex Hadamard matrices
 
+[Proof map index](README.md) · [Conjecture](../README.md)
+
 Let $A$ and $B$ be complex normal matrices of order four. Let $a_i$
 and $b_i$ be their eigenvalues with multiplicity. The Marcus–de Oliveira
 conjecture asks whether $\det(A+B)$ belongs to the real convex hull of
@@ -7,12 +9,13 @@ the matching products $\prod_j(a_{\sigma(j)}+b_j)$ over all permutations
 $\sigma$.
 
 In an eigenbasis of $A$, write $A=\mathrm{diag}(a)$ and
-$B=U\mathrm{diag}(b)U^*$. Here $U$ is unitary and $U^*$ is its conjugate
-transpose. If every entry of $U$ has modulus $1/2$, then $U$ is a
+$B=U\mathrm{diag}(b)U^*$. The notation $\mathrm{diag}(a)$ means the
+diagonal matrix with entries $a_i$. Here $U$ is unitary and $U^*$ is
+its conjugate transpose. If every entry of $U$ has modulus $1/2$, $U$ is a
 normalized complex Hadamard matrix. The inclusion holds for every such
 $U$ and for all complex spectra $a,b$. One probability law on
 permutations depends only on $U$ and gives the determinant for
-every pair of spectra.
+every pair of spectra. Lean checks the law and the inclusion.
 [Determinant inclusion](../Lean/MOC/OrderFourComplexHadamard.lean#L272) ·
 [Common law](../Lean/MOC/OrderFourComplexHadamard.lean#L259)
 

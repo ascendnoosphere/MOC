@@ -9,8 +9,8 @@ namespace MOC
 
 set_option maxHeartbeats 1500000 in
 /-- The normalized original-product identities exhaust the T5 mixed branch. -/
-theorem fourT5_capacity_of_normalized_gaps (x t r u σ λ A : ℝ) (g : Fin 24 → ℝ)
-    (ht : t ≠ 0) (ht₁ : t ≠ 1) (hr : r ≠ 0) (hλ : 0 < λ) (hA : A < 0)
+theorem fourT5_capacity_of_normalized_gaps (x t r u σ ratio A : ℝ) (g : Fin 24 → ℝ)
+    (ht : t ≠ 0) (ht₁ : t ≠ 1) (hr : r ≠ 0) (hratio_pos : 0 < ratio) (hA : A < 0)
     (hs : |σ| = 1) (hsx : σ * x < 0) (hg : ∀ i, 0 ≤ g i)
     (h9 : 0 < g 9) (h11 : 0 < g 11) (hx11 : x * g 11 = (x - 1) * g 9) :
     let L := x - r - t - u
@@ -24,7 +24,7 @@ theorem fourT5_capacity_of_normalized_gaps (x t r u σ λ A : ℝ) (g : Fin 24 �
     g 17 = A - σ * t * u * x * (x - 1) →
     H * g 13 = t * L * A + σ * t * u * x * (t - 1) * W →
     H * g 22 = (t - 1) * (x - r) * A + σ * r * t * x * (t - 1) * (x - r - u - 1) →
-    D * A = σ * r * u * (x * t * (t - 1) * (x - 1) - J * H * λ) →
+    D * A = σ * r * u * (x * t * (t - 1) * (x - 1) - J * H * ratio) →
     A ^ 2 ≤ g 10 * g 13 ∨
       A ^ 2 * (g 22 + g 17 + g 7 - A) ≤ g 22 * g 17 * (g 7 + A) := by
   intro L H W D J h7 h10 h12 h17 h13 h22 hDA
@@ -126,13 +126,13 @@ theorem fourT5_capacity_of_normalized_gaps (x t r u σ λ A : ℝ) (g : Fin 24 �
         have hn : t + u - 1 < 0 := by linarith only [htn, hun]
         dsimp only [J]
         exact add_neg hrn (mul_neg_of_neg_of_pos hn hx')
-      have hb : 0 < x * t * (t - 1) * (x - 1) - J * H * λ := by
+      have hb : 0 < x * t * (t - 1) * (x - 1) - J * H * ratio := by
         have hp := mul_pos (mul_pos_of_neg_of_neg (mul_neg_of_pos_of_neg hx' htn) htm) hy
-        have hn := mul_neg_of_neg_of_pos (mul_neg_of_neg_of_pos hJ hH) hλ
+        have hn := mul_neg_of_neg_of_pos (mul_neg_of_neg_of_pos hJ hH) hratio_pos
         linarith only [hp, hn]
       have hsru : σ * r * u < 0 := by
         rw [hσ]
-        exact mul_neg_of_pos_of_neg (mul_pos (by norm_num) (neg_pos.mpr hrn)) hun
+        exact mul_neg_of_pos_of_neg (mul_pos_of_neg_of_neg (by norm_num) hrn) hun
       exact (not_lt_of_ge (mul_pos_of_neg_of_neg hD hA).le) (hDA.symm ▸ mul_neg_of_neg_of_pos hsru hb)
     have hrp := pos_of_mul_pos_left hrt htp.le
     have hup := pos_of_mul_pos_right htu' htp.le
@@ -141,8 +141,8 @@ theorem fourT5_capacity_of_normalized_gaps (x t r u σ λ A : ℝ) (g : Fin 24 �
       have hp : 0 ≤ (r * u) * L := by linarith only [h12]
       exact (mul_nonneg_iff_of_pos_left (mul_pos hrp hup)).mp hp
     have htlt : t < 1 := by
-      by_contra! htlt
-      have htgt := lt_of_le_of_ne htlt ht₁.symm
+      by_contra hn
+      have htgt := lt_of_le_of_ne (le_of_not_gt hn) ht₁.symm
       have heq : H = t * L + (t - 1) * (t + u) := by dsimp only [H, L]; ring
       have hH : 0 < H := by
         rw [heq]
@@ -160,8 +160,9 @@ theorem fourT5_capacity_of_normalized_gaps (x t r u σ λ A : ℝ) (g : Fin 24 �
       have hD : 0 < D := add_pos hrt (mul_pos hup hx')
       have hp := mul_neg_of_neg_of_pos
         (mul_neg_of_pos_of_neg (mul_pos hx' htp) (sub_neg.mpr htlt)) hy
-      have hsru : σ * r * u < 0 := by rw [hσ]; exact mul_neg_of_neg_of_pos
-        (mul_neg_of_neg_of_pos (by norm_num) hrp) hup
+      have hsru : σ * r * u < 0 := by
+        rw [hσ]
+        exact mul_neg_of_neg_of_pos (mul_neg_of_neg_of_pos (by norm_num) hrp) hup
       rw [hH, mul_zero, zero_mul, sub_zero] at hDA
       exact (not_lt_of_ge (hDA.symm ▸ (mul_pos_of_neg_of_neg hsru hp).le)) (mul_neg_of_pos_of_neg hD hA)
     have h17' : g 17 = t * u * x * (x - 1) - (-A) := by rw [h17, hσ]; ring

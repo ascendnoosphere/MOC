@@ -64,34 +64,139 @@ private abbrev RectangleClosed (s : Finset (Fin 24)) : Prop :=
     (p 0 ∈ s → p 2 ∈ s → p 3 ∈ s → p 1 ∈ s) ∧
     (p 1 ∈ s → p 2 ∈ s → p 3 ∈ s → p 0 ∈ s)
 
-set_option maxRecDepth 100000 in
-set_option maxHeartbeats 0 in
+private def forbiddenContactTriples (t k : Fin 3) : Finset (Fin 24) :=
+  ![![{1, 6, 7}, {8, 14, 15}, {17, 22, 23}],
+    ![{1, 20, 22}, {6, 12, 17}, {8, 9, 15}],
+    ![{1, 6, 7}, {12, 14, 20}, {17, 22, 23}]] t k
+
+private def excludedContacts (t : Fin 3) : Finset (Fin 24) :=
+  ![{9, 12, 20}, {14, 23, 7}, {18, 8, 15}] t
+
+private theorem forbiddenContactTriples_not_subset (s : Finset (Fin 24)) {t : Fin 3}
+    (hs : s ⊆ seedZeros \ excludedContacts t) (hc : RectangleClosed s)
+    (k : Fin 3) : ¬ forbiddenContactTriples t k ⊆ s := by
+  have hnot (p : Fin 24) (hp : p ∉ seedZeros \ excludedContacts t) : p ∉ s :=
+    fun hm => hp (hs hm)
+  intro h
+  fin_cases t <;> fin_cases k
+  · exact hnot 0 (by decide) ((hc 0).2.2.2 (h (by decide : 1 ∈ forbiddenContactTriples 0 0)) (h (by decide : 6 ∈ forbiddenContactTriples 0 0))
+      (h (by decide : 7 ∈ forbiddenContactTriples 0 0)))
+  · exact hnot 9 (by decide) ((hc 3).2.2.1 (h (by decide : 8 ∈ forbiddenContactTriples 0 1)) (h (by decide : 14 ∈ forbiddenContactTriples 0 1))
+      (h (by decide : 15 ∈ forbiddenContactTriples 0 1)))
+  · exact hnot 16 (by decide) ((hc 5).2.2.2 (h (by decide : 17 ∈ forbiddenContactTriples 0 2)) (h (by decide : 22 ∈ forbiddenContactTriples 0 2))
+      (h (by decide : 23 ∈ forbiddenContactTriples 0 2)))
+  · exact hnot 3 (by decide) ((hc 1).2.2.1 (h (by decide : 1 ∈ forbiddenContactTriples 1 0)) (h (by decide : 20 ∈ forbiddenContactTriples 1 0))
+      (h (by decide : 22 ∈ forbiddenContactTriples 1 0)))
+  · exact hnot 11 (by decide) ((hc 2).2.2.1 (h (by decide : 6 ∈ forbiddenContactTriples 1 1)) (h (by decide : 12 ∈ forbiddenContactTriples 1 1))
+      (h (by decide : 17 ∈ forbiddenContactTriples 1 1)))
+  · exact hnot 14 (by decide) ((hc 3).2.1 (h (by decide : 8 ∈ forbiddenContactTriples 1 2)) (h (by decide : 9 ∈ forbiddenContactTriples 1 2))
+      (h (by decide : 15 ∈ forbiddenContactTriples 1 2)))
+  · exact hnot 0 (by decide) ((hc 0).2.2.2 (h (by decide : 1 ∈ forbiddenContactTriples 2 0)) (h (by decide : 6 ∈ forbiddenContactTriples 2 0))
+      (h (by decide : 7 ∈ forbiddenContactTriples 2 0)))
+  · exact hnot 18 (by decide) ((hc 4).2.1 (h (by decide : 12 ∈ forbiddenContactTriples 2 1)) (h (by decide : 14 ∈ forbiddenContactTriples 2 1))
+      (h (by decide : 20 ∈ forbiddenContactTriples 2 1)))
+  · exact hnot 16 (by decide) ((hc 5).2.2.2 (h (by decide : 17 ∈ forbiddenContactTriples 2 2)) (h (by decide : 22 ∈ forbiddenContactTriples 2 2))
+      (h (by decide : 23 ∈ forbiddenContactTriples 2 2)))
+
+private theorem closed_contacts_under_exclusion (s : Finset (Fin 24)) (t : Fin 3)
+    (hs : s ⊆ seedZeros \ excludedContacts t) (hc : RectangleClosed s) : s.card < 8 := by
+  have hfail (k : Fin 3) := forbiddenContactTriples_not_subset s hs hc k
+  obtain ⟨a, ha, hna⟩ := Finset.not_subset.mp (hfail 0)
+  obtain ⟨b, hb, hnb⟩ := Finset.not_subset.mp (hfail 1)
+  obtain ⟨c, hc', hnc⟩ := Finset.not_subset.mp (hfail 2)
+  have hsub (k : Fin 3) : forbiddenContactTriples t k ⊆ seedZeros \ excludedContacts t :=
+    (by decide +kernel : ∀ t k : Fin 3,
+      forbiddenContactTriples t k ⊆ seedZeros \ excludedContacts t) t k
+  have hne (i j : Fin 3) (hij : i ≠ j) : Disjoint (forbiddenContactTriples t i)
+      (forbiddenContactTriples t j) :=
+    (by decide +kernel : ∀ t i j : Fin 3, i ≠ j →
+      Disjoint (forbiddenContactTriples t i) (forbiddenContactTriples t j)) t i j hij
+  have hab : a ≠ b := fun h => Finset.disjoint_left.mp (hne 0 1 (by decide)) ha (h.symm ▸ hb)
+  have hac : a ≠ c := fun h => Finset.disjoint_left.mp (hne 0 2 (by decide)) ha (h.symm ▸ hc')
+  have hbc : b ≠ c := fun h => Finset.disjoint_left.mp (hne 1 2 (by decide)) hb (h.symm ▸ hc')
+  have hcard : ({a, b, c} : Finset (Fin 24)).card = 3 := by simp [hab, hac, hbc]
+  have hinc : ({a, b, c} : Finset (Fin 24)) ⊆ (seedZeros \ excludedContacts t) \ s := by
+    simp only [Finset.insert_subset_iff, Finset.singleton_subset_iff]
+    exact ⟨Finset.mem_sdiff.mpr ⟨hsub 0 ha, hna⟩, Finset.mem_sdiff.mpr ⟨hsub 1 hb, hnb⟩,
+      Finset.mem_sdiff.mpr ⟨hsub 2 hc', hnc⟩⟩
+  have hbound := Finset.card_le_card hinc
+  rw [hcard, Finset.card_sdiff hs] at hbound
+  have hsize : (seedZeros \ excludedContacts t).card = 10 :=
+    (by decide +kernel : ∀ t : Fin 3, (seedZeros \ excludedContacts t).card = 10) t
+  omega
+
 private theorem eight_closed_contacts :
     ∀ s ∈ seedZeros.powerset, 8 ≤ s.card → RectangleClosed s →
       (9 ∈ s ∨ 12 ∈ s ∨ 20 ∈ s) ∧
       (14 ∈ s ∨ 23 ∈ s ∨ 7 ∈ s) ∧
       (18 ∈ s ∨ 8 ∈ s ∨ 15 ∈ s) := by
-  decide +kernel
+  intro s hs hn hc
+  have hss := Finset.mem_powerset.mp hs
+  have hcannot (t : Fin 3) (h : ∀ p ∈ excludedContacts t, p ∉ s) : False := by
+    have hsub : s ⊆ seedZeros \ excludedContacts t := by
+      intro p hp
+      exact Finset.mem_sdiff.mpr ⟨hss hp, fun he => h p he hp⟩
+    exact (not_lt_of_ge hn) (closed_contacts_under_exclusion s t hsub hc)
+  constructor
+  · by_contra! h
+    apply hcannot 0
+    intro p hp
+    change p ∈ ({9, 12, 20} : Finset (Fin 24)) at hp
+    rcases (by simpa only [Finset.mem_insert, Finset.mem_singleton] using hp :
+      p = 9 ∨ p = 12 ∨ p = 20) with rfl | rfl | rfl
+    · exact h.1
+    · exact h.2.1
+    · exact h.2.2
+  constructor
+  · by_contra! h
+    apply hcannot 1
+    intro p hp
+    change p ∈ ({14, 23, 7} : Finset (Fin 24)) at hp
+    rcases (by simpa only [Finset.mem_insert, Finset.mem_singleton] using hp :
+      p = 14 ∨ p = 23 ∨ p = 7) with rfl | rfl | rfl
+    · exact h.1
+    · exact h.2.1
+    · exact h.2.2
+  · by_contra! h
+    apply hcannot 2
+    intro p hp
+    change p ∈ ({18, 8, 15} : Finset (Fin 24)) at hp
+    rcases (by simpa only [Finset.mem_insert, Finset.mem_singleton] using hp :
+      p = 18 ∨ p = 8 ∨ p = 15) with rfl | rfl | rfl
+    · exact h.1
+    · exact h.2.1
+    · exact h.2.2
 
-private def inversePermutationTable (p : Fin 24) : Fin 4 → Fin 4 :=
-  ![![0, 1, 2, 3], ![0, 1, 3, 2], ![0, 2, 1, 3], ![0, 3, 1, 2],
-    ![0, 2, 3, 1], ![0, 3, 2, 1], ![1, 0, 2, 3], ![1, 0, 3, 2],
-    ![2, 0, 1, 3], ![3, 0, 1, 2], ![2, 0, 3, 1], ![3, 0, 2, 1],
-    ![1, 2, 0, 3], ![1, 3, 0, 2], ![2, 1, 0, 3], ![3, 1, 0, 2],
-    ![2, 3, 0, 1], ![3, 2, 0, 1], ![1, 2, 3, 0], ![1, 3, 2, 0],
-    ![2, 1, 3, 0], ![3, 1, 2, 0], ![2, 3, 1, 0], ![3, 2, 1, 0]] p
+private def matchingEdges (p : Fin 24) : List (Fin 4 × Fin 4) :=
+  List.ofFn fun j => ((fourPerm p).symm j, j)
 
-private theorem inversePermutationTable_apply (p : Fin 24) (i : Fin 4) :
-    (fourPerm p).symm i = inversePermutationTable p i :=
-  (by decide +kernel : ∀ p : Fin 24, ∀ i : Fin 4,
-    (fourPerm p).symm i = inversePermutationTable p i) p i
+private theorem contactRectangle_edges (r : Fin 6) :
+    let p := contactRectangle r
+    (matchingEdges (p 0) ++ matchingEdges (p 3)).Perm
+      (matchingEdges (p 1) ++ matchingEdges (p 2)) :=
+  (by decide +kernel : ∀ r : Fin 6,
+    let p := contactRectangle r
+    (matchingEdges (p 0) ++ matchingEdges (p 3)).Perm
+      (matchingEdges (p 1) ++ matchingEdges (p 2))) r
 
 private theorem contactRectangle_product (a b : Fin 4 → ℂ) (η : ℂ) (r : Fin 6) :
     let z (p : Fin 24) := η * matchingProduct a b (fourPerm p).symm
     let p := contactRectangle r
     z (p 0) * z (p 3) = z (p 1) * z (p 2) := by
-  fin_cases r <;> simp only [contactRectangle, matchingProduct, Fin.prod_univ_four,
-    inversePermutationTable_apply, inversePermutationTable, Matrix.cons_val] <;> ring
+  let f (e : Fin 4 × Fin 4) := a e.1 + b e.2
+  have hf (i : Fin 24) : ((matchingEdges i).map f).prod =
+      matchingProduct a b (fourPerm i).symm := by
+    simp only [matchingEdges, List.map_ofFn, Function.comp_apply, List.prod_ofFn, f,
+      matchingProduct]
+  let p := contactRectangle r
+  have hp : matchingProduct a b (fourPerm (p 0)).symm *
+      matchingProduct a b (fourPerm (p 3)).symm =
+      matchingProduct a b (fourPerm (p 1)).symm *
+      matchingProduct a b (fourPerm (p 2)).symm := by
+    have h := ((contactRectangle_edges r).map f).prod_eq
+    simpa only [List.map_append, List.prod_append, hf] using h
+  dsimp only
+  rw [mul_mul_mul_comm η _ η _, mul_mul_mul_comm η _ η _, hp]
 
 private theorem rectangle_fourth_real_zero {x y z w : ℂ} (h : x * w = y * z) (hx : x ≠ 0)
     (h₀ : x.re = 0) (h₁ : y.re = 0) (h₂ : z.re = 0) : w.re = 0 := by

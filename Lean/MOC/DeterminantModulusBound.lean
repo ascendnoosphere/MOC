@@ -39,7 +39,7 @@ private theorem norm_det_hadamard_le_assignment_scaling (U C : Matrix ι ι ℂ)
     have hs : (↑(r i * c j) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (mul_pos (hr i) (hc j)).ne'
     calc
       _ = (z i j * (↑(r i * c j) : ℂ)) * U i j := by
-        rw [z, div_mul_cancel₀ _ hs]
+        rw [show z i j = C i j / (↑(r i * c j) : ℂ) from rfl, div_mul_cancel₀ _ hs]
       _ = _ := by rw [Complex.ofReal_mul]; ring
   have hR : 0 ≤ ∏ i, r i := Finset.prod_nonneg fun i _ => (hr i).le
   have hC : 0 ≤ ∏ j, c j := Finset.prod_nonneg fun j _ => (hc j).le
@@ -122,7 +122,7 @@ theorem norm_det_weighted_entries_div_le_supported_matching
       apply Finset.sum_eq_zero
       intro τ _
       obtain ⟨i, hi⟩ := h τ
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) hi, mul_zero]
+      rw [Finset.prod_eq_zero (f := fun j => U (τ j) j) (Finset.mem_univ i) hi, mul_zero]
     obtain ⟨τ, hτ⟩ := hmatching
     exact ⟨τ, hτ, by simp only [hdet, zero_div, norm_zero, norm_nonneg]⟩
 

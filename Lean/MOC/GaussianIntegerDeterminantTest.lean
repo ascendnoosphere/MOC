@@ -225,9 +225,10 @@ private theorem gaussianIntegerOrbitComparison_iff {n d : ℕ} {a b : Fin n → 
     · simp only [Matrix.map_apply, Matrix.diagonal_apply_ne _ hij, map_zero]
   have hMap : (gaussianIntegerOrbitNumerator a b d N).map g =
       (d : ℂ) ^ 2 • (diagonal x + U * diagonal y * Uᴴ) := by
+    change N.map g = (d : ℂ) • U at hN
     simp only [gaussianIntegerOrbitNumerator, Matrix.map_add g (map_add g), Matrix.map_mul,
       Matrix.map_smul' g _ _ (map_mul g), Matrix.conjTranspose_map g GaussianInt.toComplex_star,
-      map_pow, map_natCast, hDiag, hN, Matrix.conjTranspose_smul, star_natCast_complex,
+      map_pow, map_mul, map_natCast, hDiag, hN, Matrix.conjTranspose_smul, star_natCast_complex,
       Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_add, pow_two, x, y]
   have hD : g (gaussianIntegerOrbitNumerator a b d N).det =
       (((d : ℝ) ^ (2 * n) : ℝ) : ℂ) * determinantValue x y U := by
@@ -300,10 +301,10 @@ private theorem exists_integral_spectra {n : ℕ} (a b : Fin n → ℂ)
     have imagEq : (d : ℝ) * (p i).2 = z (i, false) := by
       simpa [q] using congrArg (fun t : ℚ => (t : ℝ)) (hz (i, false))
     apply Complex.ext
-    · rw [w, GaussianInt.toComplex_re, Complex.mul_re, Complex.natCast_re, Complex.natCast_im,
+    · rw [GaussianInt.toComplex_re, Complex.mul_re, Complex.natCast_re, Complex.natCast_im,
         zero_mul, sub_zero, (hp i).1]
       exact realEq.symm
-    · rw [w, GaussianInt.toComplex_im, Complex.mul_im, Complex.natCast_re, Complex.natCast_im,
+    · rw [GaussianInt.toComplex_im, Complex.mul_im, Complex.natCast_re, Complex.natCast_im,
         zero_mul, add_zero, (hp i).2]
       exact imagEq.symm
   exact ⟨d, w ∘ Sum.inl, w ∘ Sum.inr, hd, funext (fun i => hw (.inl i)),

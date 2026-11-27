@@ -1,7 +1,7 @@
 import MOC.Reformulations.FirstHermitian
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
-/-! Atlas 039, 046 and 047 on the actual Hermitian matrix sum. The real log
+/-! Determinant and log-determinant bounds for Hermitian sums. The real log
 is used only on a strictly positive determinant. -/
 
 open BigOperators Matrix
@@ -10,7 +10,7 @@ open scoped ComplexOrder
 namespace MOC.Reformulations
 noncomputable section
 
-/-- Atlas 047: the objective is the product of the actual sum's real
+/-- The objective is the product of the Hermitian sum's real
 eigenvalues, in any ordering. -/
 theorem nativeHermitianSumEigenvalueHull {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)
     (hA : A.IsHermitian) (hB : B.IsHermitian) (hU : IsUnitary U) :
@@ -31,7 +31,7 @@ private theorem real_part_matching {n : ℕ} (a b : Fin n → ℝ)
   unfold matchingProduct
   simp only [← Complex.ofReal_add, ← Complex.ofReal_prod, Complex.ofReal_re]
 
-/-- Atlas 046: the two end inequalities with witnessing permutations.
+/-- The lower and upper bounds with witnessing permutations.
 They are equivalent to the minimum/maximum formulation because the
 permutation set is finite. -/
 theorem nativeDeterminantBarrier {n : ℕ} (A B U : Matrix (Fin n) (Fin n) ℂ)

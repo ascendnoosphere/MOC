@@ -1,4 +1,5 @@
 import MOC.FourMatchingPolarization
+import MOC.FourMatchingRelations
 import Mathlib.LinearAlgebra.Matrix.Nondegenerate
 
 /-! The Hessian condition in Zheng's Group V follows directly by polarizing
@@ -14,6 +15,10 @@ open private cubicGradient bracket_gradient_zero from MOC.FourMatchingPolarizati
 
 namespace MOC
 
+private theorem fourMatchingGradient_eq_cubicGradient {R : Type*} [CommRing R]
+    (u : Fin 14 → R) (i : Fin 14) : fourMatchingGradient u i = cubicGradient u i := by
+  fin_cases i <;> simp [fourMatchingGradient, cubicGradient] <;> ring
+
 /-- Mixed polarization of the quadratic gradient, i.e. the Hessian action. -/
 @[irreducible] def fourMatchingHessianAction {R : Type*} [CommRing R] (u v : Fin 14 → R) :
     Fin 14 → R :=
@@ -21,8 +26,9 @@ namespace MOC
 
 set_option maxHeartbeats 1500000 in
 private theorem gradient_projection_im (y : Fin 14 → ℂ) (i : Fin 14) :
-    (cubicGradient y i).im =
+    (fourMatchingGradient y i).im =
       fourMatchingHessianAction (fun k => (y k).re) (fun k => (y k).im) i := by
+  rw [fourMatchingGradient_eq_cubicGradient]
   fin_cases i <;>
     simp [cubicGradient, fourMatchingHessianAction, Complex.add_im, Complex.sub_im,
       Complex.mul_im, Complex.mul_re, pow_two] <;> ring
@@ -80,18 +86,15 @@ theorem fourMatchingHessian_has_kernel (z : Fin 8 → ℂ) (η : ℂ) :
   · refine ⟨v, hv, ?_⟩
     funext i
     change fourMatchingHessianAction u v i = 0
-    rw [← gradient_projection_im y i, hy i, Complex.zero_im]
-
-/-- The quadratic gradient of the matching cubic. -/
-abbrev fourMatchingGradient {R : Type*} [CommRing R] (u : Fin 14 → R) : Fin 14 → R :=
-  cubicGradient u
+    rw [← gradient_projection_im y i, fourMatchingGradient_eq_cubicGradient, hy i,
+      Complex.zero_im]
 
 private theorem gradient_projection_re (y : Fin 14 → ℂ) (i : Fin 14) :
     (fourMatchingGradient y i).re =
       fourMatchingGradient (fun k => (y k).re) i -
         fourMatchingGradient (fun k => (y k).im) i := by
   fin_cases i <;>
-    simp [fourMatchingGradient, cubicGradient, Complex.add_re, Complex.sub_re,
+    simp [fourMatchingGradient_eq_cubicGradient, cubicGradient, Complex.add_re, Complex.sub_re,
       Complex.mul_re, Complex.mul_im, pow_two] <;> ring
 
 /-- The singularity equation for a complex lift splits into the real
@@ -128,6 +131,7 @@ theorem fourMatching_real_lift_equations (z : Fin 8 → ℂ) (η : ℂ) :
     fourMatchingHessianAction u v = 0 ∧ fourMatchingGradient v = fourMatchingGradient u := by
   apply (fourMatchingGradient_eq_zero_iff (fun k => η * fourBracketLift z k)).mp
   funext i
+  rw [fourMatchingGradient_eq_cubicGradient]
   exact scaled_gradient_zero z η i
 
 /-- A real secant profile that fails the real lift equations. -/
@@ -187,7 +191,7 @@ theorem fourRealSecantObstruction_checks :
         Pi.zero_apply] <;> norm_num1
   · rintro ⟨v, hv, hg⟩
     have h0 : fourMatchingGradient fourRealSecantObstruction 0 = 72 := by
-      simp only [fourMatchingGradient, fourRealSecantObstruction, cubicGradient,
+      simp only [fourMatchingGradient_eq_cubicGradient, fourRealSecantObstruction, cubicGradient,
         Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
       norm_num1
     have hp : fourMatchingGradient v 0 =
@@ -195,7 +199,8 @@ theorem fourRealSecantObstruction_checks :
       conv_lhs =>
         rw [show v = (fun i => (realSecantKernelFirst i * v 12 +
           realSecantKernelSecond i * v 13) / 13) from funext (realSecantKernel_coordinates v hv)]
-      simp [fourMatchingGradient, cubicGradient, realSecantKernelFirst, realSecantKernelSecond,
+      simp [fourMatchingGradient_eq_cubicGradient, cubicGradient, realSecantKernelFirst,
+        realSecantKernelSecond,
         Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
       ring
     have he : fourMatchingGradient v 0 = 72 := (congrFun hg 0).trans h0

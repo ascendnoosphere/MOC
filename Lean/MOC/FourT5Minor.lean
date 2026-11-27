@@ -105,7 +105,7 @@ private theorem t5GapProfile_eq_mixedSum (g : Fin 24 → ℝ) (d₄ d₂ : ℝ)
   fin_cases i <;>
     simp (config := { decide := true }) [t5GapProfile, t5MinorSupports, t5MixedWeights,
       Fin.sum_univ_succ, Matrix.cons_val] <;>
-    (first | rfl | ring | linarith only [h17, hd])
+    linarith only [h17, hd]
 
 private theorem t5_exists_nonnegative_weights (g : Fin 24 → ℝ) (hg : ∀ i, 0 ≤ g i)
     (hprofile : ∀ i, g i = t5GapProfile g i) (hA : 0 ≤ g 16 - g 0) :
@@ -166,11 +166,11 @@ private theorem t5_exists_nonnegative_weights (g : Fin 24 → ℝ) (hg : ∀ i, 
   · dsimp only [A] at hu₁
     linarith only [hu₁]
   · linarith only [hu₂]
-  · exact sub_nonneg.mpr hu₁₂
+  · exact hu₁₂
   · exact hu₀
   · linarith only [hv₁]
-  · exact sub_nonneg.mpr hv9
-  · exact sub_nonneg.mpr hv7
+  · exact hv9
+  · exact hv7
   · exact hv₀
   · exact hg 0
 

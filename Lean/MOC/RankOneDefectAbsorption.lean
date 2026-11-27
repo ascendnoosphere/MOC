@@ -44,18 +44,21 @@ theorem rankOnePhase_mul_gramDefect (v : Fin n → ℂ) (z : ℂ)
   let D := rankOnePhase v z
   let V := D * W
   have hV : V * Vᴴ = D * Dᴴ := by
-    rw [V, Matrix.conjTranspose_mul, Matrix.mul_assoc D W (Wᴴ * Dᴴ),
+    change (D * W) * (D * W)ᴴ = D * Dᴴ
+    rw [Matrix.conjTranspose_mul, Matrix.mul_assoc D W (Wᴴ * Dᴴ),
       ← Matrix.mul_assoc W Wᴴ Dᴴ, hW.1, Matrix.one_mul]
   have hD : D * Dᴴ = rankOnePhase v ((Complex.normSq z : ℝ) : ℂ) := by
-    rw [D, rankOnePhase_conjTranspose, rankOnePhase_mul v hv,
+    change rankOnePhase v z * (rankOnePhase v z)ᴴ = _
+    rw [rankOnePhase_conjTranspose, rankOnePhase_mul v hv,
       Complex.star_def, Complex.mul_conj]
   have hδ : 0 ≤ 1 - Complex.normSq z := by
     rw [sub_nonneg, Complex.normSq_eq_norm_sq]
     simpa only [one_pow] using pow_le_pow_left₀ (norm_nonneg _) hz 2
   let t : ℂ := (Real.sqrt (1 - Complex.normSq z) : ℝ)
   have ht : t * star t = (((1 : ℝ) - Complex.normSq z : ℝ) : ℂ) := by
-    rw [show star t = t from Complex.conj_ofReal _, ← pow_two, t, ← Complex.ofReal_pow,
-      Real.sq_sqrt hδ]
+    rw [show star t = t from Complex.conj_ofReal _, ← pow_two]
+    dsimp only [t]
+    rw [← Complex.ofReal_pow, Real.sq_sqrt hδ]
   let C : Matrix (Fin n) (Fin 1) ℂ := Matrix.of fun i _ => t * v i
   have hdef : 1 - V * Vᴴ = C * Cᴴ := by
     rw [hV, hD, rankOnePhase]
@@ -63,7 +66,7 @@ theorem rankOnePhase_mul_gramDefect (v : Fin n → ℂ) (z : ℂ)
     simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul,
       Matrix.vecMulVec_apply, Function.comp_apply, Matrix.mul_apply, Fin.sum_univ_one,
       Matrix.conjTranspose_apply, C, Matrix.of_apply, star_mul']
-    rw [show t * v i * (star (v j) * star t) =
+    rw [show t * v i * (star t * star (v j)) =
       (t * star t) * (v i * star (v j)) by ring, ht, Complex.ofReal_sub, Complex.ofReal_one]
     ring
   apply (rank_one_defect_left_iff_right V).mpr
@@ -79,8 +82,10 @@ def rankOneDefectInjectionSupport (a b : Fin n → ℂ) (η : ℂ) : ℝ :=
 private theorem le_rankOneDefectInjectionSupport (a b : Fin n → ℂ) (η : ℂ)
     (e : Fin n ↪ Fin (n + 1)) :
     (η * rectangularMatchingProduct a (Fin.cons 0 b) e).re ≤
-      rankOneDefectInjectionSupport a b η :=
-  Finset.le_sup' _ (Finset.mem_univ e)
+      rankOneDefectInjectionSupport a b η := by
+  unfold rankOneDefectInjectionSupport
+  exact Finset.le_sup' (fun f => (η * rectangularMatchingProduct a (Fin.cons 0 b) f).re)
+    (Finset.mem_univ e)
 
 private theorem rankOneDefect_hull_iff (a b : Fin n → ℂ) (w : ℂ) :
     w ∈ convexHull ℝ (Set.range (rectangularMatchingProduct a (Fin.cons 0 b))) ↔
@@ -206,9 +211,8 @@ theorem rankOneDefectDiskBound_iff_piecewise :
   · intro h a b v W hW hv η
     let C := rankOneDefectDiskCoefficients a b v W η
     obtain ⟨_, z, hz, he, _⟩ := quadraticDiskSupport_max C.constant C.radial C.linear
-    have hle := h a b v W hW hv η z hz
-    rw [rankOneDefectDisk_eval a b v W η z, he] at hle
-    exact hle
+    exact he.symm.le.trans
+      ((rankOneDefectDisk_eval a b v W η z).symm.le.trans (h a b v W hW hv η z hz))
   · intro h a b v W hW hv η z hz
     let C := rankOneDefectDiskCoefficients a b v W η
     rw [rankOneDefectDisk_eval a b v W η z]
@@ -220,8 +224,8 @@ def RankOneDefectSemidefinite (n : ℕ) : Prop :=
   ∀ (a b v : Fin n → ℂ) (W : Matrix (Fin n) (Fin n) ℂ), IsUnitary W →
     (∑ i, star (v i) * v i = 1) → ∀ η : ℂ,
     let C := rankOneDefectDiskCoefficients a b v W η
-    ∃ λ : ℝ, 0 ≤ λ ∧ (Reformulations.diskCertificateMatrix
-      (rankOneDefectInjectionSupport a b η - C.constant - λ) (λ - C.radial) C.linear).PosSemidef
+    ∃ multiplier : ℝ, 0 ≤ multiplier ∧ (Reformulations.diskCertificateMatrix
+      (rankOneDefectInjectionSupport a b η - C.constant - multiplier) (multiplier - C.radial) C.linear).PosSemidef
 
 theorem rankOneDefectDiskBound_iff_semidefinite :
     RankOneDefectDiskBound n ↔ RankOneDefectSemidefinite n := by
@@ -252,8 +256,8 @@ theorem rankOneDefectDiskBound_implies_absorption (h : RankOneDefectDiskBound n)
   intro hi
   obtain ⟨_, z, hz, he, _⟩ := quadraticDiskSupport_max C.constant C.radial C.linear
   rw [if_neg (not_le_of_gt hi)] at he
-  have hle := h a b v W hW hv η z hz
-  rw [rankOneDefectDisk_eval a b v W η z, he] at hle
+  have hle := he.symm.le.trans
+    ((rankOneDefectDisk_eval a b v W η z).symm.le.trans (h a b v W hW hv η z hz))
   have hpos : 0 < -C.radial := by linarith only [hi, norm_nonneg C.linear]
   have hdiv : ‖C.linear‖ ^ 2 / (-C.radial) ≤ rankOneDefectInjectionSupport a b η - C.constant := by
     linarith only [hle]

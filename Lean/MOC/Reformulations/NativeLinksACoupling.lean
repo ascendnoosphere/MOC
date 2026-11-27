@@ -13,7 +13,7 @@ def additiveLogCouplingValues (μ ν : Measure ℝ) : Set ℝ :=
   {z | ∃ γ : Measure (ℝ × ℝ), γ.map Prod.fst = μ ∧ γ.map Prod.snd = ν ∧
     z = Real.exp (∫ p, Real.log (p.1 + p.2) ∂γ)}
 
-/-- Native Atlas 052. The determinant defined by the integral of the
+/-- For two real measurable functions, the determinant defined by the integral of the
 logarithm is itself a coupling value: use the joint law of the two
 functions. This works on any measure space, not just on a finite lift. -/
 theorem commutativeLogDet_mem_couplings {X : Type*} [MeasurableSpace X]

@@ -46,8 +46,8 @@ theorem fourT5_exact_pole_ratios (x t r u z w v : ℂ)
     field_simp [hu, hG'] <;> dsimp only [Dn] <;> ring
   have hzv : z - v = -v * P / G := by rw [hz']; field_simp [hG']; dsimp only [P]; ring
   have hztv : z - t * v = v * (r - t * G) / G := by rw [hz']; field_simp [hG'] <;> ring
-  have hw₁ : w - 1 = V / u := by rw [hw']; field_simp [hu]
-  have hxw : x - w = K / u := by rw [hw']; field_simp [hu]
+  have hw₁ : w - 1 = V / u := by rw [hw']; field_simp [hu]; rfl
+  have hxw : x - w = K / u := by rw [hw']; field_simp [hu]; dsimp only [K]; ring
   have hF₀ : F 0 = (1 - v) * (z - w) * f := fourT5_pole_product_values z x w v t 0
   have hF₁ : F 1 = t * v * (v - 1) * (z - w) := fourT5_pole_product_values z x w v t 1
   have hF₇ : F 7 = t * v * (z - v) * (w - 1) := fourT5_pole_product_values z x w v t 6

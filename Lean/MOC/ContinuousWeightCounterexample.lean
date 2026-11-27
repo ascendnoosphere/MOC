@@ -8,6 +8,7 @@ import Mathlib.NumberTheory.Zsqrtd.GaussianInt
 of the two corresponding fields. -/
 
 open BigOperators Matrix Set Filter Topology
+open scoped ContDiff
 
 namespace MOC.ContinuousWeightCounterexample
 
@@ -36,7 +37,8 @@ theorem isUnitary_divide_gaussian_matrix {n : ℕ}
 
 theorem isUnitary_mixer : IsUnitary mixer := by
   apply isUnitary_divide_gaussian_matrix
-  ext i j
+  apply Matrix.ext
+  intro i j
   fin_cases i <;> fin_cases j <;> decide +kernel
 
 theorem mixerNumerator_det : mixerNumerator.det = 2401 := by
@@ -204,7 +206,10 @@ theorem triangle_certificate (s : Bool) :
   refine ⟨fun j => (triangleWeightInt s j : ℝ) / triangleDenominator s, ?_, ?_, ?_⟩
   · intro j
     exact div_pos (by exact_mod_cast hw j) (by exact_mod_cast hn)
-  · cases s <;> norm_num [Fin.sum_univ_three, triangleWeightInt, triangleDenominator]
+  · have hmass : (∑ j, triangleWeightInt s j) = triangleDenominator s := by
+      cases s <;> decide +kernel
+    have hd : (triangleDenominator s : ℝ) ≠ 0 := by exact_mod_cast hn.ne'
+    rw [← Finset.sum_div, ← Nat.cast_sum, hmass, div_self hd]
   · have he := congrArg GaussianInt.toComplex (triangle_identity s)
     simp only [map_mul, map_sum, map_natCast, map_ofNat] at he
     have hd : (triangleDenominator s : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
@@ -225,7 +230,8 @@ theorem triangle_signed_area (s : Bool) :
     (star (z 1 - z 0) * (z 2 - z 0)).im =
       if s then 40375066392900 else -193677606341510 := by
   dsimp only
-  simp_rw [matchingProduct_eq_exact, ← map_sub, ← GaussianInt.toComplex_star, ← map_mul]
+  simp only [matchingProduct_eq_exact, Complex.star_def, ← GaussianInt.toComplex_sub,
+    ← GaussianInt.toComplex_star, ← GaussianInt.toComplex_mul]
   have h : (star (vertexInt s (fourPerm (triangleIndex s 1)) -
       vertexInt s (fourPerm (triangleIndex s 0))) *
       (vertexInt s (fourPerm (triangleIndex s 2)) -
@@ -294,11 +300,11 @@ theorem intervalSpectrum_half (s : Bool) (t : ℝ)
 
 private theorem contDiffOn_positiveFlatScale :
     ContDiffOn ℝ ∞ positiveFlatScale (Ioo (-2) 2) := by
-  have h₁ : ContDiff ℝ ∞ (fun t : ℝ => 2 * t) := by fun_prop
+  have h₁ : ContDiff ℝ ∞ (fun t : ℝ => 2 * t) := contDiff_const.mul contDiff_id
   have h₂ : ContDiffOn ℝ ∞ (fun t : ℝ => 2 * t ^ 2 / (2 - t)) (Ioo (-2) 2) := by
-    apply ContDiffOn.div (by fun_prop) (by fun_prop)
-    intro t ht
-    exact sub_ne_zero.mpr (ne_of_gt ht.2)
+    have hnum : ContDiff ℝ ∞ (fun t : ℝ => 2 * t ^ 2) := contDiff_const.mul (contDiff_id.pow 2)
+    have hden : ContDiff ℝ ∞ (fun t : ℝ => 2 - t) := contDiff_const.sub contDiff_id
+    exact hnum.contDiffOn.div hden.contDiffOn (fun t ht => sub_ne_zero.mpr (ne_of_gt ht.2))
   exact (expNegInvGlue.contDiff.comp h₁).contDiffOn.mul
     (expNegInvGlue.contDiff.comp_contDiffOn h₂)
 
@@ -309,10 +315,13 @@ theorem interval_spectra_smooth (j : Fin 4) :
     constructor <;> linarith [ht.1, ht.2]
   have h₁ : ContDiffOn ℝ ∞ positiveFlatScale (Icc (-1) 1) :=
     contDiffOn_positiveFlatScale.mono hs
+  have hneg : ContDiff ℝ ∞ (fun t : ℝ => -t) := contDiff_id.neg
   have h₂ : ContDiffOn ℝ ∞ (fun t : ℝ => positiveFlatScale (-t)) (Icc (-1) 1) :=
-    contDiffOn_positiveFlatScale.comp (by fun_prop) (fun t ht => by
+    contDiffOn_positiveFlatScale.comp hneg.contDiffOn (fun t ht => by
       constructor <;> linarith [ht.1, ht.2])
-  have hr : ContDiff ℝ ∞ flatScale := expNegInvGlue.contDiff.comp (by fun_prop)
+  have hr : ContDiff ℝ ∞ flatScale := by
+    unfold flatScale
+    exact expNegInvGlue.contDiff.comp (contDiff_id.pow 2)
   constructor
   · exact ((Complex.ofRealCLM.contDiff.comp_contDiffOn h₁).mul contDiffOn_const).add
       ((Complex.ofRealCLM.contDiff.comp_contDiffOn h₂).mul contDiffOn_const)
@@ -331,11 +340,11 @@ theorem interval_pointwise_holds (s : Bool) (t : ℝ)
   rw [show rightIntervalSpectrum t = fun j => (flatScale t : ℂ) * rightSpectrum j by rfl,
     determinantValue_scale]
   obtain ⟨w, hw, hs, he⟩ := triangle_certificate s
-  apply mem_convexHull_of_exists_fintype w
+  refine mem_convexHull_of_exists_fintype w
     (fun j => matchingProduct (fun i => (flatScale t : ℂ) * leftSpectrum s i)
-      (rightIntervalSpectrum t) (fourPerm (triangleIndex s j)).symm)
-    (fun j => (hw j).le) hs (fun j => ⟨_, rfl⟩)
-  simp only [rightIntervalSpectrum, matchingProduct_scale, Complex.real_smul,
+      (fun i => (flatScale t : ℂ) * rightSpectrum i) (fourPerm (triangleIndex s j)).symm)
+    (fun j => (hw j).le) hs (fun j => Set.mem_range_self (fourPerm (triangleIndex s j)).symm) ?_
+  simp only [matchingProduct_scale, Complex.real_smul,
     ← mul_left_comm ((flatScale t : ℂ) ^ Fintype.card (Fin 4)), ← Finset.mul_sum, he]
 
 /-- On the smooth interval collision, pointwise representations cannot be
@@ -352,8 +361,10 @@ theorem no_continuous_weights_interval :
   refine ⟨w 0, hw, hs, fun s => ?_⟩
   have hc : ContinuousWithinAt (fun t => weightedMatchingValue (leftSpectrum s)
       rightSpectrum (w t)) (Icc (-1) 1) 0 := by
-    unfold weightedMatchingValue
-    fun_prop
+    unfold ContinuousWithinAt weightedMatchingValue
+    refine tendsto_finset_sum _ fun σ _ => ?_
+    exact (Complex.continuous_ofReal.continuousAt.comp_continuousWithinAt (hwc σ)).mul
+      continuousWithinAt_const
   apply continuous_zero_eq_of_open_half hc s
   intro t ht
   have ht₀ : t ≠ 0 := by

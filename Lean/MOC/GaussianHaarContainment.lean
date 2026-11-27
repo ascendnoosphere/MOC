@@ -3,6 +3,7 @@ import MOC.Support
 import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Complex.ExponentialBounds
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Group.LIntegral
 import Mathlib.MeasureTheory.Integral.Gamma
@@ -52,22 +53,26 @@ private theorem equilateral_matching_support (u : ℂ) :
   let y : ℝ := (u * matchingTriangleRoot).re
   let z : ℝ := (u * matchingTriangleRoot ^ 2).re
   have hsum : x + y + z = 0 := by
-    simp only [x, y, z, matchingTriangleRoot_sq, matchingTriangleRoot, Complex.mul_re]
+    dsimp only [x, y, z]
+    rw [matchingTriangleRoot_sq]
+    simp only [matchingTriangleRoot, Complex.mul_re]
     ring
   have hs : Real.sqrt 3 ^ 2 = (3 : ℝ) := Real.sq_sqrt (by norm_num)
   have hsq : x ^ 2 + y ^ 2 + z ^ 2 = 3 * ‖u‖ ^ 2 / 2 := by
     rw [Complex.sq_norm]
-    simp only [x, y, z, matchingTriangleRoot_sq, matchingTriangleRoot, Complex.mul_re,
-      Complex.normSq_apply]
+    dsimp only [x, y, z]
+    rw [matchingTriangleRoot_sq]
+    simp only [matchingTriangleRoot, Complex.mul_re, Complex.normSq_apply]
     linear_combination (u.im ^ 2 / 2) * hs
   change ‖u‖ / 2 ≤ x ∨ ‖u‖ / 2 ≤ y ∨ ‖u‖ / 2 ≤ z
-  by_contra! h
+  by_contra h
+  push_neg at h
   obtain ⟨hx, hy, hz⟩ := h
   have hp := mul_pos (sub_pos.mpr hx) (sub_pos.mpr hy)
   have hq := mul_pos (sub_pos.mpr hx) (sub_pos.mpr hz)
   have hr := mul_pos (sub_pos.mpr hy) (sub_pos.mpr hz)
-  have hsumSq := congrArg (fun v : ℝ => v ^ 2) hsum
-  have hsumNorm := congrArg (fun v : ℝ => ‖u‖ * v) hsum
+  have hsumSq : (x + y + z) ^ 2 = 0 := by rw [hsum, zero_pow (by decide)]
+  have hsumNorm : ‖u‖ * (x + y + z) = 0 := by rw [hsum, mul_zero]
   nlinarith only [hp, hq, hr, hsumSq, hsumNorm, hsq]
 
 private theorem norm_matching_product_perturbation (q₁ q₂ : ℂ)
@@ -93,8 +98,10 @@ private theorem perturbed_equilateral_matching_support (u q₁ q₂ : ℂ)
     ‖u‖ / 4 ≤ u.re ∨ ‖u‖ / 4 ≤ (u * q₁).re ∨ ‖u‖ / 4 ≤ (u * (q₁ * q₂)).re := by
   have step (v w : ℂ) (herr : ‖v - w‖ ≤ 21 / 100)
       (hs : ‖u‖ / 2 ≤ (u * v).re) : ‖u‖ / 4 ≤ (u * w).re := by
-    have h := (Complex.re_le_norm (u * (v - w))).trans
-      (by rw [Complex.norm_mul]; exact mul_le_mul_of_nonneg_left herr (norm_nonneg u))
+    have h : (u * (v - w)).re ≤ ‖u‖ * (21 / 100) := calc
+      _ ≤ ‖u * (v - w)‖ := Complex.re_le_norm _
+      _ = ‖u‖ * ‖v - w‖ := Complex.norm_mul _ _
+      _ ≤ _ := mul_le_mul_of_nonneg_left herr (norm_nonneg u)
     rw [mul_sub, Complex.sub_re] at h
     nlinarith only [h, hs, norm_nonneg u]
   rcases equilateral_matching_support u with h | h | h
@@ -483,8 +490,10 @@ theorem gaussianTriangleBlock_measure_ge {Ω : Type*} [MeasurableSpace Ω] (μ :
       add_nonneg (norm_nonneg _) (by norm_num [r])
     simpa only [pow_two] using mul_le_mul hle hle hnon (hnon.trans hle)
   have hsum : (∑ j : Fin 2 × Fin 4, -((cap j.2 + r) ^ 2)) = -(22751 : ℝ) / 5000 := by
-    rw [Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
-    norm_num [cap, r, Matrix.cons_val_zero', Matrix.cons_val_succ']
+    simp only [Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
+    change (-(0 + r) ^ 2 + -(1 + r) ^ 2 + -(1 + r) ^ 2 + -(1 / 2 + r) ^ 2) +
+      (-(0 + r) ^ 2 + -(1 + r) ^ 2 + -(1 + r) ^ 2 + -(1 / 2 + r) ^ 2) = _
+    norm_num [r]
   have hrealprod : (∏ j, W j) = r ^ 16 * Real.exp (-(22751 : ℝ) / 5000) := by
     simp only [W, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ← Real.exp_sum,
       hsum, ← pow_mul, Fintype.card_prod, Fintype.card_fin]
@@ -510,11 +519,13 @@ private theorem generateFrom_singleton_compl {Ω : Type*} (S : Set Ω) :
   apply le_antisymm
   · apply MeasurableSpace.generateFrom_le
     intro t ht
-    obtain rfl := Set.mem_singleton_iff.mp ht
+    have ht' : t = Sᶜ := Set.mem_singleton_iff.mp ht
+    rw [ht']
     exact (MeasurableSpace.GenerateMeasurable.basic S (by simp)).compl
   · apply MeasurableSpace.generateFrom_le
     intro t ht
-    obtain rfl := Set.mem_singleton_iff.mp ht
+    have ht' : t = S := Set.mem_singleton_iff.mp ht
+    rw [ht']
     have hm : MeasurableSet[MeasurableSpace.generateFrom {Sᶜ}] Sᶜ :=
       MeasurableSpace.GenerateMeasurable.basic Sᶜ (by simp)
     simpa only [compl_compl] using hm.compl
@@ -551,12 +562,13 @@ private theorem matchingTriangle_diskBlock_independent {Ω : Type*} [MeasurableS
         Finset.mem_univ, and_true]
       constructor
       · intro h p hp
-        exact h p.1 hp p.2
+        exact h p.1 (Finset.mem_product.mp hp).1 p.2
       · intro h i hi j
-        exact h (i, j) hi
+        exact h (i, j) (Finset.mem_product.mpr ⟨hi, Finset.mem_univ j⟩)
     rw [hset, hind.meas_biInter (S := T.product Finset.univ) (s := D)
       (fun p _ => ⟨Metric.closedBall (gaussianTriangleDiskCenters p.2.2) (1 / 200),
-        Metric.isClosed_closedBall.measurableSet, rfl⟩), Finset.prod_product]
+        Metric.isClosed_closedBall.measurableSet, rfl⟩),
+      Finset.product_eq_sprod, Finset.prod_product T Finset.univ (fun p => μ (D p))]
     exact Finset.prod_congr rfl (fun i _ => (hsingle i).symm)
   have hg := (ProbabilityTheory.iIndepSet_iff_iIndep E μ).mp hs
   apply (ProbabilityTheory.iIndepSet_iff_iIndep _ μ).mpr
@@ -636,7 +648,7 @@ theorem gaussianTriangle_no_block_measure_le_of_iid_spectra {Ω : Type*}
     decide
   have hinj : Function.Injective g := by
     intro x y he
-    have h₀ : (code x.2).1 = (code y.2).1 := congrArg Prod.fst he
+    have h₀ : (code x.2).1 = (code y.2).1 := congrArg (fun p : Fin 2 × Fin n => p.1) he
     have hv : 4 * x.1.val + (code x.2).2.val = 4 * y.1.val + (code y.2).2.val :=
       congrArg (fun p : Fin 2 × Fin n => p.2.val) he
     have hi : x.1 = y.1 := by
@@ -691,8 +703,10 @@ theorem matchingProduct_lower_tail_of_independent_negative_moments {Ω : Type*}
   have hF (x : Ω) : matchingNegativeMoment (matchingProduct (a x) (b x) 1) =
       ∏ j, F j x := by
     simp only [matchingNegativeMoment, matchingProduct, Equiv.Perm.one_apply, norm_prod]
-    rw [ofReal_prod_nonneg Finset.univ (fun j => ‖a x j + b x j‖) (fun _ => norm_nonneg _),
-      ENNReal.prod_rpow_of_ne_top (fun _ _ => ENNReal.ofReal_ne_top)] <;> rfl
+    rw [ofReal_prod_nonneg Finset.univ (fun j => ‖a x j + b x j‖) (fun _ => norm_nonneg _)]
+    exact (ENNReal.prod_rpow_of_ne_top (s := Finset.univ)
+      (f := fun j => ENNReal.ofReal ‖a x j + b x j‖)
+      (fun _ _ => ENNReal.ofReal_ne_top) (-(1 / 10 : ℝ))).symm
   have hthreshold : ENNReal.ofReal T = (ENNReal.ofReal R) ^ (-(1 / 10 : ℝ)) := by
     dsimp only [R, T]
     rw [ENNReal.ofReal_rpow_of_pos (Real.exp_pos _), ← Real.exp_mul]
@@ -716,8 +730,9 @@ theorem matchingProduct_lower_tail_of_independent_negative_moments {Ω : Type*}
       ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_nat_mul]
     congr 2
     ring
-  have htail := (measure_mono hsub).trans (meas_ge_le_lintegral_div
-    (Finset.univ.aemeasurable_prod' (fun j _ => (hmeas j).aemeasurable))
+  have hm : AEMeasurable (fun x => ∏ j, F j x) μ :=
+    Finset.aemeasurable_prod Finset.univ fun j _ => (hmeas j).aemeasurable
+  have htail := (measure_mono hsub).trans (meas_ge_le_lintegral_div hm
     ((ENNReal.ofReal_pos.mpr hT).ne') ENNReal.ofReal_ne_top)
   refine htail.trans ((ENNReal.div_le_div_right hexp (ENNReal.ofReal T)).trans_eq ?_)
   rw [← ENNReal.ofReal_div_of_pos hT, show T = Real.exp (-(n : ℝ) / 1000) from rfl,
@@ -791,10 +806,13 @@ private theorem neg_log_one_sub_le_linear_quadratic {v : ℝ} (hv : 0 ≤ v) (hv
   have hterm (j : ℕ) : f (j + 1) ≤ (v ^ 2 / 2) * v ^ j := by
     dsimp only [f]
     rw [show j + 1 + 1 = 2 + j by omega, pow_add, Nat.cast_add, Nat.cast_one]
-    have hd : (2 : ℝ) ≤ ((j : ℝ) + 1) + 1 := by linarith only [Nat.cast_nonneg j]
+    have hd : (2 : ℝ) ≤ ((j : ℝ) + 1) + 1 := by
+      have hn : 0 ≤ (j : ℝ) := Nat.cast_nonneg j
+      linarith only [hn]
     calc
       _ ≤ (v ^ 2 * v ^ j) / 2 :=
-        div_le_div_of_nonneg_left (mul_nonneg (sq_nonneg v) (pow_nonneg hv j)) (by norm_num) hd
+        div_le_div_of_nonneg_left (mul_nonneg (sq_nonneg v) (pow_nonneg hv j))
+          (by norm_num : (0 : ℝ) < 2) hd
       _ = _ := by ring
   have hle := hasSum_le hterm htail hgeom
   rw [← div_eq_mul_inv, div_div] at hle
@@ -808,24 +826,42 @@ private theorem log_factorial_eq_sum_log_succ (n : ℕ) :
     rw [Nat.factorial_succ, Nat.cast_mul, Real.log_mul (by positivity) (by positivity),
       Finset.sum_range_succ, ← ih, Nat.cast_succ, add_comm]
 
-private theorem log_two_lower_for_gaussian : (69313 : ℝ) / 100000 < Real.log 2 := by
-  let f (k : ℕ) : ℝ := 2 * (1 / (2 * (k : ℝ) + 1)) * (1 / 3) ^ (2 * k + 1)
-  have hs : HasSum f (Real.log 2) := by
-    simpa [f] using Real.hasSum_log_one_add_inv (a := 1) zero_lt_one
-  have hle : (∑ k ∈ Finset.range 4, f k) ≤ Real.log 2 := by
-    rw [← hs.tsum_eq]
-    exact hs.summable.sum_le_tsum (Finset.range 4) (fun k _ => by dsimp only [f]; positivity)
-  refine lt_of_lt_of_le ?_ hle
-  norm_num [f, Finset.sum_range_succ]
+private theorem log_two_lower_for_gaussian : (69313 : ℝ) / 100000 < Real.log 2 :=
+  lt_trans (by norm_num) Real.log_two_gt_d9
+
+private def scaledReciprocalSum (power : ℕ) : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => scaledReciprocalSum power n + (100000000 / (n + 1) ^ power + 1)
+
+private theorem reciprocalSum_le_scaled (power n : ℕ) :
+    (∑ j ∈ Finset.range n, (1 : ℝ) / ((j : ℝ) + 1) ^ power) ≤
+      (scaledReciprocalSum power n : ℝ) / 100000000 := by
+  induction n with
+  | zero => simp only [Finset.range_zero, Finset.sum_empty, scaledReciprocalSum,
+      Nat.cast_zero, zero_div, le_refl]
+  | succ n ih =>
+    rw [Finset.sum_range_succ, scaledReciprocalSum, Nat.cast_add, add_div]
+    refine add_le_add ih ?_
+    have hnat : 100000000 < (100000000 / (n + 1) ^ power + 1) * (n + 1) ^ power :=
+      (Nat.div_lt_iff_lt_mul (pow_pos (Nat.succ_pos n) power)).mp (Nat.lt_succ_self _)
+    have hreal : (100000000 : ℝ) <
+        (↑(100000000 / (n + 1) ^ power + 1 : ℕ) : ℝ) * ((n : ℝ) + 1) ^ power := by
+      exact_mod_cast hnat
+    exact (div_le_div_iff₀ (pow_pos (by positivity) power)
+      (by norm_num : (0 : ℝ) < 100000000)).mpr (by simpa only [one_mul] using hreal.le)
 
 set_option maxRecDepth 8192 in
-set_option maxHeartbeats 4000000 in
 private theorem gaussian_reciprocal_sums :
     (∑ j ∈ Finset.range 256, (1 : ℝ) / ((j : ℝ) + 1)) < 612435 / 100000 ∧
       (∑ j ∈ Finset.range 256, (1 : ℝ) / (((j : ℝ) + 1) ^ 2)) < 16411 / 10000 := by
-  have hh : (∑ j ∈ Finset.range 256, (1 : ℚ) / ((j : ℚ) + 1)) < 612435 / 100000 := by decide
-  have hs : (∑ j ∈ Finset.range 256, (1 : ℚ) / (((j : ℚ) + 1) ^ 2)) < 16411 / 10000 := by decide
-  exact ⟨by exact_mod_cast hh, by exact_mod_cast hs⟩
+  have h₁ : scaledReciprocalSum 1 256 = 612434631 := by decide +kernel
+  have h₂ : scaledReciprocalSum 2 256 = 164103681 := by decide +kernel
+  have hb₁ := reciprocalSum_le_scaled 1 256
+  have hb₂ := reciprocalSum_le_scaled 2 256
+  rw [h₁] at hb₁
+  rw [h₂] at hb₂
+  simp only [pow_one] at hb₁
+  exact ⟨hb₁.trans_lt (by norm_num), hb₂.trans_lt (by norm_num)⟩
 
 /-- The finite Bohr–Mollerup comparison bounds the Gamma factor in the
 negative moment of a pair of standard complex Gaussian variables. -/
@@ -837,7 +873,8 @@ theorem gaussianPairNegativeMoment_gamma_bound :
   have hsmall (j : ℕ) : v j ≤ 1 / 20 := by
     dsimp only [v]
     apply (div_le_iff₀ (hpos j)).mpr
-    linarith only [Nat.cast_nonneg j]
+    have hn : 0 ≤ (j : ℝ) := Nat.cast_nonneg j
+    linarith only [hn]
   have hg :
       Real.log (Real.Gamma (19 / 20)) ≤ (19 / 20) * Real.log 256 +
         Real.log ((255 : ℕ).factorial : ℝ) -
@@ -944,8 +981,9 @@ private theorem gaussian_density_convolution (z : ℂ) :
     dsimp only [c]
     ring
   simp_rw [hpoint]
-  rw [lintegral_const_mul (ENNReal.ofReal c) ((measurable_complexGaussianRadialWeight 2).comp
-      (measurable_id.sub_const (z / 2))),
+  have hw : Measurable (fun x : ℂ => complexGaussianRadialWeight 2 (x - z / 2)) :=
+    (measurable_complexGaussianRadialWeight 2).comp (measurable_id.sub_const _)
+  rw [lintegral_const_mul (ENNReal.ofReal c) hw,
     lintegral_sub_right_eq_self (complexGaussianRadialWeight 2) (z / 2),
     complexGaussianRadialWeight_integral (by norm_num), ← ENNReal.ofReal_mul hc]
   congr 1
@@ -965,14 +1003,16 @@ theorem standardComplexGaussian_add_map :
   change (∫⁻ z, f z ∂((volume.withDensity g).prod (volume.withDensity g)).map
       (fun p : ℂ × ℂ => p.1 + p.2)) = ∫⁻ z, f z ∂volume.withDensity h
   have hadd : Measurable (fun p : ℂ × ℂ => p.1 + p.2) := by fun_prop
-  rw [lintegral_map hf hadd, prod_withDensity hg hg,
-    lintegral_withDensity_eq_lintegral_mul _ ((hg.comp measurable_fst).mul (hg.comp measurable_snd))
-      (hf.comp hadd),
+  rw [lintegral_map hf hadd, prod_withDensity hg hg]
+  have hg₂ : Measurable (fun p : ℂ × ℂ => g p.1 * g p.2) :=
+    (hg.comp measurable_fst).mul (hg.comp measurable_snd)
+  have hf₂ : Measurable (fun p : ℂ × ℂ => f (p.1 + p.2)) := hf.comp hadd
+  rw [lintegral_withDensity_eq_lintegral_mul _ hg₂ hf₂,
     lintegral_withDensity_eq_lintegral_mul _ hh hf]
   change (∫⁻ p : ℂ × ℂ, g p.1 * g p.2 * f (p.1 + p.2) ∂volume.prod volume) =
     ∫⁻ z, h z * f z
-  rw [lintegral_prod_of_measurable _ (((hg.comp measurable_fst).mul (hg.comp measurable_snd)).mul
-    (hf.comp hadd))]
+  have hgf : Measurable (fun p : ℂ × ℂ => g p.1 * g p.2 * f (p.1 + p.2)) := hg₂.mul hf₂
+  rw [lintegral_prod _ hgf.aemeasurable]
   calc
     _ = ∫⁻ x : ℂ, ∫⁻ z : ℂ, g x * g (z - x) * f z := by
       refine lintegral_congr fun x => ?_
@@ -984,8 +1024,9 @@ theorem standardComplexGaussian_add_map :
         (measurable_snd.sub measurable_fst))).mul (hf.comp measurable_snd)).aemeasurable
     _ = ∫⁻ z, h z * f z := by
       refine lintegral_congr fun z => ?_
-      rw [lintegral_mul_const _ (hg.mul (hg.comp (measurable_const.sub measurable_id))),
-        gaussian_density_convolution z] <;> rfl
+      have hgconv : Measurable (fun x : ℂ => g x * g (z - x)) :=
+        hg.mul (hg.comp (measurable_const.sub measurable_id))
+      rw [lintegral_mul_const _ hgconv, gaussian_density_convolution z]
 
 /-- The paired complex Gaussian negative moment is an Euler Gamma value. -/
 theorem pairedComplexGaussian_negative_moment :
@@ -1004,7 +1045,8 @@ theorem pairedComplexGaussian_negative_moment :
       (by norm_num) (by dsimp only [q]; norm_num) (by norm_num)
     rw [show (q + 2) / 2 = 19 / 20 by dsimp only [q]; norm_num,
       show -(q + 2) / 2 = -(19 / 20) by dsimp only [q]; norm_num, hp] at h
-    simp only [Real.rpow_two, ← f] at h
+    simp only [Real.rpow_two] at h
+    change (∫ z, f z) = _ at h
     rw [h]
     ring
   have hi : Integrable f := by
@@ -1023,7 +1065,8 @@ theorem pairedComplexGaussian_negative_moment :
     _ = ∫⁻ z : ℂ, ENNReal.ofReal c * ENNReal.ofReal (f z) := by
       refine lintegral_congr_ae ?_
       filter_upwards [ha] with z hz
-      unfold matchingNegativeMoment
+      change ENNReal.ofReal (Real.exp (-(‖z‖ ^ 2 / 2)) / (2 * Real.pi)) *
+        (ENNReal.ofReal ‖z‖) ^ q = ENNReal.ofReal c * ENNReal.ofReal (f z)
       rw [ENNReal.ofReal_rpow_of_pos (norm_pos_iff.mpr hz),
         ← ENNReal.ofReal_mul (div_nonneg (Real.exp_pos _).le (by positivity)),
         ← ENNReal.ofReal_mul hc.le]
@@ -1061,15 +1104,15 @@ private instance : IsProbabilityMeasure standardComplexGaussian := by
   dsimp only [c]
   field_simp [Real.pi_pos.ne'] <;> ring
 
-/-- The identity matching product has the exponential lower tail under
-independent standard complex Gaussian spectral entries. -/
-theorem gaussianMatchingProduct_lower_tail {Ω : Type*} [MeasurableSpace Ω]
+set_option maxHeartbeats 800000 in
+private theorem independent_gaussian_spectral_pairs {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (n : ℕ) (X : Fin 2 × Fin n → Ω → ℂ)
     (hmeas : ∀ j, Measurable (X j))
     (hlaw : ∀ j, μ.map (X j) = standardComplexGaussian)
     (hind : ProbabilityTheory.iIndepFun X μ) :
-    μ {x | ‖matchingProduct (fun j => X (0, j) x) (fun j => X (1, j) x) 1‖ <
-      Real.exp ((n : ℝ) / 100)} ≤ ENNReal.ofReal (Real.exp (-(n : ℝ) / 400)) := by
+    let P (j : Fin n) (x : Ω) := (X (0, j) x, X (1, j) x)
+    ProbabilityTheory.iIndepFun P μ ∧
+      ∀ j, μ.map (P j) = standardComplexGaussian.prod standardComplexGaussian := by
   classical
   let idx : Fin n ⊕ Fin n → Fin 2 × Fin n := Sum.elim (fun j => (0, j)) (fun j => (1, j))
   have hinj : Function.Injective idx := by
@@ -1109,22 +1152,45 @@ theorem gaussianMatchingProduct_lower_tail {Ω : Type*} [MeasurableSpace Ω]
     rw [← Measure.map_map hE.measurable (he.measurable.comp hF),
       ← Measure.map_map he.measurable hF, hmap, he.map_eq, hE.map_eq]
     simp only [hPlaw]
+  exact ⟨hPind, hPlaw⟩
+
+/-- The identity matching product has the exponential lower tail under
+independent standard complex Gaussian spectral entries. -/
+theorem gaussianMatchingProduct_lower_tail {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (n : ℕ) (X : Fin 2 × Fin n → Ω → ℂ)
+    (hmeas : ∀ j, Measurable (X j))
+    (hlaw : ∀ j, μ.map (X j) = standardComplexGaussian)
+    (hind : ProbabilityTheory.iIndepFun X μ) :
+    μ {x | ‖matchingProduct (fun j => X (0, j) x) (fun j => X (1, j) x) 1‖ <
+      Real.exp ((n : ℝ) / 100)} ≤ ENNReal.ofReal (Real.exp (-(n : ℝ) / 400)) := by
+  classical
+  let P (j : Fin n) (x : Ω) := (X (0, j) x, X (1, j) x)
+  let ν := standardComplexGaussian
+  have hpairs : ProbabilityTheory.iIndepFun P μ ∧ ∀ j, μ.map (P j) = ν.prod ν :=
+    independent_gaussian_spectral_pairs μ n X hmeas hlaw hind
+  have hPmeas (j : Fin n) : Measurable (P j) := (hmeas (0, j)).prodMk (hmeas (1, j))
   let Q (p : ℂ × ℂ) := matchingNegativeMoment (p.1 + p.2)
   have hneg : Measurable matchingNegativeMoment := by
     unfold matchingNegativeMoment
     exact ENNReal.continuous_rpow_const.measurable.comp (by fun_prop)
-  have hQ : Measurable Q := hneg.comp (by fun_prop)
-  apply matchingProduct_lower_tail_of_independent_negative_moments μ n
-    (fun x j => X (0, j) x) (fun x j => X (1, j) x)
-  · exact fun j => hQ.comp (hPmeas j)
-  · exact hPind.comp (fun _ => Q) (fun _ => hQ)
+  have hadd : Measurable (fun p : ℂ × ℂ => p.1 + p.2) :=
+    measurable_fst.add measurable_snd
+  have hQ : Measurable Q := hneg.comp hadd
+  have hcomp (j : Fin n) : Measurable (Q ∘ P j) := hQ.comp (hPmeas j)
+  have hindcomp : ProbabilityTheory.iIndepFun (fun j => Q ∘ P j) μ :=
+    hpairs.1.comp (fun _ => Q) (fun _ => hQ)
+  refine matchingProduct_lower_tail_of_independent_negative_moments μ n
+    (fun x j => X (0, j) x) (fun x j => X (1, j) x) hcomp hindcomp ?_
   · intro j
     change (∫⁻ x, Q (P j x) ∂μ) ≤ _
-    rw [← lintegral_map hQ (hPmeas j), hPlaw j]
-    change (∫⁻ p, matchingNegativeMoment (p.1 + p.2) ∂ν.prod ν) ≤ _
-    rw [← lintegral_map hneg (by fun_prop), show ν = standardComplexGaussian from rfl,
-      standardComplexGaussian_add_map, pairedComplexGaussian_negative_moment]
-    exact ENNReal.ofReal_le_ofReal gaussianPairNegativeMoment_gamma_bound
+    calc
+      _ = ∫⁻ p, Q p ∂μ.map (P j) := (lintegral_map hQ (hPmeas j)).symm
+      _ = ∫⁻ z, matchingNegativeMoment z ∂pairedComplexGaussian := by
+        rw [hpairs.2 j, ← standardComplexGaussian_add_map]
+        exact (lintegral_map hneg hadd).symm
+      _ ≤ _ := by
+        rw [pairedComplexGaussian_negative_moment]
+        exact ENNReal.ofReal_le_ofReal gaussianPairNegativeMoment_gamma_bound
 
 /-- For the Gaussian spectral ensemble, only the determinant second moment
 is needed in addition to measurability to get the exponential failure bound. -/

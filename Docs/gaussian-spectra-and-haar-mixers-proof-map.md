@@ -7,18 +7,18 @@ Let $U$ be a unitary matrix. Write $d$ for the determinant of
 $\mathrm{diag}(a)+U\mathrm{diag}(b)U^*$. The matching hull is the real
 convex hull of the products obtained by matching the two lists.
 
-The random ensemble in the paper note gives every spectral entry the
-complex Gaussian density $e^{-|z|^2}/\pi$. All entries are independent.
-The mixer $U$ has Haar probability measure and is independent of the
-entries. Its result is a bound on the probability that $d$ is outside
-the matching hull. It concerns this specified ensemble.
+Give every spectral entry the complex Gaussian density
+$e^{-|z|^2}/\pi$, where $z$ is the value of the entry. Assume that all
+entries are independent. In the Gaussian–Haar ensemble, $U$ has Haar
+probability measure on the unitary group and is independent of the
+entries. The failure event is that $d$ lies outside the matching hull.
 
 The registered almost-sure reformulation requires inclusion almost
 everywhere in every order on every probability space where the mixer
 is unitary almost everywhere. A singleton probability space recovers
-the deterministic conjecture. The Gaussian–Haar
-theorem bounds failure in one ensemble under a second-moment premise.
-[Almost-sure equivalence](../Lean/MOC/Reformulations/SecondNative.lean#L271) · [Gaussian bound](../Lean/MOC/GaussianHaarContainment.lean#L1131)
+the deterministic conjecture. The Gaussian estimate bounds failure
+under a premise on the second moment of $d$.
+[Almost-sure equivalence](../Lean/MOC/Reformulations/SecondNative.lean#L271) · [Gaussian bound](../Lean/MOC/GaussianHaarContainment.lean#L1197)
 
 ```mermaid
 flowchart BT
@@ -27,7 +27,7 @@ flowchart BT
     C["Gaussian convolution"] --> N["Gamma formula for the negative moment"]
     L["Finite Bohr–Mollerup bound"] --> P["Lower tail of the identity product"]
     N --> P
-    H["Haar determinant second moment<br/>Ensemble evaluation pending in Lean"] --> D["Upper tail of the determinant"]
+    H["Assume the determinant second-moment bound"] --> D["Upper tail of the determinant"]
     S --> U["Failure is in the union of three events"]
     B --> U
     P --> U
@@ -49,14 +49,14 @@ halves of the squared norm of the direction. These identities give
 a support bound of one half of that norm. The perturbation changes
 each projection by at most $21/100$ of the norm. The proof applies
 the resulting support bound to every direction.
-[Disk inclusion](../Lean/MOC/GaussianHaarContainment.lean#L140)
+[Disk inclusion](../Lean/MOC/GaussianHaarContainment.lean#L147)
 
 For each pair, put the four disk centers at $0$, $1$, $1$, and
 $(-2+i\sqrt3)/7$ in the order of the two entries of $a$ and the two
 entries of $b$. Take radius $1/200$ at each center. The denominator
 stays nonzero and the ratio is within $1/10$ of $\omega$. Two such
 pairs give a matching triangle block.
-[Ratio estimate](../Lean/MOC/GaussianHaarContainment.lean#L262) · [Block construction](../Lean/MOC/GaussianHaarContainment.lean#L425)
+[Ratio estimate](../Lean/MOC/GaussianHaarContainment.lean#L269) · [Block construction](../Lean/MOC/GaussianHaarContainment.lean#L432)
 
 ## Failure bound
 
@@ -68,7 +68,7 @@ $p_0=e^{-5}/200^{16}$. The coordinates in different consecutive
 blocks are disjoint. Their independence makes the block failure
 probabilities multiply. The probability of no good block is at most
 $(1-p_0)^{\lfloor n/4\rfloor}$.
-[One disk](../Lean/MOC/GaussianHaarContainment.lean#L322) · [Eight disks](../Lean/MOC/GaussianHaarContainment.lean#L453) · [Consecutive blocks of independent spectra](../Lean/MOC/GaussianHaarContainment.lean#L623)
+[One disk](../Lean/MOC/GaussianHaarContainment.lean#L329) · [Eight disks](../Lean/MOC/GaussianHaarContainment.lean#L460) · [Consecutive blocks of independent spectra](../Lean/MOC/GaussianHaarContainment.lean#L635)
 
 The sum of two independent spectral entries has density
 $e^{-|z|^2/2}/(2\pi)$. Complete the square in the convolution of the
@@ -78,16 +78,16 @@ Euler gamma function. The finite Bohr–Mollerup comparison at $255$
 and bounds on two reciprocal sums give an upper bound of $e^{-7/2000}$.
 Each sum $a_j+b_j$ uses its own pair of independent entries. The product
 law of the pairs gives independence of these sums.
-[Gaussian convolution](../Lean/MOC/GaussianHaarContainment.lean#L957) · [Gamma formula](../Lean/MOC/GaussianHaarContainment.lean#L991) · [Gamma bound](../Lean/MOC/GaussianHaarContainment.lean#L832)
+[Gaussian convolution](../Lean/MOC/GaussianHaarContainment.lean#L995) · [Gamma formula](../Lean/MOC/GaussianHaarContainment.lean#L1032) · [Gamma bound](../Lean/MOC/GaussianHaarContainment.lean#L868)
 
 | Premise | Consequence | Lean source |
 | --- | --- | --- |
-| The spectral entries are independent standard complex Gaussians. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../Lean/MOC/GaussianHaarContainment.lean#L1066) |
-| The second moment of $d$ is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../Lean/MOC/GaussianHaarContainment.lean#L727) |
+| The spectral entries are independent standard complex Gaussians. | The probability that $|z_0|$ is less than $e^{n/100}$ is at most $e^{-n/400}$. | [Lower tail](../Lean/MOC/GaussianHaarContainment.lean#L1159) |
+| The squared magnitude $|d|^2$ is almost everywhere measurable and its integral is at most $(n+2)(n+3)/6$. | The probability that $|d|$ is greater than $e^{n/100}/4$ is at most $\frac83(n+2)(n+3)e^{-n/50}$. | [Determinant upper tail](../Lean/MOC/GaussianHaarContainment.lean#L742) |
 
-Assume independent standard complex Gaussian spectral entries, a
-measurable determinant magnitude, and the stated determinant second
-moment bound. The union bound gives
+Assume independent standard complex Gaussian spectral entries. If
+$|d|^2$ is almost everywhere measurable and has the stated integral
+bound, the union bound gives
 
 $$
 \Pr(d\text{ is outside the matching hull})
@@ -98,16 +98,13 @@ $$
 The three events in this union may be correlated. The displayed
 estimate decays exponentially in $n$. Its small value of $p_0$
 gives no useful bound at moderate orders.
-[Failure bound from the determinant moment](../Lean/MOC/GaussianHaarContainment.lean#L1131)
+[Failure bound from the determinant moment](../Lean/MOC/GaussianHaarContainment.lean#L1197)
 
 ## Remaining Haar input
 
-The paper argument evaluates the determinant second moment by
-orthogonality of the spectral monomials in the expansion by squared
-unitary minors. It uses Gaussian Gram–Schmidt to compute fourth
-moments of the Haar minors. The Lean source starts at the resulting
-second-moment inequality.
+The evaluation of the second moment for the Haar ensemble remains a
+paper argument. It uses orthogonality of the spectral monomials in
+the expansion by squared unitary minors. Gaussian Gram–Schmidt gives
+the fourth moments of the Haar minors. The Lean estimate takes the
+second-moment inequality as a premise.
 [Gaussian Gram–Schmidt construction, section 1.2](https://case.edu/artsci/math/esmeckes/Haar_book.pdf)
-
-The numerical constants and algebraic identities passed an exact
-arithmetic check. Lean kernel verification is pending.

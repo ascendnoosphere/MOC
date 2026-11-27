@@ -10,7 +10,7 @@ open BigOperators Matrix
 
 namespace MOC.Reformulations
 
-/-- Atlas 175 with no loops, complex edge weights, normal adjacency
+/-- Directed graphs with no loops, complex edge weights, normal adjacency
 matrices, and arbitrary relative unitary position. -/
 def LooplessDirectedAdjacencyForm : Prop :=
   ∀ (n : ℕ) (A B U : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n → ℂ),

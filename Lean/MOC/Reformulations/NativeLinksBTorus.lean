@@ -3,7 +3,7 @@ import MOC.Support
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 import Mathlib.Analysis.SpecificLimits.Basic
 
-/-! Atlas 117: actual multiplicative characters of a common one-parameter
+/-! Multiplicative characters of a common one-parameter
 complex torus. Integer weights, including negative ones, remain integral;
 there is no relabelling by an arbitrary complex-valued function. -/
 

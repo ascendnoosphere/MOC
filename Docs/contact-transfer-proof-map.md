@@ -1,4 +1,4 @@
-# Contact proof maps
+# Matching contacts and determinant support bounds
 
 [Proof map index](README.md) · [README overview](../README.md#proof-tree) · [All-order routes](all-orders-proof-map.md) · [Order four](order-four-proof-map.md#contact-patterns) · [Order five](order-five-proof-map.md#contact-thresholds)
 
@@ -7,13 +7,18 @@
 - [Polynomial coordinate tests](#polynomial-coordinate-tests)
 - [Complex stationary score](#complex-stationary-score)
 
-For eigenvalue lists $a,b$ of length $n$, let $P_\sigma$ be the matching
-product for permutation $\sigma$. Fix a complex number $\eta$ and let
-$H$ be the largest $\mathrm{Re}(\eta P_\sigma)$. A **contact** is a
-permutation that attains $H$. A **strict witness** has
-$\mathrm{Re}(\eta\det(A+B))>H$. A contact set counts permutations,
-including separate permutations with the same product. The exact support
-test excludes all strict witnesses.
+Let $A$ and $B$ be complex normal matrices of order $n$. Write $a,b$
+for their eigenvalue lists and $U$ for their unitary change of eigenbasis.
+For a permutation $\sigma$, define the matching product
+$P_\sigma=\prod_j(a_{\sigma(j)}+b_j)$. The Marcus–de Oliveira conjecture
+(MOC) places $\det(A+B)$ in the real convex hull of these products.
+
+Fix a complex direction $\eta$. Let $H$ be the maximum of
+$\mathrm{Re}(\eta P_\sigma)$ over all permutations. A **contact** is a
+permutation that attains $H$. Count each such permutation, even when
+several give the same product. A **strict witness** satisfies
+$\mathrm{Re}(\eta\det(A+B))>H$. MOC holds if and only if there are no
+strict witnesses.
 [Directional bound](../Lean/MOC/Support.lean#L52) · [Witness](../Lean/MOC/ContactIteration.lean#L13)
 
 ## Growing the contact set
@@ -115,9 +120,8 @@ flowchart BT
     classDef goal fill:#18344b,stroke:#18344b,color:#fff
 ```
 
-Here $n$ denotes matrix order. The Lean chart labels it as two plus the
-number of free entries on each side. The ranks count independent
-polynomial constraints, rather than the number of tied permutations.
+Here $n$ denotes matrix order. The chart has $n-2$ free entries on each
+side. The ranks count independent polynomial constraints.
 
 | Additional restriction on a regular chart | Lean source |
 | --- | --- |
@@ -159,7 +163,7 @@ determinant difference.
 ```mermaid
 flowchart BT
     Goal["MOC in order n"]:::goal
-    Terminal["Exclude strict maxima with ≥ 2n − 1 contacts<br/>and a negative-weight inactive permutation<br/>through every nonzero mixer entry"]:::open
+    Terminal["Exclude strict witnesses at orbit maxima with ≥ 2n − 1 contacts<br/>and a negative-weight inactive permutation<br/>through every nonzero mixer entry"]:::open
     Transfer["Increase the contact count"]:::proved
     Pivot["Complex signed score identity<br/>at an orbit maximum"]:::source
     Terminal <-->|iff| Goal
@@ -171,8 +175,14 @@ flowchart BT
     classDef source fill:#e7f0fa,stroke:#52779d,color:#142e47
 ```
 
-Let $w_\sigma$ be the real part of the signed determinant coefficient
-of $U$ at permutation $\sigma$. Let $F=\mathrm{Re}(\eta\det(A+B))$.
+Let $\mathrm{sgn}(\sigma)$ be the sign of the permutation $\sigma$.
+The real signed weight and determinant projection are
+
+$$
+w_\sigma=\mathrm{Re}\left(\frac{\mathrm{sgn}(\sigma)\prod_j U_{\sigma(j),j}}{\det U}\right),
+\qquad F=\mathrm{Re}(\eta\det(A+B)).
+$$
+
 If $U$ maximizes $F$ for the fixed lists and direction, then
 
 $$
@@ -180,14 +190,14 @@ $$
 = |U_{ij}|^2 F.
 $$
 
-This statement includes complex unitaries, zero entries and singular
+This statement includes complex unitaries, zero entries, and singular
 sums. The proof expands a cofactor in column $j$. The cofactor
 stationarity equations make a matrix commutator Hermitian. Averaging
 the expansions for the spectra and their conjugates cancels the real
 part of the correction.
 [Signed weight](../Lean/MOC/Weights.lean#L50) ·
 [Cofactor stationarity](../Lean/MOC/ComplexTiedSwap.lean#L75) ·
-[Signed score identity](../Lean/MOC/StationaryPivot.lean#L329)
+[Complex signed score identity](../Lean/MOC/StationaryPivot.lean#L329) · [Real signed score identity](../Lean/MOC/StationaryPivot.lean#L416)
 
 If $F>H$, the same sum with the gaps $H-\mathrm{Re}(\eta P_\sigma)$
 is negative whenever $U_{ij}\ne0$. Thus a negative-weight inactive

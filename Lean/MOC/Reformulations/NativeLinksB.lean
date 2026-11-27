@@ -1,8 +1,8 @@
 import MOC.Reformulations.FirstGeometric
 
 /-! Exact native matrix links for the normalized projective lifts and the
-commuting quantum integrals in atlas entries 101 and 123. Neither form
-changes its spectra by an arbitrary labelled evaluation. -/
+commuting quantum integrals. Both comparisons use the spectra of the
+selected matrices. -/
 
 open Matrix BigOperators
 

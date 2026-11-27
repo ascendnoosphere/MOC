@@ -96,20 +96,20 @@ private def kleinPrismFeature (x : KleinPrismSpace) : Fin 10 → ℝ :=
     -2 * w 1 * r 1 + 2 * s 0 * s 2,
     -2 * w 2 * r 2 + 2 * s 0 * s 1]
 
-private def kleinChartWeights (β p q : Fin 3 → ℝ) (c₋ : ℝ) : Fin 10 → ℝ :=
-  ![-c₋, β 0, β 1, β 2, p 0, p 1, p 2, q 0, q 1, q 2]
+private def kleinChartWeights (β p q : Fin 3 → ℝ) (cNeg : ℝ) : Fin 10 → ℝ :=
+  ![-cNeg, β 0, β 1, β 2, p 0, p 1, p 2, q 0, q 1, q 2]
 
-private theorem klein_cost_weighted_features (β p q : Fin 3 → ℝ) (c₋ : ℝ) (j : Fin 24) :
-    kleinMatchingCost β p q c₋ j =
-      ∑ i : Fin 10, kleinChartWeights β p q c₋ i * (kleinMatchingFeatureTable i j : ℝ) := by
+private theorem klein_cost_weighted_features (β p q : Fin 3 → ℝ) (cNeg : ℝ) (j : Fin 24) :
+    kleinMatchingCost β p q cNeg j =
+      ∑ i : Fin 10, kleinChartWeights β p q cNeg i * (kleinMatchingFeatureTable i j : ℝ) := by
   simp [kleinMatchingCost, kleinChartWeights, kleinCycle, kleinFaceIndicator,
     kleinFaceSignPlus, kleinFaceSignMinus, Fin.sum_univ_succ, Matrix.cons_val]
   <;> ring
 
-private theorem klein_prism_weighted_features (β p q : Fin 3 → ℝ) (c₋ : ℝ)
+private theorem klein_prism_weighted_features (β p q : Fin 3 → ℝ) (cNeg : ℝ)
     (x : KleinPrismSpace) :
-    kleinPrismForm β p q c₋ x =
-      ∑ i : Fin 10, kleinChartWeights β p q c₋ i * kleinPrismFeature x i := by
+    kleinPrismForm β p q cNeg x =
+      ∑ i : Fin 10, kleinChartWeights β p q cNeg i * kleinPrismFeature x i := by
   simp [kleinPrismForm, kleinChartWeights, kleinPrismFeature, kleinPrismOff, Fin.sum_univ_succ,
     Matrix.cons_val]
   <;> ring
@@ -127,13 +127,13 @@ private theorem klein_prism_basis_identity (K : Matrix (Fin 3) (Fin 3) ℝ) (i :
 
 /-- Exact polynomial identity between the signed matching cost and its
 quadratic prism in the cofactor entries. This includes singular matrices. -/
-theorem klein_signedCost_eq_prism (β p q : Fin 3 → ℝ) (c₋ : ℝ) (K : Matrix (Fin 3) (Fin 3) ℝ) :
-    8 * kleinSignedCost (kleinMatchingCost β p q c₋) (kleinCenteredMatrix K) =
-      kleinPrismForm β p q c₋ (kleinPrismInput (kleinCofactor K)) := by
+theorem klein_signedCost_eq_prism (β p q : Fin 3 → ℝ) (cNeg : ℝ) (K : Matrix (Fin 3) (Fin 3) ℝ) :
+    8 * kleinSignedCost (kleinMatchingCost β p q cNeg) (kleinCenteredMatrix K) =
+      kleinPrismForm β p q cNeg (kleinPrismInput (kleinCofactor K)) := by
   rw [klein_prism_weighted_features]
   have he :
-      kleinSignedCost (kleinMatchingCost β p q c₋) (kleinCenteredMatrix K) =
-        ∑ i : Fin 10, kleinChartWeights β p q c₋ i *
+      kleinSignedCost (kleinMatchingCost β p q cNeg) (kleinCenteredMatrix K) =
+        ∑ i : Fin 10, kleinChartWeights β p q cNeg i *
           kleinSignedCost (fun j => (kleinMatchingFeatureTable i j : ℝ)) (kleinCenteredMatrix K) := by
     simp only [kleinSignedCost, klein_cost_weighted_features, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
@@ -151,17 +151,17 @@ theorem klein_signedCost_eq_prism (β p q : Fin 3 → ℝ) (c₋ : ℝ) (K : Mat
 private theorem klein_prismInput_smul (c : ℝ) (H : Matrix (Fin 3) (Fin 3) ℝ) :
     kleinPrismInput (c • H) = c • kleinPrismInput H := map_smul kleinPrismInputLinear c H
 
-private theorem klein_prism_smul (β p q : Fin 3 → ℝ) (c₋ c : ℝ) (x : KleinPrismSpace) :
-    kleinPrismForm β p q c₋ (c • x) = c ^ 2 * kleinPrismForm β p q c₋ x := by
+private theorem klein_prism_smul (β p q : Fin 3 → ℝ) (cNeg c : ℝ) (x : KleinPrismSpace) :
+    kleinPrismForm β p q cNeg (c • x) = c ^ 2 * kleinPrismForm β p q cNeg x := by
   rcases x with ⟨w, r, s⟩
   simp [kleinPrismForm, kleinPrismOff, Fin.sum_univ_three, Pi.smul_apply, smul_eq_mul] <;> ring
 
 /-- The cofactor identity in inverse entries, with the determinant factor
 kept explicit. -/
-theorem klein_signedCost_eq_inversePrism (β p q : Fin 3 → ℝ) (c₋ : ℝ)
+theorem klein_signedCost_eq_inversePrism (β p q : Fin 3 → ℝ) (cNeg : ℝ)
     (K H : Matrix (Fin 3) (Fin 3) ℝ) (hKH : K * Hᵀ = 1) :
-    8 * kleinSignedCost (kleinMatchingCost β p q c₋) (kleinCenteredMatrix K) =
-      K.det ^ 2 * kleinPrismForm β p q c₋ (kleinPrismInput H) := by
+    8 * kleinSignedCost (kleinMatchingCost β p q cNeg) (kleinCenteredMatrix K) =
+      K.det ^ 2 * kleinPrismForm β p q cNeg (kleinPrismInput H) := by
   rw [klein_signedCost_eq_prism, kleinCofactor_eq_det_smul K H hKH, klein_prismInput_smul,
     klein_prism_smul]
 

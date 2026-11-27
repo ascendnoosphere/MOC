@@ -1,4 +1,5 @@
 import MOC.CommonWeights
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Convex.Topology
 import Mathlib.Topology.PartitionOfUnity
 import Mathlib.Topology.Order.DenselyOrdered
@@ -106,7 +107,8 @@ theorem pointwise_mem_convexHull_of_continuous_approximation
       (convex_convexHull ℝ (range fun j => v j x)).sum_mem
         (fun j _ => hw j x) (hs x)
         (fun j _ => subset_convexHull ℝ _ (mem_range_self j))
-  · simpa only [dist_eq_norm, dist_comm] using he x
+  · rw [dist_comm, dist_eq_norm]
+    exact he x
 
 /-- One-sided agreement of a continuous function with a constant forces
 agreement at the common endpoint. -/

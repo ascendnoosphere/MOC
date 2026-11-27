@@ -76,7 +76,7 @@ private theorem le_twice_sqrt_product_of_budget {x y gap : ℝ} (hx : 0 ≤ x) (
       simpa only [hz, mul_zero, add_zero, one_mul] using
         hbudget t t⁻¹ 1 ht.le (inv_nonneg.mpr ht.le) zero_le_one hcap
   · let s := Real.sqrt (x * y)
-    have hs : 0 < s := Real.sqrt_pos.2 (lt_of_le_of_ne (mul_nonneg hx hy) hzero.symm)
+    have hs : 0 < s := Real.sqrt_pos.2 (lt_of_le_of_ne (mul_nonneg hx hy) (Ne.symm hzero))
     have hsq : s ^ 2 = x * y := Real.sq_sqrt (mul_nonneg hx hy)
     have hcap : s ^ 2 ≤ y * x := (hsq.trans (mul_comm x y)).le
     apply (mul_le_mul_left hs).mp

@@ -11,14 +11,14 @@ namespace MOC.Reformulations
 noncomputable section
 
 /-- Matrix of the restriction of a bounded operator to an invariant subspace.
-The chosen basis fixes the finite Hilbert metric used in Atlas 049. -/
+The chosen basis fixes the Hilbert inner product on the invariant subspace. -/
 def invariantRestrictionMatrix {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
     {n : ℕ} (E : Submodule ℂ X) (e : Basis (Fin n) ℂ E) (A : X →L[ℂ] X)
     (hA : ∀ x : E, A x ∈ E) : Matrix (Fin n) (Fin n) ℂ :=
   LinearMap.toMatrix e e (LinearMap.codRestrict E (A.toLinearMap.domRestrict E) hA)
 
-/-- Atlas 049 uses actual bounded operators on a Banach space and the actual
-common invariant subspace. Normality and rotation refer to its chosen metric. -/
+/-- Restrict two bounded operators on a Banach space to a common finite
+invariant subspace. Normality and rotation use its chosen inner product. -/
 theorem nativeInvariantBanachHull_of_moc (h : MOCIsTrue) {X : Type}
     [NormedAddCommGroup X] [NormedSpace ℂ X] [CompleteSpace X] {n : ℕ}
     (E : Submodule ℂ X) (e : Basis (Fin n) ℂ E) (A B : X →L[ℂ] X)
@@ -39,7 +39,7 @@ def orthogonalCompressionMatrix {H : Type*} [NormedAddCommGroup H] [InnerProduct
   LinearMap.toMatrix e.toBasis e.toBasis
     (E.orthogonalProjection.toLinearMap.comp (A.toLinearMap.domRestrict E))
 
-/-- Atlas 061: MOC implies the normal finite compression comparison for
+/-- MOC implies the normal finite compression comparison for
 compact operators. The implication actually only uses normality
 after compression, so the hypotheses may be relaxed to bounded inputs. -/
 theorem nativeCompactCompression_of_moc (h : MOCIsTrue) {H : Type}

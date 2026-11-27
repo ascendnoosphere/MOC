@@ -28,11 +28,11 @@ def cubicValue (a b c e : ℝ) : ℝ := -(c + 1) * (p a b + e)
 theorem gap_nonneg {a b c d e : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (hd : 0 ≤ d) (he : 0 ≤ e) (i : Fin 24) :
     0 ≤ gap a b c d e i := by
-  fin_cases i <;> simp only [gap, Matrix.cons_val] <;> positivity
+  fin_cases i <;> simp [gap] <;> positivity
 
 theorem lift_evaluation (a b c d e height : ℝ) (i : Fin 24) :
     fourMatchingEvaluation (lift a b c d e height) i = gap a b c d e i + height := by
-  fin_cases i <;> simp only [fourMatchingEvaluation, lift, gap, Matrix.cons_val] <;> ring
+  fin_cases i <;> simp [fourMatchingEvaluation, lift, gap] <;> ring
 
 theorem lift_cubic (a b c d e height : ℝ) :
     fourMatchingCubic (lift a b c d e height) =
@@ -61,9 +61,10 @@ theorem lift_eq_spectral_real_coordinates {a b c d e height : ℝ}
 
 theorem cubicValue_neg {a b c e : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
     (hc : 0 ≤ c) (he : 0 ≤ e) : cubicValue a b c e < 0 := by
-  have hp := p_pos ha hb
+  have hc' : 0 < c + 1 := by linarith only [hc]
+  have hp : 0 < p a b + e := add_pos_of_pos_of_nonneg (p_pos ha hb) he
   unfold cubicValue
-  exact neg_neg_of_pos (mul_pos (by positivity) (by positivity))
+  exact mul_neg_of_neg_of_pos (neg_neg_of_pos hc') hp
 
 /-- All actual points in the normalized family have nonzero height
 and a nonzero denominator in the height equation. -/
@@ -166,6 +167,7 @@ theorem no_spectralLift_at_zero_fourth_weight {a b c e height : ℝ}
   norm_num [heightDenominator] at heq
   nlinarith only [he, heq, hpos]
 
+set_option maxHeartbeats 2500000 in
 /-- On both rational unequal anchors the radial gradient on the kernel
 is the same positive semidefinite binary form. -/
 theorem radial_gradient_nonneg_at_unequal_anchor
@@ -187,12 +189,15 @@ theorem radial_gradient_nonneg_at_unequal_anchor
   have h10 := hrows 10
   have h11 := hrows 11
   have hkernel : y 5 = -y 0 - y 1 / 55 ∧ y 6 = y 0 - 13 * y 1 / 11 := by
-    rcases hab with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
-      norm_num [fourMatchingHessianAction, cubicGradient, lift] at
-        h0 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 <;>
+    rcases hab with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
+    all_goals
+      simp only [fourMatchingHessianAction, cubicGradient, lift, Matrix.cons_val,
+        Matrix.cons_val_succ', Matrix.cons_val_zero'] at h0 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11
+      ring_nf at h0 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11
       constructor <;> linarith only [h0, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11]
   obtain ⟨hfifth, hsixth⟩ := hkernel
-  simp only [fourMatchingGradient, Matrix.cons_val, hfifth, hsixth]
+  change 0 ≤ y 0 * y 6 - y 1 * y 5
+  rw [hfifth, hsixth]
   nlinarith only [sq_nonneg (y 0 - y 1 / 11), sq_nonneg (y 1)]
 
 /-- The two rational anchors of the unequal continuation are exact
@@ -208,6 +213,7 @@ theorem no_spectralLift_at_unequal_anchor
   norm_num [heightDenominator] at heq
   linarith only [heq, hpos]
 
+set_option maxHeartbeats 2500000 in
 /-- The rational anchor on the equal-weight branch is excluded by a
 rank-one square for the imaginary radial gradient. -/
 theorem no_spectralLift_at_equal_anchor : ¬ HasSpectralLift 2 2 1 1 9 (-36) := by
@@ -227,8 +233,9 @@ theorem no_spectralLift_at_equal_anchor : ¬ HasSpectralLift 2 2 1 1 9 (-36) := 
   have h9 := hrows 9
   have h10 := hrows 10
   have h11 := hrows 11
-  norm_num [fourMatchingHessianAction, cubicGradient, lift] at
-    h0 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11
+  simp only [fourMatchingHessianAction, cubicGradient, lift, Matrix.cons_val,
+    Matrix.cons_val_succ', Matrix.cons_val_zero'] at h0 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11
+  ring_nf at h0 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11
   have hfirst : y 1 = 31 * y 0 / 3 := by
     linarith only [h0, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11]
   have hfifth : y 5 = -11 * y 0 / 9 := by
@@ -237,7 +244,9 @@ theorem no_spectralLift_at_equal_anchor : ¬ HasSpectralLift 2 2 1 1 9 (-36) := 
     linarith only [h0, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11]
   have heq := congrFun hg 13
   rw [lift_radial_gradient] at heq
-  norm_num [fourMatchingGradient, Matrix.cons_val, hfirst, hfifth, hsixth, heightDenominator] at heq
+  change y 0 * y 6 - y 1 * y 5 = heightDenominator 1 9 at heq
+  rw [hfirst, hfifth, hsixth] at heq
+  norm_num [heightDenominator] at heq
   nlinarith only [heq, sq_nonneg (y 0)]
 
 end

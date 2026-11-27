@@ -31,17 +31,21 @@ private theorem exists_columnGram_of_posSemidef_rank_le_one
     let u : Matrix ι Unit ℂ := Matrix.of fun i _ => W i j * t
     have hz (k : ι) (hk : k ≠ j) : eig k = 0 := by
       by_contra hne
-      exact hk (congrArg Subtype.val (Subsingleton.elim ⟨k, hne⟩ ⟨j, hj⟩ :
-        (⟨k, hne⟩ : {i // eig i ≠ 0}) = ⟨j, hj⟩))
+      have he : (⟨k, hne⟩ : {i // eig i ≠ 0}) = ⟨j, hj⟩ := Subsingleton.elim _ _
+      exact hk (congrArg Subtype.val he)
     have ht : t * star t = (eig j : ℂ) := by
-      simp only [t, Complex.star_def, Complex.conj_ofReal, ← Complex.ofReal_mul,
-        ← pow_two, Real.sq_sqrt (hH.eigenvalues_nonneg j)]
+      rw [show star t = t from Complex.conj_ofReal _, ← pow_two]
+      dsimp only [t]
+      rw [← Complex.ofReal_pow,
+        Real.sq_sqrt (hH.eigenvalues_nonneg j)]
     refine ⟨u, ?_⟩
     rw [hH']
     ext i k
-    simp only [Matrix.mul_apply _ Wᴴ, Matrix.mul_diagonal, Matrix.conjTranspose_apply]
+    rw [Matrix.mul_apply (N := Wᴴ)]
+    simp only [Matrix.mul_diagonal, Matrix.conjTranspose_apply]
     rw [Finset.sum_eq_single_of_mem j (Finset.mem_univ j)]
-    · simp only [u, Matrix.mul_apply, Fintype.sum_unique, Matrix.of_apply, star_mul']
+    · simp only [u, Matrix.mul_apply, Fintype.sum_unique, Matrix.conjTranspose_apply,
+        Matrix.of_apply, star_mul']
       rw [← ht]
       ring
     · intro l _ hl
@@ -63,8 +67,8 @@ private theorem defectFrame_compression {n : ℕ} (V : Matrix (Fin n) (Fin n) �
     (u : Matrix (Fin n) Unit ℂ) (b : Fin n → ℂ) :
     defectFrame V u * diagonal (Fin.cons 0 b) * (defectFrame V u)ᴴ = V * diagonal b * Vᴴ := by
   ext i j
-  simp only [Matrix.mul_apply _ (defectFrame V u)ᴴ, Matrix.mul_apply _ Vᴴ,
-    Matrix.mul_diagonal, Matrix.conjTranspose_apply, Fin.sum_univ_succ, defectFrame,
+  rw [Matrix.mul_apply (N := (defectFrame V u)ᴴ), Matrix.mul_apply (N := Vᴴ)]
+  simp only [Matrix.mul_diagonal, Matrix.conjTranspose_apply, Fin.sum_univ_succ, defectFrame,
     Matrix.of_apply, Fin.cons_zero, Fin.cons_succ, mul_zero, zero_mul, zero_add]
 
 private theorem right_defect_column {n : ℕ} {V : Matrix (Fin n) (Fin n) ℂ}
@@ -138,7 +142,7 @@ theorem principalCoisometry_iff_rankOneDefect (n : ℕ) :
       exact ⟨Matrix.posSemidef_self_mul_conjTranspose u,
         (Matrix.rank_mul_le_left _ _).trans (by simpa using Matrix.rank_le_card_width u)⟩
     obtain ⟨hleft, hleftRank⟩ := (rank_one_defect_left_iff_right V).mpr hright
-    have hβ (j : Fin (n + 1)) : β j = c + Fin.cons 0 b j := by
+    have hβ (j : Fin (n + 1)) : β j = c + Fin.cons (α := fun _ => ℂ) 0 b j := by
       refine Fin.cases ?_ (fun j => ?_) j
       · simp only [c, Fin.cons_zero, add_zero]
       · simp only [b, Fin.cons_succ]
@@ -148,7 +152,7 @@ theorem principalCoisometry_iff_rankOneDefect (n : ℕ) :
       ext i j
       by_cases hij : i = j <;> simp [Matrix.diagonal_apply, Matrix.one_apply, hij]
     have hcomp : diagonal a + Y * diagonal β * Yᴴ = diagonal a' + V * diagonal b * Vᴴ := by
-      rw [show β = fun j => c + Fin.cons 0 b j from funext hβ, hmat, Matrix.mul_add,
+      rw [show β = fun j => c + Fin.cons (α := fun _ => ℂ) 0 b j from funext hβ, hmat, Matrix.mul_add,
         Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, hY, ← hframe,
         defectFrame_compression, show a' = fun j => c + a j from funext (fun _ => add_comm _ _), hmat]
       abel
@@ -190,34 +194,30 @@ theorem affineSchurTransfer_rankOnePhase
   have hq : 0 < q := sub_pos.mpr ha
   have hqc : (q : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hq.ne'
   have htSq : t * t = (q : ℂ) := by
-    simp only [t, ← Complex.ofReal_mul, ← pow_two, Real.sq_sqrt hq.le]
+    dsimp only [t]
+    rw [← Complex.ofReal_mul, ← pow_two, Real.sq_sqrt hq.le]
   have htStar : star t = t := by simp only [t, Complex.star_def, Complex.conj_ofReal]
   have hWa : IsUnitary W := affineSchurTransfer_unitary a r c D 1 hU ha Complex.normSq_one
   have hleft := hU.2
   have hright := hU.1
   rw [fromBlocks_conjTranspose, fromBlocks_multiply, ← fromBlocks_one, fromBlocks_inj] at hleft hright
+  have hqI : (1 : Matrix (Fin 1) (Fin 1) ℂ) -
+      (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) =
+      (q : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) := by
+    dsimp only [q]
+    rw [Complex.ofReal_sub, Complex.ofReal_one, sub_smul, one_smul]
   have hrr : r * rᴴ = (q : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) := by
-    have h : (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) + r * rᴴ = 1 := by
-      simpa only [scalar_fin_one_eq_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
-        Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, smul_smul, Complex.star_def,
-        Complex.mul_conj] using hright.1
-    calc
-      _ = 1 - (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) :=
-        eq_sub_iff_add_eq.mpr (by rwa [add_comm])
-      _ = _ := by
-        rw [← one_smul ℂ (1 : Matrix (Fin 1) (Fin 1) ℂ), ← sub_smul,
-          q, Complex.ofReal_sub, Complex.ofReal_one]
+    have h := hright.1
+    rw [scalar_fin_one_eq_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
+      Matrix.mul_smul, Matrix.smul_mul, Matrix.one_mul, smul_smul,
+      show star a * a = (Complex.normSq a : ℂ) from Complex.normSq_eq_conj_mul_self.symm] at h
+    exact (eq_sub_iff_add_eq.mpr (by rwa [add_comm])).trans hqI
   have hcc : cᴴ * c = (q : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) := by
-    have h : (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) + cᴴ * c = 1 := by
-      simpa only [scalar_fin_one_eq_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
-        Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, smul_smul, Complex.star_def,
-        ← Complex.normSq_eq_conj_mul_self] using hleft.1
-    calc
-      _ = 1 - (Complex.normSq a : ℂ) • (1 : Matrix (Fin 1) (Fin 1) ℂ) :=
-        eq_sub_iff_add_eq.mpr (by rwa [add_comm])
-      _ = _ := by
-        rw [← one_smul ℂ (1 : Matrix (Fin 1) (Fin 1) ℂ), ← sub_smul,
-          q, Complex.ofReal_sub, Complex.ofReal_one]
+    have h := hleft.1
+    rw [scalar_fin_one_eq_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
+      Matrix.mul_smul, Matrix.smul_mul, Matrix.one_mul, smul_smul,
+      show a * star a = (Complex.normSq a : ℂ) from Complex.mul_conj a] at h
+    exact (eq_sub_iff_add_eq.mpr (by rwa [add_comm])).trans hqI
   have hrD : r * Dᴴ = (-a) • cᴴ := by
     have h := hright.2.1
     rw [scalar_fin_one_eq_smul, Matrix.smul_mul, Matrix.one_mul, add_comm] at h
@@ -233,20 +233,20 @@ theorem affineSchurTransfer_rankOnePhase
         intro i _
         simp only [v, div_eq_mul_inv, star_mul', star_inv₀, htStar]
         ring
-      _ = 1 := by rw [← Finset.mul_sum, hnorm, ← mul_inv_rev, htSq, inv_mul_cancel₀ hqc]
+      _ = 1 := by rw [← Finset.mul_sum, hnorm, ← _root_.mul_inv_rev, htSq, inv_mul_cancel₀ hqc]
   have hP : (q : ℂ)⁻¹ • (c * cᴴ) = vecMulVec v (star ∘ v) := by
     ext i j
-    simp only [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply, Fintype.sum_unique,
+    simp only [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply, Fin.sum_univ_one,
       Matrix.conjTranspose_apply, Matrix.vecMulVec_apply, Function.comp_apply,
       v, div_eq_mul_inv, star_mul', star_inv₀, htStar]
-    rw [← htSq, mul_inv_rev]
+    rw [← htSq, _root_.mul_inv_rev]
     ring
   have hW (z : ℂ) : affineSchurTransfer a r c D z =
       D + ((z + star a) / (q : ℂ)) • (c * r) := by
     simp only [affineSchurTransfer, q, Complex.ofReal_sub, Complex.ofReal_one]
   have hrW : r * Wᴴ = cᴴ := by
     have hstar : star ((1 + star a) / (q : ℂ)) = (1 + a) / (q : ℂ) := by
-      simp only [star_div₀, star_add, star_one, star_star, Complex.star_def, Complex.conj_ofReal]
+      rw [star_div₀, star_add, star_one, star_star, show star (q : ℂ) = q from Complex.conj_ofReal q]
     change r * (affineSchurTransfer a r c D 1)ᴴ = cᴴ
     rw [hW, Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul,
       Matrix.mul_add, Matrix.mul_smul, ← Matrix.mul_assoc r rᴴ cᴴ, hrD, hrr, hstar,

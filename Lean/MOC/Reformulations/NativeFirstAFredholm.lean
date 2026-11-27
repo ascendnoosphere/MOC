@@ -32,8 +32,8 @@ theorem finiteFredholmVertex_shift {n : ℕ} (a b : Fin n → ℂ) (σ : Equiv.P
     finiteFredholmVertex a b σ = matchingProduct (fun i => 1 + a i) b σ :=
   rfl
 
-/-- The finite part of Atlas 050 and 062, with actual Fredholm determinants
-and eigenvalue products. The infinite closed-hull claim is a separate limit. -/
+/-- The finite Fredholm determinant comparison uses an identity shift
+of the sum and of each matching term. -/
 def nativeFiniteFredholmHull : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
     finiteFredholmValue a b U ∈ convexHull ℝ (Set.range (finiteFredholmVertex a b))
@@ -90,7 +90,7 @@ theorem finiteRegularizedTwoHull_iff {n : ℕ} (a b : Fin n → ℂ)
     rw [regularizedTwoVertex_eq, mul_comm]
   exact hull_common_factor_iff hc hcV hcP
 
-/-- Atlas 063 and order two of Atlas 064, on actual finite Hilbert spaces. -/
+/-- The finite regularized determinant comparison at regularization degree two. -/
 def nativeFiniteRegularizedTwoHull : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
     finiteRegularizedTwoValue a b U ∈

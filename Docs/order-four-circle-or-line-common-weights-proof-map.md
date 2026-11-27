@@ -2,16 +2,18 @@
 
 [Proof map index](README.md) · [All-order proof map](all-orders-proof-map.md) · [Order-four proof map](order-four-proof-map.md)
 
-Let $a$ be a list of four complex eigenvalues, and let $H$ be a normal
-matrix with this spectrum. A common law assigns nonnegative weights
-with sum one to permutations $\sigma$ of the four labels. The law
-represents $\det(H+\mathrm{diag}(b))$ as the weighted average of
-$\prod_j(a_{\sigma(j)}+b_j)$ for every complex list $b$.
+Fix a list $a$ of four complex eigenvalues, with multiplicity. For a
+normal matrix $H$ with this spectrum, a common law assigns
+nonnegative weights with sum one to permutations $\sigma$ of the four
+labels. For every complex list $b$, the same law represents
+$\det(H+\mathrm{diag}(b))$ as the weighted sum of
+$\prod_j(a_{\sigma(j)}+b_j)$. Here $\mathrm{diag}(b)$ is the diagonal
+matrix with entries from $b$.
 
-There is a common law for every such $H$ if and only if the entries of
-$a$ lie on one circle or one straight line. Repeated entries are
-allowed. The weights can depend on the fixed spectrum and on $H$.
-[Circle-or-line criterion](../Lean/MOC/FourCircleLineCommonWeights.lean#L651)
+Every such $H$ has a common law if and only if all entries of $a$
+lie on one circle or one straight line. Repeated entries are allowed.
+The weights can depend on $a$ and $H$.
+[Circle-or-line criterion](../Lean/MOC/FourCircleLineCommonWeights.lean#L654)
 
 ```mermaid
 flowchart TD
@@ -26,15 +28,16 @@ flowchart TD
     B["Both facts rule out a common law at that mixer"]
     H["One law represents all principal minors of a Hermitian matrix"]
     X["A diagonal permutation maximizes every real linear objective on these minors"]
-    C -->|"Fractional-linear transport to real spectra"| M
-    R --> D
-    R --> E
-    D -->|"Common law for distinct real entries"| M
-    E -->|"Common law for repeated entries"| M
+    C -->|"Fractional-linear transport"| R
+    R -->|"All distinct"| D
+    R -->|"Repeated value"| E
+    D -->|"Transport common weights back"| M
+    E -->|"Transport common weights back"| M
     M -->|"Converse by contraposition"| C
     N --> P
-    P --> B
-    O --> B
+    P --> A{"Both premises"}
+    O --> A
+    A --> B
     M -->|"For real eigenvalues"| H
     H --> X
 ```
@@ -43,20 +46,19 @@ flowchart TD
 
 | Premise | Argument | Lean source |
 | --- | --- | --- |
-| Four distinct real eigenvalues | A finite facet test on the lower parameter interval gives common weights. Closedness includes the upper endpoint. | [Facet test](../Lean/MOC/HermitianByNormalFourProof.lean#L40) · [Conversion to weights](../Lean/MOC/HermitianByNormalFour.lean#L80) |
+| Four distinct real eigenvalues | Normalize to the finite facet test with a middle parameter $t$ in $(1,2]$. The certificate applies for $1<t<2$. Closedness includes $t=2$. | [Facet test](../Lean/MOC/HermitianByNormalFourProof.lean#L40) · [Conversion to weights](../Lean/MOC/HermitianByNormalFour.lean#L80) · [Common law](../Lean/MOC/FourCircleLineCommonWeights.lean#L54) |
 | A repeated entry in a real list of length four | Put the labels in three groups, one of which has one label. A coupling of squared minors of adjacent sizes gives common weights. | [Real-spectrum proof](../Lean/MOC/FourCircleLineCommonWeights.lean#L54) |
 | One circle or line contains the four eigenvalues | A fractional-linear change maps the fixed spectrum to real values. The law survives this change. Continuity includes partner values at the pole. | [Sufficiency](../Lean/MOC/FourCircleLineCommonWeights.lean#L92) |
-| The spectrum lies on no circle or line | Agreement on every diagonal partner gives the squared-minor weights for every subset image. Triple product moments determine the singleton weights. The nonreal cross ratio separates the remaining pair weights. Complementation gives the larger subsets. | [Necessary minor weights](../Lean/MOC/FourCircleLineCommonWeights.lean#L610) |
-| One mixer has no common squared-minor law | For any spectrum off a circle or line, the converse uses that same mixer to rule out a common law. | [Converse](../Lean/MOC/FourCircleLineCommonWeights.lean#L651) |
+| The spectrum lies on no circle or line | Agreement on every diagonal partner gives the squared-minor weights for every subset image. Triple product moments determine the singleton weights. The nonreal cross ratio separates the remaining pair weights. Complementation gives the larger subsets. | [Necessary minor weights](../Lean/MOC/FourCircleLineCommonWeights.lean#L613) |
+| One mixer has no common squared-minor law | For any spectrum off a circle or line, the converse uses that same mixer to rule out a common law. | [Converse](../Lean/MOC/FourCircleLineCommonWeights.lean#L654) |
 
-The lower interval has eleven ray transitions. Each transition adds
-one permutation inequality. All eleven transitions and the combined
-order-four Hermitian–normal theorem passed Lean checks. Their bit masks
-certify that distinct ray supports are incomparable and that each
-omitted crossing has a witness. The sign checks establish each mask.
-The witness checks then use the verified masks. The larger row tests
-use blocks of sixteen rows. Each block passes the Lean kernel.
-[Incomparability condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L41) · [Crossing condition](../Lean/MOC/WeightedDiamondSparseCut.lean#L46) · [Transition path](../Lean/MOC/HermitianByNormalFourProof.lean#L25) · [Witness check](../Lean/MOC/SparseRayCutKernelChecks.lean#L7) · [Finite row checks](../Lean/MOC/SparseRayCutKernelChecks.lean#L40)
+The finite certificate adds eleven permutation inequalities, one per
+transition. At each transition it uses the signs of the old ray
+coordinates to check that distinct ray supports are incomparable. The
+same signs identify a witness for every omitted crossing. The
+certificate then gives the complete nonnegative facet decomposition
+on the open interval.
+[Transition path](../Lean/MOC/HermitianByNormalFourProof.lean#L25) · [Witness check](../Lean/MOC/SparseRayCutKernelChecks.lean#L7) · [Facet decomposition](../Lean/MOC/HermitianByNormalFourProof.lean#L40)
 
 The common law gives pointwise determinant inclusion on the circle or
 line. Repeated eigenvalues also satisfy the pointwise inclusion in
@@ -65,11 +67,21 @@ where neither signed spectrum lies on a circle or line. These are the
 first list and the negation of the second list.
 [Pointwise circle or line case](../Lean/MOC/HermitianByNormalFourProof.lean#L64) · [Exact remaining test](../Lean/MOC/HermitianByNormalFourProof.lean#L128)
 
+The inclusion holds in every finite order if a single circle or line
+contains the whole first spectrum and all but at most four labels
+of the negative of the second spectrum.
+Count the omitted labels with multiplicity. A fractional-linear
+change gives a real first spectrum. Deletion of real partner labels
+reduces the test to orders at most four.
+[All-order inclusion with four omitted labels](../Lean/MOC/HermitianByNormalFourProof.lean#L82)
+
 ## Two free diagonal entries
 
-Take the fixed spectrum $(1,-i,-2,-2i)$ and the diagonal partner
-$(x,y,0,1+i)$ with $x,y\in\mathbb C$. The mixer in the basis of the
-diagonal partner is $1/14$ times the real matrix below.
+Write $\mathrm{i}$ for the imaginary unit. Take the fixed spectrum
+$(1,-\mathrm{i},-2,-2\mathrm{i})$ and the diagonal partner
+$(x,y,0,1+\mathrm{i})$ with $x,y\in\mathbb C$. The unitary change
+of eigenbasis in the basis of the diagonal partner is $1/14$ times
+the real matrix below.
 [Unitary proof](../Lean/MOC/FourCircleLineCommonWeights.lean#L112)
 
 $$
@@ -83,10 +95,11 @@ $$
 
 Evaluate the determinant and each matching product at $(0,0)$,
 $(1,0)$, and $(1,1)$. Form the real part of their linear combination
-with coefficients $1+3i$, $2-i$, and $-4+2i$ in this order. Every
+with coefficients $1+3\mathrm{i}$, $2-\mathrm{i}$, and
+$-4+2\mathrm{i}$ in this order. Every
 permutation gives a score at most $-4$. The mixer gives $-769/196$,
 which is greater than $-4$. Thus a common law cannot match the three
-evaluations. [Two-entry obstruction](../Lean/MOC/FourCircleLineCommonWeights.lean#L210)
+evaluations. [Two-entry obstruction](../Lean/MOC/FourCircleLineCommonWeights.lean#L211)
 
 ## Principal minors
 
@@ -101,7 +114,7 @@ $$
 for every $S$. To extract this identity, shift and scale the columns
 outside $S$ by a single parameter. At parameter zero, the determinant
 is that of a block triangular matrix with the desired principal
-submatrix and an identity block. [Coefficient extraction](../Lean/MOC/FourCircleLineCommonWeights.lean#L669) · [Common principal-minor law](../Lean/MOC/FourCircleLineCommonWeights.lean#L764)
+submatrix and an identity block. [Coefficient extraction](../Lean/MOC/FourCircleLineCommonWeights.lean#L672) · [Common principal-minor law](../Lean/MOC/FourCircleLineCommonWeights.lean#L767)
 
 For any real coefficients $c_S$, the objective
 $\sum_S c_S\det H[S,S]$ attains its maximum at a diagonal
@@ -109,4 +122,4 @@ permutation of the spectrum. The same conclusion holds on
 the real symmetric orbit. In particular, the coefficients of
 a homogeneous multiaffine polynomial of degree $k$ give such
 an objective by setting $c_S=0$ when $S$ has size different
-from $k$. [Hermitian maximum](../Lean/MOC/FourCircleLineCommonWeights.lean#L832) · [Real symmetric maximum](../Lean/MOC/FourCircleLineCommonWeights.lean#L870)
+from $k$. [Hermitian maximum](../Lean/MOC/FourCircleLineCommonWeights.lean#L835) · [Real symmetric maximum](../Lean/MOC/FourCircleLineCommonWeights.lean#L873)

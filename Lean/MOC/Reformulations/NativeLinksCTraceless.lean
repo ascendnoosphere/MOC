@@ -5,7 +5,7 @@ import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.Algebra.Polynomial.BigOperators
 import Mathlib.RingTheory.Coprime.Lemmas
 
-/-! A symbolic reduction of MOC to the traceless Cartan spectra in Atlas 149.
+/-! A reduction of MOC to traceless diagonal spectra.
 A zero of the Wronskian of the two signed root polynomials makes their
 logarithmic derivatives agree. The corresponding fractional-linear map
 then centers both signed spectra without changing the hull question. -/
@@ -177,7 +177,7 @@ private theorem simpleSpectra_of_matchingProduct_injective {n : ℕ} (a b : Fin 
     have := congrArg (fun e : Equiv.Perm (Fin n) => e i) (h hp)
     simpa using this.symm
 
-/-- Atlas 149 on genuine Cartan spectral lists: arbitrary pairs of traceless
+/-- To realize Cartan spectra, arbitrary pairs of traceless
 diagonals are realized using the defining modules of the two factors of
 `sl_n × sl_n`. No nonlinear evaluation of a Cartan weight is used. -/
 def TracelessCartanForm : Prop :=

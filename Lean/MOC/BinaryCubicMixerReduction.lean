@@ -49,8 +49,9 @@ private theorem cubicRotation_gram (c s : ℝ) :
   fin_cases i <;> fin_cases j <;>
     norm_num [cubicRotation, cubicEntries, Matrix.mul_apply, Matrix.transpose_apply,
       Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_four, Matrix.of_apply,
-      Matrix.cons_val, smul_eq_mul] <;> first
-      | ring
+      Matrix.cons_val, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.vecHead, Matrix.vecTail,
+      smul_eq_mul] <;> first
+      | ring1
       | linear_combination c^2*s^2*(c^2+s^2) * h
 
 theorem realBinaryCubicMixer_unitary (c s : ℝ) (h : c^2+s^2 = 1) :
@@ -76,7 +77,7 @@ private theorem unitary_two_by_two_coordinates (G : Matrix (Fin 2) (Fin 2) ℂ)
     ext i j : 1
     fin_cases i <;> fin_cases j <;>
       norm_num [K, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two, Matrix.of_apply,
-        Matrix.cons_val] <;> first | ring | linear_combination h
+        Matrix.cons_val] <;> first | ring1 | linear_combination h
   have hK : K = Gᴴ := calc
     K = K * (G * Gᴴ) := by rw [hG.1, Matrix.mul_one]
     _ = Gᴴ := by rw [← Matrix.mul_assoc, hKG, Matrix.one_mul]
@@ -122,9 +123,12 @@ private theorem complexCube_diag_phase (G : Matrix (Fin 2) (Fin 2) ℂ)
   let z := star v * star u
   have hz : Complex.normSq z = 1 := by
     simp only [z, Complex.star_def, Complex.normSq_mul, Complex.normSq_conj, hu, hv, one_mul]
-  have hzu : z * u = star v := by rw [z, mul_assoc, phase_mul_star_self u hu, mul_one]
+  have hzu : z * u = star v := by
+    dsimp only [z]
+    rw [mul_assoc, phase_mul_star_self u hu, mul_one]
   have hzv : z * v = star u := by
-    rw [z, mul_comm (star v) (star u), mul_assoc, phase_mul_star_self v hv, mul_one]
+    dsimp only [z]
+    rw [mul_comm (star v) (star u), mul_assoc, phase_mul_star_self v hv, mul_one]
   have hg10' : G 1 0 = z * (-(s : ℂ)) * u := calc
     G 1 0 = -(s : ℂ) * star v := by
       rw [hg10, hg01, star_mul', Complex.star_def, Complex.conj_ofReal, neg_mul]
@@ -159,7 +163,7 @@ theorem binaryCubicMixer_holds_iff_real_chart :
       fin_cases i <;> fin_cases j <;>
         norm_num [G, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply,
           Fin.sum_univ_two, Matrix.of_apply, Matrix.cons_val, Complex.star_def] <;>
-        first | ring | linear_combination hsC
+        first | ring1 | linear_combination hsC
     have hdet : G.det = 1 := by
       norm_num [G, Matrix.det_fin_two, Matrix.of_apply, Matrix.cons_val] <;> linear_combination hsC
     have hcubic : binaryCubicMixer G = realBinaryCubicMixer c s := by
@@ -185,21 +189,11 @@ private theorem cubic_pair_square (c s : ℝ) (h : c^2+s^2 = 1)
 private def cubicIndicator (p : Equiv.Perm (Fin 4)) (I J : Finset (Fin 4)) : ℤ :=
   if J.map p.toEmbedding = I then 1 else 0
 
-private theorem cubic_facet_perm (p : Equiv.Perm (Fin 4)) :
+private theorem cubic_facet_perm : ∀ p : Equiv.Perm (Fin 4),
     cubicIndicator p {0,1} {0,3} + cubicIndicator p {1,2} {0,3} +
       cubicIndicator p {2,3} {1,3} + cubicIndicator p {2,3} {0,3} -
       cubicIndicator p {0,2} {2,3} ≤ 1 := by
-  have hb : ∀ i j k l : Fin 4, i ≠ j → i ≠ k → i ≠ l → j ≠ k → j ≠ l → k ≠ l →
-      (if ({i,l} : Finset (Fin 4)) = {0,1} then (1 : ℤ) else 0) +
-      (if ({i,l} : Finset (Fin 4)) = {1,2} then 1 else 0) +
-      (if ({j,l} : Finset (Fin 4)) = {2,3} then 1 else 0) +
-      (if ({i,l} : Finset (Fin 4)) = {2,3} then 1 else 0) -
-      (if ({k,l} : Finset (Fin 4)) = {0,2} then 1 else 0) ≤ 1 := by
-    decide +kernel
-  simpa only [cubicIndicator, Finset.map_insert, Finset.map_singleton, Equiv.toEmbedding_apply]
-    using hb (p 0) (p 1) (p 2) (p 3)
-      (p.injective.ne (by decide)) (p.injective.ne (by decide)) (p.injective.ne (by decide))
-      (p.injective.ne (by decide)) (p.injective.ne (by decide)) (p.injective.ne (by decide))
+  decide +kernel
 
 private def cubicTwoFifths : Matrix (Fin 4) (Fin 4) ℂ :=
   realBinaryCubicMixer (Real.sqrt (3/5)) (Real.sqrt (2/5))

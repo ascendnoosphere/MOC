@@ -61,8 +61,10 @@ theorem cyclic_support_capacity_walsh_obstruction :
   obtain ⟨hnonneg, hzero, hcancel, hcapacity, hparity⟩ := rationalCapacityCertificate
   refine ⟨fun x => (rationalDeficit x : ℝ), ?_, ?_, ?_, ?_, ?_⟩
   · intro x
+    change (0 : ℝ) ≤ (rationalDeficit x : ℝ)
     exact_mod_cast hnonneg x
-  · exact_mod_cast hzero
+  · change (rationalDeficit (fun _ => false) : ℝ) = 0
+    exact_mod_cast hzero
   · intro i
     simpa only [Rat.cast_sum, Rat.cast_mul, rationalParity_cast, rationalSpin_cast,
       Rat.cast_zero] using congrArg (fun q : ℚ => (q : ℝ)) (hcancel i)

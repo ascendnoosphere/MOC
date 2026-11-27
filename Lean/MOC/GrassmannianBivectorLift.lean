@@ -60,7 +60,7 @@ theorem intersecting_planes_common_line_or_three_space
         have hEF_L : E ⊓ F ≤ L := le_inf (inf_le_left.trans inf_le_right)
           (inf_le_right.trans inf_le_right)
         have hEF_C : E ⊓ F ≤ C := inf_le_left.trans inf_le_left
-        have hEF : Module.finrank ℂ (E ⊓ F) = 0 := by
+        have hEF : Module.finrank ℂ ↥(E ⊓ F) = 0 := by
           by_contra hn
           have heq : E ⊓ F = L := Submodule.eq_of_le_of_finrank_le hEF_L (by omega)
           exact hLC (heq ▸ hEF_C)
@@ -76,9 +76,9 @@ theorem intersecting_planes_common_line_or_three_space
       · by_contra hCH
         have hLI : L ≤ C ⊓ H := le_inf hLC (inf_le_left.trans le_sup_left)
         have hIC : C ⊓ H ≤ C := inf_le_left
-        have hIle : Module.finrank ℂ (C ⊓ H) ≤ 2 := by
+        have hIle : Module.finrank ℂ ↥(C ⊓ H) ≤ 2 := by
           simpa only [hdim C hC] using Submodule.finrank_mono hIC
-        have hIne : Module.finrank ℂ (C ⊓ H) ≠ 2 := by
+        have hIne : Module.finrank ℂ ↥(C ⊓ H) ≠ 2 := by
           intro he
           have heq : C ⊓ H = C := Submodule.eq_of_le_of_finrank_le hIC (by rw [he, hdim C hC])
           exact hCH (heq ▸ (inf_le_right : C ⊓ H ≤ H))
@@ -86,12 +86,12 @@ theorem intersecting_planes_common_line_or_three_space
         have hDL : C ⊓ D ≤ L := by
           rw [hI]
           exact le_inf inf_le_left (inf_le_right.trans hDH)
-        have hCD : 1 ≤ Module.finrank ℂ (C ⊓ D) :=
+        have hCD : 1 ≤ Module.finrank ℂ ↥(C ⊓ D) :=
           Submodule.one_le_finrank_iff.mpr (hmeet C hC D hD)
         have heq : C ⊓ D = L := Submodule.eq_of_le_of_finrank_le hDL (by omega)
         exact hLD (heq ▸ (inf_le_right : C ⊓ D ≤ D))
       · exact missing_line_le_H C hC hLC
-  · by_cases hn : ∃ P ∈ planes
+  · by_cases hn : ∃ P, P ∈ planes
     · obtain ⟨P, hP⟩ := hn
       refine Or.inr ⟨P, by rw [hdim P hP]; decide, fun Q hQ => ?_⟩
       have he : P = Q := by
@@ -144,7 +144,7 @@ section Carrier
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The carrier is the range of the skew matrix on coordinate vectors. -/
-def bivectorCarrier (A : Matrix ι ι ℂ) : Submodule ℂ (ι → ℂ) :=
+noncomputable def bivectorCarrier (A : Matrix ι ι ℂ) : Submodule ℂ (ι → ℂ) :=
   LinearMap.range A.mulVecLin
 
 private theorem bivectorMatrix_mulVec (x y v : ι → ℂ) :
@@ -282,7 +282,8 @@ theorem bivectorCarrier_inf_ne_bot {A B : Matrix ι ι ℂ}
       let u (i : ι) := v (.inl i)
       let w (i : ι) := v (.inr i)
       have hv : v = Sum.elim u w := by funext i; cases i <;> rfl
-      rw [Matrix.mulVecLin_apply, hv, S, Matrix.transpose_fromRows,
+      change (Matrix.fromRows A B)ᵀ *ᵥ v ∈ _
+      rw [hv, Matrix.transpose_fromRows,
         Matrix.fromCols_mulVec_sumElim, htA, htB, Matrix.neg_mulVec, Matrix.neg_mulVec]
       exact Submodule.add_mem_sup
         (Submodule.neg_mem (bivectorCarrier A) ⟨u, rfl⟩)
@@ -447,7 +448,8 @@ def bivectorStarMap (z : ι → ℂ) : (ι → ℂ) →ₗ[ℂ] Matrix ι ι ℂ
     ring
 
 /-- The star of a vector consists of all bivectors with that first factor. -/
-def bivectorStar (z : ι → ℂ) : Submodule ℂ (Matrix ι ι ℂ) := LinearMap.range (bivectorStarMap z)
+noncomputable def bivectorStar (z : ι → ℂ) : Submodule ℂ (Matrix ι ι ℂ) :=
+  LinearMap.range (bivectorStarMap z)
 
 theorem mem_bivectorStar_iff (z : ι → ℂ) (A : Matrix ι ι ℂ) :
     A ∈ bivectorStar z ↔ ∃ w : ι → ℂ, A = bivectorMatrix z w := by

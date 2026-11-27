@@ -48,7 +48,9 @@ theorem integral_over_real_mem_range {K : Type*} [Field K] [Algebra ℝ K] [IsSe
     rw [hcompleted, map_add, map_pow, map_sub, aeval_X, aeval_C, aeval_C, map_pow] at hqzero
     let a := x - algebraMap ℝ K z.re
     let b := algebraMap ℝ K z.im
-    have hb : b ≠ 0 := (algebraMap ℝ K).map_ne_zero hzi
+    have hb : b ≠ 0 := by
+      intro h
+      exact hzi ((algebraMap ℝ K).injective (h.trans (map_zero (algebraMap ℝ K)).symm))
     have hsum : a ^ 2 + b ^ 2 = 0 := hqzero
     have hneg : (a / b) ^ 2 = -1 := by
       rw [div_pow, div_eq_iff (pow_ne_zero _ hb)]
@@ -179,7 +181,8 @@ theorem one_variable_certificate_iff_no_real_zeros {E : Type*} [Fintype E]
       cases i
       rfl
     have hroot (j : E) : (p j).eval₂ e (x PUnit.unit) = 0 := by
-      rw [p, MvPolynomial.eval₂_const_pUnitAlgEquiv, hconst]
+      dsimp only [p]
+      rw [MvPolynomial.eval₂_const_pUnitAlgEquiv, hconst]
       exact hx j
     obtain ⟨y, hy⟩ := real_univariate_common_zero e (x PUnit.unit) p hroot
     refine hn ⟨fun _ => y, fun j => ?_⟩

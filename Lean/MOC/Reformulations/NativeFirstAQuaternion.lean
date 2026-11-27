@@ -2,9 +2,9 @@ import Mathlib.Analysis.Quaternion
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
-/-! Atlas 028, the native norm under unit quaternion conjugation. The metric
+/-! The quaternion norm under unit quaternion conjugation. The metric
 ingredient holds for any real inner-product imaginary subspace, including
-the one used in the rank-two argument for Atlas 031. -/
+the imaginary subspace in the rank-two octonion norm comparison. -/
 
 open scoped Quaternion
 

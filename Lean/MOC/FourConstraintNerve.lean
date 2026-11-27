@@ -21,15 +21,27 @@ private def fourConstraintEvent (k : Fin 13) (p : Fin 24) : ℤ :=
 private theorem fourConstraintTarget_eq (k : Fin 13) :
     subsetMinorSq fourMarginalMixer (ordinaryCostRows (fourConstraintRay k))
       (ordinaryCostColumns (fourConstraintRay k)) = (fourConstraintTargetNumerator k : ℝ) / 390625 := by
-  fin_cases k <;>
-    norm_num [fourConstraintRay, ordinaryCostRows, ordinaryCostColumns, fourCostPair,
-      fourConstraintTargetNumerator, Matrix.cons_val]
+  fin_cases k <;> norm_num [fourConstraintTargetNumerator, Matrix.cons_val]
+  case' «0» => change subsetMinorSq fourMarginalMixer {0} {1} = _
+  case' «1» => change subsetMinorSq fourMarginalMixer {0} {3} = _
+  case' «2» => change subsetMinorSq fourMarginalMixer {1} {2} = _
+  case' «3» => change subsetMinorSq fourMarginalMixer {1} {3} = _
+  case' «4» => change subsetMinorSq fourMarginalMixer {2} {1} = _
+  case' «5» => change subsetMinorSq fourMarginalMixer {3} {0} = _
+  case' «6» => change subsetMinorSq fourMarginalMixer {3} {1} = _
+  case' «7» => change subsetMinorSq fourMarginalMixer {0, 1} {0, 1} = _
+  case' «8» => change subsetMinorSq fourMarginalMixer {0, 1} {0, 3} = _
+  case' «9» => change subsetMinorSq fourMarginalMixer {0, 2} {1, 2} = _
+  case' «10» => change subsetMinorSq fourMarginalMixer {0, 3} {0, 1} = _
+  case' «11» => change subsetMinorSq fourMarginalMixer {0, 3} {0, 3} = _
+  case' «12» => change subsetMinorSq fourMarginalMixer {0, 3} {2, 3} = _
   all_goals
     first
     | rw [subsetMinorSq_singleton _ fourMarginalMixer_unitary]
     | rw [subsetMinorSq_pair _ fourMarginalMixer_unitary (by decide) (by decide)]
-    norm_num [marginalMixer_entry, marginalMixerNumerator, Matrix.cons_val,
-      GaussianInt.toComplex_def₂, Complex.normSq, Complex.mul_re, Complex.mul_im,
+    norm_num [marginalMixer_entry, marginalMixerNumerator, map_neg, map_ofNat,
+      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.vecHead, Matrix.vecTail,
+      Complex.normSq, Complex.mul_re, Complex.mul_im,
       Complex.sub_re, Complex.sub_im, Complex.inv_re, Complex.inv_im]
 
 private def fourConstraintSeparator : Fin 13 → ℤ := ![-1, 1, -2, -1, 1, -2, -2, -1, -2, -1, 2, -1, -3]
@@ -144,7 +156,7 @@ theorem fourConstraintFeasible_iff (s : Finset (Fin 13)) : FourConstraintFeasibl
           rw [Finset.sum_div]
           apply Finset.sum_congr rfl
           intro p _
-          change (_ / 1562500) * (_ : ℝ) = _
+          change (_ / 1562500) * (fourConstraintEvent k p : ℝ) = _
           ring
         _ = _ := by rw [h]; ring
 
@@ -190,7 +202,7 @@ private theorem extensionWeight_event (k : Fin 13) :
 
 noncomputable section
 
-private abbrev paddedMixerLabels : Fin 5 ≃ Fin 4 ⊕ Fin 1 := finSumFinEquiv.symm
+private abbrev paddedMixerLabels : Fin 5 ≃ Fin 4 ⊕ Fin 1 := (@finSumFinEquiv 4 1).symm
 
 /-- The rational mixer with a fifth coordinate fixed. -/
 def fiveConstraintMixer : Matrix (Fin 5) (Fin 5) ℂ :=
@@ -204,24 +216,25 @@ theorem fiveConstraintMixer_unitary : IsUnitary fiveConstraintMixer :=
 private theorem fiveConstraintMixer_entry (i j : Fin 4) :
     fiveConstraintMixer (extensionEmbedding i) (extensionEmbedding j) = fourMarginalMixer i j := by
   change (fromBlocks fourMarginalMixer 0 0 (1 : Matrix (Fin 1) (Fin 1) ℂ))
-    (finSumFinEquiv.symm (Fin.castAdd 1 i)) (finSumFinEquiv.symm (Fin.castAdd 1 j)) = _
-  rw [finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_castAdd]
-  rfl
+    (paddedMixerLabels (Fin.castAdd 1 i)) (paddedMixerLabels (Fin.castAdd 1 j)) = _
+  rw [finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_castAdd] <;> rfl
 
 private theorem fiveConstraintMixer_minor (k : Fin 13) :
     subsetMinorSq fiveConstraintMixer ((ordinaryCostRows (fourConstraintRay k)).map extensionEmbedding)
         ((ordinaryCostColumns (fourConstraintRay k)).map extensionEmbedding) =
       subsetMinorSq fourMarginalMixer (ordinaryCostRows (fourConstraintRay k))
         (ordinaryCostColumns (fourConstraintRay k)) := by
-  fin_cases k <;>
-    norm_num [fourConstraintRay, ordinaryCostRows, ordinaryCostColumns, fourCostPair, Matrix.cons_val]
-  all_goals
-    first
-    | rw [subsetMinorSq_singleton _ fiveConstraintMixer_unitary,
-        subsetMinorSq_singleton _ fourMarginalMixer_unitary]
-    | rw [subsetMinorSq_pair _ fiveConstraintMixer_unitary
-          (extensionEmbedding.injective.ne (by decide)) (extensionEmbedding.injective.ne (by decide)),
-        subsetMinorSq_pair _ fourMarginalMixer_unitary (by decide) (by decide)]
+  generalize fourConstraintRay k = r
+  by_cases hr : r.val < 16
+  · simp only [ordinaryCostRows, ordinaryCostColumns, if_pos hr, Finset.map_singleton]
+    rw [subsetMinorSq_singleton _ fiveConstraintMixer_unitary,
+      subsetMinorSq_singleton _ fourMarginalMixer_unitary, fiveConstraintMixer_entry]
+  · have hd : ∀ i : Fin 6, (fourCostPair i).1 ≠ (fourCostPair i).2 := by
+      decide +kernel
+    simp only [ordinaryCostRows, ordinaryCostColumns, if_neg hr, Finset.map_insert, Finset.map_singleton]
+    rw [subsetMinorSq_pair _ fiveConstraintMixer_unitary
+          (extensionEmbedding.injective.ne (hd _)) (extensionEmbedding.injective.ne (hd _)),
+        subsetMinorSq_pair _ fourMarginalMixer_unitary (hd _) (hd _)]
     simp only [fiveConstraintMixer_entry]
 
 /-- The thirteen probes have a common law in the padded dimension when

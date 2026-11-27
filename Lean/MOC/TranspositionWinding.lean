@@ -130,8 +130,8 @@ theorem transposition_walk_sum_eq_zero_of_squares
     _ = ∑ k ∈ Finset.range m, (v (p (k + 1)) - v (p k)) :=
       Finset.sum_congr rfl fun k hk => hv _ _ (hwalk k (Finset.mem_range.mp hk))
     _ = 0 := by
-      rw [telescope_sum (v ∘ p)]
-      simp only [Function.comp_apply, hclosed, sub_self]
+      simpa only [Function.comp_apply, hclosed, sub_self] using
+        telescope_sum (v ∘ p) m
 
 private theorem swapMatrix_apply (i j k l : ι) :
     (Equiv.swap i j).permMatrix ℂ k l = if k = Equiv.swap i j l then 1 else 0 := by
@@ -690,8 +690,8 @@ theorem mem_determinantRange_of_transposition_winding_ne_zero (a b : ι → ℂ)
     transpositionWindingAngle a b q m p = ∑ k ∈ Finset.range m, (v (p (k + 1)) - v (p k)) :=
       Finset.sum_congr rfl fun k hk => hv _ _ (hwalk k (Finset.mem_range.mp hk))
     _ = 0 := by
-      rw [telescope_sum (v ∘ p)]
-      simp only [Function.comp_apply, hclosed, sub_self]
+      simpa only [Function.comp_apply, hclosed, sub_self] using
+        telescope_sum (v ∘ p) m
 
 /-- An integer cellular cycle of the transposition graph. The boundary
 at a vertex is the incoming coefficient sum minus the outgoing sum.
@@ -725,8 +725,8 @@ private theorem TranspositionCycle.two_mul_windingAngle (c : TranspositionCycle 
     by_cases hc : c.coefficient p q = 0
     · simp only [hc, Int.cast_zero, zero_mul, neg_zero]
     · rw [matchingEdgeAngle_reverse_of_segment_avoids a b z p q (h p q hc), mul_neg]
-  simp only [Int.cast_sub, sub_mul, Finset.sum_sub_distrib,
-    ← TranspositionCycle.windingAngle, hr, sub_neg_eq_add, two_mul]
+  simp only [Int.cast_sub, sub_mul, Finset.sum_sub_distrib]
+  rw [hr, sub_neg_eq_add, two_mul, TranspositionCycle.windingAngle]
 
 /-- The angle depends only on the signed coefficient of each oriented edge. -/
 theorem TranspositionCycle.windingAngle_eq_of_orientedCoefficients

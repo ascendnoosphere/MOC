@@ -3,7 +3,7 @@ import MOC.Geometry
 import MOC.Support
 
 /-! Concrete arithmetic spectral restriction for the Dolbeault realization
-in Atlas 079. Geometry of complex tori is not used inside this module:
+for Gaussian-integer eigenvalues on a flat complex torus. In the matrix argument,
 integer real and imaginary parts are kept unchanged, and the comparison
 extends by homogeneity and density rather than by arbitrary evaluations. -/
 

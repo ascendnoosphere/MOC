@@ -26,7 +26,7 @@ flowchart TD
 For two distinct mixed rays, their sum is a nonnegative combination of
 ordinary rays. Multiply this identity by the smaller mixed coefficient.
 The operation removes at least one mixed term and preserves the whole
-profile. Induction adds the mixed terms one at a time. [Pair cancellation](../Lean/MOC/FourMixedRayCancellation.lean#L376) · [Reduction to one mixed term](../Lean/MOC/FourMixedRayCancellation.lean#L421)
+profile. Induction adds the mixed terms one at a time. [Pair cancellation](../Lean/MOC/FourMixedRayCancellation.lean#L380) · [Reduction to one mixed term](../Lean/MOC/FourMixedRayCancellation.lean#L425)
 
 After relabeling the remaining mixed term, pair it with each ordinary
 term outside the canonical set of thirteen ordinary rays. The exact
@@ -34,20 +34,19 @@ absorption identity puts the paired part in that set. The procedure
 uses the smaller of the two coefficients at each step. If the mixed
 coefficient becomes zero, the result is in the ordinary cone. Otherwise
 the final profile has the canonical mixed ray and ordinary coefficients
-on the thirteen-ray set. [Absorption identities](../Lean/MOC/FourMixedRayCancellation.lean#L180) · [Support bound](../Lean/MOC/FourMixedRayCancellation.lean#L26) · [Normal form](../Lean/MOC/FourMixedRayCancellation.lean#L515)
+on the thirteen-ray set. [Absorption identities](../Lean/MOC/FourMixedRayCancellation.lean#L184) · [Support bound](../Lean/MOC/FourMixedRayCancellation.lean#L26) · [Normal form](../Lean/MOC/FourMixedRayCancellation.lean#L515)
 
 Signed determinant weights evaluate a cost profile at a fixed mixer by
 a linear map. An ordinary ray evaluates to the squared modulus of its
 specified minor. Thus the cancellation identities preserve the value
 at every unitary mixer, and the ordinary branch is nonnegative.
 Nonnegativity in the mixed section requires a separate argument for
-the costs that come from spectra. [Squared-minor evaluation](../Lean/MOC/FourMixedRayCancellation.lean#L553) · [Ordinary nonnegativity](../Lean/MOC/FourMixedRayCancellation.lean#L582)
+the costs that come from spectra. [Squared-minor evaluation](../Lean/MOC/FourMixedRayCancellation.lean#L557) · [Ordinary nonnegativity](../Lean/MOC/FourMixedRayCancellation.lean#L586)
 
-The Lean proof checks the 47 seed pair identities and the 21
-absorption identities over integer permutation profiles. An independent
-exact replay also checked closure of the ordinary rays under the 48
-relabelings used here. The new Lean source was written without a build.
-[Archived certificate source](https://github.com/ascendnoosphere/MOC/blob/a49606d39e8bb5903c9bb4a51651a18679499c0c/data/certificates/geometry/mixed_cancellation_graph.json)
+The Lean proof checks 47 pair identities and 21 absorption identities
+over integer permutation profiles. The ordinary rays are closed under
+the 48 relabelings used in the proof.
+[Pair identities](../Lean/MOC/FourMixedRayCancellation.lean#L150) · [Absorption identities](../Lean/MOC/FourMixedRayCancellation.lean#L171)
 
 ## Canonical contact certificates
 
@@ -101,18 +100,17 @@ factor has a positive constant term.
 | Ordinary ray indices | Premise and conclusion |
 | --- | --- |
 | $(13,17,18,27,30)$ | If the first determinant factor is nonpositive, the coefficients on rays 13, 18 and 27 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L167) |
-| $(7,13,20,27,31)$ | If the second determinant factor is nonpositive, the coefficients on rays 7, 13 and 31 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L213) |
+| $(7,13,20,27,31)$ | If the second determinant factor is nonpositive, the coefficients on rays 7, 13 and 31 satisfy the bound for a square decomposition. The full cost is a sum of matching squares. [Lean statement](../Lean/MOC/FourEightContactSmallFactors.lean#L219) |
 
-Both certificates allow zero coefficients. Exact Python checks expanded
-both pencil determinants and checked the square identities on all 24
-permutations. The new Lean source awaits verification.
-[Archived proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_nonlinear_capacity_20261031.txt)
+Both certificates allow zero coefficients. The determinant factorizations
+and square identities use exact arithmetic on all 24 permutations.
+[Factor and square calculations](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_nonlinear_capacity_20261031.txt)
 
 ### Additional whole-domain certificates
 
-Each table row uses positive ordinary coefficients. Exact Python
-checks verified the full determinant identities and the permutation
-identities used in the square decompositions.
+Each table row uses positive ordinary coefficients. The proofs expand
+the determinant identities and verify the square decompositions on
+the 24 permutations.
 
 | Ordinary ray indices | Premise and result |
 | --- | --- |
@@ -121,7 +119,7 @@ identities used in the square decompositions.
 | $(13,17,18,27,28)$ | A zero mixed determinant factor and the cubic height equation at positive height give one of three square bounds. [Lean scalar certificate](../Lean/MOC/FourEightContactHigherFactors.lean#L48) |
 | $(7,13,17,27,31)$ | A zero mixed determinant factor gives a matching sum of squares through an explicit four-by-four Gram matrix. [Lean statement](../Lean/MOC/FourEightContactLargestFactors.lean#L45) |
 
-The archived threshold-rectangle proof gives squares for the whole
+A rectangle bound gives squares for the whole
 family $(7,13,18,27,31)$ on its mixed factor sublevel. For six
 seven-contact families, setting one coefficient to zero reduces the
 nonpositive factor to that of a settled family, with relabeling where
@@ -132,7 +130,7 @@ $(7,10,13,17,27,30)$ and $(7,10,13,20,23,30)$.
 For $(7,17,18,23,27,30)$ the factor equation forces the product of the
 coefficients on rays 18 and 23 to be at least one. The formal factor
 links remain separate from these Lean square lemmas.
-[Inheritance](../Lean/MOC/FourSevenContactAffineElimination.lean#L65) · [Pair capacity](../Lean/MOC/FourSevenContactAffineElimination.lean#L82) · [Pair square certificate](../Lean/MOC/FourSevenContactAffineElimination.lean#L121) · [Archived threshold-rectangle proof](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_threshold_rectangle_closure_20261031.txt)
+[Inheritance](../Lean/MOC/FourSevenContactAffineElimination.lean#L65) · [Pair capacity](../Lean/MOC/FourSevenContactAffineElimination.lean#L82) · [Pair square certificate](../Lean/MOC/FourSevenContactAffineElimination.lean#L121) · [Rectangle bound](https://github.com/ascendnoosphere/MOC/blob/14cf959d78ae5828a92013d13a65b9c50ebb01d0/Docs/research/moc_high_contact_threshold_rectangle_closure_20261031.txt)
 
 ### Remaining coefficient tests
 
@@ -141,11 +139,11 @@ coefficient on ray 31 is at most one. For four seven-contact classes,
 affine factor equations have a nonzero slope or give a pair bound on
 the zero-slope branch. Shared Gram terms give further sufficient
 conditions in seven-contact classes.
-[Eight-contact bound](../Lean/MOC/FourEightContactAffineFactors.lean#L217) · [Affine charts](../Lean/MOC/FourSevenContactAffineChambers.lean#L37) · [Shared compensation](../Lean/MOC/FourSevenContactMiddleNonlinearFactors.lean#L77) · [Four-feature Gram client](../Lean/MOC/FourSevenContactHighNonlinearFactors.lean#L10)
+[Eight-contact bound](../Lean/MOC/FourEightContactAffineFactors.lean#L216) · [Affine charts](../Lean/MOC/FourSevenContactAffineChambers.lean#L37) · [Shared compensation](../Lean/MOC/FourSevenContactMiddleNonlinearFactors.lean#L77) · [Four-feature Gram client](../Lean/MOC/FourSevenContactHighNonlinearFactors.lean#L10)
 
 In twelve seven-contact profiles the matching cubic fixes the height
 as a quotient with positive numerator. Positive height requires a
-positive denominator. Exact balanced rank-eight roots can pass this
-test. The open domains require further spectral or support restrictions.
-The new Lean source awaits verification.
-[First six profiles](../Lean/MOC/FourSevenContactSmallNonlinearFactors.lean#L87) · [Second six profiles](../Lean/MOC/FourSevenContactLargeNonlinearFactors.lean#L66)
+positive denominator. Some rank-eight matrices at roots of the
+determinant factors satisfy this test. The test leaves open whether
+the corresponding spectral gaps satisfy the support bound.
+[First six profiles](../Lean/MOC/FourSevenContactSmallNonlinearFactors.lean#L85) · [Second six profiles](../Lean/MOC/FourSevenContactLargeNonlinearFactors.lean#L65)

@@ -102,7 +102,7 @@ theorem holdenFourteenTerm_nonneg_away_from_anchor (U : Matrix (Fin 4) (Fin 4) �
   let c : Fin 24 → ℝ := fun p => (holdenBalanceInt p : ℝ)
   let r := holdenFourteenTermFeature i
   have h0 : holdenFourteenTermWeight U 0 = fourSupportCostValue U c / 4 := by
-    simp only [holdenFourteenTermWeight, holdenFourteenTermNumerator, if_pos rfl, c]
+    simp only [holdenFourteenTermWeight, holdenFourteenTermNumerator, if_pos rfl, if_true, c]
   have hc : fourSupportCostValue U c ≤ 0 := by
     rw [h0] at hanchor
     linarith only [hanchor]
@@ -199,7 +199,8 @@ private theorem mixedCostRay_nonnegative (r : Fin 48) (p : Fin 24) :
   have h : ∀ (r : Fin 48) (p : Fin 24), 0 ≤ mixedCostRayInt r p := by
     intro r
     fin_cases r <;> decide +kernel
-  exact_mod_cast h r p
+  change 0 ≤ (mixedCostRayInt r p : ℝ)
+  exact Int.cast_nonneg.mpr (h r p)
 
 /-- A contact at a positive coordinate of every negatively evaluated mixed
 ray suffices for a nonnegative support value. There is at most one such ray. -/
@@ -229,17 +230,15 @@ theorem fourSupportCostValue_nonneg_of_contacts (U : Matrix (Fin 4) (Fin 4) ℂ)
         apply Finset.sum_nonneg
         intro i _
         apply mul_nonneg (ha i)
-        unfold ordinaryCostRay ordinaryCostRayInt
-        split
-        · split <;> norm_num
-        · split <;> norm_num
+        rw [ordinaryCostRay, ordinaryCostRayInt_indicator]
+        split <;> norm_num
       have hsum : (∑ i, a i * ordinaryCostRay i p) + ∑ i, b i * mixedCostRay i p = 0 := by
         simpa only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using
           (congrFun hdecomp p).symm.trans hp
       have hzero : b r = 0 := by
-        by_contra hne
-        have hpos := mul_pos (lt_of_le_of_ne (hb r) (Ne.symm hne)) hrp
-        linarith only [hpos, hsingle, hord, hsum]
+        have hterm : b r * mixedCostRay r p ≤ 0 := by
+          linarith only [hsingle, hord, hsum]
+        exact le_antisymm (nonpos_of_mul_nonpos_left hterm hrp) (hb r)
       rw [hzero, zero_mul]
 
 /-- A nonnegative spectral gap at a maximizing matching lies in the
@@ -247,13 +246,19 @@ order-four support cone. -/
 theorem fourSpectralGap_mem_supportCost (a b : Fin 4 → ℂ) (η : ℂ) (r : Equiv.Perm (Fin 4))
     (hmax : ∀ s : Equiv.Perm (Fin 4), 0 ≤ matchingGap a b η r s) :
     FourSupportCost (fun p : Fin 24 => matchingGap a b η r (fourPerm p).symm) := by
-  refine ⟨⟨fun i => (if i = 13 then (η * matchingProduct a b r).re else 0) -
-    (η * fourNoncrossingCoordinates (fourSpectralPoints a b) i).re, ?_⟩, fun p => hmax _⟩
-  funext p
-  rw [matchingGap, ← fourMatchingEvaluation_spectral_real_part a b η p]
-  generalize (η * matchingProduct a b r).re = H
-  generalize (fun i => (η * fourNoncrossingCoordinates (fourSpectralPoints a b) i).re) = m
-  fin_cases p <;> simp [fourMatchingEvaluation] <;> ring
+  refine ⟨?_, fun p => hmax (fourPerm p).symm⟩
+  let H : ℝ := (η * matchingProduct a b r).re
+  let c (i : Fin 14) := ((H : ℂ) * fourNoncrossingCoordinates
+    (fourSpectralPoints (fun _ => 1) (fun _ => 0)) i).re
+  let m (i : Fin 14) := (η * fourNoncrossingCoordinates (fourSpectralPoints a b) i).re
+  have hc (p : Fin 24) : fourMatchingEvaluation c p = H := by
+    simpa only [c, matchingProduct, add_zero, Finset.prod_const_one, mul_one, Complex.ofReal_re] using
+      fourMatchingEvaluation_spectral_real_part (fun _ => 1) (fun _ => 0) (H : ℂ) p
+  have hconst : (fun _ : Fin 24 => H) ∈ realMatchingFunctionSpace := ⟨c, funext hc⟩
+  have hscore : (fun p : Fin 24 => (η * matchingProduct a b (fourPerm p).symm).re) ∈
+      realMatchingFunctionSpace :=
+    ⟨m, funext (fourMatchingEvaluation_spectral_real_part a b η)⟩
+  exact realMatchingFunctionSpace.sub_mem hconst hscore
 
 /-- The directional order-four determinant bound when each negatively
 evaluated mixed ray has a positive coordinate at a maximizing matching. -/

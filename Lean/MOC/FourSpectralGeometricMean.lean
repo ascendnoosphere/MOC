@@ -63,6 +63,12 @@ theorem exists_four_spectral_geometric_mean_counterexample :
       _ = (GaussianInt.toComplex (geometricMeanIntegerMatching p)).re :=
         congrArg Complex.re (geometricMeanMatching_map p).symm
       _ = _ := by rw [geometricMeanProjectionTable_eq p, GaussianInt.to_real_re]
+  have hentries : geometricMeanProjectionTable 11 = -2040 ∧
+      geometricMeanProjectionTable 17 = -1530 ∧ geometricMeanProjectionTable 22 = -2012 ∧
+      geometricMeanProjectionTable 4 = 2363 ∧ geometricMeanProjectionTable 18 = -2037 ∧
+      geometricMeanProjectionTable 8 = 1508 ∧ geometricMeanProjectionTable 5 = -1904 := by
+    decide +kernel
+  rcases hentries with ⟨h11Int, h17Int, h22Int, h4Int, h18Int, h8Int, h5Int⟩
   refine ⟨a, b, -2040, ?_, ?_, ?_, ?_, ?_⟩
   · intro i j h
     have hn : ∀ x y : Fin 4, geometricMeanLeft x + geometricMeanRight y ≠ 0 := by
@@ -85,28 +91,21 @@ theorem exists_four_spectral_geometric_mean_counterexample :
       decide +kernel
     exact_mod_cast hl p
   · rw [hproj 11]
-    norm_num [geometricMeanProjectionTable, Matrix.cons_val]
+    exact_mod_cast h11Int
   · intro f h
     have hf (p : Fin 24) : f p = (geometricMeanProjectionTable p : ℝ) + 2040 := by
       change (matchingProduct a b (fourPerm p).symm).re - (-2040) = _
       rw [hproj p, sub_neg_eq_add]
     have h17 : f 17 = 510 := by
-      rw [hf]
-      norm_num [geometricMeanProjectionTable, Matrix.cons_val]
+      norm_num [hf, h17Int]
     have h22 : f 22 = 28 := by
-      rw [hf]
-      norm_num [geometricMeanProjectionTable, Matrix.cons_val]
+      norm_num [hf, h22Int]
     have hh : h = 206 := by
       change f 4 - f 18 - f 8 - f 17 - f 5 = _
-      simp only [hf]
-      norm_num [geometricMeanProjectionTable, Matrix.cons_val]
+      norm_num [hf, h4Int, h18Int, h8Int, h17Int, h5Int]
     refine ⟨h17, h22, hh, ?_⟩
     rw [h17, h22, hh]
-    have hs : (Real.sqrt (510 * 28 : ℝ)) ^ 2 = 510 * 28 :=
-      Real.sq_sqrt (by norm_num)
-    by_contra! hn
-    have hsum : 0 ≤ Real.sqrt (510 * 28 : ℝ) + 206 :=
-      add_nonneg (Real.sqrt_nonneg _) (by norm_num)
-    nlinarith only [hs, mul_nonneg (sub_nonneg.mpr hn) hsum]
+    apply (Real.sqrt_lt' (by norm_num : (0 : ℝ) < 206)).mpr
+    norm_num
 
 end MOC

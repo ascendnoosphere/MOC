@@ -134,30 +134,47 @@ theorem fourT5_projective_gap_identities (x t r u : ℝ) (z w v η : ℂ)
     dsimp only [K, W₀, f, C]
     push_cast
     ring
+  let denominator := v * (f * P)
+  have hdenominator : denominator ≠ 0 := mul_ne_zero hv (mul_ne_zero hf' hP')
+  have clear_v (a : ℂ) : a / v * denominator = a * (f * P) := by
+    change a / v * (v * (f * P)) = _
+    rw [← mul_assoc, div_mul_cancel₀ _ hv]
+  have clear_f (a : ℂ) : a / f * denominator = a * (v * P) := by
+    change a / f * (v * (f * P)) = _
+    rw [← mul_assoc v f P, mul_comm v f, mul_assoc f v P, ← mul_assoc,
+      div_mul_cancel₀ _ hf']
+  have clear_fP (a : ℂ) : a / (f * P) * denominator = a * v := by
+    change a / (f * P) * (v * (f * P)) = _
+    rw [mul_comm v (f * P), ← mul_assoc, div_mul_cancel₀ _ (mul_ne_zero hf' hP')]
+  have clear_denominator (a : ℂ) : a / (v * (f * P)) * denominator = a :=
+    div_mul_cancel₀ a hdenominator
   have h17c : R 17 - A₀ = ((x * (t + u - 1) : ℝ) : ℂ) -
       ((u * x * (x - 1) : ℝ) : ℂ) * (1 / f) := by
+    apply mul_right_cancel₀ hdenominator
     dsimp only [A₀]
     rw [h17, h16, h0]
-    field_simp [hv, hf', hP']
-    dsimp only [K, W₀, P, G, f, C]
+    simp only [sub_mul, add_mul, mul_assoc, clear_v, clear_f, clear_fP, clear_denominator, one_mul]
+    dsimp only [denominator, K, W₀, P, G, f, C]
     push_cast
     ring
   have h13c : (H : ℂ) * R 13 - ((t * L : ℝ) : ℂ) * A₀ =
       (((x - 1) * (r * t - t ^ 3 - t ^ 2 * u + 2 * t ^ 2 + 3 * t * u - t * x) - r * u - u ^ 2 : ℝ) : ℂ) +
         ((u * x * (t - 1) * W : ℝ) : ℂ) * (1 / f) := by
+    apply mul_right_cancel₀ hdenominator
     dsimp only [A₀]
     rw [h13, h16, h0]
-    field_simp [hv, hf', hP']
-    dsimp only [H, L, W, W₀, V, P, G, f, C]
+    simp only [sub_mul, add_mul, mul_assoc, clear_v, clear_f, clear_fP, clear_denominator, one_mul]
+    dsimp only [denominator, H, L, W, W₀, V, P, G, f, C]
     push_cast
     ring
   have h22c : (H : ℂ) * R 22 - (((t - 1) * (x - r) : ℝ) : ℂ) * A₀ =
       (((x - 1) * (2 * r * t + t ^ 2 + t * u - 2 * t * x + x) - r * (r + u) : ℝ) : ℂ) +
         ((r * x * (t - 1) * (x - r - u - 1) : ℝ) : ℂ) * (1 / f) := by
+    apply mul_right_cancel₀ hdenominator
     dsimp only [A₀]
     rw [h22, h16, h0]
-    field_simp [hv, hf', hP']
-    dsimp only [H, W₀, P, G, f, C]
+    simp only [sub_mul, add_mul, mul_assoc, clear_v, clear_f, clear_fP, clear_denominator, one_mul]
+    dsimp only [denominator, H, W₀, P, G, f, C]
     push_cast
     ring
   have hDAc : (D : ℂ) * A₀ = ((r * u * x * (t - 1) * (x - 1) : ℝ) : ℂ) * (1 / f) + B := by
@@ -224,7 +241,7 @@ theorem fourT5_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
   let Ef := Complex.normSq ((x : ℂ) - t * v)
   let Ep := Complex.normSq ((x : ℂ) - ((t : ℂ) + u) * v - r)
   let τ := ρ / Ef
-  let λ := Ef / Ep
+  let ratio := Ef / Ep
   let L := x - r - t - u
   let H := -r * t + t * (x - 1) - u
   let W := t * (x - 1) - r - u
@@ -234,7 +251,7 @@ theorem fourT5_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     fourT5_projective_gap_identities x t r u z w v η hv hu hzw hf hG hP hz hw hdir
   have hEf : 0 < Ef := Complex.normSq_pos.mpr hf
   have hEp : 0 < Ep := Complex.normSq_pos.mpr hP
-  have hλ : 0 < λ := div_pos hEf hEp
+  have hratio_pos : 0 < ratio := div_pos hEf hEp
   have h0' : 0 < g 0 := by dsimp only [A] at hA; linarith only [hA, hg 16]
   have hρx : ρ * x < 0 := by
     have hp : 0 < -ρ * x := (div_pos_iff_of_pos_right (Complex.normSq_pos.mpr hv)).mp (h0 ▸ h0')
@@ -258,20 +275,20 @@ theorem fourT5_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
   have hq (i : Fin 24) : 0 ≤ q i := div_nonneg (hg i) hS.le
   have h9' : 0 < g 9 := by linarith only [h17, hA, hg 17, hg 7]
   have h11' : 0 < g 11 := by linarith only [h11, h17, hA, hg 17, hg 10]
-  have hτλ : τ * λ = ρ / Ep := by
-    dsimp only [τ, λ]
+  have hτratio : τ * ratio = ρ / Ep := by
+    dsimp only [τ, ratio]
     field_simp [hEf.ne', hEp.ne'] <;> ring
-  have h12' : g 12 = λ * (-τ * r * u * L) := by
+  have h12' : g 12 = ratio * (-τ * r * u * L) := by
     change g 12 = -(ρ / Ep) * r * u * L at h12
-    linear_combination h12 + r * u * L * hτλ
+    linear_combination h12 + r * u * L * hτratio
   have h12'' : 0 ≤ -σ * r * u * L := by
-    have hp := (mul_nonneg_iff_of_pos_left hλ).mp (h12' ▸ hg 12)
+    have hp := (mul_nonneg_iff_of_pos_left hratio_pos).mp (h12' ▸ hg 12)
     have h := div_nonneg hp hS.le
     dsimp only [σ]
     convert h using 1 <;> field_simp [hS.ne'] <;> ring
-  have hDA' : D * A = τ * r * u * (x * t * (t - 1) * (x - 1) - J * H * λ) := by
+  have hDA' : D * A = τ * r * u * (x * t * (t - 1) * (x - 1) - J * H * ratio) := by
     change D * A = τ * r * u * (x * t * (t - 1) * (x - 1)) - (ρ / Ep) * r * u * J * H at hDA
-    linear_combination hDA + r * u * J * H * hτλ
+    linear_combination hDA + r * u * J * H * hτratio
   have hx11' : x * q 11 = (x - 1) * q 9 := by
     change x * g 11 = (x - 1) * g 9 at hx11
     dsimp only [q]
@@ -302,21 +319,27 @@ theorem fourT5_projective_capacity (x t r u : ℝ) (z w v η : ℂ)
     dsimp only [q, a, σ]
     field_simp [hS.ne']
     linear_combination h22
-  have hDA'' : D * a = σ * r * u * (x * t * (t - 1) * (x - 1) - J * H * λ) := by
+  have hDA'' : D * a = σ * r * u * (x * t * (t - 1) * (x - 1) - J * H * ratio) := by
     dsimp only [a, σ]
     field_simp [hS.ne']
     linear_combination hDA'
-  have h := fourT5_capacity_of_normalized_gaps x t r u σ λ a q ht ht₁ hr hλ
+  have h := fourT5_capacity_of_normalized_gaps x t r u σ ratio a q ht ht₁ hr hratio_pos
     (div_neg_of_neg_of_pos hA hS) hσ hσx hq (div_pos h9' hS) (div_pos h11' hS) hx11'
     h7' h10' h12'' h17'' h13' h22' hDA''
   rcases h with h | h
   · left
-    apply (div_le_div_iff_of_pos_right (pow_pos hS 2)).mp
     dsimp only [a, q] at h
-    convert h using 1 <;> field_simp [hS.ne'] <;> ring
+    rw [div_pow, div_mul_div_comm, ← pow_two] at h
+    exact (div_le_div_iff_of_pos_right (pow_pos hS 2)).mp h
   · right
-    apply (div_le_div_iff_of_pos_right (pow_pos hS 3)).mp
     dsimp only [a, q] at h
-    convert h using 1 <;> field_simp [hS.ne'] <;> ring
+    have hleft : (A / S) ^ 2 * (g 22 / S + g 17 / S + g 7 / S - A / S) =
+        (A ^ 2 * (g 22 + g 17 + g 7 - A)) / S ^ 3 := by
+      rw [← add_div, ← add_div, ← sub_div, div_pow, div_mul_div_comm, ← pow_succ]
+    have hright : g 22 / S * (g 17 / S) * (g 7 / S + A / S) =
+        (g 22 * g 17 * (g 7 + A)) / S ^ 3 := by
+      rw [← add_div, div_mul_div_comm, ← pow_two, div_mul_div_comm, ← pow_succ]
+    rw [hleft, hright] at h
+    exact (div_le_div_iff_of_pos_right (pow_pos hS 3)).mp h
 
 end MOC

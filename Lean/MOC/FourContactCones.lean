@@ -7,7 +7,7 @@ namespace MOC
 
 noncomputable section
 
-/-- The six contacts of paper case T34, called T33 in the archive. -/
+/-- The six matching permutations of contact pattern T34. -/
 def fourT34ContactIndices : Finset (Fin 24) := {2, 3, 5, 9, 10, 12}
 
 set_option maxHeartbeats 2000000 in

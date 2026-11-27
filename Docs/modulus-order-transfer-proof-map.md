@@ -26,8 +26,7 @@ $$
 |\det(C\circ U)|\leq\max_p\prod_j|C_{p(j),j}|.
 $$
 
-The new Lean source states this bound and $R(n)$ for every finite order.
-Kernel verification is pending.
+Lean proves this bound and $R(n)$ for every finite order.
 [Entrywise determinant bound](../Lean/MOC/DeterminantModulusBound.lean#L53) ·
 [Modulus theorem in every order](../Lean/MOC/DeterminantModulusBound.lean#L131)
 

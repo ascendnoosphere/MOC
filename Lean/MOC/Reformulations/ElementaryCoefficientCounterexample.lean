@@ -40,14 +40,20 @@ private theorem elementaryCoefficient_eq_detCoefficient {n : ℕ}
       Matrix.of fun i j => C (M i j) * X + C (if i = j then 1 else 0) := by
     apply Matrix.ext
     intro i j
-    by_cases h : i = j <;>
-      simp [Matrix.one_apply, Matrix.map_apply, Matrix.sub_apply, Matrix.smul_apply,
-        Matrix.neg_apply, smul_eq_mul, h, sub_eq_add_neg, mul_comm, add_comm]
+    by_cases h : i = j
+    · subst j
+      simp only [Matrix.one_apply_eq, Matrix.map_apply, Matrix.sub_apply, Matrix.smul_apply,
+        Matrix.neg_apply, smul_eq_mul, Matrix.of_apply, if_pos rfl, if_true, map_neg, mul_neg,
+        neg_mul, sub_neg_eq_add, map_one, mul_comm X]
+      exact add_comm _ _
+    · simp only [Matrix.one_apply_ne h, Matrix.map_apply, Matrix.sub_apply, Matrix.smul_apply,
+        Matrix.neg_apply, smul_eq_mul, Matrix.of_apply, if_neg h, map_neg, mul_neg,
+        neg_mul, sub_neg_eq_add, map_zero, zero_mul, zero_add, add_zero, mul_comm X]
   rw [elementaryCoefficient, Matrix.charpolyRev, he, Matrix.det_apply',
     Polynomial.finset_sum_coeff, detCoefficient]
   apply Finset.sum_congr rfl
   intro σ _
-  rw [← map_intCast C, Polynomial.coeff_C_mul]
+  rw [← map_intCast (C : ℂ →+* ℂ[X]), Polynomial.coeff_C_mul]
   exact congrArg (fun z : ℂ => ((Equiv.Perm.sign σ : ℤ) : ℂ) * z)
     (coeff_prod_affine (fun j => if σ j = j then 1 else 0) (fun j => M (σ j) j) k)
 
@@ -202,22 +208,20 @@ private theorem partialMatchValues_ofFn (d : Fin 5 → Option (Fin 5)) :
         List.ofFn fun i => if ∀ j, d j ≠ some i then first i else 0 := by
   unfold partialMatchValues
   congr 1
-  · apply congrArg List.ofFn
-    funext j
-    rw [List.getElem?_ofFn, dif_pos j.isLt] <;> rfl
-  · apply congrArg List.ofFn
-    funext i
-    by_cases h : ∃ j, d j = some i
-    · obtain ⟨j, hj⟩ := h
-      have hn : ¬∀ j, d j ≠ some i := fun nh => nh j hj
-      have hmem : some i ∈ List.ofFn d := List.mem_ofFn.mpr ⟨j, hj⟩
-      simp only [if_neg hn, if_pos hmem]
-    · have hn : ∀ j, d j ≠ some i := fun j hj => h ⟨j, hj⟩
-      have hmem : some i ∉ List.ofFn d := fun hh => h (List.mem_ofFn.mp hh)
-      simp only [if_pos hn, if_neg hmem]
+  apply congrArg List.ofFn
+  funext i
+  by_cases h : ∃ j, d j = some i
+  · obtain ⟨j, hj⟩ := h
+    have hn : ¬∀ j, d j ≠ some i := fun nh => nh j hj
+    have hmem : some i ∈ List.ofFn d := List.mem_ofFn.mpr ⟨j, hj⟩
+    simp only [if_neg hn, if_pos hmem]
+  · have hn : ∀ j, d j ≠ some i := fun j hj => h ⟨j, hj⟩
+    have hmem : some i ∉ List.ofFn d := fun hh => h (List.mem_ofFn.mp hh)
+    simp only [if_pos hn, if_neg hmem]
 
 private theorem mixerGram : mixerᴴ * mixer = (49 : GaussianInt) • 1 := by
-  have h : ∀ i j : Fin 5, (mixerᴴ * mixer) i j = ((49 : GaussianInt) • 1) i j := by
+  have h : ∀ i j : Fin 5, (mixerᴴ * mixer) i j =
+      ((49 : GaussianInt) • (1 : Matrix (Fin 5) (Fin 5) GaussianInt)) i j := by
     decide +kernel
   exact Matrix.ext h
 
@@ -298,6 +302,7 @@ private theorem unitary_U : IsUnitary U := by
 private theorem numerator_map : numerator.map GaussianInt.toComplex =
     (49 : ℂ) • (diagonal a + U * diagonal b * Uᴴ) := by
   let g := GaussianInt.toComplex
+  change numerator.map g = _
   have hU : W = (7 : ℂ) • U := by rw [U, smul_smul]; norm_num
   have hr : star (7 : ℂ) = 7 := by norm_num [Complex.star_def]
   have hstar := Matrix.conjTranspose_map (A := mixer) g GaussianInt.toComplex_star
@@ -305,8 +310,8 @@ private theorem numerator_map : numerator.map GaussianInt.toComplex =
     Matrix.diagonal_map (map_zero g), hstar,
     Matrix.map_smul' g _ _ (map_mul g), map_ofNat]
   change (49 : ℂ) • diagonal a + W * diagonal b * Wᴴ = _
-  rw [hU, Matrix.conjTranspose_smul, hr, Matrix.smul_mul, Matrix.mul_smul, smul_smul,
-    smul_add]
+  rw [hU, Matrix.conjTranspose_smul, hr, smul_add]
+  simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
   norm_num
 
 private theorem actual_score_gt :

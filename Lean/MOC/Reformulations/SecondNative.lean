@@ -4,7 +4,7 @@ import MOC.Weights
 import Mathlib.MeasureTheory.Measure.Dirac
 
 /-!
-# Native determinant statements for the second atlas range
+# Determinant comparisons for graphs, systems, and tuples
 
 A native comparison below is either a proved restriction on the actual finite
 spectra, or an explicitly stated proposition whose relationship to MOC is
@@ -18,7 +18,7 @@ namespace MOC.Reformulations
 
 noncomputable section
 
-/-- The invalid extension of Atlas 175 to arbitrary weighted adjacency
+/-- A counterexample to the determinant inclusion for arbitrary weighted adjacency
 matrices. Loops and directed edges have independent complex weights;
 without normality the hull inclusion need not hold. -/
 def ArbitraryAdjacencyForm : Prop :=
@@ -56,7 +56,7 @@ theorem not_arbitraryAdjacencyForm : ¬ ArbitraryAdjacencyForm := by
   rw [hp, Set.range_const, convexHull_singleton, Set.mem_singleton_iff, hd] at hh
   exact neg_ne_zero.mpr one_ne_zero hh
 
-/-- Atlas 183 in weighted matrix entries. The denominator is nonzero for
+/-- The matching comparison in weighted matrix entries. The denominator is nonzero for
 a unitary matrix. Each vertex picks one edge in every row and column. -/
 def WeightedBipartiteMatchingForm : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
@@ -73,7 +73,7 @@ theorem weightedBipartiteMatchingForm_iff : WeightedBipartiteMatchingForm ↔ MO
     rw [← determinantValue_eq_weightedEntryDet_div a b U hU]
     exact h n a b U hU
 
-/-- Atlas 183: a probability law on perfect matchings of the two labelled parts.
+/-- A probability law on perfect matchings of the two labelled parts.
 The law is allowed to depend on both spectra. -/
 def BipartiteMatchingForm : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ), IsUnitary U →
@@ -109,8 +109,8 @@ theorem bipartiteMatchingForm_iff : BipartiteMatchingForm ↔ MOCIsTrue := by
       rw [← Finset.sum_filter]
       simpa using hv
 
-/-- The characteristic comparison at each parameter, used in Atlas 185 and 193.
-This does not assert simultaneous weights on polynomial coefficients. -/
+/-- The hull for the characteristic polynomial of the sum at each complex
+parameter. The matching weights may depend on the parameter. -/
 def PointwiseCharacteristicForm : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ) (z : ℂ),
     IsUnitary U →
@@ -150,9 +150,9 @@ theorem pointwiseCharacteristicForm_iff : PointwiseCharacteristicForm ↔ MOCIsT
   · intro h n a b U z hU
     exact (pointwiseCharacteristic_iff_holds a b U z).2 (h n _ _ U hU)
 
-/-- Atlas 190: finite reciprocal zeta determinants, with a separate comparison
-at each scalar parameter. For Atlas 145 and 156 the same determinant identity
-applies to an individual finite Euler factor at its specified parameter. -/
+/-- Finite reciprocal zeta determinants, with a separate comparison at each
+scalar parameter. The same determinant identity applies to an individual
+finite Euler factor at its specified parameter. -/
 def FiniteEulerForm : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ) (z : ℂ),
     IsUnitary U →
@@ -197,7 +197,7 @@ theorem finiteEulerForm_iff : FiniteEulerForm ↔ MOCIsTrue := by
     exact (finiteEuler_iff_holds a b U z).2 (h n _ _ U hU)
 
 /-- The finite Euler determinant at a fixed parameter on nonzero spectral
-lists, as in the diagonal realization of Atlas 145 and 156. -/
+lists, as in a diagonal realization of one finite Euler factor. -/
 def FixedEulerParameterForm (z : ℂ) : Prop :=
   ∀ (n : ℕ) (a b : Fin n → ℂ) (U : Matrix (Fin n) (Fin n) ℂ),
     IsUnitary U → (∀ i, a i ≠ 0) → (∀ j, b j ≠ 0) →
@@ -241,7 +241,7 @@ theorem fixedEulerParameterForm_iff {z : ℂ} (hz : z ≠ 0) :
   · intro h n a b U hU _ _
     exact (finiteEuler_iff_holds a b U z).2 (h n _ _ U hU)
 
-/-- Atlas 195: products of arbitrary finite words whose products are normal.
+/-- Products of arbitrary finite words whose products are normal.
 The root lists count algebraic multiplicity. -/
 def NormalWordProductForm : Prop :=
   ∀ (n : ℕ) (xs ys : List (Matrix (Fin n) (Fin n) ℂ)) (a b : Fin n → ℂ),
@@ -261,7 +261,7 @@ theorem normalWordProductForm_iff : NormalWordProductForm ↔ MOCIsTrue := by
   · intro h n xs ys a b hx hy ha hb
     exact conjecture_iff_normalConjecture.mp (h n) xs.prod ys.prod a b hx hy ha hb
 
-/-- Atlas 206, with samples expressed in normal spectral coordinates. No independence
+/-- An almost-sure determinant comparison in normal spectral coordinates. No independence
 condition on the two spectra or the mixer is necessary. -/
 def AlmostSureSpectralForm : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
@@ -279,7 +279,7 @@ theorem almostSureSpectralForm_iff : AlmostSureSpectralForm ↔ MOCIsTrue := by
   · intro h Ω _ μ _ n a b U hU
     exact hU.mono fun x hx => h n (a x) (b x) (U x) hx
 
-/-- Atlas 243: the determinant of each scalar projection of two jointly
+/-- The determinant of each scalar projection of two jointly
 diagonalized normal tuples. No shared probability law across projections is required. -/
 def JointTupleProjectionForm : Prop :=
   ∀ (n r : ℕ) (a b : Fin n → Fin r → ℂ) (c : Fin r → ℂ)

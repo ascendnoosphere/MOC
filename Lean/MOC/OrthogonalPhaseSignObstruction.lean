@@ -45,7 +45,7 @@ theorem phaseSign_sum_det (z : Fin 3 → ℂ) :
   have h02 : (0 : Fin 3) ≠ 2 := by decide
   have h12 : (1 : Fin 3) ≠ 2 := by decide
   simp only [if_pos rfl, if_neg h01, if_neg h02, if_neg h12,
-    if_neg h01.symm, if_neg h02.symm, if_neg h12.symm]
+    if_neg h01.symm, if_neg h02.symm, if_neg h12.symm, if_true]
   ring
 
 private def phaseSignRoot : ℂ := ⟨-1 / 2, Real.sqrt 3 / 2⟩

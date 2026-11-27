@@ -4,8 +4,8 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
 
 /-! Nonlinear capacity certificates for two order-four eight-contact families.
-The factor signs are hypotheses. The archived derivation is
-`moc_high_contact_nonlinear_capacity_20261031.txt`. -/
+The factor signs are hypotheses. The proofs express the support gap
+through nonnegative mixed weights and squared minor terms. -/
 
 open BigOperators
 
@@ -109,7 +109,7 @@ private def mixed : Fin 24 → ℝ := fun p => (mixedCostSeedInt p : ℝ)
 
 private theorem mixed_ray_eq (p : Fin 24) : mixedCostRay 0 p = mixed p := by
   have h : ∀ p : Fin 24, mixedCostRayInt 0 p = mixedCostSeedInt p := by decide +kernel
-  exact_mod_cast h p
+  exact congrArg (fun x : ℤ => (x : ℝ)) (h p)
 
 private theorem ray_mem (i : Fin 34) : ray i ∈ realMatchingFunctionSpace := by
   change ordinaryCostRay i ∈ Set.range
@@ -184,7 +184,13 @@ theorem first_matching_sos {a b c d e : ℝ}
     ray 18, ray 17, ray 30]
   have hw : ∀ i, 0 ≤ w i := by
     intro i
-    fin_cases i <;> simp [w, ha, hb, hd, he, hweight]
+    fin_cases i
+    · norm_num [w]
+    · exact ha
+    · exact hd
+    · exact hweight
+    · exact hb
+    · exact he
   have hf : ∀ i, f i ∈ realMatchingFunctionSpace := by
     intro i
     fin_cases i
@@ -230,7 +236,13 @@ theorem second_matching_sos {a b c d e : ℝ}
     ray 13 + ((a+1)/(a*b-1)) • ray 31, ray 31, ray 20, ray 27]
   have hw : ∀ i, 0 ≤ w i := by
     intro i
-    fin_cases i <;> simp [w, ha, hb', he', hc, hd]
+    fin_cases i
+    · norm_num [w]
+    · exact ha
+    · exact hb'
+    · exact he'
+    · exact hc
+    · exact hd
   have hf : ∀ i, f i ∈ realMatchingFunctionSpace := by
     intro i
     fin_cases i

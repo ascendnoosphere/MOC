@@ -113,7 +113,7 @@ theorem isUnitary_fourCircleLineObstructionMixer : IsUnitary fourCircleLineObstr
   let g := GaussianInt.toComplex
   have hInt : obstructionMatrixInt * obstructionMatrixIntᴴ =
       (196 : GaussianInt) • (1 : Matrix (Fin 4) (Fin 4) GaussianInt) := by
-    ext i j
+    ext i j : 1
     fin_cases i <;> fin_cases j <;> decide +kernel
   have hG := congrArg (fun M : Matrix (Fin 4) (Fin 4) GaussianInt => M.map g) hInt
   have hstar := Matrix.conjTranspose_map (A := obstructionMatrixInt) g GaussianInt.toComplex_star
@@ -140,7 +140,7 @@ private theorem obstructionCorner_eq (q : Fin 3) :
   funext j
   fin_cases q <;> fin_cases j <;>
     norm_num [obstructionCorner, obstructionCornerInt, fourCircleLineObstructionPartner,
-      GaussianInt.toComplex_def']
+      GaussianInt.toComplex_def', Fin.ext_iff]
 
 private def obstructionScaledSum (q : Fin 3) : Matrix (Fin 4) (Fin 4) GaussianInt :=
   (196 : GaussianInt) • diagonal (obstructionCornerInt q) +
@@ -168,7 +168,8 @@ private theorem obstructionCorner_determinant (q : Fin 3) :
   let D := diagonal (obstructionCorner q) + U * diagonal fourCircleLineObstructionSpectrum * Uᴴ
   have hU : IsUnitary U := isUnitary_fourCircleLineObstructionMixer
   have hmap : obstructionMatrixInt.map g = (14 : ℂ) • U := by
-    simp [U, fourCircleLineObstructionMixer, smul_smul] <;> norm_num
+    dsimp only [g, U, fourCircleLineObstructionMixer]
+    rw [smul_smul, mul_one_div_cancel (by norm_num : (14 : ℂ) ≠ 0), one_smul]
   have hstar := Matrix.conjTranspose_map (A := obstructionMatrixInt) g GaussianInt.toComplex_star
   have hsum : (obstructionScaledSum q).map g = (196 : ℂ) • D := by
     change (obstructionScaledSum q).map g = (196 : ℂ) •
@@ -349,7 +350,7 @@ private theorem commonWeights_singletons_of_distinct
     have hmap : ((Finset.univ : Finset (Fin 4)).erase j).map σ.toEmbedding =
         Finset.univ.erase (σ j) := by
       ext k
-      simp only [Finset.mem_map_equiv, Finset.mem_erase, Finset.mem_univ, and_true,
+      simp only [Finset.mem_map_equiv, Finset.mem_erase, Finset.mem_univ, and_true, ne_eq,
         Equiv.symm_apply_eq]
     have hm := Finset.prod_map ((Finset.univ : Finset (Fin 4)).erase j) σ.toEmbedding c
     simp only [hmap, Equiv.toEmbedding_apply] at hm
@@ -491,7 +492,9 @@ private theorem commonWeights_pair_images_of_independence
     have h := hsum
     have hp (i j : Fin 4) (hij : i ≠ j) : (∏ k ∈ ({i,j} : Finset (Fin 4)), a k) = a i * a j :=
       Finset.prod_pair hij
-    norm_num [Fin.sum_univ_succ, circleLinePair, hp, h01,h02,h03] at h
+    norm_num [Fin.sum_univ_succ, circleLinePair, h01, h02, h03] at h
+    simp only [hp 0 1 (by decide), hp 0 2 (by decide), hp 0 3 (by decide),
+      hp 1 2 (by decide), hp 1 3 (by decide), hp 2 3 (by decide)] at h
     linear_combination h
   have hmass : ((d {0,1} : ℝ) : ℂ) + (d {0,2} : ℂ) + (d {0,3} : ℂ) = 0 := by
     exact_mod_cast h₀
@@ -863,8 +866,8 @@ private theorem fourPrincipalMinorScore_ofReal (c : Finset (Fin 4) → ℝ)
   apply Finset.sum_congr rfl
   intro S _
   congr 1
-  simp only [RingHom.mapMatrix_apply, Matrix.submatrix_map, ← RingHom.map_det,
-    Complex.ofRealHom_eq_coe, Complex.ofReal_re]
+  rw [RingHom.mapMatrix_apply, Matrix.submatrix_map]
+  exact congrArg Complex.re (Complex.ofRealHom.map_det _).symm
 
 /-- A diagonal permutation also attains the maximum on the real symmetric orbit. -/
 theorem exists_diagonal_maximizer_four_real_principal_minors
@@ -897,6 +900,7 @@ theorem exists_diagonal_maximizer_four_real_principal_minors
   have hP : P ∈ Matrix.orthogonalGroup (Fin 4) ℝ := by
     apply (Matrix.mem_orthogonalGroup_iff _ _).mpr
     apply hf
+    change f (P * Pᵀ) = f 1
     rw [f.map_mul, hstar, f.map_one, show f P = σ.permMatrix ℂ from hp σ]
     exact (isUnitary_permMatrix σ).1
   refine ⟨σ, ⟨⟨P, hP⟩, ?_⟩, fun O => ?_⟩
@@ -905,9 +909,10 @@ theorem exists_diagonal_maximizer_four_real_principal_minors
     rw [f.map_mul, f.map_mul, hd, hd, hstar, show f P = σ.permMatrix ℂ from hp σ,
       permMatrix_conjugates, Matrix.submatrix_diagonal_equiv] <;> rfl
   · have hv := hσ (f O.val) (isUnitary_ofReal_orthogonal O)
+    have he : diagonal (fun i => (a (σ i) : ℂ)) = f (diagonal (a ∘ σ)) := (hd (a ∘ σ)).symm
     rw [← hstar O.val, ← hd a, ← f.map_mul, ← f.map_mul,
-      ← hd (a ∘ σ), fourPrincipalMinorScore_ofReal, fourPrincipalMinorScore_ofReal] at hv
-    exact hv
+      he] at hv
+    simpa only [f, fourPrincipalMinorScore_ofReal] using hv
 
 end
 

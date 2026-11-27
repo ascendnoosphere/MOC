@@ -80,8 +80,8 @@ If $E_g(S)=0$ for every balanced matrix $S$, then $g$ is constant.
 Conversely, the signed evaluation of a constant function is its value
 times $\det S$. A balanced matrix has the constant vector in its kernel,
 so this determinant is zero. Thus balanced evaluations determine $g$
-up to an additive constant. The new Lean source awaits kernel verification.
-[Balanced evaluation](../Lean/MOC/BalancedMatchingProbes.lean#L202)
+up to an additive constant.
+[Balanced evaluation](../Lean/MOC/BalancedMatchingProbes.lean#L203)
 
 Fix a label $o$ and a permutation $p$. For weights $t_i$ at each label
 $i\ne o$, use a matrix with diagonal entry $t_i$ and entries $-t_i$ at
@@ -119,46 +119,47 @@ The real part of the square of $p+iq$ is $p^2-q^2$ for real $p,q$.
 On a subspace where the real form is strictly positive on every
 nonzero vector, the four positive linear functions give an injective
 map into $\mathbb R^4$. The same argument with the opposite sign
-bounds the strictly negative dimension. This includes singular cores
-and repeated eigenvalues. For a support cost of the form
+bounds the strictly negative dimension. Both bounds hold for every
+$H$ and allow repeated eigenvalues. For a support cost of the form
 $h-\mathrm{Re}(\eta z_\sigma)$, the constant $h$ contributes zero.
 [Positive dimension](../Lean/MOC/SpectralProfileDeterminant.lean#L437) ·
 [Negative dimension](../Lean/MOC/SpectralProfileDeterminant.lean#L455)
 
 ## Order-four inverse pencil certificates
 
-The nine-by-nine inverse pencil is a linear combination of 34 integer
-matrices, one for each ordinary ray. It represents 32 times the
-quadratic form in the tetrahedral coordinates. A gap from actual
-spectra gives a singular real pencil $X$ and admits an imaginary pencil
-$Y$ in the same span with $\mathrm{rank}_{\mathbb C}(X+iY)\le4$.
-The selected indicator columns express every matching evaluation as a
-linear combination of ordinary rays.
+The order-four matching cost functions include 34 functions called
+ordinary rays. Each ordinary ray has one nine-by-nine integer matrix.
+A linear combination of these matrices gives the inverse pencil for
+the same linear combination of rays. The pencil represents 32 times
+the quadratic form in the tetrahedral coordinates. If the cost is
+$h-\mathrm{Re}(\eta z_\sigma)$ for a real height $h$ and complex direction
+$\eta$, its real pencil $X$ is singular. There is a real pencil $Y$ in
+the same span for which $\mathrm{rank}_{\mathbb C}(X+iY)\le4$.
 If $X$ has rank eight, $Y$ kills its kernel. On an invertible
 eight-dimensional principal block the corresponding matrices satisfy
 $YX^{-1}Y=-X$. All five-by-five lifted minors vanish at every rank.
 These are necessary spectral conditions.
-[Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Ordinary span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight criterion](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor criterion](../Lean/MOC/FourInversePencilRankLift.lean#L117)
+[Ordinary rays](../Lean/MOC/FourSupportCostProfiles.lean#L76) · [Pencil identification](../Lean/MOC/FourInversePencil.lean#L166) · [Ordinary span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L80) · [Singularity](../Lean/MOC/FourInversePencil.lean#L285) · [Imaginary lift](../Lean/MOC/FourInversePencil.lean#L361) · [Common kernel](../Lean/MOC/FourInversePencilRankLift.lean#L80) · [Rank-eight identity](../Lean/MOC/FourInversePencilRankLift.lean#L198) · [Minor identity](../Lean/MOC/FourInversePencilRankLift.lean#L117)
 
 Write the compressed imaginary part as $Y=\sum_i x_i B_i$, where
 the $B_i$ are real matrices and the $x_i$ are real coefficients.
 Replace each $x_i x_j$ in $YX^{-1}Y$ with an entry of a moment matrix.
 An actual rank-four lift gives a positive semidefinite solution to
-these linear equations. Three test vectors refute each of four
-proposed affine solution planes, once the corresponding scalar
-evaluations are known.
-[Moment condition](../Lean/MOC/InversePencilMoments.lean#L51) · [Four conditional exclusions](research-attempts-proof-map.md#further-steps-from-the-replay-bundles)
+these linear equations. For each of four proposed affine solution
+planes, the three specified scalar evaluations rule out positive
+semidefiniteness of the moment matrix. The calculation that derives the
+scalar evaluations from each pencil remains outside Lean.
+[Moment condition](../Lean/MOC/InversePencilMoments.lean#L51) · [First exclusion](../Lean/MOC/InversePencilMoments.lean#L87) · [Second exclusion](../Lean/MOC/InversePencilMoments.lean#L105) · [Third exclusion](../Lean/MOC/InversePencilMoments.lean#L123) · [Fourth exclusion](../Lean/MOC/InversePencilMoments.lean#L141)
 
 For the canonical cost supported on ordinary rays 7, 13, 18, 28 and
 31, and for its extension by ray 30, the factored determinant has two
-possible zero factors at positive coefficients on the first five
-rays. Each factor gives a square decomposition of the full cost.
-The extended ray has a nonnegative coefficient. Actual spectra
-discharge pencil singularity. A corrected mixer moment then gives
-nonnegative support evaluation. The universal correction is a
-separate open premise of the Lean route.
-[Factorization](../Lean/MOC/FourInversePencilCertificates.lean#L186) · [Spectral square certificate](../Lean/MOC/FourInversePencilCertificates.lean#L493) · [Support implication](../Lean/MOC/FourInversePencilCertificates.lean#L481)
+possible zero factors. The first five coefficients must be positive,
+and the coefficient of ray 30 must be nonnegative. A cost from the
+matching products makes the pencil singular. Each zero factor gives
+a sum of matching squares for that cost. The general order-four
+sum-of-squares theorem then gives the support bound at every
+unitary mixer.
+[Factorization](../Lean/MOC/FourInversePencilCertificates.lean#L186) · [Cost in the matching space](../Lean/MOC/FourInversePencilCertificates.lean#L315) · [Spectral square certificate](../Lean/MOC/FourInversePencilCertificates.lean#L493) · [Support bound](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227)
 
-Exact Python checks reproduced all 34 pencil matrices, the two
-determinant branches, and the square identities on all 24 permutations.
-The new Lean source awaits verification.
+The Lean source for the inverse pencil, the moment conditions, and the
+two-factor square certificate awaits a build check.

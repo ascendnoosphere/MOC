@@ -26,8 +26,8 @@ private def correctionProfile : Fin 24 → ℝ :=
 
 /-- The spectral combination in the signed correction. Its last label is 1423. -/
 def fourSignedMinorCombination : (Fin 24 → ℝ) →ₗ[ℝ] ℝ :=
-  LinearMap.proj 18 + LinearMap.proj 8 + LinearMap.proj 17 + LinearMap.proj 5 -
-    LinearMap.proj 4
+  let coordinate (i : Fin 24) : (Fin 24 → ℝ) →ₗ[ℝ] ℝ := LinearMap.proj i
+  coordinate 18 + coordinate 8 + coordinate 17 + coordinate 5 - coordinate 4
 
 @[simp] theorem fourSignedMinorCombination_apply (g : Fin 24 → ℝ) :
     fourSignedMinorCombination g = g 18 + g 8 + g 17 + g 5 - g 4 := by

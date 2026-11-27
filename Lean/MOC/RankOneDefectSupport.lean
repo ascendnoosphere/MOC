@@ -19,7 +19,7 @@ private theorem disk_support_phase (d : ℂ) :
   refine ⟨star d / (‖d‖ : ℂ), ?_, ?_⟩
   · rw [norm_div, Complex.star_def, Complex.norm_conj, Complex.norm_of_nonneg (norm_nonneg d),
       div_self hn]
-  rw [mul_div_assoc, Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]
+  rw [← mul_div_assoc, Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]
   apply (div_eq_iff hc).mpr
   push_cast <;> ring
 
@@ -65,19 +65,23 @@ theorem quadraticDiskSupport_max (p q : ℝ) (d : ℂ) :
     have hr : 0 ≤ r := div_nonneg (norm_nonneg d) hnq.le
     have hr₁ : r ≤ 1 := (div_le_iff₀ hnq).mpr (by linarith only [lt_of_not_ge hq])
     have hM : M = p + ‖d‖ ^ 2 / (-q) := if_neg hq
+    have hrq : (-q) * r = ‖d‖ := by
+      change (-q) * (‖d‖ / (-q)) = ‖d‖
+      rw [mul_comm, div_mul_cancel₀ _ hnq.ne']
     have hfactor (t : ℝ) : M - R t = (-q) * (t - r) ^ 2 := by
-      rw [hM]
-      dsimp only [R, r]
-      field_simp [hnq.ne'] <;> ring
+      have htop : ‖d‖ ^ 2 / (-q) = ‖d‖ * r := by
+        change ‖d‖ ^ 2 / (-q) = ‖d‖ * (‖d‖ / (-q))
+        rw [pow_two, mul_div_assoc]
+      rw [hM, htop]
+      dsimp only [R]
+      linear_combination (2 * t - r) * hrq
     refine ⟨fun z hz => (hle z).trans ?_, ?_⟩
     · have hnonneg : 0 ≤ M - R ‖z‖ := by
         rw [hfactor]
         exact mul_nonneg hnq.le (sq_nonneg _)
       exact sub_nonneg.mp hnonneg
     · obtain ⟨hu', heq⟩ := huR r hr
-      have hzero := hfactor r
-      have heqM : M = R r := sub_eq_zero.mp (by simpa only [sub_self, zero_pow
-        (show (2 : ℕ) ≠ 0 by decide), mul_zero] using hzero)
+      have heqM : M = R r := sub_eq_zero.mp (by rw [hfactor]; simp)
       exact ⟨(r : ℂ) * u, hu'.le.trans hr₁, heq.trans heqM.symm, fun h => (hq h).elim⟩
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]

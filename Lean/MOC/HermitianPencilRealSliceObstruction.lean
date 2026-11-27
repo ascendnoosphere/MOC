@@ -55,7 +55,10 @@ theorem real_div_eight_mem_threeGroupAffineHull (x : ℝ) :
       simpa only [Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_ofNat,
         Complex.ofReal_neg, Complex.ofReal_add, Complex.ofReal_one]
         using congrArg Complex.ofReal hprod
-    refine ⟨1 / 16, s, 1 / 16, by norm_num, hs, by norm_num, ?_⟩
+    have ht : |(1 / 16 : ℝ)| ≤ 1 / 3 := by
+      rw [abs_of_pos (by norm_num : (0 : ℝ) < 1 / 16)]
+      norm_num
+    refine ⟨1 / 16, s, 1 / 16, ht, hs, ht, ?_⟩
     simp only [Complex.ofReal_div, Complex.ofReal_ofNat, Complex.ofReal_one]
     linear_combination (-Complex.I) * hprodC
 

@@ -93,9 +93,11 @@ theorem fourT5_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
     intro i hi
     rw [← hscale i]
     exact hc i hi
-  have hg' (i : Fin 24) : g i = (ξ * (F i - F 1)).re := by
+  let chartGap (i : Fin 24) := (ξ * (F i - F 1)).re
+  have hgap : chartGap = g := by
+    funext i
+    dsimp only [chartGap]
     rw [mul_sub, Complex.sub_re, ← hscale i, ← hscale 1, hc 1 (by decide)]
-    rfl
   obtain ⟨hti, hxi, hdir, r, u, hr, hu, hG, hP, hzEq, hwEq⟩ :=
     fourT5_normalized_chart z x w v t ξ H hz hzv hzw hv hvw htx ht₁ hx₁ hξ hpc
   have htC : (t.re : ℂ) = t := Complex.ext (by simp) (by simpa using hti.symm)
@@ -105,16 +107,20 @@ theorem fourT5_support (a b : Fin 4 → ℂ) (η : ℂ) (H : ℝ)
   have hcap := fourT5_projective_capacity x.re t.re r u z w v ξ hv htR htR₁
     (Complex.ofReal_ne_zero.mp hr) (Complex.ofReal_ne_zero.mp hu) hzw
   simp only [htC, hxC] at hcap
+  specialize hcap (sub_ne_zero.mpr htx) hG hP hzEq hwEq hdir
+  change (∀ i, 0 ≤ chartGap i) →
+    chartGap 11 = -chartGap 7 + chartGap 9 + chartGap 10 →
+    chartGap 17 = chartGap 16 - chartGap 0 - chartGap 7 + chartGap 9 →
+    chartGap 16 - chartGap 0 < 0 →
+    (chartGap 16 - chartGap 0) ^ 2 ≤ chartGap 10 * chartGap 13 ∨
+      (chartGap 16 - chartGap 0) ^ 2 *
+        (chartGap 22 + chartGap 17 + chartGap 7 - (chartGap 16 - chartGap 0)) ≤
+        chartGap 22 * chartGap 17 * (chartGap 7 + (chartGap 16 - chartGap 0)) at hcap
+  rw [hgap] at hcap
   obtain ⟨h11, h17⟩ := fourT5_gap_eleven_seventeen a b η H hc
   have hA : g 16 - g 0 < 0 := by dsimp only [d] at hd; linarith only [hd]
-  have hh := hcap (sub_ne_zero.mpr htx) hG hP hzEq hwEq hdir
-    (fun i => (hg' i) ▸ (sub_nonneg.mpr (hn i) : 0 ≤ g i))
-    (by simpa only [← hg'] using h11) (by simpa only [← hg'] using h17) (by simpa only [← hg'] using hA)
-  simp only [← hg'] at hh
-  rcases hh with hh | hh
-  · left
-    convert hh using 1 <;> dsimp only [d] <;> ring
-  · right
-    convert hh using 1 <;> dsimp only [d] <;> ring
+  have hh := hcap (fun i => sub_nonneg.mpr (hn i)) h11 h17 hA
+  have hd' : g 16 - g 0 = -d := by dsimp only [d]; ring
+  simpa only [hd', neg_sq, sub_neg_eq_add, ← sub_eq_add_neg] using hh
 
 end MOC

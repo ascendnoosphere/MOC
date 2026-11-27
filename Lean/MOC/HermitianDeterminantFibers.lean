@@ -40,7 +40,7 @@ theorem determinantOrbitFiber_eq_matching_diagonals (a b : ι → ℝ)
   have haC : Function.Injective (fun i => (a i : ℂ)) :=
     fun _ _ h => ha (Complex.ofReal_injective h)
   have hdet (p : Equiv.Perm ι) : (A + diagonal (β ∘ p)).det =
-      ((∏ i, (a i + b (p i))) : ℂ) := by
+      Complex.ofReal (∏ i, (a i + b (p i))) := by
     change (diagonal (fun i => (a i : ℂ)) + diagonal (β ∘ p)).det = _
     rw [Matrix.diagonal_add, Matrix.det_diagonal, Complex.ofReal_prod] <;>
       simp only [β, Function.comp_apply, Complex.ofReal_add]
@@ -93,7 +93,8 @@ theorem determinantOrbitFiber_eq_matching_diagonals (a b : ι → ℝ)
     simp only [Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one] at hdroots
     obtain ⟨p, hp⟩ := exists_perm_of_equal_multisets d β (hdroots.symm.trans (hd ▸ hroots))
     have hpC : C = diagonal (β ∘ p) := hd.trans (congrArg diagonal hp)
-    exact ⟨p, hpC, Complex.ofReal_injective ((hdet p).symm.trans (hpC ▸ hC))⟩
+    rw [hpC, hdet p] at hC
+    exact ⟨p, hpC, Complex.ofReal_injective hC⟩
   · rintro ⟨p, rfl, hp⟩
     refine ⟨⟨p.permMatrix ℂ, isUnitary_permMatrix p, ?_⟩, ?_⟩
     · rw [permMatrix_conjugates, Matrix.submatrix_diagonal_equiv] <;> rfl
@@ -121,8 +122,7 @@ private theorem exists_pair_of_integral_scores (a b : ι → ℤ) (r : ℤ)
     exact_mod_cast hentry
   have haR : Function.Injective (fun i => (a i : ℝ)) := by
     intro i j h
-    apply ha
-    exact_mod_cast h
+    exact ha (Int.cast_inj.mp h)
   have hbound (s : Equiv.Perm ι) : (∏ i, ((a i : ℝ) + (b (s i) : ℝ))) ≤ (r : ℝ) := by
     simpa only [integralScore, Int.cast_prod, Int.cast_add] using
       (show (integralScore a b s : ℝ) ≤ (r : ℝ) by exact_mod_cast (hs s).1)

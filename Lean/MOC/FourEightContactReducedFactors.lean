@@ -257,7 +257,7 @@ private def seed (p : Fin 24) : ℝ := mixedCostSeedInt p
 
 private theorem mixed_eq_seed (p : Fin 24) : mixedCostRay 0 p = seed p := by
   have h : ∀ p : Fin 24, mixedCostRayInt 0 p = mixedCostSeedInt p := by decide +kernel
-  exact_mod_cast h p
+  exact congrArg (fun x : ℤ => (x : ℝ)) (h p)
 
 private def exceptional (p : Fin 24) : ℝ := if p = 5 then 1 else 0
 

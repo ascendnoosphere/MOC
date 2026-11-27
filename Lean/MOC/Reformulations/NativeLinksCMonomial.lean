@@ -3,8 +3,8 @@ import MOC.Geometry
 import MOC.Reformulations.FirstGeometric
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
-/-! Atlas 169: arbitrary actual Laurent-monomial lists, not functions
-of sample labels. Two disjoint families of coordinate monomials realize
+/-! The spectral entries are Laurent monomials evaluated at one complex torus point.
+Two disjoint families of coordinate monomials realize
 any pair of lists with nonzero entries. An opposite spectral shift
 removes all zero entries without changing the determinant or its hull. -/
 
@@ -35,7 +35,7 @@ private theorem monomial_single {r : ℕ} (z : Fin r → ℂ) (j : Fin r) :
     simp [Pi.single_apply, hi.symm]
   · simp
 
-/-- Atlas 130 on the two sets of homogeneous coordinate section weights.
+/-- The comparison on the homogeneous coordinate section weights of two line bundles.
 Use independent torus coordinates for the sections of the two line bundles. -/
 def ProjectiveToricSectionForm : Prop :=
   ∀ (n : ℕ) (z : Fin (n + n) → ℂ), (∀ i, z i ≠ 0) →

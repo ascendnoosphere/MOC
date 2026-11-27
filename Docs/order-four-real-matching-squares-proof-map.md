@@ -25,10 +25,10 @@ For a permutation $\pi$ and a subset $I$, take the constant and
 linear coefficients of $\prod_{i\in I}\beta_{\pi(i)}$. Let $J$ be the
 matrix that has these 32 coefficients in row $\pi$. Its column space
 is $V$. Write $j_\pi$ for the transpose of that row.
-[Jet definition](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L170)
+[Coefficient matrix](../Lean/MOC/RealMatchingSquares.lean#L34) · [Column space](../Lean/MOC/RealMatchingSquares.lean#L170)
 
 Let $E$ be the $32$ by $4$ matrix that selects two exceptional
-directions in each block of the jet. Its two directions, with
+directions in each block of $J$. Its two directions, with
 coordinates given by subsets, are
 
 $$
@@ -53,7 +53,7 @@ first tensor index of the row and column.
 flowchart LR
     Gram["Real auxiliary Gram test<br/>on a cost in V"]
     SOS["Finite sum of squares<br/>of functions in V"]
-    RowSpace["Choose all square factors<br/>in the jet row space"]
+    RowSpace["Choose all square factors<br/>in the row space of J"]
     Pairing["Alternating pairing vanishes"]
     Fixed["Partial transpose fixes the corner"]
     Gram -->|factor the Gram matrix| SOS
@@ -71,7 +71,7 @@ $g_\pi=\sum_k f_k(\pi)^2$ for every $\pi$.
 The sign of a permutation is $1$ for an even permutation and $-1$
 for an odd one. The signed sum of a cost in $V$ is zero. Let
 $K=\begin{pmatrix}0&1\\-1&0\end{pmatrix}^{\otimes 2}$. The signed sum of
-the jet products equals $EKE^\mathsf{T}$. The resulting pairing of
+the row products $j_\pi j_\pi^\mathsf{T}$ equals $EKE^\mathsf{T}$. The resulting pairing of
 $K$ and the symmetric corner $R$ is zero. It is twice the difference
 between entries $(00,11)$ and $(01,10)$ of $R$. This difference also
 multiplies $K$ in the partial-transpose defect. Thus the partial
@@ -115,7 +115,7 @@ normalized trace pairing on real matrices. These indicators span
 $V$, so the corrected moment on the columns of $J$ is also positive
 semidefinite. This supplies the orthogonal premise of the unitary
 evaluation theorem.
-[Correction formula](../Lean/MOC/FourMatchingAlternatingCorrection.lean#L102) · [Indicator Gram matrix](../Lean/MOC/FourOrthogonalCorrectedMoment.lean#L154) · [Indicator span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L55) · [Corrected moment on the matching jet](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12)
+[Correction formula](../Lean/MOC/FourMatchingAlternatingCorrection.lean#L102) · [Indicator Gram matrix](../Lean/MOC/FourOrthogonalCorrectedMoment.lean#L154) · [Indicator span](../Lean/MOC/FourMatchingIndicatorBasis.lean#L55) · [Corrected moment on $J$](../Lean/MOC/FourOrthogonalMatchingMomentTransport.lean#L12)
 
 For every complex unitary mixer of order four, the signed determinant
 weights give a nonnegative value to each cost in $V$ that is a sum of
@@ -126,7 +126,7 @@ is a sum of matching squares, the determinant projection is at most
 the support height.
 [Unitary evaluation](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L201) · [Directional bound](../Lean/MOC/FourMatchingPhysicalPositivity.lean#L227)
 
-### Wall cost
+### Reciprocal coefficient bound
 
 Let $r_i$ be the ordinary matching indicator of index $i$. Define
 $h=1-r_0-r_1-r_4+r_{10}+r_{16}-r_{23}$. For all real $c,q>0$ and
@@ -150,9 +150,3 @@ separate fractional linear change of coordinates. For a determinant
 proof, a further step must place the actual spectral support costs in
 the matching sum-of-squares cone. This spectral test remains open
 for general support costs.
-
-An exact integer check covered all 24 permutations, the column-span
-certificates, and the signed kernel. A symbolic calculation checked
-the partial-transpose identities for every symmetric corner. Lean
-checks the real matching-square equivalence and the positive-moment
-implication.

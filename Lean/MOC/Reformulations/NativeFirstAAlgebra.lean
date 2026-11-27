@@ -32,7 +32,7 @@ private theorem diagonal_charpoly_roots {n : ℕ} (a : Fin n → ℂ) :
   have hOne : IsUnitary (1 : Matrix (Fin n) (Fin n) ℂ) := isUnitary_one
   simpa using roots_unitary_diagonalization a hOne
 
-/-- Atlas 025. Every finite complex algebra is represented on itself by left
+/-- Every finite complex algebra is represented on itself by left
 multiplication, and the basis fixes its Hermitian inner product. -/
 def nativeLeftRegularAlgebra : Prop :=
   ∀ (n : ℕ) (A : Type) [Ring A] [Algebra ℂ A]
@@ -58,9 +58,9 @@ theorem moc_iff_nativeLeftRegularAlgebra : MOCIsTrue ↔ nativeLeftRegularAlgebr
     rw [hx, hy] at hr
     exact hr
 
-/-- Atlas 026 on the split finite commutative algebra: the native norm of the
-actual sum is exactly the identity-matching value. This does not claim the
-decomposition and local multiplicity formula for general Artinian algebras. -/
+/-- In a split finite commutative algebra, the norm of the sum equals the
+identity matching product. The proof uses the coordinate characters of
+the split algebra. -/
 theorem splitCoordinateAlgebraNorm {n : ℕ} (a b : Fin n → ℂ) :
     (LinearMap.det (Algebra.lmul ℂ (Fin n → ℂ) (a + b))) = matchingProduct a b 1 := by
   rw [← LinearMap.det_toMatrix (Pi.basisFun ℂ (Fin n))]
@@ -102,8 +102,8 @@ private theorem coordinateSum_frobenius (n : ℕ) :
     simpa only [mul_comm (Pi.single i 1) a, coordinateSum_mul_single, Pi.zero_apply] using
       ha (Pi.single i 1)
 
-/-- Atlas 034. Only the regular matrix comparison is asserted; the Frobenius
-functional is part of the algebra data and is not used as a positive metric. -/
+/-- The regular matrix comparison for a finite complex Frobenius algebra.
+The Frobenius functional forms part of the algebra data. -/
 def nativeFrobeniusAlgebra : Prop :=
   ∀ (n : ℕ) (A : Type) [Ring A] [Algebra ℂ A]
     (f : A →ₗ[ℂ] ℂ), IsFrobeniusFunctional f →

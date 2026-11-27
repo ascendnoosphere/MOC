@@ -37,12 +37,12 @@ $$
 +(1-p)(s+r)\det(sI+kP_0+B).
 $$
 
-The two scalar factors are the eigenvalue sums for the deleted
-coordinate. The coefficients $p$ and $1-p$ are nonnegative and have
-sum one. They depend only on $P$. The positive-weight branches
-retain orthogonal projections.
-Their ranks are the rank of $P$ minus one for $P_1$, and the rank of
-$P$ for $P_0$. At $p=0$ and $p=1$, the column $q$ is zero.
+The first term pairs $r$ with the level $s+k$. The second term pairs
+$r$ with the level $s$. The weights $p$ and $1-p$ are nonnegative.
+They sum to one and depend only on $P$. Each positive-weight branch
+gives an orthogonal projection. If $p>0$, the rank of $P_1$ is one
+less than the rank of $P$. If $p<1$, the rank of $P_0$ is the rank
+of $P$. At $p=0$ or $p=1$, the column $q$ is zero.
 [Determinant reduction](../Lean/MOC/ProjectionLeafPivot.lean#L110) ·
 [Weight bounds](../Lean/MOC/ProjectionConditioning.lean#L68) ·
 [Selection projection](../Lean/MOC/ProjectionConditioning.lean#L154) ·
@@ -68,17 +68,14 @@ singular matrices in every block.
 [Bordered determinant formula](../Lean/MOC/ProjectionLeafPivot.lean#L45) ·
 [Rank-one update](../Lean/MOC/Pencil.lean#L15)
 
-The correction can change the entry with row $i$ and column $j$ only
-when both entries of $q$ at $i$ and $j$ are nonzero. Thus a partition
-block that contains the deleted coordinate can keep its remaining
-coordinates as one block after the update.
+If an entry of $q$ is zero, the correction is zero in its row and
+column. Thus the correction preserves any block partition of $P$
+after deletion of the selected coordinate.
 [Entry formula](../Lean/MOC/ProjectionConditioning.lean#L199)
 
-The two projection updates have a probability interpretation. On a
-finite set of coordinates, a determinantal probability measure for
-an orthogonal projection has one conditional subspace for inclusion
-of a coordinate and one for exclusion. The matrix proof here uses
-the projection equations directly.
+The updates give the conditional projections for inclusion or exclusion
+of a coordinate in a finite determinantal probability measure. The
+determinant reduction above follows directly from the projection equations.
 [Lyons, Proposition 6.3](https://rdlyons.pages.iu.edu/pdf/bases.pdf#page=18)
 
 ## Two overlapping projection blocks
@@ -91,13 +88,14 @@ with its own orthogonal projection $P$ and complex scalars $s$ and $k$.
 The levels of that block are $s$ and $s+k$. All three coordinate sets
 can have any dimension.
 
-Fix the two projections. Use a high-level label once per dimension
-of the range of its projection. Use a low-level label once per
-remaining dimension of its block. Assign a private label to each
-diagonal coordinate outside the block. One probability law on
-permutations represents the determinant of the sum for every choice
-of the levels and the private values. This gives inclusion in the
-convex hull for any ordering of the eigenvalues with multiplicity.
+Fix the two projections and the spectral labels. For each block, give
+the level $s+k$ a number of labels equal to the rank of the projection.
+Give the level $s$ one label for each remaining dimension of the block.
+Assign a scalar label to each diagonal coordinate outside the block.
+One probability law on permutations gives the determinant of the sum
+for every choice of the four level parameters and the scalar entries.
+The determinant lies in the matching hull for any ordering of the
+eigenvalues with multiplicity.
 [Spectral labels](../Lean/MOC/ProjectionBlockSpectralLabels.lean#L39) ·
 [Common law](../Lean/MOC/OverlappingProjectionBlocks.lean#L636) ·
 [Determinant inclusion](../Lean/MOC/OverlappingProjectionBlocks.lean#L671)
@@ -105,9 +103,9 @@ convex hull for any ordering of the eigenvalues with multiplicity.
 ```mermaid
 flowchart TD
     Input["Two overlapping two-level blocks and disjoint private coordinate sets"]
-    Input --> Private["A private coordinate exists"]
-    Input --> Shared["No private coordinate remains"]
-    Private --> Condition["Use each positive-weight projection branch"]
+    Input --> Test{"Does a coordinate outside one block remain?"}
+    Test -->|Yes| Condition["Use each positive-weight projection branch"]
+    Test -->|No| Shared["Both projections act on the full coordinate set"]
     Condition --> Delete["Delete the coordinate and its two matched labels"]
     Delete --> Combine["Extend each child permutation and combine the laws"]
     Shared --> Base["Use the common law for a two-valued spectrum"]
@@ -115,14 +113,14 @@ flowchart TD
     Base --> Law
 ```
 
-If a private coordinate exists, apply projection deletion to the
-other summand. The update preserves zero rows at its private
-coordinates. The child traces supply the new multiplicities. A
-positive-weight branch has a spectral label for its selected level.
-Add the two matched labels to each child permutation. The induction
-decreases the order at each deletion. If there is no private
-coordinate, both spectra have at most two values. The law for one
-two-valued spectrum gives the base.
+If one summand has a scalar block at a coordinate, apply projection
+deletion to the other summand. The correction stays inside its
+projection block. The ranks of the smaller projections give the new
+level multiplicities. A branch of positive weight has a label for the
+chosen level. Extend each smaller permutation by pairing that label
+with the scalar label. Each deletion decreases the order by one.
+When both blocks act on the full coordinate set, use the common law
+for one spectrum with at most two values.
 [Determinant step](../Lean/MOC/OverlappingProjectionBlocks.lean#L446) ·
 [Induction](../Lean/MOC/OverlappingProjectionBlocks.lean#L608) ·
 [Base common law](../Lean/MOC/TwoValues.lean#L285)

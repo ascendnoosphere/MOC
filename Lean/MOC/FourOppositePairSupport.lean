@@ -1,12 +1,15 @@
 import MOC.FourCoincidence
 import MOC.FourMatchingRelations
+import MOC.RealMatchingSquares
 import MOC.Support
 import Mathlib.Data.Real.Sqrt
-
+set_option Elab.async false
 /-! A constant cost on the matchings that pair the two zero labels has
 a nonnegative decomposition into singleton and two-element indicators. -/
 
 open BigOperators Finset Matrix
+open private matchingMask matchingIndicatorInt indicatorColumn_int evaluation_intCast
+  realMatchingEvaluation from MOC.RealMatchingSquares
 
 namespace MOC
 
@@ -147,11 +150,24 @@ private theorem matchingEvaluation_eq_collisionPair (m : Fin 14 → ℝ) (h : �
   have h₃ := hc 3 (by decide)
   have h₄ := hc 4 (by decide)
   have h₅ := hc 5 (by decide)
-  simp only [fourMatchingEvaluation, Matrix.cons_val] at h₀ h₁ h₂ h₃ h₄ h₅
-  fin_cases k <;>
-    norm_num [collisionPairValue, collisionCells, collisionCellWeights, fourMatchingEvaluation,
-      Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;>
-    linarith only [h₀, h₁, h₂, h₃, h₄, h₅]
+  simp only [fourMatchingEvaluation] at h₀ h₁ h₂ h₃ h₄ h₅
+  dsimp only [Matrix.cons_val] at h₀ h₁ h₂ h₃ h₄ h₅
+  have h7 : m 7 = -m 5 := by linear_combination h₃ - h₅
+  have h8 : m 8 = -m 0 := by linear_combination h₀ - h₁
+  have h9 : m 9 = -m 6 := by linear_combination h₀ - h₂
+  have h11 : m 11 = -m 1 := by linear_combination h₄ - h₅
+  have hcases : ∀ q : Fin 24, q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 ∨
+      q = 6 ∨ q = 7 ∨ q = 8 ∨ q = 9 ∨ q = 10 ∨ q = 11 ∨ q = 12 ∨ q = 13 ∨
+      q = 14 ∨ q = 15 ∨ q = 16 ∨ q = 17 ∨ q = 18 ∨ q = 19 ∨ q = 20 ∨ q = 21 ∨
+      q = 22 ∨ q = 23 := by decide +kernel
+  rcases hcases k with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
+    rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  all_goals first
+    | exact hc _ (by decide)
+    | simp only [collisionPairValue, collisionCells, collisionCellWeights, fourMatchingEvaluation,
+        Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero']
+      dsimp (config := { failIfUnchanged := false }) only [Matrix.cons_val]
+      simp only [h7, h8, h9, h11] <;> ring
 
 set_option maxHeartbeats 3000000 in
 private theorem collisionCells_cover (i k j l : Fin 3) (hik : i ≠ k) (hjl : j ≠ l) :
@@ -202,8 +218,8 @@ private theorem oppositePairOrdinaryCost_rebalanced (h : ℝ) (r c : Fin 3 → �
   simp only [collision_fixed_mask, collision_row_mask, collision_column_mask, collision_minor_mask,
     Fin.sum_univ_three]
   fin_cases k <;>
-    norm_num [collisionPairValue, collisionCells, rebalancedCell, Fin.sum_univ_three,
-      Fin.ext_iff, Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
+    simp (disch := decide) [collisionPairValue, collisionCells, rebalancedCell,
+      Fin.sum_univ_three] <;> norm_num [Prod.ext_iff, Fin.ext_iff] <;> ring
 
 /-- A nonnegative matching cost that is constant on the six permutations
 that fix label zero is a nonnegative combination of ordinary indicators. -/
@@ -223,7 +239,10 @@ theorem fourOppositePair_ordinary_cost (m : Fin 14 → ℝ) (h : ℝ)
     rw [hval] at hnonneg
     unfold collisionPairValue at hnonneg
     cases hslots : collisionCells p with
-    | none => exact Option.noConfusion he
+    | none =>
+      have hnone : (none : Option (Cell × Cell)) = some (x, y) := by
+        simpa only [hslots, Option.map_none] using he
+      cases hnone
     | some t =>
       obtain ⟨s, u, v⟩ := t
       have huv : (u, v) = (x, y) := Option.some.inj (by
@@ -265,39 +284,45 @@ private theorem oppositePairOrdinaryCost_eq_sum (h : ℝ) (r c : Fin 3 → ℝ)
   have hs₀ : (0 : Fin 3).succ = 1 := rfl
   have hs₁ : (1 : Fin 3).succ = 2 := rfl
   have hs₂ : (2 : Fin 3).succ = 3 := rfl
-  simp only [fourOppositePairOrdinaryCost, collisionIndicatorCoefficients, collisionIndicator,
-    collisionIndicatorRows, collisionIndicatorColumns, Fin.sum_univ_three, Fin.sum_univ_succ,
-    Fin.sum_univ_zero, hs₀, hs₁, hs₂, h₁, h₂, h₃, Matrix.cons_val, Matrix.cons_val_succ,
-    Matrix.cons_val_succ', Matrix.cons_val_zero', Finset.map_singleton, Finset.singleton_inj,
+  conv_lhs => simp only [fourOppositePairOrdinaryCost, Fin.sum_univ_three, hs₀, hs₁, hs₂,
+    h₁, h₂, h₃]
+  conv_rhs => simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, collisionIndicatorCoefficients,
+    collisionIndicator, collisionIndicatorRows, collisionIndicatorColumns, Matrix.cons_val_zero,
+    Matrix.cons_val_succ, Finset.map_singleton, Finset.singleton_inj, Equiv.toEmbedding_apply,
     mul_ite, mul_one, mul_zero, add_zero, zero_add]
   ring
 
 private def collisionIndicatorCoordinates (p : Fin 16) : Fin 14 → ℤ :=
   fourMatchingCoordinatesOfValues (fun k => collisionIndicator p (fourPerm k).symm)
 
-set_option maxRecDepth 10000 in
-set_option maxHeartbeats 4000000 in
 private theorem collisionIndicator_realized (p : Fin 16) (k : Fin 24) :
     fourMatchingEvaluation (fun i => (collisionIndicatorCoordinates p i : ℝ)) k =
       collisionIndicator p (fourPerm k).symm := by
-  have hint : ∀ (i : Fin 16) (j : Fin 24),
-      fourMatchingEvaluation (collisionIndicatorCoordinates i) j =
-        (collisionIndicator i (fourPerm j).symm : ℤ) := by
+  have hmask : ∀ s : Finset (Fin 4), ∃ a : Fin 16, matchingMask a = s := by
     decide +kernel
-  have hcast :
-      fourMatchingEvaluation (fun i => (collisionIndicatorCoordinates p i : ℝ)) k =
-        (fourMatchingEvaluation (R := ℤ) (collisionIndicatorCoordinates p) k : ℝ) := by
-    fin_cases k <;> simp only [fourMatchingEvaluation, Matrix.cons_val, Int.cast_add,
-      Int.cast_mul, Int.cast_ofNat]
-  rw [hcast, hint]
+  obtain ⟨a, ha⟩ := hmask (collisionIndicatorRows p)
+  obtain ⟨b, hb⟩ := hmask (collisionIndicatorColumns p)
+  have he (j : Fin 24) : (collisionIndicator p (fourPerm j).symm : ℤ) =
+      matchingIndicatorInt a b j := by
+    have hmap : (collisionIndicatorColumns p).map (fourPerm j).symm.toEmbedding =
+        collisionIndicatorRows p ↔ (collisionIndicatorRows p).map (fourPerm j).toEmbedding =
+        collisionIndicatorColumns p := by
+      constructor <;> intro h
+      · exact le_antisymm (Finset.subset_map_symm.mp h.ge) (Finset.map_symm_subset.mp h.le)
+      · exact le_antisymm (Finset.map_symm_subset.mpr h.ge) (Finset.subset_map_symm.mpr h.le)
+    simp only [collisionIndicator, matchingIndicatorInt, ha, hb, hmap]
+  have hint : fourMatchingEvaluation (collisionIndicatorCoordinates p) k =
+      (collisionIndicator p (fourPerm k).symm : ℤ) := by
+    simp only [collisionIndicatorCoordinates, he]
+    exact indicatorColumn_int a b k
+  rw [evaluation_intCast (collisionIndicatorCoordinates p) k, hint]
   unfold collisionIndicator
   split_ifs <;> simp only [Int.cast_one, Int.cast_zero]
 
-set_option maxRecDepth 3000 in
-set_option maxHeartbeats 1500000 in
 private theorem matchingEvaluation_scale_collision (c : ℝ) (m : Fin 14 → ℝ) (k : Fin 24) :
     fourMatchingEvaluation (fun i => c * m i) k = c * fourMatchingEvaluation m k := by
-  fin_cases k <;> simp only [fourMatchingEvaluation, Matrix.cons_val] <;> ring
+  change realMatchingEvaluation (c • m) k = c * realMatchingEvaluation m k
+  simp only [map_smul, Pi.smul_apply, smul_eq_mul]
 
 /-- The constant-coset cost is a sum of sixteen real squares in the same
 fourteen-coordinate matching-function space. -/
@@ -321,13 +346,15 @@ theorem fourOppositePair_matching_squares (m : Fin 14 → ℝ) (h : ℝ)
   split_ifs <;> simp only [mul_one, mul_zero, zero_pow (by decide : (2 : ℕ) ≠ 0),
     Real.sq_sqrt (ht p)]
 
-set_option maxRecDepth 3000 in
-set_option maxHeartbeats 1500000 in
 private theorem matchingEvaluation_sub_height (m : Fin 14 → ℝ) (h : ℝ) (k : Fin 24) :
     fourMatchingEvaluation (fun i => (if i = 13 then h else 0) - m i) k =
       h - fourMatchingEvaluation m k := by
-  fin_cases k <;> norm_num [fourMatchingEvaluation, Fin.ext_iff,
-    Matrix.cons_val, Matrix.cons_val_succ', Matrix.cons_val_zero'] <;> ring
+  let e (i : Fin 14) : ℝ := if i = 13 then h else 0
+  have he : realMatchingEvaluation e k = h := by
+    change fourMatchingEvaluation e k = h
+    fin_cases k <;> simp (disch := decide) [fourMatchingEvaluation, e]
+  change realMatchingEvaluation (e - m) k = h - realMatchingEvaluation m k
+  simp only [map_sub, Pi.sub_apply, he]
 
 private theorem collision_label_of_index (k : Fin 24) (hk : k.val < 6) :
     (fourPerm k).symm 0 = 0 := by

@@ -76,9 +76,13 @@ private theorem padding_charpolyRev_neg_diagonal {ι : Type*} [Fintype ι] [Deci
       diagonal (fun j => 1 + C (a j) * X) := by
     ext i j : 1
     by_cases hij : i = j
-    all_goals
-      simp [Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_apply, Matrix.map_apply,
-        Matrix.neg_apply, Matrix.smul_apply, smul_eq_mul, hij, mul_comm]
+    · subst j
+      simp only [Matrix.sub_apply, Matrix.one_apply_eq, Matrix.diagonal_apply_eq,
+        Matrix.map_apply, Matrix.neg_apply, Matrix.smul_apply, smul_eq_mul, map_neg,
+        mul_neg, neg_mul, sub_neg_eq_add, mul_comm X]
+    · simp only [Matrix.sub_apply, Matrix.one_apply_ne hij, Matrix.diagonal_apply_ne _ hij,
+        Matrix.map_apply, Matrix.neg_apply, Matrix.smul_apply, smul_eq_mul, neg_zero,
+        map_zero, mul_zero, sub_zero]
   rw [h, Matrix.det_diagonal]
 
 private theorem padding_charpolyRev_submatrix {ι κ : Type*}
@@ -141,8 +145,8 @@ theorem fourthElementaryCoefficient_not_mem_after_zero_padding {m : ℕ}
       elementaryCoefficient (diagonal a + U * diagonal b * Uᴴ) 4 := by
     have hneg : -((diagonal a₀ + V * diagonal b₀ * Vᴴ).submatrix e e) =
         (-(diagonal a₀ + V * diagonal b₀ * Vᴴ)).submatrix e e := rfl
-    simp only [elementaryCoefficient, hsum, hneg, padding_charpolyRev_submatrix,
-      hblock, padding_charpolyRev_neg_block]
+    unfold elementaryCoefficient
+    rw [hsum, hneg, padding_charpolyRev_submatrix, hblock, padding_charpolyRev_neg_block]
   have hvertices (σ : Equiv.Perm (Fin n)) :
       (η * elementaryCoefficient (diagonal fun j => a' (σ j) + b' j) 4).re ≤ bound := by
     let τ : Equiv.Perm (Fin m ⊕ Fin k) := (e.symm.trans σ).trans e

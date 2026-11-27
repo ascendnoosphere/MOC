@@ -59,7 +59,7 @@ theorem exists_label_phases_of_four_label_products [DecidableEq ι]
   · intro i
     by_cases h : i = a
     · simpa only [t, if_pos h] using hsnorm
-    · simp only [t, if_neg h, Complex.normSq_div, hunit a i h.symm, hsnorm, div_one]
+    · simp only [t, if_neg h, Complex.normSq_div, hunit a i (Ne.symm h), hsnorm, div_one]
   · intro i j hij
     by_cases hia : i = a
     · subst i

@@ -2,22 +2,32 @@
 
 [Proof map index](README.md) · [Conjecture and proof tree](../README.md#proof-tree) · [Order-four map](order-four-proof-map.md) · [All-order map](all-orders-proof-map.md)
 
-Let $U$ be unitary. Let $a$ and $b$ be complex eigenvalue lists of
-length $n$. The spectral inclusion compares the determinant of
-$\mathrm{diag}(a)+U\mathrm{diag}(b)U^*$ with the real convex hull of
-its matching products. A fixed curve test checks distinct first lists
-on one curve. The second list remains arbitrary. The same $U$ appears
-in the original problem and in the test.
+Let $U$ be a complex unitary matrix of order $n$. Let $a$ and $b$ be
+complex eigenvalue lists of length $n$. Write $U^*$ for the conjugate
+transpose and $\mathrm{diag}(a)$ for the diagonal matrix with entries
+$a_i$. The Marcus–de Oliveira inclusion places the determinant of
+$\mathrm{diag}(a)+U\mathrm{diag}(b)U^*$ in the real convex hull of
+$\prod_j(a_{\sigma(j)}+b_j)$ over all permutations $\sigma$.
+A fixed curve test asks for this inclusion when the entries of $a$
+are distinct and lie on the curve. The list $b$ is arbitrary. Use the
+same matrix $U$ in the original problem and in the test.
 [Lean test definition](../Lean/MOC/ConicSpectralReductions.lean#L22)
 
-If a curve test gives inclusion for all spectra at each fixed unitary,
-the test over all unitary mixers is equivalent to the conjecture at
-that order. The order-four and order-five registries use this implication
-for each conic below. The registered hyperbola has perpendicular
-asymptotes and the product parameter is one.
-[Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27) · [Order four](../Lean/MOC/ProofRoutes.lean#L280) · [Order five](../Lean/MOC/ProofRoutes.lean#L298)
+Suppose the curve test at each fixed unitary implies the inclusion
+for all spectra at that unitary. Then the test for all unitary
+matrices is equivalent to the conjecture at that order. The converse
+uses the conjecture on the restricted lists. This gives the equivalence
+for each conic below.
+[Quantifier bridge](../Lean/MOC/ConicSpectralReductions.lean#L27) · [Order-four routes](../Lean/MOC/ProofRoutes.lean#L254) · [Order-five routes](../Lean/MOC/ProofRoutes.lean#L289)
 
 ## Order-four equivalences
+
+The parabola has points $t+it^2$ for real $t$. For the hyperbola,
+fix $d\in\mathbb C$ with $\mathrm{Im}(d)\ne0$ and a real $k\ne0$.
+Its points are $x+yd$ with real $x,y$ and $xy=k$. The two asymptote
+directions are $1,d$. The same reduction applies at $k=0$, when the
+curve is the union of the asymptotes.
+[Parabola definition](../Lean/MOC/ConicSpectralReductions.lean#L36) · [Hyperbola definition](../Lean/MOC/ConicSpectralReductions.lean#L42)
 
 ```mermaid
 flowchart BT
@@ -33,9 +43,10 @@ flowchart BT
 ```
 
 - For the parabola, first send three eigenvalues to the real line by a
-  fractional linear map. The fourth and the real line lie on two
-  parallel lines. A common affine image of the parabola approximates
-  both lines, including a list with some entries on each line.
+  fractional linear map. Use the parallel line through the fourth
+  eigenvalue for that entry. A family of affine images of the
+  parabola approximates any prescribed finite list on these lines.
+  Each image uses one affine map for the entire list.
   [Order-four parabola test](../Lean/MOC/ConicSpectralReductions.lean#L330) · [Parallel-line limit](../Lean/MOC/ConicSpectralReductions.lean#L180)
 - For the hyperbola, first send three eigenvalues to the real line.
   Translate the fourth onto the second asymptote while keeping the
@@ -52,11 +63,14 @@ flowchart BT
   The stated bound on $r$ guarantees this inequality.
   [Order-four ellipse test](../Lean/MOC/ConicSpectralReductions.lean#L946) · [Antipodal construction](../Lean/MOC/ConicSpectralReductions.lean#L574)
 
-A common fractional linear change of the signed spectra preserves hull
-membership. The pole may meet the partner list after the chart is
-chosen. Perturb that list and take a limit. The same closedness argument
-includes repeated eigenvalues. An invertible affine image gives the
-same test. [Pole removal](../Lean/MOC/ConicSpectralReductions.lean#L128) · [Affine images](../Lean/MOC/ConicSpectralReductions.lean#L104)
+Use the same fractional linear map on $a$ and the entrywise negation
+of $b$, then negate the second transformed list. The determinant and
+all matching products scale by the same nonzero factor when the pole
+avoids both signed lists. The selected pole can meet the negated list
+of $b$. In that case, perturb $b$ to avoid the pole and take a limit.
+Closedness also permits repeated eigenvalues. A complex affine map
+with nonzero slope gives the same test on the image of the curve.
+[Fractional covariance](../Lean/MOC/ProjectiveTransport.lean#L61) · [Pole removal](../Lean/MOC/ConicSpectralReductions.lean#L128) · [Affine images](../Lean/MOC/ConicSpectralReductions.lean#L104)
 
 ## Exact ellipse representation
 
@@ -66,13 +80,13 @@ and only if some ordering of its
 cross ratio $\lambda=(z_0-z_2)(z_1-z_3)/((z_0-z_3)(z_1-z_2))$
 satisfies
 
-$
+$$
 ((r^2-1)^2+4r^2)\,\mathrm{Re}\,\lambda
 \le ((r^2-1)^2-4r^2)|\lambda|.
-$
+$$
 
-The right-hand coefficient divided by the left-hand coefficient is $\cos(4\arctan(1/r))$. Thus the bound
-asks for an ordering with absolute principal argument at least
+The coefficient ratio is $\cos(4\arctan(1/r))$. Thus the bound asks
+for an ordering with absolute principal argument at least
 $4\arctan(1/r)$. The fractional map must have no pole at any of the four
 points. [Exact representation criterion](../Lean/MOC/ConicSpectralReductions.lean#L1557)
 
@@ -121,9 +135,10 @@ boundary points move a small distance into that half-plane before the
 limit is taken.
 [Order-five parabola test](../Lean/MOC/ConicSpectralReductions.lean#L1348) · [Order-five hyperbola test](../Lean/MOC/ConicSpectralReductions.lean#L1369)
 
-If two distinct points are in the upper half-plane, choose a real $t$
-so the secant between their images under $z\mapsto-1/(z-t)$ has any
-given nonzero direction. For $g(t)=(u-t)(v-t)$, its imaginary part
+Let $u,v$ be distinct points in the open upper half-plane. For any
+given nonzero direction, choose a real $t$ so the secant between
+their images under $z\mapsto-1/(z-t)$ is parallel to that direction.
+For $g(t)=(u-t)(v-t)$, its imaginary part
 vanishes at a weighted average of the real parts of $u,v$. At that
 point $g(t)$ is negative real. The direction equation is linear or
 quadratic in $t$. In the quadratic case this negative value gives a

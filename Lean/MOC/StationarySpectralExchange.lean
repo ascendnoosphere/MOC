@@ -31,7 +31,10 @@ private theorem matchingProduct_oppositeExchange (a b : ι → ℂ) (σ : Equiv.
     (Finset.mul_prod_erase Finset.univ f (Finset.mem_univ j)).symm
   by_cases hj : σ j = i
   · have hs : s = p := by funext k; simp [s, p, hj]
-    have hx : x j = -p j := by simp [x, p, hj] <;> ring
+    have hx : x j = -p j := by
+      dsimp only [x, p]
+      rw [hj, Function.update_self, Function.update_self]
+      ring
     have hp : (∏ k ∈ S, x k) = ∏ k ∈ S, p k := by
       apply Finset.prod_congr rfl
       intro k hk
@@ -48,7 +51,10 @@ private theorem matchingProduct_oppositeExchange (a b : ι → ℂ) (σ : Equiv.
         (∏ l, f l) = f j * (f k * ∏ l ∈ S.erase k, f l) := by
       rw [hsplit f, ← Finset.mul_prod_erase S f hkS]
     have hxj : x j = a (σ j) - a i := by simp [x, hj, sub_eq_add_neg]
-    have hxk : x k = b k - b j := by simp [x, hk, hkj, sub_eq_add_neg, add_comm]
+    have hxk : x k = b k - b j := by
+      dsimp only [x]
+      rw [hk, Function.update_self, Function.update_of_ne hkj]
+      ring
     have hsj : s j = a i + b j := by simp [s, Equiv.swap_apply_right]
     have hsk : s k = a (σ j) + b k := by simp [s, hk, Equiv.swap_apply_left]
     have hout (l : ι) (hl : l ∈ S.erase k) : l ≠ j ∧ σ l ≠ i ∧ σ l ≠ σ j := by

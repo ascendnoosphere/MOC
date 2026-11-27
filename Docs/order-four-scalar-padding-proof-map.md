@@ -17,8 +17,9 @@ support. Block diagonal padding multiplies the actual determinant
 by $c+d$, so division recovers the determinant at order four.
 
 For the following lists, the original real support is $5$.
-Every scalar padding with $c+d\ne0$ gives an enlarged matching whose
-normalized product has real part greater than $5$.
+For every $c,d\in\mathbb C$ with $c+d\ne0$, there is a permutation of
+the five labels whose normalized matching product has real part
+greater than $5$.
 
 $$
 a=(2+i,\ 2i,\ -2+2i,\ 2-2i), \qquad
@@ -36,11 +37,13 @@ flowchart TD
     Products["Original support is five"]
     Exchanges["Crossed matchings give affine inequalities"]
     Rank["Scalar coefficients satisfy a rank equation"]
+    Both{{"AND"}}
     Certificate["Cubic identity gives a contradiction"]
     Conclusion["Every scalar pair increases real support"]
     Products --> Exchanges
-    Exchanges --> Certificate
-    Rank --> Certificate
+    Exchanges --> Both
+    Rank --> Both
+    Both --> Certificate
     Certificate --> Conclusion
 ```
 
@@ -73,7 +76,7 @@ The first sum must be nonnegative and the remaining terms must be
 zero. The Lean proof checks this polynomial identity in the six
 real variables and checks the crossed matchings that give the affine
 differences. [Polynomial certificate](../Lean/MOC/ScalarAnchorObstruction.lean#L103) ·
-[First crossed matching](../Lean/MOC/ScalarAnchorObstruction.lean#L327)
+[First crossed matching](../Lean/MOC/ScalarAnchorObstruction.lean#L330)
 
 The example rules out this scalar padding criterion for full
 downward transfer. The general implication from order five to order

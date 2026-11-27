@@ -7,11 +7,12 @@
 - [Contact patterns](#contact-patterns)
 - [Paper support bounds and exact examples](#paper-support-bounds-and-exact-examples)
 
-The order-four conjecture asks for the determinant inclusion for every
-pair of complex normal four-by-four matrices. In the eigenvalue
+For complex normal matrices $A$ and $B$ of order four, the conjecture
+places $\det(A+B)$ in the convex hull of the matching products
+$\prod_{j=1}^4(a_{\sigma(j)}+b_j)$. Here $a_j,b_j$ are eigenvalues,
+and $\sigma$ runs over the permutations of four labels. In the eigenvalue
 formulation, $U$ is the unitary change between the eigenbases. The full
-order-four statement remains open in this library. The antipodal spectral
-test and the width bound have complete proof scripts awaiting kernel checking.
+order-four statement remains open in Lean.
 [Certificates](determinant-inclusion-certificates-proof-map.md)
 [Matrix equivalence](../Lean/MOC/Normal.lean#L280) · [Source scope](all-orders-proof-map.md#scope-of-the-lean-source)
 
@@ -55,8 +56,8 @@ The six-contact inequality required by this route remains open.
 | Real orthogonal mixers with complex spectra | Iff | [Statement and proof](../Lean/MOC/FourMinorTransport.lean#L645) |
 | Regular orthogonal support maximizers | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L90) |
 | Normal sum at a support maximizer | Iff | [Statement and proof](../Lean/MOC/NormalSupportMaximum.lean#L303) |
-| Principal coisometry of dimension three | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L140) |
-| Rectangular compression with three rows | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L218) |
+| Principal coisometry of dimension three | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L150) |
+| Rectangular compression with three rows | Iff | [Statement and proof](../Lean/MOC/PrincipalCoisometry.lean#L228) |
 | Regular spectra and real orthogonal mixers | Iff | [Statement and proof](../Lean/MOC/Reformulations/StationaryFour.lean#L43) |
 | Exclude all regular stationary orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/OrderFourIndependent.lean#L231) |
 | Exclude regular stationary witnesses with a row and a column with no zero entries | Iff | [Statement and proof](../Lean/MOC/StationaryDenseCross.lean#L64) |
@@ -64,8 +65,8 @@ The six-contact inequality required by this route remains open.
 | Exclude stationary orthogonal witnesses with at least seven contacts and the inactive pivot constraints | Iff | [Statement and proof](../Lean/MOC/StationaryPivot.lean#L221) |
 | Exclude regular terminal orthogonal witnesses | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L114) |
 | Exclude regular terminal orthogonal witnesses with canonical mixed cost | Iff | [Statement and proof](../Lean/MOC/FourTerminalCoverage.lean#L398) |
-| Six-contact support bound | Iff | [Statement and proof](../Lean/MOC/ProofRoutes.lean#L274) |
-| First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | Iff | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L208) |
+| Six-contact support bound | Iff | [Registered equivalence](../Lean/MOC/ProofRoutes.lean#L254) · [Contact transfer](../Lean/MOC/ProofRoutes.lean#L193) |
+| First list $(1,-1,z,-z)$, with $\mathrm{Im}(z)>0$, $\lvert z\rvert<1$, and a real orthogonal mixer | Iff | [Antipodal test](../Lean/MOC/FourAntipodalSpectra.lean#L213) |
 | Distinct spectra and neither signed spectrum on a circle or line | Iff | [Statement and proof](../Lean/MOC/HermitianByNormalFourProof.lean#L128) |
 | Distinct first spectrum on the standard parabola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L330) |
 | Distinct first spectrum on the fixed hyperbola | Iff | [Fixed-curve test](../Lean/MOC/ConicSpectralReductions.lean#L390) |
@@ -152,8 +153,9 @@ $$
 
 The 13 weights are nonnegative and $\sum_{\sigma\in B}w_\sigma+3q=1$.
 Each negative mixed-ray evaluation becomes a positive value of $q$ after
-permuting the rows and columns.
-[Weights](../Lean/MOC/FourSignedMinorIdentity.lean#L45) · [Complex identity](../Lean/MOC/FourSignedMinorIdentity.lean#L147) · [Reduction to positive correction](../Lean/MOC/FourSignedHeightReduction.lean#L80)
+permuting the rows and columns. The conjecture in order four is
+equivalent to its restriction to mixers with $q>0$.
+[Weights](../Lean/MOC/FourSignedMinorIdentity.lean#L45) · [Complex identity](../Lean/MOC/FourSignedMinorIdentity.lean#L147) · [Equivalence for positive correction](../Lean/MOC/FourSignedHeightReduction.lean#L80)
 
 For a real angle $\theta$, set $s_\sigma=\mathrm{Re}(e^{-i\theta}z_\sigma)$
 and $f_\sigma=s_\sigma-\min_\tau s_\tau$. Put
@@ -197,17 +199,16 @@ their sum gives nonnegative weights for the matching products.
 
 ## Contact patterns
 
-Zheng states the full order-four theorem in Theorem 1.1. An audit of the
-public supplement reproduced all 214 symmetry classes of six-contact
-sets. Of these, 124 use only squared minors. The audit matched the other
-90 classes to the individual proofs used by Proposition 4.3. All five
-portable checks passed in a local replay of selected exact calculations.
-A full independent review of the case proofs and a Lean proof of the
-full bound remain open. The earlier audit used the main paper as its
-external source.
+Zheng states the full order-four theorem in Theorem 1.1. The public
+supplement lists 214 symmetry classes of six-contact sets. Its proof of
+Proposition 4.3 uses squared minors for 124 classes and individual
+arguments for the other 90. The full bound remains open in Lean.
 [Paper](https://doi.org/10.13140/RG.2.2.36790.25923) · [Pinned supplement](https://github.com/DongzheZheng/The-Marcus-de-Oliveira-conjecture-for-n-4/tree/53ec16567d2307266ce52a8e9678410b2457cc27) · [Scope of the exact checks](https://github.com/DongzheZheng/The-Marcus-de-Oliveira-conjecture-for-n-4/blob/53ec16567d2307266ce52a8e9678410b2457cc27/docs/verification-scope.md)
 
 Each T-label names a set of permutations in the linked Lean statements.
+For each of the eight complete pattern bounds, the six prescribed
+permutations must attain one global supporting value in the chosen
+direction.
 
 | Status | Named pattern | Bound or reduction |
 | --- | --- | --- |
@@ -262,37 +263,36 @@ normalized support height $H<0$ or $H>1/2$. This witness still has at
 least seven contacts.
 [Height exclusion](../Lean/MOC/FourTerminalHeightInterval.lean#L11)
 
-The earlier exact-seven result uses regular spectra and at least
-seven contacts at zero height. Its proof uses the matching cubic
-and disjoint-swap rectangles. The contact-count source awaits a
-normal build. The directional bound covers that height directly.
-[Exact-seven statement](../Lean/MOC/FourCanonicalZeroHeight.lean#L190) · [Zero-height support](../Lean/MOC/FourCanonicalHeightSquares.lean#L784)
+A regular witness in the canonical mixed-ray section with zero support
+height and at least seven contacts has exactly seven. The proof uses
+the matching cubic and six rectangle product identities. The
+directional bound covers zero height directly.
+[Contact count](../Lean/MOC/FourCanonicalZeroHeight.lean#L295) · [Rectangle identities](../Lean/MOC/FourCanonicalZeroHeight.lean#L182) · [Zero-height support](../Lean/MOC/FourCanonicalHeightSquares.lean#L784)
 
-The exact Python census gives 90 seven-contact and 58 eight-contact
-classes at nonzero height. Two canonical eleven-contact profiles
-force equality of distinct matching products. For negative height
-the Lean rescaling applies if the normalized external lower bound
-holds. The finite orbit census and universal external lower bound
-remain outside these Lean proofs. This source awaits verification.
+The finite enumeration gives 90 seven-contact and 58 eight-contact
+classes at nonzero height. Two canonical eleven-contact profiles force
+equality of distinct matching products. For negative height, the Lean
+rescaling requires a lower bound on the normalized height. The full
+enumeration and the lower bound for all spectra remain open in Lean.
 [Eleven-contact exclusion](../Lean/MOC/FourTerminalHeight.lean#L128) · [External-bound rescaling](../Lean/MOC/FourTerminalHeight.lean#L15)
 
-The wall cost has a matching-square certificate under a reciprocal
-weight bound. A corrected mixer moment gives the associated minor
-amplitude inequality. The replay ledger also gives a seven-contact
-certificate from a nonpositive determinant factor and four
-contradictions to affine moment equations. Each application still
-requires the stated link from the spectral data.
-[Wall and replay premises](research-attempts-proof-map.md#further-steps-from-the-replay-bundles)
+A fixed matching cost admits a sum of squares under a reciprocal bound
+on its coefficients. A corrected matching moment gives the associated
+minor inequality. Application to a spectral support gap requires the
+spectral data to give those coefficients.
+[Coefficient bound and minor inequality](order-four-real-matching-squares-proof-map.md#reciprocal-coefficient-bound)
 
 ### Signed weights and the bilinear spectral chart
 
-The fourteen-term formula expresses the determinant as a signed sum
-of matching products. It has thirteen nonnegative coefficients when
-its anchor coefficient is negative. At most one mixed ray evaluates
-negatively at a fixed mixer. If none does, the support cone proves the
-bound for all spectra. If a mixed ray evaluates negatively, a contact
-where that ray is positive also gives the bound.
-[Signed formula](../Lean/MOC/FourFourteenTermSupport.lean#L78) · [Unique negative ray](../Lean/MOC/FourFourteenTermSupport.lean#L186) · [Contact bound](../Lean/MOC/FourFourteenTermSupport.lean#L260)
+The fourteen-term formula evaluates a spectral support gap as a signed
+sum over fourteen matchings. The other thirteen coefficients are
+nonnegative if the coefficient of the first matching is nonpositive.
+At most one mixed ray has a negative value at a fixed unitary mixer.
+If every mixed ray has a nonnegative value, the inclusion holds for
+all spectra at that mixer. If a mixed ray has a negative value, the
+directional bound holds when that ray is positive at a matching that
+attains the support value.
+[Signed evaluation](../Lean/MOC/FourFourteenTermSupport.lean#L78) · [Coefficient signs](../Lean/MOC/FourFourteenTermSupport.lean#L99) · [Unique negative ray](../Lean/MOC/FourFourteenTermSupport.lean#L186) · [Contact bound](../Lean/MOC/FourFourteenTermSupport.lean#L265) · [Inclusion](../Lean/MOC/FourFourteenTermSupport.lean#L280)
 
 Fix the right-hand coordinates of an anchored spectral chart in order
 four. The 24 matching products are linear in four complex coefficients.
@@ -300,8 +300,7 @@ With a nonzero scale, one quadratic equation on those coefficients gives
 spectral realization. Nonnegativity of the signed gap at every maximizing
 matching on this chart is equivalent to order four.
 The contact equalities and strict support test are real linear conditions
-on the coefficients. The rank-drop and remaining feasibility tests are
-open. The new Lean source awaits verification.
+on the coefficients. The tests for rank loss and feasibility remain open.
 [Spectral realization](../Lean/MOC/FourDirectSupportCertificate.lean#L47) · [Bilinear support equivalence](../Lean/MOC/FourDirectSupportCertificate.lean#L118)
 
 ## Paper support bounds and exact examples
@@ -320,8 +319,8 @@ Write a scaled exact bracket profile as $u+iv$, with $u,v$ real.
 Let $G$ be the gradient of the matching cubic and let $J(u)$ be its
 Hessian. The complex equation $G(u+iv)=0$ splits into $J(u)v=0$ and
 $G(v)=G(u)$. Both conditions are necessary for an exact bracket lift.
-The new Lean proof expands the quadratic coordinates of $G$.
-[Lean lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L125)
+The proof expands the quadratic coordinates of $G$.
+[Lean lift equations](../Lean/MOC/FourMatchingHessianKernel.lean#L128)
 
 Take $u=(4,0,12,-18,4,0,0,-12,-4,9,3,3,-3,-11)$ in the bracket order
 of the linked definition. The cubic is zero and its Hessian has a
@@ -332,7 +331,7 @@ The example therefore excludes sufficiency of the cubic and Hessian
 kernel tests. It concerns the spectral equations for the profile,
 before comparison with a unitary.
 [Bracket convention](../Lean/MOC/FourMatchingPolarization.lean#L18) ·
-[Lean exact example](../Lean/MOC/FourMatchingHessianKernel.lean#L170)
+[Lean exact example](../Lean/MOC/FourMatchingHessianKernel.lean#L174)
 
 ### Other exact obstructions
 
@@ -395,8 +394,7 @@ In the bracket coordinates, the cubic applied to the projected
 matching profile of height $h$ is
 $-949585314h+9292385296000$. At its only root the projected Hessian
 has rank fourteen. A spectral lift would require a nonzero Hessian
-kernel. The exact intermediate calculations are in the local Cycle 07
-research note in `Temp/txt/`. [Lean Hessian necessity](../Lean/MOC/FourMatchingHessianKernel.lean#L45)
+kernel. [Lean Hessian necessity](../Lean/MOC/FourMatchingHessianKernel.lean#L51)
 
 </details>
 
@@ -451,7 +449,5 @@ For the finite lists write $f$ for the common chart factor. Changing each input 
 
 ### Exact verification
 
-The exact replay checked the nine edge identities on all 24
-permutations, every required face rank, and the rational perturbation
-bound. The replay inputs and checkers are kept in the local text
-bundle under `Temp/txt/`.
+The paper proof uses exact arithmetic to check the nine edge identities
+on all 24 permutations, the face ranks, and the perturbation bound.

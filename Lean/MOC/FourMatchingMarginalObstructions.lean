@@ -89,8 +89,9 @@ private theorem marginalEventMinor_values :
     subsetMinorSq_singleton _ fourMarginalMixer_unitary,
     subsetMinorSq_singleton _ fourMarginalMixer_unitary,
     subsetMinorSq_pair _ fourMarginalMixer_unitary (by decide) (by decide)]
-  norm_num [marginalMixer_entry, marginalMixerNumerator, Matrix.cons_val,
-    GaussianInt.toComplex_def₂, Complex.normSq, Complex.mul_re, Complex.mul_im,
+  norm_num [marginalMixer_entry, marginalMixerNumerator, map_neg, map_ofNat,
+    Matrix.cons_val_two, Matrix.cons_val_three, Matrix.vecHead, Matrix.vecTail,
+    Complex.normSq, Complex.mul_re, Complex.mul_im,
     Complex.sub_re, Complex.sub_im, Complex.inv_re, Complex.inv_im]
 
 /-- The explicit mixer has no nonnegative law for its full squared-minor table. -/
@@ -203,7 +204,8 @@ private theorem conditionalMixer_im :
 private theorem conditionalSingleton_values :
     2 * Complex.normSq (fourMarginalMixer 0 1) + Complex.normSq (fourMarginalMixer 1 0) +
       2 * Complex.normSq (fourMarginalMixer 2 3) = 541872 / 390625 := by
-  norm_num [marginalMixer_entry, marginalMixerNumerator, Matrix.cons_val, GaussianInt.toComplex_def₂,
+  norm_num [marginalMixer_entry, marginalMixerNumerator, map_neg, map_ofNat,
+    Matrix.cons_val_two, Matrix.cons_val_three, Matrix.vecHead, Matrix.vecTail,
     Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.inv_re, Complex.inv_im]
 
 /-- For these spectra, no nonnegative determinant law preserves all singleton masses. -/
@@ -245,7 +247,7 @@ private theorem jointMixer_separating_value :
       (GaussianInt.toComplex ∘ jointRightSecond) fourMarginalMixer).re < 0 := by
   rw [marginalMixer_determinant, marginalMixer_determinant,
     entryDeterminant_certificates.2.2.1, entryDeterminant_certificates.2.2.2]
-  norm_num [Complex.div_re, Complex.normSq]
+  norm_num [map_ofNat, Complex.div_re, Complex.normSq]
 
 /-- One order-four mixer yields two determinant observations outside their joint matching hull. -/
 theorem fourMarginalMixer_two_determinants_outside_joint_hull :
@@ -260,7 +262,10 @@ theorem fourMarginalMixer_two_determinants_outside_joint_hull :
     (54 : ℝ) • Complex.reLm.comp (LinearMap.fst ℝ ℂ ℂ) +
       Complex.reLm.comp (LinearMap.snd ℝ ℂ ℂ)
   intro h
-  have hnonneg : 0 ≤ f _ := by
+  have hnonneg : 0 ≤ f (determinantValue (GaussianInt.toComplex ∘ jointLeftFirst)
+      (GaussianInt.toComplex ∘ jointRightFirst) fourMarginalMixer,
+      determinantValue (GaussianInt.toComplex ∘ jointLeftSecond)
+        (GaussianInt.toComplex ∘ jointRightSecond) fourMarginalMixer) := by
     apply convexHull_min ?_ (convex_halfSpace_ge f.isLinear 0) h
     rintro _ ⟨p, rfl⟩
     change 0 ≤ 54 * (matchingProduct _ _ p).re + (matchingProduct _ _ p).re
@@ -334,20 +339,17 @@ private theorem pad_first_matching (p : Equiv.Perm (Fin 4 ⊕ κ)) :
         · exact h₀ (p.injective (he.trans h.symm))
         · exact h₁ (p.injective (he.trans h.symm))
       by_cases ht : p i = padThree <;>
-        norm_num [q, d, padFirstLeft, padFirstRight, h₀, h₁, hp, ht]
+        simp (config := { decide := true }) [q, d, padFirstLeft, padFirstRight, h₀, h₁, hp, ht]
     rw [product_two_exceptions q (by simp) hq]
     have hn : p padZero ≠ p padOne := p.injective.ne (by simp)
-    generalize h₀ : p padZero = x at hhit hn ⊢
-    generalize h₁ : p padOne = y at hhit hn ⊢
-    simp only [q, h₀, h₁]
     rcases hhit with h | h
-    · subst x
-      have hy : y ≠ (padZero : Fin 4 ⊕ κ) := Ne.symm hn
-      by_cases ht : y = padThree <;>
-        norm_num [padFirstLeft, padFirstRight, d, hy, ht]
-    · subst y
-      by_cases ht : x = padThree <;>
-        norm_num [padFirstLeft, padFirstRight, d, hn, ht]
+    · have hy : p padOne ≠ padZero := fun he => hn (h.trans he.symm)
+      by_cases ht : p padOne = padThree <;>
+        simp (config := { decide := true }) [q, padFirstLeft, padFirstRight, d, h, hy, ht]
+    · have hx : p padZero ≠ padZero := fun he => hn (he.trans h.symm)
+      by_cases ht : p padZero = padThree <;>
+        simp (config := { decide := true }) [q, padFirstLeft, padFirstRight, d, h, hx, ht] <;>
+        norm_num
   · push_neg at hhit
     let i := p.symm padZero
     have hi : p i = padZero := p.apply_symm_apply _
@@ -377,15 +379,21 @@ private theorem pad_second_matching (p : Equiv.Perm (Fin 4 ⊕ κ)) :
     rcases padSecondRight_values j with h | h | h <;> norm_num [d, h, hr]
   have hprod : (∏ j, d j) = (108 * (3 + padRatio)) * (3 + padRatio) ^ Fintype.card κ := by
     rw [Fintype.prod_sum_type, Fin.prod_univ_four]
-    norm_num [d, padSecondRight, Finset.prod_const] <;> ring
+    simp (config := { decide := true }) [d, padSecondRight, padZero, padOne, padThree, Finset.prod_const] <;>
+      ring_nf <;> simp
   let q (i : Fin 4 ⊕ κ) := (padSecondLeft i + padSecondRight (p i)) / d (p i)
   have hq (i : Fin 4 ⊕ κ) (h₁ : i ≠ padOne) (h₃ : i ≠ padThree) : q i = 1 := by
     simpa [q, d, padSecondLeft, h₁, h₃] using div_self (hd (p i))
+  have hq₁ : q padOne = (padSecondRight (p padOne) - padRatio) / (3 + padSecondRight (p padOne)) := by
+    simp [q, d, padSecondLeft, sub_eq_add_neg, add_comm]
+  have hq₃ : q padThree = padSecondRight (p padThree) / (3 + padSecondRight (p padThree)) := by
+    have hleft : padSecondLeft (padThree : Fin 4 ⊕ κ) = 0 := by
+      unfold padSecondLeft
+      rw [if_neg (by simp : (padThree : Fin 4 ⊕ κ) ≠ padOne), if_pos rfl]
+    simp only [q, d, hleft, zero_add]
   rw [matching_factor_by_columns _ _ d p hd, hprod]
   change ((108 * (3 + padRatio)) * (3 + padRatio) ^ Fintype.card κ) * (∏ i, q i) / _ = _
-  rw [product_two_exceptions q (by simp) hq]
-  simp only [q, padSecondLeft, d, if_pos rfl, if_neg (by simp : (padThree : Fin 4 ⊕ κ) ≠ padOne),
-    zero_add, add_comm (-(padRatio : ℂ)), ← sub_eq_add_neg]
+  rw [product_two_exceptions q (by simp) hq, hq₁, hq₃]
   rw [mul_right_comm, mul_div_cancel_right₀ _ (pow_ne_zero _ hr)]
 
 private theorem pad_second_score (x y : ℂ)
@@ -396,8 +404,12 @@ private theorem pad_second_score (x y : ℂ)
     intro h
     have he := congrArg Complex.re h
     norm_num [padRatio, Complex.sub_re, Complex.mul_re] at he
+  have hz : padRatio ≠ 0 := by
+    intro h
+    have he := congrArg Complex.re h
+    norm_num [padRatio, Complex.sub_re, Complex.mul_re] at he
   rcases hx with rfl | rfl | rfl <;> rcases hy with rfl | rfl | rfl <;>
-    simp only [hr, Ne.symm hr, false_implies, true_implies, or_true, true_or, and_true] <;>
+    simp only [hr, Ne.symm hr, hz, Ne.symm hz, false_implies, true_implies, or_true, true_or, and_true] <;>
     norm_num [padRatio, Complex.div_re, Complex.div_im, Complex.normSq, Complex.mul_re,
       Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im]
 
@@ -425,7 +437,9 @@ private theorem padded_vertex_separating_score (p : Equiv.Perm (Fin 4 ⊕ κ)) :
     rw [he]
     norm_num
   · rw [if_neg hn]
-    split_ifs <;> norm_num <;> linarith [hs.1]
+    split_ifs
+    · exact add_nonneg (by norm_num) hs.1
+    · simpa only [Complex.zero_re, mul_zero, zero_add] using hs.1
 
 private def padMixer : Matrix (Fin 4 ⊕ κ) (Fin 4 ⊕ κ) ℂ :=
   fromBlocks fourMarginalMixer 0 0 1
@@ -449,29 +463,31 @@ private theorem padded_determinants_separating_score :
       Sum.elim (GaussianInt.toComplex ∘ jointLeftFirst) (fun _ => 1) := by
     funext i
     rcases i with i | i
-    · fin_cases i <;> norm_num [padFirstLeft, jointLeftFirst, Matrix.cons_val]
+    · fin_cases i <;>
+        simp (config := { decide := true }) [padFirstLeft, jointLeftFirst, Matrix.cons_val]
     · simp [padFirstLeft]
   have hb : (padFirstRight : Fin 4 ⊕ κ → ℂ) =
       Sum.elim (GaussianInt.toComplex ∘ jointRightFirst) (fun _ => 0) := by
     funext i
     rcases i with i | i
-    · fin_cases i <;> norm_num [padFirstRight, jointRightFirst, Matrix.cons_val]
+    · fin_cases i <;>
+        simp (config := { decide := true }) [padFirstRight, jointRightFirst, Matrix.cons_val]
     · simp [padFirstRight]
   have hc : (padSecondLeft : Fin 4 ⊕ κ → ℂ) =
       Sum.elim (GaussianInt.toComplex ∘ jointLeftSecond) (fun _ => 3) := by
     funext i
     rcases i with i | i
     · fin_cases i <;> apply Complex.ext <;>
-        norm_num [padSecondLeft, jointLeftSecond, padRatio, Matrix.cons_val,
-          Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im]
+        simp (config := { decide := true }) [padSecondLeft, jointLeftSecond, padRatio, Matrix.cons_val,
+          map_ofNat, Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im]
     · simp [padSecondLeft]
   have hd : (padSecondRight : Fin 4 ⊕ κ → ℂ) =
       Sum.elim (GaussianInt.toComplex ∘ jointRightSecond) (fun _ => padRatio) := by
     funext i
     rcases i with i | i
     · fin_cases i <;> apply Complex.ext <;>
-        norm_num [padSecondRight, jointRightSecond, padRatio, Matrix.cons_val,
-          Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im]
+        simp (config := { decide := true }) [padSecondRight, jointRightSecond, padRatio, Matrix.cons_val,
+          map_ofNat, Complex.mul_re, Complex.mul_im, Complex.sub_re, Complex.sub_im]
     · simp [padSecondRight]
   have hr : (3 : ℂ) + padRatio ≠ 0 := by
     intro h

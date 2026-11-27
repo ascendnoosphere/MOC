@@ -6,7 +6,7 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 
-/-! Atlas 070: the exponentiated finite matrix path integral. -/
+/-! The exponential of the trace integral along a finite matrix path. -/
 
 open Matrix Polynomial MeasureTheory Set
 
@@ -137,7 +137,7 @@ theorem DetPathIntegral.det_eq_exp_mul {n : ℕ}
   | join _ _ hx hy =>
     rw [hy, hx, Complex.exp_add, mul_left_comm, mul_assoc]
 
-/-- Atlas 070, genuine path expression. The exponent uses the ordinary
+/-- The exponent of the path expression uses the ordinary
 trace; normalizing the trace by n and multiplying the integral by n
 cancels the normalization in positive dimension. -/
 def DeterminantPathForm : Prop :=
@@ -224,7 +224,7 @@ private theorem exists_det_path {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ)
   exact ⟨g, ∫ t in (0 : ℝ)..1, f t, hg₀, hg₁, .segment zero_le_one H f
     hgc.continuousOn (fun t _ => hg t) hunit hfc (fun _ _ => rfl)⟩
 
-/-- Atlas 070, including the reverse implication. The singular endpoint
+/-- Equivalence for the matrix path determinant comparison. The singular endpoint
 case already satisfies MOC by the independent singular-sum theorem. -/
 theorem determinantPathForm_iff : DeterminantPathForm ↔ MOCIsTrue := by
   refine ⟨?_, determinantPathForm_of_moc⟩

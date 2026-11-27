@@ -1,7 +1,7 @@
 import MOC.Reformulations.NativeFirstAFredholm
 import Mathlib.Data.Real.Sqrt
 
-/-! Atlas 065 on finite atomic measure spaces with positive atom masses. -/
+/-! Integral operators on finite atomic measure spaces with positive atom masses. -/
 
 open BigOperators Matrix
 

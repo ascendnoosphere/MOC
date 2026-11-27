@@ -10,15 +10,15 @@ its premises and links to the relevant Lean source.
 
 | Map | Coverage |
 | --- | --- |
-| [All orders](all-orders-proof-map.md) | All-order alternatives, the order split, fixed-order tests, the fourth elementary coefficient counterexample from order five, and 243 labelled spectral formulations. |
-| [Research attempts](research-attempts-proof-map.md) | The steps in Lean and the remaining implications for the numbered research routes and exact replay results. |
-| [Determinant research reports](determinant-research-reports-proof-map.md) | The results, exact examples, and remaining proof obligations in seven reports and six companion files. |
+| [All orders](all-orders-proof-map.md) | All-order alternatives, the order split, fixed-order tests, the fourth elementary coefficient counterexample from order five, and spectral formulations. |
+| [Proof routes](research-attempts-proof-map.md) | Proved steps, exact examples, and open implications for spectral reductions and support bounds. |
+| [Determinant methods](determinant-research-reports-proof-map.md) | Determinant identities, coefficient laws, compression, convexity, topology, and open proof obligations. |
 | [Order four](order-four-proof-map.md) | Fixed conics, real orthogonal mixers, stationary maxima, contact patterns, and the bilinear chart. |
 | [Order five](order-five-proof-map.md) | Fixed conics, contact thresholds, two-by-two zero submatrices, and squared-minor tests. |
 | [Determinant inclusion certificates](determinant-inclusion-certificates-proof-map.md) | Integer and power comparisons, a finite free-entry test, spectral multiplicities, composition of mixers, and support bounds in orders four and five. |
 | [Contact transfer](contact-transfer-proof-map.md) | Fixed and varying determinant differences, contact counts, rank, moments, and isolation. |
 | [Determinant modulus bound](modulus-order-transfer-proof-map.md) | Drury's bound in every order, transfer to smaller orders, and the equivalence with real orthogonal changes of eigenbasis on any unbounded set of orders. |
-| [Spectral and support results](spectral-support-proof-map.md) | Spectral families, order-four support tests, and coverage of the research PDFs. |
+| [Spectral and support results](spectral-support-proof-map.md) | Spectral families, order-four support tests, and determinant reductions. |
 
 ## Order-four support tests
 

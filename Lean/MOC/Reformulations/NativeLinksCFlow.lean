@@ -1,7 +1,7 @@
 import MOC.Reformulations.SecondReal
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 
-/-! Atlas 186. Constant generators are a native subclass of periodic systems.
+/-! Constant generators in periodic linear systems.
 Their diagonal fundamental solution at time one realizes every nonzero
 complex spectral list. The existing invertible-representative reduction
 removes the restriction without using any heuristic spectral sampling. -/

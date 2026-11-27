@@ -40,7 +40,6 @@ theorem rankOneCompressionDisk_eq_compression (b : ι → ℂ) (γ : ℂ)
   simp only [D, W, Matrix.conjTranspose_fromRows_eq_fromCols_conjTranspose,
     Matrix.conjTranspose_conjTranspose, Matrix.fromCols_mul_fromBlocks,
     Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add, Matrix.fromCols_mul_fromRows]
-  rfl
 
 theorem rankOnePhase_conjTranspose (v : ι → ℂ) (z : ℂ) :
     (rankOnePhase v z)ᴴ = rankOnePhase v (star z) := by

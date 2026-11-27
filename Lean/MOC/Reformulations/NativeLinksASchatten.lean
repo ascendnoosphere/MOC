@@ -176,7 +176,7 @@ theorem finiteSchattenThreeHull_of_interior (a b c s : ℝ) (h : c ^ 2 + s ^ 2 =
   exact lt_irrefl (Real.exp (t ^ 2 / 2))
     (convexHull_min hsub (convex_Iio (𝕜 := ℝ) (Real.exp (t ^ 2 / 2))) hc)
 
-/-- Atlas 064 fails at p=3 already for a real orthogonal mixer. -/
+/-- Regularization of degree three fails for a real orthogonal mixer in matrix order two. -/
 theorem finiteSchattenThreeHull_false :
     ∃ (a : Fin 2 → ℝ) (Q : Matrix (Fin 2) (Fin 2) ℝ), Q * Qᵀ = 1 ∧
       finiteDetThree (diagonal a + Q * diagonal a * Qᵀ) ∉

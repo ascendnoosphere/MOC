@@ -14,8 +14,8 @@ namespace MOC
 open Matrix
 open scoped ComplexOrder
 
-/-- The signed permutation probabilities multiplied by six. The arrays keep
-the permutation order from the report, with zero-based labels. -/
+/-- The signed permutation probabilities multiplied by six. Each list gives
+the images of the four labels in order, starting at zero. -/
 def exteriorRelaxationCoefficient (σ : Equiv.Perm (Fin 4)) : ℤ :=
   let p := [σ 0, σ 1, σ 2, σ 3]
   if p ∈ [[0, 1, 3, 2], [0, 2, 1, 3], [1, 0, 2, 3], [1, 3, 0, 2],
@@ -41,8 +41,8 @@ theorem exteriorRelaxationEntry_properties :
     (∀ I J, exteriorRelaxationEntry Iᶜ Jᶜ = exteriorRelaxationEntry I J) := by
   decide +kernel
 
-/-- The singleton and pair blocks displayed in the report, in their listed
-subset order. Their entries are scaled by six. -/
+/-- The singleton and pair transition blocks in the stated subset order.
+Their entries are scaled by six. -/
 theorem exteriorRelaxation_small_blocks :
     let S : Fin 6 → Finset (Fin 4) := ![{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}]
     (Matrix.of fun i j : Fin 4 => exteriorRelaxationEntry {i} {j}) =

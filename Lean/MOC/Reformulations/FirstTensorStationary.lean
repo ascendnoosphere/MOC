@@ -6,7 +6,7 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.NormNum
 
-/-! Atlas 022: an exact counterexample for the native Z-eigenvalue product
+/-! An exact counterexample for the Z-eigenvalue product
 of binary symmetric quartics. The mixer is the identity. -/
 
 open BigOperators

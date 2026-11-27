@@ -13,8 +13,8 @@ def IsMonicMatrixPolynomial {n : ℕ} (m : ℕ) (P : Matrix (Fin n) (Fin n) ℂ[
   (∀ i j, (P i j).coeff m = if i = j then 1 else 0) ∧
     ∀ k, m < k → ∀ i j, (P i j).coeff k = 0
 
-/-- Atlas 010, using its explicitly allowed diagonal root realization rather than
-assuming a companion matrix is normal. The roots are roots of actual polynomial
+/-- Use a diagonal matrix of characteristic roots for each monic matrix
+polynomial. These roots are roots of the associated polynomial
 matrix determinants with the prescribed monic matrix degree. -/
 def nativeMonicMatrixPolynomialRoots : Prop :=
   ∀ (m r : ℕ), 0 < m →
@@ -83,8 +83,8 @@ theorem topAlternatingCoefficient_eq_det {n : ℕ} (A : Matrix (Fin n) (Fin n) �
   rw [Basis.det_comp, Basis.det_self, mul_one, ← LinearMap.det_toMatrix',
     LinearMap.toMatrix'_toLin']
 
-/-- Atlas 014 with the action on the top exterior line expressed as the top
-alternating coefficient of the actual matrix sum, not a sum of two coefficients. -/
+/-- Use the top alternating coefficient of the matrix sum to express its
+action on the top exterior line. -/
 def nativeTopExteriorHull : Prop :=
   ∀ (n : ℕ) (A B U : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n → ℂ),
     IsStarNormal A → IsStarNormal B → IsUnitary U →

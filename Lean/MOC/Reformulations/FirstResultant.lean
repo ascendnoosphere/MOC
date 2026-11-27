@@ -4,8 +4,8 @@ import Mathlib.Data.Matrix.Notation
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.NormNum
 
-/-! An exact algebraic certificate against the native additive resultant
-test of atlas 021 in binary symmetric cubic order. -/
+/-! An exact counterexample to the additive resultant comparison for
+binary symmetric cubics. -/
 
 open BigOperators Polynomial
 

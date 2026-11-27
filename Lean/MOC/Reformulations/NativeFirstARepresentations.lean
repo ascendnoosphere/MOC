@@ -9,8 +9,8 @@ open BigOperators Matrix TensorProduct
 namespace MOC.Reformulations
 noncomputable section
 
-/-- The pure algebraic, slightly stronger form of Atlas 051: continuity and
-completeness of the source do not enter the finite determinant argument. -/
+/-- The finite determinant comparison for represented complex algebras.
+The representation is a complex algebra homomorphism. -/
 def nativeComplexAlgebraRepresentation : Prop :=
   ∀ (n : ℕ) (A : Type) [Ring A] [Algebra ℂ A]
     (ρ : A →ₐ[ℂ] Matrix (Fin n) (Fin n) ℂ) (x y : A)
@@ -29,8 +29,8 @@ theorem moc_iff_nativeComplexAlgebraRepresentation :
   · intro h n X Y U a b hX hY hU ha hb
     exact h n (Matrix (Fin n) (Fin n) ℂ) (AlgHom.id ℂ _) X Y U a b hX hY hU ha hb
 
-/-- The algebraic strengthening of Atlas 053: the source need only be a
-complex star algebra. A source unitary and its adjoint are represented by
+/-- The determinant comparison for a complex star algebra. The representation
+maps a source unitary and its adjoint by
 the same star homomorphism. -/
 def nativeStarAlgebraRepresentation : Prop :=
   ∀ (n : ℕ) (A : Type) [Ring A] [Algebra ℂ A] [StarRing A]
@@ -62,8 +62,8 @@ theorem moc_iff_nativeStarAlgebraRepresentation :
       ⟨U, unitary.mem_iff.mpr ⟨hU.2, hU.1⟩⟩
     exact h n (Matrix (Fin n) (Fin n) ℂ) (StarAlgHom.id ℂ _) X Y u a b hX hY ha hb
 
-/-- Atlas 027: actual scalar extension and a chosen algebra splitting. No
-extra structural property of the original algebra is used after the splitting. -/
+/-- Extend scalars to the complex field and choose an algebra splitting.
+The comparison uses the normal matrices in that splitting. -/
 def nativeSplitScalarExtension : Prop :=
   ∀ (F : Type) [Field F] [Algebra F ℂ] (A : Type) [Ring A] [Algebra F A]
     (n : ℕ) (ρ : (ℂ ⊗[F] A) ≃ₐ[ℂ] Matrix (Fin n) (Fin n) ℂ)
@@ -96,8 +96,8 @@ def divisionBlockMatrix {D : Type} [DivisionRing D] {n r s : ℕ}
     (X : Matrix (Fin r) (Fin r) D) : Matrix (Fin n) (Fin n) ℂ :=
   fun i j => ρ (X (e i).1 (e j).1) (e i).2 (e j).2
 
-/-- Atlas 030, with actual block representation; the cardinality of the
-target is enforced by the enumeration equivalence. -/
+/-- The determinant comparison for an algebra represented in matrix blocks.
+The enumeration equivalence fixes the size of the matrix representation. -/
 def nativeDivisionBlockHull : Prop :=
   ∀ (D : Type) [DivisionRing D] (n r s : ℕ)
     (ρ : D →+* Matrix (Fin s) (Fin s) ℂ), Function.Injective ρ →
