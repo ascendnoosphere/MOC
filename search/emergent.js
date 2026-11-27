@@ -52,6 +52,15 @@ function buildCore() {
     if(h.length===1){const v=sub(d,h[0]);test(h[0],zero(v)?[1,0]:v);}
     else if(h.length===2){const v=sub(h[1],h[0]),w=[v[1],-v[0]];test(h[0],w);test(h[0],scale(w,-1));test(h[1],v);test(h[0],scale(v,-1));}
     else for(let i=0;i<h.length;i++){const p=h[i],v=sub(h[(i+1)%h.length],p);test(p,[v[1],-v[0]]);}
+    // Outside a polygon, a nearest vertex may give a direction between two
+    // facet normals. Use the Euclidean projection, not just facet distances.
+    if(best>0&&h.length>1){
+      let nearest=null,dist=Infinity;
+      for(let i=0;i<h.length;i++){const p=h[i],v=sub(h[(i+1)%h.length],p),l=norm2(v);
+        if(!l)continue;const t=Math.max(0,Math.min(1,dot(sub(d,p),v)/l)),q=add(p,scale(v,t)),dd=abs(sub(d,q));
+        if(dd<dist){nearest=q;dist=dd;}}
+      if(nearest&&dist>0){dir=scale(sub(d,nearest),1/dist);best=dot(dir,d)-Math.max(...h.map(p=>dot(dir,p)));}
+    }
     return {gap:best,dir,radius};
   }
   function rng(seed){
@@ -96,7 +105,7 @@ function buildCore() {
   // With K=(A+B)^-1 and delta=a_j-a_i:
   // D(G)/D = 1+t T+Re(c*s) X+Im(c*s) Y.
   function orbitGate(g,E,i,j){
-    const {det:d,inv:K}=detInv(E.M,true);
+    const {det:d,inv:K}=E.inverse||(E.inverse=detInv(E.M,true));
     if(!K||!(abs(d)>0)||!Number.isFinite(abs(d)))return null;
     const da=sub(g.a[j],g.a[i]),kd=sub(mul(K[i][i],K[j][j]),mul(K[i][j],K[j][i]));
     const T=sub(mul(da,sub(K[i][i],K[j][j])),mul(mul(da,da),kd));
@@ -151,14 +160,29 @@ function buildCore() {
     return {...f,a:g.a,b:g.b,ps,sp,inner:hull(sp.slice()),full:null,attempted:false};
   }
   function evaluate(g,parent,r,o){
-    const n=g.a.length,U=mixer(g),M=sumMatrix(g.a,g.b,U);
-    const C=parent&&parent.C.a===g.a&&parent.C.b===g.b?parent.C:cacheSpectra(g,r,o);
+    const n=g.a.length;
+    let U,M;
+    const same=parent&&parent.g.a===g.a&&parent.g.b===g.b;
+    if(same&&g.gates.length===parent.g.gates.length+1&&parent.g.gates.every((x,i)=>x===g.gates[i])){
+      // Incremental G B G*: two row/column updates instead of rebuilding B.
+      const e=g.gates[g.gates.length-1],[i,j,x,y]=e,[c,t]=gate([x,y]);
+      U=parent.U.map(row=>row.slice());applyGate(U,e);
+      M=parent.M.map(row=>row.slice());
+      for(let k=0;k<n;k++)M[k][k]=sub(M[k][k],g.a[k]);
+      applyGate(M,e);
+      for(let k=0;k<n;k++){const v=M[k][i],w=M[k][j];M[k][i]=sub(scale(v,c),mul(t,w));M[k][j]=add(mul(conj(t),v),scale(w,c));}
+      for(let k=0;k<n;k++)M[k][k]=add(M[k][k],g.a[k]);
+    }else{
+      U=parent&&parent.g.gates===g.gates?parent.U:mixer(g);M=sumMatrix(g.a,g.b,U);
+    }
+    const C=same?parent.C:cacheSpectra(g,r,o);
     const D=determinant(M,C.rows),s=signedGap(C.inner,D);
     // Inner hull gives an optimistic upper bound on signed directional gap.
     // Spend the expensive oracle on near-boundary spectra, not every random point.
+    let oracleWork=0,oracleExhausted=0;
     if(!C.attempted&&(s.gap>-.15*Math.max(s.radius,1e-100)||r()<.12)){
       C.attempted=true;
-      try{C.full=subsetHull(C.z,o.work,{paths:true});}catch(e){if(!(e instanceof Exhausted))throw e;}
+      try{C.full=subsetHull(C.z,o.work,{paths:true});oracleWork=C.full.work;}catch(e){if(!(e instanceof Exhausted))throw e;oracleWork=o.work;oracleExhausted=1;}
     }
     const H=C.full?C.full.points:C.inner,G=signedGap(H,D);
     const relative=G.gap/Math.max(G.radius,1e-100),mix=1-U.reduce((s,row)=>s+Math.max(...row.map(norm2)),0)/n;
@@ -166,8 +190,14 @@ function buildCore() {
     let near=0;for(const p of C.sp)if(h-dot(G.dir,p)<.025*Math.max(G.radius,1e-100))near++;
     const contactBonus=Math.min(1,near/Math.max(1,2*n-1));
     // Near contacts are heuristic only; no exact count or pruning follows.
-    const score=(C.full?Math.max(-2,relative):Math.min(0,Math.max(-2,relative))-.08)+.025*mix+.004*contactBonus;
-    return {g,C,U,M,D,dir:G.dir,gap:relative,score,mix,near,complete:!!C.full};
+    // A balanced terminal witness has a nonnormal sum. Do not make
+    // this a hard numerical constraint; use it to discourage commuting limits.
+    let comm=0,energy=0;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){energy+=norm2(M[i][j]);if(i!==j){const da=sub(g.a[i],g.a[j]);comm+=norm2(sub(mul(da,conj(M[j][i])),mul(conj(da),M[i][j])));}}
+    const nonnormal=Math.sqrt(comm)/Math.max(energy,1e-100);
+    const score=(C.full?Math.max(-2,relative):Math.min(0,Math.max(-2,relative))-.08)+.025*mix+.004*contactBonus+.018*nonnormal;
+    const descriptor=[Math.log1p(n),Math.min(2,g.gates.length/(n*(n-1)/2)),mix,nonnormal,contactBonus];
+    return {g,C,U,M,D,dir:G.dir,gap:relative,score,mix,near,nonnormal,descriptor,complete:!!C.full,oracleWork,oracleExhausted};
   }
   function normalize(g){
     const n=g.a.length;if(!n)return g;
@@ -195,17 +225,28 @@ function buildCore() {
     const n=g.a.length,j=r.int(n),keep=(x,i)=>i!==j;
     return normalize({...g,a:g.a.filter(keep),b:g.b.filter(keep),gates:g.gates.filter(e=>e[0]!==j&&e[1]!==j).map(e=>[e[0]-(e[0]>j),e[1]-(e[1]>j),e[2],e[3]])});
   }
-  function connected(g){
-    const n=g.a.length;if(!n)return false;const seen=new Set([0]),adj=Array.from({length:n},()=>[]);
+  function components(g){
+    const n=g.a.length,seen=new Set(),adj=Array.from({length:n},()=>[]),out=[];
     for(const [i,j,x,y] of g.gates)if(x!==0||y!==0){adj[i].push(j);adj[j].push(i);}
-    const q=[0];for(let i=0;i<q.length;i++)for(const j of adj[q[i]])if(!seen.has(j)){seen.add(j);q.push(j);}
-    return seen.size===n;
+    for(let k=0;k<n;k++)if(!seen.has(k)){const q=[k];seen.add(k);for(let i=0;i<q.length;i++)for(const j of adj[q[i]])if(!seen.has(j)){seen.add(j);q.push(j);}out.push(q.sort((a,b)=>a-b));}
+    return out;
+  }
+  function reduceBlocks(g,r){
+    const cs=components(g);if(cs.length===1)return g;
+    const viable=cs.filter(c=>c.length>=4);if(!viable.length)return null;
+    const c=viable[r.int(viable.length)],map=new Map(c.map((k,i)=>[k,i]));
+    return normalize({...g,a:c.map(i=>g.a[i]),b:c.map(i=>g.b[i]),gates:g.gates.filter(e=>map.has(e[0])&&map.has(e[1])).map(e=>[map.get(e[0]),map.get(e[1]),e[2],e[3]])});
   }
   function allowed(g){
     const n=g.a.length;
-    if(n<4||!connected(g))return false;
+    if(n<4||components(g).length!==1)return false;
     const distinct=a=>new Set(a.map(x=>x.join(","))).size,da=distinct(g.a),db=distinct(g.b);
-    return da>2&&db>2&&(da>3||db>3);
+    if(da<=2||db<=2||(da<=3&&db<=3))return false;
+    // Checked opposite-pair multiplicity theorem. Exact equality only;
+    // numerical near-coincidence is deliberately not excluded.
+    const count=(xs,z)=>xs.filter(x=>x[0]===z[0]&&x[1]===z[1]).length;
+    for(const a of g.a)for(const b of g.b)if(zero(add(a,b))&&(n===4||count(g.a,a)+count(g.b,b)>=n-2))return false;
+    return true;
   }
   function restart(r){
     let g={a:[],b:[],gates:[],mode:r.int(5)};
@@ -234,31 +275,73 @@ function buildCore() {
   // For one free spectral entry the determinant and all matching products
   // are affine. Optimize the lower envelope of active constraints in a box.
   // This is a proposal oracle, not a separation certificate.
-  function freeEntry(E,r,step){
+  function freeEntry(E,r,step,o){
     const g=E.g,C=E.C,n=g.a.length,side=r()<.5?"a":"b",i=r.int(n);
     const a=g.a.slice(),b=g.b.slice(),v=side==="a"?a:b;v[i]=add(v[i],[1,0]);
     const dd=sub(determinant(sumMatrix(a,b,E.U),C.rows),E.D);
     const ps=C.ps.slice();if(C.full)for(const p of C.full.points)ps.push(unpack(p));
-    const lines=[];
-    for(const p of ps){
+    const lines=[],keys=new Set();
+    function constraint(p){
+      const key=p.join(",");if(keys.has(key))return false;keys.add(key);
       const k=side==="a"?i:p.indexOf(i),P=product(C.z,p),dp=scale(product(C.z,p,k),1/C.rows[k]),s=sub(dd,dp);
-      lines.push([dot(E.dir,s),dot(E.dir,mul([0,1],s)),dot(E.dir,sub(E.D,P))]);
+      lines.push([dot(E.dir,s),dot(E.dir,mul([0,1],s)),dot(E.dir,sub(E.D,P))]);return true;
     }
-    const d=maxMin(lines,step);v[i]=add(g[side][i],d);
+    for(const p of ps)constraint(p);
+    let d=maxMin(lines,step);
+    // At most two violated-contact additions. Each oracle uses the old
+    // positive row scales, so the affine model and support use identical units.
+    if(E.complete&&E.gap>-.15)for(let pass=0;pass<2;pass++){
+      const z=C.z.map((row,k)=>row.map((x,j)=>(side==="a"?k===i:j===i)?add(x,scale(d,1/C.rows[k])):x));
+      try{
+        const h=subsetHull(z,Math.max(1,Math.floor(o.work/2)),{paths:true}).points;
+        let contact=h[0];for(const p of h)if(dot(E.dir,p)>dot(E.dir,contact))contact=p;
+        const actual=dot(E.dir,sub(add(E.D,mul(dd,d)),contact)),predicted=Math.min(...lines.map(l=>l[0]*d[0]+l[1]*d[1]+l[2]));
+        if(predicted-actual<=1e-10*Math.max(1,Math.abs(predicted))||!constraint(unpack(contact)))break;
+        d=maxMin(lines,step);
+      }catch(e){if(!(e instanceof Exhausted))throw e;break;}
+    }
+    v[i]=add(g[side][i],d);
     return normalize({...g,a,b});
   }
+  // Numerical chart for the equal-e1/e2 reduction: solve the rational
+  // moment equation for a regular reciprocal pole. Failure is harmless.
+  function balancedPole(g,r){
+    const n=g.a.length,one=[1,0],c=g.b.map(x=>scale(x,-1));
+    let p=scale(r.point(),1.5);
+    function moments(list,p){
+      let s=[0,0],t=[0,0],u=[0,0],mass=0;
+      for(const z of list){const den=sub(p,z);if(abs(den)<1e-5)return null;const x=div(one,den),x2=mul(x,x);s=add(s,x);t=add(t,x2);u=add(u,mul(x2,x));mass+=norm2(x);}
+      return {s,t,u,mass};
+    }
+    for(let k=0;k<30;k++){
+      if(abs(p)>10)return null;
+      const x=moments(g.a,p),y=moments(c,p);if(!x||!y)return null;
+      const F=sub(scale(sub(x.t,y.t),n),sub(mul(x.s,x.s),mul(y.s,y.s)));
+      const denom=n*(x.mass+y.mass)+norm2(x.s)+norm2(y.s);
+      if(abs(F)<1e-10*denom){
+        const out=normalize({...g,a:g.a.map(z=>div(one,sub(p,z))),b:c.map(z=>scale(div(one,sub(p,z)),-1))});
+        const sum2=a=>a.reduce((s,x)=>add(s,mul(x,x)),[0,0]);
+        if(abs(sub(sum2(out.a),sum2(out.b)))<1e-6*n)return out;
+        return null;
+      }
+      const Fp=scale(sub(sub(mul(x.s,x.t),mul(y.s,y.t)),scale(sub(x.u,y.u),n)),2);
+      if(abs(Fp)<1e-15)return null;let d=div(F,Fp);if(abs(d)>1)d=scale(d,1/abs(d));p=sub(p,d);
+    }
+    return null;
+  }
   function projective(g,r){
+    if(r()<.5){const balanced=balancedPole(g,r);if(balanced)return balanced;}
     const t=scale(r.point(),.25),one=[1,0];
     const fa=x=>div(x,add(one,mul(t,x))),fb=x=>div(x,sub(one,mul(t,x)));
     if(g.a.some(x=>abs(add(one,mul(t,x)))<.2)||g.b.some(x=>abs(sub(one,mul(t,x)))<.2))return g;
     return normalize({...g,a:g.a.map(fa),b:g.b.map(fb)});
   }
-  function mutate(E,r){
+  function mutate(E,r,o){
     const g=E.g,n=g.a.length,u=r(),step=Math.exp(-3.3+3*r());
     if(u<.17)return birth(g,r);
     if(u<.28)return death(g,r);
     if(u<.48){const [i,j]=pair(n,r),e=orbitGate(g,E,i,j)||randomGate(i,j,r,step);return {...g,gates:g.gates.concat([e])};}
-    if(u<.63)return freeEntry(E,r,step);
+    if(u<.63)return freeEntry(E,r,step,o);
     if(u<.71)return projective(g,r);
     if(u<.84){
       const gates=g.gates.slice();
@@ -333,7 +416,7 @@ function buildCore() {
     return {format:"moc-emergent-v1",a:E.g.a.map(v),b:E.g.b.map(v),direction:v(E.dir),
       gates:compact(E.U).map(([i,j,x,y])=>[i,j,q(x),q(y),String(Q)])};
   }
-  function verify(cert,limit=1000000){
+  function verify(cert,limit=1000000,discoverDirection=false){
     if(cert.format!=="moc-emergent-v1")throw new Error("unknown certificate format");
     const cv=v=>{if(!Array.isArray(v)||v.length!==2||v.some(x=>typeof x!=="string"||!/^[-]?\d+$/.test(x)))throw new Error("invalid integer pair");return v.map(BigInt);};
     const a=cert.a.map(cv),b=cert.b.map(cv),e=cv(cert.direction),n=a.length;
@@ -343,44 +426,67 @@ function buildCore() {
     const z=a.map(x=>b.map(y=>add(x,y)));
     const result={dimension:n,determinantNumerator:D.map(String),denominator:String(den),projectedNumerator:String(target)};
     try{
-      const H=subsetHull(z,limit,{integer:true});let max=null;
-      for(const p of H.points){const h=dot(e,p);if(max===null||h>max)max=h;}
-      const gap=target-den*max;
-      return {...result,status:gap>0n?"CERTIFIED":"NOT_A_COUNTEREXAMPLE",method:"exact-subset-hull",maximumMatchingProjection:String(max),gapNumerator:String(gap),work:H.work,states:H.states};
+      const H=subsetHull(z,limit,{integer:true});
+      const support=e=>H.points.map(p=>dot(e,p)).reduce((x,y)=>x>y?x:y);
+      let direction=e,max=support(e),projected=target,gap=projected-den*max;
+      // If rounding spoiled the proposed direction, derive an integer
+      // separating normal directly from the exact polygon and rational D.
+      if(discoverDirection&&gap<=0n){
+        const p=H.points,dirs=[];
+        if(p.length===1)dirs.push(sub(D,scale(p[0],den)));
+        else if(p.length===2){const v=sub(p[1],p[0]),w=[v[1],-v[0]];dirs.push(w,scale(w,-1n),v,scale(v,-1n));}
+        else for(let i=0;i<p.length;i++){const v=sub(p[(i+1)%p.length],p[i]);dirs.push([v[1],-v[0]]);}
+        for(const v of dirs){if(izero(v))continue;const m=support(v),d=dot(v,D),g=d-den*m;if(g>0n){direction=v;max=m;projected=d;gap=g;break;}}
+      }
+      return {...result,direction:direction.map(String),projectedNumerator:String(projected),status:gap>0n?"CERTIFIED":"NOT_SEPARATED",method:"exact-subset-hull",maximumMatchingProjection:String(max),gapNumerator:String(gap),work:H.work,states:H.states};
     }catch(err){if(!(err instanceof Exhausted))throw err;}
     try{
       const B=diskSeparate(z,e,target,den,limit);
-      return {...result,status:B.strict?"CERTIFIED":"NOT_A_COUNTEREXAMPLE",method:"exact-disk-branch-bound",...B};
+      return {...result,direction:e.map(String),status:B.strict?"CERTIFIED":"NOT_SEPARATED",method:"exact-disk-branch-bound",...B};
     }catch(err){if(!(err instanceof Exhausted))throw err;return {...result,status:"INCONCLUSIVE",method:"budget-exhausted"};}
   }
   function search(options={},progress=()=>{}){
     const o={seed:1,steps:1000,population:24,work:80000,exactWork:1000000,samples:40,reportEvery:100,...options};
-    const r=rng(o.seed),pool=[],dims={},stats={evaluated:0,rejected:0,complete:0,oracleWork:0,exactAttempts:0,exactInconclusive:0},best={gap:null,dimension:null},start=Date.now();
+    const r=rng(o.seed),pool=[],dims={},stats={evaluated:0,rejected:0,complete:0,oracleWork:0,oracleExhausted:0,exactAttempts:0,exactInconclusive:0},best={gap:null,dimension:null},start=Date.now();
+    const dist=(a,b)=>Math.sqrt(a.descriptor.reduce((s,x,i)=>s+(x-b.descriptor[i])**2,0));
+    // One global quality-diversity population; no order-indexed subsearches.
+    const novelty=(a,list)=>Math.min(...list.filter(x=>x!==a).map(x=>dist(a,x)),1);
+    function fitness(a){return a.score+.08*novelty(a,pool);}
+    function insert(E){
+      if(pool.length<o.population){pool.push(E);return;}
+      if(r()<.15){pool[r.int(pool.length)]=E;return;}
+      if(r()<.50){
+        let nearest=0;for(let i=1;i<pool.length;i++)if(dist(E,pool[i])<dist(E,pool[nearest]))nearest=i;
+        if(dist(E,pool[nearest])<.18){if(E.score>=pool[nearest].score)pool[nearest]=E;return;}
+      }
+      let worst=0;for(let i=1;i<pool.length;i++)if(fitness(pool[i])<fitness(pool[worst]))worst=i;
+      if(E.score+.08*novelty(E,pool)>fitness(pool[worst]))pool[worst]=E;
+    }
     function snapshot(step){return {step,seed:o.seed,elapsedMs:Date.now()-start,dimensions:{...dims},...stats,best:{...best}};}
     for(let k=0;k<o.steps;k++){
       let parent=null,g;
       if(!pool.length||r()<.12)g=restart(r);
       else{
-        parent=pool[r.int(pool.length)];if(r()<.7)for(let i=0;i<2;i++){const x=pool[r.int(pool.length)];if(x.score>parent.score)parent=x;}
-        g=mutate(parent,r);
+        parent=pool[r.int(pool.length)];if(r()<.65)for(let i=0;i<2;i++){const x=pool[r.int(pool.length)];if(fitness(x)>fitness(parent))parent=x;}
+        g=mutate(parent,r,o);
       }
       // The size guard is an operation budget, not a fixed order or order sweep.
+      g=reduceBlocks(g,r);if(!g){stats.rejected++;continue;}
       const n=g.a.length;if(!allowed(g)||n*n*n>o.work*16){stats.rejected++;continue;}
       if(g.gates.length>2*n*n){g={...g,gates:compact(mixer(g))};}
       const E=evaluate(g,parent,r,o);if(!Number.isFinite(E.score)||!Number.isFinite(E.gap)){stats.rejected++;continue;}
-      stats.evaluated++;dims[n]=(dims[n]||0)+1;if(E.complete){stats.complete++;if(!parent||parent.C!==E.C)stats.oracleWork+=E.C.full.work;
-        if(best.gap===null||E.gap>best.gap){best.gap=E.gap;best.dimension=n;}}
-      if(E.gap>1e-8&&(E.complete||k%64===0)){
+      stats.evaluated++;dims[n]=(dims[n]||0)+1;stats.oracleWork+=E.oracleWork;stats.oracleExhausted+=E.oracleExhausted;
+      if(E.complete){stats.complete++;if(best.gap===null||E.gap>best.gap){best.gap=E.gap;best.dimension=n;}}
+      const tolerance=Math.max(1e-12,64*Number.EPSILON*n*n);
+      if(E.gap>tolerance&&(E.complete||k%64===0)){
         stats.exactAttempts++;
-        for(const Q of [10000,1000000,100000000]){
-          const cert=rationalize(E,Q),proof=verify(cert,o.exactWork);
-          if(proof.status==="CERTIFIED")return {status:"CERTIFIED",certificate:{...cert,proof},stats:snapshot(k+1)};
+        for(const Q of [10000,1000000,100000000,10000000000]){
+          const cert=rationalize(E,Q),proof=verify(cert,o.exactWork,true);
+          if(proof.status==="CERTIFIED")return {status:"CERTIFIED",certificate:{...cert,direction:proof.direction,proof},stats:snapshot(k+1)};
           if(proof.status==="INCONCLUSIVE"){stats.exactInconclusive++;break;}
         }
       }
-      if(pool.length<o.population)pool.push(E);
-      else if(r()<.20){pool[r.int(pool.length)]=E;}
-      else{let worst=0;for(let i=1;i<pool.length;i++)if(pool[i].score<pool[worst].score)worst=i;if(E.score>pool[worst].score)pool[worst]=E;}
+      insert(E);
       if(o.reportEvery&&(k+1)%o.reportEvery===0)progress(snapshot(k+1));
     }
     return {status:"NO_CERTIFIED_COUNTEREXAMPLE",stats:snapshot(o.steps)};
@@ -410,9 +516,17 @@ function buildCore() {
       const V=mixer({...g,gates:compact(U)}),N=sumMatrix(g.a,g.b,V);
       for(let i=0;i<M.length;i++)for(let j=0;j<M.length;j++)assert(abs(sub(M[i][j],N[i][j]))<1e-9,"QR gate compression");tests++;
     }
+    // Gap must be the true support distance, including vertex-normal cases.
+    const h=hull([[0,0],[1,0],[1,1],[0,1]]),q=signedGap(h,[2,2]);
+    assert(Math.abs(q.gap-Math.sqrt(2))<1e-12,"vertex distance");tests++;
+    assert(Math.abs(signedGap(h,[.5,.5]).gap+.5)<1e-12,"interior distance");tests++;
+    for(let k=0;k<10;k++){
+      const g=restart(r),o={samples:12,work:10000},E=evaluate(g,null,r,o),[i,j]=pair(g.a.length,r),g2={...g,gates:g.gates.concat([randomGate(i,j,r)])},F=evaluate(g2,E,r,o),M=sumMatrix(g2.a,g2.b,mixer(g2));
+      for(let i=0;i<M.length;i++)for(let j=0;j<M.length;j++)assert(abs(sub(F.M[i][j],M[i][j]))<1e-9,"incremental orbit update");tests++;
+    }
     const cert={format:"moc-emergent-v1",a:[["1","2"],["2","0"]],b:[["3","1"],["-1","4"]],gates:[],direction:["1","0"]};
-    assert(verify(cert).status==="NOT_A_COUNTEREXAMPLE","identity not violation");tests++;
-    cert.gates=[[0,1,"2","3","7"]];assert(verify(cert).status==="NOT_A_COUNTEREXAMPLE","two-order rational rotation");tests++;
+    assert(verify(cert).status==="NOT_SEPARATED","identity not violation");tests++;
+    cert.gates=[[0,1,"2","3","7"]];assert(verify(cert).status==="NOT_SEPARATED","two-order rational rotation");tests++;
     const sm=search({steps:70,seed:41,work:12000,exactWork:10000,reportEvery:0,samples:12});
     assert(Object.keys(sm.stats.dimensions).length>1,"mixed-order smoke run");tests++;
     return {status:"PASS",assertions:tests,smoke:sm.stats};
