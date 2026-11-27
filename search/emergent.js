@@ -24,19 +24,33 @@ function buildCore() {
   }
   // H(S) = conv union_{j in S} z[n-|S|,j] H(S\{j}).
   // Complex multiplication is real-linear, so discarding interior products is exact.
-  function subsetHull(z,limit,{integer=false,paths=false}={}) {
+  function subsetHull(z,limit,{integer=false,paths=false,store=null}={}) {
     const n=z.length, full=(1n<<BigInt(n))-1n, m=meter(limit), cache=new Map();
     const one=integer?[1n,0n]:[1,0];if(paths)one.push(null);
     cache.set(0n,[one]);
     function rec(mask,i) {
       const old=cache.get(mask);if(old)return old;
       m.tick();const pts=[];
+      // Cache by the actual remaining factor matrix, not dimension or mask.
+      // Column labels in cached paths are local to the subproblem.
+      // Exact verification deliberately does not consume external caches.
+      let key=null,cols=null;
+      if(store&&!integer&&paths&&n-i>=3){
+        cols=[];for(let j=0;j<n;j++)if(mask&(1n<<BigInt(j)))cols.push(j);
+        if(cols.length<=8||i===0){
+          key="hull-v3:"+JSON.stringify(z.slice(i).map(row=>cols.map(j=>row[j])));
+          const hit=store.get(key);
+          if(hit!==undefined){m.tick(hit.length);const h=hit.map(([x,y,p])=>[x,y,p.reduceRight((q,j)=>[cols[j],q],null)]);cache.set(mask,h);return h;}
+        }
+      }
       for(let j=0;j<n;j++){
         const bit=1n<<BigInt(j);if(!(mask&bit))continue;
         const child=rec(mask^bit,i+1);m.tick(child.length);
         for(const p of child){const x=mul(z[i][j],p);if(paths)x.push([j,p[2]]);pts.push(x);}
       }
-      const h=hull(pts);cache.set(mask,h);return h;
+      const h=hull(pts);cache.set(mask,h);
+      if(key&&h.every(p=>Number.isFinite(p[0])&&Number.isFinite(p[1])))store.set(key,h.map(p=>[p[0],p[1],unpack(p).map(j=>cols.indexOf(j))]));
+      return h;
     }
     return {points:rec(full,0),work:m.used,states:cache.size};
   }
@@ -129,7 +143,7 @@ function buildCore() {
   }
   function shuffle(n,r){const p=Array.from({length:n},(_,i)=>i);for(let i=n-1;i>0;i--){const j=r.int(i+1);[p[i],p[j]]=[p[j],p[i]];}return p;}
   function factors(a,b){
-    const rows=[],z=a.map(x=>{const p=b.map(y=>add(x,y)),s=Math.max(...p.map(abs),1e-100);rows.push(s);return p.map(v=>scale(v,1/s));});
+    const rows=[],z=a.map(x=>{const p=b.map(y=>add(x,y)),s=4*Math.max(1,abs(x));rows.push(s);return p.map(v=>scale(v,1/s));});
     return {rows,z};
   }
   function sampled(z,r,count){
@@ -176,13 +190,16 @@ function buildCore() {
       U=parent&&parent.g.gates===g.gates?parent.U:mixer(g);M=sumMatrix(g.a,g.b,U);
     }
     const C=same?parent.C:cacheSpectra(g,r,o);
-    const D=determinant(M,C.rows),s=signedGap(C.inner,D);
+    const matrixKey=o.cache?"det-v3:"+JSON.stringify([g.a,g.b,g.gates]):null;
+    let D=matrixKey?o.cache.get(matrixKey):undefined;
+    if(D===undefined){D=determinant(M,C.rows);if(matrixKey&&D.every(Number.isFinite))o.cache.set(matrixKey,D);}
+    const s=signedGap(C.inner,D);
     // Inner hull gives an optimistic upper bound on signed directional gap.
     // Spend the expensive oracle on near-boundary spectra, not every random point.
     let oracleWork=0,oracleExhausted=0;
     if(!C.attempted&&(s.gap>-.15*Math.max(s.radius,1e-100)||r()<.12)){
       C.attempted=true;
-      try{C.full=subsetHull(C.z,o.work,{paths:true});oracleWork=C.full.work;}catch(e){if(!(e instanceof Exhausted))throw e;oracleWork=o.work;oracleExhausted=1;}
+      try{C.full=subsetHull(C.z,o.work,{paths:true,store:o.cache});oracleWork=C.full.work;}catch(e){if(!(e instanceof Exhausted))throw e;oracleWork=o.work;oracleExhausted=1;}
     }
     const H=C.full?C.full.points:C.inner,G=signedGap(H,D);
     const relative=G.gap/Math.max(G.radius,1e-100),mix=1-U.reduce((s,row)=>s+Math.max(...row.map(norm2)),0)/n;
@@ -206,6 +223,9 @@ function buildCore() {
     const s=Math.sqrt((a.reduce((s,x)=>s+norm2(x),0)+b.reduce((s,x)=>s+norm2(x),0))/(2*n))||1;
     return {...g,a:a.map(x=>scale(x,1/s)),b:b.map(x=>scale(x,1/s))};
   }
+  // Avoid global renormalization on every local edit: it destroys exact
+  // cache keys for unchanged spectral subproblems. Normalize only on drift.
+  function stabilize(g){return g.a.concat(g.b).some(x=>abs(x)>8)?normalize(g):g;}
   function pair(n,r){let i=r.int(n),j=r.int(n-1);if(j>=i)j++;return i<j?[i,j]:[j,i];}
   function randomGate(i,j,r,step=.8){return [i,j,r.normal()*step,r.normal()*step];}
   function spectralPair(mode,r){
@@ -217,13 +237,14 @@ function buildCore() {
     return [a,b];
   }
   function birth(g,r){
-    const n=g.a.length,[a,b]=spectralPair(g.mode,r),gates=g.gates.slice();
-    if(n){const links=1+r.int(Math.min(n,3));for(let k=0;k<links;k++)gates.splice(r.int(gates.length+1),0,randomGate(r.int(n),n,r));}
-    return normalize({...g,a:g.a.concat([a]),b:g.b.concat([b]),gates});
+    const n=g.a.length,[a,b]=spectralPair(g.mode,r),gates=g.gates.map(([i,j,x,y])=>[i+1,j+1,x,y]);
+    // Prepend the new label: unchanged suffix subproblems survive growth.
+    if(n){const links=1+r.int(Math.min(n,3));for(let k=0;k<links;k++)gates.splice(r.int(gates.length+1),0,randomGate(0,1+r.int(n),r));}
+    return stabilize({...g,a:[a,...g.a],b:[b,...g.b],gates});
   }
   function death(g,r){
     const n=g.a.length,j=r.int(n),keep=(x,i)=>i!==j;
-    return normalize({...g,a:g.a.filter(keep),b:g.b.filter(keep),gates:g.gates.filter(e=>e[0]!==j&&e[1]!==j).map(e=>[e[0]-(e[0]>j),e[1]-(e[1]>j),e[2],e[3]])});
+    return stabilize({...g,a:g.a.filter(keep),b:g.b.filter(keep),gates:g.gates.filter(e=>e[0]!==j&&e[1]!==j).map(e=>[e[0]-(e[0]>j),e[1]-(e[1]>j),e[2],e[3]])});
   }
   function components(g){
     const n=g.a.length,seen=new Set(),adj=Array.from({length:n},()=>[]),out=[];
@@ -235,7 +256,7 @@ function buildCore() {
     const cs=components(g);if(cs.length===1)return g;
     const viable=cs.filter(c=>c.length>=4);if(!viable.length)return null;
     const c=viable[r.int(viable.length)],map=new Map(c.map((k,i)=>[k,i]));
-    return normalize({...g,a:c.map(i=>g.a[i]),b:c.map(i=>g.b[i]),gates:g.gates.filter(e=>map.has(e[0])&&map.has(e[1])).map(e=>[map.get(e[0]),map.get(e[1]),e[2],e[3]])});
+    return stabilize({...g,a:c.map(i=>g.a[i]),b:c.map(i=>g.b[i]),gates:g.gates.filter(e=>map.has(e[0])&&map.has(e[1])).map(e=>[map.get(e[0]),map.get(e[1]),e[2],e[3]])});
   }
   function allowed(g){
     const n=g.a.length;
@@ -308,7 +329,7 @@ function buildCore() {
     if(E.complete&&E.gap>-.15)for(let pass=0;pass<2;pass++){
       const z=C.z.map((row,k)=>row.map((x,j)=>(side==="a"?k===i:j===i)?add(x,scale(d,1/C.rows[k])):x));
       try{
-        const h=subsetHull(z,Math.max(1,Math.floor(o.work/2)),{paths:true}).points;
+        const h=subsetHull(z,Math.max(1,Math.floor(o.work/2)),{paths:true,store:o.cache}).points;
         let contact=h[0];for(const p of h)if(dot(E.dir,p)>dot(E.dir,contact))contact=p;
         const actual=dot(E.dir,sub(add(E.D,mul(dd,d)),contact)),predicted=Math.min(...lines.map(l=>l[0]*d[0]+l[1]*d[1]+l[2]));
         if(predicted-actual<=1e-10*Math.max(1,Math.abs(predicted))||!constraint(unpack(contact)))break;
@@ -316,7 +337,7 @@ function buildCore() {
       }catch(e){if(!(e instanceof Exhausted))throw e;break;}
     }
     v[i]=add(g[side][i],d);
-    return normalize({...g,a,b});
+    return stabilize({...g,a,b});
   }
   // Numerical chart for the equal-e1/e2 reduction: solve the rational
   // moment equation for a regular reciprocal pole. Failure is harmless.
@@ -407,7 +428,7 @@ function buildCore() {
     let m=0;for(let j=0;j<2*n;j++)m=Math.max(m,Math.hypot(d[2*j],d[2*j+1]));
     if(!Number.isFinite(m)||m<1e-13)return g;
     const t=Math.min(1,step/m),a=g.a.map((v,i)=>add(v,[t*d[2*i],t*d[2*i+1]])),b=g.b.map((v,i)=>add(v,[t*d[2*(n+i)],t*d[2*(n+i)+1]]));
-    return normalize({...g,a,b});
+    return stabilize({...g,a,b});
   }
   function mutate(E,r,o){
     const g=E.g,n=g.a.length,u=r(),step=Math.exp(-3.3+3*r());
@@ -426,7 +447,7 @@ function buildCore() {
     const a=g.a.slice(),b=g.b.slice(),s=r()<.5?a:b,i=r.int(n);
     s[i]=add(s[i],scale(r.point(),step));
     if(r()<.25){const j=r.int(n);s[j]=add(s[j],scale(r.point(),step));}
-    return normalize({...g,a,b});
+    return stabilize({...g,a,b});
   }
   function exactDivide(a,b){
     const p=mul(a,conj(b)),d=norm2(b);
@@ -558,6 +579,12 @@ function buildCore() {
       if(E.score+.08*novelty(E,pool)>fitness(pool[worst]))pool[worst]=E;
     }
     function snapshot(step){return {step,seed:o.seed,elapsedMs:Date.now()-start,dimensions:{...dims},...stats,best:{...best}};}
+    // Import migrants from other workers or an earlier checkpoint.
+    for(const x of (o.frontier||[]).slice(0,o.population)){
+      const g=x.g;if(!g||!allowed(g)||g.a.length**3>o.work*16)continue;
+      const E=evaluate(g,null,r,o);if(Number.isFinite(E.score)&&Number.isFinite(E.gap))insert(E);
+    }
+    function frontier(){return pool.map(E=>({g:E.g,score:E.score,descriptor:E.descriptor,gap:E.gap,complete:E.complete}));}
     for(let k=0;k<o.steps;k++){
       let parent=null,g;
       if(!pool.length||r()<.12)g=restart(r);
@@ -586,7 +613,7 @@ function buildCore() {
       insert(E);
       if(o.reportEvery&&(k+1)%o.reportEvery===0)progress(snapshot(k+1));
     }
-    return {status:"NO_CERTIFIED_COUNTEREXAMPLE",stats:snapshot(o.steps)};
+    return {status:"NO_CERTIFIED_COUNTEREXAMPLE",stats:snapshot(o.steps),...(o.returnFrontier?{frontier:frontier()}: {})};
   }
   function selftest(){
     const assert=(x,m)=>{if(!x)throw new Error("selftest: "+m);};
@@ -639,9 +666,16 @@ function buildCore() {
     cert.gates=[[0,1,"2","3","7"]];assert(verify(cert).status==="NOT_SEPARATED","two-order rational rotation");tests++;
     const sm=search({steps:70,seed:41,work:12000,exactWork:10000,reportEvery:0,samples:12});
     assert(Object.keys(sm.stats.dimensions).length>1,"mixed-order smoke run");tests++;
-    return {status:"PASS",assertions:tests,smoke:sm.stats};
+    const store=new Map(),base=[[[2,1],[3,0],[1,2]],[[1,-1],[3,1],[2,0]],[[2,2],[0,1],[4,0]]];
+    subsetHull(base,100000,{paths:true,store});let hits=0;
+    const shared={get(k){const v=store.get(k);if(v!==undefined)hits++;return v;},set(k,v){store.set(k,v);}};
+    const grown=[[[3,1],[1,0],[2,1],[4,1]],...base.map((row,i)=>[[i+1,1],...row])];
+    const x=subsetHull(grown,100000,{paths:true,store:shared}),y=subsetHull(grown,100000,{paths:true});
+    assert(hits>0&&JSON.stringify(x.points.map(p=>p.slice(0,2)))===JSON.stringify(y.points.map(p=>p.slice(0,2))),"cross-order cache reuse");tests++;
+    for(const p of x.points)assert(abs(sub(p,product(grown,unpack(p))))<1e-10,"cached path remapping");tests++;
+    return {status:"PASS",assertions:tests,smoke:sm.stats,crossOrderCacheHits:hits};
   }
-  return {search,verify,selftest};
+  return {search,verify,selftest,subsetHull,determinant,mixer,sumMatrix,gapFromPoints:(p,d)=>signedGap(hull(p.slice()),d)};
 }
 
 if (require.main === module) {
